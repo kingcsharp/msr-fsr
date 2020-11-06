@@ -17,8 +17,6 @@ import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { SelectItem } from 'primeng/api';
 import { take } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
-import { DocumentsComponent } from '../../documents/documents/documents.component';
-
 
 @Component({
   selector: 'app-wipdetails',
@@ -62,7 +60,6 @@ export class WipdetailsComponent implements OnInit {
   areMonitorsValid: boolean = false;
   monitorsAreInvalidDialog: boolean = false;
 
-
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
     public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService) { }
@@ -90,12 +87,10 @@ export class WipdetailsComponent implements OnInit {
       { label: 'Select', value: 6 },
     ];
 
-
     this.route.params.subscribe(params => {
 
       let workOrderId = params['id'] == null ? 0 : Number(params['id']);
       this.workOrdersService.workOrder(workOrderId, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
-
 
         this.workOrderModel = this.cleanData(response.object[0]);
         this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
@@ -109,7 +104,8 @@ export class WipdetailsComponent implements OnInit {
         this.purchase = this.workOrderModel.purchase;
 
         for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
-          if (this.workOrderModel.workOrderTasks[index].status.name === 'In Progress' || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start') {
+          const status = this.workOrderModel.workOrderTasks[index].status;
+          if (status.name === 'In Progress' || status.name === 'Approved' || status.name === 'Waiting to Start') {
 
             this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[index]);
             this.startSlideIndex = index;
@@ -121,7 +117,6 @@ export class WipdetailsComponent implements OnInit {
 
           this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[0]);
         }
-
         this.globals.showLoader(false);
       }));
 
@@ -180,7 +175,6 @@ export class WipdetailsComponent implements OnInit {
       }));
 
     }));
-
 
   }
 
@@ -252,7 +246,6 @@ export class WipdetailsComponent implements OnInit {
           u.inputType = 'Manual';
         }
 
-
       });
 
       s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
@@ -262,7 +255,6 @@ export class WipdetailsComponent implements OnInit {
       });
 
     });
-
 
     return workOrderModel;
 
@@ -304,7 +296,6 @@ export class WipdetailsComponent implements OnInit {
       } else {
         this.rolesRequiredMessage += ', ' + role;
       }
-
 
     });
 
@@ -515,7 +506,6 @@ export class WipdetailsComponent implements OnInit {
     this.showCarousel = true;
   }
 
-
   slideToTaskInProgress() {
     let index = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
     this.carousel.selectSlide(index);
@@ -562,7 +552,6 @@ export class WipdetailsComponent implements OnInit {
     } else {
       this.monitorsAreInvalidDialog = true;
     }
-
 
   }
 }
