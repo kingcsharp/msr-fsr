@@ -21,35 +21,4 @@ export function copyObj(objToCopy: any): any {
     return Object.assign({}, objToCopy);
 }
 
-export function deepCopy(data: any) {
-    //leave this one by now as deep copy does not work correctly
-    return JSON.parse(JSON.stringify(data));
-    // WARNING it does not copy the type of the object.
-    // let node;
-    // if (Array.isArray(data)) {
-    //     node = data.length > 0 ? data.slice(0) : [];
-    //     node.forEach((e, i) => {
-    //         if (
-    //             (typeof e === 'object' && e !== {}) ||
-    //             (Array.isArray(e) && e.length > 0)
-    //         ) {
-    //             node[i] = deepCopy(e);
-    //         }
-    //     });
-    // } else if (data && typeof data === 'object') {
-    //     node = data instanceof Date ? data : Object.assign({}, data);
-    //     Object.keys(node).forEach((key) => {
-    //         if (
-    //             (typeof node[key] === 'object' && node[key] !== {}) ||
-    //             (Array.isArray(node[key]) && node[key].length > 0)
-    //         ) {
-    //             node[key] = deepCopy(node[key]);
-    //         }
-    //     });
-    // } else {
-    //     node = data;
-    // }
-    // return node;
-}
-
 
