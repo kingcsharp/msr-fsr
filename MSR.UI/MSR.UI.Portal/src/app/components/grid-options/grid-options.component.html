@@ -28,11 +28,11 @@
         <div class="dropdown-divider"></div>
         <div class="text-center">
             <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
-                (click)="showSaveViewDiv()">
+                (click)="showSaveView = !showSaveView">
                 Save Current View
             </button> &nbsp;
             <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" data-cy="clearview-button"
-                (click)="resetgr()">
+                (click)="resetgrid(null)">
                 Clear View
             </button>
         </div>

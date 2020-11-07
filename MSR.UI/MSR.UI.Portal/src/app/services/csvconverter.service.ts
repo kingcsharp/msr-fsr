@@ -63,6 +63,9 @@ export class CSVConverterService {
         if (column.type === EnumColumnType.Boolean) {
             return value === true ? 'Yes' : 'No';
         }
+        if (column.type === EnumColumnType.StringArray) {
+            return value.map(x => x.name).join(',');
+        }
 
         return value;
     }
