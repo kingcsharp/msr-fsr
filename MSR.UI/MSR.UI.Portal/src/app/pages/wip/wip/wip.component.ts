@@ -341,7 +341,7 @@ export class WipComponent implements OnInit, AfterViewInit {
         });
 
         this.reportModel = new ReportModel({
-          name: 'Work Orders' + custNameAdd
+          name: 'Work Orders', custNameAdd
           name: ''
         });
 
