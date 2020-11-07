@@ -103,7 +103,6 @@ export class EquipmentMaintenanceComponent implements OnInit {
   users: any[] = [];
   getUsersFlag: boolean = false;
   internalAddress: string;
-  isLooking: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -159,26 +158,29 @@ export class EquipmentMaintenanceComponent implements OnInit {
       }));
   }
 
-  getLocations() {
+  searchLocations() {
     if (this.getLocationsFlag === false || !this.internalAddress) {
       return;
     }
     if (this.internalAddress) {
-      this.getLocationsFlag = false;
-      this.isLooking = true;
-      this.locationService.locationGet(null, null, this.internalAddress, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.locations = [];
-        response.object.map((x) => {
-          this.locations.push({ label: x.name, value: x.id });
-        });
-        if (this.locations.length === 1) {
-          this.currentEM.locationId = this.locations[0].value;
-        }
-        this.getLocationsFlag = true;
-        this.isLooking = false;
-      }));
+      this.getLocations(this.internalAddress);
     }
+  }
+
+  getLocations(internalAddress: string) {
+    this.globals.showLoader(true);
+    this.getLocationsFlag = false;
+    this.locationService.locationGet(null, null, internalAddress, env.apiVersion).pipe(take(1))
+    .subscribe(responseHandler(response => {
+      this.locations = [];
+      response.object.map((x) => {
+        this.locations.push({ label: x.name, value: x.id });
+      });
+      if (this.locations.length === 1) {
+        this.currentEM.locationId = this.locations[0].value;
+      }
+      this.getLocationsFlag = true;
+    }));
   }
 
   showEMModal(em: EquipmentMaintenanceModel) {
@@ -193,8 +195,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
       this.currentEM = new EquipmentMaintenanceModel();
       this.currentEM.troubleState = true;
       this.currentEM.statusId = this.enumEMStatus.Requested;
-      this.locations = [];
-      this.getLocationsFlag = true;
+      this.getLocations(null);
     }
 
     this.displayEMDialog = true;
