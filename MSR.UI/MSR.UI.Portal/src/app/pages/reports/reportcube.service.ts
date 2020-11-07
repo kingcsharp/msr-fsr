@@ -24,33 +24,14 @@ export class ReportCubeService {
 
     public getReport = async (reportInfo: ReportModel) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
-        return this.http.get(reportInfo.apiEndPointURL, { headers: headers }).toPromise().then(response => {
-            return this.filterReportData(this.filterByCustomer(response), reportInfo);
-        });
-    }
-
-    filterByCustomer(response: any) {
-        return response.filter(x => {
-            if (x['CubeFinancial.customername'] !== undefined) {
-                return x['CubeFinancial.customername'] === this.globals.selectedCustomer.name;
+        return this.http.get(reportInfo.apiEndPointURL, {
+            headers: headers,
+            params: {
+                clientId: this.globals.selectedCustomer.id,
+                clientName: this.globals.selectedCustomer.name
             }
-            if (x['CubePartsmonitors.customerid'] !== undefined) {
-                return x['CubePartsmonitors.customerid'] === this.globals.selectedCustomer.id;
-            }
-            if (x['CubeWorkorderparts.customername'] !== undefined) {
-                return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
-            }
-            if (x['CubeWorkorderparts.customername'] !== undefined) {
-                return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
-            }
-            if (x['CubeWorkorderpartscyclecount.customername'] !== undefined) {
-                return x['CubeWorkorderpartscyclecount.customername'] === this.globals.selectedCustomer.name;
-            }
-            if (x['MonitorsHistorybyWorkOrder.customerid'] !== undefined) {
-                return x['MonitorsHistorybyWorkOrder.customerid'] === this.globals.selectedCustomer.id;
-            }
-
-            return true;
+        }).toPromise().then(response => {
+            return this.filterReportData(response, reportInfo);
         });
     }
 
