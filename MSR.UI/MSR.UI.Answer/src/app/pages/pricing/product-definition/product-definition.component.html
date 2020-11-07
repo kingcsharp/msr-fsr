@@ -21,7 +21,6 @@
     <form
       data-cy="quote-create-form"
       class="parsleyjs product-form"
-      (ngSubmit)="onSubmit()"
       data-parsley-validate="false"
       data-parsley-priority-enabled="false"
       novalidate="novalidate"
@@ -524,7 +523,7 @@
 
       <div class="row mx-0 my-4">
         <div class="col-md-12 d-flex justify-content-end">
-          <button type="submit" *ngIf="mode === productPageModes.Create || mode === productPageModes.Edit"
+          <button type="button" (click)="onSubmit()" *ngIf="mode === productPageModes.Create || mode === productPageModes.Edit"
             class="btn btn-success ml-2" data-cy="btn-product-submit">
             <i class="fa fa-send"></i> Submit
           </button>
@@ -734,7 +733,7 @@
   </div>
   <p-footer>
     <div class="pull-right">
-      <button type="submit" (click)="closeQuoteViewModal()" class="btn btn-outline-inverse width-100 mb-xs"
+      <button type="button" (click)="closeQuoteViewModal()" class="btn btn-outline-inverse width-100 mb-xs"
         role="button" data-cy="closequoteview-button">
         Close
       </button>
@@ -1446,7 +1445,7 @@
   </section>
   <p-footer>
     <div class="pull-right">
-      <button type="submit" (click)="closeRequirementViewModal()" class="btn btn-outline-inverse width-100 mb-xs"
+      <button type="button" (click)="closeRequirementViewModal()" class="btn btn-outline-inverse width-100 mb-xs"
         role="button" data-cy="closerequirementview-button">
         Close
       </button>
