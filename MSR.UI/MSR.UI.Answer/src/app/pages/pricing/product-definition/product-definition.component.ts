@@ -527,6 +527,7 @@ export class ProductDefinitionComponent implements OnInit {
       }
 
       this.productSteps[index].rmAnnualRate = rmAnnualRate;
+      this.calculateCharge(index);
     }
   }
 
