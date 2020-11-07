@@ -267,8 +267,16 @@
                         <tr>
                             <th>
                             </th>
+                            <th grid-input-filter [dt]="dt2" searchField="id"
+                                [hidden]="!cg.isVisibleCol('id',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
                             <th grid-input-filter [dt]="dt2" searchField="customerName"
                                 [hidden]="!cg.isVisibleCol('customerName',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="purchase.purchaseOrderId"
+                                [hidden]="!cg.isVisibleCol('purchase.purchaseOrderId',gridWoSettings)"
                                 [gridSettings]="gridWoSettings">
                             </th>
                             <th grid-input-filter [dt]="dt2" searchField="purchase.customerPurchaseNumber"
@@ -311,8 +319,16 @@
                                     (onChange)="selectWorkOrder($event,workOrderModel)" binary="true"></p-checkbox>
                             </td>
                             <td class="text-capitalize"
+                                [hidden]="!cg.isVisibleCol('id',gridWoSettings)">
+                                {{workOrderModel.id}}
+                            </td>
+                            <td class="text-capitalize"
                                 [hidden]="!cg.isVisibleCol('customerName',gridWoSettings)">
                                 {{workOrderModel.customerName}}
+                            </td>
+                            <td class="text-capitalize"
+                                [hidden]="!cg.isVisibleCol('purchase.purchaseOrderId',gridWoSettings)">
+                                {{workOrderModel.purchase.purchaseOrderId}}
                             </td>
                             <td class="text-capitalize"
                                 [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)">
