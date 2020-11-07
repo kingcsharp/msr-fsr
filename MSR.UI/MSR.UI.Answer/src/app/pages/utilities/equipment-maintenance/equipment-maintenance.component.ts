@@ -192,9 +192,17 @@ export class EquipmentMaintenanceComponent implements OnInit {
       }];
       this.getLocationsFlag = true;
     } else {
-      this.currentEM = new EquipmentMaintenanceModel();
-      this.currentEM.troubleState = true;
-      this.currentEM.statusId = this.enumEMStatus.Requested;
+      this.currentEM = new EquipmentMaintenanceModel({
+        troubleState: true,
+        statusId: this.enumEMStatus.Requested,
+        locationId: null,
+        pemLastCompletedDate: null,
+        maintenanceTask: null,
+        assignedToId: null,
+        frequencyField: null,
+        comments: null,
+
+      });
       this.getLocations(null);
     }
 
@@ -212,23 +220,35 @@ export class EquipmentMaintenanceComponent implements OnInit {
     this.currentEM.troubleState = $event;
   }
 
+  onChangeFrequencyField($event) {
+    jQuery('#frequencyField').parsley().validate();
+    if (jQuery('#frequencyField').parsley().isValid()) {
+      let frequencyField = null;
+
+      if ($event.target.value) {
+        frequencyField = parseInt($event.target.value, 10);
+      }
+      this.currentEM.frequencyField = frequencyField;
+    }
+  }
+
   onEMFormSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      let requestData;
       this.globals.showLoader(true);
-      if (this.currentEM.id === undefined) {
-        requestData = {
-          locationId: this.currentEM.locationId,
-          troubleState: this.currentEM.troubleState,
-          statusId: this.currentEM.troubleState ? this.enumEMStatus.Requested : this.currentEM.statusId,
-          maintenanceTask: this.currentEM.troubleState ? null : this.currentEM.maintenanceTask,
-          pemLastCompletedDate:  this.currentEM.troubleState ? null : this.currentEM.pemLastCompletedDate,
-          frequencyField:  this.currentEM.troubleState ? null : parseInt(this.currentEM.frequencyField.toString(), 10),
-          assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
-          comments: this.currentEM.comments,
-        };
 
+      const requestData = {
+        locationId: this.currentEM.locationId,
+        troubleState: this.currentEM.troubleState,
+        statusId: this.currentEM.troubleState ? this.enumEMStatus.Requested : this.currentEM.statusId,
+        maintenanceTask: this.currentEM.troubleState ? null : this.currentEM.maintenanceTask,
+        pemLastCompletedDate:  this.currentEM.troubleState ? null : this.currentEM.pemLastCompletedDate,
+        frequencyField:  this.currentEM.troubleState ? null : this.currentEM.frequencyField,
+        assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
+        comments: this.currentEM.comments,
+      };
+
+      if (this.currentEM.id === undefined) {
         this.equipmentMaintenanceService.equipmentMaintenancePost(env.apiVersion, new CreateEquipmentMaintenanceRequest(requestData)).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.data.push(response.object);
@@ -236,18 +256,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
             this.closeEMModal();
           }));
       } else {
-        requestData = {
-          id: this.currentEM.id,
-          locationId: this.currentEM.locationId,
-          troubleState: this.currentEM.troubleState,
-          statusId: this.currentEM.troubleState ? this.enumEMStatus.Requested : this.currentEM.statusId,
-          maintenanceTask: this.currentEM.troubleState ? null : this.currentEM.maintenanceTask,
-          pemLastCompletedDate:  this.currentEM.troubleState ? null : this.currentEM.pemLastCompletedDate,
-          frequencyField:  this.currentEM.troubleState ? null : parseInt(this.currentEM.frequencyField.toString(), 10),
-          assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
-          comments: this.currentEM.comments,
-        };
-        this.equipmentMaintenanceService.equipmentMaintenancePatch(env.apiVersion, new UpdateEquipmentMaintenanceRequest(requestData)).pipe(take(1))
+        this.equipmentMaintenanceService.equipmentMaintenancePatch(env.apiVersion, new UpdateEquipmentMaintenanceRequest({...requestData, id: this.currentEM.id})).pipe(take(1))
           .subscribe(responseHandler(response => {
             const index = this.data.findIndex(x => x.id === this.currentEM.id);
             this.data.splice(index, 1);
