@@ -29,6 +29,7 @@ import { CSVConverterService } from '../../services/csvconverter.service';
 export class GridComponent implements OnInit {
   @Input() gridSaved: GridSaved;
   @Input() showReport: boolean;
+  @Input() showExportGrid: boolean;
   @Input() saveToLocalStorage: boolean;
   @Input() data;
   @Input() reportInfo: ReportModel;
