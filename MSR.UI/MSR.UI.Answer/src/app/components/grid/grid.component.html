@@ -19,7 +19,7 @@
                 [(visibleColumnsCount)]="gridSaved.visibleColumns">
             </grid-options>
         </div>
-        <div class="pull-right exportBtnsMargin">
+        <div *ngIf="showExportGrid" class="pull-right exportBtnsMargin">
             <button class="btn btn-secondary pull-right" (click)="printCsvReport()">
                 <i class="fas fa-file-csv"></i> Export CSV
             </button>
