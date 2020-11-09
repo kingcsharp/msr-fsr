@@ -83,8 +83,8 @@ export class InvoiceComponent implements OnInit {
 
     this.gridWoStorageId = 'invoiceWorkorderGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridWoSettings = [
-      new ColumnsSaved({ id: 'id', label:'Id', visible: true }),
       new ColumnsSaved({ id: 'customerName', label: 'Customer Name', visible: true }),
+      new ColumnsSaved({ id: 'id', label: 'WorkOrder #', visible: true }),
       new ColumnsSaved({ id: 'purchase.purchaseOrderId', label: 'PO #', visible: true }),
       new ColumnsSaved({ id: 'purchase.customerPurchaseNumber', label: 'Customer Puchase Number', visible: true }),
       new ColumnsSaved({ id: 'purchase.customerLineNumber', label: 'Customer Line', visible: true }),
