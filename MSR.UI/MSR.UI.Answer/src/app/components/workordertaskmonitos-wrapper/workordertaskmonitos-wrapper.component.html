@@ -23,7 +23,7 @@
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row"
-            *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'EQUAL'">
+            *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'EQUAL' && workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number'">
             <label for="equal" class="col-form-label text-left col-3">
               Equal To:
             </label>
@@ -32,7 +32,7 @@
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row"
-            *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'ABOVE'">
+            *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'ABOVE' && workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number'">
             <label for="equal" class="col-form-label text-left col-3">
               Above:
             </label>
@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row"
-            *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'BELOW'">
+            *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'BELOW' && workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number'">
             <label for="equal" class="col-form-label text-left col-3">
               Below:
             </label>
@@ -50,7 +50,7 @@
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row"
-            *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'BETWEEN'">
+            *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'BETWEEN' && workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number'">
             <label for="equal" class="col-form-label text-left col-3">
               Between:
             </label>
@@ -108,7 +108,7 @@
             <label for="result" class="col-form-label text-left col-3">
               Result:
             </label>
-            <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.holdIfFails !== undefined">
+            <div class="col-9 px-0">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
                 data-validate="parsley" 
                 data-parsley-trigger="change" 
