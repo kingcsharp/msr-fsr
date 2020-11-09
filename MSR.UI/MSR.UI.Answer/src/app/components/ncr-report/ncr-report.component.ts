@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FileModel, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel, EnumMenuItem } from '../../services/api.client.generated';
 import { Globals } from '../../models/lib/globals';
 import { EnumProcedureType } from '../../models/enums/EnumProcedureType';
+import { GridFileViewerComponent } from '../../components/grid-viewer/grid-file-viewer.component'
 
 @Component({
   selector: 'ncr-report',
@@ -20,6 +21,7 @@ export class NcrReportComponent implements OnInit {
   showImagePreview: boolean = false;
   imagePreview: FileModel = new FileModel();
   menuItems = EnumMenuItem;
+  griFileViewerComponent: GridFileViewerComponent;
   constructor(private globals: Globals) { }
 
   ngOnInit(): void {
@@ -67,7 +69,7 @@ export class NcrReportComponent implements OnInit {
 
         workOrderTask.referenceFiles.map(referenceFile => {
 
-          if (this.getViewerType(referenceFile.contentType) === 'img') {
+          if (this.griFileViewerComponent.getViewerType(referenceFile.contentType) === 'img') {
             this.associatedDigitalPictures.push(referenceFile);
           } else {
             this.associatedDocuments.push(referenceFile);
@@ -84,31 +86,5 @@ export class NcrReportComponent implements OnInit {
   showImagePreviewDialog(fileModel: FileModel) {
     this.imagePreview = fileModel;
     this.showImagePreview = !this.showImagePreview;
-  }
-
-  getViewerType(contentType) {
-    switch (contentType) {
-      case 'application/msword':
-      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-      case 'application/vnd.ms-excel':
-      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-      case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-        return 'office';
-      case 'text/plain':
-      case 'text/html':
-      case 'text/csv':
-        return 'google';
-      case 'application/pdf':
-        return 'pdf';
-      case 'image/gif':
-      case 'image/tiff':
-      case 'image/webp':
-      case 'image/jpeg':
-      case 'image/png':
-        return 'img';
-      case 'text/plain':
-      default:
-        return 'url';
-    }
   }
 }
