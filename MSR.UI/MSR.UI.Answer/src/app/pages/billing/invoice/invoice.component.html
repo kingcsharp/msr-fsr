@@ -259,8 +259,8 @@
               <th grid-input-filter [dt]="dt2" searchField="id" [hidden]="!cg.isVisibleCol('id',gridWoSettings)"
                 [gridSettings]="gridWoSettings">
               </th>
-              <th grid-input-filter [dt]="dt2" searchField="purchase.purchaseOrderId"
-                [hidden]="!cg.isVisibleCol('purchase.purchaseOrderId',gridWoSettings)" [gridSettings]="gridWoSettings">
+              <th grid-input-filter [dt]="dt2" searchField="purchase.purchaseOrder.referencePO"
+                [hidden]="!cg.isVisibleCol('purchase.purchaseOrder.referencePO',gridWoSettings)" [gridSettings]="gridWoSettings">
               </th>
               <th grid-input-filter [dt]="dt2" searchField="purchase.customerPurchaseNumber"
                 [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)"
@@ -303,8 +303,8 @@
               <td class="text-capitalize" [hidden]="!cg.isVisibleCol('id',gridWoSettings)">
                 {{workOrderModel.id}}
               </td>
-              <td class="text-capitalize" [hidden]="!cg.isVisibleCol('purchase.purchaseOrderId',gridWoSettings)">
-                {{workOrderModel.purchase.purchaseOrderId}}
+              <td class="text-capitalize" [hidden]="!cg.isVisibleCol('purchase.purchaseOrder.referencePO',gridWoSettings)">
+                {{workOrderModel.purchase.purchaseOrder.referencePO}}
               </td>
               <td class="text-capitalize" [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)">
                 {{workOrderModel.purchase.customerPurchaseNumber}}
