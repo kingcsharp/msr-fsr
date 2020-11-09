@@ -186,34 +186,18 @@ export class RoleassignmentsComponent implements OnInit {
     roleModule.value = !roleModule.value;
     this.pendingPermissionsUpdate = true;
 
-    const pendingRoleChangeIndex = this.pendingPermissions.findIndex(s => s.menuModule.id === menuModule.id && s.roleModule.id === roleModule.id && s.permissionModule === null);
-
-    if (pendingRoleChangeIndex === -1) {
 
       if (roleModule.value) {
-        this.pendingPermissions.push({
-          menuModule: menuModule,
-          roleModule: roleModule,
-          permissionModule: null,
-          event: 'add'
-        } as UpdatePermissionsEventModel);
+
+        this.addRoleAndPermissions(menuModule, roleModule, null);
 
         this.selectedRoleModule = roleModule;
       } else {
-        this.pendingPermissions.push({
-          menuModule: menuModule,
-          roleModule: roleModule,
-          permissionModule: null,
-          event: 'remove'
-        } as UpdatePermissionsEventModel);
 
-        this.selectedRoleModule = null;
+        this.removeRoleAndPermissions(menuModule, roleModule, null);
+
+        this.selectedRoleModule = roleModule;
       }
-
-    } else {
-
-      this.pendingPermissions.splice(pendingRoleChangeIndex, 1);
-    }
 
   }
 
@@ -335,5 +319,39 @@ export class RoleassignmentsComponent implements OnInit {
     });
 
     this.clearPendingChanges();
+  }
+
+  removeRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel){
+
+    this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
+
+    this.pendingPermissions.push({
+      menuModule: menuModule,
+      roleModule: roleModule,
+      permissionModule: null,
+      event: 'remove'
+    } as UpdatePermissionsEventModel);
+
+    roleModule.permissions.map(permission => {
+      permission.value = false;
+    });
+
+  }
+
+  addRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel){
+
+    this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
+
+    this.pendingPermissions.push({
+      menuModule: menuModule,
+      roleModule: roleModule,
+      permissionModule: null,
+      event: 'add'
+    } as UpdatePermissionsEventModel);
+
+    roleModule.permissions.map(permission => {
+      permission.value = false;
+      this.permissionChanged(null, menuModule, roleModule, permission);
+    });
   }
 }
