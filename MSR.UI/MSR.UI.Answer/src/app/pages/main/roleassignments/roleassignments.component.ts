@@ -321,7 +321,7 @@ export class RoleassignmentsComponent implements OnInit {
     this.clearPendingChanges();
   }
 
-  removeRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel){
+  removeRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel) {
 
     this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
 
@@ -338,7 +338,7 @@ export class RoleassignmentsComponent implements OnInit {
 
   }
 
-  addRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel){
+  addRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel) {
 
     this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
 
