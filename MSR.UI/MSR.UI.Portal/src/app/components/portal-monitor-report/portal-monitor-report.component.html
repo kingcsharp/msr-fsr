@@ -29,7 +29,7 @@
                     <tr>
                         <td>{{woTaskMonitor.procedureStepMonitor?.description}}</td>
                         <td>
-                            {{woTaskMonitor?.textVal || woTaskMonitor?.multiVal || woTaskMonitor?.numVal}}
+                            {{woTaskMonitor | monitorResult}}
                         </td>
                         <td class="text-center" [ngClass]="{'alert-success':woTaskMonitor.pass,'alert-danger':!woTaskMonitor.pass}">
                             {{woTaskMonitor.pass?'Pass':'Fail'}}
