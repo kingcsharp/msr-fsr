@@ -85,6 +85,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
                 var procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
+                procedure.Revision = 1;
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
                 var created = _unitOfWork.Procedures.Add(procedure);
@@ -127,7 +128,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
+                int revision = current.Revision;
                 var procedure = _mapper.Map(command, current);
+                procedure.Revision = revision + 1;
                 _unitOfWork.Procedures.Update(procedure);
 
                 // This will call SaveChangesAsync
@@ -218,12 +221,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepApprovalEntity);
         }
 
-        public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command)
+        public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command, bool incRevision = true)
         {
             ProcedureStep current = await _unitOfWork.ProcedureSteps
                 .Query()
                 .Include(x => x.StepType)
                 .Include(x => x.ReferenceFiles)
+                .Include(x => x.Procedure)
                 .FirstOrDefaultAsync(i =>
                     i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
 
@@ -319,6 +323,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     {
                         m.ProcedureStepId = step.Id;
                     }
+                }
+
+                if (incRevision)
+                {
+                    step.Procedure.Revision += 1;
                 }
                 _unitOfWork.ProcedureSteps.Update(step);
 
