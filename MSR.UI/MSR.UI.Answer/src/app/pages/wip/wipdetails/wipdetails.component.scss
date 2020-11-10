@@ -86,6 +86,17 @@ ol{
   margin-left: 15px;
 }
 
+.workordertask-titles{
+  background-color: #1d232a !important;
+  color: #FFFFFF !important;
+  font-weight: bold;
+}
+
+.workordertask-steptext{
+  background-color: white !important;
+  color: black !important;
+}
+
 @media print {
     .workreport-control{
         display: none;
@@ -112,6 +123,35 @@ ol{
     }
     .report.ui-dialog .report-viewport{
         height:100% !important;
+    }
+
+    .ui-dialog-mask{
+      position: absolute;
+      
+    }
+
+    body .ui-dialog-mask{
+      background-color: unset !important;
+    }
+
+    #sidebar {
+      display: none !important;
+    }
+
+    app-wipdetails{
+      display: none !important;
+    }
+
+    body{
+      background: none;
+    }
+
+    footer.content-footer{
+      display: none !important;
+    }
+
+    .workordertask-container{
+      border: 1px solid #000000;
     }
 
 }
