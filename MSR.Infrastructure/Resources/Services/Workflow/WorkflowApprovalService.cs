@@ -814,7 +814,6 @@ namespace MSR.Infrastructure.Resources.Services
             else
             {
                 var procedureCommand = _mapper.Map<UpdateProcedure>(procedureApproval);
-                procedureCommand.Revision += 1;
                 await _procedureService.UpdateProcedureAsync(procedureCommand);
 
                 foreach (ProcedureStepApproval step in procedureApproval.ProcedureStepApprovals)

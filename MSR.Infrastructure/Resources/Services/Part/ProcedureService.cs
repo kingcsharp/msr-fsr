@@ -85,6 +85,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
                 var procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
+                procedure.Revision = 1;
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
                 var created = _unitOfWork.Procedures.Add(procedure);
@@ -127,7 +128,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
+                int revision = current.Revision;
                 var procedure = _mapper.Map(command, current);
+                procedure.Revision = revision + 1;
                 _unitOfWork.Procedures.Update(procedure);
 
                 // This will call SaveChangesAsync
@@ -224,6 +227,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Query()
                 .Include(x => x.StepType)
                 .Include(x => x.ReferenceFiles)
+                .Include(x => x.Procedure)
                 .FirstOrDefaultAsync(i =>
                     i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
 
@@ -320,6 +324,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         m.ProcedureStepId = step.Id;
                     }
                 }
+
+                step.Procedure.Revision += 1;
                 _unitOfWork.ProcedureSteps.Update(step);
 
                 // This will call SaveChangesAsync
