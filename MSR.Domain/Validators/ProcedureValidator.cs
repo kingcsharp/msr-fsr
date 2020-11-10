@@ -43,6 +43,12 @@ namespace MSR.Domain.Validators
 
     public class ProcedureValidator : IValidateImportData
     {
+        const int IMPORT_TABLE_COUNT = 2;
+        const string PROC_STEP_EXPORT = "PROC_STEP_EXPORT";
+        const string PROCEDURE_NAME_EXPORT = "PROCEDURE_NAME_EXPORT";
+        const int PROCEDURESTEPS_COLUMNS_COUNT = 13;
+        const int PROCEDURES_COLUMNS_COUNT = 4;
+
         private readonly IMapper _mapper;
 
         public ProcedureValidator(IMapper mapper)
@@ -66,7 +72,7 @@ namespace MSR.Domain.Validators
             var result = reader.AsDataSet();
             DataTableCollection tables = result.Tables;
 
-            if (tables.Count != 2)
+            if (tables.Count != IMPORT_TABLE_COUNT)
             {
                 errorStrings.Add($"Invalid table count {tables.Count} != 2");
                 errors.Add(new ImportError() { Errors = errorStrings });
@@ -77,33 +83,41 @@ namespace MSR.Domain.Validators
             DataTable procedureSteps = tables[0];
             DataTable procedures = tables[1];
 
-            if (!procedureSteps.TableName.ToUpper().Equals("PROC_STEP_EXPORT"))
+            if (!procedureSteps.TableName.ToUpper().Equals(PROC_STEP_EXPORT))
             {
-                errorStrings.Add($"Invalid table name: {procedureSteps.TableName} != PROC_STEP_EXPORT");
+                errorStrings.Add($"Invalid table name: {procedureSteps.TableName} != {PROC_STEP_EXPORT}");
                 errors.Add(new ImportError() { Errors = errorStrings });
                 importErrors = errors;
                 return null;
             }
 
-            if (!procedures.TableName.ToUpper().Equals("PROCEDURE_NAME_EXPORT"))
+            if (!procedures.TableName.ToUpper().Equals(PROCEDURE_NAME_EXPORT))
             {
-                errorStrings.Add($"Invalid table name: {procedureSteps.TableName} != PROCEDURE_NAME_EXPORT");
+                errorStrings.Add($"Invalid table name: {procedureSteps.TableName} != {PROCEDURE_NAME_EXPORT}");
                 errors.Add(new ImportError() { Errors = errorStrings });
                 importErrors = errors;
                 return null;
             }
 
-            if (procedureSteps.Columns.Count != 13)
+            if (procedureSteps.Columns.Count != PROCEDURESTEPS_COLUMNS_COUNT)
             {
-                errorStrings.Add($"Invalid PROC_STEP_EXPORT row count {procedureSteps.Columns.Count} != 13");
+                errorStrings.Add(
+                    $"Invalid {PROC_STEP_EXPORT} row count " +
+                    $"{procedureSteps.Columns.Count} != " +
+                    PROCEDURESTEPS_COLUMNS_COUNT.ToString()
+                );
                 errors.Add(new ImportError() { Errors = errorStrings });
                 importErrors = errors;
                 return null;
             }
 
-            if (procedures.Columns.Count != 4)
+            if (procedures.Columns.Count != PROCEDURES_COLUMNS_COUNT)
             {
-                errorStrings.Add($"Invalid PROC_STEP_EXPORT row count {procedures.Columns.Count} != 4");
+                errorStrings.Add(
+                    $"Invalid {PROC_STEP_EXPORT} row " +
+                    $"count {procedures.Columns.Count} != " +
+                    PROCEDURES_COLUMNS_COUNT.ToString()
+                );
                 errors.Add(new ImportError() { Errors = errorStrings });
                 importErrors = errors;
                 return null;
