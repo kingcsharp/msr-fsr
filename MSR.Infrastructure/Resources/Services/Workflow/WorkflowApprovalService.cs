@@ -831,7 +831,10 @@ namespace MSR.Infrastructure.Resources.Services
                     update.ReferenceDocumentIds = dataObj.documentIds;
                     update.Roles = _mapper.Map<List<Domain.Models.Role>>(dataObj.roleIds);
 
-                    await _procedureService.UpdateProcedureStepAsync(update);
+                    // Save the step changes WITHOUT revision increment.  This is
+                    // because the changes are supposed to be all rolled into
+                    // ONE change to the parent procedure.
+                    await _procedureService.UpdateProcedureStepAsync(update, false);
                 }
 
             }

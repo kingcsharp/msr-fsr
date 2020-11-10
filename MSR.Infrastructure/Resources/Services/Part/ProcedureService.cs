@@ -221,7 +221,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepApprovalEntity);
         }
 
-        public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command)
+        public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command, bool incRevision = true)
         {
             ProcedureStep current = await _unitOfWork.ProcedureSteps
                 .Query()
@@ -325,7 +325,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }
                 }
 
-                step.Procedure.Revision += 1;
+                if (incRevision)
+                {
+                    step.Procedure.Revision += 1;
+                }
                 _unitOfWork.ProcedureSteps.Update(step);
 
                 // This will call SaveChangesAsync
