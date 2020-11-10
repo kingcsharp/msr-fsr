@@ -87,7 +87,8 @@ export class Globals {
         }
         if (localStorage.user !== undefined) {
             this.user = JSON.parse(localStorage.user);
-            this.user.timezonePipe = this.getOffset();
+            this.user.timezoneSTDPipe = this.getOffset()['STD'];
+            this.user.timezoneDSTPipe = this.getOffset()['DST'];
         }
     }
 
@@ -176,7 +177,8 @@ export class Globals {
 
     updateUser(val) {
         this.user = val;
-        this.user.timezonePipe = this.getOffset();
+        this.user.timezoneSTDPipe = this.getOffset()['STD'];
+        this.user.timezoneDSTPipe = this.getOffset()['DST'];
         localStorage.setItem('user', JSON.stringify(val));
     }
 
@@ -186,10 +188,13 @@ export class Globals {
 
     getOffset() {
         if (this.user.timeZone === undefined) {
-            return '';
+            return {
+              DST: '',
+              STD: ''
+            };
         }
         const offset = this.user.timeZone.offset;
-        let intPart = Math.floor(offset).toString();
+        let intPart = Math.floor(offset);
         let fraction = Math.floor((offset - Math.floor(offset)) * 100) * 60 / 100;
         let fractionPart = '';
         if (fraction > 0) {
@@ -198,7 +203,12 @@ export class Globals {
                 fractionPart += '0';
             }
         }
-        return 'GMT' + intPart + fractionPart;
+        // return 'GMT' + intPart + fractionPart;
+
+        return {
+          DST: 'GMT' + intPart.toString() + fractionPart,
+          STD: 'GMT' + (intPart - this.user.timeZone.useDalightSavings).toString() + fractionPart
+        };
     }
 
     getLogin() {
