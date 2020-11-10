@@ -5,6 +5,7 @@ using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MSR.Domain.Validators
 {
@@ -41,10 +42,7 @@ namespace MSR.Domain.Validators
 
         public bool ValidateImportData(byte[] binData, out IEnumerable<ImportError> importErrors)
         {
-            throw new DomainException(
-                $"{nameof(LocationImportValidator)} cannot import binary data",
-                DomainError.BadRequest
-            );
+            return ValidateImportData(Encoding.UTF8.GetString(binData), out importErrors);
         }
     }
 }

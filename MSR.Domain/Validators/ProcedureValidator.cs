@@ -50,14 +50,6 @@ namespace MSR.Domain.Validators
             _mapper = mapper;
         }
 
-        public bool ValidateImportData(string data, out IEnumerable<ImportError> importErrors)
-        {
-            throw new DomainException(
-                $"{nameof(ProcedureValidator)} cannot import text data",
-                DomainError.BadRequest
-            );
-        }
-
         public bool ValidateImportData(byte[] binData, out IEnumerable<ImportError> importErrors)
         {
             ParsedProcedureImport import = ValidateAndReturnImportData(binData, out importErrors);

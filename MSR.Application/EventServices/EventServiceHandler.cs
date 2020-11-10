@@ -15,6 +15,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace MSR.Application.EventServices
 {
@@ -66,19 +67,25 @@ namespace MSR.Application.EventServices
                 switch (handledEvent.MenuItem)
                 {
                     case EnumMenuItem.CustomersDepartments:
-                        var importedCustomers = await _customerService.ImportCustomers(handledEvent.CsvData);
+                        var importedCustomers = await _customerService.ImportCustomers(
+                            Encoding.UTF8.GetString(handledEvent.data)
+                        );
                         count = importedCustomers.Count();
                         break;
                     case EnumMenuItem.Locations:
-                        var importedLocations = await _locationService.ImportLocations(handledEvent.CsvData);
+                        var importedLocations = await _locationService.ImportLocations(
+                            Encoding.UTF8.GetString(handledEvent.data)
+                        );
                         count = importedLocations.Count();
                         break;
                     case EnumMenuItem.Parts:
-                        var importedParts = await _partService.ImportLocations(handledEvent.CsvData);
+                        var importedParts = await _partService.ImportLocations(
+                            Encoding.UTF8.GetString(handledEvent.data)
+                        );
                         count = importedParts.Count();
                         break;
                     case EnumMenuItem.RunnableProcedures:
-                        var imported = await _procedureService.ImportProcedures(handledEvent.BinData);
+                        var imported = await _procedureService.ImportProcedures(handledEvent.data);
                         count = imported.Count();
                         break;
                     default:

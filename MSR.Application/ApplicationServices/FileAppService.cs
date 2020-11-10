@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -99,19 +100,11 @@ namespace MSR.Application.ApplicationServices
                 {
                     csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
                 }
-
-                if (!validator.ValidateImportData(csvData, out var importErrors))
-                {
-                    return new CommandResponse<IEnumerable<ImportError>>(importErrors);
-                }
+                binData = csvData.ToCharArray().Select(x => (byte)x).ToArray();
             }
             else if (base64File.ContentType.ToUpper().Equals("APPLICATION/VND.MS-EXCEL"))
             {
                 binData = base64File.FileContents;
-                if (!validator.ValidateImportData(binData, out var importErrors))
-                {
-                    return new CommandResponse<IEnumerable<ImportError>>(importErrors);
-                }
             }
             else
             {
@@ -121,10 +114,14 @@ namespace MSR.Application.ApplicationServices
                 );
             }
 
+            if (!validator.ValidateImportData(binData, out var importErrors))
+            {
+                return new CommandResponse<IEnumerable<ImportError>>(importErrors);
+            }
+
             var importEvent = new ImportEvent()
             {
-                CsvData = csvData,
-                BinData = binData,
+                data = binData,
                 MenuItem = command.MenuItem
             };
 
