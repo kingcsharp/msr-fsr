@@ -477,14 +477,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     newProc.DurationType = "hours";
                 }
 
-                Domain.Models.Procedure procObj = await CreateProcedureAsync(newProc);
+                Domain.Models.Procedure createdProcedure =
+                    await CreateProcedureAsync(newProc);
 
                 if (import.procedureSteps.ContainsKey(procid))
                 {
                     List<CreateProcedureStep> steps = import.procedureSteps[procid];
                     foreach (var step in steps)
                     {
-                        step.procedureId = procObj.Id;
+                        step.procedureId = createdProcedure.Id;
                         ProcedureStepModel newStep =
                             await CreateProcedureStepAsync(step);
                         // TODO: there's no place in the procedure model to store
@@ -492,7 +493,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }
                 }
 
-                createdProcs.Add(procObj);
+                createdProcs.Add(createdProcedure);
             }
 
             return createdProcs;
