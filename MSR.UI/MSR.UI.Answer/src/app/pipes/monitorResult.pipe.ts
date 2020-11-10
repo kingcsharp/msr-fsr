@@ -25,9 +25,9 @@ export class MonitorResultPipe implements PipeTransform {
             case 3:
                 return workOrderTaskMonitor.numVal === 1 ? 'Yes' : 'No';
             case 4:
-                //value is textVal
+                // value is textVal
             case 6:
-                //value is saved in multival but in workorderGet we are setting the text value in the text field out of what multival has.
+                // value is saved in multival but in workorderGet we are setting the text value in the text field out of what multival has.
                 return workOrderTaskMonitor.textVal;
             case 5:
                 return workOrderTaskMonitor.numVal === 1 ? 'Pass' : 'Fail';
