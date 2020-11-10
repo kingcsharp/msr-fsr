@@ -38,7 +38,7 @@
             <div class="col-6 border font-weight-bold">Product Name (#):</div><div class="col-6 border">{{  WorkOrder.product?.part?.name}}</div>
             <div class="col-6 border font-weight-bold">Procedure Name (#):</div><div class="col-6 border">{{ WorkOrder.product?.procedure?.name}}</div>
             <div class="col-6 border font-weight-bold">Current Owner's Part Name (#):</div><div class="col-6 border">{{ WorkOrder.product?.name}}</div>
-            <div class="col-6 border font-weight-bold">Fill Date:</div><div class="col-6 border">{{ WorkOrder.acutalEndDate}}</div>
+            <div class="col-6 border font-weight-bold">Fill Date:</div><div class="col-6 border">{{ WorkOrder.actualEndDate}}</div>
         </div>
     </div>
     <div class="col-12" *ngIf="selectedReportType === 'TechnicalSummary'">
