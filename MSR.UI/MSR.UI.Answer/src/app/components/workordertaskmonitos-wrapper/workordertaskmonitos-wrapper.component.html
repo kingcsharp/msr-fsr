@@ -174,10 +174,10 @@
             </label>
             <div class="col-9 px-0">
               <p-dropdown name="selectresult{{i}}" [options]="monitorListItemOptions" placeholder="Select a Response"
-                [showClear]="true" [(ngModel)]="workOrderTaskMonitor.numVal">
+                [showClear]="true" [(ngModel)]="workOrderTaskMonitor.multiVal">
               </p-dropdown>
               <ul class="parsley-errors-list filled"
-                *ngIf="(workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null) && workOrderTaskMonitor.holdIfFails">
+                *ngIf="(workOrderTaskMonitor.multiVal === undefined || workOrderTaskMonitor.multiVal === null) && workOrderTaskMonitor.holdIfFails">
                 <li class="parsley-custom-error-message">You must select a Result</li>
               </ul>
             </div>
