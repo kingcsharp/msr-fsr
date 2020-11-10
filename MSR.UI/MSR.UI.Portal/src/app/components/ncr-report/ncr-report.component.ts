@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FileModel, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
+import { FileModel, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel, EnumMenuItem } from '../../services/api.client.generated';
 import { Globals } from '../../models/lib/globals';
 import { EnumProcedureType } from '../../models/enums/EnumProcedureType';
+import { GridFileViewerComponent } from '../../components/grid-viewer/grid-file-viewer.component'
 
 @Component({
   selector: 'ncr-report',
@@ -16,9 +17,11 @@ export class NcrReportComponent implements OnInit {
   technicianFullName: string;
   date: Date;
   associatedDigitalPictures: Array<FileModel> = new Array<FileModel>();
+  associatedDocuments: Array<FileModel> = new Array<FileModel>();
   showImagePreview: boolean = false;
   imagePreview: FileModel = new FileModel();
-
+  menuItems = EnumMenuItem;
+  griFileViewerComponent: GridFileViewerComponent;
   constructor(private globals: Globals) { }
 
   ngOnInit(): void {
@@ -29,7 +32,6 @@ export class NcrReportComponent implements OnInit {
         s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>();
       }
     });
-
     this.generateMonitorSummaries();
     this.workOrderPart = this.WorkOrder.workOrderParts[0];
   }
@@ -50,14 +52,21 @@ export class NcrReportComponent implements OnInit {
             comment: workOrderTaskMonitor.comment
           });
         });
+
         this.taskSummaries.push(taskSummary);
-        this.associatedDigitalPictures = this.associatedDigitalPictures.concat(workOrderTask.referenceFiles);
+        workOrderTask.referenceFiles.map(referenceFile => {
+          if (this.griFileViewerComponent.getViewerType(referenceFile.contentType) === 'img') {
+            this.associatedDigitalPictures.push(referenceFile);
+          } else {
+            this.associatedDocuments.push(referenceFile);
+          }
+        });
       }
     });
   }
 
   showImagePreviewDialog(fileModel: FileModel) {
-      this.imagePreview = fileModel;
-      this.showImagePreview = !this.showImagePreview;
+    this.imagePreview = fileModel;
+    this.showImagePreview = !this.showImagePreview;
   }
 }
