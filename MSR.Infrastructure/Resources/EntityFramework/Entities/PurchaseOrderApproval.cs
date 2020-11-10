@@ -16,8 +16,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(50)]
         public string ReferencePO { get; set; }
 
-        [Required]
-        [StringLength(100)]
         public string ReferenceName { get; set; }
 
         public DateTime OpenDate { get; set; }
