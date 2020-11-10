@@ -38,7 +38,7 @@
             <div class="col-6 border font-weight-bold">Product Name (#):</div><div class="col-6 border">{{  WorkOrder.product?.part?.name}}</div>
             <div class="col-6 border font-weight-bold">Procedure Name (#):</div><div class="col-6 border">{{ WorkOrder.product?.procedure?.name}}</div>
             <div class="col-6 border font-weight-bold">Current Owner's Part Name (#):</div><div class="col-6 border">{{ WorkOrder.product?.name}}</div>
-            <div class="col-6 border font-weight-bold">Fill Date:</div><div class="col-6 border">{{ WorkOrder.acutalEndDate}}</div>
+            <div class="col-6 border font-weight-bold">Fill Date:</div><div class="col-6 border">{{ WorkOrder.actualEndDate | userTimezone}}</div>
         </div>
     </div>
     <div class="col-12" *ngIf="selectedReportType === 'TechnicalSummary'">
@@ -60,13 +60,13 @@
                         {{workOrderTask.id}}
                     </div>
                     <div class="col-11 border p-2">
-                        <div class="col-12 mb-2">{{workOrderTask.procedureStep?.stepText}}</div>
+                        <div class="col-12 mb-2" [innerHTML]="workOrderTask.procedureStep?.stepText"></div>
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-8 border font-weight-bold">Desciption</div><div class="col-4 border font-weight-bold">Result</div>
                                 <div class="col-12" *ngIf="workOrderTask.workOrderTaskMonitors?.length > 0">
                                     <div class="row" *ngFor="let workOrderTaskMonitor of workOrderTask.workOrderTaskMonitors">
-                                        <div class="col-8 border">{{workOrderTaskMonitor.procedureStepMonitor?.description }}</div>
+                                        <div class="col-8 border" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description"></div>
                                         <div class="col-4 border">{{workOrderTaskMonitor.textVal}}</div>
                                     </div>
                                 </div>
