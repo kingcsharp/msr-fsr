@@ -133,18 +133,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
             _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
 
-
-            var numVals = new List<string>();
-            foreach (var workOrderEntity in workOrderEntities)
-            {
-                numVals.AddRange(from woTaks in workOrderEntity.WorkOrderTasks
-                                 from woTaskMonitor in woTaks.WorkOrderTaskMonitors.Where(x => x.ProcedureStepMonitor.MonitorTypeId == 6)
-                                 where !numVals.Any(x => x == woTaskMonitor.MultiVal)
-                                 select woTaskMonitor.MultiVal);
-            }
-
-            var monitorListItems = await _unitOfWork.MonitorListItems.Query().Where(x => numVals.Contains(x.Id.ToString())).ToListAsync();
-
             foreach (var workOrderEntity in workOrderEntities)
             {
 
@@ -163,11 +151,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     foreach (var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
                     {
                         workOrderTaskMonitorModel.MonitorNumber = i;
-                        //monitorListItems
-                        if (workOrderTaskMonitorModel.MultiVal != null && workOrderTaskMonitorModel.ProcedureStepMonitor.MonitorTypeId == 6)
-                        {
-                            workOrderTaskMonitorModel.TextVal = monitorListItems.Where(x => x.Id.ToString() == workOrderTaskMonitorModel.MultiVal).FirstOrDefault()?.Name;
-                        }
                         workOrderTaskMonitorModel.WorkOrderTask = null; // avoid loops
                         workOrderTaskMonitorModels.Add(workOrderTaskMonitorModel);
                         i += 1;
@@ -666,7 +649,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.BadRequest);
             }
 
-            var current = await _unitOfWork.WorkOrderTaskMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var current = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(x=>x.ProcedureStepMonitor).FirstOrDefaultAsync(i => i.Id == command.Id);
 
             if (current is null)
             {
@@ -674,6 +657,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             WorkOrderTaskMonitorModel ret;
+
+            if (current.ProcedureStepMonitor.MonitorTypeId == 6)
+            {
+                var multival = int.Parse(command.MultiVal);
+                var monitorListItem = await _unitOfWork.MonitorListItems.Query().Where(x => x.Id == multival).FirstOrDefaultAsync();
+                command.TextVal = monitorListItem.Name;
+            }
+
             var workordertaskmonitor = _mapper.Map(command, current);
             _unitOfWork.WorkOrderTaskMonitors.Update(workordertaskmonitor);
 
