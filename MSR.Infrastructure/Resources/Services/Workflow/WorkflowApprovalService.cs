@@ -557,13 +557,11 @@ namespace MSR.Infrastructure.Resources.Services
             if (productApproval.ProductId == null)
             {
                 var productCommand = _mapper.Map<CreateProduct>(productApproval);
-                productCommand.Revision = 1;
                 await _productService.CreateProductAsync(productCommand);
             }
             else
             {
                 var productCommand = _mapper.Map<UpdateProduct>(productApproval);
-                productCommand.Revision += 1;
                 await _productService.UpdateProductAsync(productCommand);
             }
 
