@@ -260,8 +260,12 @@ export class WipdetailsComponent implements OnInit {
 
   }
 
-  canUserAccessWorkOrderTask(workOrderTask: WorkOrderTaskModel) {
-    return workOrderTask.procedureStep?.roles?.map(s => s.name).some(s => this.globals.getCurrentUser().roles?.map(m => m.name).includes(s));
+  canUserAccessWorkOrderTask(workOrderTask: WorkOrderTaskModel): boolean {
+    if (workOrderTask.procedureStep?.roles.length === 0) {
+      return false;
+    }
+    const ret = workOrderTask.procedureStep?.roles?.map(s => s.name).some(s => this.globals.getCurrentUser().roles?.map(m => m.name).includes(s));
+    return ret;
   }
 
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
@@ -286,9 +290,11 @@ export class WipdetailsComponent implements OnInit {
   }
 
   generateRolesRequiredMessage(roles: Array<string>) {
+    if (roles.length === 0) {
+      return;
+    }
     this.rolesRequiredMessage = '';
     roles.map((role, index) => {
-
       if (index === 0) {
         this.rolesRequiredMessage += role;
       } else if (index === roles.length - 1) {
@@ -296,9 +302,7 @@ export class WipdetailsComponent implements OnInit {
       } else {
         this.rolesRequiredMessage += ', ' + role;
       }
-
     });
-
   }
 
   changeSerialNumber(index, serialNumber, partId) {
