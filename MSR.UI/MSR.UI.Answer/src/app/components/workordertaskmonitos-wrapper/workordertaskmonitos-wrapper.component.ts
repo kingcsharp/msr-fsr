@@ -57,13 +57,13 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     ];
 
     this.workOrderMonitorYesOrNoOptions = [
-      { label: 'Yes', value: '1' },
-      { label: 'No', value: '0' }
+      { label: 'Yes', value: 1 },
+      { label: 'No', value: 0 }
     ];
 
     this.workOrderMonitorPassOrFailOptions = [
-      { label: 'Pass', value: '1' },
-      { label: 'Fail', value: '0' }
+      { label: 'Pass', value: 1 },
+      { label: 'Fail', value: 0 }
     ];
 
     this.workOrderMonitorsToView.map(monitor => {
