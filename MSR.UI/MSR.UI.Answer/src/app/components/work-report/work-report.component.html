@@ -14,7 +14,7 @@
     <div class="col-12" *ngIf="selectedReportType === 'PurchaseSummary'">
         <div class="row mb-4" *ngIf="selectedShowPurchaseItemOption === true">
             <div class="col-2 border font-weight-bold">PO #</div>
-            <div class="col-2 border font-weight-bold">Purchase Item #</div>
+            <div class="col-2 border font-weight-bold">Work Order Id</div>
             <div class="col-2 border font-weight-bold">Single PO# (Customer Purchase #)</div>
             <div class="col-2 border font-weight-bold">Blanket PO #</div>
             <div class="col-1 border font-weight-bold">Line Item</div>
@@ -22,7 +22,7 @@
             <div class="col-1 border font-weight-bold">Serial #</div>
             <div class="col-1 border font-weight-bold">Qty #</div>
             <div class="col-2 border">{{WorkOrder.purchase?.purchaseOrder?.id}}</div>
-            <div class="col-2 border">{{WorkOrder.purchase?.id}}</div>
+            <div class="col-2 border">{{WorkOrder.id}}</div>
             <div class="col-2 border">{{WorkOrder.purchase?.purchaseOrder?.referencePO}}</div>
             <div class="col-2 border"></div>
             <div class="col-1 border"></div>
