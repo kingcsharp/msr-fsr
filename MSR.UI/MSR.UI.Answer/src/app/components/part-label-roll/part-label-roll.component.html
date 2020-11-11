@@ -6,9 +6,9 @@
           <div class="img-responsive" style="margin-top: 16px;width:185px;">
             <img src="assets/img/msr-label-logo.png" alt="Logo">
           </div>
-          <p class="date">Date:<strong>{{WorkOrder.actualEndDate |  userTimezone}}</strong></p>
+          <p class="date">Date: <strong>{{WorkOrder.actualEndDate |  userTimezone}}</strong></p>
           <p>Site: <strong>MSR-FSR {{WorkOrder.location?.name}}</strong></p>
-          <p>WO: <strong>WO:
+          <p>WO: <strong>
               {{WorkOrder.product?.customer?.name}}-{{ WorkOrder.purchase?.customerPurchaseNumber }}</strong></p>
           <div class="coded" style="max-width:175px">
             PO #: <strong>{{WorkOrder.purchase?.purchaseOrder?.referencePO}}</strong><br />
