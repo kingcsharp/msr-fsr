@@ -3,8 +3,8 @@
         <div class="row mb-4">
             <div class="col-6 border p-2">Report Type:</div>
             <div class="col-6 border p-2"><p-dropdown [options]="reportTypeOptions" [(ngModel)]="selectedReportType" placeholder="Select Report Type"></p-dropdown></div>
-            <div class="col-6 border p-2">Purchase Item:</div>
-            <div class="col-6 border p-2">{{ WorkOrder.purchase?.id}}</div>
+            <div class="col-6 border p-2">Work Order Id:</div>
+            <div class="col-6 border p-2">{{ WorkOrder.id}}</div>
             <div class="col-6 border p-2" *ngIf="selectedReportType === 'TechnicalSummary'">Show Procedure Steps?:</div>
             <div class="col-6 border p-2" *ngIf="selectedReportType === 'TechnicalSummary'"><p-dropdown [options]="yesOrNoOptions" [(ngModel)]="selectedShowProcedureStepOption"></p-dropdown></div>
             <div class="col-6 border p-2" *ngIf="selectedReportType === 'PurchaseSummary'">Show Shipping Procedure Purchase Items?:</div>
