@@ -991,17 +991,18 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 11  Waiting to Start
             int[] completed = { 3, 6, 8 };
             string status;
-            if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.InProgress))
+            if (tasks.All(x => completed.Contains(x.StatusId)))
+            {
+                status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
+            }
+            else if (tasks.Any(x => (x.StatusId == (int)EnumStatusSteps.InProgress ||
+                                     x.StatusId == (int)EnumStatusSteps.Complete) ))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.InProgress);
             }
             else if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.Cancelled))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.Cancelled);
-            }
-            else if (tasks.All(x => completed.Contains(x.StatusId)))
-            {
-                status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
             }
             else
             {
