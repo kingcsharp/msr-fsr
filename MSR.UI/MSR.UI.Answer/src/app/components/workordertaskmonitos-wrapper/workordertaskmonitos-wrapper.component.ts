@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel } from '../../services/api.client.generated';
+import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { forkJoin } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -106,11 +107,8 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   }
 
   updateMonitors(closeTask: boolean = false) {
-
-    let updateMonitorsRequests = new Array<any>();
-
-    this.workOrderMonitorsToView.forEach(monitor => {
-
+    let toatlRequests = this.workOrderMonitorsToView.length;
+    this.workOrderMonitorsToView.map(monitor => {
       let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
         comment: monitor.comment === undefined ? '' : monitor.comment,
         multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
@@ -120,17 +118,20 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
         workOrderTaskMonitorId: monitor.id
       } as IUpdateWorkOrderTaskMonitorRequest);
 
-      updateMonitorsRequests.push(this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest));
-
+      this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest)
+        .pipe(take(1)).subscribe((result: AuditActionResultOfWorkOrderTaskMonitorModel) => {
+          if (closeTask) {
+            if (toatlRequests === 0) {
+              this.closeCurrentTaskInProgress.emit();
+            } else {
+              toatlRequests--;
+            }
+          }
+          monitor.lastUpdated = result.object.lastUpdated;
+          monitor.lastUpdatedBy = result.object.lastUpdatedBy;
+          monitor.textVal = result.object.textVal;
+        });
     });
-
-    forkJoin(updateMonitorsRequests).subscribe(() => {
-      if (closeTask) {
-        this.closeCurrentTaskInProgress.emit();
-      }
-    });
-
-
   }
 
   areMonitorsInValidStateToCloseTask(): boolean {
@@ -145,20 +146,14 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   }
 
   saveMonitors() {
-
     if (this.areMonitorsInValidStateToCloseTask()) {
-
       this.updateMonitors(false);
-
     }
   }
 
   saveMonitorsAndCloseTask() {
-
     if (this.areMonitorsInValidStateToCloseTask()) {
-
       this.updateMonitors(true);
-
     }
   }
 
