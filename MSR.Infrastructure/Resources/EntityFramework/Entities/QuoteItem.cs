@@ -25,8 +25,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [MaxLength(50)]
         public string CustomerPartNo { get; set; }
 
+        [Column(TypeName = "money")]
         public decimal? Price { get; set; }
 
+        [Column(TypeName = "money")]
         public decimal? Extension { get; set; }
     }
 }

@@ -21,7 +21,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string ProductName { get; set; }
         public string ProcedureName { get; set; }
         public string Status { get; set; }
+        [Column(TypeName = "money")]
         public decimal? Price { get; set; }
+        [Column(TypeName = "money")]
         public decimal? InvoiceAmount { get; set; }
         public DateTime? InvoiceDate { get; set; }
         public string InvoiceName { get; set; }

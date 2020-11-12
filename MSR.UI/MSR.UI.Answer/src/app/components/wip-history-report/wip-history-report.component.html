@@ -2,8 +2,9 @@
     <div class="col-3 ">MSR-FSR</div>
     <div class="col-9">
         <div class="row">
-            <div class="col-12">{{WorkOrder.product?.procedure?.name}}</div>
-            <div class="col-12">Customer Part # {{workOrderPart?.part?.partNumber}}, (Serial #: {{workOrderPart?.serialNumber}}),
+          <div class="col-12">Work Order Id: {{WorkOrder.id}}</div>  
+          <div class="col-12">{{WorkOrder.product?.procedure?.name}}</div>
+          <div class="col-12">Customer Part # {{workOrderPart?.part?.partNumber}}, (Serial #: {{workOrderPart?.serialNumber}}),
                 {{workOrderPart?.part?.name}}</div>
         </div>
     </div>

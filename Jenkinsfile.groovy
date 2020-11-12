@@ -325,5 +325,6 @@ void deploy(composeFile,name,target, app) {
         sh "ecs-cli configure profile --access-key AKIAWGEEZQATRVZEHMGB --secret-key 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 --profile-name answer-profile"
 
         sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
+        sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 2"
     }
 }
