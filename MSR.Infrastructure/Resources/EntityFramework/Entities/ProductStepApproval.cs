@@ -13,11 +13,15 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? ProcedureStepId { get; set; }
         public int? LaborMinutes { get; set; }
         public int? EquipmentMinutes { get; set; }
+        [Column(TypeName = "money")]
         public decimal? ReplacementCost { get; set; }
         public float? Utilization { get; set; }
         public int? UsefulLife { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal? EquipmentExpensePerMinute { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal? RMAnnualRate { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal? RMPerMinuteRate { get; set; }
         public int? ProductStepId { get; set; }
 

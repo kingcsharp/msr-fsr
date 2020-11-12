@@ -32,10 +32,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? UsefulLife { get; set; }
 
+        [Column(TypeName = "decimal(18,4)")]
         public decimal? EquipmentExpensePerMinute { get; set; }
 
+        [Column(TypeName = "decimal(18,4)")]
         public decimal? RMAnnualRate { get; set; }
 
+        [Column(TypeName = "decimal(18,4)")]
         public decimal? RMPerMinuteRate { get; set; }
 
         [MaxLength(100)]
