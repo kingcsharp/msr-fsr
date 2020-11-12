@@ -198,10 +198,8 @@ export class ReportCubeService {
     }
 
     private isValidRowForChart(row, prop1, prop2) {
-        const isValid = row[prop2] !== undefined && row[prop2] !== null && row[prop2].length > 0 && row[prop1] !== undefined && row[prop1] !== null && row[prop1].length > 0;
-        if (isValid) {
-            let a = 1;
-        }
+        const isValid = row[prop2] !== undefined && row[prop2] !== null && row[prop2].length > 0
+            && row[prop1] !== undefined && row[prop1] !== null && row[prop1].length > 0;
         return isValid;
     }
 
@@ -359,18 +357,38 @@ export class ReportCubeService {
 
                 return this.getResultDataAndChart(chartInfo2);
             case 'CountofKitsbyPart/Kit':
-                const gridData5 = data.map(elem => {
+                let countOfKitsGridDataDic = {};
+                data.forEach(elem => {
                     elem = this.removeObjectsPropertyPrefix(elem);
-                    elem.elemKey = elem['duedate'] + this.splitChars + this.setName(elem, 'kitname', 'msrfsrfacility', '-');
+                    const keyCombinedName = this.setName(elem, 'kitname', 'msrfsrfacility', '-');
+                    const key = moment(elem['duedate']).format("YYYY-MM") + this.splitChars + keyCombinedName;
+                    elem.elemKey = elem['duedate'] + this.splitChars + keyCombinedName;
                     elem.isValidForChart = this.isValidRowForChart(elem, 'kitname', 'msrfsrfacility');
-                    elem.yearMonth = moment(elem['CubeFinancial.duedate']);
+                    elem.yearMonth = moment(elem['duedate']);
                     elem.site = elem['msrfsrfacility'];
                     elem.count = 1;
-                    return elem;
+                    if (elem.isValidForChart) {
+
+                        if (countOfKitsGridDataDic[key] === undefined) {
+                            if (elem.kitname == 'ProductWithAllMonitors') {
+                                var a = 1;
+                                console.log(elem.site + ':' + elem['duedate'] + '-' + elem.yearMonth);
+                            }
+                            countOfKitsGridDataDic[key] = elem;
+                        } else {
+                            countOfKitsGridDataDic[key].count++;
+                        }
+                    }
                 });
 
+                const countOfKitsGridData = [];
+
+                Object.keys(countOfKitsGridDataDic).forEach(chartDataKey => {
+                    countOfKitsGridData.push(countOfKitsGridDataDic[chartDataKey]);
+                })
+
                 const chartInfo3 = new ChartInfo({
-                    gridData: gridData5,
+                    gridData: countOfKitsGridData,
                     stackBy: 'count',
                     chartTitle: 'Count of Kits',
                     xAxisTitle: 'Month (Previous 12 Months Rolling)',
@@ -379,7 +397,6 @@ export class ReportCubeService {
                 });
 
                 return this.getResultDataAndChart(chartInfo3);
-
             default:
                 if (data.length > 0) {
                     const resultDataArr = data.map((elem) => this.removeObjectsPropertyPrefix(elem));
