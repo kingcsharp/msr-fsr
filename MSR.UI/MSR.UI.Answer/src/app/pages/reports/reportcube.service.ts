@@ -314,8 +314,7 @@ export class ReportCubeService {
                 return gridDataMonitorsbyWorkOrder;
                 break;
             case 'WorkOrdersNotInvoicedbyWorkOrder':
-                const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null);
-
+                const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.shipdate'] !== undefined && x['CubeFinancial.shipdate'] !== null);
                 return workOrdersNotInvoicedbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
             case 'RevenuebyCustomerbyTimePeriod':
                 const resultDataRevenuebyCustomerbyTimePeriod = data.map(elem => {
