@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
-import { responseHandler } from '../../utils/responseHandler';
-import { forkJoin } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
+import { EnumFailAction } from '../../models/enums/EnumFailAction';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -69,7 +69,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
     this.workOrderMonitorsToView.map(monitor => {
 
-      monitor.holdIfFails = monitor.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED' ? true : false;
+      monitor.holdIfFails = monitor.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared ? true : false;
 
     });
 
@@ -89,19 +89,29 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
     let dropDownsAreValid = true;
 
-    this.workOrderMonitorsToView.filter(s => (s.procedureStepMonitor.monitorType === 'Pass or Fail'
-      || s.procedureStepMonitor.monitorType === 'Yes or No'
-      || s.procedureStepMonitor.monitorType === 'Select') && s.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED').forEach(m => {
+    this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.PassOrFail
+    || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo).forEach(m => {
 
-        if (m.procedureStepMonitor.targetValue !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
-          || m.procedureStepMonitor.monitorType === 'Yes or No')) {
-          dropDownsAreValid = false;
-        } else if (m.procedureStepMonitor.monitorType === 'Select' && (m.multiVal === undefined || m.multiVal === null)) {
+      if (m.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared) {
+
+        dropDownsAreValid = (m.numVal === undefined || m.numVal === null);
+
+      } else if (m.procedureStepMonitor.faultHandling === EnumFailAction.RecordAndContinue) {
+
+        if (m.procedureStepMonitor.targetValue !== m.numVal.toString()) {
           dropDownsAreValid = false;
         }
 
+      }
 
-      });
+
+    });
+
+    this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Select).forEach(m => {
+
+          dropDownsAreValid = (m.multiVal !== undefined && m.multiVal !== null);
+
+    });
 
     return dropDownsAreValid;
   }
@@ -121,7 +131,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest)
         .pipe(take(1)).subscribe((result: AuditActionResultOfWorkOrderTaskMonitorModel) => {
           if (closeTask) {
-            if (toatlRequests === 0) {
+            if (toatlRequests === 1) {
               this.closeCurrentTaskInProgress.emit();
             } else {
               toatlRequests--;
