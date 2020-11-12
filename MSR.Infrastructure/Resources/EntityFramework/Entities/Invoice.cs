@@ -44,6 +44,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Column(TypeName = "money")]
         public decimal Subtotal { get; set; }
 
+        [Column(TypeName = "decimal(18,4)")]
         public decimal? TaxPercentage { get; set; }
 
         [Required]
