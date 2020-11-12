@@ -1,4 +1,4 @@
-export enum EnumMonitorType{
+export enum EnumMonitorType {
     Equipment = 1,
     Number = 2,
     YesOrNo = 3,

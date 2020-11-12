@@ -107,7 +107,7 @@
           </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number' && workOrderTaskMonitor.procedureStepMonitor.inputType !== 'Sensor'">
             <label for="result" class="col-form-label text-left col-3">
-              Result: 
+              Result:
             </label>
             <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.holdIfFails">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal" class="form-control input-transparent"
@@ -136,7 +136,6 @@
             </div>
             <div class="col-9 px-0" *ngIf="!workOrderTaskMonitor.holdIfFails">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal" class="form-control input-transparent"
-                *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'EQUAL'"
                 data-validate="parsley" 
                 data-parsley-trigger="change" 
                 data-parsley-required="true" 
@@ -193,7 +192,7 @@
           <div class="form-group col-12 d-flex flex-row"
             *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Select'">
             <label for="selectresult" class="col-form-label text-left col-3">
-              Result: ({{workOrderTaskMonitor.multiVal | json}})
+              Result:
             </label>
             <div class="col-9 px-0">
               <p-dropdown name="selectresult{{i}}" [options]="monitorListItemOptions" placeholder="Select a Response"
