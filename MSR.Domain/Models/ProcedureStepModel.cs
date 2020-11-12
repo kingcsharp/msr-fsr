@@ -120,5 +120,10 @@ namespace MSR.Domain.Models
         /// Copy of the status field of the ProductApproval row
         /// </summary>
         public string ApprovalStatus;
+
+        /// <summary>
+        /// TRUE if ProcedureStep is used by a WorkOrderTask
+        /// </summary>
+        public bool IsUsed { get; set; }
     }
 }

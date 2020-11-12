@@ -178,21 +178,25 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .Where(x => x.ProcedureId == command.procedureId)
                     .ToListAsync();
             }
-            var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
+            var procedureStepModels = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
 
-            var procedureStepIds = result.Select(m => m.Id).ToList();
+            var procedureStepIds = procedureStepModels.Select(m => m.Id).ToList();
             var documentEntityMaps = await _unitOfWork.DocumentEntityMap.Query().Where(s =>
                 procedureStepIds.Contains(s.EntityId) &&
                 s.EntityTableName == nameof(EntityFramework.Entities.ProcedureStep)).ToListAsync();
 
-            result.ForEach(procedureStep =>
+            var workOrderTasksInUse = _unitOfWork.WorkOrderTasks.Query()
+                .Where(s => procedureStepIds.Contains(s.ProcedureStepId));
+
+            procedureStepModels.ForEach(procedureStep =>
             {
                 procedureStep.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStep.Id).ToList();
                 procedureStep.ReferenceDocumentIds = documentEntityMaps.Where(s => s.EntityId == procedureStep.Id).Select(m => m.DocumentId).ToList();
+                procedureStep.IsUsed = workOrderTasksInUse.Any(s => s.ProcedureStepId == procedureStep.Id);
             });
 
 
-            return result;
+            return procedureStepModels;
         }
 
         public async Task<Domain.Models.ProcedureStepModel> CreateProcedureStepAsync(CreateProcedureStep command)
