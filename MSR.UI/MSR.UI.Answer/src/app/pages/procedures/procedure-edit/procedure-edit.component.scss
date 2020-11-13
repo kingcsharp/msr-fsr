@@ -65,3 +65,10 @@
 .procedure-button-container{
   margin-left:25px;
 }
+
+.disabled-button{
+  box-shadow: none !important;
+  background-color: #db4912;
+  border-color: #db4912;
+  opacity: 0.65;
+}

@@ -8,8 +8,7 @@
           </div>
           <p class="date">Date: <strong>{{WorkOrder.actualEndDate |  userTimezone}}</strong></p>
           <p>Site: <strong>MSR-FSR {{WorkOrder.location?.name}}</strong></p>
-          <p>WO: <strong>
-              {{WorkOrder.product?.customer?.name}}-{{ WorkOrder.purchase?.customerPurchaseNumber }}</strong></p>
+          <p>WO: <strong> {{WorkOrder.id}}</strong></p>
           <div class="coded" style="max-width:175px">
             PO #: <strong>{{WorkOrder.purchase?.purchaseOrder?.referencePO}}</strong><br />
             <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
