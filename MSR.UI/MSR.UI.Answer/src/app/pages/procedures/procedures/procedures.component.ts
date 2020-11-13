@@ -6,6 +6,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege} from '../../../models/enums/privileges';
 import { Procedure, ProcedureService, EnumApprovalTables, EnumMenuItem} from '../../../services/api.client.generated';
+import { AllowedActions } from '../../../models/lib/AllowedActions';
 
 @Component({
   selector: 'app-procedures',
@@ -18,21 +19,25 @@ export class ProceduresComponent implements OnInit {
   data: any;
   privileges = EnumPrivilege;
   approvalTables = EnumApprovalTables;
+  gridVersion: string;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
-  canAdd: boolean = false;
-  canEdit: boolean = false;
-  canDelete: boolean = false;
   menuItems = EnumMenuItem;
   statusOptions: any[];
   showConfirmDeleteDialog: boolean = false;
   procedureToDelete: Procedure;
+  procedurePrivileges: AllowedActions;
 
-  constructor(private procedureService: ProcedureService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(
+    private procedureService: ProcedureService,
+    public commonGrid: CommonGrid,
+    private elementReference: ElementRef,
+    public globals: Globals
+  ) { }
 
   ngOnInit(): void {
-
+    this.gridVersion = '1.0.0';
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
@@ -48,12 +53,8 @@ export class ProceduresComponent implements OnInit {
       new ColumnsSaved({ id: 'lastUpdated.fullName', label: 'Last Updated By', visible: true}),
       new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Last Updated On', visible: true}),
       new ColumnsSaved({ id: 'Actions', label: 'Actions', visible: true})
-      ];
-
-    this.canAdd = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDelete = this.hasPrivilege(this.privileges.CanDelete);
-    this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
-
+    ];
+    this.procedurePrivileges = this.globals.getEnumPrivileges(this.menuItems.RunnableProcedures);
     this.getProcedures();
   }
 
@@ -82,23 +83,22 @@ export class ProceduresComponent implements OnInit {
   }
 
   delete() {
-
     this.globals.showLoader(true);
     this.procedureService.procedureDelete(this.procedureToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
       this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     }, () => {
       this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     }));
-
   }
 
   copyProcedure(procedure) {
-
     this.data.length = 0;
     this.loading = true;
     this.getProcedures();
+  }
 
-
+  uploadProceduresCSV($event) {
+    // TODO: Procedures csv file upload
   }
 
 }
