@@ -29,6 +29,7 @@ namespace MSR.Application.ApplicationServices
                     return;
                 }
                 connection = new HubConnectionBuilder()
+                    .WithAutomaticReconnect()
                     .WithUrl(url)
                     .Build();
 

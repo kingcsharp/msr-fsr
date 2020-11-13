@@ -3,6 +3,7 @@ import * as signalR from '@aspnet/signalr';
 import { NotificationService } from '../layout/navbar/notification.service';
 import { environment as env } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { Globals } from '../models/lib/globals';
 
 @Injectable({
   providedIn: 'root'
@@ -10,28 +11,40 @@ import { ToastrService } from 'ngx-toastr';
 export class SignalRService implements OnDestroy {
   workflowNotificationIds: Array<number>;
   hubConnection: signalR.HubConnection;
-  constructor(private notificationService: NotificationService, private toastr: ToastrService) {
+  constructor(private notificationService: NotificationService, private toastr: ToastrService, private globalService: Globals) {
     this.workflowNotificationIds = new Array<number>();
 
   }
 
-  public startConnection = () => {
-    const token: string = localStorage.getItem('token');
-
-    if (token === null || token === '' || token === undefined) {
+  public startConnection = (waitIteration: number = 1) => {
+    if (!this.globalService.userLogged) {
+      if (waitIteration < 9) {
+        setTimeout(() => {
+          this.startConnection(++waitIteration);
+        }, 2000 * waitIteration);
+      } else {
+        this.toastr.error('We were not able to connect with signalr.')
+      }
       return;
     }
 
+    const token: string = localStorage.getItem('token');
+    if (token === null || token === '' || token === undefined) {
+      return;
+    }
+    
     this.hubConnection = new signalR.HubConnectionBuilder()
+      .withAutomaticReconnect()
       .withUrl(env.url + '/msg', {
-        accessTokenFactory: () => token,
-        // skipNegotiation: true,
-        // transport: signalR.HttpTransportType.WebSockets
+        accessTokenFactory: () => token
       })
       .build();
     this.hubConnection
       .start()
-      .then(() => console.log('Signalr Connection started'))
+      .then(() => {
+        this.addToasterMessageNotificationListener();
+        this.addWorkflowNotificationListener();
+      })
       .catch(err => console.log('Error while starting connection: ' + err));
   }
 

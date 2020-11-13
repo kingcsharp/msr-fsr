@@ -22,7 +22,8 @@ export class LoginService {
     appConfig: AppConfig,
     private globals: Globals,
     private http: HttpClient,
-    private router: Router, private accountService: AccountService, private userService: UserService, private signalrService: SignalRService
+    private router: Router, private accountService: AccountService, private userService: UserService,
+    private signalrService: SignalRService
   ) {
     this.config = appConfig.getConfig();
   }
@@ -44,7 +45,6 @@ export class LoginService {
     if (tokenExpired) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
     return !tokenExpired;
   }
@@ -100,7 +100,7 @@ export class LoginService {
   logoutUser() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    this.signalrService.discconecctHub();
     this.isFetching = false;
     this.router.navigate(['/login']);
   }
