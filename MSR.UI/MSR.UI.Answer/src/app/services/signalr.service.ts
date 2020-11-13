@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import * as signalR from '@aspnet/signalr';
+import * as signalR from '@microsoft/signalr';
 import { NotificationService } from '../layout/navbar/notification.service';
 import { environment as env } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
