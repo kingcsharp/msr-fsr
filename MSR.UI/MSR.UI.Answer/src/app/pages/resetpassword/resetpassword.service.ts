@@ -4,16 +4,16 @@ import { AccountService, ResetPasswordRequest } from '../../services/api.client.
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
+import { SignalRService } from '../../services/signalr.service';
 
 @Injectable()
 export class ResetpasswordService {
     _isFetching: boolean = false;
     _errorMessage: string = '';
 
-    constructor(
-        private router: Router,
-        private accountService: AccountService
-    ) { }
+    constructor(private router: Router, private accountService: AccountService, private signalrService: SignalRService) { 
+        
+    }
 
     get isFetching() {
         return this._isFetching;
@@ -49,7 +49,7 @@ export class ResetpasswordService {
     logoutUser() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        this.signalrService.discconecctHub();
         this.router.navigate(['/login']);
     }
 

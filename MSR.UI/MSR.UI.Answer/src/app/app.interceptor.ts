@@ -46,7 +46,7 @@ export class AppInterceptor implements HttpInterceptor {
 
     if (this.loginService.isAuthenticated() !== undefined && !this.loginService.isAuthenticated()) {
       this.toastr.error('Your token has expired, please log in again.');
-      this.router.navigate(['/login']);
+      this.loginService.logoutUser();
       return throwError(undefined);
     }
 

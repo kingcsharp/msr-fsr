@@ -12,12 +12,6 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    if (this.globalService.userLogged) {
-      setTimeout(() => {
-        this.signalrService.startConnection();
-        this.signalrService.addWorkflowNotificationListener();
-        this.signalrService.addToasterMessageNotificationListener();
-      }, 1000);
-    }
+    this.signalrService.startConnection();
   }
 }
