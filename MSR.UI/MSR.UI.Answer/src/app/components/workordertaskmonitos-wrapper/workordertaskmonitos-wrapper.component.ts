@@ -70,12 +70,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       { label: 'Fail', value: 0 }
     ];
 
-    this.workOrderMonitorsToView.map(monitor => {
-
-      monitor.holdIfFails = monitor.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared ? true : false;
-
-    });
-
     Parsley.addValidator('equaltotarget', {
       requirementType: 'number',
       validateString: function (value, requirement) {
