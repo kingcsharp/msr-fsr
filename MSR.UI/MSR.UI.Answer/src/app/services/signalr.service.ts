@@ -32,7 +32,7 @@ export class SignalRService implements OnDestroy {
     if (token === null || token === '' || token === undefined) {
       return;
     }
-    
+
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withAutomaticReconnect()
       .withUrl(env.url + '/msg', {
