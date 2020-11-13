@@ -97,7 +97,7 @@
             <div class="col-9 px-0">
               <input type="text" id="equipmentsensorresult{{i}}" name="equipmentsensorresult{{i}}"
                 [(ngModel)]="workOrderTaskMonitor.sensorValue" class="form-control input-transparent" tooltip="Result">
-              <ul class="parsley-errors-list filled" *ngIf="workOrderTaskMonitor.sensorValue === undefined">
+              <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled && workOrderTaskMonitor.sensorValue === undefined">
                 <li class="parsley-custom-error-message">You must retrieve the value for the sensor</li>
               </ul>
               <button type="button" class="btn btn-primary m-2"
@@ -151,7 +151,7 @@
               <p-dropdown name="passorfailresult{{i}}" [options]="workOrderMonitorPassOrFailOptions"
                 placeholder="Select a Response" [showClear]="true" [(ngModel)]="workOrderTaskMonitor.numVal">
               </p-dropdown>
-              <ul class="parsley-errors-list filled">
+              <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
                 <li class="parsley-custom-error-message" 
                 *ngIf="workOrderTaskMonitor.holdIfFails && 
                   (workOrderTaskMonitor.numVal === null ||
@@ -174,13 +174,13 @@
               <p-dropdown name="yourAnswer{{i}}" [options]="workOrderMonitorYesOrNoOptions"
                 placeholder="Select a Response" [showClear]="true" [(ngModel)]="workOrderTaskMonitor.numVal">
               </p-dropdown>
-              <ul class="parsley-errors-list filled">
+              <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
                 <li class="parsley-custom-error-message" 
                 *ngIf="workOrderTaskMonitor.holdIfFails && 
                   (workOrderTaskMonitor.numVal === null ||
                   workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.procedureStepMonitor.targetValue)">
                   Value should be equal to
-                  {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'No' : 'Yes'}} {{workOrderTaskMonitor.numVal | json}}
+                  {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'No' : 'Yes'}}
                 </li>
                 <li class="parsley-custom-error-message" 
                 *ngIf="!workOrderTaskMonitor.holdIfFails && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)">
@@ -198,7 +198,7 @@
               <p-dropdown name="selectresult{{i}}" [options]="monitorListItemOptions" placeholder="Select a Response"
                 [showClear]="true" [(ngModel)]="workOrderTaskMonitor.multiVal">
               </p-dropdown>
-              <ul class="parsley-errors-list filled">
+              <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
                 <li class="parsley-custom-error-message" *ngIf="workOrderTaskMonitor.multiVal === undefined || workOrderTaskMonitor.multiVal === null">
                   This monitor requires feedback
                 </li>

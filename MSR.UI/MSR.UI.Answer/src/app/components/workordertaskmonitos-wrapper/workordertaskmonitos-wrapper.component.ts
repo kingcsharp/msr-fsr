@@ -26,6 +26,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   monitorListItemOptions: Array<SelectItem>;
   sensorsAvailable: Array<SelectItem>;
   workOrderMonitorPassOrFailOptions: Array<SelectItem>;
+  wasValidationCalled: boolean = false;
 
   constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
 
@@ -145,6 +146,8 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   }
 
   areMonitorsInValidStateToCloseTask(): boolean {
+
+    this.wasValidationCalled = true;
 
     if (this.workOrderMonitorsToView.length === 0) {
       return true;
