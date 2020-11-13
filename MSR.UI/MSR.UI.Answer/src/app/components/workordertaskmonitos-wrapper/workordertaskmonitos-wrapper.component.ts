@@ -27,6 +27,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   sensorsAvailable: Array<SelectItem>;
   workOrderMonitorPassOrFailOptions: Array<SelectItem>;
   wasValidationCalled: boolean = false;
+  failActions = EnumFailAction;
 
   constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
 
@@ -90,28 +91,39 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
     let dropDownsAreValid = true;
 
-    this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.PassOrFail
-    || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo).forEach(m => {
+    let passAndFailAndYesOrNoMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.PassOrFail
+      || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo);
+
+    passAndFailAndYesOrNoMonitors.map(m => {
 
       if (m.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared) {
 
-        dropDownsAreValid = (m.numVal === undefined || m.numVal === null);
+        if (m.numVal === undefined || m.numVal === null) {
+          dropDownsAreValid = false;
+        } else {
+
+          if (m.procedureStepMonitor.targetValue !== m.numVal.toString()) {
+            dropDownsAreValid = false;
+          }
+
+        }
 
       } else if (m.procedureStepMonitor.faultHandling === EnumFailAction.RecordAndContinue) {
 
-        if (m.procedureStepMonitor.targetValue !== m.numVal.toString()) {
+        if (m.numVal === undefined || m.numVal === null) {
           dropDownsAreValid = false;
         }
 
       }
 
-
     });
 
-    this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Select).forEach(m => {
+    let selectMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Select);
+    selectMonitors.map(m => {
 
-          dropDownsAreValid = (m.multiVal !== undefined && m.multiVal !== null);
-
+      if (m.multiVal === undefined || m.multiVal === null){
+        dropDownsAreValid = false;
+      }
     });
 
     return dropDownsAreValid;

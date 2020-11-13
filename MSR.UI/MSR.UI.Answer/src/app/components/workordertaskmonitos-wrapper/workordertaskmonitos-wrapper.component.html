@@ -97,7 +97,7 @@
             <div class="col-9 px-0">
               <input type="text" id="equipmentsensorresult{{i}}" name="equipmentsensorresult{{i}}"
                 [(ngModel)]="workOrderTaskMonitor.sensorValue" class="form-control input-transparent" tooltip="Result">
-              <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled && workOrderTaskMonitor.sensorValue === undefined">
+              <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled && workOrderTaskMonitor.sensorValue === null">
                 <li class="parsley-custom-error-message">You must retrieve the value for the sensor</li>
               </ul>
               <button type="button" class="btn btn-primary m-2"
@@ -109,7 +109,7 @@
             <label for="result" class="col-form-label text-left col-3">
               Result:
             </label>
-            <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.holdIfFails">
+            <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.StopUntilFaultCleared">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal" class="form-control input-transparent"
                 *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'EQUAL'"
                 data-validate="parsley" 
@@ -134,7 +134,7 @@
                 [attr.data-parsley-range]="'[' + workOrderTaskMonitor.procedureStepMonitor.lowTarget + ',' + workOrderTaskMonitor.procedureStepMonitor.highTarget + ']'"
                 data-parsley-error-message="Value is not within acceptable range">
             </div>
-            <div class="col-9 px-0" *ngIf="!workOrderTaskMonitor.holdIfFails">
+            <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.RecordAndContinue">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal" class="form-control input-transparent"
                 data-validate="parsley" 
                 data-parsley-trigger="change" 
@@ -153,13 +153,13 @@
               </p-dropdown>
               <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
                 <li class="parsley-custom-error-message" 
-                *ngIf="workOrderTaskMonitor.holdIfFails && 
+                *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.StopUntilFaultCleared && 
                   (workOrderTaskMonitor.numVal === null ||
                   workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.procedureStepMonitor.targetValue)">
                   Value should be equal to
                   {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'Fail' : 'Pass'}}
                 </li>
-                <li class="parsley-custom-error-message" *ngIf="!workOrderTaskMonitor.holdIfFails && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)">
+                <li class="parsley-custom-error-message" *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.RecordAndContinue && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)">
                   This monitor requires feedback
                 </li>
               </ul>
@@ -176,14 +176,14 @@
               </p-dropdown>
               <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
                 <li class="parsley-custom-error-message" 
-                *ngIf="workOrderTaskMonitor.holdIfFails && 
+                *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.StopUntilFaultCleared && 
                   (workOrderTaskMonitor.numVal === null ||
                   workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.procedureStepMonitor.targetValue)">
                   Value should be equal to
                   {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'No' : 'Yes'}}
                 </li>
                 <li class="parsley-custom-error-message" 
-                *ngIf="!workOrderTaskMonitor.holdIfFails && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)">
+                *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.RecordAndContinue && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)">
                   This monitor requires feedback
                 </li>
               </ul>
