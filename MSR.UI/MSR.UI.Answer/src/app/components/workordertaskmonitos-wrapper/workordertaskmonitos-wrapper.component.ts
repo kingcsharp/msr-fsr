@@ -28,6 +28,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   workOrderMonitorPassOrFailOptions: Array<SelectItem>;
   wasValidationCalled: boolean = false;
   failActions = EnumFailAction;
+  monitorTypes = EnumMonitorType;
 
   constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
 
@@ -145,6 +146,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
         .pipe(take(1)).subscribe((result: AuditActionResultOfWorkOrderTaskMonitorModel) => {
           if (closeTask) {
             if (toatlRequests === 1) {
+              this.wasValidationCalled = false;
               this.closeCurrentTaskInProgress.emit();
             } else {
               toatlRequests--;
