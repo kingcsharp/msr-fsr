@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
-import { responseHandler } from '../../utils/responseHandler';
-import { forkJoin } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
+import { EnumFailAction } from '../../models/enums/EnumFailAction';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -26,6 +26,9 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   monitorListItemOptions: Array<SelectItem>;
   sensorsAvailable: Array<SelectItem>;
   workOrderMonitorPassOrFailOptions: Array<SelectItem>;
+  wasValidationCalled: boolean = false;
+  failActions = EnumFailAction;
+  monitorTypes = EnumMonitorType;
 
   constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
 
@@ -67,12 +70,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       { label: 'Fail', value: 0 }
     ];
 
-    this.workOrderMonitorsToView.map(monitor => {
-
-      monitor.holdIfFails = monitor.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED' ? true : false;
-
-    });
-
     Parsley.addValidator('equaltotarget', {
       requirementType: 'number',
       validateString: function (value, requirement) {
@@ -85,23 +82,48 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
   }
 
+  ngOnChanges(changes) {
+    this.wasValidationCalled = false;
+  }
+
   areDropDownsValid(): boolean {
 
     let dropDownsAreValid = true;
 
-    this.workOrderMonitorsToView.filter(s => (s.procedureStepMonitor.monitorType === 'Pass or Fail'
-      || s.procedureStepMonitor.monitorType === 'Yes or No'
-      || s.procedureStepMonitor.monitorType === 'Select') && s.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED').forEach(m => {
+    let passAndFailAndYesOrNoMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.PassOrFail
+      || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo);
 
-        if (m.procedureStepMonitor.targetValue !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
-          || m.procedureStepMonitor.monitorType === 'Yes or No')) {
+    passAndFailAndYesOrNoMonitors.map(m => {
+
+      if (m.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared) {
+
+        if (m.numVal === undefined || m.numVal === null) {
           dropDownsAreValid = false;
-        } else if (m.procedureStepMonitor.monitorType === 'Select' && (m.multiVal === undefined || m.multiVal === null)) {
+        } else {
+
+          if (m.procedureStepMonitor.targetValue !== m.numVal.toString()) {
+            dropDownsAreValid = false;
+          }
+
+        }
+
+      } else if (m.procedureStepMonitor.faultHandling === EnumFailAction.RecordAndContinue) {
+
+        if (m.numVal === undefined || m.numVal === null) {
           dropDownsAreValid = false;
         }
 
+      }
 
-      });
+    });
+
+    let selectMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Select);
+    selectMonitors.map(m => {
+
+      if (m.multiVal === undefined || m.multiVal === null){
+        dropDownsAreValid = false;
+      }
+    });
 
     return dropDownsAreValid;
   }
@@ -121,7 +143,8 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest)
         .pipe(take(1)).subscribe((result: AuditActionResultOfWorkOrderTaskMonitorModel) => {
           if (closeTask) {
-            if (toatlRequests === 0) {
+            if (toatlRequests === 1) {
+              this.wasValidationCalled = false;
               this.closeCurrentTaskInProgress.emit();
             } else {
               toatlRequests--;
@@ -135,6 +158,8 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   }
 
   areMonitorsInValidStateToCloseTask(): boolean {
+
+    this.wasValidationCalled = true;
 
     if (this.workOrderMonitorsToView.length === 0) {
       return true;
