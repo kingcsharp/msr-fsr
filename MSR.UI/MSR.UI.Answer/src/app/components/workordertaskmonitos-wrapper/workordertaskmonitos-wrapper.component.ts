@@ -82,6 +82,10 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
   }
 
+  ngOnChanges(changes) {
+    this.wasValidationCalled = false;
+  }
+
   areDropDownsValid(): boolean {
 
     let dropDownsAreValid = true;
