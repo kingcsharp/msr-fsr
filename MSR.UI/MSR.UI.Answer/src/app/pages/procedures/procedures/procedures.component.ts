@@ -59,13 +59,11 @@ export class ProceduresComponent implements OnInit {
   }
 
   getProcedures() {
-
     this.globals.showLoader(true);
     this.procedureService.procedureGet(null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data  = response.object;
       this.loading = false;
     }));
-
   }
 
   hasPrivilege(privName) {
@@ -73,7 +71,6 @@ export class ProceduresComponent implements OnInit {
   }
 
   openConfirmDeleteDialog(procedure) {
-
     this.procedureToDelete = procedure;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
@@ -96,9 +93,4 @@ export class ProceduresComponent implements OnInit {
     this.loading = true;
     this.getProcedures();
   }
-
-  uploadProceduresCSV($event) {
-    // TODO: Procedures csv file upload
-  }
-
 }

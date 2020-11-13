@@ -20,7 +20,7 @@
               + Add
             </button>
             <csv-import [showButton]="procedurePrivileges.canCreate" [menuItem]="menuItems.RunnableProcedures"
-              title="Import Procedures" (onUpload)="uploadProceduresCSV($event)" fileName="ProceduresSample.xlsx"
+              title="Import Procedures" fileName="ProceduresSample.xlsx"
               *ngIf="menuItems !== undefined">
             </csv-import>
             <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
