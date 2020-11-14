@@ -25,8 +25,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let workOrderTask of workOrderTasks">
-            <th scope="row">{{workOrderTask.taskStepOrder}}</th>
+          <tr *ngFor="let workOrderTask of workOrderTasks; let stepCount = index">
+            <th scope="row">{{stepCount + 1}}</th>
             <td>{{workOrderTask.procedureStep?.title}}</td>
             <td>{{workOrderTask.assignedToUser?.fullName}}</td>
             <td>{{workOrderTask.startedOn | userTimezone}}</td>
