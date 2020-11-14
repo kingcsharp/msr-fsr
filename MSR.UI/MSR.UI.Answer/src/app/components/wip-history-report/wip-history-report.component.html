@@ -25,15 +25,31 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let workOrderTask of workOrderTasks; let stepCount = index">
-            <th scope="row">{{stepCount + 1}}</th>
-            <td>{{workOrderTask.procedureStep?.title}}</td>
-            <td>{{workOrderTask.assignedToUser?.fullName}}</td>
-            <td>{{workOrderTask.startedOn | userTimezone}}</td>
-            <td>{{workOrderTask.completedOn | userTimezone}}</td>
-            <td>{{workOrderTask.taskTime }}</td>
-            <td>{{workOrderTask.status?.name}}</td>
-          </tr>
+          <ng-container *ngFor="let workOrderTask of workOrderTasks; let stepCount = index">
+            <tr>
+              <td scope="row">{{stepCount + 1}}</td>
+              <td>{{workOrderTask.procedureStep?.title}}</td>
+              <td>{{workOrderTask.assignedToUser?.fullName}}</td>
+              <td>{{workOrderTask.startedOn | userTimezone}}</td>
+              <td>{{workOrderTask.completedOn | userTimezone}}</td>
+              <td>{{workOrderTask.taskTime }}</td>
+              <td>{{workOrderTask.status?.name}}</td>
+            </tr>
+            <tr *ngIf="workOrderTask.workOrderTaskMonitors.length > 0">
+              <td></td>
+              <td colspan="4" class="font-weight-bold">Monitor {{workOrderTask.Id}}</td>
+              <td class="font-weight-bold">Result</td>
+              <td class="font-weight-bold">Pass/Fail</td>
+            </tr>
+            <ng-container *ngFor="let workOrderTaskMonitor of workOrderTask.workOrderTaskMonitors">
+              <tr>
+                <td></td>
+                <td colspan="4" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description"></td>
+                <td>{{workOrderTaskMonitor | monitorResult }}</td>
+                <td>{{workOrderTaskMonitor | monitorstatus }}</td>
+              </tr>
+            </ng-container>
+          </ng-container>
         </tbody>
       </table>
 </div>

@@ -38,6 +38,7 @@ import { TableModule } from 'primeng/table';
 import { GridComponent } from '../../../app/components/grid/grid.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { GalleriaModule } from 'primeng/galleria';
+import { MonitorStatusPipe } from '../../../app/pipes/monitorstatus';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { GalleriaModule } from 'primeng/galleria';
     MonitorResultPipe,
     BootstrapSwitchComponent,
     CkeditorWrapperComponent,
-    GridComponent
+    GridComponent,
+    MonitorStatusPipe
   ],
   exports: [
     GridComponent,
@@ -81,7 +83,8 @@ import { GalleriaModule } from 'primeng/galleria';
     TimeZonePipe,
     MonitorResultPipe,
     BootstrapSwitchComponent,
-    CkeditorWrapperComponent
+    CkeditorWrapperComponent,
+    MonitorStatusPipe
   ],
   imports: [
     TableModule,
