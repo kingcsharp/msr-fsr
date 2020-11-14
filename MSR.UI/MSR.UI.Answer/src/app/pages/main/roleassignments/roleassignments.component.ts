@@ -59,12 +59,12 @@ export class RoleassignmentsComponent implements OnInit {
 
     this.originalMenuModules = new Array<MenuModel>();
 
-    menuItems.forEach(menuItem => {
+    menuItems.map(menuItem => {
       let menuModel = new MenuModel();
       menuModel.id = menuItem.id;
       menuModel.name = menuItem.name;
 
-      roles.forEach(role => {
+      roles.map(role => {
 
         let roleModel = new RoleModel();
         roleModel.id = role.id;
@@ -196,7 +196,7 @@ export class RoleassignmentsComponent implements OnInit {
 
         this.removeRoleAndPermissions(menuModule, roleModule, null);
 
-        this.selectedRoleModule = roleModule;
+        this.selectedRoleModule = null;
       }
 
   }
