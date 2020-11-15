@@ -193,6 +193,7 @@ export class QuotesProductsComponent implements OnInit {
       this.globals.showLoader(true);
       const requestData = new CreateQuoteRequest();
       requestData.customerId = this.CSRToCreate.customerId;
+      requestData.partKitNo = this.CSRToCreate.PartKitNo;
       const process = [];
       this.CSRToCreate.Process.forEach(v => {
         if (v.Contaminents) {
