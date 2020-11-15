@@ -95,11 +95,38 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }
 
             _unitOfWork.Quotes.Delete(false, quote, true);
-            
+
             await _unitOfWork.SaveChangesAsync();
 
             var ret = _mapper.Map<QuoteModel>(quote);
             return ret;
+        }
+
+        public async Task<IEnumerable<QuoteModel>> ImportQuotes(string csvData)
+        {
+            var records = CSVHelper.ParseRecords<QuoteImportItem>(csvData);
+            var quotes = new List<QuoteModel>();
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanApprove))
+            {
+                throw new DomainException("Permission denied for import", DomainError.BadRequest);
+            }
+
+            foreach (var record in records)
+            {
+                try
+                {
+
+                    var ret = await CreateQuoteAsync(_mapper.Map<CreateQuote>(record));
+                    quotes.Add(ret);
+                }
+                catch
+                {
+                    //If we get an error on a single import dump it and keep going. 
+                }
+            }
+
+            return quotes;
         }
     }
 }

@@ -127,10 +127,6 @@ export class QuotesProductsComponent implements OnInit {
     }));
   }
 
-  onClickImportQuote($event) {
-    // TODO: Import CSV process;
-  }
-
   openConfirmDeleteDialog(quote: QuotesProductsView) {
     this.quoteToDelete = quote;
     this.showConfirmDeleteDialog = true;

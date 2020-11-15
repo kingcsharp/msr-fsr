@@ -25,6 +25,7 @@ namespace MSR.Application.EventServices
         private ICustomerService _customerService;
         private ILocationService _locationService;
         private IPartService _partService;
+        private IQuoteService _quoteService;
         private IMessageHubClient _messageHub;
         private GeneralInformation _processorConfig;
         private IWorkOrderService _workOrderService;
@@ -35,6 +36,7 @@ namespace MSR.Application.EventServices
             ICustomerService customerService,
             ILocationService locationService,
             IPartService partService,
+            IQuoteService quoteService,
             GeneralInformation processorConfig,
             IWorkOrderService workOrderService,
             IMapper mapper,
@@ -44,6 +46,7 @@ namespace MSR.Application.EventServices
             _customerService = customerService;
             _locationService = locationService;
             _partService = partService;
+            _quoteService = quoteService;
             _processorConfig = processorConfig;
             _messageHub = messageHub;
             _workOrderService = workOrderService;
@@ -73,6 +76,10 @@ namespace MSR.Application.EventServices
                     case EnumMenuItem.Parts:
                         var importedParts = await _partService.ImportLocations(handledEvent.CsvData);
                         count = importedParts.Count();
+                        break;
+                    case EnumMenuItem.QuotesProducts:
+                        var importedQuotes = await _quoteService.ImportQuotes(handledEvent.CsvData);
+                        count = importedQuotes.Count();
                         break;
                     default:
                         throw new DomainException("Import function not found for " +
