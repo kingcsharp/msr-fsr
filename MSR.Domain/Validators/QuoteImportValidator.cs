@@ -14,7 +14,8 @@ namespace MSR.Domain.Validators
         {
             List<ImportError> errors = new List<ImportError>();
             int line = 0;
-            IEnumerable records = null;
+            IEnumerable<QuoteImportItem> records = null;
+            ImportError importError;
 
             try
             {
@@ -22,17 +23,18 @@ namespace MSR.Domain.Validators
             }
             catch (Exception e)
             {
-                var ie = new ImportError() { Line = line };
-                ie.Errors.Add(e.Message);
-                errors.Add(ie);
+                importError = new ImportError() { Line = line };
+                importError.Errors.Add(e.Message);
+                errors.Add(importError);
             }
 
             foreach (QuoteImportItem record in records)
             {
                 line++;
-                var importError = new ImportError();
+                importError = new ImportError();
 
-                if (record.CustomerId == 0) {
+                if (record.CustomerId == 0)
+                {
                     importError.Errors.Add($"{nameof(record.CustomerId)} does not have a value");
                 }
                 if (string.IsNullOrWhiteSpace(record.QuoteJson) && string.IsNullOrWhiteSpace(record.CustomerRequirementJson))
@@ -47,10 +49,11 @@ namespace MSR.Domain.Validators
                 }
             }
 
-            if (!errors.Any() && line == 0) {
-                var ie = new ImportError() { Line = line };
-                ie.Errors.Add($"file does not have import data.");
-                errors.Add(ie);
+            if (!errors.Any() && line == 0)
+            {
+                importError = new ImportError() { Line = line };
+                importError.Errors.Add($"This file does not have records to import.");
+                errors.Add(importError);
             }
 
             importErrors = errors.Any() ? errors : null;
