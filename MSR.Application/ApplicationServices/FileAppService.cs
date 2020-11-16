@@ -33,6 +33,26 @@ namespace MSR.Application.ApplicationServices
         private readonly ISendSQSMessages _bus;
         private readonly IAccountService _accountService;
 
+        enum ImportFileType {
+            ImportUnknown,
+            ImportTextCSV,
+            ImportTextPlain,
+            ImportExcel
+        };
+        static ImportFileType ImportFileTypeFromString(string type)
+        {
+            switch(type.ToUpper()) {
+                case "TEXT/CSV":
+                    return ImportFileType.ImportTextCSV;
+                case "TEXT/PLAIN":
+                    return ImportFileType.ImportTextPlain;
+                case "APPLICATION/VND.MS-EXCEL":
+                    return ImportFileType.ImportExcel;
+                default:
+                    return ImportFileType.ImportUnknown;
+            }
+        }
+
         public FileAppService(
             IFileService fileService,
             IMapper mapper,
@@ -91,27 +111,26 @@ namespace MSR.Application.ApplicationServices
             string csvData = "";
             byte[] binData = new byte[0];
             var validator = _validationFactory.Create(command.MenuItem);
+            ImportFileType type = ImportFileTypeFromString(base64File.ContentType);
 
-            if (base64File.ContentType.ToUpper().Equals("TEXT/CSV") ||
-                base64File.ContentType.ToUpper().Equals("TEXT/PLAIN"))
-            {
-                csvData = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r", "").Trim();
-                if (csvData.StartsWith(Base64Helper.ByteOrderMarkUtf8, StringComparison.Ordinal))
-                {
-                    csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
-                }
-                binData = csvData.ToCharArray().Select(x => (byte)x).ToArray();
-            }
-            else if (base64File.ContentType.ToUpper().Equals("APPLICATION/VND.MS-EXCEL"))
-            {
-                binData = base64File.FileContents;
-            }
-            else
-            {
-                throw new DomainException(
-                    $"Invalid Import file type: {base64File.ContentType}",
-                    DomainError.BadRequest
-                );
+            switch(type) {
+                case ImportFileType.ImportTextCSV:
+                case ImportFileType.ImportTextPlain:
+                        csvData = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r", "").Trim();
+                        if (csvData.StartsWith(Base64Helper.ByteOrderMarkUtf8, StringComparison.Ordinal))
+                        {
+                            csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
+                        }
+                        binData = csvData.ToCharArray().Select(x => (byte)x).ToArray();
+                    break;
+                case ImportFileType.ImportExcel:
+                    binData = base64File.FileContents;
+                    break;
+                default:
+                    throw new DomainException(
+                        $"Invalid Import file type: {base64File.ContentType}",
+                        DomainError.BadRequest
+                    );
             }
 
             if (!validator.ValidateImportData(binData, out var importErrors))
