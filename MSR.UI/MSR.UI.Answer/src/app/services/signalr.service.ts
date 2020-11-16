@@ -16,18 +16,15 @@ export class SignalRService implements OnDestroy {
 
   }
 
-  public startConnection = (waitIteration: number = 1) => {
-    if (!this.globalService.userLogged) {
-      if (waitIteration < 9) {
-        setTimeout(() => {
-          this.startConnection(++waitIteration);
-        }, 2000 * waitIteration);
-      } else {
-        this.toastr.error('We were not able to connect with signalr.')
+  public startConnection = () => {
+    setTimeout(() => {
+      if (this.globalService.userLogged) {
+        this.connectToSignalR();
       }
-      return;
-    }
+    }, 1000);
+  }
 
+  private connectToSignalR() {
     const token: string = localStorage.getItem('token');
     if (token === null || token === '' || token === undefined) {
       return;
@@ -49,8 +46,10 @@ export class SignalRService implements OnDestroy {
   }
 
   public discconecctHub = () => {
-    this.hubConnection.stop();
-    console.log('Signalr Connection stopped');
+    if (this.hubConnection !== undefined) {
+      this.hubConnection.stop();
+      console.log('Signalr Connection stopped');
+    }
   }
 
   public addWorkflowNotificationListener = () => {
