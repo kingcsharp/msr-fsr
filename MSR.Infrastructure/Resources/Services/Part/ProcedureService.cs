@@ -24,12 +24,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
+        private readonly ProcedureValidator _validator;
 
-        public ProcedureService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
+        public ProcedureService(IUnitOfWork unitOfWork,
+            IMapper mapper, IFileService fileService, ProcedureValidator validator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _fileService = fileService;
+            _validator = validator; // used for import
         }
 
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
@@ -458,12 +461,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<Domain.Models.Procedure>> ImportProcedures(byte[] xlsData)
         {
-            ProcedureValidator validator = new ProcedureValidator(_mapper);
             IEnumerable<ImportError> importErrors;
             List<Domain.Models.Procedure> createdProcs = new List<Domain.Models.Procedure>();
 
             ParsedProcedureImport import =
-                validator.ValidateAndReturnImportData(xlsData, out importErrors);
+                _validator.ValidateAndReturnImportData(xlsData, out importErrors);
 
             // Iterate through each procedure and add it, adding
             // each procedure's step along the way.
