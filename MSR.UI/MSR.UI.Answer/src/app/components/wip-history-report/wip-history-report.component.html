@@ -46,7 +46,7 @@
                 <td></td>
                 <td colspan="4" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description"></td>
                 <td>{{workOrderTaskMonitor | monitorResult }}</td>
-                <td>{{workOrderTaskMonitor | monitorstatus }}</td>
+                <td [ngClass]="workOrderTaskMonitor.isPassing ? 'bg-success' : 'bg-danger' ">{{workOrderTaskMonitor | monitorstatus }}</td>
               </tr>
             </ng-container>
           </ng-container>

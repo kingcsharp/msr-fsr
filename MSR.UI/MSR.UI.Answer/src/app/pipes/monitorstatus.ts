@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { EnumMonitorInputType } from '../models/enums/EnumMonitorInputType';
 import { EnumMonitorPassFailStatus } from '../models/enums/EnumMonitorPassFailStatus';
 import { EnumMonitorType } from '../models/enums/EnumMonitorType';
 import { WorkOrderTaskMonitorModel } from '../services/api.client.generated';
@@ -25,6 +26,15 @@ export class MonitorStatusPipe implements PipeTransform {
             case EnumMonitorType.Equipment:
                 return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
             case EnumMonitorType.Number:
+
+                if(workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor){
+                   return true;
+                }
+
+                if(workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Manual){
+                    return false;
+                }
+                
                 return workOrderTaskMonitor.numVal;
             case EnumMonitorType.YesOrNo:
                 return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;
