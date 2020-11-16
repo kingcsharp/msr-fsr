@@ -28,6 +28,13 @@ namespace MSR.Domain.Validators
                 errors.Add(importError);
             }
 
+            if (!records.Any())
+            {
+                importError = new ImportError() { Line = line };
+                importError.Errors.Add($"This file does not have records to import.");
+                errors.Add(importError);
+            }
+
             foreach (QuoteImportItem record in records)
             {
                 line++;
@@ -48,14 +55,7 @@ namespace MSR.Domain.Validators
                     errors.Add(importError);
                 }
             }
-
-            if (!errors.Any() && line == 0)
-            {
-                importError = new ImportError() { Line = line };
-                importError.Errors.Add($"This file does not have records to import.");
-                errors.Add(importError);
-            }
-
+            
             importErrors = errors.Any() ? errors : null;
             return !errors.Any();
         }
