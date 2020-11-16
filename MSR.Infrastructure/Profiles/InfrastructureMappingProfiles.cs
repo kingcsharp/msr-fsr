@@ -382,6 +382,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<QuoteItem, Domain.Models.QuoteItemModel>().ReverseMap();
             CreateMap<CreateQuote, Quote>();
             CreateMap<CreateQuoteItem, QuoteItem>();
+            CreateMap<QuoteImportItem, CreateQuote>();
             #endregion
 
 
