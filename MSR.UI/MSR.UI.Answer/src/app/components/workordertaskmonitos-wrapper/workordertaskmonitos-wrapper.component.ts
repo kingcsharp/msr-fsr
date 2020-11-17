@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
 import { EnumFailAction } from '../../models/enums/EnumFailAction';
 import { EnumMonitorInputType } from '../../models/enums/EnumMonitorInputType';
+import { EnumMonitorShouldBe } from '../../models/enums/EnumMonitorShouldBe';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -30,6 +31,8 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   wasValidationCalled: boolean = false;
   failActions = EnumFailAction;
   monitorTypes = EnumMonitorType;
+  monitorInputTypes = EnumMonitorInputType;
+  monitorShouldBe = EnumMonitorShouldBe;
   readonly monitorValueNotAvailable = 'No Sensor Value Available';
 
   constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
