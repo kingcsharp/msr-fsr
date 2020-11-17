@@ -123,15 +123,29 @@ namespace MSR.Domain.Validators
                 return null;
             }
 
-            bool isHeader;
-            Dictionary<string, int> fieldMap;
-            int lineNumber = 1;
-
+            ParsedProcedureImport parsedData = new ParsedProcedureImport();
             //
             // procedure import
             //
-            isHeader = true;
-            fieldMap = new Dictionary<string, int>();
+            errors = ImportProcedureData(procedures, parsedData);
+
+            //
+            // procedure step import
+            //
+            errors.AddRange(ImportProcedureStepData(procedureSteps, parsedData));
+
+            importErrors = errors;
+            return parsedData;
+        }
+
+        private List<ImportError> ImportProcedureData(DataTable procedures,
+            ParsedProcedureImport parsedData)
+        {
+            bool isHeader = true;
+            Dictionary<string, int> fieldMap = new Dictionary<string, int>();
+            int lineNumber = 1;
+            var errors = new List<ImportError>();
+
             Dictionary<string, CreateProcedure> newProcs =
                 new Dictionary<string, CreateProcedure>();
             Dictionary<string, CreateProcedureImport> newProcsExtra =
@@ -165,7 +179,7 @@ namespace MSR.Domain.Validators
                     // Store the new procedure data in memory.
                     if (newProcs.ContainsKey(procedureIdString))
                     {
-                        errorStrings = new List<string>();
+                        List<string> errorStrings = new List<string>();
                         errorStrings.Add($"Import ERROR: duplicate key '{procedureIdString}'");
                         errors.Add(new ImportError() { Errors = errorStrings });
                     }
@@ -174,7 +188,7 @@ namespace MSR.Domain.Validators
                 }
                 catch (InvalidCastException e)
                 {
-                    errorStrings = new List<string>();
+                    List<string> errorStrings = new List<string>();
                     errorStrings.Add($"PROC({procedureIdString}) Parse Error: {e.Message}");
                     errors.Add(new ImportError()
                     {
@@ -184,12 +198,19 @@ namespace MSR.Domain.Validators
                 }
                 lineNumber += 1;
             }
+            parsedData.procedures = newProcs;
+            parsedData.procedureExtras = newProcsExtra;
+            return errors;
+        }
 
-            //
-            // procedure step import
-            //
-            isHeader = true;
-            fieldMap = new Dictionary<string, int>();
+        private List<ImportError> ImportProcedureStepData(DataTable procedureSteps,
+            ParsedProcedureImport parsedData)
+        {
+            bool isHeader = true;
+            Dictionary<string, int> fieldMap = new Dictionary<string, int>();
+            int lineNumber = 1;
+            var errors = new List<ImportError>();
+
             Dictionary<string, List<CreateProcedureStep>> newSteps =
                 new Dictionary<string, List<CreateProcedureStep>>();
             Dictionary<string, List<CreateProcedureStepImport>> newStepsExtra =
@@ -261,7 +282,7 @@ namespace MSR.Domain.Validators
                 }
                 catch (InvalidCastException e)
                 {
-                    errorStrings = new List<string>();
+                    List<string> errorStrings = new List<string>();
                     errorStrings.Add($"STEP({procedureIdString}) Parse Error: {e.Message}");
                     errors.Add(new ImportError()
                     {
@@ -271,15 +292,9 @@ namespace MSR.Domain.Validators
                 }
                 lineNumber += 1;
             }
-
-            importErrors = errors;
-            return new ParsedProcedureImport()
-            {
-                procedures = newProcs,
-                    procedureExtras = newProcsExtra,
-                    procedureSteps = newSteps,
-                    procedureStepExtras = newStepsExtra
-            };
+            parsedData.procedureSteps = newSteps;
+            parsedData.procedureStepExtras = newStepsExtra;
+            return errors;
         }
     }
 }
