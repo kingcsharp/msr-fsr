@@ -14,7 +14,7 @@ export class MonitorStatusPipe implements PipeTransform {
 
     transform(workOrderTaskMonitor: WorkOrderTaskMonitorModel): any {
         if (workOrderTaskMonitor) {
-            return this.isMonitorPassing(workOrderTaskMonitor) ? 'Pass' : 'Fail';
+            return this.isMonitorPassing(workOrderTaskMonitor);
         }
     }
 
@@ -27,14 +27,43 @@ export class MonitorStatusPipe implements PipeTransform {
                 return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
             case EnumMonitorType.Number:
 
-                if(workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor){
-                   return true;
+                if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor) {
+                    return (workOrderTaskMonitor.sensorValue !== undefined && workOrderTaskMonitor.sensorValue !== null && workOrderTaskMonitor.sensorValue !== '');
                 }
 
-                if(workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Manual){
-                    return false;
+                if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Manual) {
+
+
+                    if (workOrderTaskMonitor.procedureStepMonitor.targetValue === null ||
+                        workOrderTaskMonitor.procedureStepMonitor.targetValue === undefined ||
+                        workOrderTaskMonitor.procedureStepMonitor.targetValue === '') {
+                        return false;
+                    }
+
+                    let targetValue = Number(workOrderTaskMonitor.procedureStepMonitor.targetValue);
+
+                    switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
+                        case 'EQUAL': {
+                            return (targetValue === workOrderTaskMonitor.numVal);
+                        }
+                        case 'ABOVE': {
+                            return (targetValue <= workOrderTaskMonitor.numVal);
+                        }
+                        case 'BELOW': {
+                            return (targetValue >= workOrderTaskMonitor.numVal);
+                        }
+                        case 'BETWEEN': {
+
+                            return (workOrderTaskMonitor.procedureStepMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
+                                workOrderTaskMonitor.procedureStepMonitor.highTarget >= workOrderTaskMonitor.numVal);
+                        }
+                        default:
+                            return false;
+                    }
+
+
                 }
-                
+
                 return workOrderTaskMonitor.numVal;
             case EnumMonitorType.YesOrNo:
                 return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;

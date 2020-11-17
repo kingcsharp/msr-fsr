@@ -3,6 +3,7 @@ import { WorkOrderModel, WorkOrderPartModel, WorkOrderTaskModel, WorkOrderTaskMo
 import * as moment from 'moment';
 import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
 import { EnumMonitorPassFailStatus } from '../../models/enums/EnumMonitorPassFailStatus';
+import { EnumMonitorInputType } from '../../models/enums/EnumMonitorInputType';
 
 @Component({
   selector: 'wip-history-report',
@@ -30,40 +31,9 @@ export class WipHistoryReportComponent implements OnInit {
       let formattedTotalTaskTime = moment.utc(Number(workOrderTask.totalTaskTime) * 1000).format('HH:mm:ss');
       workOrderTask.taskTime = formattedTotalTaskTime === '00:00:00' ? '' : formattedTotalTaskTime;
 
-      workOrderTask.workOrderTaskMonitors.map(workOrderTaskMonitor => {
-        workOrderTaskMonitor.isPassing = this.isMonitorPassing(workOrderTaskMonitor);
-      });
 
     });
 
   }
-
-  onChange(event){
-
-  }
-
-  isMonitorPassing(workOrderTaskMonitor: WorkOrderTaskMonitorModel) {
-
-    const monitorType = workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId;
-
-    switch (monitorType) {
-        case EnumMonitorType.Equipment:
-            return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
-        case EnumMonitorType.Number:
-            return workOrderTaskMonitor.numVal;
-        case EnumMonitorType.YesOrNo:
-            return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;
-        case EnumMonitorType.Text:
-            return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
-        case EnumMonitorType.Select:
-            return (workOrderTaskMonitor.multiVal !== undefined && workOrderTaskMonitor.multiVal !== null);
-        case EnumMonitorType.PassOrFail:
-            return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;
-        default:
-            break;
-    }
-
-    return false;
-}
 
 }
