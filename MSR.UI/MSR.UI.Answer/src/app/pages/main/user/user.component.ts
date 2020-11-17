@@ -130,7 +130,9 @@ export class UserComponent implements OnInit {
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          ctrl.locations.push({ label: x.name, value: x.id });
+          if(x.parentId === null){
+            ctrl.locations.push({ label: x.name, value: x.id });
+          }
         });
         ctrl.getLocationsFlag = true;
       }));
