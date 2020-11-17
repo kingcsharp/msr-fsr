@@ -127,10 +127,6 @@ export class QuotesProductsComponent implements OnInit {
     }));
   }
 
-  onClickImportQuote($event) {
-    // TODO: Import CSV process;
-  }
-
   openConfirmDeleteDialog(quote: QuotesProductsView) {
     this.quoteToDelete = quote;
     this.showConfirmDeleteDialog = true;
@@ -197,6 +193,7 @@ export class QuotesProductsComponent implements OnInit {
       this.globals.showLoader(true);
       const requestData = new CreateQuoteRequest();
       requestData.customerId = this.CSRToCreate.customerId;
+      requestData.partKitNo = this.CSRToCreate.PartKitNo;
       const process = [];
       this.CSRToCreate.Process.forEach(v => {
         if (v.Contaminents) {

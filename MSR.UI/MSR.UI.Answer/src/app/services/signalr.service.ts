@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import * as signalR from '@aspnet/signalr';
+import * as signalR from '@microsoft/signalr';
 import { NotificationService } from '../layout/navbar/notification.service';
 import { environment as env } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { Globals } from '../models/lib/globals';
 
 @Injectable({
   providedIn: 'root'
@@ -10,34 +11,45 @@ import { ToastrService } from 'ngx-toastr';
 export class SignalRService implements OnDestroy {
   workflowNotificationIds: Array<number>;
   hubConnection: signalR.HubConnection;
-  constructor(private notificationService: NotificationService, private toastr: ToastrService) {
+  constructor(private notificationService: NotificationService, private toastr: ToastrService, private globalService: Globals) {
     this.workflowNotificationIds = new Array<number>();
 
   }
 
   public startConnection = () => {
-    const token: string = localStorage.getItem('token');
+    setTimeout(() => {
+      if (this.globalService.userLogged) {
+        this.connectToSignalR();
+      }
+    }, 1000);
+  }
 
+  private connectToSignalR() {
+    const token: string = localStorage.getItem('token');
     if (token === null || token === '' || token === undefined) {
       return;
     }
 
     this.hubConnection = new signalR.HubConnectionBuilder()
+      .withAutomaticReconnect()
       .withUrl(env.url + '/msg', {
-        accessTokenFactory: () => token,
-        // skipNegotiation: true,
-        // transport: signalR.HttpTransportType.WebSockets
+        accessTokenFactory: () => token
       })
       .build();
     this.hubConnection
       .start()
-      .then(() => console.log('Signalr Connection started'))
+      .then(() => {
+        this.addToasterMessageNotificationListener();
+        this.addWorkflowNotificationListener();
+      })
       .catch(err => console.log('Error while starting connection: ' + err));
   }
 
   public discconecctHub = () => {
-    this.hubConnection.stop();
-    console.log('Signalr Connection stopped');
+    if (this.hubConnection !== undefined) {
+      this.hubConnection.stop();
+      console.log('Signalr Connection stopped');
+    }
   }
 
   public addWorkflowNotificationListener = () => {

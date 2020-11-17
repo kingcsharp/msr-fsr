@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel } from '../../services/api.client.generated';
+import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
-import { responseHandler } from '../../utils/responseHandler';
-import { forkJoin } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
+import { EnumFailAction } from '../../models/enums/EnumFailAction';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -25,52 +26,49 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   monitorListItemOptions: Array<SelectItem>;
   sensorsAvailable: Array<SelectItem>;
   workOrderMonitorPassOrFailOptions: Array<SelectItem>;
+  wasValidationCalled: boolean = false;
+  failActions = EnumFailAction;
+  monitorTypes = EnumMonitorType;
 
   constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
 
   ngOnInit(): void {
 
     this.monitorListItemOptions = [
-      { label: 'Damaged in Handling', value: 1 },
-      { label: 'Damaged in Storage', value: 2 },
-      { label: 'Damaged in Transit', value: 4 },
-      { label: 'Defect Appearance', value: 5 },
-      { label: 'Defect Functional', value: 6 },
-      { label: 'Defect Material', value: 7 },
-      { label: 'Defect Peformance', value: 8 },
-      { label: 'Defect Process', value: 9 },
-      { label: 'Defect Tolerance', value: 10 },
-      { label: 'Wrong Product', value: 12 },
-      { label: 'Wrong ID/Traceability', value: 12 },
-      { label: 'Cust NC - chips, cracks, breakage', value: 13 },
-      { label: 'Cust NC - scratches, pitting', value: 14 },
-      { label: 'Cust NC - other damage', value: 15 },
-      { label: 'Cust NC - end of life', value: 16 },
-      { label: 'Cust NC - false leak check', value: 17 },
-      { label: 'Cust NC - CU protocol violation', value: 18 },
-      { label: 'Cust NC - inadequate packaging', value: 19 },
-      { label: 'Cust NC - missing parts/subparts', value: 20 },
-      { label: 'Cust NC - wrong product', value: 21 },
-      { label: 'Cust NC - shipped to wrong location', value: 22 },
-      { label: 'Cust NC - incorrect paperwork', value: 23 },
-      { label: 'Cust NC - cannot disassemble', value: 24 }
+      { label: 'Damaged in Handling', value: '1' },
+      { label: 'Damaged in Storage', value: '2' },
+      { label: 'Damaged in Transit', value: '4' },
+      { label: 'Defect Appearance', value: '5' },
+      { label: 'Defect Functional', value: '6' },
+      { label: 'Defect Material', value: '7' },
+      { label: 'Defect Peformance', value: '8' },
+      { label: 'Defect Process', value: '9' },
+      { label: 'Defect Tolerance', value: '10' },
+      { label: 'Wrong Product', value: '11' },
+      { label: 'Wrong ID/Traceability', value: '12' },
+      { label: 'Cust NC - chips, cracks, breakage', value: '13' },
+      { label: 'Cust NC - scratches, pitting', value: '14' },
+      { label: 'Cust NC - other damage', value: '15' },
+      { label: 'Cust NC - end of life', value: '16' },
+      { label: 'Cust NC - false leak check', value: '17' },
+      { label: 'Cust NC - CU protocol violation', value: '18' },
+      { label: 'Cust NC - inadequate packaging', value: '19' },
+      { label: 'Cust NC - missing parts/subparts', value: '20' },
+      { label: 'Cust NC - wrong product', value: '21' },
+      { label: 'Cust NC - shipped to wrong location', value: '22' },
+      { label: 'Cust NC - incorrect paperwork', value: '23' },
+      { label: 'Cust NC - cannot disassemble', value: '24' }
     ];
 
     this.workOrderMonitorYesOrNoOptions = [
-      { label: 'Yes', value: '1' },
-      { label: 'No', value: '0' }
+      { label: 'Yes', value: 1 },
+      { label: 'No', value: 0 }
     ];
 
     this.workOrderMonitorPassOrFailOptions = [
-      { label: 'Pass', value: '1' },
-      { label: 'Fail', value: '0' }
+      { label: 'Pass', value: 1 },
+      { label: 'Fail', value: 0 }
     ];
-
-    this.workOrderMonitorsToView.map(monitor => {
-
-      monitor.holdIfFails = monitor.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED' ? true : false;
-
-    });
 
     Parsley.addValidator('equaltotarget', {
       requirementType: 'number',
@@ -84,33 +82,55 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
   }
 
+  ngOnChanges(changes) {
+    this.wasValidationCalled = false;
+  }
+
   areDropDownsValid(): boolean {
 
     let dropDownsAreValid = true;
 
-    this.workOrderMonitorsToView.filter(s => (s.procedureStepMonitor.monitorType === 'Pass or Fail'
-      || s.procedureStepMonitor.monitorType === 'Yes or No'
-      || s.procedureStepMonitor.monitorType === 'Select') && s.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED').forEach(m => {
+    let passAndFailAndYesOrNoMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.PassOrFail
+      || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo);
 
-        if (m.procedureStepMonitor.targetValue !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
-          || m.procedureStepMonitor.monitorType === 'Yes or No')) {
+    passAndFailAndYesOrNoMonitors.map(m => {
+
+      if (m.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared) {
+
+        if (m.numVal === undefined || m.numVal === null) {
           dropDownsAreValid = false;
-        } else if (m.procedureStepMonitor.monitorType === 'Select' && (m.numVal === undefined || m.numVal === null)) {
+        } else {
+
+          if (m.procedureStepMonitor.targetValue !== m.numVal.toString()) {
+            dropDownsAreValid = false;
+          }
+
+        }
+
+      } else if (m.procedureStepMonitor.faultHandling === EnumFailAction.RecordAndContinue) {
+
+        if (m.numVal === undefined || m.numVal === null) {
           dropDownsAreValid = false;
         }
 
+      }
 
-      });
+    });
+
+    let selectMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Select);
+    selectMonitors.map(m => {
+
+      if (m.multiVal === undefined || m.multiVal === null){
+        dropDownsAreValid = false;
+      }
+    });
 
     return dropDownsAreValid;
   }
 
   updateMonitors(closeTask: boolean = false) {
-
-    let updateMonitorsRequests = new Array<any>();
-
-    this.workOrderMonitorsToView.forEach(monitor => {
-
+    let toatlRequests = this.workOrderMonitorsToView.length;
+    this.workOrderMonitorsToView.map(monitor => {
       let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
         comment: monitor.comment === undefined ? '' : monitor.comment,
         multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
@@ -120,20 +140,26 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
         workOrderTaskMonitorId: monitor.id
       } as IUpdateWorkOrderTaskMonitorRequest);
 
-      updateMonitorsRequests.push(this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest));
-
+      this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest)
+        .pipe(take(1)).subscribe((result: AuditActionResultOfWorkOrderTaskMonitorModel) => {
+          if (closeTask) {
+            if (toatlRequests === 1) {
+              this.wasValidationCalled = false;
+              this.closeCurrentTaskInProgress.emit();
+            } else {
+              toatlRequests--;
+            }
+          }
+          monitor.lastUpdated = result.object.lastUpdated;
+          monitor.lastUpdatedBy = result.object.lastUpdatedBy;
+          monitor.textVal = result.object.textVal;
+        });
     });
-
-    forkJoin(updateMonitorsRequests).subscribe(() => {
-      if (closeTask) {
-        this.closeCurrentTaskInProgress.emit();
-      }
-    });
-
-
   }
 
   areMonitorsInValidStateToCloseTask(): boolean {
+
+    this.wasValidationCalled = true;
 
     if (this.workOrderMonitorsToView.length === 0) {
       return true;
@@ -145,20 +171,14 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   }
 
   saveMonitors() {
-
     if (this.areMonitorsInValidStateToCloseTask()) {
-
       this.updateMonitors(false);
-
     }
   }
 
   saveMonitorsAndCloseTask() {
-
     if (this.areMonitorsInValidStateToCloseTask()) {
-
       this.updateMonitors(true);
-
     }
   }
 

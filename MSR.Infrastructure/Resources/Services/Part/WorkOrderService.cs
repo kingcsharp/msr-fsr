@@ -37,7 +37,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
-            
+
             IQueryable<WorkOrder> query = _unitOfWork.WorkOrders.Query();
 
             if (command.Id.HasValue && command.Id > 0)
@@ -107,7 +107,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _ = await _unitOfWork.Products.Query()
                 .Include(u => u.Part)
                 .Include(t => t.Customer)
-                .Include(v =>v.Procedure)
+                .Include(v => v.Procedure)
                 .Where(s => workOrderEntities.Select(m => m.ProductId).Contains(s.Id)).ToListAsync();
 
             _ = await _unitOfWork.Purchases.Query()
@@ -384,7 +384,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (command.Id.HasValue)
             {
                 query = query.Where(s => s.Id == command.Id);
-                
+
             }
 
             if (command.WorkOrderId.HasValue)
@@ -398,7 +398,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             // We have to null out the array of children for WorkOrderParts or else the depth of the data structure is too deep for the return object
             // TODO: Since we track if WorkOrderPart is child based on parentId and parent property, the child property is not needed and should be removed
-            foreach (var workOrderPartModel in workOrderPartModels) 
+            foreach (var workOrderPartModel in workOrderPartModels)
             {
                 workOrderPartModel.Children = null;
             }
@@ -649,7 +649,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.BadRequest);
             }
 
-            var current = await _unitOfWork.WorkOrderTaskMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var current = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(x=>x.ProcedureStepMonitor).FirstOrDefaultAsync(i => i.Id == command.Id);
 
             if (current is null)
             {
@@ -657,6 +657,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             WorkOrderTaskMonitorModel ret;
+
+            if (current.ProcedureStepMonitor.MonitorTypeId == 6)
+            {
+                var multival = int.Parse(command.MultiVal);
+                var monitorListItem = await _unitOfWork.MonitorListItems.Query().Where(x => x.Id == multival).FirstOrDefaultAsync();
+                command.TextVal = monitorListItem.Name;
+            }
+
             var workordertaskmonitor = _mapper.Map(command, current);
             _unitOfWork.WorkOrderTaskMonitors.Update(workordertaskmonitor);
 
@@ -864,7 +872,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     var (completedDenominator, completedNumerator, percentComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration) = GetStatusValues(associatedWorkOrder);
                     var parentPart = associatedWorkOrder.WorkOrderParts.Any() ? associatedWorkOrder.WorkOrderParts.FirstOrDefault(i => i.Part != null && i.ParentId == null) : (new WorkOrderPartModel());
                     var inProgressTask = associatedWorkOrder.WorkOrderTasks.FirstOrDefault(i => i.StatusId == (int)WorkOrderStatusEnum.InProgress);
-                    if(inProgressTask != null)
+                    if (inProgressTask != null)
                     {
                         portalView.StepText = inProgressTask.ProcedureStep?.Title;
                     }
@@ -974,17 +982,18 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 11  Waiting to Start
             int[] completed = { 3, 6, 8 };
             string status;
-            if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.InProgress))
+            if (tasks.All(x => completed.Contains(x.StatusId)))
+            {
+                status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
+            }
+            else if (tasks.Any(x => (x.StatusId == (int)EnumStatusSteps.InProgress ||
+                                     x.StatusId == (int)EnumStatusSteps.Complete) ))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.InProgress);
             }
             else if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.Cancelled))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.Cancelled);
-            }
-            else if (tasks.All(x => completed.Contains(x.StatusId)))
-            {
-                status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
             }
             else
             {

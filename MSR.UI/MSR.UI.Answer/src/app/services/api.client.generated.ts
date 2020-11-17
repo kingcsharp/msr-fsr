@@ -12868,6 +12868,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
     referenceDocument?: FileModel[] | undefined;
+    isUsed?: boolean;
 
     constructor(data?: IProcedureStepModel) {
         if (data) {
@@ -12917,6 +12918,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
                 for (let item of _data["referenceDocument"])
                     this.referenceDocument!.push(FileModel.fromJS(item));
             }
+            this.isUsed = _data["isUsed"];
         }
     }
 
@@ -12966,6 +12968,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
             for (let item of this.referenceDocument)
                 data["referenceDocument"].push(item.toJSON());
         }
+        data["isUsed"] = this.isUsed;
         return data; 
     }
 }
@@ -12992,6 +12995,7 @@ export interface IProcedureStepModel {
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
     referenceDocument?: FileModel[] | undefined;
+    isUsed?: boolean;
 }
 
 /**  */

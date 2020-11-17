@@ -248,7 +248,10 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateProcedureStep, ProcedureStepApproval>();
             CreateMap<CreateProcedureStep, ProcedureStep>();
             CreateMap<UpdateProcedure, ProcedureApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.Id))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<ProcedureApproval, Domain.Models.Procedure>();
             CreateMap<ProcedureApproval, UpdateProcedure>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProcedureId));
             CreateMap<UpdateProcedure, Procedure>()
@@ -336,7 +339,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureStepApproval, ProcedureStep>().ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<ProductApproval, Product>().ForMember(dest => dest.Id, opt => opt.Ignore());
-            //CreateMap<PurchaseOrderApproval, PurchaseOrder>().ForMember(dest => dest.Id, opt => opt.Ignore());
             #endregion
 
             CreateMap<MenuRolePermission, Permission>().ReverseMap();
@@ -380,6 +382,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<QuoteItem, Domain.Models.QuoteItemModel>().ReverseMap();
             CreateMap<CreateQuote, Quote>();
             CreateMap<CreateQuoteItem, QuoteItem>();
+            CreateMap<QuoteImportItem, CreateQuote>();
             #endregion
 
 
@@ -412,7 +415,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreatePurchaseOrder, PurchaseOrderApproval>()
                 .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.CustomerReferencePO))
                 .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo));
-            CreateMap<PurchaseOrderApproval, PurchaseOrder>();
+            CreateMap<PurchaseOrderApproval, PurchaseOrder>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PurchaseOrderId));
             CreateMap<UpdatePurchaseOrder, PurchaseOrder>()
                 .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.CustomerReferencePO))
                 .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo))

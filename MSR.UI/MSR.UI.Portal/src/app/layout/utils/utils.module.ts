@@ -16,6 +16,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CheckboxModule } from 'primeng/checkbox';
+import { MonitorResultPipe } from '../../../app/pipes/monitorResult.pipe';
 import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
 import { MultiselectWrapperFormComponent } from '../../../app/components/multiselect-wrapper-form/multiselect-wrapper-form.component';
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
@@ -48,6 +49,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
     GridInputFilterComponent,
     GridOptionsComponent,
     TimeZonePipe,
+    MonitorResultPipe,
     BootstrapSwitchComponent,
     CkeditorWrapperComponent,
     GridComponent
@@ -72,6 +74,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
     CalendarModule,
     GridOptionsComponent,
     TimeZonePipe,
+    MonitorResultPipe,
     BootstrapSwitchComponent,
     CkeditorWrapperComponent
   ],

@@ -81,9 +81,8 @@ namespace MSR.Infrastructure.Resources.Services
                     }
 
                     var part = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(x => x.Id == partApproval.PartId);
-                    partApproval.Status = status;
                     _mapper.Map(partApproval, part);
-                    _unitOfWork.PartApprovals.Update(partApproval);
+                    _unitOfWork.PartApprovals.Delete(false, partApproval, true);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(partApproval, partApproval.Id, status.Name, command.Comments);
                     result = partApproval;
@@ -558,13 +557,11 @@ namespace MSR.Infrastructure.Resources.Services
             if (productApproval.ProductId == null)
             {
                 var productCommand = _mapper.Map<CreateProduct>(productApproval);
-                productCommand.Revision = 1;
                 await _productService.CreateProductAsync(productCommand);
             }
             else
             {
                 var productCommand = _mapper.Map<UpdateProduct>(productApproval);
-                productCommand.Revision += 1;
                 await _productService.UpdateProductAsync(productCommand);
             }
 
@@ -815,7 +812,6 @@ namespace MSR.Infrastructure.Resources.Services
             else
             {
                 var procedureCommand = _mapper.Map<UpdateProcedure>(procedureApproval);
-                procedureCommand.Revision += 1;
                 await _procedureService.UpdateProcedureAsync(procedureCommand);
 
                 foreach (ProcedureStepApproval step in procedureApproval.ProcedureStepApprovals)
@@ -833,7 +829,10 @@ namespace MSR.Infrastructure.Resources.Services
                     update.ReferenceDocumentIds = dataObj.documentIds;
                     update.Roles = _mapper.Map<List<Domain.Models.Role>>(dataObj.roleIds);
 
-                    await _procedureService.UpdateProcedureStepAsync(update);
+                    // Save the step changes WITHOUT revision increment.  This is
+                    // because the changes are supposed to be all rolled into
+                    // ONE change to the parent procedure.
+                    await _procedureService.UpdateProcedureStepAsync(update, false);
                 }
 
             }

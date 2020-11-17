@@ -1,8 +1,8 @@
 <button type="button" class="btn btn-sm btn-primary mr-2" (click)="togglePrintTravelerDialog()"><i
         class="fas fa-print mx-1"></i>Print Traveler</button>
 
-<p-dialog [(visible)]="showPrintTravelerDialog" appendTo="body" styleClass="report"
-    [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+<p-dialog [(visible)]="showPrintTravelerDialog" appendTo="body" styleClass="report" [baseZIndex]="100001" [modal]='true'
+    [style]="{width: '50vw'}" data-cy="user-header">
     <p-header>
         Print Traveler Report
     </p-header>
@@ -18,24 +18,31 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="row">
-                            <div class="col-4 text-right">Customer:</div><div class="col-8">{{WorkOrder.product?.customer?.name}}</div>
+                            <div class="col-4 text-right">Customer:</div>
+                            <div class="col-8">{{WorkOrder.product?.customer?.name}}</div>
                         </div>
                         <div class="row">
-                            <div class="col-4 text-right">Product:</div><div class="col-8">{{WorkOrder.product?.name}}</div>
+                            <div class="col-4 text-right">Product:</div>
+                            <div class="col-8">{{WorkOrder.product?.name}}</div>
                         </div>
                         <div class="row">
-                            <div class="col-4 text-right">Procedure:</div><div class="col-8">{{WorkOrder.product?.procedure?.name}}</div>
+                            <div class="col-4 text-right">Procedure:</div>
+                            <div class="col-8">{{WorkOrder.product?.procedure?.name}}</div>
                         </div>
                         <div class="row">
-                            <div class="col-4 text-right">WO Item #:</div><div class="col-8">{{WorkOrder.id}}</div>
+                            <div class="col-4 text-right">Work Order Id:</div>
+                            <div class="col-8">{{WorkOrder.id}}</div>
                         </div>
                         <div class="row">
-                            <div class="col-4 text-right">Customer P/O Line:</div><div class="col-8">{{WorkOrder.purchase?.customerLineNumber}}</div>
+                            <div class="col-4 text-right">Customer P/O Line:</div>
+                            <div class="col-8">{{WorkOrder.purchase?.customerLineNumber}}</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="d-flex justify-content-center">
-                            <div class="my-auto image-placeholder" *ngIf="parentPartImageUrl === undefined"><h2>NO IMAGE AVAILABLE</h2></div>
+                            <div class="my-auto image-placeholder" *ngIf="parentPartImageUrl === undefined">
+                                <h2>NO IMAGE AVAILABLE</h2>
+                            </div>
                             <div class="my-auto" *ngIf="parentPartImageUrl !== undefined">
                                 <img class="w-100" src="{{parentPartImageUrl}}" alt="Part Image">
                             </div>
@@ -50,22 +57,27 @@
             </div>
             <div class="col-12 ml-4 mb-4">
                 <div class="row">
-                    <div class="col-12" *ngIf="WorkOrder !== undefined && WorkOrder.workOrderParts !== undefined && WorkOrder.workOrderParts?.length !== 0">
-                        Customer Part Number {{WorkOrder.workOrderParts[0]?.part?.partNumber}}, (Serial #: {{WorkOrder.workOrderParts[0]?.serialNumber}}),{{WorkOrder.workOrderParts[0]?.part?.name}}
+                    <div class="col-12"
+                        *ngIf="WorkOrder !== undefined && WorkOrder.workOrderParts !== undefined && WorkOrder.workOrderParts?.length !== 0">
+                        Customer Part Number {{WorkOrder.workOrderParts[0]?.part?.partNumber}}, (Serial #:
+                        {{WorkOrder.workOrderParts[0]?.serialNumber}}),{{WorkOrder.workOrderParts[0]?.part?.name}}
                     </div>
                 </div>
             </div>
             <div class="col-12">
-                <div class="card-column mx-4">
-                    <div class="card" *ngFor="let workOrderTask of WorkOrder.workOrderTasks">
-                        <div class="card-header">
-                          {{ workOrderTask.procedureStep?.title}}
-                        </div>
-                        <div class="card-body">
-                          <p class="card-text">{{ workOrderTask.procedureStep?.stepText}}</p>
-                        </div>
-                      </div>
-                </div>
+                <table>
+                    <tbody>
+                        <tr class="workordertask-container" *ngFor="let workOrderTask of WorkOrder.workOrderTasks">
+                            <td>
+                                <div class="col-12 p-2 workordertask-title">
+                                    <span>{{workOrderTask.procedureStep?.title}}</span>
+                                </div>
+                                <div class="col-12 p-2 workordertask-steptext" [innerHTML]="workOrderTask.procedureStep?.stepText">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

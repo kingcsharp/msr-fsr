@@ -3,8 +3,8 @@
         <div class="row mb-4">
             <div class="col-6 border p-2">Report Type:</div>
             <div class="col-6 border p-2"><p-dropdown [options]="reportTypeOptions" [(ngModel)]="selectedReportType" placeholder="Select Report Type"></p-dropdown></div>
-            <div class="col-6 border p-2">Purchase Item:</div>
-            <div class="col-6 border p-2">{{ WorkOrder.purchase?.id}}</div>
+            <div class="col-6 border p-2">Work Order Id:</div>
+            <div class="col-6 border p-2">{{ WorkOrder.id}}</div>
             <div class="col-6 border p-2" *ngIf="selectedReportType === 'TechnicalSummary'">Show Procedure Steps?:</div>
             <div class="col-6 border p-2" *ngIf="selectedReportType === 'TechnicalSummary'"><p-dropdown [options]="yesOrNoOptions" [(ngModel)]="selectedShowProcedureStepOption"></p-dropdown></div>
             <div class="col-6 border p-2" *ngIf="selectedReportType === 'PurchaseSummary'">Show Shipping Procedure Purchase Items?:</div>
@@ -14,7 +14,7 @@
     <div class="col-12" *ngIf="selectedReportType === 'PurchaseSummary'">
         <div class="row mb-4" *ngIf="selectedShowPurchaseItemOption === true">
             <div class="col-2 border font-weight-bold">PO #</div>
-            <div class="col-2 border font-weight-bold">Purchase Item #</div>
+            <div class="col-2 border font-weight-bold">Work Order Id</div>
             <div class="col-2 border font-weight-bold">Single PO# (Customer Purchase #)</div>
             <div class="col-2 border font-weight-bold">Blanket PO #</div>
             <div class="col-1 border font-weight-bold">Line Item</div>
@@ -22,7 +22,7 @@
             <div class="col-1 border font-weight-bold">Serial #</div>
             <div class="col-1 border font-weight-bold">Qty #</div>
             <div class="col-2 border">{{WorkOrder.purchase?.purchaseOrder?.id}}</div>
-            <div class="col-2 border">{{WorkOrder.purchase?.id}}</div>
+            <div class="col-2 border">{{WorkOrder.id}}</div>
             <div class="col-2 border">{{WorkOrder.purchase?.purchaseOrder?.referencePO}}</div>
             <div class="col-2 border"></div>
             <div class="col-1 border"></div>
@@ -38,7 +38,7 @@
             <div class="col-6 border font-weight-bold">Product Name (#):</div><div class="col-6 border">{{  WorkOrder.product?.part?.name}}</div>
             <div class="col-6 border font-weight-bold">Procedure Name (#):</div><div class="col-6 border">{{ WorkOrder.product?.procedure?.name}}</div>
             <div class="col-6 border font-weight-bold">Current Owner's Part Name (#):</div><div class="col-6 border">{{ WorkOrder.product?.name}}</div>
-            <div class="col-6 border font-weight-bold">Fill Date:</div><div class="col-6 border">{{ WorkOrder.acutalEndDate}}</div>
+            <div class="col-6 border font-weight-bold">Fill Date:</div><div class="col-6 border">{{ WorkOrder.actualEndDate | userTimezone}}</div>
         </div>
     </div>
     <div class="col-12" *ngIf="selectedReportType === 'TechnicalSummary'">
@@ -60,13 +60,13 @@
                         {{workOrderTask.id}}
                     </div>
                     <div class="col-11 border p-2">
-                        <div class="col-12 mb-2">{{workOrderTask.procedureStep?.stepText}}</div>
+                        <div class="col-12 mb-2" [innerHTML]="workOrderTask.procedureStep?.stepText"></div>
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-8 border font-weight-bold">Desciption</div><div class="col-4 border font-weight-bold">Result</div>
                                 <div class="col-12" *ngIf="workOrderTask.workOrderTaskMonitors?.length > 0">
                                     <div class="row" *ngFor="let workOrderTaskMonitor of workOrderTask.workOrderTaskMonitors">
-                                        <div class="col-8 border">{{workOrderTaskMonitor.procedureStepMonitor?.description }}</div>
+                                        <div class="col-8 border" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description"></div>
                                         <div class="col-4 border">{{workOrderTaskMonitor.textVal}}</div>
                                     </div>
                                 </div>

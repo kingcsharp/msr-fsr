@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.API.Extentions;
+using MSR.Answer.API.Infrastructure.Converters;
 using MSR.Application.Hubs;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -31,8 +32,15 @@ namespace MSR.Answer.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+
+            services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
+            });
+
             services.AddApiVersioning();
+
             services.AddApiServices(Configuration);
             services.AddOpenApiDocument(settings =>
             {
@@ -61,6 +69,7 @@ namespace MSR.Answer.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

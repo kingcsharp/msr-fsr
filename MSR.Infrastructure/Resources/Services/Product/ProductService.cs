@@ -65,6 +65,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
                 var product = _mapper.Map<Product>(command);
+                product.Revision = 1;
 
                 if (product.ProductSteps != null)
                 {
@@ -214,7 +215,10 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
+                int revision = product.Revision;
                 _ = _mapper.Map(command, product);
+                product.Revision = revision + 1;
+
                 product.ProductSteps = _mapper.Map<ICollection<EntityFramework.Entities.ProductStep>>(command.ProductSteps);
 
                 // Save product changes

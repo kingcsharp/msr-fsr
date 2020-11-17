@@ -251,9 +251,13 @@
                                     <button *ngIf="procedureStep.value.id !== 0" type="button" name="updatebutton{{i}}"
                                         class="btn btn-primary m-2" (click)="updateProcedureStep(procedureStep.value)"
                                         data-cy="update-button">Update</button>
-                                    <button type="button" name="deletebutton{{i}}" class="btn btn-danger m-2"
+                                    <button *ngIf="!procedureStep.value.isUsed" type="button" name="deletebutton{{i}}" class="btn btn-danger m-2"
                                         (click)="openConfirmDeleteStepDialog(procedureStep.value)"
                                         data-cy="delete-button">Delete</button>
+                                    <button type="button" name="deletebutton{{i}}" class="btn btn-danger m-2 disabled-button"
+                                        *ngIf="procedureStep.value.isUsed"
+                                        data-toggle="tooltip" data-placement="bottom" title="Cannot Delete Step if used by WorkOrderTasks"
+                                         data-cy="delete-button">Delete</button>
                                 </div>
                             </div>
                             <div class="col-12 col-xl-3">

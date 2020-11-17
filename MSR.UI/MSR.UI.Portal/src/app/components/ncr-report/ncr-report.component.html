@@ -20,9 +20,9 @@
             <div class="col-4 font-weight-bold">Part #</div>
             <div class="col-4 font-weight-bold">Part Name</div>
             <div class="col-4 font-weight-bold">Serial Number</div>
-            <div class="col-4">500213434</div>
-            <div class="col-4">Heated V2 Valve</div>
-            <div class="col-4">N/A</div>
+            <div class="col-4">{{workOrderPart.part.partNumber}}</div>
+            <div class="col-4">{{workOrderPart.part.name}}</div>
+            <div class="col-4">{{workOrderPart.serialNumber}}</div>
         </div>
     </div>
     <div class="col-12 border mb-2">
@@ -49,8 +49,8 @@
             <div class="col-3 border bg-secondary p-2">Comment</div>
             <div class="col-12">
                 <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
-                    <div class="col-6 border p-2">{{monitorSummary.monitorTitle}}</div>
-                    <div class="col-3 border p-2">{{monitorSummary.result}}</div>
+                    <div class="col-6 border p-2" [innerHTML]="monitorSummary.monitorTitle"></div>
+                    <div class="col-3 border p-2">{{monitorSummary.result | monitorResult}}</div>
                     <div class="col-3 border p-2">{{monitorSummary.comment}}</div>
                 </div>
             </div>

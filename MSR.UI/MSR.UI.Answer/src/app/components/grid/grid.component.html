@@ -19,8 +19,16 @@
                 [(visibleColumnsCount)]="gridSaved.visibleColumns">
             </grid-options>
         </div>
-        <div class="pull-right">
-            <i class="fad fa-file-csv exportCsv" tooltip="Export CSV" (click)="printCsvReport()"></i>
+        <div *ngIf="showExportGrid" class="pull-right exportBtnsMargin">
+            <button class="btn btn-secondary pull-right" (click)="printCsvReport()">
+                <i class="fas fa-file-csv"></i> Export CSV
+            </button>
+            <!-- <button class="btn btn-success pull-right">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </button>
+            <button class="btn btn-danger pull-right">
+                <i class="fas fa-file-pdf"></i> Export PDF
+            </button> -->
         </div>
     </ng-template>
     <ng-template pTemplate="header">

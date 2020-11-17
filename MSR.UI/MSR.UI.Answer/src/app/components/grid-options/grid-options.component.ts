@@ -4,7 +4,7 @@ import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ViewSaved } from '../../models/lib/ViewSaved';
 import { Globals } from '../../models/lib/globals';
 import { TableState } from 'primeng/api';
-import { deepCopy } from '../../models/lib/Utils';
+import * as _ from 'lodash';
 
 @Component({
   host: {
@@ -39,7 +39,7 @@ export class GridOptionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gridSettings = deepCopy(this.defaultColumns);
+    this.gridSettings = _.cloneDeep(this.defaultColumns);
     this.updateDefaultColumns(this.cg.getDefaultView(this.gridStorageId, this.gridVersion));
 
     this.columnPicker = this.defaultColumns.map((elem) => {
@@ -214,14 +214,14 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public updateTemplateWithCurrentView(tplView: ViewSaved) {
-    const columns = deepCopy(this.defaultColumns).map(e => new ColumnsSaved(e));
+    const columns = _.cloneDeep(this.defaultColumns).map(e => new ColumnsSaved(e));
     const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false, columns: columns });
     Object.assign(savedView, this.viewToSave);
     this.cg.updateView(tplView, savedView);
   }
 
   public saveView() {
-    const columns = deepCopy(this.defaultColumns).map(e => new ColumnsSaved(e));
+    const columns = _.cloneDeep(this.defaultColumns).map(e => new ColumnsSaved(e));
     const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false, columns: columns });
     Object.assign(savedView, this.viewToSave);
     this.cg.addView(savedView);

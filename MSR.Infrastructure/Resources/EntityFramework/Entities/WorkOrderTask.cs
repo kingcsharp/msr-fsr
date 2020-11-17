@@ -27,6 +27,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("AssignedTo")]
         public virtual User AssignedToUser { get; set; }
 
+        [Column(TypeName = "decimal(18,4)")]
         public decimal? TotalTaskTime { get; set; }
 
         public bool? TaskIsRunning { get; set; }

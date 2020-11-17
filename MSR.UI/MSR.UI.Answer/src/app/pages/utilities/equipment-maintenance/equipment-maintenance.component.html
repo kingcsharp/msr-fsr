@@ -207,15 +207,16 @@
 <p-dialog
   header="Create/Edit Equipment Maintenance"
   [(visible)]="displayEMDialog"
-  [baseZIndex]="100001"
+  appendTo="body"
   [modal]='true'
   [style]="{width: '70vw'}"
   data-cy="user-header"
 >
   <form
     *ngIf="currentEM"
-    data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
-    (ngSubmit)="onEMFormSubmit()"
+    data-parsley-validate
+    class="form-horizontal form-label-left parsleyjs"
+    method="post"
     data-parsley-priority-enabled="false"
     novalidate="novalidate"
   >
@@ -238,35 +239,44 @@
               <button
                 type="button"
                 class="input-group-addon bg-primary btn"
-                (click)="getLocations()"
-              >
-                Lookup <i [class]="isLooking ? 'fa fa-refresh fa-spin ml-2' : 'fa fa-search ml-2'"></i>
-              </button>
+                (click)="searchLocations()"
+              >Lookup</button>
             </div>
           </div>
 
-          <ng-container *ngIf="getLocationsFlag && locations.length > 0">
+          <ng-container *ngIf="getLocationsFlag">
             <div class="form-group row">
               <label for="locationId" class="col-md-3 col-12 col-form-label text-md-right">
                 Room/Equipment
               </label>
-              <p-dropdown
-                *ngIf="getLocationsFlag"
-                class="col-md-9 col-12"
-                placeholder="Select Room/Equipment"
-                name="locationId"
-                [(ngModel)]="currentEM.locationId"
-                [options]="locations"
-                appendTo="body"
-                [baseZIndex]="100002"
-                [virtualScroll]="true"
-                itemSize="30"
-                [filter]="true"
-                filterBy="label"
-                data-cy="em-select-locationid"
-                required
-              >
-              </p-dropdown>
+              <div *ngIf="getLocationsFlag" class="col-md-9 col-12">
+                <p-dropdown
+                  class="w-100"
+                  placeholder="Select Room/Equipment"
+                  name="locationId"
+                  [(ngModel)]="currentEM.locationId"
+                  [options]="locations"
+                  appendTo="body"
+                  [baseZIndex]="100002"
+                  [virtualScroll]="true"
+                  itemSize="30"
+                  [filter]="true"
+                  filterBy="label"
+                  data-cy="em-select-locationid"
+                >
+                </p-dropdown>
+                <input
+                  hidden
+                  class="form-control input-transparent w-100"
+                  name="hdnLocationId"
+                  [value]="currentEM.locationId"
+                  data-cy="em-hdn-locationid"
+                  readonly
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </div>
             </div>
 
             <div class="form-group row">
@@ -286,91 +296,141 @@
               <label for="maintenanceTask" class="col-md-3 col-12 col-form-label text-md-right">
                 Maintenance Task
               </label>
-              <p-dropdown
-                class="col-md-3"
-                placeholder="Select Maintenance Task"
-                name="maintenanceTask"
-                [(ngModel)]="currentEM.maintenanceTask"
-                [options]="maintenanceTasks"
-                appendTo="body"
-                [baseZIndex]="100003"
-                [filter]="true"
-                filterBy="label"
-                data-cy="em-select-maintenanceTask"
-                required
-              >
-              </p-dropdown>
+              <div class="col-md-3 col-12">
+                <p-dropdown
+                  class="w-100"
+                  placeholder="Select Maintenance Task"
+                  name="maintenanceTask"
+                  [(ngModel)]="currentEM.maintenanceTask"
+                  [options]="maintenanceTasks"
+                  appendTo="body"
+                  [baseZIndex]="100003"
+                  [filter]="true"
+                  filterBy="label"
+                  data-cy="em-select-maintenanceTask"
+                >
+                </p-dropdown>
+                <input
+                  hidden
+                  class="form-control input-transparent w-100"
+                  name="hdnMaintenanceTask"
+                  [value]="currentEM.maintenanceTask"
+                  data-cy="em-hdn-maintenanceTask"
+                  readonly
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </div>
+
               <label for="status" class="col-md-3 col-12 col-form-label text-md-right">
                 Status
               </label>
-              <p-dropdown
-                *ngIf="currentEM.statusId"
-                class="col-md-3 col-12"
-                placeholder="Select Status"
-                name="status"
-                [(ngModel)]="currentEM.statusId"
-                [options]="allStatus"
-                appendTo="body"
-                [baseZIndex]="100003"
-                [filter]="true"
-                filterBy="label"
-                data-cy="em-select-status"
-                required
-              >
-              </p-dropdown>
+              <div *ngIf="currentEM.statusId" class="col-md-3 col-12">
+                <p-dropdown
+                  class="w-100"
+                  placeholder="Select Status"
+                  name="status"
+                  [(ngModel)]="currentEM.statusId"
+                  [options]="allStatus"
+                  appendTo="body"
+                  [baseZIndex]="100003"
+                  [filter]="true"
+                  filterBy="label"
+                  data-cy="em-select-status"
+                >
+                </p-dropdown>
+                <input
+                  hidden
+                  class="form-control input-transparent w-100"
+                  name="hdnStatus"
+                  [value]="currentEM.statusId"
+                  data-cy="em-hdn-status"
+                  readonly
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </div>
             </div>
 
             <div class="form-group row" *ngIf="!currentEM.troubleState && currentEM.statusId === enumEMStatus.Assigned">
               <label for="assignedTo" class="col-md-3 col-12 col-form-label text-md-right">
                 Assigned To
               </label>
-              <p-dropdown
-                class="col-md-9 col-12"
-                placeholder="Select Assigned To User"
-                name="assignedTo"
-                [(ngModel)]="currentEM.assignedToId"
-                [options]="users"
-                appendTo="body"
-                [baseZIndex]="100004"
-                [filter]="true"
-                filterBy="label"
-                data-cy="em-select-assignedto"
-                required
-              >
-              </p-dropdown>
+              <div class="col-md-9 col-12">
+                <p-dropdown
+                  class="w-100"
+                  placeholder="Select Assigned To User"
+                  name="assignedTo"
+                  [(ngModel)]="currentEM.assignedToId"
+                  [options]="users"
+                  appendTo="body"
+                  [baseZIndex]="100004"
+                  [filter]="true"
+                  filterBy="label"
+                  data-cy="em-select-assignedto"
+                >
+                </p-dropdown>
+                <input
+                  hidden
+                  class="form-control input-transparent w-100"
+                  name="hdnAssignedTo"
+                  [value]="currentEM.assignedToId"
+                  data-cy="em-hdn-assignedto"
+                  readonly
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </div>
             </div>
 
             <div *ngIf="!currentEM.troubleState" class="form-group row">
               <label class="form-control-label col-md-3 col-12 text-md-right" for="lastCompleted">
                 Maintenance Last Completed
               </label>
-              <p-calendar
-                [(ngModel)]="currentEM.pemLastCompletedDate"
-                placeholder="Select Last Completed Date"
-                class="col-md-3 col-12"
-                name="lastCompleted"
-                showIcon="true"
-                styleClass="input-group input-group-transparent"
-                inputStyleClass="form-control input-transparent" data-parsley-trigger="change"
-                data-parsley-required="true"
-                tooltip="Open Date"
-                data-cy="em-input-lastcompleted"
-              >
-              </p-calendar>
+              <div class="col-md-3 col-12">
+                <p-calendar
+                  [(ngModel)]="currentEM.pemLastCompletedDate"
+                  placeholder="Select Last Completed Date"
+                  class="w-100"
+                  name="lastCompleted"
+                  showIcon="true"
+                  styleClass="input-group input-group-transparent"
+                  inputStyleClass="form-control input-transparent"
+                  tooltip="Open Date"
+                  data-cy="em-input-lastcompleted"
+                >
+                </p-calendar>
+                <input
+                  hidden
+                  class="form-control input-transparent w-100"
+                  name="hdnLastCompleted"
+                  [value]="currentEM.pemLastCompletedDate"
+                  data-cy="em-hdn-lastCompleted"
+                  readonly
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </div>
               <label class="form-control-label col-md-3 col-12 text-md-right" for="frequencyField">
                 Maintenance Frequency
               </label>
               <div class="input-group input-group-transparent col-md-3 col-12">
                 <input
+                  id="frequencyField"
                   pInputText
                   type="text"
                   class="form-control input-transparent"
                   name="frequencyField"
                   [(ngModel)]="currentEM.frequencyField"
+                  (change)="onChangeFrequencyField($event)"
                   data-cy="em-input-frequencyfield"
                   data-validate="parsley"
                   data-parsley-trigger="change"
-                  data-parsley-type="number"
+                  data-parsley-type="integer"
                 >
                 <span class="input-group-addon bg-secondary">
                   Days
@@ -406,10 +466,11 @@
     <p-footer>
       <div class="row mx-4 px-4 pb-2 justify-content-end">
         <button
-          *ngIf="currentEM.locationId"
-          type="submit"
-          class="btn btn-outline-inverse width-100 mb-xs"
-          role="button" data-cy="btn-submit"
+          type="button"
+          class="btn btn-outline-inverse width-100 mb-xs mr-xs"
+          (click)="onEMFormSubmit()"
+          role="button"
+          data-cy="btn-submit"
         >
           Submit
         </button>

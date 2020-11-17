@@ -1,5 +1,15 @@
-.exportCsv{
+.exportCsv {
     font-size: 31px;
     margin-right: 5px;
     cursor: pointer;
+}
+
+.exportBtnsMargin {
+    .btn {
+        margin-right: 5px;
+    }
+    .btn-secondary {
+        color: #fff;
+        border-color: #868e96;
+    }
 }

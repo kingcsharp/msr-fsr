@@ -30,6 +30,7 @@ import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploa
 import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
 // import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
+import { MonitorResultPipe } from '../../../app/pipes/monitorResult.pipe';
 import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-switch/bootstrap-switch.component';
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
@@ -52,6 +53,7 @@ import { GalleriaModule } from 'primeng/galleria';
     GridInputFilterComponent,
     GridOptionsComponent,
     TimeZonePipe,
+    MonitorResultPipe,
     BootstrapSwitchComponent,
     CkeditorWrapperComponent,
     GridComponent
@@ -77,6 +79,7 @@ import { GalleriaModule } from 'primeng/galleria';
     CalendarModule,
     GridOptionsComponent,
     TimeZonePipe,
+    MonitorResultPipe,
     BootstrapSwitchComponent,
     CkeditorWrapperComponent
   ],
