@@ -32,12 +32,26 @@ export class MonitorResultPipe implements PipeTransform {
                 }
 
             }
-            case EnumMonitorType.YesOrNo:
-                return workOrderTaskMonitor.numVal === 1 ? 'Yes' : 'No';
+            case EnumMonitorType.YesOrNo: {
+
+                if (workOrderTaskMonitor.numVal === null || workOrderTaskMonitor.numVal === undefined) {
+                    return null;
+                } else {
+                    return workOrderTaskMonitor.numVal === 1 ? 'Yes' : 'No';
+                }
+
+            }
             case EnumMonitorType.Text:
                 return workOrderTaskMonitor.textVal;
-            case EnumMonitorType.PassOrFail:
-                return workOrderTaskMonitor.numVal === 1 ? 'Pass' : 'Fail';
+            case EnumMonitorType.PassOrFail: {
+
+                if (workOrderTaskMonitor.numVal === null || workOrderTaskMonitor.numVal === undefined) {
+                    return null;
+                } else {
+                    return workOrderTaskMonitor.numVal === 1 ? 'Pass' : 'Fail';
+                }
+
+            }
             case EnumMonitorType.Select:
                 return workOrderTaskMonitor.textVal;
             default:
