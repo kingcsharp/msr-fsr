@@ -189,17 +189,38 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 await _unitOfWork.RoleChildRoleMaps.AddAsync(map);
             }
 
-            if (command.IsCertificationRole)
-            {
-                var userRoleIds = command.UserRoles.Select(x => x.UserRoleId).ToList();
+            var userRoles = await _unitOfWork.UserRoles.Query().Where(x => x.RoleId == command.Id).ToListAsync();
+            var commandUserIds = command.UserRoles.Select(x => x.UserId).ToList();
 
-                var userRoles = await _unitOfWork.UserRoles.Query().Where(x => userRoleIds.Contains(x.Id)).ToListAsync();
-                foreach (var item in userRoles)
+            foreach (var userRole in userRoles)
+            {
+                if (!commandUserIds.Contains(userRole.UserId))
                 {
-                    var commandUserRole = command.UserRoles.FirstOrDefault(x => x.UserRoleId == item.Id);
-                    item.CertificationFromDate = commandUserRole.CertificationFromDate;
-                    item.CertificationToDate = commandUserRole.CertificationToDate;
-                    _unitOfWork.UserRoles.Update(item);
+                    _unitOfWork.UserRoles.Delete(false, userRole, true);
+                    userRoles.Remove(userRole);
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            foreach (var userRole in command.UserRoles)
+            {
+                var foundUserRole = userRoles.FirstOrDefault(x => x.UserId == userRole.UserId);
+                if (foundUserRole == null)
+                {
+                    _unitOfWork.UserRoles.AttachAndInsert(new UserRole()
+                    {
+                        Role = role,
+                        UserId = userRole.UserId,
+                        CertificationFromDate = command.IsCertificationRole ? userRole.CertificationFromDate : null,
+                        CertificationToDate = command.IsCertificationRole ? userRole.CertificationToDate : null
+                    });
+                }
+                else
+                {
+                    foundUserRole.CertificationFromDate = command.IsCertificationRole ? userRole.CertificationFromDate : null;
+                    foundUserRole.CertificationToDate = command.IsCertificationRole ? userRole.CertificationToDate : null;
+                    _unitOfWork.UserRoles.Update(foundUserRole);
                 }
             }
 
