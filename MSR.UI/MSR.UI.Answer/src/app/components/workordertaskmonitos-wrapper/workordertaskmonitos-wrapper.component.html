@@ -153,7 +153,7 @@
               Result:
             </label>
             <div class="col-9 px-0">
-              <p-dropdown name="passorfailresult{{i}}" [options]="workOrderMonitorPassOrFailOptions"
+              <p-dropdown name="passorfailresult{{i}}" [options]="workOrderMonitorPassOrFailOptions" [disabled]="!doNotAllowEditing"
                 placeholder="Select a Response" [showClear]="true" [(ngModel)]="workOrderTaskMonitor.numVal">
               </p-dropdown>
               <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
@@ -176,7 +176,7 @@
               Your Answer:
             </label>
             <div class="col-9 px-0">
-              <p-dropdown name="yourAnswer{{i}}" [options]="workOrderMonitorYesOrNoOptions"
+              <p-dropdown name="yourAnswer{{i}}" [options]="workOrderMonitorYesOrNoOptions"  [disabled]="!doNotAllowEditing"
                 placeholder="Select a Response" [showClear]="true" [(ngModel)]="workOrderTaskMonitor.numVal">
               </p-dropdown>
               <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
@@ -200,7 +200,7 @@
               Result:
             </label>
             <div class="col-9 px-0">
-              <p-dropdown name="selectresult{{i}}" [options]="monitorListItemOptions" placeholder="Select a Response"
+              <p-dropdown name="selectresult{{i}}" [options]="monitorListItemOptions" placeholder="Select a Response"  [disabled]="!doNotAllowEditing"
                 [showClear]="true" [(ngModel)]="workOrderTaskMonitor.multiVal">
               </p-dropdown>
               <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
