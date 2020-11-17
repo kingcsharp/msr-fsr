@@ -132,7 +132,9 @@ pipeline {
 
                             try {
                                 sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE}"
+                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
                                 sh "cat ${API_COMPOSE}"
+                                sh "cat ${API_COMPOSE_PROCESSOR}"
 
                                 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                                     //sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
@@ -181,7 +183,10 @@ pipeline {
                                 input message: 'Are you ready to deploy the API to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                             }
                             sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
                             sh "cat ${API_COMPOSE}"
+
+                            sh "cat ${API_COMPOSE_PROCESSOR}"
                             deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
                             deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
                         }
@@ -238,7 +243,10 @@ pipeline {
                                 input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                             }
                             sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
+                            sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
+
                             sh "cat ${API_COMPOSE}"
+                            sh "cat ${API_COMPOSE_PROCESSOR}"
                             deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
                             deploy_processor("${API_COMPOSE_PROCESSOR}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
                         }
