@@ -92,7 +92,9 @@ namespace MSR.Application.EventServices
                         count = imported.Count();
                         break;
                     case EnumMenuItem.QuotesProducts:
-                        var importedQuotes = await _quoteService.ImportQuotes(handledEvent.CsvData);
+                        var importedQuotes = await _quoteService.ImportQuotes(
+                            Encoding.UTF8.GetString(handledEvent.data)
+                        );
                         count = importedQuotes.Count();
                         break;
                     default:
