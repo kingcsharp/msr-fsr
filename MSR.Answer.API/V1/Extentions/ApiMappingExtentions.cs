@@ -923,6 +923,13 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        public static GetRolesUsers ToGetRoleUsersCommand(this GetRoleUsersRequest request) => AutoMapperHelper.Mapper.Map<GetRolesUsers>(request);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static CreateRole ToCreateRoleCommand(this CreateRoleRequest request) => AutoMapperHelper.Mapper.Map<CreateRole>(request);
         /// <summary>
         ///

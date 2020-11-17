@@ -5,7 +5,7 @@ import {
   RoleService, Role,
   CreateRoleRequest,
   AuditActionResultOfRole, UserRoleModel,
-  UpdateRoleRequest, RolesUsersView, ReportModel, UserService, AuditActionResultOfWorkOrderTaskMonitorModel, AuditActionResultOfICollectionOfDocumentView, AuditActionResultOfICollectionOfUserModel, UserModel
+  UpdateRoleRequest, RolesUsersView, ReportModel, UserService, AuditActionResultOfWorkOrderTaskMonitorModel, AuditActionResultOfICollectionOfDocumentView, AuditActionResultOfICollectionOfUserModel, UserModel, AuditActionResultOfICollectionOfRolesUsersView
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -149,15 +149,24 @@ export class RoleComponent implements OnInit {
   }
 
   getRolesUsers() {
-    this.roleService.rolesUsers(env.apiVersion).pipe(take(1))
+    this.roleService.rolesUsers(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.rolesUsers = this.setFullNameToParentObjAndSortIt(response.object);
         this.getRoles();
       }));
   }
 
+  updateRoleUsers(roleId: number, roleUsers: any) {
+    const filteredRoles = this.rolesUsers.filter(x => x.roleId != roleId);
+    filteredRoles.push(...this.setFullNameToParentObjAndSortIt(roleUsers));
+    this.rolesUsers = filteredRoles;
+  }
+
   getRoleUsersByRoleId(roleId) {
     const assignedUsers = [];
+    if (roleId === undefined) {
+      return assignedUsers;
+    }
     this.rolesUsers.forEach(x => {
       if (x.roleId === roleId) {
         pushIfNotExists(x, assignedUsers, 'userId');
@@ -169,10 +178,8 @@ export class RoleComponent implements OnInit {
   showDialog(roleView: Role) {
     this.currentRole = this.getCurrentRole(roleView);
     this.availableRoles = this.data.filter((elem) => elem.id !== this.currentRole.id);
-    if (roleView?.id) {
-      this.roleUsers = this.getRoleUsersByRoleId(roleView.id);
-      this.userOptions = this.getRoleUsersOptions(this.roleUsers, roleView.id);
-    }
+    this.roleUsers = this.getRoleUsersByRoleId(this.currentRole.id);
+    this.userOptions = this.getRoleUsersOptions(this.roleUsers, this.currentRole.id);
 
     this.display = true;
   }
@@ -191,20 +198,19 @@ export class RoleComponent implements OnInit {
         userRoles: []
       };
 
-      if (this.currentRole.id !== undefined) {
-        data.userRoles = [];
-        this.roleUsers.forEach((x: any) => {
-          let userRoleModel = new UserRoleModel(x);
-          userRoleModel.userRoleId = x.id;
-          if (data.isCertificationRole && userRoleModel.certificationFromDate !== undefined) {
-            userRoleModel.certificationFromDate = moment(userRoleModel.certificationFromDate, 'MM/DD/YYYY').toDate();
-          }
-          if (data.isCertificationRole && userRoleModel.certificationToDate !== undefined) {
-            userRoleModel.certificationToDate = moment(userRoleModel.certificationToDate, 'MM/DD/YYYY').toDate();
-          }
-          data.userRoles.push(userRoleModel);
-        });
+      this.roleUsers.forEach((x: any) => {
+        let userRoleModel = new UserRoleModel(x);
+        userRoleModel.userRoleId = x.id;
+        if (data.isCertificationRole && userRoleModel.certificationFromDate !== undefined) {
+          userRoleModel.certificationFromDate = moment(userRoleModel.certificationFromDate, 'MM/DD/YYYY').toDate();
+        }
+        if (data.isCertificationRole && userRoleModel.certificationToDate !== undefined) {
+          userRoleModel.certificationToDate = moment(userRoleModel.certificationToDate, 'MM/DD/YYYY').toDate();
+        }
+        data.userRoles.push(userRoleModel);
+      });
 
+      if (this.currentRole.id !== undefined) {
         let postRoleData = new UpdateRoleRequest(data);
         method = this.roleService.rolePatch(env.apiVersion, postRoleData);
       } else {
@@ -212,20 +218,25 @@ export class RoleComponent implements OnInit {
         method = this.roleService.rolePost(env.apiVersion, postRoleData);
       }
 
-      method.pipe(take(1)).subscribe(responseHandler((resp) => {
+      method.pipe(take(1)).subscribe(responseHandler((resp: any) => {
         if (!resp.hasErrors) {
           resp.object.parentRoles = this.currentRole.parentRoles;
-          resp.object.assignedUsers = this.getRoleUsersByRoleId(this.currentRole.id);
-          if (ctrl.currentRole.id === undefined) {
-            ctrl.data.push(resp.object);
-            this.data = this.data.slice(0);
-          } else {
-            const index = ctrl.data.findIndex(x => x.id === ctrl.currentRole.id);
-            ctrl.data.splice(index, 1);
-            ctrl.data.splice(index, 0, resp.object);
-            ctrl.data = ctrl.data.slice(0);
-          }
-          ctrl.clseDialog();
+          this.globals.showLoader(true);
+          this.roleService.rolesUsers(resp.object.id, env.apiVersion).pipe(take(1))
+            .subscribe(responseHandler((userRolesResponse: AuditActionResultOfICollectionOfRolesUsersView) => {
+              resp.object.assignedUsers = this.setFullNameToParentObjAndSortIt(userRolesResponse.object);
+              this.updateRoleUsers(resp.object.id, resp.object.assignedUsers);
+              if (ctrl.currentRole.id === undefined) {
+                ctrl.data.push(resp.object);
+                this.data = this.data.slice(0);
+              } else {
+                const index = ctrl.data.findIndex(x => x.id === ctrl.currentRole.id);
+                ctrl.data.splice(index, 1);
+                ctrl.data.splice(index, 0, resp.object);
+                ctrl.data = ctrl.data.slice(0);
+              }
+              ctrl.clseDialog();
+            }));
         }
       }, () => {
 

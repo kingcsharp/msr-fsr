@@ -111,7 +111,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'partname', label: 'Part Names', visible: false, type: this.enumColumnType.StringArray, dropdownHeader: true, multipleValues: true }),
                     new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: false, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'value', label: 'Result', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'result', label: 'Passing', visible: true, type: this.enumColumnType.String,styles: { 'width': '6rem' } }),
+                    new ColumnsSaved({ id: 'result', label: 'Passing', visible: true, type: this.enumColumnType.String, styles: { 'width': '6rem' } }),
                     new ColumnsSaved({ id: 'workordername', label: 'WO Name', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'lastupdatedon', label: 'Task Completed', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '8rem' }, formattingAngular: 'dd-MM-yyyy', formattingMoment: 'MM-DD-YYYY' }),
                     new ColumnsSaved({ id: 'serialnumber', label: 'Serial #', visible: true, type: this.enumColumnType.String })
@@ -148,22 +148,22 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'wtax', label: 'Total', visible: true, type: this.enumColumnType.String })
                 ];
             case 'RevenuebyCustomerbyTimePeriod':
-                return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true,styles: { 'width': '8rem' } }),
+                return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '8rem' } }),
                 new ColumnsSaved({ id: 'customername', label: 'Customer Name', visible: true, type: this.enumColumnType.String, dropdownHeader: true }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String, dropdownHeader: true }),
-                new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money,styles: { 'width': '7rem' } })
+                new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money, styles: { 'width': '7rem' } })
                 ];
             case 'RevenuebyKitbyPart/Kit':
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
-                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true,styles: { 'width': '8rem' } }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '8rem' } }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String, dropdownHeader: true }),
-                new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money,styles: { 'width': '7rem' } })
+                new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money, styles: { 'width': '7rem' } })
                 ];
             case 'CountofKitsbyPart/Kit':
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
-                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true,styles: { 'width': '8rem' } }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '8rem' } }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String, dropdownHeader: true }),
-                new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Number,styles: { 'width': '6rem' } })
+                new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Number, styles: { 'width': '6rem' } })
                 ];
             default:
                 break;
@@ -312,7 +312,10 @@ export class ReportCubeService {
                 return gridDataMonitorsbyWorkOrder;
                 break;
             case 'WorkOrdersNotInvoicedbyWorkOrder':
-                const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.shipdate'] !== undefined && x['CubeFinancial.shipdate'] !== null);
+                const workOrdersNotInvoicedbyWorkOrder =
+                    data.filter(x => x['CubeFinancial.shipdate'] !== undefined && x['CubeFinancial.shipdate'] !== null
+                        && (x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null));
+                        
                 return workOrdersNotInvoicedbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
             case 'RevenuebyCustomerbyTimePeriod':
                 const resultDataRevenuebyCustomerbyTimePeriod = data.map(elem => {

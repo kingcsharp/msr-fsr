@@ -47,6 +47,17 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 await _unitOfWork.RoleChildRoleMaps.AddAsync(map);
             }
 
+            foreach (var userRole in command.UserRoles)
+            {
+                _unitOfWork.UserRoles.AttachAndInsert(new UserRole()
+                {
+                    Role = role,
+                    UserId = userRole.UserId,
+                    CertificationFromDate = command.IsCertificationRole ? userRole.CertificationFromDate : null,
+                    CertificationToDate = command.IsCertificationRole ? userRole.CertificationToDate : null
+                });
+            }
+
             await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<Domain.Models.Role>(role);
@@ -137,7 +148,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             var roleUsersModelList = new List<RolesUsersView>();
 
-            var roleIdsUserIds = await _unitOfWork.UserRoles.Query()
+            var iquerableRoleUsersView = _unitOfWork.UserRoles.Query()
                 .Select(x => new RolesUsersView
                 {
                     Id = x.Id,
@@ -146,8 +157,16 @@ namespace MSR.Infrastructure.Resources.Services.Role
                     CertificationFromDate = x.CertificationFromDate,
                     CertificationToDate = x.CertificationToDate,
                     User = new UserModel() { FirstName = x.User.FirstName, LastName = x.User.LastName, Id = x.UserId }
-                }).ToListAsync();
-            return roleIdsUserIds;
+                });
+
+            if (command.RoleId.HasValue)
+            {
+                iquerableRoleUsersView = iquerableRoleUsersView.Where(x => x.RoleId == command.RoleId);
+            }
+
+            var roleUsersView = await iquerableRoleUsersView.ToListAsync();
+
+            return roleUsersView;
         }
 
         public async Task<Domain.Models.Role> UpdateRoleAsync(UpdateRole command)
@@ -197,7 +216,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 if (!commandUserIds.Contains(userRole.UserId))
                 {
                     _unitOfWork.UserRoles.Delete(false, userRole, true);
-                    userRoles.Remove(userRole);
                 }
             }
 
