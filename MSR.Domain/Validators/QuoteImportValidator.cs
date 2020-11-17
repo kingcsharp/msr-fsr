@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Text;
 
 namespace MSR.Domain.Validators
 {
@@ -58,6 +59,11 @@ namespace MSR.Domain.Validators
             
             importErrors = errors.Any() ? errors : null;
             return !errors.Any();
+        }
+
+        public bool ValidateImportData(byte[] binData, out IEnumerable<ImportError> importErrors)
+        {
+            return ValidateImportData(Encoding.UTF8.GetString(binData), out importErrors);
         }
     }
 }
