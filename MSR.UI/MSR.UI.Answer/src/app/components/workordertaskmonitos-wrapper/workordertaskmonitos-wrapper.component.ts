@@ -5,6 +5,7 @@ import { environment as env } from '../../../environments/environment';
 import { take } from 'rxjs/operators';
 import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
 import { EnumFailAction } from '../../models/enums/EnumFailAction';
+import { EnumMonitorInputType } from '../../models/enums/EnumMonitorInputType';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -121,6 +122,15 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     selectMonitors.map(m => {
 
       if (m.multiVal === undefined || m.multiVal === null){
+        dropDownsAreValid = false;
+      }
+    });
+
+
+    let sensorMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Number && s.procedureStepMonitor.inputTypeId === EnumMonitorInputType.Sensor);
+    sensorMonitors.map(m => {
+
+      if (m.sensorValue === undefined || m.sensorValue === null){
         dropDownsAreValid = false;
       }
     });
