@@ -238,8 +238,6 @@
   </div>
   <div *ngIf="workOrderMonitorsToView !== undefined && workOrderMonitorsToView.length > 0">
     <button type="button" class="btn btn-primary m-2" (click)="saveMonitors()" [disabled]="!doNotAllowEditing">Save</button>
-    <button type="button" class="btn btn-primary m-2" (click)="saveMonitorsAndCloseTask()" [disabled]="!doNotAllowEditing">Save & Close
-      Task</button>
   </div>
 </form>
 <div class="nomonitors-message d-flex" *ngIf="workOrderMonitorsToView === undefined || workOrderMonitorsToView.length === 0">
