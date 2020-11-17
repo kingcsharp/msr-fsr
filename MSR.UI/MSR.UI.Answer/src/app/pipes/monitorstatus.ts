@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { EnumMonitorInputType } from '../models/enums/EnumMonitorInputType';
 import { EnumMonitorPassFailStatus } from '../models/enums/EnumMonitorPassFailStatus';
+import { EnumMonitorShouldBe } from '../models/enums/EnumMonitorShouldBe';
 import { EnumMonitorType } from '../models/enums/EnumMonitorType';
 import { WorkOrderTaskMonitorModel } from '../services/api.client.generated';
 
@@ -28,31 +29,30 @@ export class MonitorStatusPipe implements PipeTransform {
             case EnumMonitorType.Number:
 
                 if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor) {
-                    return (workOrderTaskMonitor.sensorValue !== undefined && workOrderTaskMonitor.sensorValue !== null && workOrderTaskMonitor.sensorValue !== '');
+                    return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null
+                        && workOrderTaskMonitor.textVal !== '' && workOrderTaskMonitor.textVal !== 'No Sensor Value Available');
                 }
 
                 if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Manual) {
 
-
-                    if (workOrderTaskMonitor.procedureStepMonitor.targetValue === null ||
-                        workOrderTaskMonitor.procedureStepMonitor.targetValue === undefined ||
-                        workOrderTaskMonitor.procedureStepMonitor.targetValue === '') {
+                    if (workOrderTaskMonitor.numVal === null ||
+                        workOrderTaskMonitor.numVal === undefined) {
                         return false;
                     }
 
                     let targetValue = Number(workOrderTaskMonitor.procedureStepMonitor.targetValue);
 
                     switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
-                        case 'EQUAL': {
+                        case EnumMonitorShouldBe.EQUAL: {
                             return (targetValue === workOrderTaskMonitor.numVal);
                         }
-                        case 'ABOVE': {
+                        case EnumMonitorShouldBe.ABOVE: {
                             return (targetValue <= workOrderTaskMonitor.numVal);
                         }
-                        case 'BELOW': {
-                            return (targetValue >= workOrderTaskMonitor.numVal);
+                        case EnumMonitorShouldBe.BELOW: {
+                            return (workOrderTaskMonitor.numVal <= targetValue);
                         }
-                        case 'BETWEEN': {
+                        case EnumMonitorShouldBe.BETWEEN: {
 
                             return (workOrderTaskMonitor.procedureStepMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
                                 workOrderTaskMonitor.procedureStepMonitor.highTarget >= workOrderTaskMonitor.numVal);
@@ -60,7 +60,6 @@ export class MonitorStatusPipe implements PipeTransform {
                         default:
                             return false;
                     }
-
 
                 }
 

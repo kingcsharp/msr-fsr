@@ -96,11 +96,11 @@
             </label>
             <div class="col-9 px-0">
               <input type="text" id="equipmentsensorresult{{i}}" name="equipmentsensorresult{{i}}"
-                [(ngModel)]="workOrderTaskMonitor.sensorValue" class="form-control input-transparent" tooltip="Result">
-              <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled && workOrderTaskMonitor.sensorValue === null">
+                [(ngModel)]="workOrderTaskMonitor.textVal" class="form-control input-transparent" tooltip="Result">
+              <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled && (workOrderTaskMonitor.textVal === null || workOrderTaskMonitor.textVal === '')">
                 <li class="parsley-custom-error-message">You must retrieve the value for the sensor</li>
               </ul>
-              <button type="button" class="btn btn-primary m-2"
+              <button type="button" class="btn btn-primary m-2" [disabled]="!doNotAllowEditing"
                 (click)="getSensorValue(i, workOrderTaskMonitor.procedureStepMonitor?.sensorName)">Get
                 Value</button>
             </div>
