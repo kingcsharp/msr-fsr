@@ -39,11 +39,6 @@ export class UserComponent implements OnInit {
   canEditUsers: boolean = false;
   showSaveView: boolean = false;
   savedViewsOptions: any;
-  phoneMask = {
-    mask: ['(', /[1-9]/, /\d/, /\d/, ')',
-      ' ', /\d/, /\d/, /\d/,
-      '-', /\d/, /\d/, /\d/, /\d/]
-  };
   canActivate: boolean;
   viewsSaved: Array<ViewSaved>;
   viewToSave: ViewSaved;
