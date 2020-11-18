@@ -142,8 +142,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
         if ((indexOfNextTask + 1) === this.workOrderTasks.length) {
           this.router.navigate(['/app/wip/wipstatus']);
         } else {
-          this.workOrderTaskInProgress = this.workOrderTasks[indexOfNextTask + 1];
-          this.workOrderTaskToView = this.workOrderTasks[indexOfNextTask + 1];
           this.updateWorkOrderTaskToViewAndInProgress.emit(this.workOrderTasks[indexOfNextTask + 1]);
         }
       }
