@@ -136,15 +136,15 @@ export class RoleComponent implements OnInit {
     return this.setFullNameToParentObjAndSortIt(roleUsersOptions);
   }
 
-  setFullNameToParentObjAndSortIt(arr) {
-    arr.map(x => {
+  setFullNameToParentObjAndSortIt(rolesUsersViewArray) {
+    rolesUsersViewArray.map(x => {
       x.fullName = x.user.fullName;
       x.firstName = x.user.firstName;
       x.lastName = x.user.lastName;
       return x;
     });
 
-    const ret = _.orderBy(arr, [user => user.firstName.toLowerCase(), user => user.lastName.toLowerCase()], ['asc', 'asc']);
+    const ret = _.orderBy(rolesUsersViewArray, [user => user.firstName.toLowerCase(), user => user.lastName.toLowerCase()], ['asc', 'asc']);
     return ret;
   }
 
