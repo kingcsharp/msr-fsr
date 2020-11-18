@@ -122,8 +122,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   saveTaskTimerState(closeStep: boolean, isStartingTask: boolean) {
 
-
-
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
       assignedUserId: this.globals.getCurrentUser().id,
       status: closeStep ? 'Complete' : this.workOrderTaskInProgress.status.name,
@@ -135,6 +133,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       startedOn: isStartingTask ? moment() : this.workOrderTaskInProgress.startedOn
     } as IUpdateWorkOrderTaskRequest);
 
+    this.globals.showLoader(true);
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
 
       if (closeStep) {
@@ -142,9 +141,31 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
         if ((indexOfNextTask + 1) === this.workOrderTasks.length) {
           this.router.navigate(['/app/wip/wipstatus']);
         } else {
-          this.workOrderTaskInProgress = this.workOrderTasks[indexOfNextTask + 1];
-          this.workOrderTaskToView = this.workOrderTasks[indexOfNextTask + 1];
-          this.updateWorkOrderTaskToViewAndInProgress.emit(this.workOrderTasks[indexOfNextTask + 1]);
+
+          let nextWorkOrderTask = this.workOrderTasks[indexOfNextTask + 1];
+          nextWorkOrderTask.statusId = 2;
+          nextWorkOrderTask.status = new StatusModel({
+            id: 2,
+            name: 'In Progress'
+          } as IStatusModel);
+
+          let updateNextWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+            assignedUserId: this.globals.getCurrentUser().id,
+            status: 'In Progress',
+            taskIsRunning: nextWorkOrderTask.taskIsRunning,
+            taskRunningSince: nextWorkOrderTask.taskRunningSince,
+            totalTaskTime: nextWorkOrderTask.totalTaskTime,
+            taskStepOrder: nextWorkOrderTask.taskStepOrder,
+            workOrderTaskId: nextWorkOrderTask.id,
+            startedOn: nextWorkOrderTask.startedOn
+          } as IUpdateWorkOrderTaskRequest);
+
+          this.globals.showLoader(true);
+          this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateNextWorkOrderTaskRequest).subscribe(responseHandler(nextWorkOrderTaskPatchResponse => {
+            this.updateWorkOrderTaskToViewAndInProgress.emit(nextWorkOrderTask);
+          }));
+
+
         }
       }
 
