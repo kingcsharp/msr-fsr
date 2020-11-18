@@ -122,8 +122,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   saveTaskTimerState(closeStep: boolean, isStartingTask: boolean) {
 
-
-
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
       assignedUserId: this.globals.getCurrentUser().id,
       status: closeStep ? 'Complete' : this.workOrderTaskInProgress.status.name,
@@ -142,7 +140,15 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
         if ((indexOfNextTask + 1) === this.workOrderTasks.length) {
           this.router.navigate(['/app/wip/wipstatus']);
         } else {
-          this.updateWorkOrderTaskToViewAndInProgress.emit(this.workOrderTasks[indexOfNextTask + 1]);
+
+          this.areMonitorsValidCheck.emit({
+            areValid: (result) => {
+
+              this.updateWorkOrderTaskToViewAndInProgress.emit(this.workOrderTasks[indexOfNextTask + 1]);
+
+            }
+          });
+
         }
       }
 
