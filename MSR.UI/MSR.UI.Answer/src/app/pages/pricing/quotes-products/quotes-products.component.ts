@@ -1,6 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
-import { EnumPrivilege } from '../../../models/enums/privileges';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
@@ -30,7 +29,6 @@ declare let Parsley: any;
 })
 export class QuotesProductsComponent implements OnInit {
   productPageModes = EnumProductPageModes;
-  privileges = EnumPrivilege;
   menuItems = EnumMenuItem;
   defaultView: ViewSaved;
   gridStorageId: string;
