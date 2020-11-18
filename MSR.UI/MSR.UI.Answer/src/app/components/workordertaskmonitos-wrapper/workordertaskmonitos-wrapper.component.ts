@@ -5,6 +5,8 @@ import { environment as env } from '../../../environments/environment';
 import { take } from 'rxjs/operators';
 import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
 import { EnumFailAction } from '../../models/enums/EnumFailAction';
+import { EnumMonitorInputType } from '../../models/enums/EnumMonitorInputType';
+import { EnumMonitorShouldBe } from '../../models/enums/EnumMonitorShouldBe';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -29,6 +31,9 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   wasValidationCalled: boolean = false;
   failActions = EnumFailAction;
   monitorTypes = EnumMonitorType;
+  monitorInputTypes = EnumMonitorInputType;
+  monitorShouldBe = EnumMonitorShouldBe;
+  readonly monitorValueNotAvailable = 'No Sensor Value Available';
 
   constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
 
@@ -93,23 +98,23 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     let passAndFailAndYesOrNoMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.PassOrFail
       || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo);
 
-    passAndFailAndYesOrNoMonitors.map(m => {
+    passAndFailAndYesOrNoMonitors.map(monitor => {
 
-      if (m.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared) {
+      if (monitor.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared) {
 
-        if (m.numVal === undefined || m.numVal === null) {
+        if (monitor.numVal === undefined || monitor.numVal === null) {
           dropDownsAreValid = false;
         } else {
 
-          if (m.procedureStepMonitor.targetValue !== m.numVal.toString()) {
+          if (monitor.procedureStepMonitor.targetValue !== monitor.numVal.toString()) {
             dropDownsAreValid = false;
           }
 
         }
 
-      } else if (m.procedureStepMonitor.faultHandling === EnumFailAction.RecordAndContinue) {
+      } else if (monitor.procedureStepMonitor.faultHandling === EnumFailAction.RecordAndContinue) {
 
-        if (m.numVal === undefined || m.numVal === null) {
+        if (monitor.numVal === undefined || monitor.numVal === null) {
           dropDownsAreValid = false;
         }
 
@@ -118,9 +123,18 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     });
 
     let selectMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Select);
-    selectMonitors.map(m => {
+    selectMonitors.map(selectMonitor => {
 
-      if (m.multiVal === undefined || m.multiVal === null){
+      if (selectMonitor.multiVal === undefined || selectMonitor.multiVal === null) {
+        dropDownsAreValid = false;
+      }
+    });
+
+
+    let sensorMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Number && s.procedureStepMonitor.inputTypeId === EnumMonitorInputType.Sensor);
+    sensorMonitors.map(sensorMonitor => {
+
+      if (sensorMonitor.textVal === undefined || sensorMonitor.textVal === null || sensorMonitor.textVal === '') {
         dropDownsAreValid = false;
       }
     });
@@ -134,8 +148,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
         comment: monitor.comment === undefined ? '' : monitor.comment,
         multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
-        sensorValue: monitor.sensorValue === undefined ? '' : monitor.sensorValue,
-        textVal: monitor.textVal === undefined ? '' : monitor.textVal,
+        textVal: monitor.textVal === undefined || monitor.textVal === this.monitorValueNotAvailable ? '' : monitor.textVal,
         numVal: monitor.numVal === undefined ? undefined : monitor.numVal,
         workOrderTaskMonitorId: monitor.id
       } as IUpdateWorkOrderTaskMonitorRequest);
@@ -152,7 +165,14 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
           }
           monitor.lastUpdated = result.object.lastUpdated;
           monitor.lastUpdatedBy = result.object.lastUpdatedBy;
-          monitor.textVal = result.object.textVal;
+
+          if (result.object.procedureStepMonitor.monitorTypeId !== EnumMonitorType.Number
+            && result.object.procedureStepMonitor.inputTypeId !== EnumMonitorInputType.Sensor
+            && result.object.procedureStepMonitor.faultHandling !== EnumFailAction.StopUntilFaultCleared
+            && monitor.textVal !== this.monitorValueNotAvailable) {
+              monitor.textVal = result.object.textVal;
+          }
+
         });
     });
   }
@@ -189,9 +209,9 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     this.sensorService.value(sensorName, siteId, env.apiVersion).subscribe(response => {
 
       if (response.object === undefined) {
-        this.workOrderMonitorsToView[indexOfMonitor].sensorValue = 'No Sensor Value Available';
+        this.workOrderMonitorsToView[indexOfMonitor].textVal = this.monitorValueNotAvailable;
       } else {
-        this.workOrderMonitorsToView[indexOfMonitor].sensorValue = response.object.itemCurrentValue;
+        this.workOrderMonitorsToView[indexOfMonitor].textVal = response.object.itemCurrentValue;
       }
 
 
