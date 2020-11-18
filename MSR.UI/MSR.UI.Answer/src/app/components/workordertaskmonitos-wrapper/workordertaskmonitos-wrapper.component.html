@@ -65,7 +65,7 @@
           </div>
           <div class="form-group col-12 d-flex flex-row"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number 
-            && workOrderTaskMonitor.procedureStepMonitor.inputType === monitorInputTypes.Sensor)">
+            && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
             <label for="equipmentsensorresult" class="col-form-label text-left col-3">
               Sensor:
             </label>
@@ -84,7 +84,7 @@
           </div>
           <div class="form-group col-12 d-flex flex-row"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Equipment 
-            && workOrderTaskMonitor.procedureStepMonitor.inputType === monitorInputTypes.Manual) 
+            && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Manual') 
             || workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Text">
             <label for="result" class="col-form-label text-left col-3">
               Result:
@@ -98,7 +98,7 @@
           </div>
           <div class="form-group col-12 d-flex flex-row"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number 
-            && workOrderTaskMonitor.procedureStepMonitor.inputType === monitorInputTypes.Sensor)">
+            && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
             <label for="equipmentsensorresult" class="col-form-label text-left col-3">
               Result:
             </label>
@@ -114,7 +114,7 @@
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number 
-          && workOrderTaskMonitor.procedureStepMonitor.inputType !== monitorInputTypes.Sensor">
+          && workOrderTaskMonitor.procedureStepMonitor.inputType !== 'Sensor'">
             <label for="result" class="col-form-label text-left col-3">
               Result:
             </label>
