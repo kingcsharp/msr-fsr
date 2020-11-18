@@ -122,7 +122,9 @@ export class UserComponent implements OnInit {
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          this.locations.push({ label: x.name, value: x.id });
+          if (x.parentId === null) {
+            this.locations.push({ label: x.name, value: x.id });
+          }
         });
         this.getLocationsFlag = true;
       }));
@@ -177,7 +179,7 @@ export class UserComponent implements OnInit {
         if (user.isAnswerUser) {
           this.toastr.success('User type changed to Is Answer User!');
         } else {
-          this.toastr.success('User type changed to Not Answer User!');
+          this.toastr.success('User type changed to Portal User!');
         }
       }
     }, () => {
