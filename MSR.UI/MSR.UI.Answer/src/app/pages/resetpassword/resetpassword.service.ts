@@ -11,8 +11,8 @@ export class ResetpasswordService {
     _isFetching: boolean = false;
     _errorMessage: string = '';
 
-    constructor(private router: Router, private accountService: AccountService, private signalrService: SignalRService) { 
-        
+    constructor(private router: Router, private accountService: AccountService, private signalrService: SignalRService) {
+
     }
 
     get isFetching() {
