@@ -15,6 +15,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace MSR.Application.EventServices
 {
@@ -22,9 +23,11 @@ namespace MSR.Application.EventServices
         IEventHandler<ImportEvent>,
         IEventHandler<WorkOrderCreateEvent>
     {
-        private ICustomerService _customerService;
-        private ILocationService _locationService;
-        private IPartService _partService;
+        private readonly ICustomerService _customerService;
+        private readonly ILocationService _locationService;
+        private readonly IPartService _partService;
+        private readonly IProcedureService _procedureService;
+        private IQuoteService _quoteService;
         private IMessageHubClient _messageHub;
         private GeneralInformation _processorConfig;
         private IWorkOrderService _workOrderService;
@@ -35,6 +38,8 @@ namespace MSR.Application.EventServices
             ICustomerService customerService,
             ILocationService locationService,
             IPartService partService,
+            IProcedureService procedureService,
+            IQuoteService quoteService,
             GeneralInformation processorConfig,
             IWorkOrderService workOrderService,
             IMapper mapper,
@@ -44,6 +49,8 @@ namespace MSR.Application.EventServices
             _customerService = customerService;
             _locationService = locationService;
             _partService = partService;
+            _procedureService = procedureService;
+            _quoteService = quoteService;
             _processorConfig = processorConfig;
             _messageHub = messageHub;
             _workOrderService = workOrderService;
@@ -63,16 +70,32 @@ namespace MSR.Application.EventServices
                 switch (handledEvent.MenuItem)
                 {
                     case EnumMenuItem.CustomersDepartments:
-                        var importedCustomers = await _customerService.ImportCustomers(handledEvent.CsvData);
+                        var importedCustomers = await _customerService.ImportCustomers(
+                            Encoding.UTF8.GetString(handledEvent.data)
+                        );
                         count = importedCustomers.Count();
                         break;
                     case EnumMenuItem.Locations:
-                        var importedLocations = await _locationService.ImportLocations(handledEvent.CsvData);
+                        var importedLocations = await _locationService.ImportLocations(
+                            Encoding.UTF8.GetString(handledEvent.data)
+                        );
                         count = importedLocations.Count();
                         break;
                     case EnumMenuItem.Parts:
-                        var importedParts = await _partService.ImportLocations(handledEvent.CsvData);
+                        var importedParts = await _partService.ImportLocations(
+                            Encoding.UTF8.GetString(handledEvent.data)
+                        );
                         count = importedParts.Count();
+                        break;
+                    case EnumMenuItem.RunnableProcedures:
+                        var imported = await _procedureService.ImportProcedures(handledEvent.data);
+                        count = imported.Count();
+                        break;
+                    case EnumMenuItem.QuotesProducts:
+                        var importedQuotes = await _quoteService.ImportQuotes(
+                            Encoding.UTF8.GetString(handledEvent.data)
+                        );
+                        count = importedQuotes.Count();
                         break;
                     default:
                         throw new DomainException("Import function not found for " +
@@ -96,6 +119,7 @@ namespace MSR.Application.EventServices
                               $"ERROR: {e.Message}",
                     Status = EnumToasterStatus.Error
                 });
+                throw;
             }
         }
 

@@ -32,5 +32,7 @@ namespace MSR.Domain.Abstractions.Services
         /// <param name="command"></param>
         /// <returns></returns>
         Task<QuoteModel> DeleteQuoteAsync(DeleteQuote command);
+
+        Task<IEnumerable<QuoteModel>> ImportQuotes(string csvData);
     }
 }

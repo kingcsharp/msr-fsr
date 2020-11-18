@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.Processor.Extentions;
 using MSR.Answer.Processor.SQSServices.Abstractions;
+using System.Text;
 
 namespace MSR.Answer.Processor
 {
@@ -20,6 +21,10 @@ namespace MSR.Answer.Processor
             configuration = builder.Build();
 
             Configuration = configuration;
+
+            // required to load older XLS files with DOS-era encodings
+            // see: https://github.com/ExcelDataReader/ExcelDataReader#important-note-on-net-core
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         public IConfiguration Configuration { get; }

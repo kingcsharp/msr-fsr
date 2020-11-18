@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MSR.Domain.Validators
 {
@@ -73,5 +76,9 @@ namespace MSR.Domain.Validators
             return parts;
         }
 
+        public bool ValidateImportData(byte[] binData, out IEnumerable<ImportError> importErrors)
+        {
+            return ValidateImportData(Encoding.UTF8.GetString(binData), out importErrors);
+        }
     }
 }

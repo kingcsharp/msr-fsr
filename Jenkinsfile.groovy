@@ -23,6 +23,7 @@ pipeline {
         PROD_PROJECT_API='prod-answer-api'
         PROD_PROJECT_UI='prod-answer-ui'
         API_COMPOSE='docker-compose-api.yml'
+        API_COMPOSE_PROCESSOR='docker-compose-api-processor.yml'
         UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
@@ -131,17 +132,17 @@ pipeline {
 
                             try {
                                 sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE}"
+                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
                                 sh "cat ${API_COMPOSE}"
+                                sh "cat ${API_COMPOSE_PROCESSOR}"
 
                                 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                                     //sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
                                     //sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
-                                    if(env.BRANCH_NAME == 'Develop') {
-                                        echo "Deploying Develop"
-                                        deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
-                                    }
-                                //}
+                                echo "Deploying Develop"
+                                deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
+                                deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
@@ -179,8 +180,12 @@ pipeline {
                                 input message: 'Are you ready to deploy the API to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                             }
                             sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
                             sh "cat ${API_COMPOSE}"
+                            sh "cat ${API_COMPOSE_PROCESSOR}"
+
                             deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
+                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
                         }
                     }
                 }
@@ -235,8 +240,12 @@ pipeline {
                                 input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                             }
                             sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
+                            sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
+
                             sh "cat ${API_COMPOSE}"
+                            sh "cat ${API_COMPOSE_PROCESSOR}"
                             deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
+                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "processor")
                         }
                     }
                 }
@@ -325,6 +334,18 @@ void deploy(composeFile,name,target, app) {
         sh "ecs-cli configure profile --access-key AKIAWGEEZQATRVZEHMGB --secret-key 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 --profile-name answer-profile"
 
         sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
-        sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 2"
+        //sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 2"
+    }
+}
+
+void deploy_processor(composeFile,name,target, app) {
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
+        //sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
+        sh "ecs-cli configure profile --access-key AKIAWGEEZQATRVZEHMGB --secret-key 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 --profile-name answer-profile"
+
+        sh "ecs-cli compose --file ${composeFile} --project-name ${name}-processor service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --timeout 15"
+        //sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 0 -—timeout 15"
+
     }
 }

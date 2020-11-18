@@ -1,25 +1,26 @@
-﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoMapper;
 using MSR.Answer.Domain.Models;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
-using MSR.Domain.Helpers;
-using MSR.Domain.SQSEventing.Abstractions;
-using MSR.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Commands;
 using MSR.Domain.Events;
-using MSR.Domain.SQSEventing.Models;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
+using MSR.Domain.Models;
+using MSR.Domain.SQSEventing.Abstractions;
+using MSR.Domain.SQSEventing.Models;
 
 namespace MSR.Application.ApplicationServices
 {
-    public class FileAppService :
+    public class FileAppService:
         ICommandHandler<GetFiles>,
         ICommandHandler<CreateFile>,
         ICommandHandler<DetachFile>,
@@ -32,13 +33,33 @@ namespace MSR.Application.ApplicationServices
         private readonly ISendSQSMessages _bus;
         private readonly IAccountService _accountService;
 
+        enum ImportFileType {
+            ImportUnknown,
+            ImportTextCSV,
+            ImportTextPlain,
+            ImportExcel
+        };
+        static ImportFileType ImportFileTypeFromString(string type)
+        {
+            switch(type.ToUpper()) {
+                case "TEXT/CSV":
+                    return ImportFileType.ImportTextCSV;
+                case "TEXT/PLAIN":
+                    return ImportFileType.ImportTextPlain;
+                case "APPLICATION/VND.MS-EXCEL":
+                    return ImportFileType.ImportExcel;
+                default:
+                    return ImportFileType.ImportUnknown;
+            }
+        }
+
         public FileAppService(
             IFileService fileService,
             IMapper mapper,
             IImportValidatorFactory validationFactory,
             ISendSQSMessages bus,
             IAccountService accountService
-            )
+        )
         {
             _fileService = fileService;
             _mapper = mapper;
@@ -78,30 +99,48 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(ImportFile command, CancellationToken cancellationToken = default)
         {
-            var base64File = Base64Helper.Parse(command.Base64Data);
-            var csvData = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r", "").Trim();
-            if (csvData.StartsWith(Base64Helper.ByteOrderMarkUtf8, StringComparison.Ordinal))
+            if (!CurrentUser.HasPrivilege(command.MenuItem, EnumPrivilege.CanCreate))
             {
-                csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
-            }
-
-            if (!CurrentUser.HasPrivilege(command.MenuItem, EnumPrivilege.CanCreate)) {
                 // Importing data through workflow is not supported.
                 throw new DomainException("Permission denied for import " +
                     Enum.GetName(command.MenuItem.GetType(), command.MenuItem),
                     DomainError.BadRequest);
             }
 
+            var base64File = Base64Helper.Parse(command.Base64Data);
+            string csvData = "";
+            byte[] binData = new byte[0];
             var validator = _validationFactory.Create(command.MenuItem);
+            ImportFileType type = ImportFileTypeFromString(base64File.ContentType);
 
-            if (!validator.ValidateImportData(csvData, out var importErrors))
+            switch(type) {
+                case ImportFileType.ImportTextCSV:
+                case ImportFileType.ImportTextPlain:
+                        csvData = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r", "").Trim();
+                        if (csvData.StartsWith(Base64Helper.ByteOrderMarkUtf8, StringComparison.Ordinal))
+                        {
+                            csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
+                        }
+                        binData = csvData.ToCharArray().Select(x => (byte)x).ToArray();
+                    break;
+                case ImportFileType.ImportExcel:
+                    binData = base64File.FileContents;
+                    break;
+                default:
+                    throw new DomainException(
+                        $"Invalid Import file type: {base64File.ContentType}",
+                        DomainError.BadRequest
+                    );
+            }
+
+            if (!validator.ValidateImportData(binData, out var importErrors))
             {
                 return new CommandResponse<IEnumerable<ImportError>>(importErrors);
             }
 
             var importEvent = new ImportEvent()
             {
-                CsvData = csvData,
+                data = binData,
                 MenuItem = command.MenuItem
             };
 
@@ -109,7 +148,7 @@ namespace MSR.Application.ApplicationServices
 
             await _bus.SendMessage(envelope);
 
-            return new CommandResponse<IEnumerable<ImportError>>((IEnumerable<ImportError>)null);
+            return new CommandResponse<IEnumerable<ImportError>>((IEnumerable<ImportError>) null);
         }
     }
 }

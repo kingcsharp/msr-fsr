@@ -1,1 +1,1 @@
-Name,Address1,City,State,PostalCode,Country,Phone,InternalAddress,InvoiceClass,TimeZone,createdOn,createdBy
+Name,Address1,Address2,City,State,PostalCode,Country,Phone,Parent,InternalAddress,InvoiceClass,TimeZone,createdOn,createdBy

@@ -167,7 +167,7 @@ export class ProductDefinitionComponent implements OnInit {
             this.productData.name =  this.customerRequirementJson.RequirementName;
           }
           this.productData.quoteId = this.quoteData.id;
-          this.productData.customerId = null;
+          this.productData.customerId = this.quoteData.customerId;
           this.productData.partId = null;
           this.productData.procedureId = null;
           this.productData.revision = 0;
@@ -177,6 +177,7 @@ export class ProductDefinitionComponent implements OnInit {
           this.productData.totalMachineMins = 0;
           this.productData.materialCost = 0;
           this.getProductDataFlag = true;
+          this.getQuotePartKitNo();
         }
       }));
   }
@@ -233,13 +234,25 @@ export class ProductDefinitionComponent implements OnInit {
     this.partsService.partGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          this.partsData.push({ label: `${x.name} [${x.partNumber}] [ID: ${x.id}]`, value: x.id });
+          this.partsData.push({ label: `${x.name} [${x.partNumber}] [ID: ${x.id}]`, partNumber: x.partNumber, value: x.id });
         });
         this.getPartsFlag = true;
         if (isRefresh) {
           this.isRefreshingPartsData = false;
         }
+        if (this.mode === this.productPageModes.Create) {
+          this.getQuotePartKitNo();
+        }
       }));
+  }
+
+  getQuotePartKitNo() {
+    if (this.productData.partId === null && this.getQuoteDataFlag && this.getPartsFlag) {
+      const index = this.partsData.findIndex(x => x.partNumber === this.quoteData.partKitNo);
+      if (index > -1) {
+        this.productData.partId = this.partsData[index].value;
+      }
+    }
   }
 
   getPartLabel(part: PartModel): string {
