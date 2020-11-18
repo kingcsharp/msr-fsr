@@ -7,4 +7,4 @@ export const environment = {
   version: 'v1',
   apiVersion: '1'
 };
-  
+

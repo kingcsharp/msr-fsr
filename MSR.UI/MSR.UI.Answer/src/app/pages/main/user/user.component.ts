@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
-import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
   UserService, UserModel, IAuditActionResultOfUserModel, LocationService
   , UpdateUserRequest, RoleService, Role, EnumMenuItem, CustomerService, Customer
@@ -14,6 +13,7 @@ import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { copyObj } from '../../../models/lib/Utils';
+import { AllowedActions } from '../../../models/lib/AllowedActions';
 
 declare let jQuery: any;
 
@@ -25,7 +25,8 @@ declare let jQuery: any;
   preserveWhitespaces: true
 })
 export class UserComponent implements OnInit {
-  privileges = EnumPrivilege;
+  userPrivileges: AllowedActions;
+  menuItems = EnumMenuItem;
   data: any;
   display: boolean = false;
   currUser: any;
@@ -35,11 +36,8 @@ export class UserComponent implements OnInit {
   allRoles: any[] = [];
   allUsers: any[];
   userTypes: any[];
-  canAddUsers: boolean = false;
-  canEditUsers: boolean = false;
   showSaveView: boolean = false;
   savedViewsOptions: any;
-  canActivate: boolean;
   viewsSaved: Array<ViewSaved>;
   viewToSave: ViewSaved;
   controllerName: string;
@@ -53,7 +51,6 @@ export class UserComponent implements OnInit {
   gridOptionsRotate: boolean = false;
   locations: any[] = [];
   getLocationsFlag: boolean = false;
-  backendRoles: Array<Role>;
   customers: Array<Customer>;
 
   constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService, private customerService: CustomerService,
@@ -91,9 +88,7 @@ export class UserComponent implements OnInit {
       { label: 'Answer User', value: true },
     ];
 
-    this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
-    this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
-    this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
+    this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.Users);
     this.getUsers();
     this.getLocations();
     this.getRoles();
@@ -108,56 +103,46 @@ export class UserComponent implements OnInit {
   }
 
   getRoles() {
-    const ctrl = this;
     this.roleService.roleGet(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        ctrl.allRoles = response.object;
-        ctrl.backendRoles = response.object;
+        this.allRoles = response.object;
       }));
   }
 
   getLocations() {
-    const ctrl = this;
-    if (ctrl.getLocationsFlag) {
-      return ctrl.locations;
+    if (this.getLocationsFlag) {
+      return this.locations;
     }
     this.locationService.locationGet(null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          if(x.parentId === null){
-            ctrl.locations.push({ label: x.name, value: x.id });
+          if (x.parentId === null) {
+            this.locations.push({ label: x.name, value: x.id });
           }
         });
-        ctrl.getLocationsFlag = true;
+        this.getLocationsFlag = true;
       }));
   }
 
   async getUsers() {
-    const ctrl = this;
     this.globals.showLoader(true);
     this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.globals.showLoader(false);
         this.data = response.object;
         this.updateUsersData(this.data);
       }));
   }
 
   updateUsersData(usersData) {
-    const ctrl = this;
     usersData.forEach((x) => {
-      const userIndex = ctrl.allUsers.findIndex(z => z.value === x.id);
+      const userIndex = this.allUsers.findIndex(z => z.value === x.id);
       if (userIndex < 0) {
-        ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
+        this.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
       }
     });
-    ctrl.allUsers.sort((a, b) => (a.label > b.label) ? 1 : -1);
-  }
-
-  hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Users, privName);
+    this.allUsers.sort((a, b) => (a.label > b.label) ? 1 : -1);
   }
 
   unmask(event) {
@@ -169,15 +154,14 @@ export class UserComponent implements OnInit {
     this.currUser = this.getUser(user);
   }
 
-  clseDialog() {
+  closeDialog() {
     this.display = false;
     jQuery('.parsleyjs').parsley().reset();
   }
 
   changeUserStatus(user: UserModel) {
-    const ctrl = this;
     this.userService.userDelete(user.customerId, env.apiVersion).pipe(take(1)).subscribe(responseHandler(() => {
-      ctrl.toastr.success(`User has been successfully ${user.isActive ? 'activated' : 'deactivated'}!`);
+      this.toastr.success(`User has been successfully ${user.isActive ? 'activated' : 'deactivated'}!`);
     }, () => {
       user.isActive = !user.isActive;
     })
@@ -185,14 +169,12 @@ export class UserComponent implements OnInit {
   }
 
   changeUserType(user: UpdateUserRequest) {
-    const ctrl = this;
-
     this.userService.userPatch(env.apiVersion, user).pipe(take(1)).subscribe(responseHandler((resp) => {
       if (!resp.hasErrors) {
         if (user.isAnswerUser) {
-          ctrl.toastr.success('User type changed to Is Answer User!');
+          this.toastr.success('User type changed to Is Answer User!');
         } else {
-          ctrl.toastr.success('User type changed to Not Answer User!');
+          this.toastr.success('User type changed to Portal User!');
         }
       }
     }, () => {
@@ -202,7 +184,6 @@ export class UserComponent implements OnInit {
 
   onUserSubmit() {
     jQuery('.parsleyjs').parsley().validate();
-    const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
       let method: Observable<IAuditActionResultOfUserModel> = null;
       this.globals.showLoader(true);
@@ -225,15 +206,15 @@ export class UserComponent implements OnInit {
 
       method.pipe(take(1)).subscribe(responseHandler((resp) => {
         if (!resp.hasErrors) {
-          if (ctrl.currUser.id !== undefined) {
-            const index = ctrl.data.findIndex(x => x.id === resp.object.id);
-            ctrl.data.splice(index, 1);
+          if (this.currUser.id !== undefined) {
+            const index = this.data.findIndex(x => x.id === resp.object.id);
+            this.data.splice(index, 1);
           }
 
-          ctrl.data.push(new UserModel(resp.object));
-          ctrl.data = ctrl.data.slice(0);
-          this.updateUsersData(ctrl.data);
-          ctrl.clseDialog();
+          this.data.push(new UserModel(resp.object));
+          this.data = this.data.slice(0);
+          this.updateUsersData(this.data);
+          this.closeDialog();
         }
       }));
     }
@@ -245,6 +226,7 @@ export class UserComponent implements OnInit {
       ret.isActive = true;
       ret.isAnswerUser = true;
       ret.firstName = '';
+      ret.roles = [];
       return ret;
     } else {
       this.setCustomer(user);

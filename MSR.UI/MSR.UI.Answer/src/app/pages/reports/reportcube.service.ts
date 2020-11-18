@@ -363,7 +363,7 @@ export class ReportCubeService {
                 data.forEach(elem => {
                     elem = this.removeObjectsPropertyPrefix(elem);
                     const keyCombinedName = this.setName(elem, 'kitname', 'msrfsrfacility', '-');
-                    const key = moment(elem['duedate']).format("YYYY-MM") + this.splitChars + keyCombinedName;
+                    const key = moment(elem['duedate']).format('YYYY-MM') + this.splitChars + keyCombinedName;
                     elem.elemKey = elem['duedate'] + this.splitChars + keyCombinedName;
                     elem.isValidForChart = this.isValidRowForChart(elem, 'kitname', 'msrfsrfacility');
                     elem.yearMonth = moment(elem['duedate']);
@@ -382,7 +382,7 @@ export class ReportCubeService {
 
                 Object.keys(countOfKitsGridDataDic).forEach(chartDataKey => {
                     countOfKitsGridData.push(countOfKitsGridDataDic[chartDataKey]);
-                })
+                });
 
                 const chartInfo3 = new ChartInfo({
                     gridData: countOfKitsGridData,

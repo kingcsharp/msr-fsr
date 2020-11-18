@@ -9,7 +9,7 @@
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
-        <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button"
+        <button *ngIf="userPrivileges.canCreate" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button"
           data-cy="add-button">
           + Add
         </button>
@@ -122,14 +122,8 @@
           {{user.id}}
         </td>
         <td class="text-center" [hidden]="!cg.isVisibleCol('isActive', gridSettings)">
-          <ng-template [ngIf]="!canActivate">
-            <p-inputSwitch disabled="true" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
-            </p-inputSwitch>
-          </ng-template>
-          <ng-template [ngIf]="canActivate">
-            <p-inputSwitch [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
-            </p-inputSwitch>
-          </ng-template>
+          <p-inputSwitch [disabled]="!userPrivileges.canActivate" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
+          </p-inputSwitch>
         </td>
         <td class="text-center" [hidden]="!cg.isVisibleCol('isAnswerUser', gridSettings)">
           <span
@@ -160,7 +154,7 @@
           {{user.supervisorName}}
         </td>
         <td>
-          <i *ngIf="canEditUsers" class="far fa-edit pointer" tooltip="Edit User" (click)="showDialog(user)"></i>
+          <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit User" (click)="showDialog(user)"></i>
         </td>
       </tr>
     </ng-template>
@@ -322,7 +316,7 @@
         <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
           Save
         </button>
-        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+        <button type="button" (click)="closeDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
           Cancel
         </button>
       </div>
