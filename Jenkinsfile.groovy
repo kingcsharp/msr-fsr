@@ -140,12 +140,9 @@ pipeline {
                                     //sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
                                     //sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
-                                    if(env.BRANCH_NAME == 'Develop') {
-                                        echo "Deploying Develop"
-                                        deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
-                                        deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
-                                    }
-                                //}
+                                echo "Deploying Develop"
+                                deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
+                                deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
@@ -185,8 +182,8 @@ pipeline {
                             sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
                             sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
                             sh "cat ${API_COMPOSE}"
-
                             sh "cat ${API_COMPOSE_PROCESSOR}"
+
                             deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
                             deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
                         }
