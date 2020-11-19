@@ -10,6 +10,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
+using System.ComponentModel.DataAnnotations;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -33,9 +34,10 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("RolesUsers"), SwaggerResponse(typeof(AuditActionResult<ICollection<RolesUsersView>>))]
-        public async Task<IActionResult> GetRolesAssignedUsers()
+        public async Task<IActionResult> GetRolesAssignedUsers([FromQuery, Required] GetRoleUsersRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetRolesUsers());
+            var command = request.ToGetRoleUsersCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<RolesUsersView>>();
         }
 

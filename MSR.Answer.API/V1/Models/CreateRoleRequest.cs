@@ -8,5 +8,6 @@ namespace MSR.Answer.API.V1.Models
         public string Name { get; set; }
         public bool IsCertificationRole { get; set; }
         public ICollection<int> ParentRoleIds { get; set; }
+        public ICollection<UserRoleModel> UserRoles { get; set; }
     }
 }

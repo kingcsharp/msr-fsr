@@ -312,7 +312,9 @@ export class ReportCubeService {
                 return gridDataMonitorsbyWorkOrder;
                 break;
             case 'WorkOrdersNotInvoicedbyWorkOrder':
-                const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.shipdate'] !== undefined && x['CubeFinancial.shipdate'] !== null);
+                const workOrdersNotInvoicedbyWorkOrder =
+                    data.filter(x => x['CubeFinancial.status'] === 'Completed' && x['CubeFinancial.shipdate'] !== undefined && x['CubeFinancial.shipdate'] !== null
+                        && (x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null));
                 return workOrdersNotInvoicedbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
             case 'RevenuebyCustomerbyTimePeriod':
                 const resultDataRevenuebyCustomerbyTimePeriod = data.map(elem => {

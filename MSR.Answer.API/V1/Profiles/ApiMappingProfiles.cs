@@ -91,6 +91,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateProductRequest, UpdateProduct>();
             CreateMap<ProductStep, ProductStepModel>();
             CreateMap<CreateRoleRequest, CreateRole>();
+            CreateMap<GetRoleUsersRequest, GetRolesUsers>();
             CreateMap<UpdateRoleRequest, UpdateRole>();
             CreateMap<Models.UserRoleModel, MSR.Domain.Models.UserRoleModel>();
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();

@@ -38,11 +38,6 @@ export class UserComponent implements OnInit {
   userTypes: any[];
   showSaveView: boolean = false;
   savedViewsOptions: any;
-  phoneMask = {
-    mask: ['(', /[1-9]/, /\d/, /\d/, ')',
-      ' ', /\d/, /\d/, /\d/,
-      '-', /\d/, /\d/, /\d/, /\d/]
-  };
   viewsSaved: Array<ViewSaved>;
   viewToSave: ViewSaved;
   controllerName: string;
