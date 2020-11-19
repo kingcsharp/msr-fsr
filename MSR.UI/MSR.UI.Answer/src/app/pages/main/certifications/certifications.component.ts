@@ -17,7 +17,6 @@ export class CertificationsComponent implements OnInit {
   data: any;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = false;
   gridStorageId: string;
   canAddLocation: boolean = false;
   canEditLocation: boolean = false;

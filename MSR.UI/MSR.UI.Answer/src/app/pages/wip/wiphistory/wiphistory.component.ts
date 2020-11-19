@@ -19,7 +19,6 @@ import { take } from 'rxjs/operators';
 export class WiphistoryComponent implements OnInit {
 
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
   gridStorageId: string;
   data: Array<WorkOrderGridSummary>;
   statusOptions: Array<SelectItem>;
@@ -67,7 +66,6 @@ export class WiphistoryComponent implements OnInit {
       this.locationOptions = this.data.filter(
         (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
       ).map(x => ({ label: x.locationName, value: x.locationName }));
-      this.loading = false;
     }));
 
   }

@@ -18,7 +18,6 @@ export class ProceduretypesComponent implements OnInit {
   privileges = EnumPrivilege;
   approvalTables = EnumApprovalTables;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
   gridStorageId: string;
   canAdd: boolean = false;
   canEdit: boolean = false;
@@ -54,8 +53,6 @@ export class ProceduretypesComponent implements OnInit {
       this.statusOptions = this.data.filter(
         (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
       ).map(x => ({ label: x.status, value: x.status }));
-      this.loading = false;
-
     }));
 
   }

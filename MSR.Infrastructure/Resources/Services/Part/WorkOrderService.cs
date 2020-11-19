@@ -35,6 +35,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _fileService = fileService;
         }
 
+
+
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
 
@@ -44,37 +46,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 query = query.Where(x => x.Id == command.Id.Value);
             }
-            List<int> woIds;
-            if (command.statuses != null && command.statuses.Count > 0)
-            {
-                List<int> statusIds = command.statuses.Select(x => x.Id).ToList();
-                woIds = _unitOfWork.WorkOrderTasks.Query()
-                    .Where(x => statusIds.Contains(x.StatusId))
-                    .Select(x => x.WorkOrderId)
-                    .Distinct()
-                    .ToList();
-                // if the invertStatusSet flag is set, then include
-                // the elements NOT in the set of status ids.
-                if (command.invertStatusSet)
-                {
-                    query = query.Where(x => !woIds.Contains(x.Id));
-                }
-                else
-                {
-                    query = query.Where(x => woIds.Contains(x.Id));
-                }
-            }
 
             if (command.completedOnly.HasValue)
             {
-                if (command.completedOnly.Value)
-                {
-                    query = query.Where(x => x.ActualEndDate.HasValue);
-                }
-                else
-                {
-                    query = query.Where(x => !x.ActualEndDate.HasValue);
-                }
+                query = query.Where(x => x.ActualEndDate.HasValue == command.completedOnly.Value);
             }
 
             if (command.assignedToId.HasValue)
@@ -135,10 +110,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             foreach (var workOrderEntity in workOrderEntities)
             {
-
                 var workOrderModel = _mapper.Map<WorkOrderModel>(workOrderEntity);
 
-                // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
                 workOrderModel.Status = TranslateWOStatusToViewModel(workOrderModel.WorkOrderTasks);
 
                 foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
@@ -164,6 +137,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
                 result.Add(DetachBackPointers(workOrderModel));
             };
+
+            if (command.completedOnly.HasValue)
+            {
+                result = result.Where(x => x.Status == EnumUtils.GetDescription(EnumStatusSteps.Cancelled) || x.Status == EnumUtils.GetDescription(EnumStatusSteps.Complete)).ToList();
+            }
 
             return result.OrderBy(x => x.Id).ToList();
         }
@@ -649,7 +627,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.BadRequest);
             }
 
-            var current = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(x=>x.ProcedureStepMonitor).FirstOrDefaultAsync(i => i.Id == command.Id);
+            var current = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(x => x.ProcedureStepMonitor).FirstOrDefaultAsync(i => i.Id == command.Id);
 
             if (current is null)
             {
@@ -966,40 +944,43 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         private string TranslateWOStatusToViewModel(ICollection<WorkOrderTaskModel> tasks)
         {
-            // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
-            // This field is calculated based on the summation of the statuses
-            // of the steps.
-            // 1   Approved
-            // 2   In Progress
-            // 3   Complete
-            // 4   Cancelled
-            // 5   Pending
-            // 6   Rejected
-            // 7   Open
-            // 8   Closed
-            // 9   Requested
-            // 10  Assigned
-            // 11  Waiting to Start
-            int[] completed = { 3, 6, 8 };
-            string status;
-            if (tasks.All(x => completed.Contains(x.StatusId)))
+            var isCompleted = true;
+            var inProgress = true;
+            foreach (var woStatus in tasks.Select(x => x.StatusId))
             {
-                status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
+                if (woStatus == (int)EnumStatusSteps.Cancelled)
+                {
+                    return EnumUtils.GetDescription(EnumStatusSteps.Cancelled);
+                }
+
+                if (woStatus == (int)EnumStatusSteps.InProgress)
+                {
+                    return EnumUtils.GetDescription(EnumStatusSteps.InProgress);
+                }
+
+                if (woStatus != (int)EnumStatusSteps.Complete && woStatus != (int)EnumStatusSteps.Closed && woStatus != (int)EnumStatusSteps.Rejected)
+                {
+                    isCompleted = false;
+                }
+
+                if (woStatus != (int)EnumStatusSteps.Complete && woStatus != (int)EnumStatusSteps.InProgress)
+                {
+                    inProgress = false;
+                }
             }
-            else if (tasks.Any(x => (x.StatusId == (int)EnumStatusSteps.InProgress ||
-                                     x.StatusId == (int)EnumStatusSteps.Complete) ))
+
+            if (isCompleted)
             {
-                status = EnumUtils.GetDescription(EnumStatusSteps.InProgress);
+                return EnumUtils.GetDescription(EnumStatusSteps.Complete);
             }
-            else if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.Cancelled))
+            else if (inProgress)
             {
-                status = EnumUtils.GetDescription(EnumStatusSteps.Cancelled);
+                return EnumUtils.GetDescription(EnumStatusSteps.InProgress);
             }
             else
             {
-                status = EnumUtils.GetDescription(EnumStatusSteps.WaitingtoStart);
+                return EnumUtils.GetDescription(EnumStatusSteps.WaitingtoStart);
             }
-            return status;
         }
         private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
         {
