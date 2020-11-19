@@ -81,10 +81,10 @@ namespace MSR.Answer.API.V1.Controllers
             var poView = commandResponse.ToEntity<PurchaseOrderView>();
             var response = $"PurchaseOrder {action} Pending Approval";
 
-            if (string.IsNullOrWhiteSpace(poView.Status))
+            if (string.IsNullOrWhiteSpace(poView.Status) ||
+                poView.Status.ToUpper().Equals("OPEN"))
             {
                 response = $"PurchaseOrder {action} Successfull";
-                poView.Status = "Approved";
             }
             await SendApprovalNotificationHubMessage(EnumApprovalTables.PurchaseOrderApproval, _messageHub);
 
