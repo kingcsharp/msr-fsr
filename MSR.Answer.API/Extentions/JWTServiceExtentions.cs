@@ -65,9 +65,52 @@ namespace MSR.Answer.API.Extentions
                         //var roles = JsonConvert.DeserializeObject<int[]>(userRolesStr);
 
                         CurrentUser.GetId = () => accountId;
-                        CurrentUser.CanApproveActivity = (EnumApprovalTables) =>
+                        CurrentUser.CanApproveActivity = (EnumApprovalTables tbl) =>
                         {
-                            var activityToBeApproved = (int)EnumApprovalTables;
+                            // First check if user has approval power on the menu item.  If
+                            // not, then check if they have it on the workflow.
+
+                            EnumMenuItem? menuItem;
+                            switch(tbl) {
+                                case EnumApprovalTables.CustomerApproval:
+                                    menuItem = EnumMenuItem.CustomersDepartments;
+                                    break;
+                                case EnumApprovalTables.DocumentApproval:
+                                    menuItem = EnumMenuItem.Documents;
+                                    break;
+                                case EnumApprovalTables.LocationApproval:
+                                    menuItem = EnumMenuItem.Locations;
+                                    break;
+                                case EnumApprovalTables.PartApproval:
+                                    menuItem = EnumMenuItem.Parts;
+                                    break;
+                                case EnumApprovalTables.ProcedureApproval:
+                                    menuItem = EnumMenuItem.Procedures;
+                                    break;
+                                case EnumApprovalTables.ProductApproval:
+                                    menuItem = EnumMenuItem.QuotesProducts;
+                                    break;
+                                case EnumApprovalTables.PurchaseOrderApproval:
+                                    menuItem = EnumMenuItem.PurchaseOrders;
+                                    break;
+                                case EnumApprovalTables.UserApproval:
+                                    menuItem = EnumMenuItem.Users;
+                                    break;
+                                default:
+                                    menuItem = null;
+                                    break;
+                            }
+
+                            if (menuItem.HasValue) {
+                                var menuItemPrivileges = deserializedUserPrivileges[(int)menuItem.Value];
+                                if (menuItemPrivileges != null &&
+                                    Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege.CanApprove) != -1)
+                                {
+                                    return true;
+                                }
+                            }
+
+                            var activityToBeApproved = (int)tbl;
 
                             approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
 
