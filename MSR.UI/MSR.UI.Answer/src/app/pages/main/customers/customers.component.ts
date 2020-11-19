@@ -18,7 +18,6 @@ export class CustomersComponent implements OnInit {
   data: Array<Customer>;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
   gridVersion: string;
   gridStorageId: string;
   canAddCustomer: boolean = false;
@@ -83,9 +82,6 @@ export class CustomersComponent implements OnInit {
       this.statusOptions = this.data.filter(
         (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
       ).map(x => ({ label: x.status, value: x.status }));
-
-      this.loading = false;
-
     }));
 
   }

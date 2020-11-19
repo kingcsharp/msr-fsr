@@ -21,7 +21,6 @@ export class HelpComponent implements OnInit {
   allRoles: Array<SelectItem>;
   roleFilter: string;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
   gridStorageId: string;
   canAddHelpPage: boolean = false;
   canEditHelpPage: boolean = false;
@@ -61,8 +60,6 @@ export class HelpComponent implements OnInit {
       this.allRoles = new Array<SelectItem>();
       let distinctRolesFromReturnedResults = response.object.map(s => s.roles).flat().map(role => ({ label: role.name, value: role.name })).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
       this.allRoles = this.allRoles.concat(distinctRolesFromReturnedResults);
-      this.loading = false;
-
     }));
 
   }

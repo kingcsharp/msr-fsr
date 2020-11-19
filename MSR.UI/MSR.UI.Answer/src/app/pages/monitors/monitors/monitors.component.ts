@@ -19,7 +19,6 @@ export class MonitorsComponent implements OnInit {
   privileges = EnumPrivilege;
   approvalTables = EnumApprovalTables;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
   gridStorageId: string;
 
   constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, public monitorsService: MonitorService) { }
@@ -42,17 +41,11 @@ export class MonitorsComponent implements OnInit {
   }
 
   getMonitors() {
-
     this.globals.showLoader(true);
-
     this.monitorsService.monitor(null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
-      this.loading = false;
     }, () => {
-
       this.data = [];
-      this.loading = false;
-
     }));
 
   }

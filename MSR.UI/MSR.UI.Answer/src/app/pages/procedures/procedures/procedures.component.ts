@@ -21,7 +21,6 @@ export class ProceduresComponent implements OnInit {
   approvalTables = EnumApprovalTables;
   gridVersion: string;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
   gridStorageId: string;
   menuItems = EnumMenuItem;
   statusOptions: any[];
@@ -62,7 +61,6 @@ export class ProceduresComponent implements OnInit {
     this.globals.showLoader(true);
     this.procedureService.procedureGet(null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data  = response.object;
-      this.loading = false;
     }));
   }
 
@@ -90,7 +88,6 @@ export class ProceduresComponent implements OnInit {
 
   copyProcedure(procedure) {
     this.data.length = 0;
-    this.loading = true;
     this.getProcedures();
   }
 }
