@@ -71,7 +71,8 @@ namespace MSR.Answer.API.Extentions
                             // not, then check if they have it on the workflow.
 
                             EnumMenuItem? menuItem;
-                            switch(tbl) {
+                            switch(tbl)
+                            {
                                 case EnumApprovalTables.CustomerApproval:
                                     menuItem = EnumMenuItem.CustomersDepartments;
                                     break;
@@ -101,7 +102,8 @@ namespace MSR.Answer.API.Extentions
                                     break;
                             }
 
-                            if (menuItem.HasValue) {
+                            if (menuItem.HasValue)
+                            {
                                 var menuItemPrivileges = deserializedUserPrivileges[(int)menuItem.Value];
                                 if (menuItemPrivileges != null &&
                                     Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege.CanApprove) != -1)
