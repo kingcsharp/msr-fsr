@@ -984,73 +984,61 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
         {
-            var gwo = new GetWorkOrder()
+            var getWorkOrderCommand = new GetWorkOrder()
             {
                 completedOnly = isHistory
             };
 
-            ICollection<WorkOrderModel> workOrderModels = await GetWorkOrderAsync(gwo);
+            ICollection<WorkOrderModel> workOrderModels = await GetWorkOrderAsync(getWorkOrderCommand);
             List<WorkOrderGridSummary> workOrderGridSummaries = new List<WorkOrderGridSummary>();
             foreach (WorkOrderModel workOrderModel in workOrderModels)
             {
                 var workOrderGridSummary = _mapper.Map<WorkOrderGridSummary>(workOrderModel);
 
-                //
-                // Map the work order database entity to the WIP grid view
-                //
+                var workOrderTaskEntitiesInProgress = workOrderModel.WorkOrderTasks
+                    .Where(x => x.StatusId == (int)EnumStatusSteps.InProgress)
+                    .OrderBy(s => s.TaskStepOrder).ToList();
 
-                // CurrentActiveTaskName
-                var curProc = workOrderModel.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
-                if (curProc.Any())
+                if (workOrderTaskEntitiesInProgress.Any())
                 {
-                    var proc = curProc.First();
-                    workOrderGridSummary.CurrentActiveTaskName = proc.ProcedureStep.Title;
+                    var workOrderTaskEntityInProgress = workOrderTaskEntitiesInProgress.First();
+                    workOrderGridSummary.CurrentActiveTaskName = workOrderTaskEntityInProgress.ProcedureStep?.Title;
                 }
 
-                // CustomerName
                 workOrderGridSummary.CustomerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name;
                 if (string.IsNullOrEmpty(workOrderGridSummary.CustomerName))
                 {
-                    workOrderGridSummary.CustomerName = "";
+                    workOrderGridSummary.CustomerName = String.Empty;
                 }
 
-                // WorkOrderItemNumber
                 workOrderGridSummary.WorkOrderItemNumber = GetWorkOrderItemNumber(workOrderModel);
 
                 workOrderGridSummary.ReferencePO = workOrderModel.Purchase?.PurchaseOrder?.ReferencePO;
-                // ProcedureName
-                var firstProc =
-                    workOrderModel.WorkOrderTasks.FirstOrDefault();
-                if (firstProc == null)
-                {
-                    workOrderGridSummary.ProcedureName = "";
-                }
-                else
-                {
-                    workOrderGridSummary.ProcedureName = firstProc.ProcedureStep?.Procedure?.Name;
-                }
+
+                var firstWorkOrderTask = workOrderModel.WorkOrderTasks.OrderBy(s => s.TaskStepOrder).FirstOrDefault();
+                workOrderGridSummary.ProcedureName = firstWorkOrderTask == null ? String.Empty : firstWorkOrderTask.ProcedureStep?.Procedure?.Name;
 
                 // Disposition
                 // This is a string join of the text values of
                 // all procedure steps with a type of "NC Disposition"
-                workOrderGridSummary.Disposition = "";
+                workOrderGridSummary.Disposition = String.Empty;
                 if (workOrderModel.HasNCR.GetValueOrDefault())
                 {
-                    var nc = workOrderModel.WorkOrderTasks.Where(x =>
-                        x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC);
-                    if (nc.Any())
+                    var workOrderTaskModels = workOrderModel.WorkOrderTasks.Where(x =>
+                        x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC).ToList();
+                    if (workOrderTaskModels.Any())
                     {
-                        string disp = "";
-                        foreach (WorkOrderTaskModel task in nc)
+                        string dispositionMessage = String.Empty;
+                        foreach (WorkOrderTaskModel workOrderTaskModel in workOrderTaskModels)
                         {
-                            disp +=
+                            dispositionMessage +=
                                 String.Join(" ",
-                                    task.WorkOrderTaskMonitors.Select(x =>
+                                    workOrderTaskModel.WorkOrderTaskMonitors.Select(x =>
                                         x.TextVal
                                     ).ToList()
                                 ) + " ";
                         }
-                        workOrderGridSummary.Disposition = disp;
+                        workOrderGridSummary.Disposition = dispositionMessage;
                     }
                 }
 
