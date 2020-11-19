@@ -186,7 +186,7 @@ export class PurchaseCreateComponent implements OnInit {
       } else if (this.step === 1) {
         this.purchaseSerializeItems = [];
         this.purchaseItems.map(item => {
-          if (item.serializeIndividually) {
+          if (!item.serializeIndividually) {
             this.purchaseSerializeItems.push({
               serialKitNo: null,
               locationId: null,
