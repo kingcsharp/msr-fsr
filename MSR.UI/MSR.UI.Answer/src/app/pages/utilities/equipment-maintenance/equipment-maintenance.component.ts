@@ -97,7 +97,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
       value: EnumEMStatus.Scheduled
     }
   ];
-  currentEM: EquipmentMaintenanceModel;
+  selectedEquipmentMaintenance: EquipmentMaintenanceModel;
   locations: any[] = [];
   getLocationsFlag: boolean = false;
   users: any[] = [];
@@ -178,22 +178,22 @@ export class EquipmentMaintenanceComponent implements OnInit {
         this.locations.push({ label: x.name, value: x.id });
       });
       if (this.locations.length === 1) {
-        this.currentEM.locationId = this.locations[0].value;
+        this.selectedEquipmentMaintenance.locationId = this.locations[0].value;
       }
       this.getLocationsFlag = true;
     }));
   }
 
-  showEMModal(em: EquipmentMaintenanceModel) {
-    if (em) {
-      this.currentEM = em;
+  showEMModal(equipmentMaintenance: EquipmentMaintenanceModel) {
+    if (equipmentMaintenance) {
+      this.selectedEquipmentMaintenance = equipmentMaintenance;
       this.locations = [{
-        label: em.location.name,
-        value: em.location.id
+        label: equipmentMaintenance.location.name,
+        value: equipmentMaintenance.location.id
       }];
       this.getLocationsFlag = true;
     } else {
-      this.currentEM = new EquipmentMaintenanceModel({
+      this.selectedEquipmentMaintenance = new EquipmentMaintenanceModel({
         troubleState: true,
         statusId: this.enumEMStatus.Requested,
         locationId: null,
@@ -211,13 +211,13 @@ export class EquipmentMaintenanceComponent implements OnInit {
 
   closeEMModal() {
     this.displayEMDialog = false;
-    this.currentEM = null;
+    this.selectedEquipmentMaintenance = null;
     this.internalAddress = null;
     jQuery('.parsleyjs').parsley().reset();
   }
 
   onTroubleStateToggle($event: boolean) {
-    this.currentEM.troubleState = $event;
+    this.selectedEquipmentMaintenance.troubleState = $event;
   }
 
   onChangeFrequencyField($event) {
@@ -228,7 +228,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
       if ($event.target.value) {
         frequencyField = parseInt($event.target.value, 10);
       }
-      this.currentEM.frequencyField = frequencyField;
+      this.selectedEquipmentMaintenance.frequencyField = frequencyField;
     }
   }
 
@@ -238,17 +238,17 @@ export class EquipmentMaintenanceComponent implements OnInit {
       this.globals.showLoader(true);
 
       const requestData = {
-        locationId: this.currentEM.locationId,
-        troubleState: this.currentEM.troubleState,
-        statusId: this.currentEM.troubleState ? this.enumEMStatus.Requested : this.currentEM.statusId,
-        maintenanceTask: this.currentEM.troubleState ? null : this.currentEM.maintenanceTask,
-        pemLastCompletedDate:  this.currentEM.troubleState ? null : this.currentEM.pemLastCompletedDate,
-        frequencyField:  this.currentEM.troubleState ? null : this.currentEM.frequencyField,
-        assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
-        comments: this.currentEM.comments,
+        locationId: this.selectedEquipmentMaintenance.locationId,
+        troubleState: this.selectedEquipmentMaintenance.troubleState,
+        statusId: this.selectedEquipmentMaintenance.troubleState ? this.enumEMStatus.Requested : this.selectedEquipmentMaintenance.statusId,
+        maintenanceTask: this.selectedEquipmentMaintenance.troubleState ? null : this.selectedEquipmentMaintenance.maintenanceTask,
+        pemLastCompletedDate:  this.selectedEquipmentMaintenance.troubleState ? null : this.selectedEquipmentMaintenance.pemLastCompletedDate,
+        frequencyField:  this.selectedEquipmentMaintenance.troubleState ? null : this.selectedEquipmentMaintenance.frequencyField,
+        assignedToId: !this.selectedEquipmentMaintenance.troubleState && this.selectedEquipmentMaintenance.statusId === this.enumEMStatus.Assigned ? this.selectedEquipmentMaintenance.assignedToId : null,
+        comments: this.selectedEquipmentMaintenance.comments,
       };
 
-      if (this.currentEM.id === undefined) {
+      if (this.selectedEquipmentMaintenance.id === undefined) {
         this.equipmentMaintenanceService.equipmentMaintenancePost(env.apiVersion, new CreateEquipmentMaintenanceRequest(requestData)).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.data.push(response.object);
@@ -256,9 +256,9 @@ export class EquipmentMaintenanceComponent implements OnInit {
             this.closeEMModal();
           }));
       } else {
-        this.equipmentMaintenanceService.equipmentMaintenancePatch(env.apiVersion, new UpdateEquipmentMaintenanceRequest({...requestData, id: this.currentEM.id})).pipe(take(1))
+        this.equipmentMaintenanceService.equipmentMaintenancePatch(env.apiVersion, new UpdateEquipmentMaintenanceRequest({...requestData, id: this.selectedEquipmentMaintenance.id})).pipe(take(1))
           .subscribe(responseHandler(response => {
-            const index = this.data.findIndex(x => x.id === this.currentEM.id);
+            const index = this.data.findIndex(x => x.id === this.selectedEquipmentMaintenance.id);
             this.data.splice(index, 1);
             this.data.splice(index, 0, response.object);
             this.data = this.data.slice(0);
@@ -268,23 +268,23 @@ export class EquipmentMaintenanceComponent implements OnInit {
     }
   }
 
-  openConfirmModal(em: EquipmentMaintenanceModel) {
-    if (em) {
-      this.currentEM = em;
+  openConfirmModal(equipmentMaintenance: EquipmentMaintenanceModel) {
+    if (equipmentMaintenance) {
+      this.selectedEquipmentMaintenance = equipmentMaintenance;
       this.displayConfirmModal = true;
     }
   }
 
   closeConfirmModal() {
     this.displayConfirmModal = false;
-    this.currentEM = null;
+    this.selectedEquipmentMaintenance = null;
   }
 
-  deleteEM() {
+  deleteEquipmentMaintenance() {
     this.globals.showLoader(true);
-    this.equipmentMaintenanceService.equipmentMaintenanceDelete(this.currentEM.id, env.apiVersion).pipe(take(1))
+    this.equipmentMaintenanceService.equipmentMaintenanceDelete(this.selectedEquipmentMaintenance.id, env.apiVersion).pipe(take(1))
     .subscribe(responseHandler(response => {
-      const index = this.data.findIndex(x => x.id === this.currentEM.id);
+      const index = this.data.findIndex(x => x.id === this.selectedEquipmentMaintenance.id);
       this.data.splice(index, 1);
       this.data = this.data.slice(0);
       this.closeConfirmModal();

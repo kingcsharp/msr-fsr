@@ -100,21 +100,21 @@ namespace MSR.Infrastructure.Resources.Services.EquipmentMaintenance
 
         public async Task<EquipmentMaintenanceModel> DeleteEquipmentMaintenanceAsync(DeleteEquipmentMaintenance command)
         {
-            var em = await _unitOfWork.EquipmentMaintenances
+            var equipmentMaintenanceEntity = await _unitOfWork.EquipmentMaintenances
                 .Query()
                 .FirstOrDefaultAsync(i => i.Id == command.Id);
 
-            if (em is null)
+            if (equipmentMaintenanceEntity is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.EquipmentMaintenance)} not found with ID: {command.Id}");
             }
 
-            _unitOfWork.EquipmentMaintenances.Delete(false, em);
+            _unitOfWork.EquipmentMaintenances.Delete(false, equipmentMaintenanceEntity);
             await _unitOfWork.SaveChangesAsync();
 
-            var retEm = _mapper.Map<EquipmentMaintenanceModel>(em);
+            var equipmentMaintenanceModel = _mapper.Map<EquipmentMaintenanceModel>(equipmentMaintenanceEntity);
 
-            return retEm;
+            return equipmentMaintenanceModel;
         }
 
     }
