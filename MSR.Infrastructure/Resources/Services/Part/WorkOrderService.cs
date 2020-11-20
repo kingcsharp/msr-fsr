@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3.Model;
 using AutoMapper;
@@ -664,10 +665,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             WorkOrderTaskMonitorModel workOrderTaskMonitorModel = _mapper.Map<WorkOrderTaskMonitorModel>(workOrderTaskMonitor);
 
-            var workOrderTaskEntity = await _unitOfWork.WorkOrderTasks.Query()
-                .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorModel.WorkOrderTaskId);
+            var workOrderTaskMonitorEntity = await _unitOfWork.WorkOrderTaskMonitors.Query().FirstOrDefaultAsync(s => s.Id == command.Id);
 
-            await SendWorkOrderTaskMonitorCompleteEmailNotification(workOrderTaskMonitorModel.Id);
+            if (workOrderTaskMonitorEntity.ProcedureStepMonitor.SendNCREmail.HasValue &&
+                workOrderTaskMonitorEntity.ProcedureStepMonitor.SendNCREmail.Value)
+            {
+                await SendNCREmailNotification(workOrderTaskMonitorModel.Id);
+            }
 
             return workOrderTaskMonitorModel;
         }
@@ -1130,7 +1134,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
         }
 
-        private async Task SendWorkOrderTaskMonitorCompleteEmailNotification(int? workOrderTaskMonitorId)
+        private async Task SendNCREmailNotification(int? workOrderTaskMonitorId)
         {
             var workOrderTaskMonitorEntity = await _unitOfWork.WorkOrderTaskMonitors.Query()
                 .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorId);
@@ -1171,7 +1175,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 carbonCopyList.Add(secondaryContactUserModel?.Email);
             }
 
-            var body = $@"
+            StringBuilder body = new StringBuilder($@"
                         Dear MSR-FSR Customer,<br>
                         <br>
                         A product non-conformance has been reported on a part for which you are listed as the NC contact.<br>
@@ -1186,18 +1190,18 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         <br>
                         Please log into the MSR-FSR Portal at {_generalInformation.WebsiteURL} for additional detail, to view photographs, and to enter a disposition.<br>
                         <br>
-                        Alternatively you can email your local MSR-FSR Production Manager or call MSR-FSR at the numbers below:<br>";
+                        Alternatively you can email your local MSR-FSR Production Manager or call MSR-FSR at the numbers below:<br>");
 
             var parentLocationEntities = _unitOfWork.Locations.Query().Where(s => s.ParentId.HasValue == false);
 
             await parentLocationEntities.ForEachAsync(parentLocationEntity =>
             {
-                body += $"{parentLocationEntity.Name}, {parentLocationEntity.State} {parentLocationEntity.Country} {parentLocationEntity.Phone}<br>";
+                body.Append($"{parentLocationEntity.Name}, {parentLocationEntity.State} {parentLocationEntity.Country} {parentLocationEntity.Phone}<br>");
             });
 
             var subject = $"Non-Conformity Reported on {workOrderEntity.Id}";
 
-            await _emailService.SendEmailAsync(from, to, subject, body, carbonCopyList, true);
+            await _emailService.SendEmailAsync(from, to, subject, body.ToString(), carbonCopyList, true);
 
         }
 
