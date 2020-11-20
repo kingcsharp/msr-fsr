@@ -192,6 +192,10 @@
               class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
               (click)="showEMModal(emmodel)">
             </i>
+            <i *ngIf="emPrivileges.canDelete"
+            class="far fa-trash-alt pointer" tooltip="Delete" data-cy="deleteRow"
+            (click)="openConfirmModal(emmodel)">
+          </i>
           </td>
         </tr>
       </ng-template>
@@ -205,6 +209,33 @@
 </div>
 
 <p-dialog
+  *ngIf="selectedEquipmentMaintenance"
+  header="Confirm Dialog"
+  [(visible)]="displayConfirmModal"
+  appendTo="body"
+  [modal]='true'
+  [style]="{width: '50vw'}"
+  data-cy="user-header"
+>
+  <div class="container">
+    <div class="row">
+      Are you sure you want to Delete this record?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="button" (click)="deleteEquipmentMaintenance()" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="confirmdelete-button">
+        Delete
+      </button>
+      <button type="button" (click)="closeConfirmModal()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog
   header="Create/Edit Equipment Maintenance"
   [(visible)]="displayEMDialog"
   appendTo="body"
@@ -213,7 +244,7 @@
   data-cy="user-header"
 >
   <form
-    *ngIf="currentEM"
+    *ngIf="selectedEquipmentMaintenance"
     data-parsley-validate
     class="form-horizontal form-label-left parsleyjs"
     method="post"
@@ -254,7 +285,7 @@
                   class="w-100"
                   placeholder="Select Room/Equipment"
                   name="locationId"
-                  [(ngModel)]="currentEM.locationId"
+                  [(ngModel)]="selectedEquipmentMaintenance.locationId"
                   [options]="locations"
                   appendTo="body"
                   [baseZIndex]="100002"
@@ -269,7 +300,7 @@
                   hidden
                   class="form-control input-transparent w-100"
                   name="hdnLocationId"
-                  [value]="currentEM.locationId"
+                  [value]="selectedEquipmentMaintenance.locationId"
                   data-cy="em-hdn-locationid"
                   readonly
                   data-validate="parsley"
@@ -287,12 +318,12 @@
                 <bootstrap-switch
                   name="troubleState"
                   (onChange)="onTroubleStateToggle($event)"
-                  [isOn]="currentEM.troubleState" data-cy="em-toogle-troublestate"
+                  [isOn]="selectedEquipmentMaintenance.troubleState" data-cy="em-toogle-troublestate"
                 ></bootstrap-switch>
               </div>
             </div>
 
-            <div class="form-group row" *ngIf="!currentEM.troubleState">
+            <div class="form-group row" *ngIf="!selectedEquipmentMaintenance.troubleState">
               <label for="maintenanceTask" class="col-md-3 col-12 col-form-label text-md-right">
                 Maintenance Task
               </label>
@@ -301,7 +332,7 @@
                   class="w-100"
                   placeholder="Select Maintenance Task"
                   name="maintenanceTask"
-                  [(ngModel)]="currentEM.maintenanceTask"
+                  [(ngModel)]="selectedEquipmentMaintenance.maintenanceTask"
                   [options]="maintenanceTasks"
                   appendTo="body"
                   [baseZIndex]="100003"
@@ -314,7 +345,7 @@
                   hidden
                   class="form-control input-transparent w-100"
                   name="hdnMaintenanceTask"
-                  [value]="currentEM.maintenanceTask"
+                  [value]="selectedEquipmentMaintenance.maintenanceTask"
                   data-cy="em-hdn-maintenanceTask"
                   readonly
                   data-validate="parsley"
@@ -326,12 +357,12 @@
               <label for="status" class="col-md-3 col-12 col-form-label text-md-right">
                 Status
               </label>
-              <div *ngIf="currentEM.statusId" class="col-md-3 col-12">
+              <div *ngIf="selectedEquipmentMaintenance.statusId" class="col-md-3 col-12">
                 <p-dropdown
                   class="w-100"
                   placeholder="Select Status"
                   name="status"
-                  [(ngModel)]="currentEM.statusId"
+                  [(ngModel)]="selectedEquipmentMaintenance.statusId"
                   [options]="allStatus"
                   appendTo="body"
                   [baseZIndex]="100003"
@@ -344,7 +375,7 @@
                   hidden
                   class="form-control input-transparent w-100"
                   name="hdnStatus"
-                  [value]="currentEM.statusId"
+                  [value]="selectedEquipmentMaintenance.statusId"
                   data-cy="em-hdn-status"
                   readonly
                   data-validate="parsley"
@@ -354,7 +385,7 @@
               </div>
             </div>
 
-            <div class="form-group row" *ngIf="!currentEM.troubleState && currentEM.statusId === enumEMStatus.Assigned">
+            <div class="form-group row" *ngIf="!selectedEquipmentMaintenance.troubleState && selectedEquipmentMaintenance.statusId === enumEMStatus.Assigned">
               <label for="assignedTo" class="col-md-3 col-12 col-form-label text-md-right">
                 Assigned To
               </label>
@@ -363,7 +394,7 @@
                   class="w-100"
                   placeholder="Select Assigned To User"
                   name="assignedTo"
-                  [(ngModel)]="currentEM.assignedToId"
+                  [(ngModel)]="selectedEquipmentMaintenance.assignedToId"
                   [options]="users"
                   appendTo="body"
                   [baseZIndex]="100004"
@@ -376,7 +407,7 @@
                   hidden
                   class="form-control input-transparent w-100"
                   name="hdnAssignedTo"
-                  [value]="currentEM.assignedToId"
+                  [value]="selectedEquipmentMaintenance.assignedToId"
                   data-cy="em-hdn-assignedto"
                   readonly
                   data-validate="parsley"
@@ -386,13 +417,13 @@
               </div>
             </div>
 
-            <div *ngIf="!currentEM.troubleState" class="form-group row">
+            <div *ngIf="!selectedEquipmentMaintenance.troubleState" class="form-group row">
               <label class="form-control-label col-md-3 col-12 text-md-right" for="lastCompleted">
                 Maintenance Last Completed
               </label>
               <div class="col-md-3 col-12">
                 <p-calendar
-                  [(ngModel)]="currentEM.pemLastCompletedDate"
+                  [(ngModel)]="selectedEquipmentMaintenance.pemLastCompletedDate"
                   placeholder="Select Last Completed Date"
                   class="w-100"
                   name="lastCompleted"
@@ -407,7 +438,7 @@
                   hidden
                   class="form-control input-transparent w-100"
                   name="hdnLastCompleted"
-                  [value]="currentEM.pemLastCompletedDate"
+                  [value]="selectedEquipmentMaintenance.pemLastCompletedDate"
                   data-cy="em-hdn-lastCompleted"
                   readonly
                   data-validate="parsley"
@@ -425,7 +456,7 @@
                   type="text"
                   class="form-control input-transparent"
                   name="frequencyField"
-                  [(ngModel)]="currentEM.frequencyField"
+                  [(ngModel)]="selectedEquipmentMaintenance.frequencyField"
                   (change)="onChangeFrequencyField($event)"
                   data-cy="em-input-frequencyfield"
                   data-validate="parsley"
@@ -448,7 +479,7 @@
                   rows="8"
                   type="text"
                   name="comments"
-                  [(ngModel)]="currentEM.comments"
+                  [(ngModel)]="selectedEquipmentMaintenance.comments"
                   data-validate="parsley"
                   data-parsley-trigger="change"
                   class="form-control input-transparent"
