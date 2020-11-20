@@ -5,7 +5,9 @@ import {
   RoleService, Role,
   CreateRoleRequest,
   AuditActionResultOfRole, UserRoleModel,
-  UpdateRoleRequest, RolesUsersView, ReportModel, UserService, AuditActionResultOfWorkOrderTaskMonitorModel, AuditActionResultOfICollectionOfDocumentView, AuditActionResultOfICollectionOfUserModel, UserModel, AuditActionResultOfICollectionOfRolesUsersView
+  UpdateRoleRequest, RolesUsersView, ReportModel, UserService,
+  AuditActionResultOfICollectionOfUserModel, UserModel,
+  AuditActionResultOfICollectionOfRolesUsersView
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -157,7 +159,7 @@ export class RoleComponent implements OnInit {
   }
 
   updateRoleUsers(roleId: number, roleUsers: any) {
-    const filteredRoles = this.rolesUsers.filter(x => x.roleId != roleId);
+    const filteredRoles = this.rolesUsers.filter(x => x.roleId !== roleId);
     filteredRoles.push(...this.setFullNameToParentObjAndSortIt(roleUsers));
     this.rolesUsers = filteredRoles;
   }

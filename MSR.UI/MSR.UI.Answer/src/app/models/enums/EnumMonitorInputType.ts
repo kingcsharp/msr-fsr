@@ -1,4 +1,4 @@
-export enum EnumMonitorInputType{
+export enum EnumMonitorInputType {
     Manual = 5,
     Sensor = 6
 }
