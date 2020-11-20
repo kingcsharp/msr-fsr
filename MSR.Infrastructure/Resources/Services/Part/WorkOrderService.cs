@@ -20,6 +20,7 @@ using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using Customer = MSR.Infrastructure.Resources.EntityFramework.Entities.Customer;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -647,7 +648,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"{nameof(WorkOrderTaskMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            WorkOrderTaskMonitorModel ret;
+            
 
             if (current.ProcedureStepMonitor.MonitorTypeId == 6)
             {
@@ -656,15 +657,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 command.TextVal = monitorListItem.Name;
             }
 
-            var workordertaskmonitor = _mapper.Map(command, current);
-            _unitOfWork.WorkOrderTaskMonitors.Update(workordertaskmonitor);
+            var workOrderTaskMonitor = _mapper.Map(command, current);
+            _unitOfWork.WorkOrderTaskMonitors.Update(workOrderTaskMonitor);
 
-            // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(workordertaskmonitor, workordertaskmonitor.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrderTaskMonitor, workOrderTaskMonitor.Id);
 
-            ret = _mapper.Map<WorkOrderTaskMonitorModel>(workordertaskmonitor);
+            WorkOrderTaskMonitorModel workOrderTaskMonitorModel = _mapper.Map<WorkOrderTaskMonitorModel>(workOrderTaskMonitor);
 
-            return ret;
+            var workOrderTaskEntity = await _unitOfWork.WorkOrderTasks.Query()
+                .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorModel.WorkOrderTaskId);
+
+            await SendWorkOrderTaskMonitorCompleteEmailNotification(workOrderTaskMonitorModel.Id);
+
+            return workOrderTaskMonitorModel;
         }
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderHistory command)
         {
@@ -1125,29 +1130,45 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
         }
 
-        private async Task SendWorkOrderTaskMonitorCompleteEmailNotification(WorkOrderModel workOrderModel, WorkOrderTaskModel workOrderTaskModel, 
-            WorkOrderTaskMonitorModel workOrderTaskMonitorModel)
+        private async Task SendWorkOrderTaskMonitorCompleteEmailNotification(int? workOrderTaskMonitorId)
         {
-            var primaryContactUserModel = workOrderModel.Purchase?.PurchaseOrder?.Customer.PrimaryContactUser;
-            var workOrderTaskAssignedUserModel = workOrderTaskModel.AssignedToUser;
+            var workOrderTaskMonitorEntity = await _unitOfWork.WorkOrderTaskMonitors.Query()
+                .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorId);
+            var workOrderTaskEntity = await _unitOfWork.WorkOrderTasks.Query()
+                .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorEntity.WorkOrderTaskId);
+            var workOrderEntity = await _unitOfWork.WorkOrders.Query()
+                .FirstOrDefaultAsync(s => s.Id == workOrderTaskEntity.WorkOrderId);
+            var purchaseEntity = await _unitOfWork.Purchases.Query()
+                .FirstOrDefaultAsync(s => s.Id == workOrderEntity.PurchaseId);
+            var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.Query()
+                .FirstOrDefaultAsync(s => s.Id == purchaseEntity.PurchaseOrderId);
+            var customerEntity = await _unitOfWork.Customers.Query()
+                .FirstOrDefaultAsync(s => s.Id == purchaseOrderEntity.CustomerId);
+            var parentPartEntity = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
+                .FirstOrDefaultAsync(m => m.WorkOrderId == workOrderEntity.Id && m.ParentId.HasValue == false);
+            var primaryContactUserModel = await _unitOfWork.Users.Query()
+                .FirstOrDefaultAsync(s => s.Id == customerEntity.PrimaryContactUserId);
+            var secondaryContactUserModel = await _unitOfWork.Users.Query()
+                .FirstOrDefaultAsync(s => s.Id == customerEntity.SecondaryContactUserId);
+            var workOrderTaskAssignedUserModel = workOrderTaskEntity.AssignedToUser;
 
-            if (primaryContactUserModel == null)
+            if (primaryContactUserModel == null || primaryContactUserModel.IsAnswerUser == true)
             {
-                throw new DomainException("There is no Primary Contact associated with this Purchase Order", DomainError.InternalServerError);
+                throw new DomainException("There is no Portal User set as Primary Contact associated with this Work Order", DomainError.NotFound);
             }
 
             if (workOrderTaskAssignedUserModel == null)
             {
-                throw new DomainException("The WorkOrder Task must have an assigned user", DomainError.InternalServerError);
+                throw new DomainException("The Work Order Task must have an assigned user", DomainError.InternalServerError);
             }
 
-            var to = "robert.lara@cmhworks.com";//primaryContactUserModel.Email;
-            var from = "robert.lara@cmhworks.com";//workOrderTaskAssignedUserModel.Email;
+            var to = primaryContactUserModel.Email;
+            var from = workOrderTaskAssignedUserModel.Email;
             var carbonCopyList = new List<string>(){ workOrderTaskAssignedUserModel.Email };
 
-            if (workOrderModel.Purchase?.PurchaseOrder?.Customer.SecondaryContactUser != null)
+            if (secondaryContactUserModel != null && secondaryContactUserModel.IsAnswerUser == false)
             {
-                carbonCopyList.Add(workOrderModel.Purchase?.PurchaseOrder?.Customer.SecondaryContactUser.Email);
+                carbonCopyList.Add(secondaryContactUserModel?.Email);
             }
 
             var body = $@"
@@ -1155,13 +1176,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         <br>
                         A product non-conformance has been reported on a part for which you are listed as the NC contact.<br>
                         <br>
-                        Date Reported: {workOrderTaskMonitorModel.LastUpdatedOn}<br>
-                        Technician: {workOrderTaskAssignedUserModel.FullName}<br>
-                        Part Name: {workOrderModel.Product.Part.Name}<br>
-                        Part Number: {workOrderModel.Product.Part.PartNumber}<br>
-                        Serial Number: {workOrderModel.WorkOrderParts.FirstOrDefault()?.SerialNumber}<br>
-                        WO Number: {workOrderModel.Id}<br>
-                        Description of NC: {workOrderTaskMonitorModel.TextVal}<br>
+                        Date Reported: {workOrderTaskMonitorEntity.LastUpdatedOn}<br>
+                        Technician: {workOrderTaskAssignedUserModel.FirstName} {workOrderTaskAssignedUserModel.LastName}<br>
+                        Part Name: {parentPartEntity?.Part?.Name}<br>
+                        Part Number: {parentPartEntity?.Part?.PartNumber}<br>
+                        Serial Number: {parentPartEntity?.SerialNumber}<br>
+                        WO Number: {workOrderEntity.Id}<br>
+                        Description of NC: {workOrderTaskMonitorEntity.TextVal}<br>
                         <br>
                         Please log into the MSR-FSR Portal at {_generalInformation.WebsiteURL} for additional detail, to view photographs, and to enter a disposition.<br>
                         <br>
@@ -1174,10 +1195,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 body += $"{parentLocationEntity.Name}, {parentLocationEntity.State} {parentLocationEntity.Country} {parentLocationEntity.Phone}<br>";
             });
 
-            var subject = $"Non-Conformity Reported on {workOrderModel.Id}";
+            var subject = $"Non-Conformity Reported on {workOrderEntity.Id}";
 
-            await _emailService.SendEmailAsync(from, to, subject, 
-                body, carbonCopyList, true);
+            await _emailService.SendEmailAsync(from, to, subject, body, carbonCopyList, true);
 
         }
 
