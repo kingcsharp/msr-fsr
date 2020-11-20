@@ -103,6 +103,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   users: any[] = [];
   getUsersFlag: boolean = false;
   internalAddress: string;
+  displayConfirmModal: boolean  = false;
 
   constructor(
     public globals: Globals,
@@ -201,7 +202,6 @@ export class EquipmentMaintenanceComponent implements OnInit {
         assignedToId: null,
         frequencyField: null,
         comments: null,
-
       });
       this.getLocations(null);
     }
@@ -268,4 +268,26 @@ export class EquipmentMaintenanceComponent implements OnInit {
     }
   }
 
+  openConfirmModal(em: EquipmentMaintenanceModel) {
+    if (em) {
+      this.currentEM = em;
+      this.displayConfirmModal = true;
+    }
+  }
+
+  closeConfirmModal() {
+    this.displayConfirmModal = false;
+    this.currentEM = null;
+  }
+
+  deleteEM() {
+    this.globals.showLoader(true);
+    this.equipmentMaintenanceService.equipmentMaintenanceDelete(this.currentEM.id, env.apiVersion).pipe(take(1))
+    .subscribe(responseHandler(response => {
+      const index = this.data.findIndex(x => x.id === this.currentEM.id);
+      this.data.splice(index, 1);
+      this.data = this.data.slice(0);
+      this.closeConfirmModal();
+    }));
+  }
 }

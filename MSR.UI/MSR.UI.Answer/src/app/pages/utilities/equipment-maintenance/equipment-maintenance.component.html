@@ -192,6 +192,10 @@
               class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
               (click)="showEMModal(emmodel)">
             </i>
+            <i *ngIf="emPrivileges.canDelete"
+            class="far fa-trash-alt pointer" tooltip="Delete" data-cy="deleteRow"
+            (click)="openConfirmModal(emmodel)">
+          </i>
           </td>
         </tr>
       </ng-template>
@@ -203,6 +207,33 @@
     </p-table>
   </widget>
 </div>
+
+<p-dialog
+  *ngIf="currentEM"
+  header="Confirm Dialog"
+  [(visible)]="displayConfirmModal"
+  appendTo="body"
+  [modal]='true'
+  [style]="{width: '50vw'}"
+  data-cy="user-header"
+>
+  <div class="container">
+    <div class="row">
+      Are you sure you want to Delete this record?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="button" (click)="deleteEM()" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="confirmdelete-button">
+        Delete
+      </button>
+      <button type="button" (click)="closeConfirmModal()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
 
 <p-dialog
   header="Create/Edit Equipment Maintenance"
