@@ -5,13 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.S3.Model;
 using AutoMapper;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Microsoft.EntityFrameworkCore;
+using MSR.Domain.Abstractions.Email;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Domain.Models.Config;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
@@ -27,12 +30,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
+        private readonly IEmailService _emailService;
+        private readonly EmailInformation _emailInformation;
+        private readonly GeneralInformation _generalInformation;
 
-        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
+        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService, 
+            EmailInformation emailInformation, GeneralInformation generalInformation)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _fileService = fileService;
+            _emailService = emailService;
+            _emailInformation = emailInformation;
+            _generalInformation = generalInformation;
         }
 
 
@@ -616,6 +626,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
+
+            //await SendWorkOrderTaskMonitorCompleteEmailNotification();
+
             return workOrderTaskModel;
         }
         public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
@@ -1110,6 +1123,62 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
 
             }
+        }
+
+        private async Task SendWorkOrderTaskMonitorCompleteEmailNotification(WorkOrderModel workOrderModel, WorkOrderTaskModel workOrderTaskModel, 
+            WorkOrderTaskMonitorModel workOrderTaskMonitorModel)
+        {
+            var primaryContactUserModel = workOrderModel.Purchase?.PurchaseOrder?.Customer.PrimaryContactUser;
+            var workOrderTaskAssignedUserModel = workOrderTaskModel.AssignedToUser;
+
+            if (primaryContactUserModel == null)
+            {
+                throw new DomainException("There is no Primary Contact associated with this Purchase Order", DomainError.InternalServerError);
+            }
+
+            if (workOrderTaskAssignedUserModel == null)
+            {
+                throw new DomainException("The WorkOrder Task must have an assigned user", DomainError.InternalServerError);
+            }
+
+            var to = "robert.lara@cmhworks.com";//primaryContactUserModel.Email;
+            var from = "robert.lara@cmhworks.com";//workOrderTaskAssignedUserModel.Email;
+            var carbonCopyList = new List<string>(){ workOrderTaskAssignedUserModel.Email };
+
+            if (workOrderModel.Purchase?.PurchaseOrder?.Customer.SecondaryContactUser != null)
+            {
+                carbonCopyList.Add(workOrderModel.Purchase?.PurchaseOrder?.Customer.SecondaryContactUser.Email);
+            }
+
+            var body = $@"
+                        Dear MSR-FSR Customer,<br>
+                        <br>
+                        A product non-conformance has been reported on a part for which you are listed as the NC contact.<br>
+                        <br>
+                        Date Reported: {workOrderTaskMonitorModel.LastUpdatedOn}<br>
+                        Technician: {workOrderTaskAssignedUserModel.FullName}<br>
+                        Part Name: {workOrderModel.Product.Part.Name}<br>
+                        Part Number: {workOrderModel.Product.Part.PartNumber}<br>
+                        Serial Number: {workOrderModel.WorkOrderParts.FirstOrDefault()?.SerialNumber}<br>
+                        WO Number: {workOrderModel.Id}<br>
+                        Description of NC: {workOrderTaskMonitorModel.TextVal}<br>
+                        <br>
+                        Please log into the MSR-FSR Portal at {_generalInformation.WebsiteURL} for additional detail, to view photographs, and to enter a disposition.<br>
+                        <br>
+                        Alternatively you can email your local MSR-FSR Production Manager or call MSR-FSR at the numbers below:<br>";
+
+            var parentLocationEntities = _unitOfWork.Locations.Query().Where(s => s.ParentId.HasValue == false);
+
+            await parentLocationEntities.ForEachAsync(parentLocationEntity =>
+            {
+                body += $"{parentLocationEntity.Name}, {parentLocationEntity.State} {parentLocationEntity.Country} {parentLocationEntity.Phone}<br>";
+            });
+
+            var subject = $"Non-Conformity Reported on {workOrderModel.Id}";
+
+            await _emailService.SendEmailAsync(from, to, subject, 
+                body, carbonCopyList, true);
+
         }
 
     }
