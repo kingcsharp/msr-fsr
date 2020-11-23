@@ -1152,8 +1152,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .FirstOrDefaultAsync(m => m.WorkOrderId == workOrderEntity.Id && m.ParentId.HasValue == false);
             var primaryContactUserModel = await _unitOfWork.Users.Query()
                 .FirstOrDefaultAsync(s => s.Id == customerEntity.PrimaryContactUserId);
-            var secondaryContactUserModel = await _unitOfWork.Users.Query()
-                .FirstOrDefaultAsync(s => s.Id == customerEntity.SecondaryContactUserId);
+            var secondaryContactUserModel = await _unitOfWork.Users.FirstOrDefaultAsync(false,s => s.Id == customerEntity.SecondaryContactUserId);
             var workOrderTaskAssignedUserModel = workOrderTaskEntity.AssignedToUser;
 
             if (primaryContactUserModel == null || primaryContactUserModel.IsAnswerUser == true)
