@@ -1168,7 +1168,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.InternalServerError);
             }
 
-            var to = String.Empty; //primaryContactUserModel.Email;
+            var to = primaryContactUserModel.Email;
             var from = workOrderTaskAssignedUserModel.Email;
             var carbonCopyList = new List<string>() {workOrderTaskAssignedUserModel.Email};
 
