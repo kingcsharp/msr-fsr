@@ -126,7 +126,7 @@ export class GridComponent implements OnInit {
       columnsSaved: [
         new ColumnsSaved({ id: 'fileName', label: 'Archive File', type: EnumColumnType.String, visible: true, styles: { 'width': '23rem' } }),
         new ColumnsSaved({ id: 'fileSize', label: 'File Size', visible: true, type: EnumColumnType.ByteToMb, styles: { 'width': '10rem' } }),
-        new ColumnsSaved({ id: 'createDate', label: 'Created On', visible: true, type: EnumColumnType.Date, styles: { 'width': '8rem' }, formattingAngular: 'dd-MM-yyyy', formattingMoment: 'DD-MM-YYYY' }),
+        new ColumnsSaved({ id: 'createDate', label: 'Created On', visible: true, type: EnumColumnType.Date,isRanged:true, styles: { 'width': '8rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
         new ColumnsSaved({ id: 'downloadUrl', label: 'Actions', visible: true, type: EnumColumnType.DownloadLink,styles: { 'width': '4rem' } })
       ],
       gridClass: 'formTbl',
