@@ -133,6 +133,9 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateWorkOrderMessageRequest, CreateWorkOrderMessage>()
                 .ForMember(dest => dest.WorkOrderId, opts => opts.MapFrom(src => src.Id));
             CreateMap<GetPortalWorkOrderRequest, GetPortalWorkOrder>();
+
+            CreateMap<GetArchiveDocumentRequest, GetArchiveDocument>();
+
         }
     }
 }

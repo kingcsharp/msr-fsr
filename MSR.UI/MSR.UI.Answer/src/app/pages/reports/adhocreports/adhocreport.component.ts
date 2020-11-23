@@ -50,7 +50,8 @@ export class AdhocComponent implements OnInit {
                 this.gridSaved = new GridSaved({
                     columnsSaved: this.reportCubeService.getReportColumns(this.reportInfo),
                     storageId: this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') + this.elem.nativeElement.tagName.toLowerCase(),
-                    version: '1.0.0'
+                    version: '1.0.0',
+                    archivedFolder: this.reportCubeService.getArchivedEnum(this.reportInfo)
                 });
 
                 this.showReport = true;

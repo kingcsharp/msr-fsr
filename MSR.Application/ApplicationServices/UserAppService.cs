@@ -82,7 +82,9 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetLoggedInUserData command, CancellationToken cancellationToken = default)
         {
             var ret = await _userService.GetLoggedInUserData(command.UserId);
-            var file = _fileService.ListFiles(new User().GetType().Name, command.UserId).FirstOrDefault();
+            // token expires in one day so img returned should expire in the same time.
+            var oneDayInSeconds = 24 * 60 * 60;
+            var file = _fileService.ListFiles(new User().GetType().Name, command.UserId, null, oneDayInSeconds).FirstOrDefault();
             if (file != null)
             {
                 ret.FileModel = file;

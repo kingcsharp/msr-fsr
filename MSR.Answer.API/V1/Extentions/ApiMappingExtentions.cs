@@ -1020,6 +1020,8 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static GetPortalWorkOrder ToGetPortalWorkOrderCommand(this GetPortalWorkOrderRequest request) => AutoMapperHelper.Mapper.Map<GetPortalWorkOrder>(request);
 
+        public static GetArchiveDocument ToArchiveDocumentCommand(this GetArchiveDocumentRequest request) => AutoMapperHelper.Mapper.Map<GetArchiveDocument>(request);
+        
         public static CreateWorkOrderMessage ToCreateWorkOrderMessageCommand(this CreateWorkOrderMessageRequest request)
         {
             var command = AutoMapperHelper.Mapper.Map<CreateWorkOrderMessage>(request);
