@@ -32,6 +32,7 @@ using MSR.Infrastructure.Resources.Services.AdminCostSetting;
 using MSR.Infrastructure.Resources.Services.Report;
 using MSR.Infrastructure.Resources.Services.Search;
 using MSR.Infrastructure.Resources.Services.Document;
+using MSR.Infrastructure.Resources.Services.EquipmentMaintenance;
 
 namespace MSR.Infrastructure.Extensions
 {

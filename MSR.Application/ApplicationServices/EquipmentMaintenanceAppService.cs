@@ -13,7 +13,8 @@ namespace MSR.Application.ApplicationServices
     public class EquipmentMaintenanceAppService :
         ICommandHandler<GetEquipmentMaintenance>,
         ICommandHandler<CreateEquipmentMaintenance>,
-        ICommandHandler<UpdateEquipmentMaintenance>
+        ICommandHandler<UpdateEquipmentMaintenance>,
+        ICommandHandler<DeleteEquipmentMaintenance>
     {
 
         private readonly IEquipmentMaintenanceService _equipmentMaintenanceService;
@@ -40,6 +41,12 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(UpdateEquipmentMaintenance command, CancellationToken cancellationToken = default)
         {
             var ret = await _equipmentMaintenanceService.UpdateEquipmentMaintenanceAsync(command);
+            return new CommandResponse<EquipmentMaintenanceModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeleteEquipmentMaintenance command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _equipmentMaintenanceService.DeleteEquipmentMaintenanceAsync(command);
             return new CommandResponse<EquipmentMaintenanceModel>(ret);
         }
     }

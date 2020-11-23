@@ -10,5 +10,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<IEnumerable<EquipmentMaintenanceModel>> GetEquipmentMaintenancesAsync(GetEquipmentMaintenance command);
         Task<EquipmentMaintenanceModel> CreateEquipmentMaintenanceAsync(CreateEquipmentMaintenance command);
         Task<EquipmentMaintenanceModel> UpdateEquipmentMaintenanceAsync(UpdateEquipmentMaintenance command);
+        Task<EquipmentMaintenanceModel> DeleteEquipmentMaintenanceAsync(DeleteEquipmentMaintenance command);
     }
 }

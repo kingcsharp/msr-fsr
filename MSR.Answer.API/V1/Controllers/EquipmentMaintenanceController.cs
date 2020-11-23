@@ -11,6 +11,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
+using MSR.Domain.Commands;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -65,6 +66,16 @@ namespace MSR.Answer.API.V1.Controllers
             var updateEquipmentMaintenance = request.ToUpdateEquipmentMaintenanceCommand();
             var ret = await _dispatcher.DispatchAsync(updateEquipmentMaintenance);
             return ret.ToOkObjectResponse<EquipmentMaintenanceModel>("Equipment maintenance has been successfully updated.");
+        }
+
+        [HttpDelete("{id}"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanDelete)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult))]
+        public async Task<IActionResult> DeleteEquipmentMaintenance(int id)
+        {
+            var command = new DeleteEquipmentMaintenance() { Id = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToOkObjectResponse("Equipment maintenance has been sucessfully deleted.");
         }
     }
 }

@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-
-
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -10,9 +8,8 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
-using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
-namespace MSR.Infrastructure.Resources.Services.Invoices
+namespace MSR.Infrastructure.Resources.Services.EquipmentMaintenance
 {
     public class EquipmentMaintenanceService : IEquipmentMaintenanceService
 
@@ -50,7 +47,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<EquipmentMaintenanceModel> CreateEquipmentMaintenanceAsync(CreateEquipmentMaintenance command)
         {
-            var em = _mapper.Map<EquipmentMaintenance>(command);
+            var em = _mapper.Map<EntityFramework.Entities.EquipmentMaintenance>(command);
 
             // Save the new equipment maintenance entry
             await _unitOfWork.EquipmentMaintenances.AddAndSaveChangesAsync(em);
@@ -99,6 +96,25 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var retEm = _mapper.Map<EquipmentMaintenanceModel>(em);
 
             return retEm;
+        }
+
+        public async Task<EquipmentMaintenanceModel> DeleteEquipmentMaintenanceAsync(DeleteEquipmentMaintenance command)
+        {
+            var equipmentMaintenanceEntity = await _unitOfWork.EquipmentMaintenances
+                .Query()
+                .FirstOrDefaultAsync(i => i.Id == command.Id);
+
+            if (equipmentMaintenanceEntity is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.EquipmentMaintenance)} not found with ID: {command.Id}");
+            }
+
+            _unitOfWork.EquipmentMaintenances.Delete(false, equipmentMaintenanceEntity);
+            await _unitOfWork.SaveChangesAsync();
+
+            var equipmentMaintenanceModel = _mapper.Map<EquipmentMaintenanceModel>(equipmentMaintenanceEntity);
+
+            return equipmentMaintenanceModel;
         }
 
     }
