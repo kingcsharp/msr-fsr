@@ -904,6 +904,65 @@ export class DocumentService {
         }
         return _observableOf<AuditActionResult>(<any>null);
     }
+
+    /**
+     * Gets list of files from a folder
+     * @param folder (optional) 
+     */
+    archive(folder: EnumAwsFolders | undefined, version: string): Observable<AuditActionResultOfICollectionOfArchiveDocumentView> {
+        let url_ = this.baseUrl + "/v{version}/Document/Archive?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (folder === null)
+            throw new Error("The parameter 'folder' cannot be null.");
+        else if (folder !== undefined)
+            url_ += "Folder=" + encodeURIComponent("" + folder) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processArchive(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processArchive(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfArchiveDocumentView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfArchiveDocumentView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processArchive(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfArchiveDocumentView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfArchiveDocumentView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfArchiveDocumentView>(<any>null);
+    }
 }
 
 @Injectable()
@@ -1085,6 +1144,60 @@ export class EquipmentMaintenanceService {
             }));
         }
         return _observableOf<AuditActionResultOfEquipmentMaintenanceModel>(<any>null);
+    }
+
+    equipmentMaintenanceDelete(id: number, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEquipmentMaintenanceDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEquipmentMaintenanceDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processEquipmentMaintenanceDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 
@@ -5554,11 +5667,13 @@ export class RoleService {
         return _observableOf<AuditActionResultOfRole>(<any>null);
     }
 
-    rolesUsers(version: string): Observable<AuditActionResultOfICollectionOfRolesUsersView> {
-        let url_ = this.baseUrl + "/v{version}/Role/RolesUsers";
+    rolesUsers(roleId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfRolesUsersView> {
+        let url_ = this.baseUrl + "/v{version}/Role/RolesUsers?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (roleId !== undefined && roleId !== null)
+            url_ += "RoleId=" + encodeURIComponent("" + roleId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -10170,6 +10285,101 @@ export interface IUpdateDocumentRequest {
 }
 
 /** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfArchiveDocumentView extends AuditActionResult implements IAuditActionResultOfICollectionOfArchiveDocumentView {
+    object?: ArchiveDocumentView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfArchiveDocumentView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(ArchiveDocumentView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfArchiveDocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfArchiveDocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfArchiveDocumentView extends IAuditActionResult {
+    object?: ArchiveDocumentView[] | undefined;
+}
+
+export class ArchiveDocumentView implements IArchiveDocumentView {
+    fileName?: string | undefined;
+    downloadURL?: string | undefined;
+    fileSize?: number;
+    createDate?: Date;
+
+    constructor(data?: IArchiveDocumentView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fileName = _data["fileName"];
+            this.downloadURL = _data["downloadURL"];
+            this.fileSize = _data["fileSize"];
+            this.createDate = _data["createDate"] ? new Date(_data["createDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ArchiveDocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArchiveDocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fileName"] = this.fileName;
+        data["downloadURL"] = this.downloadURL;
+        data["fileSize"] = this.fileSize;
+        data["createDate"] = this.createDate ? this.createDate.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IArchiveDocumentView {
+    fileName?: string | undefined;
+    downloadURL?: string | undefined;
+    fileSize?: number;
+    createDate?: Date;
+}
+
+export enum EnumAwsFolders {
+    Combinedfinancialdata = 0,
+}
+
+/** Base class for an API call with a typed result */
 export class AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfEquipmentMaintenanceModel {
     object?: EquipmentMaintenanceModel[] | undefined;
 
@@ -12868,6 +13078,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
     referenceDocument?: FileModel[] | undefined;
+    isUsed?: boolean;
 
     constructor(data?: IProcedureStepModel) {
         if (data) {
@@ -12917,6 +13128,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
                 for (let item of _data["referenceDocument"])
                     this.referenceDocument!.push(FileModel.fromJS(item));
             }
+            this.isUsed = _data["isUsed"];
         }
     }
 
@@ -12966,6 +13178,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
             for (let item of this.referenceDocument)
                 data["referenceDocument"].push(item.toJSON());
         }
+        data["isUsed"] = this.isUsed;
         return data; 
     }
 }
@@ -12992,6 +13205,7 @@ export interface IProcedureStepModel {
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
     referenceDocument?: FileModel[] | undefined;
+    isUsed?: boolean;
 }
 
 /**  */
@@ -17963,6 +18177,7 @@ export class CreateRoleRequest implements ICreateRoleRequest {
     name?: string | undefined;
     isCertificationRole?: boolean;
     parentRoleIds?: number[] | undefined;
+    userRoles?: UserRoleModel[] | undefined;
 
     constructor(data?: ICreateRoleRequest) {
         if (data) {
@@ -17981,6 +18196,11 @@ export class CreateRoleRequest implements ICreateRoleRequest {
                 this.parentRoleIds = [] as any;
                 for (let item of _data["parentRoleIds"])
                     this.parentRoleIds!.push(item);
+            }
+            if (Array.isArray(_data["userRoles"])) {
+                this.userRoles = [] as any;
+                for (let item of _data["userRoles"])
+                    this.userRoles!.push(UserRoleModel.fromJS(item));
             }
         }
     }
@@ -18001,6 +18221,11 @@ export class CreateRoleRequest implements ICreateRoleRequest {
             for (let item of this.parentRoleIds)
                 data["parentRoleIds"].push(item);
         }
+        if (Array.isArray(this.userRoles)) {
+            data["userRoles"] = [];
+            for (let item of this.userRoles)
+                data["userRoles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -18009,50 +18234,6 @@ export interface ICreateRoleRequest {
     name?: string | undefined;
     isCertificationRole?: boolean;
     parentRoleIds?: number[] | undefined;
-}
-
-export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleRequest {
-    id?: number;
-    userRoles?: UserRoleModel[] | undefined;
-
-    constructor(data?: IUpdateRoleRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.id = _data["id"];
-            if (Array.isArray(_data["userRoles"])) {
-                this.userRoles = [] as any;
-                for (let item of _data["userRoles"])
-                    this.userRoles!.push(UserRoleModel.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): UpdateRoleRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateRoleRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        if (Array.isArray(this.userRoles)) {
-            data["userRoles"] = [];
-            for (let item of this.userRoles)
-                data["userRoles"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IUpdateRoleRequest extends ICreateRoleRequest {
-    id?: number;
     userRoles?: UserRoleModel[] | undefined;
 }
 
@@ -18106,6 +18287,39 @@ export interface IUserRoleModel {
     roleId?: number | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
+}
+
+export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleRequest {
+    id?: number;
+
+    constructor(data?: IUpdateRoleRequest) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UpdateRoleRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateRoleRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IUpdateRoleRequest extends ICreateRoleRequest {
+    id?: number;
 }
 
 /** Base class for an API call with a typed result */

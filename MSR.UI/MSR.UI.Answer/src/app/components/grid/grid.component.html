@@ -19,6 +19,12 @@
                 [(visibleColumnsCount)]="gridSaved.visibleColumns">
             </grid-options>
         </div>
+        <div *ngIf="gridSaved.archivedFolder !== null && gridSaved.archivedFolder !== undefined"
+            class="pull-right exportBtnsMargin">
+            <button class="btn btn-secondary pull-right" (click)="viewArchives()">
+                <i class="fa fa-eye"></i> View Archives
+            </button>
+        </div>
         <div *ngIf="showExportGrid" class="pull-right exportBtnsMargin">
             <button class="btn btn-secondary pull-right" (click)="printCsvReport()">
                 <i class="fas fa-file-csv"></i> Export CSV
@@ -98,6 +104,11 @@
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency}}
     </td>
+    <td container="body" tooltip="{{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | byte}}"
+        class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.ByteToMb"
+        [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
+        {{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | byte}}
+    </td>
     <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Date"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         <div *ngIf="colsDataAndSettings.col.formattingAngular === undefined">
@@ -105,6 +116,12 @@
         <div *ngIf="colsDataAndSettings.col.formattingAngular !== undefined">
             {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | date: colsDataAndSettings.col.formattingAngular }}
         </div>
+    </td>
+    <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.DownloadLink"
+        [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
+        <a href="{{colsDataAndSettings.colData.downloadURL}}" style="color:#fff" download tooltip="Download File">
+            <i class="fas fa-download"></i>
+        </a>
     </td>
     <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.InputDateTime"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
@@ -164,3 +181,36 @@
     </th>
     <th *ngIf="colsAndSettings.col.type === enumColumnType.Template"></th>
 </ng-template>
+
+
+
+<p-dialog *ngIf="showArchiveDialogue" header="Combined Financial Data Archives" [(visible)]="showArchiveDialogue"
+    [style]="{width: '50vw'}" data-cy="user-header" [modal]='true'>
+    <form>
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+            </header>
+            <div class="widget-body">
+                <fieldset>
+                    <div class="alert alert-info alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <i class="fa fa-info-circle"></i> The Files listed below are created on the 1st of each month
+                        and named for the month's data they contain. They are in .csv format and viewable in MS Excel.
+                        Click on a Archive File below to download it.
+                    </div>
+                    <app-grid [gridSaved]="archiveDocsGrid" [showReport]="true" [reportInfo]="reportArchiveModel"
+                        [data]="archivedGridData">
+                    </app-grid>
+                </fieldset>
+            </div>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="button" (click)="showArchiveDialogue = false"
+                    class="btn btn-outline-inverse width-100 mb-xs" role="button">
+                    Cancel
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog>

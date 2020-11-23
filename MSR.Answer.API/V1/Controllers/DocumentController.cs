@@ -93,5 +93,19 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToOkObjectResponse("Document has been sucessfully deleted.");
         }
+
+        /// <summary>
+        /// Gets list of files from a folder
+        /// </summary>
+        /// <param name="getArchiveDocuments"></param>
+        /// <returns></returns>
+        [HttpGet, Route("Archive")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ICollection<ArchiveDocumentView>>))]
+        public async Task<IActionResult> GetArchiveDocuments([FromQuery, Required] GetArchiveDocumentRequest getArchiveDocuments)
+        {
+            var archiveDocument = getArchiveDocuments.ToArchiveDocumentCommand();
+            var ret = await _dispatcher.DispatchAsync(archiveDocument);
+            return ret.ToOkObjectResponse<ICollection<ArchiveDocumentView>>();
+        }
     }
 }

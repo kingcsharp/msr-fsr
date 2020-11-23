@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ReportModel } from '../../services/api.client.generated';
+import { EnumAwsFolders, ReportModel } from '../../services/api.client.generated';
 import { ColumnsSaved } from '../../../app/models/lib/ColumnsSaved';
 import { EnumColumnType } from '../../../app/models/enums/EnumColumnType';
 import * as moment from 'moment';
@@ -27,6 +27,15 @@ export class ReportCubeService {
         return this.http.get(reportInfo.apiEndPointURL, { headers: headers }).toPromise().then(response => {
             return this.filterReportData(response, reportInfo);
         });
+    }
+
+    public getArchivedEnum(reportInfo: ReportModel) {
+        switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
+            case 'CombinedFinancialDatabyWorkOrder':
+                return EnumAwsFolders.Combinedfinancialdata;
+            default:
+                return null;
+        }
     }
 
     public getReportColumns(reportInfo: ReportModel) {

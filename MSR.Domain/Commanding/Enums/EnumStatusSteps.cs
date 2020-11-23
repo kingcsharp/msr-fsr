@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace MSR.Domain.Commanding.Enums
 {

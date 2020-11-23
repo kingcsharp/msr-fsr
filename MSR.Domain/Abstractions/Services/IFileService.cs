@@ -10,7 +10,7 @@ namespace MSR.Domain.Abstractions.Services
     public interface IFileService
     {
         Task<FileModel> CreateFileAsync(string entityName, int entityId, FileModel file);
-        ICollection<FileModel> ListFiles(string entityName, int? entityId = null, int? fileId = null);
+        ICollection<FileModel> ListFiles(string entityName, int? entityId = null, int? fileId = null, int expireInSeconds = 6);
         ICollection<FileModel> ListFilesForEntitySet(string tableName, ICollection<int> entityIds);
         Task<int> DetachFilesAsync(string entityName, int entityId, int? fileId = null);
         Task<ICollection<FileModel>> AttachFilesAsync(string entityName, int entityId, ICollection<FileModel> files);
@@ -27,5 +27,7 @@ namespace MSR.Domain.Abstractions.Services
         /// <returns></returns>
         Task<FileModel> MapUploadedFileAsync(string entityName, int entityId, int uploadedFileId);
         Task<bool> EditPdfFile(FileModel file, DocumentView document, string entityName);
+
+        Task<List<ArchiveDocumentView>> GetArchivedDocuments(string folderName);
     }
 }

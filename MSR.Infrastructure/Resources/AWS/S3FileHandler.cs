@@ -13,8 +13,8 @@ namespace MSR.Infrastructure.Resources.AWS
 {
     public class S3FileHandler : IUploadFiles, IDownloadFiles
     {
-        IAmazonS3 _s3Handler;
-        S3Information _s3Information;
+        readonly IAmazonS3 _s3Handler;
+        readonly S3Information _s3Information;
 
         public S3FileHandler(IAmazonS3 s3Handler, S3Information s3Information)
         {
@@ -31,6 +31,20 @@ namespace MSR.Infrastructure.Resources.AWS
             });
 
             return response.ResponseStream;
+        }
+
+        public async Task<ListObjectsV2Response> GetS3Files(string folderName)
+        {
+            var request = new ListObjectsV2Request
+            {
+                BucketName = _s3Information.FileBucketName,
+                Prefix = folderName+ "/",
+                MaxKeys = 1000,
+                //StartAfter= "combinedfinancialdata/combined-export-06-2019.csv" //VEry interesting shit, if u store files with yr names then u can filter by them like this.
+            };
+
+            var listObjectsRequest = await _s3Handler.ListObjectsV2Async(request);
+            return listObjectsRequest;
         }
 
         public async Task<string> UploadFile(FileModel file, string entityName, int entityId)
@@ -70,7 +84,7 @@ namespace MSR.Infrastructure.Resources.AWS
         public string GetURL(string key, int expiresInSeconds = 6000)
         {
             var s3Key = key;
-            if (key.Contains(_s3Information.AWSURL) 
+            if (key.Contains(_s3Information.AWSURL)
                 || key.Contains(_s3Information.UnSecureAWSURL)
                 || key.Contains(_s3Information.HelpAWSURL))
             {
@@ -107,5 +121,8 @@ namespace MSR.Infrastructure.Resources.AWS
 
             return $"{name}";
         }
+
+
+
     }
 }
