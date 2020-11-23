@@ -670,7 +670,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (workOrderTaskMonitorEntity.ProcedureStepMonitor.SendNCREmail.HasValue &&
                 workOrderTaskMonitorEntity.ProcedureStepMonitor.SendNCREmail.Value)
             {
-                await SendNCREmailNotification(workOrderTaskMonitorModel.Id);
+                await SendNcrEmailNotification(workOrderTaskMonitorModel.Id);
             }
 
             return workOrderTaskMonitorModel;
@@ -1134,7 +1134,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
         }
 
-        private async Task SendNCREmailNotification(int? workOrderTaskMonitorId)
+        private async Task SendNcrEmailNotification(int? workOrderTaskMonitorId)
         {
             var workOrderTaskMonitorEntity = await _unitOfWork.WorkOrderTaskMonitors.Query()
                 .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorId);
@@ -1158,22 +1158,27 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (primaryContactUserModel == null || primaryContactUserModel.IsAnswerUser == true)
             {
-                throw new DomainException("There is no Portal User set as Primary Contact associated with this Work Order", DomainError.NotFound);
+                throw new DomainException(
+                    "There is no Portal User set as Primary Contact associated with this Work Order",
+                    DomainError.NotFound);
             }
 
             if (workOrderTaskAssignedUserModel == null)
             {
-                throw new DomainException("The Work Order Task must have an assigned user", DomainError.InternalServerError);
+                throw new DomainException("The Work Order Task must have an assigned user",
+                    DomainError.InternalServerError);
             }
 
             var to = primaryContactUserModel.Email;
             var from = workOrderTaskAssignedUserModel.Email;
-            var carbonCopyList = new List<string>(){ workOrderTaskAssignedUserModel.Email };
+            var carbonCopyList = new List<string>() {workOrderTaskAssignedUserModel.Email};
 
             if (secondaryContactUserModel != null && secondaryContactUserModel.IsAnswerUser == false)
             {
                 carbonCopyList.Add(secondaryContactUserModel?.Email);
             }
+
+            var serialNumber = string.IsNullOrWhiteSpace(parentPartEntity?.SerialNumber) ? "N/A" : parentPartEntity?.SerialNumber;
 
             StringBuilder body = new StringBuilder($@"
                         Dear MSR-FSR Customer,<br>
@@ -1184,15 +1189,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         Technician: {workOrderTaskAssignedUserModel.FirstName} {workOrderTaskAssignedUserModel.LastName}<br>
                         Part Name: {parentPartEntity?.Part?.Name}<br>
                         Part Number: {parentPartEntity?.Part?.PartNumber}<br>
-                        Serial Number: {parentPartEntity?.SerialNumber}<br>
+                        Serial Number: {serialNumber}<br>
                         WO Number: {workOrderEntity.Id}<br>
                         Description of NC: {workOrderTaskMonitorEntity.TextVal}<br>
                         <br>
-                        Please log into the MSR-FSR Portal at {_generalInformation.WebsiteURL} for additional detail, to view photographs, and to enter a disposition.<br>
+                        Please log into the MSR-FSR Portal at <a href=""{_generalInformation.PortalWebsiteUrl}"">portal.msr-fsr.com</a> for additional detail, to view photographs, and to enter a disposition.<br>
                         <br>
                         Alternatively you can email your local MSR-FSR Production Manager or call MSR-FSR at the numbers below:<br>");
 
-            var parentLocationEntities = _unitOfWork.Locations.Query().Where(s => s.ParentId.HasValue == false);
+            var parentLocationEntities = _unitOfWork.Locations.Query().Where(s => s.ParentId.HasValue == false && s.IsActive == true);
 
             await parentLocationEntities.ForEachAsync(parentLocationEntity =>
             {

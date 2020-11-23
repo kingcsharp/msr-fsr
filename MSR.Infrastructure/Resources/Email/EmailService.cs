@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Exceptions;
 
 namespace MSR.Infrastructure.Resources.Email
 {
@@ -80,7 +82,8 @@ namespace MSR.Infrastructure.Resources.Email
             }
             catch (Exception exception)
             {
-                throw exception;
+                throw new DomainException($"The following error occurred sending an Email: {exception.Message}",
+                    DomainError.InternalServerError);
             }
         }
     }

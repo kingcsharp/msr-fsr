@@ -5554,11 +5554,13 @@ export class RoleService {
         return _observableOf<AuditActionResultOfRole>(<any>null);
     }
 
-    rolesUsers(version: string): Observable<AuditActionResultOfICollectionOfRolesUsersView> {
-        let url_ = this.baseUrl + "/v{version}/Role/RolesUsers";
+    rolesUsers(roleId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfRolesUsersView> {
+        let url_ = this.baseUrl + "/v{version}/Role/RolesUsers?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (roleId !== undefined && roleId !== null)
+            url_ += "RoleId=" + encodeURIComponent("" + roleId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -12868,6 +12870,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
     referenceDocument?: FileModel[] | undefined;
+    isUsed?: boolean;
 
     constructor(data?: IProcedureStepModel) {
         if (data) {
@@ -12917,6 +12920,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
                 for (let item of _data["referenceDocument"])
                     this.referenceDocument!.push(FileModel.fromJS(item));
             }
+            this.isUsed = _data["isUsed"];
         }
     }
 
@@ -12966,6 +12970,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
             for (let item of this.referenceDocument)
                 data["referenceDocument"].push(item.toJSON());
         }
+        data["isUsed"] = this.isUsed;
         return data; 
     }
 }
@@ -12992,6 +12997,7 @@ export interface IProcedureStepModel {
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
     referenceDocument?: FileModel[] | undefined;
+    isUsed?: boolean;
 }
 
 /**  */
@@ -17963,6 +17969,7 @@ export class CreateRoleRequest implements ICreateRoleRequest {
     name?: string | undefined;
     isCertificationRole?: boolean;
     parentRoleIds?: number[] | undefined;
+    userRoles?: UserRoleModel[] | undefined;
 
     constructor(data?: ICreateRoleRequest) {
         if (data) {
@@ -17981,6 +17988,11 @@ export class CreateRoleRequest implements ICreateRoleRequest {
                 this.parentRoleIds = [] as any;
                 for (let item of _data["parentRoleIds"])
                     this.parentRoleIds!.push(item);
+            }
+            if (Array.isArray(_data["userRoles"])) {
+                this.userRoles = [] as any;
+                for (let item of _data["userRoles"])
+                    this.userRoles!.push(UserRoleModel.fromJS(item));
             }
         }
     }
@@ -18001,6 +18013,11 @@ export class CreateRoleRequest implements ICreateRoleRequest {
             for (let item of this.parentRoleIds)
                 data["parentRoleIds"].push(item);
         }
+        if (Array.isArray(this.userRoles)) {
+            data["userRoles"] = [];
+            for (let item of this.userRoles)
+                data["userRoles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -18009,50 +18026,6 @@ export interface ICreateRoleRequest {
     name?: string | undefined;
     isCertificationRole?: boolean;
     parentRoleIds?: number[] | undefined;
-}
-
-export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleRequest {
-    id?: number;
-    userRoles?: UserRoleModel[] | undefined;
-
-    constructor(data?: IUpdateRoleRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.id = _data["id"];
-            if (Array.isArray(_data["userRoles"])) {
-                this.userRoles = [] as any;
-                for (let item of _data["userRoles"])
-                    this.userRoles!.push(UserRoleModel.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): UpdateRoleRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateRoleRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        if (Array.isArray(this.userRoles)) {
-            data["userRoles"] = [];
-            for (let item of this.userRoles)
-                data["userRoles"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IUpdateRoleRequest extends ICreateRoleRequest {
-    id?: number;
     userRoles?: UserRoleModel[] | undefined;
 }
 
@@ -18106,6 +18079,39 @@ export interface IUserRoleModel {
     roleId?: number | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
+}
+
+export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleRequest {
+    id?: number;
+
+    constructor(data?: IUpdateRoleRequest) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UpdateRoleRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateRoleRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IUpdateRoleRequest extends ICreateRoleRequest {
+    id?: number;
 }
 
 /** Base class for an API call with a typed result */
