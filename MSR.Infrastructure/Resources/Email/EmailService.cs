@@ -80,9 +80,9 @@ namespace MSR.Infrastructure.Resources.Email
                 }
                 return true;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                throw new DomainException($"The following error occurred sending an Email: {exception.Message}",
+                throw new DomainException($"The following error occurred sending an Email: {ex}",
                     DomainError.InternalServerError);
             }
         }
