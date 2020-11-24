@@ -350,7 +350,13 @@ export class RoleassignmentsComponent implements OnInit {
     } as UpdatePermissionsEventModel);
 
     roleModule.permissions.map(permission => {
-      permission.value = false;
+
+      if (permission.name === 'Read') {
+        permission.value = false;
+      } else {
+        permission.value = true;
+      }
+
       this.permissionChanged(null, menuModule, roleModule, permission);
     });
   }
