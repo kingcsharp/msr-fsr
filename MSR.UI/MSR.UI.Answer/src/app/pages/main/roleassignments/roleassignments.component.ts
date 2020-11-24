@@ -267,7 +267,7 @@ export class RoleassignmentsComponent implements OnInit {
           canCreate: permissionChange.roleModule.permissions.find(s => s.name === 'Create').value,
           canDelete: permissionChange.roleModule.permissions.find(s => s.name === 'Delete').value,
           canEdit: permissionChange.roleModule.permissions.find(s => s.name === 'Edit').value,
-          canRead: permissionChange.roleModule.permissions.find(s => s.name === 'Read').value
+          canRead: true
         } as IUpdateMenuRoleMapRequest);
 
         uniquePermissionChanges.push(updateMenuRoleMapRequest);

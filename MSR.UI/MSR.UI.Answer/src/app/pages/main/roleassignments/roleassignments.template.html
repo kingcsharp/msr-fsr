@@ -51,9 +51,9 @@
             <ul class="list-group" *ngIf="selectedRoleModule != null">
                 <li class="list-group-item  d-flex justify-content-between" *ngFor="let permissionModule of selectedRoleModule.permissions">
                     <input type="checkbox" class="form-check-input" id="{{ permissionModule.id }}" [checked]="permissionModule.value" [attr.data-cy]="permissionModule.name"
-                     (change)="permissionChanged($event,selectedMenuModule,selectedRoleModule,permissionModule)" [disabled]="permissionModule.inheritedPermission || selectedRoleModule.value === false">
+                     (change)="permissionChanged($event,selectedMenuModule,selectedRoleModule,permissionModule)" [disabled]="permissionModule.inheritedPermission || (permissionModule.name === 'Read' && permissionModule.value === true)">
                     <label class="form-check-label" for="{{ permissionModule.id }}">{{ permissionModule.name }} </label>
-                    <i class="fas fa-check fa-lg" data-toggle="tooltip" data-placement="left" title="This is an Inherited Permission" *ngIf="permissionModule.inheritedPermission"></i>
+                    <i class="fas fa-check fa-lg" data-toggle="tooltip" data-placement="left" title="This is an Inherited Permission" *ngIf="permissionModule.inheritedPermission && permissionModule.name !== 'Read'"></i>
                 </li>
             </ul>
         </div>
