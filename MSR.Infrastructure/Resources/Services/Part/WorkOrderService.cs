@@ -446,9 +446,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
             ProcedureStep procedureStepEntity = _unitOfWork.ProcedureSteps
                 .Query()
                 .Include(x => x.ProcedureStepMonitors)
-                .Include(s => s.Procedure)
                 .FirstOrDefault(x => x.Id == command.ProcedureStepId);
 
+            _ = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, s => s.Id == procedureStepEntity.ProcedureId);
             _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
             _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
 
