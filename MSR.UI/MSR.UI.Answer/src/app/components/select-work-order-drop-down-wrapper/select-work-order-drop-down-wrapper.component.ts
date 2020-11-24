@@ -19,12 +19,14 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
   workOrdersAvailable: Array<WorkOrderItem>;
   orignalworkOrdersOptions: Array<WorkOrderItem>;
   selectedWorkOrder: string;
+  disableDropDown: boolean = true;
+  placeHolder: string = 'Loading Available WorkOrders...';
 
   constructor(private workOrderService: WorkOrderService, private router: Router, public globals: Globals) { }
 
   ngOnInit(): void {
 
-    this.globals.showLoader(true);
+    this.globals.addRequestToIgnore('v1/WorkOrder?assignedToId');
      this.workOrderService.workOrder(null, null, null, null,
       this.globals.getCurrentUser().id, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
@@ -54,7 +56,8 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
       });
 
       this.orignalworkOrdersOptions = this.workOrdersAvailable;
-
+      this.placeHolder = 'Select a WorkOrder';
+      this.disableDropDown = false;
      }));
 
   }
