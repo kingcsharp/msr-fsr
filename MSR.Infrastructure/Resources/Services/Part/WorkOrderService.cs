@@ -628,9 +628,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
-
-            //await SendWorkOrderTaskMonitorCompleteEmailNotification();
-
             return workOrderTaskModel;
         }
         public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
