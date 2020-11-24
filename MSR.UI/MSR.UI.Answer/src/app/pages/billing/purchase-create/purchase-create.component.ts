@@ -105,7 +105,7 @@ export class PurchaseCreateComponent implements OnInit {
     this.customerService.customerGet(id, null, null, null, null, null, null, true, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.customerData = response.object[0];
+        this.customerData = response.object[0] ? response.object[0] : {};
         this.getCustomerFlag = true;
       }));
   }
