@@ -479,22 +479,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 command.ProcedureStepTypeId = procedureStepEntity.ProcedureStepTypeId;
             }
 
-            WorkOrderTask WorkOrderTaskEntity = _mapper.Map<WorkOrderTask>(command);
+            WorkOrderTask workOrderTaskEntity = _mapper.Map<WorkOrderTask>(command);
 
-            WorkOrderTaskEntity.WorkOrderTaskMonitors =
+            workOrderTaskEntity.WorkOrderTaskMonitors =
                 _mapper.Map<List<WorkOrderTaskMonitor>>(procedureStepEntity.ProcedureStepMonitors);
 
-            var created = await _unitOfWork.WorkOrderTasks.AddAsync(WorkOrderTaskEntity);
+            var created = await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(WorkOrderTaskEntity, WorkOrderTaskEntity.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrderTaskEntity, workOrderTaskEntity.Id);
 
-            await created.Context.Entry(WorkOrderTaskEntity)
+            await created.Context.Entry(workOrderTaskEntity)
                 .Reference(x => x.ProcedureStep).LoadAsync();
-            await created.Context.Entry(WorkOrderTaskEntity.ProcedureStep)
+            await created.Context.Entry(workOrderTaskEntity.ProcedureStep)
                 .Reference(x => x.StepType).LoadAsync();
 
-            var workOrderTaskModel = _mapper.Map<WorkOrderTaskModel>(WorkOrderTaskEntity);
+            var workOrderTaskModel = _mapper.Map<WorkOrderTaskModel>(workOrderTaskEntity);
 
             // detach backpointer to self
             foreach (WorkOrderTaskMonitorModel workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors)
