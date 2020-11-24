@@ -555,12 +555,28 @@ namespace MSR.Infrastructure.Profiles
             return src.Purchase?.PurchaseOrder?.Customer?.Name;
         }
 
+        // TODO: this might be better as a new field in the WorkOrderPart
+        // table, populated at work order creation time.
         private int? WorkOrderPart_to_WorkOrderPartModel_qty(WorkOrderPart src)
         {
-            if (src.WorkOrder != null && src.WorkOrder.Purchase != null)
+            if (src.WorkOrder == null)
             {
+                return null;
+            }
+
+            if (src.WorkOrder.WorkOrderParts != null && src.WorkOrder.WorkOrderParts.Count > 1)
+            {
+                // If the number of parts is greater than 1, then we are grouping and
+                // serializing individually, so the quantity is always 1.
+                return 1;
+            }
+
+            if (src.WorkOrder.Purchase != null)
+            {
+                // Otherwise, the purchase quantity is a group on a single WO.
                 return src.WorkOrder.Purchase.Qty;
             }
+
             return null;
         }
     }
