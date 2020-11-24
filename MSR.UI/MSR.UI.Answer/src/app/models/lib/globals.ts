@@ -22,6 +22,7 @@ export class Globals {
     showApprovalModal: boolean = false;
     comment: string;
     showComment: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    private requestsToIgnoreModal: Array<string> = new Array<string>();
     modalData: ModalData = {
         showModal: false,
         comment: new Subject<string>()
@@ -226,4 +227,26 @@ export class Globals {
       return false;
     }
 
+    addRequestToIgnore(requestToIgnore: string): void {
+        this.requestsToIgnoreModal.push(requestToIgnore);
+    }
+
+    removeRequestToIgnore(requestToIgnore: string): void {
+        let indexOfRequestToRemove = this.requestsToIgnoreModal.findIndex(s => s === requestToIgnore);
+        this.requestsToIgnoreModal.splice(indexOfRequestToRemove, 1);
+    }
+
+    isRequestNotOnListToIgnore(url: string): boolean {
+
+        let requestIsNotOnList = true;
+        this.requestsToIgnoreModal.map(requestToIgnore => {
+
+            if (url.includes(requestToIgnore)) {
+                requestIsNotOnList = false;
+            }
+
+        });
+
+        return requestIsNotOnList;
+    }
 }

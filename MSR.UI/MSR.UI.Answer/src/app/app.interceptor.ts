@@ -39,6 +39,14 @@ export class AppInterceptor implements HttpInterceptor {
     reader.readAsText(blob);
   }
 
+  decrementRequestCounter(url: string){
+    if (this.globals.isRequestNotOnListToIgnore(url)) {
+      this.requests--;
+    } else {
+      this.globals.removeRequestToIgnore(url);
+    }
+  }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     req = req.clone({ url: this.config.baseURLApi + req.url });
     const method = req.method;
@@ -50,7 +58,9 @@ export class AppInterceptor implements HttpInterceptor {
       return throwError(undefined);
     }
 
-    this.requests++;
+    if (this.globals.isRequestNotOnListToIgnore(req.url)) {
+      this.requests++;
+    }
 
     req = req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + token)
@@ -58,7 +68,7 @@ export class AppInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       catchError(err => {
-        this.requests--;
+        this.decrementRequestCounter(req.url);
         this.turnOffLoader();
         if (err.error) {
           let reader = new FileReader();
@@ -97,7 +107,7 @@ export class AppInterceptor implements HttpInterceptor {
           if (method === 'PATCH' || method === 'POST' || method === 'DELETE') {
             this.nextSuccessHandler(event.body);
           }
-          this.requests--;
+          this.decrementRequestCounter(req.url);
           this.turnOffLoader();
         }
         return event;
