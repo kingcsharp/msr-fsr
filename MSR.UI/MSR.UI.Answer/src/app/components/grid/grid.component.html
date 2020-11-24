@@ -155,6 +155,13 @@
             [multipleValues]="true">
         </multiselect-wrapper>
     </th>
+
+    <th *ngIf="colsAndSettings.col.type === enumColumnType.ByteToMb" grid-input-filter [dt]="colsAndSettings.dt"
+        searchField="{{colsAndSettings.col.id}}"
+        [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)"
+        [gridSettings]="colsAndSettings.gridSaved.columnsSaved">
+    </th>
+
     <th *ngIf="colsAndSettings.col.type === enumColumnType.String && !colsAndSettings.col.dropdownHeader"
         grid-input-filter [dt]="colsAndSettings.dt" searchField="{{colsAndSettings.col.id}}"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)"
