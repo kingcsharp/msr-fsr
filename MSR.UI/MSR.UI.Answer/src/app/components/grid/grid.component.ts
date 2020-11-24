@@ -12,7 +12,7 @@ import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, forkJoin, of } from 'rxjs';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../models/lib/Utils';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj, formatBytes } from '../../models/lib/Utils';
 import { ActivatedRoute } from '@angular/router';
 import { EnumColumnType } from '../../models/enums/EnumColumnType';
 import { GridSaved } from '../../models/lib/GridSaved';
@@ -119,15 +119,14 @@ export class GridComponent implements OnInit {
   }
 
   viewArchives() {
-    //EnumAwsFolders
     this.globals.showLoader(true);
 
     this.archiveDocsGrid = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({ id: 'fileName', label: 'Archive File', type: EnumColumnType.String, visible: true, styles: { 'width': '23rem' } }),
-        new ColumnsSaved({ id: 'fileSize', label: 'File Size', visible: true, type: EnumColumnType.ByteToMb, styles: { 'width': '10rem' } }),
-        new ColumnsSaved({ id: 'createDate', label: 'Created On', visible: true, type: EnumColumnType.Date,isRanged:true, styles: { 'width': '8rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
-        new ColumnsSaved({ id: 'downloadUrl', label: 'Actions', visible: true, type: EnumColumnType.DownloadLink,styles: { 'width': '4rem' } })
+        new ColumnsSaved({ id: 'fileSize', label: 'File Size', visible: true, type: EnumColumnType.String, styles: { 'width': '10rem' } }),
+        new ColumnsSaved({ id: 'createDate', label: 'Created On', visible: true, type: EnumColumnType.Date, isRanged: true, styles: { 'width': '8rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
+        new ColumnsSaved({ id: 'downloadUrl', label: 'Actions', visible: true, type: EnumColumnType.DownloadLink, styles: { 'width': '4rem' } })
       ],
       gridClass: 'formTbl',
       showMyViewsFeature: false,
@@ -142,9 +141,14 @@ export class GridComponent implements OnInit {
 
     this.documentService.archive(this.gridSaved.archivedFolder, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler((resp: AuditActionResultOfICollectionOfArchiveDocumentView) => {
-        this.archivedGridData = resp.object;
+        this.archivedGridData = resp.object.map(x => this.formatSize(x));
         this.showArchiveDialogue = true;
       }));
+  }
+
+  formatSize(archiveDocmentView: any) {
+    archiveDocmentView.fileSize = formatBytes(archiveDocmentView.fileSize);
+    return archiveDocmentView;
   }
 
 }

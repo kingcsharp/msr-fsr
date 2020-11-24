@@ -32,6 +32,7 @@ export class ReportCubeService {
     public getArchivedEnum(reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
             case 'CombinedFinancialDatabyWorkOrder':
+            case 'WorkOrdersNotInvoicedbyWorkOrder':
                 return EnumAwsFolders.Combinedfinancialdata;
             default:
                 return null;
