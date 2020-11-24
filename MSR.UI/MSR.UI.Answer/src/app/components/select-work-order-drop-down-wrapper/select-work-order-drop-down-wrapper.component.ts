@@ -20,6 +20,7 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
   orignalworkOrdersOptions: Array<WorkOrderItem>;
   selectedWorkOrder: string;
   disableDropDown: boolean = true;
+  placeHolder: string = 'Loading Available WorkOrders...';
 
   constructor(private workOrderService: WorkOrderService, private router: Router, public globals: Globals) { }
 
@@ -55,6 +56,7 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
       });
 
       this.orignalworkOrdersOptions = this.workOrdersAvailable;
+      this.placeHolder = 'Select a WorkOrder';
       this.disableDropDown = false;
      }));
 
