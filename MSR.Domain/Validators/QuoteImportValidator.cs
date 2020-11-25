@@ -45,10 +45,6 @@ namespace MSR.Domain.Validators
                 {
                     importError.Errors.Add($"{nameof(record.CustomerId)} does not have a value");
                 }
-                if (string.IsNullOrWhiteSpace(record.QuoteJson) && string.IsNullOrWhiteSpace(record.CustomerRequirementJson))
-                {
-                    importError.Errors.Add($"{nameof(record.QuoteJson)} or {nameof(record.CustomerRequirementJson)} does not have a value");
-                }
 
                 if (importError.Errors.Any())
                 {

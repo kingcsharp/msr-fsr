@@ -1,1 +1,1 @@
-﻿CustomerId,QuoteJson,CustomerRequirementJson,PartKitNo,Representative,RepresentativeTitle,RepresentativeAddress,Contact,Title,Phone,Delivery,Delivery,ProcessName,Description
+CustomerId,PartKitNo,Representative,RepresentativeTitle,RepresentativeAddress,Contact,Title,Phone,Delivery,ProcessName,Description

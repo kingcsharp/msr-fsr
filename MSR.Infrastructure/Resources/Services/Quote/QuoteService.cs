@@ -116,7 +116,13 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 try
                 {
+                    var currentCustomer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == record.CustomerId);
 
+                    if (currentCustomer is null)
+                    {
+                        // if CustomerId is not exist, ignore and keep going.
+                        continue;
+                    }
                     var ret = await CreateQuoteAsync(_mapper.Map<CreateQuote>(record));
                     quotes.Add(ret);
                 }
