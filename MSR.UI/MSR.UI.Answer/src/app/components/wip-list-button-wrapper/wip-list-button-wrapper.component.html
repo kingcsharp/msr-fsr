@@ -1,9 +1,9 @@
 <button type="button" class="btn btn-primary" (click)="showWipList()"><i class="fas fa-list mr-1"></i>WIP List</button>
-<p-dialog header="WIP List" [(visible)]="showWipListDialog" appendTo="body" [baseZIndex]="100001" [modal]='true'
+<p-dialog header="WIP List" [(visible)]="showWipListDialog" appendTo="body" [modal]='true'
   [style]="{width: '50vw'}">
   <div class="container">
-    <div class="row">
-        <wipstatus [ngClass]="['w-100']" [takeOverSteps]="false" [isDisplayedInWipList]="true" [(displayWipListDialog)]="showWipListDialog"></wipstatus>
+    <div class="row" *ngIf="showWipListDialog">
+        <wipstatus [ngClass]="['w-100']" [takeOverSteps]="false" [isDisplayedInWipList]="false" [(displayWipListDialog)]="showWipListDialog"></wipstatus>
     </div>
   </div>
   <p-footer>

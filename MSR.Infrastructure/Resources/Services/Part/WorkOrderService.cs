@@ -28,6 +28,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
     public class WorkOrderService : IWorkOrderService
     {
         public const int PROCEDURE_STEP_TYPE_NC = 3;
+        public const int PROCEDURE_TYPE_NC = 6;
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -442,15 +443,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.BadRequest);
             }
 
-            ProcedureStep step = _unitOfWork.ProcedureSteps
+            ProcedureStep procedureStepEntity = _unitOfWork.ProcedureSteps
                 .Query()
                 .Include(x => x.ProcedureStepMonitors)
                 .FirstOrDefault(x => x.Id == command.ProcedureStepId);
 
+            _ = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, s => s.Id == procedureStepEntity.ProcedureId);
             _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
             _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
 
-            if (step != null && step.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC)
+            if (procedureStepEntity != null && procedureStepEntity.Procedure?.ProcedureTypeId == PROCEDURE_TYPE_NC)
             {
                 var workOrderEntity = await _unitOfWork.WorkOrders
                     .FirstOrDefaultAsync(false, s => s.Id == command.WorkOrderId);
@@ -465,7 +467,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
 
-            if (step == null)
+            if (procedureStepEntity == null)
             {
                 throw new DomainException(
                     $"No {nameof(ProcedureStep)} with ID {command.ProcedureStepId}",
@@ -474,35 +476,35 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (!command.ProcedureStepTypeId.HasValue)
             {
-                command.ProcedureStepTypeId = step.ProcedureStepTypeId;
+                command.ProcedureStepTypeId = procedureStepEntity.ProcedureStepTypeId;
             }
 
-            WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
+            WorkOrderTask workOrderTaskEntity = _mapper.Map<WorkOrderTask>(command);
 
-            newTask.WorkOrderTaskMonitors =
-                _mapper.Map<List<WorkOrderTaskMonitor>>(step.ProcedureStepMonitors);
+            workOrderTaskEntity.WorkOrderTaskMonitors =
+                _mapper.Map<List<WorkOrderTaskMonitor>>(procedureStepEntity.ProcedureStepMonitors);
 
-            var created = _unitOfWork.WorkOrderTasks.Add(newTask);
+            var created = await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(newTask, newTask.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrderTaskEntity, workOrderTaskEntity.Id);
 
-            created.Context.Entry(newTask)
-                .Reference(x => x.ProcedureStep).Load();
-            created.Context.Entry(newTask.ProcedureStep)
-                .Reference(x => x.StepType).Load();
+            await created.Context.Entry(workOrderTaskEntity)
+                .Reference(x => x.ProcedureStep).LoadAsync();
+            await created.Context.Entry(workOrderTaskEntity.ProcedureStep)
+                .Reference(x => x.StepType).LoadAsync();
 
-            var ret = _mapper.Map<WorkOrderTaskModel>(newTask);
+            var workOrderTaskModel = _mapper.Map<WorkOrderTaskModel>(workOrderTaskEntity);
 
             // detach backpointer to self
-            foreach (WorkOrderTaskMonitorModel wotm in ret.WorkOrderTaskMonitors)
+            foreach (WorkOrderTaskMonitorModel workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors)
             {
-                wotm.WorkOrderTask = null;
+                workOrderTaskMonitorModel.WorkOrderTask = null;
             }
 
-            ret.WorkOrder = null;
+            workOrderTaskModel.WorkOrder = null;
 
-            return ret;
+            return workOrderTaskModel;
         }
 
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
@@ -627,9 +629,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
-
-
-            //await SendWorkOrderTaskMonitorCompleteEmailNotification();
 
             return workOrderTaskModel;
         }

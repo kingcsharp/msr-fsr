@@ -3,8 +3,6 @@
     public class QuoteImportItem
     {
         public int CustomerId { get; set; }
-        public string QuoteJson { get; set; }
-        public string CustomerRequirementJson { get; set; }
         public string Contact { get; set; }
         public string Delivery { get; set; }
         public string Title { get; set; }
