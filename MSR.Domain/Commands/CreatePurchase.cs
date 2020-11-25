@@ -1,5 +1,6 @@
 ﻿using MSR.Domain.Commanding;
 using System;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
@@ -10,7 +11,7 @@ namespace MSR.Domain.Commands
         public int PurchaseOrderProductId { get; set; }
         public string CustomerPurchaseNumber { get; set; }
         public int LocationId { get; set; }
-        public string SerialNumber { get; set; }
+        public List<string> SerialNumbers { get; set; }
         public int Qty { get; set; }
         public int CustomerLineNumber { get; set; }
         public string MTTN { get; set; }

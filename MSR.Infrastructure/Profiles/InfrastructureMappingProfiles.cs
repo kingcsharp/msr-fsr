@@ -77,7 +77,11 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Resources.EntityFramework.Entities.ProductStep, ProductStepModel>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>();
-            CreateMap<CreatePurchase, Purchase>().ReverseMap();
+            CreateMap<Purchase, CreatePurchase>();
+            CreateMap<CreatePurchase, Purchase>()
+                // A purchase will take the first item's serial as the main serial number.  This
+                // follows the behavior of Answer 2.
+                .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => src.SerialNumbers == null ? null : src.SerialNumbers[0]));
             CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>()
                 .ForMember(dest => dest.TaskStarted, opts => opts.MapFrom(src => (
