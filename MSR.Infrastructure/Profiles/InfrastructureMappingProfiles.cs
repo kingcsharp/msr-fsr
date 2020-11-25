@@ -368,7 +368,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.Created))
                 .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
+                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.PartNumber));
             CreateMap<QuoteModel, QuotesProductsView>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.ProcessName))
