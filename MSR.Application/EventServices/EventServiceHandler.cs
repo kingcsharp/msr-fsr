@@ -137,7 +137,24 @@ namespace MSR.Application.EventServices
                 ICollection<WorkOrderTaskModel> tasks = await _workOrderService.GetWorkOrderTasksAsync(command);
                 command.WorkOrderTasks = tasks;
 
-                ICollection<WorkOrderPartModel> parts = await _workOrderService.GetWorkOrderPartsAsync(command);
+                List<WorkOrderPartModel> parts =
+                    (await _workOrderService.GetWorkOrderPartsAsync(command))
+                    .ToList();
+
+                // Copy in the serial numbers entered at purchase time, if any.
+                int workOrderPartIndex;
+                for (workOrderPartIndex = 0;
+                     workOrderPartIndex < handledEvent.serialNumbers.Count &&
+                     workOrderPartIndex < parts.Count;
+                     workOrderPartIndex += 1)
+                {
+                    if (handledEvent.serialNumbers[workOrderPartIndex] != null)
+                    {
+                        parts[workOrderPartIndex].SerialNumber =
+                            handledEvent.serialNumbers[workOrderPartIndex];
+                    }
+
+                }
                 command.WorkOrderParts = parts;
 
                 WorkOrderModel model = await _workOrderService.CreateWorkOrderAsync(command);
