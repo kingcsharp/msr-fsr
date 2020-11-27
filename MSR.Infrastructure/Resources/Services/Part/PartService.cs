@@ -250,15 +250,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // First parse the file to ensure valid data
             foreach (PartCSVRecord record in records)
             {
-                if (record.Id.HasValue)
+                if (string.IsNullOrWhiteSpace(record.Id))
                 {
-                    var part = _mapper.Map<UpdatePart>(record);
-                    updates.Add(part);
+                    var createPartModel = _mapper.Map<CreatePart>(record);
+                    inserts.Add(createPartModel);
                 }
                 else
                 {
-                    var part = _mapper.Map<CreatePart>(record);
-                    inserts.Add(part);
+                    var updatePartModel = _mapper.Map<UpdatePart>(record);
+                    updates.Add(updatePartModel);
                 }
             }
 
