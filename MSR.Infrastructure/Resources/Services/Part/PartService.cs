@@ -235,7 +235,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         }
 
-        public async Task<ICollection<PartModel>> ImportLocations(string csvData)
+        public async Task<ICollection<PartModel>> ImportParts(string csvData)
         {
             IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvData);
             List<UpdatePart> updates = new List<UpdatePart>();
