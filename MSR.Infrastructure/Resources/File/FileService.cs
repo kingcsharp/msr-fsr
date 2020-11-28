@@ -290,13 +290,20 @@ namespace MSR.Infrastructure.Resources.Services
             {
                 if (item.Size > 0)
                 {
-                    archiveDocuments.Add(new ArchiveDocumentView()
+                    var archiveToAdd = new ArchiveDocumentView()
                     {
                         CreateDate = item.LastModified,
                         FileName = item.Key.Split('/')[1],
                         FileSize = item.Size,
                         DownloadURL = _fileDownloader.GetURL(item.Key, 6000)
-                    });
+                    };
+
+                    var maxMonthDate = archiveDocuments.Where(x => x.CreateDate.Year == archiveToAdd.CreateDate.Year && x.CreateDate.Month == archiveToAdd.CreateDate.Month).FirstOrDefault();
+                    if (maxMonthDate == null || DateTime.Compare(archiveToAdd.CreateDate, maxMonthDate.CreateDate) > 0)
+                    {
+                        archiveDocuments.Remove(maxMonthDate);
+                        archiveDocuments.Add(archiveToAdd);
+                    }
                 }
             }
 
