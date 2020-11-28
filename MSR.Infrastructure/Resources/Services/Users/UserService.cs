@@ -415,6 +415,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 var efRole = role.Role;
                 var domainRole = new Domain.Models.Role()
                 {
+                    Id = efRole.Id,
                     IsCertificationRole = efRole.IsCertificationRole,
                     Name = efRole.Name
                 };
