@@ -31,13 +31,13 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
         public async Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderAsync(GetPurchaseOrder command)
         {
-            var purchaseOrders = _unitOfWork.PurchaseOrders.Query();
+            var purchaseOrderQuery = _unitOfWork.PurchaseOrders.Query();
             if (command.Id.HasValue)
             {
-                purchaseOrders = purchaseOrders.Where(i => i.Id == command.Id);
+                purchaseOrderQuery = purchaseOrderQuery.Where(i => i.Id == command.Id);
             }
 
-            var purchaseOrderModelList = await purchaseOrders
+            var purchaseOrderEntities = await purchaseOrderQuery
                 .Include(i => i.Status)
                 .Include(i => i.PurchaseOrderProducts)
                 .ThenInclude(x => x.Product)
@@ -47,42 +47,77 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 .ThenInclude(pt => pt.Procedure)
                 .ToListAsync();
 
-            var purchaseOrderList = new List<PurchaseOrderView>();
-            foreach (var pom in purchaseOrderModelList)
+            var purchaseOrderViews = new List<PurchaseOrderView>();
+
+            foreach (var purchaseOrderEntity in purchaseOrderEntities)
             {
-                var pov = _mapper.Map<PurchaseOrderView>(pom);
-                pov.Products = pom.PurchaseOrderProducts
+                var purchaseOrderView = _mapper.Map<PurchaseOrderView>(purchaseOrderEntity);
+                purchaseOrderView.Products = purchaseOrderEntity.PurchaseOrderProducts
                     .Select(x => _mapper.Map<PurchaseOrderProductView>(x))
                     .ToList();
-                purchaseOrderList.Add(pov);
+                purchaseOrderViews.Add(purchaseOrderView);
             }
 
-            var purchaseOrderIds = purchaseOrderList.Select(i => i.Id).ToList();
-            var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId).ToList();
+            var purchaseOrderIds = purchaseOrderViews.Select(i => i.Id).ToList();
+            var purchaseOrderCustomerIds = purchaseOrderViews.Select(i => i.CustomerId).ToList();
 
-            var customers = await _unitOfWork.Customers.Query()
+            var customersDictionary = await _unitOfWork.Customers.Query()
                 .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
                 .Select(i => new { i.Id, i.Name })
                 .ToDictionaryAsync(i => i.Id, i => i.Name);
 
-            var purchases = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
-                .Select(x => new { x.PurchaseOrderId, x.Id }).ToListAsync();
+            var purchaseEntities = await _unitOfWork.Purchases.Query()
+                .Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
+                .Select(i => i)
+                .ToListAsync();
 
-            foreach (var po in purchaseOrderList)
+            var purchaseIds = purchaseEntities.Select(i => i.Id).ToList();
+
+            var workOrderEntities = await _unitOfWork.WorkOrders.Query()
+                .Where(i => i.ActualEndDate != null && purchaseIds.Contains(i.PurchaseId))
+                .Include(i => i.Purchase)
+                .Select(x => x)
+                .ToListAsync();
+
+            var invoicedWorkOrderIds = await _unitOfWork.InvoiceItems.Query()
+                .Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
+                .Select(i => i.WorkOrderId)
+                .Distinct()
+                .ToListAsync();
+
+            foreach (var purchaseOrderView in purchaseOrderViews)
             {
-                customers.TryGetValue(po.CustomerId, out var name);
+                customersDictionary.TryGetValue(purchaseOrderView.CustomerId, out var name);
                 if (name != null)
                 {
-                    po.CustomerName = name;
+                    purchaseOrderView.CustomerName = name;
                 }
-                po.IsDeletable = purchases.All(i => i.PurchaseOrderId != po.Id);
-                po.InvoicedBalance = 0;
-                po.Balance = 0;
-                po.UninvoicedBalance = 0;
-                po.UnusedAmount = 0;
+                purchaseOrderView.IsDeletable = purchaseEntities.All(i => i.PurchaseOrderId != purchaseOrderView.Id);
+                purchaseOrderView.InvoicedBalance = 0;
+                purchaseOrderView.Balance = 0;
+                purchaseOrderView.UninvoicedBalance = 0;
+
+                var purchaseOrderWorkOrderEntities = workOrderEntities
+                    .Where(i => i.Purchase.PurchaseOrderId == purchaseOrderView.Id)
+                    .Select(x => x)
+                    .ToList();
+
+                foreach (var purchaseOrderWorkOrderEntity in purchaseOrderWorkOrderEntities)
+                {
+                    purchaseOrderView.Balance += purchaseOrderWorkOrderEntity.Price;
+                    if (invoicedWorkOrderIds.Contains(purchaseOrderWorkOrderEntity.Id))
+                    {
+                        purchaseOrderView.InvoicedBalance += purchaseOrderWorkOrderEntity.Price;
+                    } else
+                    {
+                        purchaseOrderView.UninvoicedBalance += purchaseOrderWorkOrderEntity.Price;
+                    }
+                }
+
+                purchaseOrderView.UnusedAmount = purchaseOrderView.TotalPurchaseLimit - purchaseOrderView.Balance;
             }
 
-            return purchaseOrderList;
+            return purchaseOrderViews;
         }
 
         public async Task<PurchaseOrderView> CreatePurchaseOrderAsync(CreatePurchaseOrder command)
