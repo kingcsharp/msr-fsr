@@ -111,6 +111,7 @@ export class CustomerCreateComponent implements OnInit {
     updateCustomerRequest.primaryContactUserId = this.selectedPrimaryContactId;
     updateCustomerRequest.secondaryContactUserId = this.selectedSecondaryContactId;
     updateCustomerRequest.customerNumber = this.customer.customerNumber;
+    updateCustomerRequest.isActive = true;
 
     this.globals.showLoader(true);
     this.customerService.customerPatch(env.apiVersion, updateCustomerRequest).subscribe(responseHandler((response) => {
