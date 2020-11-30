@@ -61,7 +61,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             var purchaseOrderIds = purchaseOrderViews.Select(i => i.Id).ToList();
             var purchaseOrderCustomerIds = purchaseOrderViews.Select(i => i.CustomerId).ToList();
 
-            var customersDictionary = await _unitOfWork.Customers.Query()
+            var customerEntities = await _unitOfWork.Customers.Query()
                 .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
                 .Select(i => new { i.Id, i.Name })
                 .ToDictionaryAsync(i => i.Id, i => i.Name);
@@ -85,7 +85,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
             foreach (var purchaseOrderView in purchaseOrderViews)
             {
-                customersDictionary.TryGetValue(purchaseOrderView.CustomerId, out var name);
+                customerEntities.TryGetValue(purchaseOrderView.CustomerId, out var name);
                 if (name != null)
                 {
                     purchaseOrderView.CustomerName = name;
