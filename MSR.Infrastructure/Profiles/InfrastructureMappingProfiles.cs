@@ -77,14 +77,18 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Resources.EntityFramework.Entities.ProductStep, ProductStepModel>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>();
-            CreateMap<CreatePurchase, Purchase>().ReverseMap();
+            CreateMap<Purchase, CreatePurchase>();
+            CreateMap<CreatePurchase, Purchase>()
+                // A purchase will take the first item's serial as the main serial number.  This
+                // follows the behavior of Answer 2.
+                .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => src.SerialNumbers == null ? null : src.SerialNumbers[0]));
             CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>()
                 .ForMember(dest => dest.TaskStarted, opts => opts.MapFrom(src => (
                     src.StartedOn != null && src.StartedOn.Value.Ticks > 0
                 )));
             CreateMap<WorkOrderPart, WorkOrderPartModel>()
-                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => WorkOrderPart_to_WorkOrderPartModel_qty(src)));
+                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => ConvertWorkOrderPartToWorkOrderPartModelQty(src)));
             CreateMap<WorkOrderPartModel, WorkOrderPart>();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
@@ -555,13 +559,19 @@ namespace MSR.Infrastructure.Profiles
             return src.Purchase?.PurchaseOrder?.Customer?.Name;
         }
 
-        private int? WorkOrderPart_to_WorkOrderPartModel_qty(WorkOrderPart src)
+        // TODO: this might be better as a new field in the WorkOrderPart
+        // table, populated at work order creation time.
+        private int? ConvertWorkOrderPartToWorkOrderPartModelQty(WorkOrderPart workOrderPart)
         {
-            if (src.WorkOrder != null && src.WorkOrder.Purchase != null)
+            if (workOrderPart.WorkOrder?.WorkOrderParts != null && workOrderPart.WorkOrder.WorkOrderParts.Count > 1)
             {
-                return src.WorkOrder.Purchase.Qty;
+                // If the number of parts is greater than 1, then we are grouping and
+                // serializing individually, so the quantity is always 1.
+                return 1;
             }
-            return null;
+
+            // Otherwise, the purchase quantity is a group on a single WO.
+            return workOrderPart.WorkOrder?.Purchase?.Qty;
         }
     }
 }

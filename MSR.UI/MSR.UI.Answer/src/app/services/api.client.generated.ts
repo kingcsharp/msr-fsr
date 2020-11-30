@@ -16926,7 +16926,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     /** LocationId */
     locationId!: number;
     /** SerialNumber */
-    serialNumber?: string | undefined;
+    serialNumbers?: string[] | undefined;
     /** Quantity */
     qty!: number;
     /** CustomerLineNumber */
@@ -16956,7 +16956,11 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
             this.purchaseOrderProductId = _data["purchaseOrderProductId"];
             this.customerPurchaseNumber = _data["customerPurchaseNumber"];
             this.locationId = _data["locationId"];
-            this.serialNumber = _data["serialNumber"];
+            if (Array.isArray(_data["serialNumbers"])) {
+                this.serialNumbers = [] as any;
+                for (let item of _data["serialNumbers"])
+                    this.serialNumbers!.push(item);
+            }
             this.qty = _data["qty"];
             this.customerLineNumber = _data["customerLineNumber"];
             this.mttn = _data["mttn"];
@@ -16980,7 +16984,11 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
         data["purchaseOrderProductId"] = this.purchaseOrderProductId;
         data["customerPurchaseNumber"] = this.customerPurchaseNumber;
         data["locationId"] = this.locationId;
-        data["serialNumber"] = this.serialNumber;
+        if (Array.isArray(this.serialNumbers)) {
+            data["serialNumbers"] = [];
+            for (let item of this.serialNumbers)
+                data["serialNumbers"].push(item);
+        }
         data["qty"] = this.qty;
         data["customerLineNumber"] = this.customerLineNumber;
         data["mttn"] = this.mttn;
@@ -17004,7 +17012,7 @@ export interface ICreatePurchaseRequest {
     /** LocationId */
     locationId: number;
     /** SerialNumber */
-    serialNumber?: string | undefined;
+    serialNumbers?: string[] | undefined;
     /** Quantity */
     qty: number;
     /** CustomerLineNumber */
