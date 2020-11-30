@@ -106,6 +106,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         {
             var records = CSVHelper.ParseRecords<QuoteImportItem>(csvData);
             var quotes = new List<QuoteModel>();
+            var customerIds = await _unitOfWork.Customers.Query().Select(i => i.Id).ToListAsync();
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanApprove))
             {
@@ -116,15 +117,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 try
                 {
-                    var currentCustomer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == record.CustomerId);
-
-                    if (currentCustomer is null)
+                    if (customerIds.Contains(record.CustomerId))
                     {
-                        // if CustomerId is not exist, ignore and keep going.
-                        continue;
+                        var createQuoteModel = await CreateQuoteAsync(_mapper.Map<CreateQuote>(record));
+                        quotes.Add(createQuoteModel);
                     }
-                    var ret = await CreateQuoteAsync(_mapper.Map<CreateQuote>(record));
-                    quotes.Add(ret);
                 }
                 catch
                 {

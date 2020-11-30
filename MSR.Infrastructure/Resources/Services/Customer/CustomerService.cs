@@ -234,6 +234,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
         {
             var records = CSVHelper.ParseRecords<CustomerImportItem>(csvData);
             var customers = new List<Domain.Models.Customer>();
+            var customerIds = await _unitOfWork.Customers.Query().Select(i => i.Id).ToListAsync();
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.CustomersDepartments, EnumPrivilege.CanApprove))
             {
@@ -244,7 +245,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             {
                 try
                 {
-                    if (record.Id.HasValue && record.Id.Value > 0)
+                    if (record.Id.HasValue && record.Id.Value > 0 && customerIds.Contains(record.Id.Value))
                     {
                         var ret = await UpdateCustomerAsync(_mapper.Map<UpdateCustomer>(record), true);
                         customers.Add(ret);
