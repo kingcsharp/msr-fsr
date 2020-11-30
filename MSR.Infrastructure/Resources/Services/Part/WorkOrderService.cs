@@ -860,7 +860,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var notes = await _unitOfWork.WorkOrderMessages.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
             var files = _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.EntityId)) && i.EntityTableName.Equals("WorkOrderTask") && i.FileObject != null).Select(i => i).ToList();
             var monitors = _unitOfWork.WorkOrderTaskMonitors.Query().ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.WorkOrderTaskId))).Select(i => i).ToList();
-            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Include(i => i.Invoice).Where(i => i.WorkOrderId != null && workOrderIds.Contains(i.WorkOrderId.Value)).Select(i => i).ToListAsync();
+            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Include(i => i.Invoice).Where(i => workOrderIds.Contains(i.WorkOrderId)).Select(i => i).ToListAsync();
             var imageContentTypes = new List<string>() { "image/jpg", "image/jpeg", "image/gif", "image/png" };
 
             foreach (var portalView in portalViews)
@@ -911,7 +911,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     portalView.ProcedureName = workOrderTask.ProcedureStep?.Procedure?.Name;
                 }
 
-                var invoiceItem = invoiceItems.FirstOrDefault(i => i.WorkOrderId.Value == portalView.WorkOrderId);
+                var invoiceItem = invoiceItems.FirstOrDefault(i => i.WorkOrderId == portalView.WorkOrderId);
 
                 if (invoiceItem != null)
                 {

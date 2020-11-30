@@ -23,11 +23,11 @@ namespace MSR.Domain.Views
         /// </summary>
         public string CustomerReferenceNo { get; set; }
 
-        public int InvoicedBalance { get; set; }
+        public decimal InvoicedBalance { get; set; }
 
-        public int UninvoicedBalance { get; set; }
+        public decimal UninvoicedBalance { get; set; }
 
-        public int Balance { get; set; } 
+        public decimal Balance { get; set; } 
 
         public DateTime OpenDate { get; set; }
 
@@ -41,6 +41,6 @@ namespace MSR.Domain.Views
         public bool IsDeletable { get; set; }
         public string Status { get; set; }
         public int? Revision { get; set; }
-        public double UnusedAmount { get; set; }
+        public decimal UnusedAmount { get; set; }
     }
 }

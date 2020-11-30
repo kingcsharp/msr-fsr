@@ -39,7 +39,7 @@ export class AppInterceptor implements HttpInterceptor {
     reader.readAsText(blob);
   }
 
-  decrementRequestCounter(url: string){
+  decrementRequestCounter(url: string) {
     if (this.globals.isRequestNotOnListToIgnore(url)) {
       this.requests--;
     } else {
