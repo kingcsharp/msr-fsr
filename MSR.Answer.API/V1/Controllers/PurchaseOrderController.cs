@@ -84,7 +84,7 @@ namespace MSR.Answer.API.V1.Controllers
             if (string.IsNullOrWhiteSpace(poView.Status) ||
                 poView.Status.ToUpper().Equals("OPEN"))
             {
-                response = $"PurchaseOrder {action} Successfull";
+                response = $"PurchaseOrder {action} Successful";
             }
             await SendApprovalNotificationHubMessage(EnumApprovalTables.PurchaseOrderApproval, _messageHub);
 
