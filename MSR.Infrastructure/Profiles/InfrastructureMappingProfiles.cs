@@ -563,7 +563,7 @@ namespace MSR.Infrastructure.Profiles
         // table, populated at work order creation time.
         private int? ConvertWorkOrderPartToWorkOrderPartModelQty(WorkOrderPart workOrderPart)
         {
-            if (workOrderPart.WorkOrder?.WorkOrderParts != null && workOrderPart.WorkOrder?.WorkOrderParts?.Count > 1)
+            if (workOrderPart.WorkOrder?.WorkOrderParts != null && workOrderPart.WorkOrder.WorkOrderParts.Count > 1)
             {
                 // If the number of parts is greater than 1, then we are grouping and
                 // serializing individually, so the quantity is always 1.
