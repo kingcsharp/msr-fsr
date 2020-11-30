@@ -88,7 +88,7 @@ namespace MSR.Infrastructure.Profiles
                     src.StartedOn != null && src.StartedOn.Value.Ticks > 0
                 )));
             CreateMap<WorkOrderPart, WorkOrderPartModel>()
-                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => WorkOrderPart_to_WorkOrderPartModel_qty(src)));
+                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => ConvertWorkOrderPartToWorkOrderPartModelQty(src)));
             CreateMap<WorkOrderPartModel, WorkOrderPart>();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
@@ -561,27 +561,17 @@ namespace MSR.Infrastructure.Profiles
 
         // TODO: this might be better as a new field in the WorkOrderPart
         // table, populated at work order creation time.
-        private int? WorkOrderPart_to_WorkOrderPartModel_qty(WorkOrderPart src)
+        private int? ConvertWorkOrderPartToWorkOrderPartModelQty(WorkOrderPart src)
         {
-            if (src.WorkOrder == null)
-            {
-                return null;
-            }
-
-            if (src.WorkOrder.WorkOrderParts != null && src.WorkOrder.WorkOrderParts.Count > 1)
+            if (src.WorkOrder?.WorkOrderParts != null && src.WorkOrder?.WorkOrderParts?.Count > 1)
             {
                 // If the number of parts is greater than 1, then we are grouping and
                 // serializing individually, so the quantity is always 1.
                 return 1;
             }
 
-            if (src.WorkOrder.Purchase != null)
-            {
-                // Otherwise, the purchase quantity is a group on a single WO.
-                return src.WorkOrder.Purchase.Qty;
-            }
-
-            return null;
+            // Otherwise, the purchase quantity is a group on a single WO.
+            return src.WorkOrder?.Purchase?.Qty;
         }
     }
 }
