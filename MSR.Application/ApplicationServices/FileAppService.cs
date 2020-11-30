@@ -47,6 +47,7 @@ namespace MSR.Application.ApplicationServices
                 case "TEXT/PLAIN":
                     return ImportFileType.ImportTextPlain;
                 case "APPLICATION/VND.MS-EXCEL":
+                case "APPLICATION/VND.OPENXMLFORMATS-OFFICEDOCUMENT.SPREADSHEETML.SHEET":
                     return ImportFileType.ImportExcel;
                 default:
                     return ImportFileType.ImportUnknown;

@@ -235,9 +235,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         }
 
-        public async Task<ICollection<PartModel>> ImportLocations(string csvData)
+        public async Task<ICollection<PartModel>> ImportParts(string csvData)
         {
-            IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvData);
+            IEnumerable records = CSVHelper.ParseRecords<PartImportItem>(csvData);
             List<UpdatePart> updates = new List<UpdatePart>();
             List<CreatePart> inserts = new List<CreatePart>();
             List<PartModel> results = new List<PartModel>();
@@ -248,17 +248,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             // First parse the file to ensure valid data
-            foreach (PartCSVRecord record in records)
+            foreach (PartImportItem record in records)
             {
-                if (record.Id.HasValue)
+                if (record.Id.HasValue && record.Id.Value > 0)
                 {
-                    var part = _mapper.Map<UpdatePart>(record);
-                    updates.Add(part);
+                    var updatePartModel = _mapper.Map<UpdatePart>(record);
+                    updates.Add(updatePartModel); 
                 }
                 else
                 {
-                    var part = _mapper.Map<CreatePart>(record);
-                    inserts.Add(part);
+                    var createPartModel = _mapper.Map<CreatePart>(record);
+                    inserts.Add(createPartModel);
                 }
             }
 
