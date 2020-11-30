@@ -441,9 +441,9 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<AdminCostSetting, AdminCostSettingsModel>().ReverseMap();
 
-            CreateMap<PartCSVRecord, PartModel>();
-            CreateMap<PartCSVRecord, UpdatePart>();
-            CreateMap<PartCSVRecord, CreatePart>();
+            CreateMap<PartImportItem, PartModel>();
+            CreateMap<PartImportItem, UpdatePart>();
+            CreateMap<PartImportItem, CreatePart>();
 
             #region Reporting
             CreateMap<Report, ReportModel>();
