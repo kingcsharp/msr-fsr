@@ -14,7 +14,7 @@ namespace MSR.Domain.Validators
 {
     public class PartCSVRecord
     {
-        public string Id { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
         public string PartNumber { get; set; }
         public string OEMPartNumber { get; set; }

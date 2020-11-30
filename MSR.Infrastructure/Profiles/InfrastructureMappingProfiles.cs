@@ -441,10 +441,8 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<AdminCostSetting, AdminCostSettingsModel>().ReverseMap();
 
-            CreateMap<PartCSVRecord, PartModel>()
-                .ForMember(dest => dest.Id, opts => opts.Ignore());
-            CreateMap<PartCSVRecord, UpdatePart>()
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => Int32.Parse(src.Id)));
+            CreateMap<PartCSVRecord, PartModel>();
+            CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
 
             #region Reporting
