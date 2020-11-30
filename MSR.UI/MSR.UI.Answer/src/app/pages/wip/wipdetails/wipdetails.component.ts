@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ChangeDetectorRef, Inject, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  ProcedureService, WorkOrderTaskService, LocationService, UserService,
+  ProcedureService, WorkOrderTaskService, LocationService, UserService, RoleService,
   Customer, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService, DocumentService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel, ProcedureStepModel, DocumentView
+  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel, ProcedureStepModel, DocumentView, Role, UserModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -25,7 +25,7 @@ import { forkJoin, Observable } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true,
   providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService,
-    LocationService, UserService, UserService, InvoiceService, DocumentService]
+    LocationService, UserService, UserService, InvoiceService, DocumentService, RoleService]
 })
 export class WipdetailsComponent implements OnInit {
 
@@ -59,10 +59,12 @@ export class WipdetailsComponent implements OnInit {
   hasAccessToTaskBeingViewed: boolean = false;
   areMonitorsValid: boolean = false;
   monitorsAreInvalidDialog: boolean = false;
+  roles: Array<Role> = new Array<Role>();
+  allUserRoleIds: Array<number>;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
-    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService) { }
+    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, private roleService: RoleService) { }
 
   @HostListener('window:resize', ['$event'])
   getScreenSize() {
@@ -87,40 +89,54 @@ export class WipdetailsComponent implements OnInit {
       { label: 'Select', value: 6 },
     ];
 
-    this.route.params.subscribe(params => {
+    this.globals.showLoader(true);
+    this.roleService.roleGet(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
-      let workOrderId = params['id'] == null ? 0 : Number(params['id']);
-      this.workOrdersService.workOrder(workOrderId, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+      this.roles = response.object;
 
-        this.workOrderModel = this.cleanData(response.object[0]);
-        this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
-        this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
-        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
-        this.workOrderParts = this.workOrderModel.workOrderParts;
-        this.parentPart = this.workOrderModel.workOrderParts[0];
-        this.procedure = this.workOrderModel.product.procedure;
-        this.customer = this.workOrderModel.product.customer;
-        this.product = this.workOrderModel.product;
-        this.purchase = this.workOrderModel.purchase;
+      this.route.params.subscribe(params => {
 
-        for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
-          const status = this.workOrderModel.workOrderTasks[index].status;
-          if (status.name === 'In Progress' || status.name === 'Approved' || status.name === 'Waiting to Start') {
+        let workOrderId = params['id'] == null ? 0 : Number(params['id']);
+        this.getWorkOrder(workOrderId);
 
-            this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[index]);
-            this.startSlideIndex = index;
-            break;
-          }
+      });
+
+    }));
+
+  }
+
+  getWorkOrder(workOrderId: number) {
+
+    this.globals.showLoader(true);
+    this.workOrdersService.workOrder(workOrderId, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+
+      this.workOrderModel = this.cleanData(response.object[0]);
+      this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
+      this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
+      this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
+      this.workOrderParts = this.workOrderModel.workOrderParts;
+      this.parentPart = this.workOrderModel.workOrderParts[0];
+      this.procedure = this.workOrderModel.product.procedure;
+      this.customer = this.workOrderModel.product.customer;
+      this.product = this.workOrderModel.product;
+      this.purchase = this.workOrderModel.purchase;
+
+      for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
+        const status = this.workOrderModel.workOrderTasks[index].status;
+        if (status.name === 'In Progress' || status.name === 'Approved' || status.name === 'Waiting to Start') {
+
+          this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[index]);
+          this.startSlideIndex = index;
+          break;
         }
+      }
 
-        if (this.workOrderTaskInProgress === undefined) {
+      if (this.workOrderTaskInProgress === undefined) {
 
-          this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[0]);
-        }
-        this.globals.showLoader(false);
-      }));
-
-    });
+        this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[0]);
+      }
+      this.globals.showLoader(false);
+    }));
 
   }
 
@@ -264,8 +280,15 @@ export class WipdetailsComponent implements OnInit {
     if (workOrderTask.procedureStep?.roles.length === 0) {
       return false;
     }
-    const ret = workOrderTask.procedureStep?.roles?.map(s => s.name).some(s => this.globals.getCurrentUser().roles?.map(m => m.name).includes(s));
-    return ret;
+    let canUserAccessStep = workOrderTask.procedureStep?.roles?.map(s => s.id).some(m => this.getAllRoleIdsForCurrentUser().includes(m));
+    return canUserAccessStep;
+  }
+
+  getAllRoleIdsForCurrentUser() {
+
+    let currentUser = <UserModel>this.globals.user;
+    return currentUser.roles.map(s => s.id).filter((n, i) => currentUser.roles.map(s => s.id).indexOf(n) === i);
+
   }
 
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
