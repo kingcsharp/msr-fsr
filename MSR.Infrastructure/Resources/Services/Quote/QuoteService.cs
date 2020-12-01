@@ -105,7 +105,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<IEnumerable<QuoteModel>> ImportQuotes(string csvData)
         {
             var records = CSVHelper.ParseRecords<QuoteImportItem>(csvData);
-            var quotes = new List<QuoteModel>();
+            var quoteModels = new List<QuoteModel>();
             var customerIds = await _unitOfWork.Customers.Query().Select(i => i.Id).ToListAsync();
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanApprove))
@@ -113,23 +113,26 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new DomainException("Permission denied for import", DomainError.BadRequest);
             }
 
+            var index = 0;
+
             foreach (var record in records)
             {
+                index++;
                 try
                 {
                     if (customerIds.Contains(record.CustomerId))
                     {
-                        var createQuoteModel = await CreateQuoteAsync(_mapper.Map<CreateQuote>(record));
-                        quotes.Add(createQuoteModel);
+                        var quoteModel = await CreateQuoteAsync(_mapper.Map<CreateQuote>(record));
+                        quoteModels.Add(quoteModel);
                     }
                 }
                 catch
                 {
-                    //If we get an error on a single import dump it and keep going. 
+                    throw new DomainException($"{nameof(Quote)} import failed at row {index}", DomainError.InternalServerError);
                 }
             }
 
-            return quotes;
+            return quoteModels;
         }
     }
 }

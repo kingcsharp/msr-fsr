@@ -233,7 +233,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
         public async Task<IEnumerable<Domain.Models.Customer>> ImportCustomers(string csvData)
         {
             var records = CSVHelper.ParseRecords<CustomerImportItem>(csvData);
-            var customers = new List<Domain.Models.Customer>();
+            var customerModels = new List<Domain.Models.Customer>();
             var customerIds = await _unitOfWork.Customers.Query().Select(i => i.Id).ToListAsync();
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.CustomersDepartments, EnumPrivilege.CanApprove))
@@ -241,28 +241,31 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 throw new DomainException("Permission denied for import", DomainError.BadRequest);
             }
 
+            var index = 0;
+
             foreach (var record in records)
             {
+                index++;
                 try
                 {
                     if (record.Id.HasValue && record.Id.Value > 0 && customerIds.Contains(record.Id.Value))
                     {
-                        var ret = await UpdateCustomerAsync(_mapper.Map<UpdateCustomer>(record), true);
-                        customers.Add(ret);
+                        var customerModel = await UpdateCustomerAsync(_mapper.Map<UpdateCustomer>(record), true);
+                        customerModels.Add(customerModel);
                     }
                     else
                     {
-                        var ret = await CreateCustomerAsync(_mapper.Map<CreateCustomer>(record),true);
-                        customers.Add(ret);
+                        var customerModel = await CreateCustomerAsync(_mapper.Map<CreateCustomer>(record),true);
+                        customerModels.Add(customerModel);
                     }
                 }
                 catch
                 {
-                    //If we get an error on a single import dump it and keep going. 
+                    throw new DomainException($"{nameof(Domain.Models.Customer)} import failed at row {index}", DomainError.InternalServerError); 
                 }
             }
 
-            return customers;
+            return customerModels;
         }
 
     }
