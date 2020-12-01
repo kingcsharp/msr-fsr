@@ -352,7 +352,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                             subs.Add(new WorkOrderPartModel()
                             {
                                 PartId = p.PartId,
-                                ParentId = p.ParentPartId
+                                ParentId = p.ParentPartId,
+                                Qty = p.Qty
                             });
                         }
                     }
@@ -360,7 +361,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var n = new WorkOrderPartModel()
                 {
                     PartId = product.PartId,
-                    Children = subs
+                    Children = subs,
+                    Qty = quantity
                 };
                 parts.Add(n);
             }
