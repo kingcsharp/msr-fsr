@@ -160,9 +160,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-
-
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
+            // Note the menu permission here: Purchases.  Work orders are created by a user
+            // entering a purchase against a purchase order.  The Processor then creates the
+            // work order as that user.  Therefore, per REQ61, the permission required
+            // is EnumMenuItem.Purchases (see SBB-304).
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
             {
                 throw new DomainException(
                     $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
