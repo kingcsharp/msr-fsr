@@ -87,8 +87,6 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.TaskStarted, opts => opts.MapFrom(src => (
                     src.StartedOn != null && src.StartedOn.Value.Ticks > 0
                 )));
-            CreateMap<WorkOrderPart, WorkOrderPartModel>()
-                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => ConvertWorkOrderPartToWorkOrderPartModelQty(src)));
             CreateMap<WorkOrderPartModel, WorkOrderPart>();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
@@ -557,21 +555,6 @@ namespace MSR.Infrastructure.Profiles
         private string? GetCustomerName(WorkOrder src)
         {
             return src.Purchase?.PurchaseOrder?.Customer?.Name;
-        }
-
-        // TODO: this might be better as a new field in the WorkOrderPart
-        // table, populated at work order creation time.
-        private int? ConvertWorkOrderPartToWorkOrderPartModelQty(WorkOrderPart workOrderPart)
-        {
-            if (workOrderPart.WorkOrder?.WorkOrderParts != null && workOrderPart.WorkOrder.WorkOrderParts.Count > 1)
-            {
-                // If the number of parts is greater than 1, then we are grouping and
-                // serializing individually, so the quantity is always 1.
-                return 1;
-            }
-
-            // Otherwise, the purchase quantity is a group on a single WO.
-            return workOrderPart.WorkOrder?.Purchase?.Qty;
         }
     }
 }

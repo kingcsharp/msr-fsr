@@ -326,45 +326,46 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.Part)
                 .ThenInclude(y => y.Subparts)
                 .FirstAsync(x => x.Id == command.ProductId);
-            int count = 1;
+            int createCount = 1;
             int quantity = command.Qty;
 
             if (command.SerializeIndividually && command.Qty > 1)
             {
-                count = command.Qty;
+                createCount = command.Qty;
                 quantity = 1;
             }
 
             List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
-            for (int i = 0; i < count; i++)
+            for ( ; createCount > 0; createCount -= 1)
             {
                 List<WorkOrderPartModel> subs = new List<WorkOrderPartModel>();
                 if (product.Part.Subparts != null && product.Part.Subparts.Count > 0)
                 {
-                    foreach (PartSubPartMap p in product.Part.Subparts)
+                    foreach (PartSubPartMap partSubPartMapForSubPart in product.Part.Subparts)
                     {
-                        int spquantity = p.Qty;
-                        if (spquantity == 0)
+                        int subPartQuantity = partSubPartMapForSubPart.Qty;
+                        if (subPartQuantity == 0)
                         {
-                            spquantity = 1;
+                            subPartQuantity = 1;
                         }
 
-                        for (int j = 0; j < spquantity; j++)
+                        for ( ; subPartQuantity > 0; subPartQuantity -= 1)
                         {
                             subs.Add(new WorkOrderPartModel()
                             {
-                                PartId = p.PartId,
-                                ParentId = p.ParentPartId
+                                PartId = partSubPartMapForSubPart.PartId,
+                                ParentId = partSubPartMapForSubPart.ParentPartId,
+                                Qty = partSubPartMapForSubPart.Qty
                             });
                         }
                     }
                 }
-                var n = new WorkOrderPartModel()
-                {
-                    PartId = product.PartId,
-                    Children = subs
-                };
-                parts.Add(n);
+                parts.Add(new WorkOrderPartModel()
+                    {
+                        PartId = product.PartId,
+                        Children = subs,
+                        Qty = quantity
+                    });
             }
 
             return parts;
