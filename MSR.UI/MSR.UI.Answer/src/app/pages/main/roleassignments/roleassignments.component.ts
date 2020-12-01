@@ -65,6 +65,7 @@ export class RoleassignmentsComponent implements OnInit {
       menuModel.name = menuItem.name;
 
       roles.map(role => {
+        role.parentRoles = roles.find(s => s.id === role.id).parentRoles;
 
         let roleModel = new RoleModel();
         roleModel.id = role.id;
@@ -164,6 +165,12 @@ export class RoleassignmentsComponent implements OnInit {
 
         }
 
+        roleModel.childRoles = this.addChildRolesToRoleModel(roleModel, roles);
+        roleModel.menuItemsChildrenHaveAccessTo = this.getMenuItemsChildRolesHaveAccessTo(roleModel.childRoles);
+
+        if (roleModel.menuItemsChildrenHaveAccessTo.find(s => s.id === menuModel.id) !== undefined) {
+          roleModel.childRoleHasAccessToMenuModule = true;
+        }
 
         menuModel.roles.push(roleModel);
       });
@@ -171,6 +178,33 @@ export class RoleassignmentsComponent implements OnInit {
 
       this.originalMenuModules.push(menuModel);
     });
+
+  }
+
+  getMenuItemsChildRolesHaveAccessTo(childRoles: Array<Role>){
+
+    return childRoles.map(s => s.menus)
+    .reduce((memuItemArray, memuItem) => memuItemArray.concat(memuItem), [])
+    .filter((distinctMenuItem, index, menuItemArray) => menuItemArray.findIndex(s => s.id === distinctMenuItem.id) === index);
+  }
+
+  addChildRolesToRoleModel(roleModel: RoleModel, roles: Array<Role>): Array<Role> {
+
+    let childRoles = new Array<Role>();
+
+    roles.map(role => {
+
+      role.parentRoles.map(parentRole => {
+
+        if (parentRole.id === roleModel.id) {
+          childRoles.push(role);
+        }
+
+      });
+
+    });
+
+    return childRoles;
 
   }
 
@@ -187,17 +221,17 @@ export class RoleassignmentsComponent implements OnInit {
     this.pendingPermissionsUpdate = true;
 
 
-      if (roleModule.value) {
+    if (roleModule.value) {
 
-        this.addRoleAndPermissions(menuModule, roleModule, null);
+      this.addRoleAndPermissions(menuModule, roleModule, null);
 
-        this.selectedRoleModule = roleModule;
-      } else {
+      this.selectedRoleModule = roleModule;
+    } else {
 
-        this.removeRoleAndPermissions(menuModule, roleModule, null);
+      this.removeRoleAndPermissions(menuModule, roleModule, null);
 
-        this.selectedRoleModule = null;
-      }
+      this.selectedRoleModule = null;
+    }
 
   }
 

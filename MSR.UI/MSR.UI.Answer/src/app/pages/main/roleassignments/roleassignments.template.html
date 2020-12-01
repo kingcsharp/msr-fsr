@@ -38,7 +38,7 @@
             <ul class="list-group" *ngIf="selectedMenuModule != null">
                 <li class="list-group-item d-flex justify-content-between" *ngFor="let roleModule of selectedMenuModule.roles" [ngClass]="{'item-selected' : roleModule != null && selectedRoleModule != null && roleModule.name == selectedRoleModule.name}">
                     <input type="checkbox" class="form-check-input" id="{{ roleModule.id }}" [checked]="roleModule.value" [attr.data-cy]="roleModule.name"
-                    (change)="roleChanged($event,selectedMenuModule,roleModule)">
+                    (change)="roleChanged($event,selectedMenuModule,roleModule)" [disabled]="roleModule.childRoleHasAccessToMenuModule">
                     <label class="form-check-label" for="{{ roleModule.id }}">{{ roleModule.name }} </label>
                     <button type="button" class="btn btn-warning" (click)="editRolePermissions(roleModule)" [disabled]="!roleModule.value">
                         <i class="fas fa-edit editpermissions-icon"></i> Edit
