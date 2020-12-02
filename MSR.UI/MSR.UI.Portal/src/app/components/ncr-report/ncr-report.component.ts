@@ -40,7 +40,8 @@ export class NcrReportComponent implements OnInit {
         let taskSummary = {
           taskName: workOrderTask.procedureStep.title,
           taskId: workOrderTask.id,
-          monitors: new Array<any>()
+          monitors: new Array<any>(),
+          taskStepOrder: workOrderTask.taskStepOrder
         };
 
         workOrderTask.workOrderTaskMonitors.forEach(workOrderTaskMonitor => {
@@ -62,6 +63,8 @@ export class NcrReportComponent implements OnInit {
         });
       }
     });
+
+    this.taskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder)
   }
 
   showImagePreviewDialog(fileModel: FileModel) {
