@@ -12,6 +12,7 @@ using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace MSR.Infrastructure.Resources.Services.Invoices
 {
@@ -20,11 +21,13 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
+        private ILogger _logger;
 
-        public QuoteService(IUnitOfWork unitOfWork, IMapper mapper)
+        public QuoteService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<QuoteService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<QuoteModel>> GetQuotesAsync()
@@ -113,11 +116,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new DomainException("Permission denied for import", DomainError.BadRequest);
             }
 
-            var index = 0;
-
             foreach (var record in records)
             {
-                index++;
                 try
                 {
                     if (customerIds.Contains(record.CustomerId))
@@ -126,9 +126,10 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                         quoteModels.Add(quoteModel);
                     }
                 }
-                catch
+                catch (Exception exception)
                 {
-                    throw new DomainException($"{nameof(Quote)} import failed at row {index}", DomainError.InternalServerError);
+                    //If we get an error on a single import dump it and keep going. 
+                    _logger.LogError(exception, exception.Message);
                 }
             }
 

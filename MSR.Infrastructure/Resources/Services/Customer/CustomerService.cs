@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using Microsoft.Extensions.Logging;
 
 namespace MSR.Infrastructure.Resources.Services.Customers
 {
@@ -20,11 +22,13 @@ namespace MSR.Infrastructure.Resources.Services.Customers
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
+        private ILogger _logger;
 
-        public CustomerService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CustomerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CustomerService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Domain.Models.Customer> CreateCustomerAsync(CreateCustomer command, bool import = false)
@@ -241,11 +245,8 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 throw new DomainException("Permission denied for import", DomainError.BadRequest);
             }
 
-            var index = 0;
-
             foreach (var record in records)
             {
-                index++;
                 try
                 {
                     if (record.Id.HasValue && record.Id.Value > 0 && customerIds.Contains(record.Id.Value))
@@ -259,9 +260,10 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                         customerModels.Add(customerModel);
                     }
                 }
-                catch
+                catch (Exception exception)
                 {
-                    throw new DomainException($"{nameof(Domain.Models.Customer)} import failed at row {index}", DomainError.InternalServerError); 
+                    //If we get an error on a single import dump it and keep going. 
+                    _logger.LogError(exception, exception.Message);
                 }
             }
 
