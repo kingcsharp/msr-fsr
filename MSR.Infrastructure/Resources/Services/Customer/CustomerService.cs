@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using Microsoft.Extensions.Logging;
 
 namespace MSR.Infrastructure.Resources.Services.Customers
 {
@@ -20,11 +22,13 @@ namespace MSR.Infrastructure.Resources.Services.Customers
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
+        private ILogger _logger;
 
-        public CustomerService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CustomerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CustomerService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Domain.Models.Customer> CreateCustomerAsync(CreateCustomer command, bool import = false)
@@ -233,7 +237,8 @@ namespace MSR.Infrastructure.Resources.Services.Customers
         public async Task<IEnumerable<Domain.Models.Customer>> ImportCustomers(string csvData)
         {
             var records = CSVHelper.ParseRecords<CustomerImportItem>(csvData);
-            var customers = new List<Domain.Models.Customer>();
+            var customerModels = new List<Domain.Models.Customer>();
+            var customerIds = await _unitOfWork.Customers.Query().Select(i => i.Id).ToListAsync();
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.CustomersDepartments, EnumPrivilege.CanApprove))
             {
@@ -244,24 +249,25 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             {
                 try
                 {
-                    if (record.Id.HasValue && record.Id.Value > 0)
+                    if (record.Id.HasValue && record.Id.Value > 0 && customerIds.Contains(record.Id.Value))
                     {
-                        var ret = await UpdateCustomerAsync(_mapper.Map<UpdateCustomer>(record), true);
-                        customers.Add(ret);
+                        var customerModel = await UpdateCustomerAsync(_mapper.Map<UpdateCustomer>(record), true);
+                        customerModels.Add(customerModel);
                     }
                     else
                     {
-                        var ret = await CreateCustomerAsync(_mapper.Map<CreateCustomer>(record),true);
-                        customers.Add(ret);
+                        var customerModel = await CreateCustomerAsync(_mapper.Map<CreateCustomer>(record),true);
+                        customerModels.Add(customerModel);
                     }
                 }
-                catch
+                catch (Exception exception)
                 {
                     //If we get an error on a single import dump it and keep going. 
+                    _logger.LogError(exception, exception.Message);
                 }
             }
 
-            return customers;
+            return customerModels;
         }
 
     }

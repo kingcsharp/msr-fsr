@@ -285,5 +285,12 @@ namespace MSR.Infrastructure.Resources.Services.Document
 
             await _unitOfWork.SaveChangesAsync();
         }
+
+        public async Task<ICollection<ArchiveDocumentView>> GetArchiveDocumentAsync(GetArchiveDocument command)
+        {
+            var ret = await _fileService.GetArchivedDocuments(EnumUtils.GetDescription(command.Folder));
+
+            return ret;
+        }
     }
 }

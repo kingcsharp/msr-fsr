@@ -51,11 +51,11 @@ namespace MSR.Infrastructure.Resources.Services
             throw new NotImplementedException();
         }
 
-        public ICollection<FileModel> ListFiles(string entityName, int? entityId = null, int? fileId = null)
+        public ICollection<FileModel> ListFiles(string entityName, int? entityId = null, int? fileId = null, int expireInSeconds = 6000)
         {
             var tableName = mapEntityToTable(entityName ?? "");
             var fileMaps = _unitOfWork.FileEntityMap.Query();
-            
+
             if (fileId.HasValue)
             {
                 fileMaps = fileMaps.Where(x => x.FileId == fileId);
@@ -81,7 +81,7 @@ namespace MSR.Infrastructure.Resources.Services
                     continue;
                 }
 
-                var fileURL = _fileDownloader.GetURL(x.FileURL, 6000);
+                var fileURL = _fileDownloader.GetURL(x.FileURL, expireInSeconds);
                 ret.Add(new FileModel()
                 {
                     FileId = x.Id,
@@ -125,7 +125,7 @@ namespace MSR.Infrastructure.Resources.Services
             var tableName = mapEntityToTable(entityName);
 
             var url = await _fileUploader.UploadFile(file, tableName, entityId);
-            
+
             var efFile = new File()
             {
                 ContentType = file.ContentType,
@@ -194,7 +194,7 @@ namespace MSR.Infrastructure.Resources.Services
                                         Name = x.Name,
                                         Base64String = "",
                                         ContentType = x.ContentType,
-                                        FileURL = _fileDownloader.GetURL(x.FileURL,6000)
+                                        FileURL = _fileDownloader.GetURL(x.FileURL, 6000)
                                     })
                                     .SingleOrDefaultAsync();
 
@@ -280,6 +280,34 @@ namespace MSR.Infrastructure.Resources.Services
             {
                 URL = ret
             };
+        }
+
+        public async Task<List<ArchiveDocumentView>> GetArchivedDocuments(string folderName)
+        {
+            var listObjectsV2Response = await _fileDownloader.GetS3Files(folderName);
+            var archiveDocuments = new List<ArchiveDocumentView>();
+            foreach (var item in listObjectsV2Response.S3Objects)
+            {
+                if (item.Size > 0)
+                {
+                    var archiveToAdd = new ArchiveDocumentView()
+                    {
+                        CreateDate = item.LastModified,
+                        FileName = item.Key.Split('/')[1],
+                        FileSize = item.Size,
+                        DownloadURL = _fileDownloader.GetURL(item.Key, 6000)
+                    };
+
+                    var maxMonthDate = archiveDocuments.Where(x => x.CreateDate.Year == archiveToAdd.CreateDate.Year && x.CreateDate.Month == archiveToAdd.CreateDate.Month).FirstOrDefault();
+                    if (maxMonthDate == null || DateTime.Compare(archiveToAdd.CreateDate, maxMonthDate.CreateDate) > 0)
+                    {
+                        archiveDocuments.Remove(maxMonthDate);
+                        archiveDocuments.Add(archiveToAdd);
+                    }
+                }
+            }
+
+            return archiveDocuments;
         }
 
         public async Task<bool> EditPdfFile(FileModel file, DocumentView document, string entityName)
@@ -400,7 +428,7 @@ namespace MSR.Infrastructure.Resources.Services
 
                 await _fileUploader.UploadFile(pdfDoc.Stream, new FileModel() { Name = file.Name, ContentType = file.ContentType }, nameof(EntityFramework.Entities.Document), document.Id);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
@@ -412,7 +440,7 @@ namespace MSR.Infrastructure.Resources.Services
         private async Task<string> GetRevisionTable(DocumentView document)
         {
             var historyList = await _unitOfWork.ApprovalTransactionLogs.Query()
-                                                                       .Where(i => i.ApprovalEntity == nameof(EntityFramework.Entities.Document) 
+                                                                       .Where(i => i.ApprovalEntity == nameof(EntityFramework.Entities.Document)
                                                                                 && i.ApprovalEntityId == document.Id)
                                                                        .ToListAsync();
 

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { WorkOrderModel, WorkOrderPartModel } from '../../services/api.client.generated';
+import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
 
 @Component({
   selector: 'portal-monitor-report',
@@ -10,6 +11,7 @@ export class PortalMonitorReportComponent implements OnInit {
 
   @Input() workOrder: WorkOrderModel;
   workOrderPart: WorkOrderPartModel;
+  enumMonitorType = EnumMonitorType;
   constructor() { }
 
   ngOnInit(): void {

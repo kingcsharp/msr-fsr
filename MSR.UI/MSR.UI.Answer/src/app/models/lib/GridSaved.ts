@@ -1,5 +1,8 @@
 import { ElementRef } from '@angular/core';
 import { ColumnsSaved } from './ColumnsSaved';
+import {
+    EnumAwsFolders
+} from '../../services/api.client.generated';
 
 export interface IGridSaved {
     columnsSaved?: ColumnsSaved[] | undefined;
@@ -12,6 +15,7 @@ export interface IGridSaved {
     showMyViewsFeature?: boolean | undefined;
     paginator?: boolean | undefined;
     gridClass?: string | undefined;
+    archivedFolder?: EnumAwsFolders | undefined;
 }
 export class GridSaved implements IGridSaved {
     columnsSaved?: ColumnsSaved[] | undefined;
@@ -24,6 +28,7 @@ export class GridSaved implements IGridSaved {
     showMyViewsFeature?: boolean = true;
     paginator?: boolean = true;
     gridClass?: string | undefined;
+    archivedFolder?: EnumAwsFolders | undefined;
 
     constructor(data?: IGridSaved) {
         if (data) {

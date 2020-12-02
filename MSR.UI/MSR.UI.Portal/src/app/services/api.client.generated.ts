@@ -904,6 +904,65 @@ export class DocumentService {
         }
         return _observableOf<AuditActionResult>(<any>null);
     }
+
+    /**
+     * Gets list of files from a folder
+     * @param folder (optional) 
+     */
+    archive(folder: EnumAwsFolders | undefined, version: string): Observable<AuditActionResultOfICollectionOfArchiveDocumentView> {
+        let url_ = this.baseUrl + "/v{version}/Document/Archive?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (folder === null)
+            throw new Error("The parameter 'folder' cannot be null.");
+        else if (folder !== undefined)
+            url_ += "Folder=" + encodeURIComponent("" + folder) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processArchive(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processArchive(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfArchiveDocumentView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfArchiveDocumentView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processArchive(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfArchiveDocumentView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfArchiveDocumentView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfArchiveDocumentView>(<any>null);
+    }
 }
 
 @Injectable()
@@ -10223,6 +10282,101 @@ export interface IUpdateDocumentRequest {
     roleIds?: (number | undefined)[] | undefined;
     referenceFileIds?: (number | undefined)[] | undefined;
     referenceFiles?: FileModel[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfArchiveDocumentView extends AuditActionResult implements IAuditActionResultOfICollectionOfArchiveDocumentView {
+    object?: ArchiveDocumentView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfArchiveDocumentView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(ArchiveDocumentView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfArchiveDocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfArchiveDocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfArchiveDocumentView extends IAuditActionResult {
+    object?: ArchiveDocumentView[] | undefined;
+}
+
+export class ArchiveDocumentView implements IArchiveDocumentView {
+    fileName?: string | undefined;
+    downloadURL?: string | undefined;
+    fileSize?: number;
+    createDate?: Date;
+
+    constructor(data?: IArchiveDocumentView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fileName = _data["fileName"];
+            this.downloadURL = _data["downloadURL"];
+            this.fileSize = _data["fileSize"];
+            this.createDate = _data["createDate"] ? new Date(_data["createDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ArchiveDocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArchiveDocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fileName"] = this.fileName;
+        data["downloadURL"] = this.downloadURL;
+        data["fileSize"] = this.fileSize;
+        data["createDate"] = this.createDate ? this.createDate.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IArchiveDocumentView {
+    fileName?: string | undefined;
+    downloadURL?: string | undefined;
+    fileSize?: number;
+    createDate?: Date;
+}
+
+export enum EnumAwsFolders {
+    Combinedfinancialdata = 0,
 }
 
 /** Base class for an API call with a typed result */

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MSR.Answer.API.V1.Models
@@ -41,8 +42,7 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// SerialNumber
         /// </summary>
-        [StringLength(20)]
-        public string SerialNumber { get; set; }
+        public List<string> SerialNumbers { get; set; }
 
         /// <summary>
         /// Quantity

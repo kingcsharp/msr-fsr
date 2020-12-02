@@ -1,5 +1,5 @@
 <h1 class="page-title" data-cy="page-title">
-    <div class="form-group col-10 d-flex flex-row headerSearch" *ngIf="globals.selectedCustomer !== undefined">
+    <div class="form-group col-12 d-flex flex-row headerSearch" *ngIf="globals.selectedCustomer !== undefined">
         <div>
             <i class="fas fa-desktop"></i>
             {{title}}
@@ -107,7 +107,7 @@
     </div>
     <p-footer>
         <div class="pull-right">
-            <button type="submit" (click)="showNcrModal = false" class="btn btn-warning mb-xs" role="button"
+            <button type="submit" (click)="displayBasic2 = false" class="btn btn-warning mb-xs" role="button"
                 data-cy="confirmdelete-button">
                 <i class="fas fa-times-circle mx-1"></i>Close
             </button>

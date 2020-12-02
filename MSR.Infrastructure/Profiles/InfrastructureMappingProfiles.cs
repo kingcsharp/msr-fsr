@@ -77,14 +77,16 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Resources.EntityFramework.Entities.ProductStep, ProductStepModel>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>();
-            CreateMap<CreatePurchase, Purchase>().ReverseMap();
+            CreateMap<Purchase, CreatePurchase>();
+            CreateMap<CreatePurchase, Purchase>()
+                // A purchase will take the first item's serial as the main serial number.  This
+                // follows the behavior of Answer 2.
+                .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => src.SerialNumbers == null ? null : src.SerialNumbers[0]));
             CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>()
                 .ForMember(dest => dest.TaskStarted, opts => opts.MapFrom(src => (
                     src.StartedOn != null && src.StartedOn.Value.Ticks > 0
                 )));
-            CreateMap<WorkOrderPart, WorkOrderPartModel>()
-                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => WorkOrderPart_to_WorkOrderPartModel_qty(src)));
             CreateMap<WorkOrderPartModel, WorkOrderPart>();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
@@ -368,7 +370,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.Created))
                 .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
+                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.PartNumber));
             CreateMap<QuoteModel, QuotesProductsView>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.ProcessName))
@@ -441,9 +443,9 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<AdminCostSetting, AdminCostSettingsModel>().ReverseMap();
 
-            CreateMap<PartCSVRecord, PartModel>();
-            CreateMap<PartCSVRecord, UpdatePart>();
-            CreateMap<PartCSVRecord, CreatePart>();
+            CreateMap<PartImportItem, PartModel>();
+            CreateMap<PartImportItem, UpdatePart>();
+            CreateMap<PartImportItem, CreatePart>();
 
             #region Reporting
             CreateMap<Report, ReportModel>();
@@ -553,15 +555,6 @@ namespace MSR.Infrastructure.Profiles
         private string? GetCustomerName(WorkOrder src)
         {
             return src.Purchase?.PurchaseOrder?.Customer?.Name;
-        }
-
-        private int? WorkOrderPart_to_WorkOrderPartModel_qty(WorkOrderPart src)
-        {
-            if (src.WorkOrder != null && src.WorkOrder.Purchase != null)
-            {
-                return src.WorkOrder.Purchase.Qty;
-            }
-            return null;
         }
     }
 }

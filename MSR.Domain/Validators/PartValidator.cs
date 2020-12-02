@@ -12,15 +12,6 @@ using System.Text;
 
 namespace MSR.Domain.Validators
 {
-    public class PartCSVRecord
-    {
-        public int? Id { get; set; }
-        public string Name { get; set; }
-        public string PartNumber { get; set; }
-        public string OEMPartNumber { get; set; }
-        public string NickName { get; set; }
-        public int MaximumCycles { get; set; }
-    }
 
     public class PartValidator : IValidateImportData
     {
@@ -45,7 +36,7 @@ namespace MSR.Domain.Validators
             IEnumerable records = null;
             try
             {
-                records = CSVHelper.ParseRecords<PartCSVRecord>(csvData);
+                records = CSVHelper.ParseRecords<PartImportItem>(csvData);
             }
             catch (Exception e)
             {
@@ -55,7 +46,7 @@ namespace MSR.Domain.Validators
             }
 
             // parse the file in-memory to ensure valid data
-            foreach (PartCSVRecord record in records)
+            foreach (PartImportItem record in records)
             {
                 line += 1;
                 try

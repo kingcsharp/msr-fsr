@@ -8,4 +8,6 @@ export enum EnumColumnType {
     Template = 6,
     InputNumber = 7,
     InputDateTime = 7,
+    DownloadLink = 8,
+    ByteToMb = 9
 }

@@ -30,6 +30,7 @@ import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploa
 import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
 // import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
+import { BytePipe } from '../../../app/pipes/bytes.pipe';
 import { MonitorResultPipe } from '../../../app/pipes/monitorResult.pipe';
 import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-switch/bootstrap-switch.component';
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
@@ -54,6 +55,7 @@ import { MonitorStatusPipe } from '../../../app/pipes/monitorstatus';
     GridInputFilterComponent,
     GridOptionsComponent,
     TimeZonePipe,
+    BytePipe,
     MonitorResultPipe,
     BootstrapSwitchComponent,
     CkeditorWrapperComponent,
@@ -81,6 +83,7 @@ import { MonitorStatusPipe } from '../../../app/pipes/monitorstatus';
     CalendarModule,
     GridOptionsComponent,
     TimeZonePipe,
+    BytePipe,
     MonitorResultPipe,
     BootstrapSwitchComponent,
     CkeditorWrapperComponent,

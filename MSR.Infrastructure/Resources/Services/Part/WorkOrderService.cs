@@ -2,37 +2,50 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3.Model;
 using AutoMapper;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Microsoft.EntityFrameworkCore;
+using MSR.Domain.Abstractions.Email;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Domain.Models.Config;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using Customer = MSR.Infrastructure.Resources.EntityFramework.Entities.Customer;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
     public class WorkOrderService : IWorkOrderService
     {
         public const int PROCEDURE_STEP_TYPE_NC = 3;
+        public const int PROCEDURE_TYPE_NC = 6;
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
+        private readonly IEmailService _emailService;
+        private readonly EmailInformation _emailInformation;
+        private readonly GeneralInformation _generalInformation;
 
-        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
+        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService, 
+            EmailInformation emailInformation, GeneralInformation generalInformation)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _fileService = fileService;
+            _emailService = emailService;
+            _emailInformation = emailInformation;
+            _generalInformation = generalInformation;
         }
 
 
@@ -147,9 +160,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-
-
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
+            // Note the menu permission here: Purchases.  Work orders are created by a user
+            // entering a purchase against a purchase order.  The Processor then creates the
+            // work order as that user.  Therefore, per REQ61, the permission required
+            // is EnumMenuItem.Purchases (see SBB-304).
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
             {
                 throw new DomainException(
                     $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
@@ -311,45 +326,46 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.Part)
                 .ThenInclude(y => y.Subparts)
                 .FirstAsync(x => x.Id == command.ProductId);
-            int count = 1;
+            int createCount = 1;
             int quantity = command.Qty;
 
             if (command.SerializeIndividually && command.Qty > 1)
             {
-                count = command.Qty;
+                createCount = command.Qty;
                 quantity = 1;
             }
 
             List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
-            for (int i = 0; i < count; i++)
+            for ( ; createCount > 0; createCount -= 1)
             {
                 List<WorkOrderPartModel> subs = new List<WorkOrderPartModel>();
                 if (product.Part.Subparts != null && product.Part.Subparts.Count > 0)
                 {
-                    foreach (PartSubPartMap p in product.Part.Subparts)
+                    foreach (PartSubPartMap partSubPartMapForSubPart in product.Part.Subparts)
                     {
-                        int spquantity = p.Qty;
-                        if (spquantity == 0)
+                        int subPartQuantity = partSubPartMapForSubPart.Qty;
+                        if (subPartQuantity == 0)
                         {
-                            spquantity = 1;
+                            subPartQuantity = 1;
                         }
 
-                        for (int j = 0; j < spquantity; j++)
+                        for ( ; subPartQuantity > 0; subPartQuantity -= 1)
                         {
                             subs.Add(new WorkOrderPartModel()
                             {
-                                PartId = p.PartId,
-                                ParentId = p.ParentPartId
+                                PartId = partSubPartMapForSubPart.PartId,
+                                ParentId = partSubPartMapForSubPart.ParentPartId,
+                                Qty = partSubPartMapForSubPart.Qty
                             });
                         }
                     }
                 }
-                var n = new WorkOrderPartModel()
-                {
-                    PartId = product.PartId,
-                    Children = subs
-                };
-                parts.Add(n);
+                parts.Add(new WorkOrderPartModel()
+                    {
+                        PartId = product.PartId,
+                        Children = subs,
+                        Qty = quantity
+                    });
             }
 
             return parts;
@@ -430,15 +446,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.BadRequest);
             }
 
-            ProcedureStep step = _unitOfWork.ProcedureSteps
+            ProcedureStep procedureStepEntity = _unitOfWork.ProcedureSteps
                 .Query()
                 .Include(x => x.ProcedureStepMonitors)
                 .FirstOrDefault(x => x.Id == command.ProcedureStepId);
 
+            _ = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, s => s.Id == procedureStepEntity.ProcedureId);
             _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
             _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
 
-            if (step != null && step.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC)
+            if (procedureStepEntity != null && procedureStepEntity.Procedure?.ProcedureTypeId == PROCEDURE_TYPE_NC)
             {
                 var workOrderEntity = await _unitOfWork.WorkOrders
                     .FirstOrDefaultAsync(false, s => s.Id == command.WorkOrderId);
@@ -453,7 +470,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
 
-            if (step == null)
+            if (procedureStepEntity == null)
             {
                 throw new DomainException(
                     $"No {nameof(ProcedureStep)} with ID {command.ProcedureStepId}",
@@ -462,35 +479,35 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (!command.ProcedureStepTypeId.HasValue)
             {
-                command.ProcedureStepTypeId = step.ProcedureStepTypeId;
+                command.ProcedureStepTypeId = procedureStepEntity.ProcedureStepTypeId;
             }
 
-            WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
+            WorkOrderTask workOrderTaskEntity = _mapper.Map<WorkOrderTask>(command);
 
-            newTask.WorkOrderTaskMonitors =
-                _mapper.Map<List<WorkOrderTaskMonitor>>(step.ProcedureStepMonitors);
+            workOrderTaskEntity.WorkOrderTaskMonitors =
+                _mapper.Map<List<WorkOrderTaskMonitor>>(procedureStepEntity.ProcedureStepMonitors);
 
-            var created = _unitOfWork.WorkOrderTasks.Add(newTask);
+            var created = await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(newTask, newTask.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrderTaskEntity, workOrderTaskEntity.Id);
 
-            created.Context.Entry(newTask)
-                .Reference(x => x.ProcedureStep).Load();
-            created.Context.Entry(newTask.ProcedureStep)
-                .Reference(x => x.StepType).Load();
+            await created.Context.Entry(workOrderTaskEntity)
+                .Reference(x => x.ProcedureStep).LoadAsync();
+            await created.Context.Entry(workOrderTaskEntity.ProcedureStep)
+                .Reference(x => x.StepType).LoadAsync();
 
-            var ret = _mapper.Map<WorkOrderTaskModel>(newTask);
+            var workOrderTaskModel = _mapper.Map<WorkOrderTaskModel>(workOrderTaskEntity);
 
             // detach backpointer to self
-            foreach (WorkOrderTaskMonitorModel wotm in ret.WorkOrderTaskMonitors)
+            foreach (WorkOrderTaskMonitorModel workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors)
             {
-                wotm.WorkOrderTask = null;
+                workOrderTaskMonitorModel.WorkOrderTask = null;
             }
 
-            ret.WorkOrder = null;
+            workOrderTaskModel.WorkOrder = null;
 
-            return ret;
+            return workOrderTaskModel;
         }
 
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
@@ -634,7 +651,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"{nameof(WorkOrderTaskMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            WorkOrderTaskMonitorModel ret;
+            
 
             if (current.ProcedureStepMonitor.MonitorTypeId == 6)
             {
@@ -643,15 +660,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 command.TextVal = monitorListItem.Name;
             }
 
-            var workordertaskmonitor = _mapper.Map(command, current);
-            _unitOfWork.WorkOrderTaskMonitors.Update(workordertaskmonitor);
+            var workOrderTaskMonitor = _mapper.Map(command, current);
+            _unitOfWork.WorkOrderTaskMonitors.Update(workOrderTaskMonitor);
 
-            // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(workordertaskmonitor, workordertaskmonitor.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrderTaskMonitor, workOrderTaskMonitor.Id);
 
-            ret = _mapper.Map<WorkOrderTaskMonitorModel>(workordertaskmonitor);
+            WorkOrderTaskMonitorModel workOrderTaskMonitorModel = _mapper.Map<WorkOrderTaskMonitorModel>(workOrderTaskMonitor);
 
-            return ret;
+            var workOrderTaskMonitorEntity = await _unitOfWork.WorkOrderTaskMonitors.Query().FirstOrDefaultAsync(s => s.Id == command.Id);
+
+            if (workOrderTaskMonitorEntity.ProcedureStepMonitor.SendNCREmail.HasValue &&
+                workOrderTaskMonitorEntity.ProcedureStepMonitor.SendNCREmail.Value)
+            {
+                await SendNcrEmailNotification(workOrderTaskMonitorModel.Id);
+            }
+
+            return workOrderTaskMonitorModel;
         }
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderHistory command)
         {
@@ -839,7 +863,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var notes = await _unitOfWork.WorkOrderMessages.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
             var files = _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.EntityId)) && i.EntityTableName.Equals("WorkOrderTask") && i.FileObject != null).Select(i => i).ToList();
             var monitors = _unitOfWork.WorkOrderTaskMonitors.Query().ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.WorkOrderTaskId))).Select(i => i).ToList();
-            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Include(i => i.Invoice).Where(i => i.WorkOrderId != null && workOrderIds.Contains(i.WorkOrderId.Value)).Select(i => i).ToListAsync();
+            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Include(i => i.Invoice).Where(i => workOrderIds.Contains(i.WorkOrderId)).Select(i => i).ToListAsync();
             var imageContentTypes = new List<string>() { "image/jpg", "image/jpeg", "image/gif", "image/png" };
 
             foreach (var portalView in portalViews)
@@ -890,7 +914,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     portalView.ProcedureName = workOrderTask.ProcedureStep?.Procedure?.Name;
                 }
 
-                var invoiceItem = invoiceItems.FirstOrDefault(i => i.WorkOrderId.Value == portalView.WorkOrderId);
+                var invoiceItem = invoiceItems.FirstOrDefault(i => i.WorkOrderId == portalView.WorkOrderId);
 
                 if (invoiceItem != null)
                 {
@@ -1110,6 +1134,81 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
 
             }
+        }
+
+        private async Task SendNcrEmailNotification(int? workOrderTaskMonitorId)
+        {
+            var workOrderTaskMonitorEntity = await _unitOfWork.WorkOrderTaskMonitors.Query()
+                .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorId);
+            var workOrderTaskEntity = await _unitOfWork.WorkOrderTasks.Query()
+                .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorEntity.WorkOrderTaskId);
+            var workOrderEntity = await _unitOfWork.WorkOrders.Query()
+                .FirstOrDefaultAsync(s => s.Id == workOrderTaskEntity.WorkOrderId);
+            var purchaseEntity = await _unitOfWork.Purchases.Query()
+                .FirstOrDefaultAsync(s => s.Id == workOrderEntity.PurchaseId);
+            var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.Query()
+                .FirstOrDefaultAsync(s => s.Id == purchaseEntity.PurchaseOrderId);
+            var customerEntity = await _unitOfWork.Customers.Query()
+                .FirstOrDefaultAsync(s => s.Id == purchaseOrderEntity.CustomerId);
+            var parentPartEntity = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
+                .FirstOrDefaultAsync(m => m.WorkOrderId == workOrderEntity.Id && m.ParentId.HasValue == false);
+            var primaryContactUserModel = await _unitOfWork.Users.Query()
+                .FirstOrDefaultAsync(s => s.Id == customerEntity.PrimaryContactUserId);
+            var secondaryContactUserModel = await _unitOfWork.Users.FirstOrDefaultAsync(false,s => s.Id == customerEntity.SecondaryContactUserId);
+            var workOrderTaskAssignedUserModel = workOrderTaskEntity.AssignedToUser;
+
+            if (primaryContactUserModel == null || primaryContactUserModel.IsAnswerUser == true)
+            {
+                throw new DomainException(
+                    "There is no Portal User set as Primary Contact associated with this Work Order",
+                    DomainError.NotFound);
+            }
+
+            if (workOrderTaskAssignedUserModel == null)
+            {
+                throw new DomainException("The Work Order Task must have an assigned user",
+                    DomainError.InternalServerError);
+            }
+
+            var to = primaryContactUserModel.Email;
+            var from = workOrderTaskAssignedUserModel.Email;
+            var carbonCopyList = new List<string>() {workOrderTaskAssignedUserModel.Email};
+
+            if (secondaryContactUserModel != null && secondaryContactUserModel.IsAnswerUser == false)
+            {
+                carbonCopyList.Add(secondaryContactUserModel?.Email);
+            }
+
+            var serialNumber = string.IsNullOrWhiteSpace(parentPartEntity?.SerialNumber) ? "N/A" : parentPartEntity?.SerialNumber;
+
+            StringBuilder body = new StringBuilder($@"
+                        Dear MSR-FSR Customer,<br>
+                        <br>
+                        A product non-conformance has been reported on a part for which you are listed as the NC contact.<br>
+                        <br>
+                        Date Reported: {workOrderTaskMonitorEntity.LastUpdatedOn}<br>
+                        Technician: {workOrderTaskAssignedUserModel.FirstName} {workOrderTaskAssignedUserModel.LastName}<br>
+                        Part Name: {parentPartEntity?.Part?.Name}<br>
+                        Part Number: {parentPartEntity?.Part?.PartNumber}<br>
+                        Serial Number: {serialNumber}<br>
+                        WO Number: {workOrderEntity.Id}<br>
+                        Description of NC: {workOrderTaskMonitorEntity.TextVal}<br>
+                        <br>
+                        Please log into the MSR-FSR Portal at <a href=""{_generalInformation.PortalWebsiteUrl}"">portal.msr-fsr.com</a> for additional detail, to view photographs, and to enter a disposition.<br>
+                        <br>
+                        Alternatively you can email your local MSR-FSR Production Manager or call MSR-FSR at the numbers below:<br>");
+
+            var parentLocationEntities = _unitOfWork.Locations.Query().Where(s => s.ParentId.HasValue == false && s.IsActive == true);
+
+            await parentLocationEntities.ForEachAsync(parentLocationEntity =>
+            {
+                body.Append($"{parentLocationEntity.Name}, {parentLocationEntity.State} {parentLocationEntity.Country} {parentLocationEntity.Phone}<br>");
+            });
+
+            var subject = $"Non-Conformity Reported on {workOrderEntity.Id}";
+
+            await _emailService.SendEmailAsync(from, to, subject, body.ToString(), carbonCopyList, true);
+
         }
 
     }
