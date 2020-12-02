@@ -3,10 +3,11 @@ import { MenuModel } from '../../../models/menu-model';
 import { RoleModel } from '../../../models/role-model';
 import { UpdatePermissionsEventModel } from '../../../models/update-permission-event-model';
 import { PermissionModel } from '../../../models/permission-model';
-import { MenuService, MenuItem, RoleService, Role, Permission, CreateMenuRoleMapRequest, UpdateMenuRoleMapRequest, ICreateMenuRoleMapRequest, IUpdateProcedureStepRequest, IUpdateMenuRoleMapRequest } from '../../../services/api.client.generated';
+import { MenuService, MenuItem, RoleService, Role, Permission, CreateMenuRoleMapRequest, UpdateMenuRoleMapRequest, ICreateMenuRoleMapRequest, IUpdateMenuRoleMapRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-roleassignments',
@@ -48,7 +49,7 @@ export class RoleassignmentsComponent implements OnInit {
         let roles = roleResponse.object;
 
         this.adaptMenuItemsAndRolesToMenuModels(menuItems, roles);
-        this.menuModules = [...this.originalMenuModules];
+        this.menuModules = _.cloneDeep(this.originalMenuModules);
       }));
 
     }));
@@ -181,11 +182,11 @@ export class RoleassignmentsComponent implements OnInit {
 
   }
 
-  getMenuItemsChildRolesHaveAccessTo(childRoles: Array<Role>){
+  getMenuItemsChildRolesHaveAccessTo(childRoles: Array<Role>) {
 
     return childRoles.map(s => s.menus)
-    .reduce((memuItemArray, memuItem) => memuItemArray.concat(memuItem), [])
-    .filter((distinctMenuItem, index, menuItemArray) => menuItemArray.findIndex(s => s.id === distinctMenuItem.id) === index);
+      .reduce((memuItemArray, memuItem) => memuItemArray.concat(memuItem), [])
+      .filter((distinctMenuItem, index, menuItemArray) => menuItemArray.findIndex(s => s.id === distinctMenuItem.id) === index);
   }
 
   addChildRolesToRoleModel(roleModel: RoleModel, roles: Array<Role>): Array<Role> {
@@ -216,30 +217,50 @@ export class RoleassignmentsComponent implements OnInit {
     this.selectedRoleModule = roleModule;
   }
 
-  roleChanged(event: Event, menuModule: MenuModel, roleModule: RoleModel) {
+  roleChanged(menuModule: MenuModel, roleModule: RoleModel) {
     roleModule.value = !roleModule.value;
     this.pendingPermissionsUpdate = true;
 
+    const pendingRoleChangeIndex = this.pendingPermissions.findIndex(s => s.menuModule.id === menuModule.id && s.roleModule.id === roleModule.id && s.permissionModule === null);
 
-    if (roleModule.value) {
+    if (pendingRoleChangeIndex === -1) {
 
-      this.addRoleAndPermissions(menuModule, roleModule, null);
+      if (roleModule.value) {
 
-      this.updateInheritedRoleAccess(menuModule, roleModule, false);
+        this.addRoleAndPermissions(menuModule, roleModule);
 
-      this.selectedRoleModule = roleModule;
+        this.updateInheritedRoleAccess(menuModule, roleModule);
+
+        this.selectedRoleModule = roleModule;
+      } else {
+
+        this.removeRoleAndPermissions(menuModule, roleModule);
+
+        this.updateInheritedRoleAccess(menuModule, roleModule);
+
+        this.selectedRoleModule = null;
+      }
+
     } else {
 
-      this.removeRoleAndPermissions(menuModule, roleModule, null);
+      this.pendingPermissions.splice(pendingRoleChangeIndex, 1);
 
-      this.updateInheritedRoleAccess(menuModule, roleModule, true);
+      if (roleModule.value) {
+        let originalPermissions = this.originalMenuModules.find(s => s.id === menuModule.id).roles.find(m => m.id === roleModule.id).permissions;
+        let menuModulePermissions = this.menuModules.find(s => s.id === menuModule.id).roles.find(m => m.id === roleModule.id).permissions;
+        menuModulePermissions.map(menuModelPermission => {
 
-      this.selectedRoleModule = null;
+          menuModelPermission.value = originalPermissions.find(s => s.name === menuModelPermission.name).value;
+
+        });
+      }
+
     }
+
 
   }
 
-  updateInheritedRoleAccess(menuModule: MenuModel, roleModule: RoleModel, roleIsBeingRemoved: boolean) {
+  updateInheritedRoleAccess(menuModule: MenuModel, roleModule: RoleModel) {
 
     let rolesWithRoleModuleAsChild = menuModule.roles.filter(s => s.childRoles.length > 0 && s.childRoles.find(m => m.id === roleModule.id));
 
@@ -264,7 +285,7 @@ export class RoleassignmentsComponent implements OnInit {
     return childRoleHasAccessToMenuItem;
   }
 
-  permissionChanged(event: Event, menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel) {
+  permissionChanged(menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel) {
     permissionModule.value = !permissionModule.value;
     this.pendingPermissionsUpdate = true;
 
@@ -360,13 +381,13 @@ export class RoleassignmentsComponent implements OnInit {
           roleId: roleChange.roleModule.id
         } as ICreateMenuRoleMapRequest);
 
-        this.menuService.rolePost(env.apiVersion, createMenuRoleMapRequest).subscribe(responseHandler((response) => {
+        this.menuService.rolePost(env.apiVersion, createMenuRoleMapRequest).subscribe(responseHandler(() => {
 
         }));
 
       } else {
 
-        this.menuService.roleDelete(roleChange.menuModule.id, roleChange.roleModule.id, env.apiVersion).subscribe(responseHandler((response) => {
+        this.menuService.roleDelete(roleChange.menuModule.id, roleChange.roleModule.id, env.apiVersion).subscribe(responseHandler(() => {
 
         }));
 
@@ -384,7 +405,7 @@ export class RoleassignmentsComponent implements OnInit {
     this.clearPendingChanges();
   }
 
-  removeRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel) {
+  removeRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel) {
 
     this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
 
@@ -401,7 +422,7 @@ export class RoleassignmentsComponent implements OnInit {
 
   }
 
-  addRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel) {
+  addRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel) {
 
     this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
 
@@ -420,7 +441,7 @@ export class RoleassignmentsComponent implements OnInit {
         permission.value = true;
       }
 
-      this.permissionChanged(null, menuModule, roleModule, permission);
+      this.permissionChanged(menuModule, roleModule, permission);
     });
   }
 }
