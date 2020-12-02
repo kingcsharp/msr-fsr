@@ -12,5 +12,6 @@ namespace MSR.Domain.Commands
         public string MultiVal { get; set; }
         public string SensorValue { get; set; }
         public string Comment { get; set; }
+        public string SendNCREmail { get; set; }
     }
 }

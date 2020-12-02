@@ -34,6 +34,8 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   monitorInputTypes = EnumMonitorInputType;
   monitorShouldBe = EnumMonitorShouldBe;
   readonly monitorValueNotAvailable = 'No Sensor Value Available';
+  showNcrEmailNotificationDialog: boolean = false;
+  ncrEmailDestination: string = '';
 
   constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
 
@@ -143,7 +145,29 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   }
 
   updateMonitors(closeTask: boolean = false) {
+
+    let sendAnNcrEmailNotification = this.workOrderMonitorsToView.map(s => s.procedureStepMonitor?.sendEmailNotification).find(m => m === true);
+    let primaryContactUserEmail = this.workOrderModel.purchase?.purchaseOrder?.customer?.primaryContactUser?.email;
+
+    if (sendAnNcrEmailNotification && (primaryContactUserEmail === undefined || primaryContactUserEmail === null || primaryContactUserEmail === '')) {
+      this.showNcrEmailNotificationDialog = true;
+    } else {
+      this.createEndSendMonitorRequests(closeTask);
+    }
+
+  }
+
+  validateSendNcrEmail() {
+    jQuery('.ncremail-form').parsley().validate();
+
+    if (jQuery('.ncremail-form').parsley().isValid()) {
+      this.createEndSendMonitorRequests(false);
+    }
+  }
+
+  createEndSendMonitorRequests(closeTask: boolean = false) {
     let toatlRequests = this.workOrderMonitorsToView.length;
+
     this.workOrderMonitorsToView.map(monitor => {
       let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
         comment: monitor.comment === undefined ? '' : monitor.comment,
@@ -170,11 +194,12 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
             && result.object.procedureStepMonitor.inputTypeId !== EnumMonitorInputType.Sensor
             && result.object.procedureStepMonitor.faultHandling !== EnumFailAction.StopUntilFaultCleared
             && monitor.textVal !== this.monitorValueNotAvailable) {
-              monitor.textVal = result.object.textVal;
+            monitor.textVal = result.object.textVal;
           }
 
         });
     });
+
   }
 
   areMonitorsInValidStateToCloseTask(): boolean {

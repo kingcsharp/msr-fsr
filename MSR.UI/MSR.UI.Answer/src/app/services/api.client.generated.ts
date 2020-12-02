@@ -20421,6 +20421,8 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
     sensorValue?: string | undefined;
     /** Gets or Sets Comment */
     comment?: string | undefined;
+    /** Gets or Sets Comment */
+    sendNCREmail?: string | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskMonitorRequest) {
         if (data) {
@@ -20439,6 +20441,7 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
             this.multiVal = _data["multiVal"];
             this.sensorValue = _data["sensorValue"];
             this.comment = _data["comment"];
+            this.sendNCREmail = _data["sendNCREmail"];
         }
     }
 
@@ -20457,6 +20460,7 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
         data["multiVal"] = this.multiVal;
         data["sensorValue"] = this.sensorValue;
         data["comment"] = this.comment;
+        data["sendNCREmail"] = this.sendNCREmail;
         return data; 
     }
 }
@@ -20475,6 +20479,8 @@ export interface IUpdateWorkOrderTaskMonitorRequest {
     sensorValue?: string | undefined;
     /** Gets or Sets Comment */
     comment?: string | undefined;
+    /** Gets or Sets Comment */
+    sendNCREmail?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

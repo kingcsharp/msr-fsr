@@ -61,5 +61,11 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name="comment")]
         public string Comment { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Comment
+        /// </summary>
+        [DataMember(Name = "sendNCREmail")]
+        public string SendNCREmail { get; set; }
     }
 }
