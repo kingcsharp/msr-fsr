@@ -38,7 +38,7 @@
             <ul class="list-group" *ngIf="selectedMenuModule != null">
                 <li class="list-group-item d-flex justify-content-between" *ngFor="let roleModule of selectedMenuModule.roles" [ngClass]="{'item-selected' : roleModule != null && selectedRoleModule != null && roleModule.name == selectedRoleModule.name}">
                     <input type="checkbox" class="form-check-input" id="{{ roleModule.id }}" [checked]="roleModule.value" [attr.data-cy]="roleModule.name"
-                    (change)="roleChanged($event,selectedMenuModule,roleModule)">
+                    (change)="roleChanged($event,selectedMenuModule,roleModule)" [disabled]="roleModule.childRoleHasAccessToMenuModule">
                     <label class="form-check-label" for="{{ roleModule.id }}">{{ roleModule.name }} </label>
                     <button type="button" class="btn btn-warning" (click)="editRolePermissions(roleModule)" [disabled]="!roleModule.value">
                         <i class="fas fa-edit editpermissions-icon"></i> Edit
@@ -51,9 +51,9 @@
             <ul class="list-group" *ngIf="selectedRoleModule != null">
                 <li class="list-group-item  d-flex justify-content-between" *ngFor="let permissionModule of selectedRoleModule.permissions">
                     <input type="checkbox" class="form-check-input" id="{{ permissionModule.id }}" [checked]="permissionModule.value" [attr.data-cy]="permissionModule.name"
-                     (change)="permissionChanged($event,selectedMenuModule,selectedRoleModule,permissionModule)" [disabled]="permissionModule.inheritedPermission || selectedRoleModule.value === false">
+                     (change)="permissionChanged($event,selectedMenuModule,selectedRoleModule,permissionModule)" [disabled]="permissionModule.inheritedPermission || (permissionModule.name === 'Read' && permissionModule.value === true)">
                     <label class="form-check-label" for="{{ permissionModule.id }}">{{ permissionModule.name }} </label>
-                    <i class="fas fa-check fa-lg" data-toggle="tooltip" data-placement="left" title="This is an Inherited Permission" *ngIf="permissionModule.inheritedPermission"></i>
+                    <i class="fas fa-check fa-lg" data-toggle="tooltip" data-placement="left" title="This is an Inherited Permission" *ngIf="permissionModule.inheritedPermission && permissionModule.name !== 'Read'"></i>
                 </li>
             </ul>
         </div>
