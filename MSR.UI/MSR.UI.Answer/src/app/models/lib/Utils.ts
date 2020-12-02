@@ -22,7 +22,7 @@ export function copyObj(objToCopy: any): any {
 }
 
 export function formatBytes(bytes, decimals = 2) {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) { return '0 Bytes'; }
 
     const k = 1024;
     let dm = decimals < 0 ? 0 : decimals;

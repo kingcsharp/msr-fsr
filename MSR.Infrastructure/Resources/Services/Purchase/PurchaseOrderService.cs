@@ -31,13 +31,13 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
         public async Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderAsync(GetPurchaseOrder command)
         {
-            var purchaseOrders = _unitOfWork.PurchaseOrders.Query();
+            var purchaseOrderQuery = _unitOfWork.PurchaseOrders.Query();
             if (command.Id.HasValue)
             {
-                purchaseOrders = purchaseOrders.Where(i => i.Id == command.Id);
+                purchaseOrderQuery = purchaseOrderQuery.Where(i => i.Id == command.Id);
             }
 
-            var purchaseOrderModelList = await purchaseOrders
+            var purchaseOrderEntities = await purchaseOrderQuery
                 .Include(i => i.Status)
                 .Include(i => i.PurchaseOrderProducts)
                 .ThenInclude(x => x.Product)
@@ -47,42 +47,75 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 .ThenInclude(pt => pt.Procedure)
                 .ToListAsync();
 
-            var purchaseOrderList = new List<PurchaseOrderView>();
-            foreach (var pom in purchaseOrderModelList)
+            var purchaseOrderViews = new List<PurchaseOrderView>();
+
+            foreach (var purchaseOrderEntity in purchaseOrderEntities)
             {
-                var pov = _mapper.Map<PurchaseOrderView>(pom);
-                pov.Products = pom.PurchaseOrderProducts
+                var purchaseOrderView = _mapper.Map<PurchaseOrderView>(purchaseOrderEntity);
+                purchaseOrderView.Products = purchaseOrderEntity.PurchaseOrderProducts
                     .Select(x => _mapper.Map<PurchaseOrderProductView>(x))
                     .ToList();
-                purchaseOrderList.Add(pov);
+                purchaseOrderViews.Add(purchaseOrderView);
             }
 
-            var purchaseOrderIds = purchaseOrderList.Select(i => i.Id).ToList();
-            var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId).ToList();
+            var purchaseOrderIds = purchaseOrderViews.Select(i => i.Id).ToList();
+            var purchaseOrderCustomerIds = purchaseOrderViews.Select(i => i.CustomerId).ToList();
 
-            var customers = await _unitOfWork.Customers.Query()
+            var customerEntities = await _unitOfWork.Customers.Query()
                 .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
                 .Select(i => new { i.Id, i.Name })
                 .ToDictionaryAsync(i => i.Id, i => i.Name);
 
-            var purchases = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
-                .Select(x => new { x.PurchaseOrderId, x.Id }).ToListAsync();
+            var purchaseEntities = await _unitOfWork.Purchases.Query()
+                .Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
+                .ToListAsync();
 
-            foreach (var po in purchaseOrderList)
+            var purchaseIds = purchaseEntities.Select(i => i.Id).ToList();
+
+            var workOrderEntities = await _unitOfWork.WorkOrders.Query()
+                .Where(i => i.ActualEndDate != null && purchaseIds.Contains(i.PurchaseId))
+                .Include(i => i.Purchase)
+                .ToListAsync();
+
+            var invoicedWorkOrderIds = await _unitOfWork.InvoiceItems.Query()
+                .Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
+                .Select(i => i.WorkOrderId)
+                .Distinct()
+                .ToListAsync();
+
+            foreach (var purchaseOrderView in purchaseOrderViews)
             {
-                customers.TryGetValue(po.CustomerId, out var name);
+                customerEntities.TryGetValue(purchaseOrderView.CustomerId, out var name);
                 if (name != null)
                 {
-                    po.CustomerName = name;
+                    purchaseOrderView.CustomerName = name;
                 }
-                po.IsDeletable = purchases.All(i => i.PurchaseOrderId != po.Id);
-                po.InvoicedBalance = 0;
-                po.Balance = 0;
-                po.UninvoicedBalance = 0;
-                po.UnusedAmount = 0;
+                purchaseOrderView.IsDeletable = purchaseEntities.All(i => i.PurchaseOrderId != purchaseOrderView.Id);
+                purchaseOrderView.InvoicedBalance = 0;
+                purchaseOrderView.Balance = 0;
+                purchaseOrderView.UninvoicedBalance = 0;
+
+                var purchaseOrderWorkOrderEntities = workOrderEntities
+                    .Where(i => i.Purchase.PurchaseOrderId == purchaseOrderView.Id)
+                    .ToList();
+
+                foreach (var purchaseOrderWorkOrderEntity in purchaseOrderWorkOrderEntities)
+                {
+                    purchaseOrderView.Balance += purchaseOrderWorkOrderEntity.Price;
+                    if (invoicedWorkOrderIds.Contains(purchaseOrderWorkOrderEntity.Id))
+                    {
+                        purchaseOrderView.InvoicedBalance += purchaseOrderWorkOrderEntity.Price;
+                    }
+                    else
+                    {
+                        purchaseOrderView.UninvoicedBalance += purchaseOrderWorkOrderEntity.Price;
+                    }
+                }
+
+                purchaseOrderView.UnusedAmount = purchaseOrderView.TotalPurchaseLimit - purchaseOrderView.Balance;
             }
 
-            return purchaseOrderList;
+            return purchaseOrderViews;
         }
 
         public async Task<PurchaseOrderView> CreatePurchaseOrderAsync(CreatePurchaseOrder command)
@@ -91,142 +124,156 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.PurchaseOrderApproval))
             {
                 //They can approve so just put it in the tables
-                var purchaseOrder = _mapper.Map<EntityFramework.Entities.PurchaseOrder>(command);
-                purchaseOrder.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Name == "Open");
-                purchaseOrder.Revision = 1;
+                var purchaseOrderEntity = _mapper.Map<EntityFramework.Entities.PurchaseOrder>(command);
+                purchaseOrderEntity.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Name == "Open");
+                purchaseOrderEntity.Revision = 1;
 
-                await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrder);
+                await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrderEntity);
                 await _unitOfWork.SaveChangesAsync();
 
-                var products = await _unitOfWork.Products.Query().Where(i => command.Products.Contains(i.Id)).ToListAsync();
+                var productEntities = await _unitOfWork.Products.Query()
+                    .Where(i => command.Products.Contains(i.Id))
+                    .ToListAsync();
 
-                foreach (var product in products)
+                foreach (var productEntity in productEntities)
                 {
-                    var map = new PurchaseOrderProduct()
+                    var purchaseOrderProductEntity = new PurchaseOrderProduct()
                     {
-                        PurchaseOrder = purchaseOrder,
-                        Product = product,
-                        ProductRevision = product.Revision
+                        PurchaseOrder = purchaseOrderEntity,
+                        Product = productEntity,
+                        ProductRevision = productEntity.Revision
                     };
 
-                    await _unitOfWork.PurchaseOrderProducts.AddAsync(map);
+                    await _unitOfWork.PurchaseOrderProducts.AddAsync(purchaseOrderProductEntity);
                 }
 
-                await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, "Approved", "Auto Approved");
-                var retPO = _mapper.Map<PurchaseOrderView>(purchaseOrder);
-                retPO.Products = products.Select(i => _mapper.Map<PurchaseOrderProductView>(i)).ToList();
-                retPO.CustomerName = (await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == command.CustomerId)).Name;
-                return retPO;
+                await _unitOfWork.LogApprovalTransaction(purchaseOrderEntity, purchaseOrderEntity.Id, "Approved", "Auto Approved");
+                var purchaseOrderView = _mapper.Map<PurchaseOrderView>(purchaseOrderEntity);
+                purchaseOrderView.Products = productEntities.Select(i => _mapper.Map<PurchaseOrderProductView>(i)).ToList();
+                purchaseOrderView.CustomerName = (await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == command.CustomerId)).Name;
+
+                return purchaseOrderView;
             }
             else
             {
-                var purchaseOrderApproval = _mapper.Map<PurchaseOrderApproval>(command);
-                purchaseOrderApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(purchaseOrderApproval);
-                purchaseOrderApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(purchaseOrderApproval.Workflow?.Id ?? 0);
-                purchaseOrderApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+                var purchaseOrderApprovalEntity = _mapper.Map<PurchaseOrderApproval>(command);
+                purchaseOrderApprovalEntity.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(purchaseOrderApprovalEntity);
+                purchaseOrderApprovalEntity.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(purchaseOrderApprovalEntity.Workflow?.Id ?? 0);
+                purchaseOrderApprovalEntity.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
 
-                await _unitOfWork.PurchaseOrderApprovals.AddAsync(purchaseOrderApproval);
+                await _unitOfWork.PurchaseOrderApprovals.AddAsync(purchaseOrderApprovalEntity);
                 await _unitOfWork.SaveChangesAsync();
 
-                var products = _unitOfWork.Products.Query().Where(i => command.Products.Contains(i.Id));
+                var productEntities = await _unitOfWork.Products.Query()
+                    .Where(i => command.Products.Contains(i.Id))
+                    .ToListAsync();
 
-                foreach (var product in products)
+                foreach (var productEntity in productEntities)
                 {
-                    var approvalMap = new PurchaseOrderProductApproval()
+                    var PurchaseOrderProductApprovalEntity = new PurchaseOrderProductApproval()
                     {
-                        PurchaseOrderApprovalId = purchaseOrderApproval.Id,
-                        ProductId = product.Id
+                        PurchaseOrderApprovalId = purchaseOrderApprovalEntity.Id,
+                        ProductId = productEntity.Id
                     };
 
-                    await _unitOfWork.PurchaseOrderProductApprovals.AddAsync(approvalMap);
+                    await _unitOfWork.PurchaseOrderProductApprovals.AddAsync(PurchaseOrderProductApprovalEntity);
                 }
 
                 await _unitOfWork.SaveChangesAsync();
-                return _mapper.Map<PurchaseOrderView>(purchaseOrderApproval);
+                return _mapper.Map<PurchaseOrderView>(purchaseOrderApprovalEntity);
             }
         }
 
         public async Task<PurchaseOrderView> UpdatePurchaseOrderAsync(UpdatePurchaseOrder command)
         {
-            var purchaseOrder = await _unitOfWork.PurchaseOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if (purchaseOrder is null)
+            if (purchaseOrderEntity is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.PurchaseOrder)} with ID: {command.Id} not found", DomainError.NotFound);
             }
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.PurchaseOrderApproval))
             {
-                _mapper.Map(command, purchaseOrder);
-                purchaseOrder.Revision = purchaseOrder.Revision == null ? 1 : purchaseOrder.Revision + 1;
+                _mapper.Map(command, purchaseOrderEntity);
+                purchaseOrderEntity.Revision = purchaseOrderEntity.Revision == null ? 1 : purchaseOrderEntity.Revision + 1;
                 if(command.ClosePurchaseOrder && command.CloseDate.HasValue)
                 {
-                    purchaseOrder.CloseDate = command.CloseDate;
-                    purchaseOrder.StatusId = (int)PurchaseOrderStatusEnum.Closed;
-                    purchaseOrder.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)PurchaseOrderStatusEnum.Closed);
+                    purchaseOrderEntity.CloseDate = command.CloseDate;
+                    purchaseOrderEntity.StatusId = (int)PurchaseOrderStatusEnum.Closed;
+                    purchaseOrderEntity.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)PurchaseOrderStatusEnum.Closed);
                 }
-                _unitOfWork.PurchaseOrders.Update(purchaseOrder);
+                _unitOfWork.PurchaseOrders.Update(purchaseOrderEntity);
                 await _unitOfWork.SaveChangesAsync();
 
-                var productIds = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id).Select(i => i.ProductId).ToListAsync();
+                var productIds = await _unitOfWork.PurchaseOrderProducts.Query()
+                    .Where(i => i.PurchaseOrderId == purchaseOrderEntity.Id)
+                    .Select(i => i.ProductId)
+                    .ToListAsync();
 
                 //Exists in DB but not in list: Remove
-                var productsToRemove = productIds.Except(command.Products);
+                var productIdsToRemove = productIds.Except(command.Products);
                 //Does not Exist in DB: Add
-                var productsToAdd = command.Products.Except(productIds);
-                var usedProducts = await _unitOfWork.Purchases.Query().Where(i => i.PurchaseOrderId == command.Id).Select(i => i.PurchaseOrderProductId).ToListAsync();
-                var removeProducts = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id && productsToRemove.Contains(i.ProductId) && !usedProducts.Contains(i.Id)).ToListAsync();
+                var productIdsToAdd = command.Products.Except(productIds);
+                var usedProductIds = await _unitOfWork.Purchases.Query()
+                    .Where(i => i.PurchaseOrderId == command.Id)
+                    .Select(i => i.PurchaseOrderProductId)
+                    .ToListAsync();
+                var purchaseOrderProductEntitiesToRemove = await _unitOfWork.PurchaseOrderProducts.Query()
+                    .Where(i => i.PurchaseOrderId == purchaseOrderEntity.Id && productIdsToRemove.Contains(i.ProductId) && !usedProductIds.Contains(i.Id))
+                    .ToListAsync();
                 
-                foreach (var removeProduct in removeProducts)
+                foreach (var purchaseOrderProductEntity in purchaseOrderProductEntitiesToRemove)
                 {
-                    _unitOfWork.PurchaseOrderProducts.Delete(false, removeProduct);
+                    _unitOfWork.PurchaseOrderProducts.Delete(false, purchaseOrderProductEntity);
                 }
 
                 await _unitOfWork.SaveChangesAsync();
-                foreach (var addProduct in productsToAdd)
+
+                foreach (var productIdToAdd in productIdsToAdd)
                 {
-                    var map = new PurchaseOrderProduct()
+                    var purchaseOrderProductEntity = new PurchaseOrderProduct()
                     {
-                        PurchaseOrderId = purchaseOrder.Id,
-                        ProductId = addProduct
+                        PurchaseOrderId = purchaseOrderEntity.Id,
+                        ProductId = productIdToAdd
                     };
 
-                    await _unitOfWork.PurchaseOrderProducts.AddAsync(map);
+                    await _unitOfWork.PurchaseOrderProducts.AddAsync(purchaseOrderProductEntity);
                 }
 
                 await _unitOfWork.SaveChangesAsync();
-                await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, "Approved", "Auto Approved");
-                var result = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
-                return result.FirstOrDefault();
+                await _unitOfWork.LogApprovalTransaction(purchaseOrderEntity, purchaseOrderEntity.Id, "Approved", "Auto Approved");
+                var purchaseOrderViews = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
+                return purchaseOrderViews.FirstOrDefault();
             }
             else
             {
-                var poApproval = _mapper.Map<PurchaseOrderApproval>(purchaseOrder);
-                _mapper.Map(command, poApproval);
-                poApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(poApproval);
-                poApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(poApproval.Workflow?.Id ?? 0);
-                poApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+                var purchaseOrderApprovalEntity = _mapper.Map<PurchaseOrderApproval>(purchaseOrderEntity);
+                _mapper.Map(command, purchaseOrderApprovalEntity);
+                purchaseOrderApprovalEntity.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(purchaseOrderApprovalEntity);
+                purchaseOrderApprovalEntity.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(purchaseOrderApprovalEntity.Workflow?.Id ?? 0);
+                purchaseOrderApprovalEntity.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
 
-                await _unitOfWork.PurchaseOrderApprovals.AddAsync(poApproval);
+                await _unitOfWork.PurchaseOrderApprovals.AddAsync(purchaseOrderApprovalEntity);
                 await _unitOfWork.SaveChangesAsync();
 
-                var products = _unitOfWork.Products.Query().Where(i => command.Products.Contains(i.Id));
+                var productEntities = _unitOfWork.Products.Query().Where(i => command.Products.Contains(i.Id));
 
-                foreach (var product in products)
+                foreach (var productEntity in productEntities)
                 {
-                    var approvalMap = new PurchaseOrderProductApproval()
+                    var purchaseOrderProductApprovalEntity = new PurchaseOrderProductApproval()
                     {
-                        PurchaseOrderApprovalId = poApproval.Id,
-                        ProductId = product.Id
+                        PurchaseOrderApprovalId = purchaseOrderApprovalEntity.Id,
+                        ProductId = productEntity.Id
                     };
 
-                    await _unitOfWork.PurchaseOrderProductApprovals.AddAsync(approvalMap);
+                    await _unitOfWork.PurchaseOrderProductApprovals.AddAsync(purchaseOrderProductApprovalEntity);
                 }
 
                 await _unitOfWork.SaveChangesAsync();
 
-                var result = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
-                return result.FirstOrDefault();
+                var purchaseOrderViews = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
+                return purchaseOrderViews.FirstOrDefault();
             }
         }
 
@@ -239,53 +286,53 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 throw new DomainException($"{nameof(EntityFramework.Entities.PurchaseOrder)} in use.", DomainError.Conflict);
             }
 
-            var purchaseOrder = await _unitOfWork.PurchaseOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if (purchaseOrder is null)
+            if (purchaseOrderEntity is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.PurchaseOrder)} with ID: {command.Id} not found", DomainError.NotFound);
             }
 
-            var poProductsToDelete = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == command.Id).ToListAsync();
+            var purchaseOrderProductEntitiesToDelete = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == command.Id).ToListAsync();
 
-            foreach (var poProduct in poProductsToDelete)
+            foreach (var purchaseOrderProductEntity in purchaseOrderProductEntitiesToDelete)
             {
-                _unitOfWork.PurchaseOrderProducts.Delete(false, poProduct);
+                _unitOfWork.PurchaseOrderProducts.Delete(false, purchaseOrderProductEntity);
             }
 
-            _unitOfWork.PurchaseOrders.Delete(false, purchaseOrder);
-            await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, "Approved", "Auto Approved");
+            _unitOfWork.PurchaseOrders.Delete(false, purchaseOrderEntity);
+            await _unitOfWork.LogApprovalTransaction(purchaseOrderEntity, purchaseOrderEntity.Id, "Approved", "Auto Approved");
 
-            return _mapper.Map<PurchaseOrderView>(purchaseOrder);
+            return _mapper.Map<PurchaseOrderView>(purchaseOrderEntity);
         }
 
         public async Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderProductAsync(GetPurchaseOrder command)
         {
-            List<PurchaseOrderView> poList;
+            List<PurchaseOrderView> purchaseOrderViews;
 
             if (command.Id.HasValue)
             {
-                poList = await _unitOfWork.PurchaseOrders
+                purchaseOrderViews = await _unitOfWork.PurchaseOrders
                                             .Query()
                                             .Include(po => po.Customer)
                                             .Select(po => _mapper.Map<PurchaseOrderView>(po))
                                             .Where(po => po.Id == command.Id)
                                             .ToListAsync();
-                if (!poList.Any())
+                if (!purchaseOrderViews.Any())
                 {
                     throw new DomainException($"PurchaseOrder ID {command.Id} not found", DomainError.NotFound);
                 }
             }
             else
             {
-                poList = await _unitOfWork.PurchaseOrders
+                purchaseOrderViews = await _unitOfWork.PurchaseOrders
                                             .Query()
                                             .Include(po => po.Customer)
                                             .Select(po => _mapper.Map<PurchaseOrderView>(po))
                                             .ToListAsync();
             }
 
-            var result = poList.Select(x => _mapper.Map<PurchaseOrderView>(x)).OrderBy(x => x.Name).AsEnumerable();
+            var result = purchaseOrderViews.Select(x => _mapper.Map<PurchaseOrderView>(x)).OrderBy(x => x.Name).AsEnumerable();
 
             return result;
         }

@@ -160,9 +160,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-
-
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
+            // Note the menu permission here: Purchases.  Work orders are created by a user
+            // entering a purchase against a purchase order.  The Processor then creates the
+            // work order as that user.  Therefore, per REQ61, the permission required
+            // is EnumMenuItem.Purchases (see SBB-304).
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
             {
                 throw new DomainException(
                     $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
@@ -324,45 +326,46 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.Part)
                 .ThenInclude(y => y.Subparts)
                 .FirstAsync(x => x.Id == command.ProductId);
-            int count = 1;
+            int createCount = 1;
             int quantity = command.Qty;
 
             if (command.SerializeIndividually && command.Qty > 1)
             {
-                count = command.Qty;
+                createCount = command.Qty;
                 quantity = 1;
             }
 
             List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
-            for (int i = 0; i < count; i++)
+            for ( ; createCount > 0; createCount -= 1)
             {
                 List<WorkOrderPartModel> subs = new List<WorkOrderPartModel>();
                 if (product.Part.Subparts != null && product.Part.Subparts.Count > 0)
                 {
-                    foreach (PartSubPartMap p in product.Part.Subparts)
+                    foreach (PartSubPartMap partSubPartMapForSubPart in product.Part.Subparts)
                     {
-                        int spquantity = p.Qty;
-                        if (spquantity == 0)
+                        int subPartQuantity = partSubPartMapForSubPart.Qty;
+                        if (subPartQuantity == 0)
                         {
-                            spquantity = 1;
+                            subPartQuantity = 1;
                         }
 
-                        for (int j = 0; j < spquantity; j++)
+                        for ( ; subPartQuantity > 0; subPartQuantity -= 1)
                         {
                             subs.Add(new WorkOrderPartModel()
                             {
-                                PartId = p.PartId,
-                                ParentId = p.ParentPartId
+                                PartId = partSubPartMapForSubPart.PartId,
+                                ParentId = partSubPartMapForSubPart.ParentPartId,
+                                Qty = partSubPartMapForSubPart.Qty
                             });
                         }
                     }
                 }
-                var n = new WorkOrderPartModel()
-                {
-                    PartId = product.PartId,
-                    Children = subs
-                };
-                parts.Add(n);
+                parts.Add(new WorkOrderPartModel()
+                    {
+                        PartId = product.PartId,
+                        Children = subs,
+                        Qty = quantity
+                    });
             }
 
             return parts;
@@ -860,7 +863,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var notes = await _unitOfWork.WorkOrderMessages.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
             var files = _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.EntityId)) && i.EntityTableName.Equals("WorkOrderTask") && i.FileObject != null).Select(i => i).ToList();
             var monitors = _unitOfWork.WorkOrderTaskMonitors.Query().ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.WorkOrderTaskId))).Select(i => i).ToList();
-            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Include(i => i.Invoice).Where(i => i.WorkOrderId != null && workOrderIds.Contains(i.WorkOrderId.Value)).Select(i => i).ToListAsync();
+            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Include(i => i.Invoice).Where(i => workOrderIds.Contains(i.WorkOrderId)).Select(i => i).ToListAsync();
             var imageContentTypes = new List<string>() { "image/jpg", "image/jpeg", "image/gif", "image/png" };
 
             foreach (var portalView in portalViews)
@@ -911,7 +914,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     portalView.ProcedureName = workOrderTask.ProcedureStep?.Procedure?.Name;
                 }
 
-                var invoiceItem = invoiceItems.FirstOrDefault(i => i.WorkOrderId.Value == portalView.WorkOrderId);
+                var invoiceItem = invoiceItems.FirstOrDefault(i => i.WorkOrderId == portalView.WorkOrderId);
 
                 if (invoiceItem != null)
                 {
