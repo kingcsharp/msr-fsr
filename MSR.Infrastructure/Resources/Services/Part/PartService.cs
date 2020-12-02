@@ -242,6 +242,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             List<CreatePart> inserts = new List<CreatePart>();
             List<PartModel> results = new List<PartModel>();
 
+            var partIds = await _unitOfWork.Parts.Query().Select(i => i.Id).ToListAsync();
+
             if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
                 throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
@@ -250,7 +252,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // First parse the file to ensure valid data
             foreach (PartImportItem record in records)
             {
-                if (record.Id.HasValue && record.Id.Value > 0)
+                if (record.Id.HasValue && record.Id.Value > 0 && partIds.Contains(record.Id.Value))
                 {
                     var updatePartModel = _mapper.Map<UpdatePart>(record);
                     updates.Add(updatePartModel); 
