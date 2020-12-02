@@ -7,6 +7,7 @@ import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
 import { EnumFailAction } from '../../models/enums/EnumFailAction';
 import { EnumMonitorInputType } from '../../models/enums/EnumMonitorInputType';
 import { EnumMonitorShouldBe } from '../../models/enums/EnumMonitorShouldBe';
+import { Globals } from '../../models/lib/globals';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -36,8 +37,9 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   readonly monitorValueNotAvailable = 'No Sensor Value Available';
   showNcrEmailNotificationDialog: boolean = false;
   ncrEmailDestination: string = '';
+  monitorsHaveBeenSaved: boolean = false;
 
-  constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
+  constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -149,7 +151,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     let sendAnNcrEmailNotification = this.workOrderMonitorsToView.map(s => s.procedureStepMonitor?.sendEmailNotification).find(m => m === true);
     let primaryContactUserEmail = this.workOrderModel.purchase?.purchaseOrder?.customer?.primaryContactUser?.email;
 
-    if (sendAnNcrEmailNotification && (primaryContactUserEmail === undefined || primaryContactUserEmail === null || primaryContactUserEmail === '')) {
+    if (sendAnNcrEmailNotification && (primaryContactUserEmail === undefined || primaryContactUserEmail === null || primaryContactUserEmail === '') && !this.monitorsHaveBeenSaved) {
       this.showNcrEmailNotificationDialog = true;
     } else {
       this.createEndSendMonitorRequests(closeTask);
@@ -168,24 +170,29 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   createEndSendMonitorRequests(closeTask: boolean = false) {
     let toatlRequests = this.workOrderMonitorsToView.length;
 
+    this.showNcrEmailNotificationDialog = false;
+    this.globals.showLoader(true);
     this.workOrderMonitorsToView.map(monitor => {
       let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
         comment: monitor.comment === undefined ? '' : monitor.comment,
         multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
         textVal: monitor.textVal === undefined || monitor.textVal === this.monitorValueNotAvailable ? '' : monitor.textVal,
         numVal: monitor.numVal === undefined ? undefined : monitor.numVal,
-        workOrderTaskMonitorId: monitor.id
+        workOrderTaskMonitorId: monitor.id,
+        sendNCREmail: monitor.procedureStepMonitor.sendEmailNotification ? this.ncrEmailDestination : undefined
       } as IUpdateWorkOrderTaskMonitorRequest);
 
       this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest)
         .pipe(take(1)).subscribe((result: AuditActionResultOfWorkOrderTaskMonitorModel) => {
-          if (closeTask) {
-            if (toatlRequests === 1) {
-              this.wasValidationCalled = false;
-              this.closeCurrentTaskInProgress.emit();
-            } else {
-              toatlRequests--;
-            }
+          toatlRequests--;
+
+          if (toatlRequests === 0) {
+            this.monitorsHaveBeenSaved = true;
+          }
+
+          if (closeTask && toatlRequests === 0) {
+            this.wasValidationCalled = false;
+            this.monitorsHaveBeenSaved = false;
           }
           monitor.lastUpdated = result.object.lastUpdated;
           monitor.lastUpdatedBy = result.object.lastUpdatedBy;
@@ -217,7 +224,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
   saveMonitors() {
     if (this.areMonitorsInValidStateToCloseTask()) {
-      this.updateMonitors(false);
+      this.updateMonitors(true);
     }
   }
 
