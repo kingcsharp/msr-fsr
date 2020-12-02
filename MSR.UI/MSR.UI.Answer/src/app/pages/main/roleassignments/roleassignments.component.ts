@@ -91,37 +91,37 @@ export class RoleassignmentsComponent implements OnInit {
 
           let canActivatePermissionModel = new PermissionModel();
           canActivatePermissionModel.inheritedPermission = inheritedPermissions.canActivate;
-          canActivatePermissionModel.value = permissions.canActivate;
+          canActivatePermissionModel.value = permissions.canActivate || inheritedPermissions.canActivate ? true : false;
           canActivatePermissionModel.name = 'Activate';
           roleModel.permissions.push(canActivatePermissionModel);
 
           let canApprovePermissionModel = new PermissionModel();
           canApprovePermissionModel.inheritedPermission = inheritedPermissions.canApprove;
-          canApprovePermissionModel.value = permissions.canApprove;
+          canApprovePermissionModel.value = permissions.canApprove || inheritedPermissions.canApprove ? true : false;
           canApprovePermissionModel.name = 'Approve';
           roleModel.permissions.push(canApprovePermissionModel);
 
           let canCreatePermissionModel = new PermissionModel();
           canCreatePermissionModel.inheritedPermission = inheritedPermissions.canCreate;
-          canCreatePermissionModel.value = permissions.canCreate;
+          canCreatePermissionModel.value = permissions.canCreatecan || inheritedPermissions.canCreate ? true : false;
           canCreatePermissionModel.name = 'Create';
           roleModel.permissions.push(canCreatePermissionModel);
 
           let canDeletePermissionModel = new PermissionModel();
           canDeletePermissionModel.inheritedPermission = inheritedPermissions.canDelete;
-          canDeletePermissionModel.value = permissions.canDelete;
+          canDeletePermissionModel.value = permissions.canDelete || inheritedPermissions.canDelete ? true : false;
           canDeletePermissionModel.name = 'Delete';
           roleModel.permissions.push(canDeletePermissionModel);
 
           let canEditPermissionModel = new PermissionModel();
           canEditPermissionModel.inheritedPermission = inheritedPermissions.canEdit;
-          canEditPermissionModel.value = permissions.canEdit;
+          canEditPermissionModel.value = permissions.canEdit || inheritedPermissions.canEdit ? true : false;
           canEditPermissionModel.name = 'Edit';
           roleModel.permissions.push(canEditPermissionModel);
 
           let canReadPermissionModel = new PermissionModel();
           canReadPermissionModel.inheritedPermission = inheritedPermissions.canRead;
-          canReadPermissionModel.value = permissions.canRead;
+          canReadPermissionModel.value = permissions.canRead || inheritedPermissions.canRead ? true : false;
           canReadPermissionModel.name = 'Read';
           roleModel.permissions.push(canReadPermissionModel);
 
@@ -225,14 +225,43 @@ export class RoleassignmentsComponent implements OnInit {
 
       this.addRoleAndPermissions(menuModule, roleModule, null);
 
+      this.updateInheritedRoleAccess(menuModule, roleModule, false);
+
       this.selectedRoleModule = roleModule;
     } else {
 
       this.removeRoleAndPermissions(menuModule, roleModule, null);
 
+      this.updateInheritedRoleAccess(menuModule, roleModule, true);
+
       this.selectedRoleModule = null;
     }
 
+  }
+
+  updateInheritedRoleAccess(menuModule: MenuModel, roleModule: RoleModel, roleIsBeingRemoved: boolean) {
+
+    let rolesWithRoleModuleAsChild = menuModule.roles.filter(s => s.childRoles.length > 0 && s.childRoles.find(m => m.id === roleModule.id));
+
+    rolesWithRoleModuleAsChild.map(roleWithRoleModuleAsChild => {
+
+      roleWithRoleModuleAsChild.childRoleHasAccessToMenuModule = this.doesChildRoleHaveAccessToMenuItem(roleWithRoleModuleAsChild, menuModule);
+
+    });
+
+  }
+
+  doesChildRoleHaveAccessToMenuItem(roleWithRoleModuleAsChild: RoleModel, menuModule: MenuModel) {
+
+    let childRoleHasAccessToMenuItem = false;
+
+    roleWithRoleModuleAsChild.childRoles.map(childRole => {
+
+      childRoleHasAccessToMenuItem = menuModule.roles.find(s => s.id === childRole.id).value;
+
+    });
+
+    return childRoleHasAccessToMenuItem;
   }
 
   permissionChanged(event: Event, menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel) {
