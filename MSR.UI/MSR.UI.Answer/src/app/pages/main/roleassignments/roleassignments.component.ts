@@ -404,39 +404,44 @@ export class RoleassignmentsComponent implements OnInit {
 
     let uniqueUpdateRoleModelRequests = this.generateUniqueUpdateRoleModelRequests(permissionChanges);
 
+    if (roleChanges.length === 0) {
+      this.updatePermissions(uniqueUpdateRoleModelRequests);
+    } else {
+      roleChanges.map((roleChange, index) => {
 
-    roleChanges.map((roleChange, index) => {
+        if (roleChange.event === 'add') {
 
-      if (roleChange.event === 'add') {
+          let createMenuRoleMapRequest = new CreateMenuRoleMapRequest({
+            menuId: roleChange.menuModule.id,
+            roleId: roleChange.roleModule.id
+          } as ICreateMenuRoleMapRequest);
 
-        let createMenuRoleMapRequest = new CreateMenuRoleMapRequest({
-          menuId: roleChange.menuModule.id,
-          roleId: roleChange.roleModule.id
-        } as ICreateMenuRoleMapRequest);
+          this.menuService.rolePost(env.apiVersion, createMenuRoleMapRequest).subscribe(responseHandler((response) => {
 
-        this.menuService.rolePost(env.apiVersion, createMenuRoleMapRequest).subscribe(responseHandler((response) => {
+            if (roleChanges.length === (index + 1)) {
+              this.updatePermissions(uniqueUpdateRoleModelRequests);
+            }
 
-          if (roleChanges.length === (index + 1)) {
-            this.updatePermissions(uniqueUpdateRoleModelRequests);
-          }
+          }));
 
-        }));
+        } else {
 
-      } else {
+          this.menuService.roleDelete(roleChange.menuModule.id, roleChange.roleModule.id, env.apiVersion).subscribe(responseHandler((response) => {
+            if (roleChanges.length === (index + 1)) {
+              this.updatePermissions(uniqueUpdateRoleModelRequests);
+            }
+          }));
 
-        this.menuService.roleDelete(roleChange.menuModule.id, roleChange.roleModule.id, env.apiVersion).subscribe(responseHandler((response) => {
-          if (roleChanges.length === (index + 1)) {
-            this.updatePermissions(uniqueUpdateRoleModelRequests);
-          }
-        }));
+        }
 
-      }
+      });
+    }
 
-    });
+
 
   }
 
-  updatePermissions(uniqueUpdateRoleModelRequests:Array<UpdateMenuRoleMapRequest>){
+  updatePermissions(uniqueUpdateRoleModelRequests: Array<UpdateMenuRoleMapRequest>) {
 
     uniqueUpdateRoleModelRequests.map(uniquePermissionChange => {
       this.menuService.rolePatch(env.apiVersion, uniquePermissionChange).subscribe(responseHandler(() => {
@@ -449,7 +454,7 @@ export class RoleassignmentsComponent implements OnInit {
 
   removeRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel) {
 
-    this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
+    // this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
 
     this.pendingPermissions.push({
       menuModule: menuModule,
@@ -466,7 +471,7 @@ export class RoleassignmentsComponent implements OnInit {
 
   addRoleAndPermissions(menuModule: MenuModel, roleModule: RoleModel) {
 
-    this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
+    // this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
 
     this.pendingPermissions.push({
       menuModule: menuModule,
