@@ -170,22 +170,30 @@ pipeline {
             }
         }
 
+        stage('Promoting to UAT?') {
+            agent { label 'master' }
+            steps {
+                script {
+                    timeout(activity: true, time: 5) {
+                        input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                    }
+                }
+            }
+        }
+
         stage('Promoting to UAT') {
             parallel {
-                stage("Promote API to UAT") {
+                stage("Promoting API to UAT") {
                     agent { label 'master' }
                     steps {
                         script {
-                            timeout(activity: true, time: 5) {
-                                input message: 'Are you ready to deploy the API to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
-                            }
                             sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
                             sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
                             sh "cat ${API_COMPOSE}"
                             sh "cat ${API_COMPOSE_PROCESSOR}"
 
-                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
-                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
+//                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
+//                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
                         }
                     }
                 }
@@ -194,9 +202,6 @@ pipeline {
                     agent { label 'master' }
                     steps {
                         script {
-                            timeout(activity: true, time: 5) {
-                                input message: 'Are you ready to deploy the UI to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
-                            }
                             dir('MSR.UI/MSR.UI.Answer') {
                                 //sh "sudo chmod 777 /var/run/docker.sock"
                                 sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
@@ -209,8 +214,8 @@ pipeline {
                             sh "sh update_image.sh Stage ${env.GIT_COMMIT} ${UI_COMPOSE}"
                             sh "cat ${UI_COMPOSE}"
 
-                            deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
-                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+//                            deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
+//                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
                         }
                     }
                 }
@@ -230,22 +235,30 @@ pipeline {
             }
         }
 
+        stage('Promoting to Production?') {
+            agent { label 'master' }
+            steps {
+                script {
+                    timeout(activity: true, time: 5) {
+                        input message: 'Are you ready to deploy to Production?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                    }
+                }
+            }
+        }
+
         stage('Promoting to Production') {
             parallel {
                 stage("Promote API to PROD") {
                     agent { label 'master' }
                     steps {
                         script {
-                            timeout(activity: true, time: 5) {
-                                input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
-                            }
                             sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
                             sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
 
                             sh "cat ${API_COMPOSE}"
                             sh "cat ${API_COMPOSE_PROCESSOR}"
-                            deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
-                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "processor")
+//                            deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
+//                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "processor")
                         }
                     }
                 }
@@ -254,11 +267,7 @@ pipeline {
                     agent { label 'master' }
                     steps {
                         script {
-                            timeout(activity: true, time: 5) {
-                                input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
-                            }
                             dir('MSR.UI/MSR.UI.Answer') {
-                                //sh "sudo chmod 777 /var/run/docker.sock"
                                 sh "docker build --build-arg ENV=buildprod -t msr-ui ."
                                 sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
@@ -269,8 +278,8 @@ pipeline {
                             sh "sh update_image.sh Production ${env.GIT_COMMIT} ${UI_COMPOSE}"
                             sh "cat ${UI_COMPOSE}"
 
-                            deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
-                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+//                            deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
+//                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
                         }
                     }
                 }
@@ -334,7 +343,7 @@ void deploy(composeFile,name,target, app) {
         sh "ecs-cli configure profile --access-key AKIAWGEEZQATRVZEHMGB --secret-key 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 --profile-name answer-profile"
 
         sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
-        //sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 2"
+        sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 2"
     }
 }
 
