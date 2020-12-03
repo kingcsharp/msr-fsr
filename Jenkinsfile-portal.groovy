@@ -21,7 +21,7 @@ pipeline {
     stages {
         stage('Build & Deploy UI to QA') {
             agent { label 'master'}
-            //when { changeset "MSR.UI/MSR.UI.Portal"}
+            when { changeset "MSR.UI/MSR.UI.Portal"}
             steps {
                 script {
                     try {
@@ -60,7 +60,7 @@ pipeline {
 
         stage("Deploy Rollbar QA") {
             agent { label 'master' }
-            //when { changeset "MSR.UI/MSR.UI.Portal"}
+            when { changeset "MSR.UI/MSR.UI.Portal"}
             steps {
                 script {
                     sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
@@ -118,7 +118,7 @@ pipeline {
             steps {
                 script {
                     timeout(activity: true, time: 5) {
-                        input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                        input message: 'Are you ready to deploy to Production?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                     }
                     dir('MSR.UI/MSR.UI.Portal') {
                         sh "docker build --build-arg ENV=buildprod -t msr-ui-portal ."
