@@ -439,8 +439,7 @@ export class RoleassignmentsComponent implements OnInit {
   updatePermissions(uniqueUpdateRoleModelRequests:Array<UpdateMenuRoleMapRequest>){
 
     uniqueUpdateRoleModelRequests.map(uniquePermissionChange => {
-      this.menuService.rolePatch(env.apiVersion, uniquePermissionChange).subscribe(responseHandler((response) => {
-        console.log(response);
+      this.menuService.rolePatch(env.apiVersion, uniquePermissionChange).subscribe(responseHandler(() => {
       }));
     });
 
