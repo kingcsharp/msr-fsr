@@ -212,7 +212,7 @@ export class PurchaseCreateComponent implements OnInit {
         if (rootItem.serializeIndividually) {
           qty = length;
         }
-        const serialNumbers : string[] = this.purchaseSerializeItems.map(
+        const serialNumbers: string[] = this.purchaseSerializeItems.map(
             x => x.serialKitNo ? x.serialKitNo : ''
         );
         const requestData = new CreatePurchaseRequest(
