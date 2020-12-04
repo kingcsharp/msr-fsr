@@ -39,5 +39,15 @@ namespace MSR.Domain.Commands
         /// If null, do not filter.
         /// </description>
         public bool? completedOnly { get; set; }
+
+        /// <summary>
+        /// Option to return only invoiceable work orders.
+        /// </summary>
+        /// <description>
+        /// If True, return invoiceable work orders.
+        /// If False, return invoiced work orders.
+        /// If null, do not filter.
+        /// </description>
+        public bool? invoiceableOnly { get; set; }
     }
 }

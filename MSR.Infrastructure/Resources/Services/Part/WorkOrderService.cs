@@ -77,6 +77,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 query = query.Where(x => x.LocationId == command.LocationId);
             }
 
+            if (command.invoiceableOnly.HasValue)
+            {
+                List<int> invoicedWorkOrderIds = await _unitOfWork.InvoiceItems.Query()
+                .Select(i => i.WorkOrderId)
+                .Distinct()
+                .ToListAsync();
+
+                query = query.Where(x => invoicedWorkOrderIds.Contains(x.Id) != command.invoiceableOnly.Value);
+            }
+
             List<WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
             List<int> workOrderIds = workOrderEntities.Select(m => m.Id).ToList();
             _ = await _unitOfWork.WorkOrderParts.Query().Include(m => m.Part).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
@@ -116,7 +126,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 workOrderEntities = workOrderEntities.Where(i => i.Purchase.PurchaseOrder.CustomerId == command.CustomerId.Value).ToList();
             }
 
-            var result = new List<WorkOrderModel>();
+            var workOrderModels = new List<WorkOrderModel>();
 
             _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
             _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
@@ -148,15 +158,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }
 
                 }
-                result.Add(DetachBackPointers(workOrderModel));
+                workOrderModels.Add(DetachBackPointers(workOrderModel));
             };
 
             if (command.completedOnly.HasValue && command.completedOnly.Value)
             {
-                result = result.Where(x => x.Status == EnumUtils.GetDescription(EnumStatusSteps.Cancelled) || x.Status == EnumUtils.GetDescription(EnumStatusSteps.Complete)).ToList();
+                workOrderModels = workOrderModels.Where(x => x.Status == EnumUtils.GetDescription(EnumStatusSteps.Cancelled) || x.Status == EnumUtils.GetDescription(EnumStatusSteps.Complete)).ToList();
             }
 
-            return result.OrderBy(x => x.Id).ToList();
+            return workOrderModels.OrderBy(x => x.Id).ToList();
         }
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
