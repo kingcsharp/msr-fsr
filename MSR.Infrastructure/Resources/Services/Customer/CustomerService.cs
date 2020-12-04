@@ -92,6 +92,9 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.CustomerApproval) || import)
             {
                 var customer = _mapper.Map(command, curCustomer);
+                customer.PrimaryContactUserId = command.PrimaryContactUserId;
+                customer.SecondaryContactUserId = command.SecondaryContactUserId;
+                customer.LocationId = command.LocationId;
                 _unitOfWork.Customers.Update(curCustomer);
                 await _unitOfWork.LogApprovalTransaction(curCustomer, curCustomer.Id);
 

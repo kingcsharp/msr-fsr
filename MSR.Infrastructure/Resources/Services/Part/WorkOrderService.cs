@@ -672,7 +672,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (workOrderTaskMonitorEntity.ProcedureStepMonitor.SendNCREmail.HasValue &&
                 workOrderTaskMonitorEntity.ProcedureStepMonitor.SendNCREmail.Value)
             {
-                await SendNcrEmailNotification(workOrderTaskMonitorModel.Id);
+                await SendNcrEmailNotification(workOrderTaskMonitorModel.Id, command.SendNCREmail);
             }
 
             return workOrderTaskMonitorModel;
@@ -1136,7 +1136,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
         }
 
-        private async Task SendNcrEmailNotification(int? workOrderTaskMonitorId)
+        private async Task SendNcrEmailNotification(int? workOrderTaskMonitorId, string ncrEmail)
         {
             var workOrderTaskMonitorEntity = await _unitOfWork.WorkOrderTaskMonitors.Query()
                 .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorId);
@@ -1157,7 +1157,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var secondaryContactUserModel = await _unitOfWork.Users.FirstOrDefaultAsync(false,s => s.Id == customerEntity.SecondaryContactUserId);
             var workOrderTaskAssignedUserModel = workOrderTaskEntity.AssignedToUser;
 
-            if (primaryContactUserModel == null || primaryContactUserModel.IsAnswerUser == true)
+            if ((primaryContactUserModel == null || primaryContactUserModel.IsAnswerUser == true) && string.IsNullOrWhiteSpace(ncrEmail))
             {
                 throw new DomainException(
                     "There is no Portal User set as Primary Contact associated with this Work Order",
@@ -1170,7 +1170,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.InternalServerError);
             }
 
-            var to = primaryContactUserModel.Email;
+            var to = string.IsNullOrWhiteSpace(ncrEmail) ? primaryContactUserModel.Email : ncrEmail;
             var from = workOrderTaskAssignedUserModel.Email;
             var carbonCopyList = new List<string>() {workOrderTaskAssignedUserModel.Email};
 

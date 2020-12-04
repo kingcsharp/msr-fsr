@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ChangeDetectorRef, Inject, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  ProcedureService, WorkOrderTaskService, LocationService, UserService, RoleService,
+  ProcedureService, WorkOrderTaskService, LocationService, UserService, RoleService, CustomerService,
   Customer, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService, DocumentService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel, ProcedureStepModel, DocumentView, Role, UserModel
+  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
+  ProcedureStepModel, DocumentView, Role, UserModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -25,7 +26,7 @@ import { forkJoin, Observable } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true,
   providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService,
-    LocationService, UserService, UserService, InvoiceService, DocumentService, RoleService]
+    LocationService, UserService, UserService, InvoiceService, DocumentService, RoleService, CustomerService]
 })
 export class WipdetailsComponent implements OnInit {
 
@@ -62,7 +63,7 @@ export class WipdetailsComponent implements OnInit {
   roles: Array<Role> = new Array<Role>();
   allUserRoleIds: Array<number>;
 
-  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
+  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, private customerService: CustomerService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
     public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, private roleService: RoleService) { }
 
@@ -111,6 +112,7 @@ export class WipdetailsComponent implements OnInit {
     this.workOrdersService.workOrder(workOrderId, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.workOrderModel = this.cleanData(response.object[0]);
+      this.getCustomerContacts(this.workOrderModel.purchase?.purchaseOrder?.customer?.id);
       this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
       this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
       this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
@@ -136,6 +138,18 @@ export class WipdetailsComponent implements OnInit {
         this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[0]);
       }
       this.globals.showLoader(false);
+    }));
+
+  }
+
+  getCustomerContacts(customerId: number) {
+
+    this.customerService.customerGet(customerId, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+
+      if (response.object.length > 0) {
+        this.workOrderModel.purchase.purchaseOrder.customer = response.object[0];
+      }
+
     }));
 
   }
