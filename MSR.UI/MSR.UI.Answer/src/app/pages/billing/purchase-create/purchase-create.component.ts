@@ -205,39 +205,47 @@ export class PurchaseCreateComponent implements OnInit {
         });
         this.step = 2;
       } else {
+
         length = this.purchaseSerializeItems.length;
+        let rootItemIndex = 0;
         this.globals.showLoader(true);
-        const rootItem = this.purchaseSerializeItems[0];
-        let qty = rootItem.qty;
-        if (rootItem.serializeIndividually) {
-          qty = length;
-        }
-        const serialNumbers: string[] = this.purchaseSerializeItems.map(
-            x => x.serialKitNo ? x.serialKitNo : ''
-        );
-        const requestData = new CreatePurchaseRequest(
-          {
-            purchaseOrderId: this.purchaseOrderData.id,
-            statusId: 1, // Approved
-            purchaseOrderProductId: rootItem.id,
-            serialNumbers: serialNumbers,
-            locationId: rootItem.locationId,
-            qty: qty,
-            customerLineNumber: rootItem.customerLineNumber ? parseInt(rootItem.customerLineNumber, 10) : null,
-            mttn: rootItem.mttn,
-            dueDate: rootItem.dueDate,
-            purchasePrice: rootItem.unitPrice,
-            serializeIndividually: rootItem.serializeIndividually,
+
+        this.purchaseItems.forEach((purchaseItem) => {
+
+          const rootItem = this.purchaseSerializeItems[rootItemIndex];
+
+          const serialNumbers: string[] = [];
+          for (let i = rootItemIndex; i < rootItemIndex + purchaseItem.qty; i++) {
+            serialNumbers.push(this.purchaseSerializeItems[i].serialKitNo ? this.purchaseSerializeItems[i].serialKitNo : '');
           }
-        );
-        this.purchaseService.purchasePost(env.apiVersion, requestData)
-        .pipe(take(1))
-        .subscribe(responseHandler((resp) => {
-          length--;
-          if (length === 0) {
-            this.router.navigate(['app/pricing/purchaseorder']);
-          }
-        }));
+
+          const requestData = new CreatePurchaseRequest(
+            {
+              purchaseOrderId: this.purchaseOrderData.id,
+              statusId: 1, // Approved
+              purchaseOrderProductId: rootItem.id,
+              serialNumbers: serialNumbers,
+              locationId: rootItem.locationId,
+              qty: purchaseItem.qty,
+              customerLineNumber: rootItem.customerLineNumber ? parseInt(rootItem.customerLineNumber, 10) : null,
+              mttn: rootItem.mttn,
+              dueDate: rootItem.dueDate,
+              purchasePrice: rootItem.unitPrice,
+              serializeIndividually: rootItem.serializeIndividually,
+            }
+          );
+
+          rootItemIndex += purchaseItem.serializeIndividually ? purchaseItem.qty : 1;
+
+          this.purchaseService.purchasePost(env.apiVersion, requestData)
+          .pipe(take(1))
+          .subscribe(responseHandler((resp) => {
+            length -= purchaseItem.serializeIndividually ? purchaseItem.qty : 1;
+            if (length === 0) {
+              this.router.navigate(['app/pricing/purchaseorder']);
+            }
+          }));
+        });
       }
     }
   }
