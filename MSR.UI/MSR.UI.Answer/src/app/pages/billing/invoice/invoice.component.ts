@@ -111,7 +111,7 @@ export class InvoiceComponent implements OnInit {
     this.globals.showLoader(true);
     this.showWorkOrders = false;
     this.workOrderService.workOrder(null, this.currentInvoice.customerId,
-      this.currentInvoice.locationId, null, null, env.apiVersion).pipe(take(1))
+      this.currentInvoice.locationId, null, null, true, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.forEach((wo) => {
           const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);

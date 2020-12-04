@@ -109,7 +109,7 @@ export class WipdetailsComponent implements OnInit {
   getWorkOrder(workOrderId: number) {
 
     this.globals.showLoader(true);
-    this.workOrdersService.workOrder(workOrderId, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.workOrdersService.workOrder(workOrderId, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.workOrderModel = this.cleanData(response.object[0]);
       this.getCustomerContacts(this.workOrderModel.purchase?.purchaseOrder?.customer?.id);
