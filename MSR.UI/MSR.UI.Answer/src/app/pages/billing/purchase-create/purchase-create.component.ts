@@ -215,7 +215,9 @@ export class PurchaseCreateComponent implements OnInit {
           const rootItem = this.purchaseSerializeItems[rootItemIndex];
 
           const serialNumbers: string[] = [];
-          for (let i = rootItemIndex; i < rootItemIndex + purchaseItem.qty; i++) {
+          let purchaseSerializeItemsCount = purchaseItem.serializeIndividually ? purchaseItem.qty : 1;
+
+          for (let i = rootItemIndex; i < rootItemIndex + purchaseSerializeItemsCount; i++) {
             serialNumbers.push(this.purchaseSerializeItems[i].serialKitNo ? this.purchaseSerializeItems[i].serialKitNo : '');
           }
 
@@ -235,7 +237,7 @@ export class PurchaseCreateComponent implements OnInit {
             }
           );
 
-          rootItemIndex += purchaseItem.serializeIndividually ? purchaseItem.qty : 1;
+          rootItemIndex += purchaseSerializeItemsCount;
 
           this.purchaseService.purchasePost(env.apiVersion, requestData)
           .pipe(take(1))
