@@ -80,9 +80,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (command.invoiceableOnly.HasValue)
             {
                 List<int> invoicedWorkOrderIds = await _unitOfWork.InvoiceItems.Query()
-                .Select(i => i.WorkOrderId)
-                .Distinct()
-                .ToListAsync();
+                    .Select(i => i.WorkOrderId)
+                    .Distinct()
+                    .ToListAsync();
 
                 query = query.Where(x => invoicedWorkOrderIds.Contains(x.Id) != command.invoiceableOnly.Value);
             }
