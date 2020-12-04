@@ -272,7 +272,7 @@ export class WipComponent implements OnInit, AfterViewInit {
               switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
                 case 'EQUAL':
                   if (workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number') {
-                    workOrderTaskMonitor.pass = parseInt(valSelected) === parseInt(workOrderTaskMonitor.procedureStepMonitor.targetValue);
+                    workOrderTaskMonitor.pass = parseInt(valSelected, 10) === parseInt(workOrderTaskMonitor.procedureStepMonitor.targetValue, 10);
                   } else {
                     workOrderTaskMonitor.pass = valSelected === workOrderTaskMonitor.procedureStepMonitor.targetValue;
                   }

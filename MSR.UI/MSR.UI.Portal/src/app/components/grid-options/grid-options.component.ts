@@ -4,7 +4,7 @@ import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ViewSaved } from '../../models/lib/ViewSaved';
 import { Globals } from '../../models/lib/globals';
 import { TableState } from 'primeng/api';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 @Component({
   host: {
     '(document:click)': 'onClick($event)',
