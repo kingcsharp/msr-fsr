@@ -206,8 +206,8 @@ export class InvoiceComponent implements OnInit {
         workOrderId: workorder.id,
       });
 
-      pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'purchaseNumber');
-      pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'purchaseNumber');
+      pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'workOrderId');
+      pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'workOrderId');
 
       setTimeout(() => {
         this.showInvoiceItems = true;

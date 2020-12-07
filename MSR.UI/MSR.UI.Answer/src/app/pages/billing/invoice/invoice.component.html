@@ -217,7 +217,7 @@
             </label>
             <div class="col-md-10 col-12">
               <multiselect-wrapper-form *ngIf="showInvoiceItems" [options]="invoiceItemOptions"
-                [(model)]="currentInvoice.invoiceItems" defaultId="workOrderId" defaultLabelProperty="purchaseNumber"
+                [(model)]="currentInvoice.invoiceItems" defaultId="workOrderId" defaultLabelProperty="workOrderId"
                 defaultLabel="Select Work Orders">
               </multiselect-wrapper-form>
               <input pInputText type="text" hidden class="form-control input-transparent" name="invoiceitemshdn"
