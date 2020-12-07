@@ -23,6 +23,8 @@
 
         public string ProcedureName { get; set; }
 
+        public int? CycleTime { get; set; }
+
         /// <summary>
         /// Total Sale Price
         /// </summary>

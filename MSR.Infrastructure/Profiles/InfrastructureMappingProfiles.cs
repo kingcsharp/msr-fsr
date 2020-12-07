@@ -459,7 +459,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.Product.TotalSalePrice))
                 .ForMember(dest => dest.PartName, opts => opts.MapFrom(src => src.Product.Part.Name))
                 .ForMember(dest => dest.PartNumber, opts => opts.MapFrom(src => src.Product.Part.PartNumber))
-                .ForMember(dest => dest.ProcedureName, opts => opts.MapFrom(src => src.Product.Procedure.Name));
+                .ForMember(dest => dest.ProcedureName, opts => opts.MapFrom(src => src.Product.Procedure.Name))
+                .ForMember(dest => dest.CycleTime, opts => opts.MapFrom(src => src.Product.CycleTime));
 
             CreateMap<PurchaseModel, CreateWorkOrder>()
                 .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => src.Qty > 0 ? src.Qty : 1))
