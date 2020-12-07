@@ -17,7 +17,8 @@ namespace MSR.Domain.Commanding
         {
             try
             {
-                var handler = _provider.GetService<IEventHandler<T>>();
+                using var scope = _provider.CreateScope();
+                var handler = scope.ServiceProvider.GetService<IEventHandler<T>>();
 
                 await handler.HandleAsync((T)@event, new CancellationToken());
             }

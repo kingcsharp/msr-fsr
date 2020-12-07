@@ -18,10 +18,11 @@ namespace MSR.Infrastructure.Factories
 
         public IUploadFiles CreateUploader(FileProvider provider)
         {
+            using var scope = _serviceProvider.CreateScope();
             switch (provider)
             {
                 case FileProvider.S3:
-                    return _serviceProvider.GetService<S3FileHandler>();
+                    return scope.ServiceProvider.GetService<S3FileHandler>();
                 default:
                     throw new NotSupportedException($"Uploader not found for {nameof(FileProvider)} {provider}");
             }
@@ -29,10 +30,11 @@ namespace MSR.Infrastructure.Factories
 
         public IDownloadFiles CreateDownloader(FileProvider provider)
         {
+            using var scope = _serviceProvider.CreateScope();
             switch (provider)
             {
                 case FileProvider.S3:
-                    return _serviceProvider.GetService<S3FileHandler>();
+                    return scope.ServiceProvider.GetService<S3FileHandler>();
                 default:
                     throw new NotSupportedException($"Downloader not found for {nameof(FileProvider)} {provider}");
             }
