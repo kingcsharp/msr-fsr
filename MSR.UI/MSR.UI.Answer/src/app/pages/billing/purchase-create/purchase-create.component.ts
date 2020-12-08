@@ -67,6 +67,7 @@ export class PurchaseCreateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.globalDueDate = moment().add(7, 'days').toDate();
     this.route.paramMap.subscribe(params => {
       this.poId = parseInt(params.get('id'), 10);
       this.step = 0;
@@ -93,11 +94,11 @@ export class PurchaseCreateComponent implements OnInit {
             qty: 0,
             groupWO: false,
             serializeIndividually: false,
+            dueDate: product.cycleTime ? moment().add(product.cycleTime, 'days').toDate() : this.globalDueDate,
           });
         });
         this.getPurchaseOrderFlag = true;
         this.getCustomerData(this.purchaseOrderData.customerId);
-        this.globalDueDate = moment().add(7, 'days').toDate();
       }));
   }
 
@@ -151,7 +152,7 @@ export class PurchaseCreateComponent implements OnInit {
                 productName: product.name,
                 customerLineNumber: null,
                 mttn: null,
-                dueDate: this.globalDueDate,
+                dueDate: product.dueDate,
                 qty: product.qty,
                 unitPrice: product.price,
                 extPrice: product.qty * product.price,
@@ -168,7 +169,7 @@ export class PurchaseCreateComponent implements OnInit {
                   productName: product.name,
                   customerLineNumber: null,
                   mttn: null,
-                  dueDate: this.globalDueDate,
+                  dueDate: product.dueDate,
                   qty: 1,
                   unitPrice: product.price,
                   extPrice: product.price,
