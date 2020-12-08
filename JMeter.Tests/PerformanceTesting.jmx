@@ -191,7 +191,7 @@
                 <connectTime>true</connectTime>
               </value>
             </objProp>
-            <stringProp name="filename"></stringProp>
+            <stringProp name="filename">Part_Results</stringProp>
           </ResultCollector>
           <hashTree/>
         </hashTree>
@@ -266,7 +266,7 @@
                 <connectTime>true</connectTime>
               </value>
             </objProp>
-            <stringProp name="filename"></stringProp>
+            <stringProp name="filename">Location_Results</stringProp>
           </ResultCollector>
           <hashTree/>
         </hashTree>
@@ -304,7 +304,7 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename"></stringProp>
+          <stringProp name="filename">Answer_Summary</stringProp>
         </ResultCollector>
         <hashTree/>
         <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
@@ -341,7 +341,7 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename"></stringProp>
+          <stringProp name="filename">Answer_Results</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>
