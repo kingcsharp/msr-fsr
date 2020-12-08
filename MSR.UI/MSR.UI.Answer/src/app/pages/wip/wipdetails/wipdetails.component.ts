@@ -14,6 +14,7 @@ import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 import { WorkordertaskmonitosWrapperComponent } from '../../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component';
+import { PrintotherReportComponent } from '../../../components/printother-report/printother-report.component';
 import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { SelectItem } from 'primeng/api';
 import { take } from 'rxjs/operators';
@@ -34,6 +35,7 @@ export class WipdetailsComponent implements OnInit {
   @ViewChild('selectworkorderdropdown') selectWorkOrderDropDown: SelectWorkOrderDropDownWrapperComponent;
   @ViewChild('stepCarousel') carousel: CarouselComponent;
   @ViewChild('workordertaskmonitors') workordertaskmonitors: WorkordertaskmonitosWrapperComponent;
+  @ViewChild('printotherreport') printOtherReport: PrintotherReportComponent;
   workOrderModel: WorkOrderModel = new WorkOrderModel();
   parentPart: WorkOrderPartModel = new WorkOrderPartModel();
   procedure: Procedure = new Procedure();
@@ -595,5 +597,10 @@ export class WipdetailsComponent implements OnInit {
       this.monitorsAreInvalidDialog = true;
     }
 
+  }
+
+  showNcrReport() {
+    this.printOtherReport.togglePrintOtherDialog();
+    this.printOtherReport.selectedReport = 'NCRReport';
   }
 }

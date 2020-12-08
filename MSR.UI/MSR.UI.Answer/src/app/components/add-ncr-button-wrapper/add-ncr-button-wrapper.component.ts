@@ -105,7 +105,7 @@ export class AddNcrButtonWrapperComponent implements OnInit {
         workOrderTask.workOrderTaskMonitors = workOrderTasks.find(s => s.id === workOrderTask.id).workOrderTaskMonitors;
 
       });
-
+      this.workOrderModel.hasNCR = true;
       this.addNcrTasks.emit(updatedWorkOrderTasks);
     });
 

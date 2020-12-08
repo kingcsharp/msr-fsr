@@ -41,10 +41,13 @@
               <i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
             <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel?.workOrderParts?.length > 0">
             </printtraveler-report>
-            <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printother-report>
+            <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined" #printotherreport></printother-report>
           </div>
         </div>
-        <div class="col-6" style="margin-right:-25px;padding-right:12px;">
+        <div [ngClass]="{'col-6':true, 'tab-area':true, 'tab-area-withncr':workOrderModel.hasNCR }">
+          <div class="d-flex justify-content-end ncr-badge" *ngIf="workOrderModel.hasNCR">
+            <span class="badge badge-pill badge-danger" (click)="showNcrReport()"><i class="fas fa-exclamation-triangle"></i> NCR</span>
+          </div>
           <p-tabView class="mt-0">
             <p-tabPanel header="Parts" class="ui-tabview-top-panel">
               <div class="ui-tabview-top-right">
