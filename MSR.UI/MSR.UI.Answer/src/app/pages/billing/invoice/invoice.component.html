@@ -244,7 +244,9 @@
           stateStorage="local" stateKey="{{gridWoStorageId}}">
           <ng-template pTemplate="header">
             <tr>
-              <th></th>
+              <th>
+                <p-checkbox *ngIf="workorders?.length > 0" [(ngModel)]="isSelectAllWorkOrders" [ngModelOptions]="{standalone: true}" binary="true" (onChange)="selectAllWorkOrders($event)"></p-checkbox>
+              </th>
               <th *ngFor="let col of gridWoSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
                 data-cy="workorder-table-header">
                 {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
@@ -342,7 +344,7 @@
         <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
           Save
         </button>
-        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+        <button type="button" (click)="closeDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
           Cancel
         </button>
       </div>
