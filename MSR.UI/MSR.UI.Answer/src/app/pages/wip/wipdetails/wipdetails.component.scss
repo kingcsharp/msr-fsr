@@ -158,12 +158,6 @@ ol{
 .carousel-caption {
   color:#000
 }
-/* .carousel .item {
-  height: 60px !important;
-  width: 150px !important;
-  display:table !important;
-  margin-right: 2px;
-} */
 
 .carousel .item {
   height: 100%;
@@ -194,7 +188,6 @@ ol{
   position: relative;
   width: 95.75%;
   overflow: hidden;
-  /* margin-left: 15px; */
 }
 
 .wip-detail-top {
@@ -262,4 +255,19 @@ ol{
 
 .step-viewed{
   border: 2px solid #000000;
+}
+
+.ncr-badge{
+  position: relative;
+  top: 1.5em;
+  cursor: pointer;
+}
+
+.tab-area{
+  margin-right:-25px;
+  padding-right:12px;
+}
+
+.tab-area-withncr{
+  margin-top: -1.5em;
 }
