@@ -242,7 +242,7 @@ export class InvoiceComponent implements OnInit {
     } else {
       this.workorders.forEach((_, index) => {
         this.workorders[index]['checked'] = false;
-      })
+      });
     }
   }
 
