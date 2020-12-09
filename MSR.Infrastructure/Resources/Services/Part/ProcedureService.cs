@@ -331,31 +331,36 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
 
 
-                if (command.ReferenceDocumentIds != null &&
-                    command.ReferenceDocumentIds.Count > 0)
+
+                List<int> savedDocumentIds = await _unitOfWork.DocumentEntityMap
+                    .Query()
+                    .Where(x => x.EntityId == updatedProcedureStepEntity.Id &&
+                        x.EntityTableName.Equals(nameof(ProcedureStep)))
+                    .Select(x => x.Id)
+                    .ToListAsync();
+
+                foreach (int documentId in savedDocumentIds)
                 {
-                    List<int> currentIds = await _unitOfWork.DocumentEntityMap
-                        .Query()
-                        .Where(x => x.EntityId == updatedProcedureStepEntity.Id &&
-                            x.EntityTableName.Equals(nameof(EntityFramework.Entities.ProcedureStep)))
-                        .Select(x => x.Id)
-                        .ToListAsync();
-                    foreach (int id in currentIds)
-                    {
-                        _unitOfWork.DocumentEntityMap.Delete(false, id);
-                    }
+                    _unitOfWork.DocumentEntityMap.Delete(false, documentId);
+                }
+
+                if (command.ReferenceDocumentIds != null)
+                {
                     foreach (int newDocId in command.ReferenceDocumentIds)
                     {
-                        var ndem = new DocumentEntityMap()
+                        var documentEntityMap = new DocumentEntityMap()
                         {
                             EntityId = updatedProcedureStepEntity.Id,
-                            EntityTableName = nameof(EntityFramework.Entities.ProcedureStep),
+                            EntityTableName = nameof(ProcedureStep),
                             DocumentId = newDocId
                         };
-                        await _unitOfWork.DocumentEntityMap.AddAsync(ndem);
+                        await _unitOfWork.DocumentEntityMap.AddAsync(documentEntityMap);
                     }
                     await _unitOfWork.SaveChangesAsync();
                 }
+
+
+                
 
                 if (updatedProcedureStepEntity.ProcedureStepRoles != null)
                 {
