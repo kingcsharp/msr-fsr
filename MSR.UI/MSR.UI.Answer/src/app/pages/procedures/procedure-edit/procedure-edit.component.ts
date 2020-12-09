@@ -248,7 +248,7 @@ export class ProcedureEditComponent implements OnInit {
     });
 
     this.globals.showLoader(true);
-    this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).pipe(take(1)).subscribe(responseHandler(() => {
+    this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).pipe(take(1)).subscribe(responseHandler((response) => {
 
       let procedureStepsToUpdate = this.lastSavedProcedureStepOrder.filter(s => s !== procedureStep.id);
 
