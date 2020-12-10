@@ -72,6 +72,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 query = query.Where(x => x.LocationId == command.LocationId);
             }
 
+            if (command.FromDate.HasValue) {
+                query = query.Where(x => x.CreatedOn >= command.FromDate);
+            }
+
+            if (command.ToDate.HasValue) {
+                query = query.Where(x => x.CreatedOn <= command.ToDate);
+            }
+
             if (command.invoiceableOnly.HasValue)
             {
                 List<int> invoicedWorkOrderIds = await _unitOfWork.InvoiceItems.Query().Select(i => i.WorkOrderId).Distinct().ToListAsync();
@@ -846,7 +854,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<ICollection<PortalWorkOrderView>> GetPortalWorkOrders(GetPortalWorkOrder command)
         {
-            var workOrders = await GetWorkOrderAsync(new GetWorkOrder() { CustomerId = command.CustomerId });
+            var workOrders = await GetWorkOrderAsync(_mapper.Map<GetWorkOrder>(command));
 
             if (command.PartId.HasValue)
             {

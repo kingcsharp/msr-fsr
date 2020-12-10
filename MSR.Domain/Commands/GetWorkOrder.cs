@@ -11,7 +11,8 @@ namespace MSR.Domain.Commands
         public int? CustomerId { get; set; }
         public int? LocationId { get; set; }
         public int? assignedToId { get; set; }
-        public DateTime? InvoiceDate { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
 
         /// <summary>
         /// Only include work orders with the following statuses
