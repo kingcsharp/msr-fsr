@@ -329,23 +329,23 @@
         <div class="clearfix">
           <ul class="nav nav-tabs float-left" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="customerTab" data-toggle="tab" href="#customerInfo" role="tab"
+              <a class="nav-link" [class.active]="activeTab === tabMenus.CustomerInfo" id="customerTab" data-toggle="tab" (click)="switchTab(tabMenus.CustomerInfo)" role="tab"
                 aria-controls="customerInfo" aria-expanded="true">Customer Information</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="generalTab" data-toggle="tab" href="#generalInfo" role="tab"
+              <a class="nav-link" [class.active]="activeTab === tabMenus.GeneralInfo" id="generalTab" data-toggle="tab"(click)="switchTab(tabMenus.GeneralInfo)" role="tab"
                 aria-controls="generalInfo" aria-expanded="false">General Information</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="generalTab" data-toggle="tab" href="#contaminantInfo" role="tab"
+              <a class="nav-link" [class.active]="activeTab === tabMenus.ContaminantInfo" id="generalTab" data-toggle="tab" (click)="switchTab(tabMenus.ContaminantInfo)" role="tab"
                 aria-controls="contaminantInfo" aria-expanded="false">Contaminant Information</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="generalTab" data-toggle="tab" href="#kitInfo" role="tab" aria-controls="kitInfo"
+              <a class="nav-link" [class.active]="activeTab === tabMenus.KitInfo" id="generalTab" data-toggle="tab" (click)="switchTab(tabMenus.KitInfo)" role="tab" aria-controls="kitInfo"
                 aria-expanded="false">Kit Breakdown By Part</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="generalTab" data-toggle="tab" href="#additionalInfo" role="tab"
+              <a class="nav-link" [class.active]="activeTab === tabMenus.AdditionalInfo" id="generalTab" data-toggle="tab" (click)="switchTab(tabMenus.AdditionalInfo)" role="tab"
                 aria-controls="additionalInfo" aria-expanded="false">Additional Information / Comments</a>
             </li>
           </ul>
@@ -354,8 +354,7 @@
           <legend>
           </legend>
           <div class="tab-content mb-lg" id="myTabContent">
-            <div role="tabpanel" class="tab-pane active in clearfix" id="customerInfo" aria-labelledby="customerTab"
-              aria-expanded="true">
+            <div role="tabpanel" class="tab-pane" [class.active]="activeTab === tabMenus.CustomerInfo" id="customerInfo" aria-labelledby="customerTab">
               <div class="row clearfix">
                 <div class="col-md-6">
                   <div class="form-group row">
@@ -507,7 +506,7 @@
 
               </div>
             </div>
-            <div class="tab-pane" id="generalInfo" role="tabpanel" aria-labelledby="generalTab" aria-expanded="false">
+            <div class="tab-pane" [class.active]="activeTab === tabMenus.GeneralInfo" id="generalInfo" role="tabpanel" aria-labelledby="generalTab">
               <div class="row clearfix">
                 <div class="col-md-12">
                   <div class="form-group row">
@@ -660,8 +659,7 @@
               </div>
             </div>
 
-            <div class="tab-pane" id="contaminantInfo" role="tabpanel" aria-labelledby="contaminantTab"
-              aria-expanded="false">
+            <div class="tab-pane" [class.active]="activeTab === tabMenus.ContaminantInfo" id="contaminantInfo" role="tabpanel" aria-labelledby="contaminantTab">
               <div class="row clearfix">
                 <div class="col-md-12 column">
                   <table class="table table-bordered" id="process_steps">
@@ -697,7 +695,7 @@
               </div>
             </div>
 
-            <div class="tab-pane" id="kitInfo" role="tabpanel" aria-labelledby="kitTab" aria-expanded="false">
+            <div class="tab-pane" [class.active]="activeTab === tabMenus.KitInfo" id="kitInfo" role="tabpanel" aria-labelledby="kitTab">
               <div class="row clearfix">
                 <div class="col-md-12 column">
                   <table class="table table-bordered" id="kit_parts">
@@ -789,8 +787,7 @@
               </div>
             </div>
 
-            <div class="tab-pane" id="additionalInfo" role="tabpanel" aria-labelledby="additionalTab"
-              aria-expanded="false">
+            <div class="tab-pane" [class.active]="activeTab === tabMenus.AdditionalInfo" id="additionalInfo" role="tabpanel" aria-labelledby="additionalTab">
               <div class="row clearfix">
                 <div class="col-md-12">
                   <div class="form-group">
