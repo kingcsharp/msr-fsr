@@ -28,8 +28,6 @@ declare let Parsley: any;
   styleUrls: ['./quotes-products.component.scss'],
   providers: [QuoteService, CustomerService]
 })
-
-
 export class QuotesProductsComponent implements OnInit {
   productPageModes = EnumProductPageModes;
   menuItems = EnumMenuItem;
