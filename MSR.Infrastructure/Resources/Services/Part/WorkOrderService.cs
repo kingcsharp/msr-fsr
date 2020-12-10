@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Amazon.S3.Model;
 using AutoMapper;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Email;
 using MSR.Domain.Abstractions.Services;
@@ -17,11 +14,9 @@ using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using MSR.Domain.Views;
-using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
-using Customer = MSR.Infrastructure.Resources.EntityFramework.Entities.Customer;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -37,7 +32,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         private readonly EmailInformation _emailInformation;
         private readonly GeneralInformation _generalInformation;
 
-        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService, 
+        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService,
             EmailInformation emailInformation, GeneralInformation generalInformation)
         {
             _unitOfWork = unitOfWork;
@@ -165,6 +160,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             return workOrderModels.OrderBy(x => x.Id).ToList();
         }
+
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
             // Note the menu permission here: Purchases.  Work orders are created by a user
@@ -658,7 +654,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"{nameof(WorkOrderTaskMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            
+
 
             if (current.ProcedureStepMonitor.MonitorTypeId == 6)
             {
@@ -989,18 +985,26 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 9   Requested
             // 10  Assigned
             // 11  Waiting to Start
-            int[] completed = { 3, 6, 8 };
+            int[] completed = {
+                (int)EnumStatusSteps.Complete,
+                (int)EnumStatusSteps.Rejected,
+                (int)EnumStatusSteps.Closed
+            };
+            int[] cancelled = {
+                (int)EnumStatusSteps.Closed,
+                (int)EnumStatusSteps.Cancelled,
+            };
             string status;
             if (tasks.All(x => completed.Contains(x.StatusId)))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
             }
-            else if (tasks.Any(x => (x.StatusId == (int)EnumStatusSteps.InProgress ||
+            else if (tasks.All(x => (x.StatusId == (int)EnumStatusSteps.InProgress ||
                                      x.StatusId == (int)EnumStatusSteps.Complete)))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.InProgress);
             }
-            else if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.Cancelled))
+            else if (tasks.Any(x => cancelled.Contains(x.StatusId)))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.Cancelled);
             }
