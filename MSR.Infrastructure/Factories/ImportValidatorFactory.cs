@@ -16,18 +16,19 @@ namespace MSR.Infrastructure.Factories
         }
         public IValidateImportData Create(EnumMenuItem menuItem)
         {
+            using var scope = _serviceProvider.CreateScope();
             switch (menuItem)
             {
                 case EnumMenuItem.CustomersDepartments:
-                    return _serviceProvider.GetService<CustomerImportValidator>();
+                    return scope.ServiceProvider.GetService<CustomerImportValidator>();
                 case EnumMenuItem.Locations:
-                    return _serviceProvider.GetService<LocationImportValidator>();
+                    return scope.ServiceProvider.GetService<LocationImportValidator>();
                 case EnumMenuItem.Parts:
-                    return _serviceProvider.GetService<PartValidator>();
+                    return scope.ServiceProvider.GetService<PartValidator>();
                 case EnumMenuItem.RunnableProcedures:
-                    return _serviceProvider.GetService<ProcedureValidator>();
+                    return scope.ServiceProvider.GetService<ProcedureValidator>();
                 case EnumMenuItem.QuotesProducts:
-                    return _serviceProvider.GetService<QuoteImportValidator>();
+                    return scope.ServiceProvider.GetService<QuoteImportValidator>();
                 default:
                     throw new NotImplementedException($"No Validator for Menu Item: {menuItem}");
             }
