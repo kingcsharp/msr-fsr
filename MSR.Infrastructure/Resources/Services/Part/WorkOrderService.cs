@@ -87,6 +87,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 query = query.Where(x => invoicedWorkOrderIds.Contains(x.Id) != command.invoiceableOnly.Value);
             }
 
+            // There is a 1-to-1 purchase to work order mapping.  This
+            // should be a safe include with minimal impact, and it is
+            // required to filter on customer ID.
+            query = query.Include(x => x.Purchase).ThenInclude(y => y.PurchaseOrder);
+            if (command.CustomerId.HasValue)
+            {
+                query = query.Where(i => i.Purchase.PurchaseOrder.CustomerId == command.CustomerId.Value);
+            }
+
             List<WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
             List<int> workOrderIds = workOrderEntities.Select(m => m.Id).ToList();
             _ = await _unitOfWork.WorkOrderParts.Query().Include(m => m.Part).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
@@ -119,11 +128,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (workOrderEntities.Count == 0 && command.Id.HasValue)
             {
                 throw new DomainException($"Work Order ID {command.Id.GetValueOrDefault()} not found", DomainError.NotFound);
-            }
-
-            if (command.CustomerId.HasValue)
-            {
-                workOrderEntities = workOrderEntities.Where(i => i.Purchase.PurchaseOrder.CustomerId == command.CustomerId.Value).ToList();
             }
 
             var workOrderModels = new List<WorkOrderModel>();
@@ -1002,13 +1006,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 (int)EnumStatusSteps.Closed,
                 (int)EnumStatusSteps.Cancelled,
             };
+
+            int[] inProgress = {
+                (int)EnumStatusSteps.InProgress,
+                (int)EnumStatusSteps.Approved,
+                (int)EnumStatusSteps.Complete
+            };
             string status;
             if (tasks.All(x => completed.Contains(x.StatusId)))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
             }
-            else if (tasks.All(x => (x.StatusId == (int)EnumStatusSteps.InProgress ||
-                                     x.StatusId == (int)EnumStatusSteps.Complete)))
+            else if (tasks.All(x => x.StatusId == (int)EnumStatusSteps.Approved))
+            {
+                status = EnumUtils.GetDescription(EnumStatusSteps.WaitingtoStart);
+            }
+            else if (tasks.All(x => inProgress.Contains(x.StatusId)))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.InProgress);
             }
