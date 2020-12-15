@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Exceptions;
+using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,9 +14,16 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Queries
 {
     public static class WorkOrderQueries
     {
-        public static async Task<dynamic> GetInvoiceableWorkOrders(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection)
+        public static async Task<ICollection<dynamic>> GetInvoiceableWorkOrders(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection)
         {
-            return await dbSet.Select(projection).ToListAsync();
+            try
+            {
+                return await dbSet.Select(projection).ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new DomainException(ex.Message, DomainError.InternalServerError);
+            }
         }
     }
 }
