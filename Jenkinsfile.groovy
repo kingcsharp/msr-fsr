@@ -257,7 +257,9 @@ pipeline {
 
                             sh "cat ${API_COMPOSE}"
                             sh "cat ${API_COMPOSE_PROCESSOR}"
-                            deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
+                            //deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
+                            sh "ecs-cli compose --file docker-compose-api.yml --ecs-params ecs-params-api.yml --project-name prod-answer-api service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${PROD_API_TARGET_ARN} --container-name reverseproxy --container-port 80 --timeout 15"
+
                             deploy_processor("${API_COMPOSE_PROCESSOR}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "processor")
                         }
                     }
