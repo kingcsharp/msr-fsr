@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <Folder Include="Commands\Abstractions\" />
+    <Folder Include="Projections\" />
+    <Folder Include="Queries\" />
   </ItemGroup>
 
   <ItemGroup>
