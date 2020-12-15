@@ -17,6 +17,7 @@ import {
   CreateQuoteRequest,
 } from '../../../services/api.client.generated';
 import { CSRJsonModel, ProcessModel, PartModel } from '../../../models/csr-json-model';
+import { EnumCRFTabs } from '../../../models/enums/EnumCRFTabs';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -62,6 +63,9 @@ export class QuotesProductsComponent implements OnInit {
   getCustomersFlag: boolean = false;
   CSRCustomer: Customer;
   CSRFormValidErrors: string[] = [];
+
+  tabMenus = EnumCRFTabs;
+  activeTab: string;
 
   constructor(
     public globals: Globals,
@@ -166,6 +170,7 @@ export class QuotesProductsComponent implements OnInit {
   }
 
   openCSRDialog() {
+    this.activeTab = EnumCRFTabs.CustomerInfo;
     this.CSRFormValidErrors = [];
     this.CSRToCreate = new CSRJsonModel();
     this.CSRToCreate.SubmittedBy = this.globals.user.fullName;
@@ -173,6 +178,10 @@ export class QuotesProductsComponent implements OnInit {
     this.CSRToCreate.Parts = [new PartModel()];
     this.CSRCustomer = null;
     this.showCSRDialog = true;
+  }
+
+  switchTab(activeTab: string) {
+    this.activeTab = activeTab;
   }
 
   closeCSRDialog() {

@@ -266,34 +266,28 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command, bool incRevision = true)
         {
-            ProcedureStep current = await _unitOfWork.ProcedureSteps
+            ProcedureStep originalProcedureStepEntity = await _unitOfWork.ProcedureSteps
                 .Query()
                 .Include(x => x.StepType)
                 .Include(x => x.ReferenceFiles)
                 .Include(x => x.Procedure)
                 .FirstOrDefaultAsync(i =>
-                    i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
+                    i.Id == command.procedureStepId);
 
-            if (current is null)
+            if (originalProcedureStepEntity is null)
             {
                 throw new DomainException($"{nameof(ProcedureStep)} not " +
                     $"found with ID: {command.procedureId} / {command.procedureStepId}",
                     DomainError.NotFound);
             }
 
-            _unitOfWork.ProcedureSteps.LoadCollection(current, "ProcedureStepRoles");
+            _unitOfWork.ProcedureSteps.LoadCollection(originalProcedureStepEntity, "ProcedureStepRoles");
 
-            var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureStepModel ret;
+            List<int> idsOfFilesToBeMappedAndSaved = new List<int>();
 
             // Upload any new files, but do not attach yet.
-            if (command.ReferenceFiles != null &&
-                command.ReferenceFiles.Count > 0)
+            if (command.ReferenceFiles?.Count > 0)
             {
-                if (command.ReferenceFileIds == null)
-                {
-                    command.ReferenceFileIds = new List<int>();
-                }
                 foreach (FileModel file in command.ReferenceFiles)
                 {
                     FileModel newFile = await _fileService.CreateFileAsync(
@@ -301,8 +295,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         0, // will be attached after checking perms
                         file
                     );
-                    command.ReferenceFileIds.Add(newFile.FileId.Value);
+                    idsOfFilesToBeMappedAndSaved.Add(newFile.FileId.Value);
                 }
+            }
+
+            foreach (var commandReferenceFileId in command.ReferenceFileIds)
+            {
+                idsOfFilesToBeMappedAndSaved.Add(commandReferenceFileId);
             }
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
@@ -311,81 +310,82 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     command.Roles.Count > 0 &&
                     command.Roles.All(x => x != null))
                 {
-                    foreach (ProcedureStepRoleMap m in current.ProcedureStepRoles)
+                    foreach (ProcedureStepRoleMap m in originalProcedureStepEntity.ProcedureStepRoles)
                     {
                         _unitOfWork.ProcedureStepRoleMaps.Delete(false, m);
                     }
                 }
 
-                // update EF object with update command data
-                var step = _mapper.Map(command, current);
+                var updatedProcedureStepEntity = _mapper.Map(command, originalProcedureStepEntity);
 
-                // If we're updating the file list, detach and re-attach
-                if (command.ReferenceFileIds.Count > 0)
+                await _fileService.DetachFilesAsync(
+                    nameof(ProcedureStep),
+                    updatedProcedureStepEntity.Id);
+
+                foreach (int fileId in idsOfFilesToBeMappedAndSaved)
                 {
-                    await _fileService.DetachFilesAsync(
-                        nameof(EntityFramework.Entities.ProcedureStep),
-                        current.Id);
-
-                    foreach (int fileId in command.ReferenceFileIds)
-                    {
-                        await _fileService.MapUploadedFileAsync(
-                            nameof(EntityFramework.Entities.ProcedureStep),
-                            current.Id, fileId
-                        );
-                    }
+                    await _fileService.MapUploadedFileAsync(
+                        nameof(ProcedureStep),
+                        updatedProcedureStepEntity.Id, fileId
+                    );
                 }
 
-                if (command.ReferenceDocumentIds != null &&
-                    command.ReferenceDocumentIds.Count > 0)
+
+
+                List<int> savedDocumentIds = await _unitOfWork.DocumentEntityMap
+                    .Query()
+                    .Where(x => x.EntityId == updatedProcedureStepEntity.Id &&
+                        x.EntityTableName.Equals(nameof(ProcedureStep)))
+                    .Select(x => x.Id)
+                    .ToListAsync();
+
+                foreach (int documentId in savedDocumentIds)
                 {
-                    List<int> currentIds = await _unitOfWork.DocumentEntityMap
-                        .Query()
-                        .Where(x => x.EntityId == current.Id &&
-                            x.EntityTableName.Equals(nameof(EntityFramework.Entities.ProcedureStep)))
-                        .Select(x => x.Id)
-                        .ToListAsync();
-                    foreach (int id in currentIds)
-                    {
-                        _unitOfWork.DocumentEntityMap.Delete(false, id);
-                    }
+                    _unitOfWork.DocumentEntityMap.Delete(false, documentId);
+                }
+
+                if (command.ReferenceDocumentIds != null)
+                {
                     foreach (int newDocId in command.ReferenceDocumentIds)
                     {
-                        var ndem = new DocumentEntityMap()
+                        var documentEntityMap = new DocumentEntityMap()
                         {
-                            EntityId = current.Id,
-                            EntityTableName = nameof(EntityFramework.Entities.ProcedureStep),
+                            EntityId = updatedProcedureStepEntity.Id,
+                            EntityTableName = nameof(ProcedureStep),
                             DocumentId = newDocId
                         };
-                        await _unitOfWork.DocumentEntityMap.AddAsync(ndem);
+                        await _unitOfWork.DocumentEntityMap.AddAsync(documentEntityMap);
                     }
                     await _unitOfWork.SaveChangesAsync();
                 }
 
-                if (step.ProcedureStepRoles != null)
+
+                
+
+                if (updatedProcedureStepEntity.ProcedureStepRoles != null)
                 {
-                    foreach (ProcedureStepRoleMap m in step.ProcedureStepRoles)
+                    foreach (ProcedureStepRoleMap m in updatedProcedureStepEntity.ProcedureStepRoles)
                     {
-                        m.ProcedureStepId = step.Id;
+                        m.ProcedureStepId = updatedProcedureStepEntity.Id;
                     }
                 }
 
                 if (incRevision)
                 {
-                    step.Procedure.Revision += 1;
+                    updatedProcedureStepEntity.Procedure.Revision += 1;
                 }
-                _unitOfWork.ProcedureSteps.Update(step);
+                _unitOfWork.ProcedureSteps.Update(updatedProcedureStepEntity);
 
                 // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(step, step.Id);
+                await _unitOfWork.LogApprovalTransaction(updatedProcedureStepEntity, updatedProcedureStepEntity.Id);
 
-                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(step);
+                return _mapper.Map<ProcedureStepModel>(updatedProcedureStepEntity);
             }
             else
             {
-                _unitOfWork.ProcedureSteps.LoadReference(current, x => x.Procedure);
+                _unitOfWork.ProcedureSteps.LoadReference(originalProcedureStepEntity, x => x.Procedure);
                 int procApprovalId = await FlagProcedureForApproval(
-                    current.Procedure, current.ProcedureId
+                    originalProcedureStepEntity.Procedure, originalProcedureStepEntity.ProcedureId
                 );
                 var approval = _mapper.Map<ProcedureStepApproval>(command);
                 approval.ProcedureApprovalId = procApprovalId;
@@ -393,7 +393,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 string json = JsonConvert.SerializeObject(new
                 {
                     roleIds = command.Roles.Select(x => x.Id).ToList(),
-                        fileIds = command.ReferenceFileIds,
+                        fileIds = idsOfFilesToBeMappedAndSaved,
                         documentIds = command.ReferenceDocumentIds,
                 });
                 approval.ApprovalJSON = json;
@@ -401,10 +401,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 _unitOfWork.ProcedureStepApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(approval);
+                return _mapper.Map<ProcedureStepModel>(approval);
             }
 
-            return ret;
         }
 
         public async Task<bool> DeleteProcedureAsync(DeleteProcedure command)

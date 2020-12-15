@@ -7036,8 +7036,9 @@ export class WorkOrderService {
      * @param locationId (optional) Get work orders by location ID
      * @param invoiceDate (optional) Get work orders by invoice Date
      * @param assignedToId (optional) Get work orders with ANY tasks assigned to this user ID
+     * @param invoiceableOnly (optional) Get invoiceable work orders only
      */
-    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, invoiceableOnly: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7052,6 +7053,8 @@ export class WorkOrderService {
             url_ += "invoiceDate=" + encodeURIComponent("" + invoiceDate) + "&";
         if (assignedToId !== undefined && assignedToId !== null)
             url_ += "assignedToId=" + encodeURIComponent("" + assignedToId) + "&";
+        if (invoiceableOnly !== undefined && invoiceableOnly !== null)
+            url_ += "invoiceableOnly=" + encodeURIComponent("" + invoiceableOnly) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -16044,6 +16047,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     partName?: string | undefined;
     partNumber?: string | undefined;
     procedureName?: string | undefined;
+    cycleTime?: number | undefined;
     totalSalePrice?: number;
 
     constructor(data?: IPurchaseOrderProductView) {
@@ -16063,6 +16067,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
             this.partName = _data["partName"];
             this.partNumber = _data["partNumber"];
             this.procedureName = _data["procedureName"];
+            this.cycleTime = _data["cycleTime"];
             this.totalSalePrice = _data["totalSalePrice"];
         }
     }
@@ -16082,6 +16087,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
         data["partName"] = this.partName;
         data["partNumber"] = this.partNumber;
         data["procedureName"] = this.procedureName;
+        data["cycleTime"] = this.cycleTime;
         data["totalSalePrice"] = this.totalSalePrice;
         return data; 
     }
@@ -16094,6 +16100,7 @@ export interface IPurchaseOrderProductView {
     partName?: string | undefined;
     partNumber?: string | undefined;
     procedureName?: string | undefined;
+    cycleTime?: number | undefined;
     totalSalePrice?: number;
 }
 
@@ -16926,7 +16933,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     /** LocationId */
     locationId!: number;
     /** SerialNumber */
-    serialNumber?: string | undefined;
+    serialNumbers?: string[] | undefined;
     /** Quantity */
     qty!: number;
     /** CustomerLineNumber */
@@ -16956,7 +16963,11 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
             this.purchaseOrderProductId = _data["purchaseOrderProductId"];
             this.customerPurchaseNumber = _data["customerPurchaseNumber"];
             this.locationId = _data["locationId"];
-            this.serialNumber = _data["serialNumber"];
+            if (Array.isArray(_data["serialNumbers"])) {
+                this.serialNumbers = [] as any;
+                for (let item of _data["serialNumbers"])
+                    this.serialNumbers!.push(item);
+            }
             this.qty = _data["qty"];
             this.customerLineNumber = _data["customerLineNumber"];
             this.mttn = _data["mttn"];
@@ -16980,7 +16991,11 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
         data["purchaseOrderProductId"] = this.purchaseOrderProductId;
         data["customerPurchaseNumber"] = this.customerPurchaseNumber;
         data["locationId"] = this.locationId;
-        data["serialNumber"] = this.serialNumber;
+        if (Array.isArray(this.serialNumbers)) {
+            data["serialNumbers"] = [];
+            for (let item of this.serialNumbers)
+                data["serialNumbers"].push(item);
+        }
         data["qty"] = this.qty;
         data["customerLineNumber"] = this.customerLineNumber;
         data["mttn"] = this.mttn;
@@ -17004,7 +17019,7 @@ export interface ICreatePurchaseRequest {
     /** LocationId */
     locationId: number;
     /** SerialNumber */
-    serialNumber?: string | undefined;
+    serialNumbers?: string[] | undefined;
     /** Quantity */
     qty: number;
     /** CustomerLineNumber */
@@ -20413,6 +20428,8 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
     sensorValue?: string | undefined;
     /** Gets or Sets Comment */
     comment?: string | undefined;
+    /** Gets or Sets Comment */
+    sendNCREmail?: string | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskMonitorRequest) {
         if (data) {
@@ -20431,6 +20448,7 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
             this.multiVal = _data["multiVal"];
             this.sensorValue = _data["sensorValue"];
             this.comment = _data["comment"];
+            this.sendNCREmail = _data["sendNCREmail"];
         }
     }
 
@@ -20449,6 +20467,7 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
         data["multiVal"] = this.multiVal;
         data["sensorValue"] = this.sensorValue;
         data["comment"] = this.comment;
+        data["sendNCREmail"] = this.sendNCREmail;
         return data; 
     }
 }
@@ -20467,6 +20486,8 @@ export interface IUpdateWorkOrderTaskMonitorRequest {
     sensorValue?: string | undefined;
     /** Gets or Sets Comment */
     comment?: string | undefined;
+    /** Gets or Sets Comment */
+    sendNCREmail?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

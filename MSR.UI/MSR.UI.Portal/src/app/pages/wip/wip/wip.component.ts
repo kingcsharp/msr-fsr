@@ -119,7 +119,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   showPhotos(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
+    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(true);
@@ -161,7 +161,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   showFiles(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
+    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(true);
@@ -264,7 +264,7 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.selectedReport = reportType;
     if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId) {
       this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id,
-        null, null, null, env.apiVersion).pipe(take(1))
+        null, null, null, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           response.object[0].workOrderTasks.forEach(workOrderTask => {
             workOrderTask.workOrderTaskMonitors.forEach((workOrderTaskMonitor: any) => {
@@ -272,7 +272,7 @@ export class WipComponent implements OnInit, AfterViewInit {
               switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
                 case 'EQUAL':
                   if (workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number') {
-                    workOrderTaskMonitor.pass = parseInt(valSelected) === parseInt(workOrderTaskMonitor.procedureStepMonitor.targetValue);
+                    workOrderTaskMonitor.pass = parseInt(valSelected, 10) === parseInt(workOrderTaskMonitor.procedureStepMonitor.targetValue, 10);
                   } else {
                     workOrderTaskMonitor.pass = valSelected === workOrderTaskMonitor.procedureStepMonitor.targetValue;
                   }

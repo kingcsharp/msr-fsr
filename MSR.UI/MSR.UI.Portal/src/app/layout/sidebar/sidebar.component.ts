@@ -14,9 +14,9 @@ import { responseHandler } from '../../utils/responseHandler';
 import { environment as env } from '../../../environments/environment';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { EnumCRFTabs } from '../../models/enums/EnumCRFTabs';
 declare let jQuery: any;
 declare let Parsley: any;
-// export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
 @Component({
   selector: '[sidebar]',
   templateUrl: './sidebar.template.html',
@@ -159,6 +159,9 @@ export class Sidebar implements OnDestroy {
     }
   ];
 
+  tabMenus = EnumCRFTabs;
+  activeTab: string;
+
   constructor(private renderer: Renderer2, private el: ElementRef, public globals: Globals, private quoteService: QuoteService) {
     const subscription1 = this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.isBuyer !== undefined) {
@@ -183,12 +186,17 @@ export class Sidebar implements OnDestroy {
   }
 
   openCSRDialog() {
+    this.activeTab = EnumCRFTabs.CustomerInfo;
     this.CSRFormValidErrors = [];
     this.CSRToCreate = new CSRJsonModel();
     this.CSRToCreate.SubmittedBy = this.globals.user.fullName;
     this.CSRToCreate.Process = [new ProcessModel()];
     this.CSRToCreate.Parts = [new PartModel()];
     this.showCSRDialog = true;
+  }
+
+  switchTab(activeTab: string) {
+    this.activeTab = activeTab;
   }
 
   onCSRSubmit() {

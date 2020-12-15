@@ -58,6 +58,7 @@ export class InvoiceComponent implements OnInit {
   showInvoiceItems: boolean = true;
   workorders: Array<WorkOrderModel> = new Array<WorkOrderModel>();
   calendarEn: any;
+  isSelectAllWorkOrders: boolean = false;
 
   constructor(public globals: Globals, private invoiceService: InvoiceService, public cg: CommonGrid,
     private elem: ElementRef, private toastr: ToastrService, private customerService: CustomerService,
@@ -111,7 +112,7 @@ export class InvoiceComponent implements OnInit {
     this.globals.showLoader(true);
     this.showWorkOrders = false;
     this.workOrderService.workOrder(null, this.currentInvoice.customerId,
-      this.currentInvoice.locationId, null, null, env.apiVersion).pipe(take(1))
+      this.currentInvoice.locationId, null, null, true, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.forEach((wo) => {
           const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
@@ -120,6 +121,7 @@ export class InvoiceComponent implements OnInit {
           }
         });
         replaceArrayItems(this.workorders, response.object);
+        this.isSelectAllWorkOrders = false;
         this.showWorkOrders = true;
       }));
   }
@@ -194,6 +196,7 @@ export class InvoiceComponent implements OnInit {
     this.currentInvoice = this.getInvoice(invoice);
     this.invoiceItemOptions = JSON.parse(JSON.stringify(this.currentInvoice.invoiceItems));
     this.getWorkOrders();
+    this.isSelectAllWorkOrders = false;
     this.display = true;
   }
 
@@ -206,16 +209,44 @@ export class InvoiceComponent implements OnInit {
         workOrderId: workorder.id,
       });
 
-      pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'purchaseNumber');
-      pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'purchaseNumber');
+      pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'workOrderId');
+      pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'workOrderId');
 
       setTimeout(() => {
         this.showInvoiceItems = true;
       }, 10);
+    } else {
+      this.isSelectAllWorkOrders = false;
     }
   }
 
-  clseDialog() {
+  selectAllWorkOrders(event) {
+    if (event.checked) {
+      this.showInvoiceItems = false;
+
+      this.workorders.forEach((workorder, index) => {
+        this.workorders[index]['checked'] = true;
+        let addInvoiceItem = new InvoiceItemView({
+          purchaseOrderId: workorder.purchase.purchaseOrderId,
+          purchaseNumber: workorder.purchase.customerPurchaseNumber,
+          workOrderId: workorder.id,
+        });
+
+        pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'workOrderId');
+        pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'workOrderId');
+      });
+
+      setTimeout(() => {
+        this.showInvoiceItems = true;
+      }, 10);
+    } else {
+      this.workorders.forEach((_, index) => {
+        this.workorders[index]['checked'] = false;
+      });
+    }
+  }
+
+  closeDialog() {
     this.display = false;
     jQuery('.parsleyjs').parsley().reset();
   }
@@ -231,7 +262,6 @@ export class InvoiceComponent implements OnInit {
 
   onInvoiceSubmit() {
     jQuery('.parsleyjs').parsley().validate();
-    const ctrl = this;
     const isValid = jQuery('.parsleyjs').parsley().isValid();
     if (isValid) {
       this.globals.showLoader(true);
@@ -259,9 +289,9 @@ export class InvoiceComponent implements OnInit {
         } else {
           this.invoiceService.createIndividualInvoices(env.apiVersion, new CreateInvoiceRequest(basicReqData)).pipe(take(1)).subscribe(responseHandler((resp) => {
             if (!resp.hasErrors) {
-              ctrl.data.push(...resp.object);
+              this.data.push(...resp.object);
               this.data = this.data.slice(0);
-              ctrl.clseDialog();
+              this.closeDialog();
             }
           }, () => {
           }));
@@ -269,16 +299,16 @@ export class InvoiceComponent implements OnInit {
       }
       method.pipe(take(1)).subscribe(responseHandler((resp) => {
         if (!resp.hasErrors) {
-          if (ctrl.currentInvoice.id === undefined) {
-            ctrl.data.push(resp.object);
+          if (this.currentInvoice.id === undefined) {
+            this.data.push(resp.object);
             this.data = this.data.slice(0);
           } else {
-            const index = ctrl.data.findIndex(x => x.id === ctrl.currentInvoice.id);
-            ctrl.data.splice(index, 1);
-            ctrl.data.splice(index, 0, resp.object);
+            const index = this.data.findIndex(x => x.id === this.currentInvoice.id);
+            this.data.splice(index, 1);
+            this.data.splice(index, 0, resp.object);
             this.data = this.data.slice(0);
           }
-          ctrl.clseDialog();
+          this.closeDialog();
         }
       }, () => {
 

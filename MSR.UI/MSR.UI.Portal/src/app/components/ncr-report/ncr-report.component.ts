@@ -64,7 +64,7 @@ export class NcrReportComponent implements OnInit {
       }
     });
 
-    this.taskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder)
+    this.taskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
   }
 
   showImagePreviewDialog(fileModel: FileModel) {

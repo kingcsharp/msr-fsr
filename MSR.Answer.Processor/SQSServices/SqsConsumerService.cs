@@ -18,6 +18,7 @@ using System.Linq;
 using MSR.Domain.Helpers;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Abstractions.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MSR.Answer.Processor.SQSServices
 {
@@ -160,7 +161,8 @@ namespace MSR.Answer.Processor.SQSServices
                 var messageType = _eventHandlers.GetReference(envelope.MessageType);
                 var @event = JsonConvert.DeserializeObject(envelope.Message.ToString(), messageType);
 
-                var dispatcher = (EventDispatcher)(_serviceProvider.GetService(typeof(EventDispatcher<>).MakeGenericType(messageType)));
+                using var scope = _serviceProvider.CreateScope();
+                var dispatcher = (EventDispatcher)(scope.ServiceProvider.GetService(typeof(EventDispatcher<>).MakeGenericType(messageType)));
 
                 Task opr = dispatcher.Dispatch((IEvent)@event);
                 await _sqsClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle);

@@ -7036,8 +7036,9 @@ export class WorkOrderService {
      * @param locationId (optional) Get work orders by location ID
      * @param invoiceDate (optional) Get work orders by invoice Date
      * @param assignedToId (optional) Get work orders with ANY tasks assigned to this user ID
+     * @param invoiceableOnly (optional) Get invoiceable work orders only
      */
-    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, invoiceableOnly: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7052,6 +7053,8 @@ export class WorkOrderService {
             url_ += "invoiceDate=" + encodeURIComponent("" + invoiceDate) + "&";
         if (assignedToId !== undefined && assignedToId !== null)
             url_ += "assignedToId=" + encodeURIComponent("" + assignedToId) + "&";
+        if (invoiceableOnly !== undefined && invoiceableOnly !== null)
+            url_ += "invoiceableOnly=" + encodeURIComponent("" + invoiceableOnly) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -16044,6 +16047,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     partName?: string | undefined;
     partNumber?: string | undefined;
     procedureName?: string | undefined;
+    cycleTime?: number | undefined;
     totalSalePrice?: number;
 
     constructor(data?: IPurchaseOrderProductView) {
@@ -16063,6 +16067,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
             this.partName = _data["partName"];
             this.partNumber = _data["partNumber"];
             this.procedureName = _data["procedureName"];
+            this.cycleTime = _data["cycleTime"];
             this.totalSalePrice = _data["totalSalePrice"];
         }
     }
@@ -16082,6 +16087,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
         data["partName"] = this.partName;
         data["partNumber"] = this.partNumber;
         data["procedureName"] = this.procedureName;
+        data["cycleTime"] = this.cycleTime;
         data["totalSalePrice"] = this.totalSalePrice;
         return data; 
     }
@@ -16094,6 +16100,7 @@ export interface IPurchaseOrderProductView {
     partName?: string | undefined;
     partNumber?: string | undefined;
     procedureName?: string | undefined;
+    cycleTime?: number | undefined;
     totalSalePrice?: number;
 }
 

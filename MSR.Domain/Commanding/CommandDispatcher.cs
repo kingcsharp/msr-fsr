@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MSR.Domain.Commanding.Abstractions;
 using System;
 using System.Threading;
@@ -25,7 +26,8 @@ namespace MSR.Domain.Commanding
             }
             try
             {
-                var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>));
+                using var scope = _serviceProvider.CreateScope();
+                var handler = scope.ServiceProvider.GetService(typeof(ICommandHandler<TCommand>));
 
                 if (handler == null)
                 {
