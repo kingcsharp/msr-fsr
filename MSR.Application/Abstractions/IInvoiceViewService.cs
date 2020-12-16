@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace MSR.Application.Abstractions
 {
-    //public interface IInvoiceViewService
-    //{
-    //    Task<InvoiceView>
-    //}
+    public interface IInvoiceViewService
+    {
+    }
 }

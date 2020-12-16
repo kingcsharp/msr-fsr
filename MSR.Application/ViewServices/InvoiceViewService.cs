@@ -9,9 +9,6 @@ namespace MSR.Application.ViewServices
 {
     public class InvoiceViewService
     {
-        //public Task<ICollection<InvoiceView>> GetFilteredInvoices(InvoiceFilter filter)
-        //{
-
-        //}
+       
     }
 }
