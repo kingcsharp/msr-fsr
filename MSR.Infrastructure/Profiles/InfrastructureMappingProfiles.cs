@@ -145,8 +145,8 @@ namespace MSR.Infrastructure.Profiles
 
 
             #region Invoice
-            CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
-            CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
+            CreateMap<Invoice, InvoiceModel>().ReverseMap();
+            CreateMap<InvoiceItem, InvoiceItemModel>().ReverseMap();
             CreateMap<Invoice, InvoiceView>()
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Total))
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))

@@ -17,6 +17,7 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Application.Abstractions;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
@@ -36,14 +37,17 @@ namespace MSR.Answer.API.V1.Controllers
     public class WorkOrderController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
+        private IWorkOrderViewService _workOrderViewService;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="dispatcher"></param>
-        public WorkOrderController(ICommandDispatcher dispatcher)
+        /// <param name="workOrderViewService"></param>
+        public WorkOrderController(ICommandDispatcher dispatcher, IWorkOrderViewService workOrderViewService)
         {
             _dispatcher = dispatcher;
+            _workOrderViewService = workOrderViewService;
         }
 
         /// <summary>
@@ -94,6 +98,23 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToGetWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
+        }
+
+        /// <summary>
+        /// Get InvoiceableWorkOrders
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Invoiceable")]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<InvoiceableWorkOrderView>>))]
+        public async Task<IActionResult> GetInvoiceableWorkOrders()
+        {
+            var workOrders = await _workOrderViewService.GetInvoiceableWorkOrders();
+
+            return Ok(new AuditActionResult<ICollection<InvoiceableWorkOrderView>>()
+            {
+                Object = workOrders,
+                SuccessMessage = "Successfully retrieved Invoiceable WorkOrders"
+            });
         }
 
         [HttpGet("Portal")]

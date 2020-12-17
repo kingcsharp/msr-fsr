@@ -9,6 +9,8 @@ using MSR.Domain.Helpers;
 using MSR.Application.ApplicationServices;
 using MSR.Application.EventServices;
 using MSR.Domain.Abstractions.Services;
+using MSR.Application.Abstractions;
+using MSR.Application.ViewServices;
 
 namespace MSR.Application.Extentions
 {
@@ -16,26 +18,27 @@ namespace MSR.Application.Extentions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<AccountAppService>();
-            services.AddScoped<CustomerAppService>();
-            services.AddScoped<HelpAppService>();
-            services.AddScoped<LocationAppService>();
-            services.AddScoped<MenuAppService>();
-            services.AddScoped<PartAppService>();
-            services.AddScoped<ProcedureAppService>();
-            services.AddScoped<ProcedureStepMonitorAppService>();
-            services.AddScoped<ProcedureStepTemplateAppService>();
-            services.AddScoped<ProcedureTypeAppService>();
-            services.AddScoped<WorkOrderAppService>();
-            services.AddScoped<RoleAppService>();
-            services.AddScoped<UserAppService>();
-            services.AddScoped<WorkflowAppService>();
-            services.AddScoped<EventServiceHandler>();
-            services.AddScoped<TimezoneAppService>();
-            services.AddScoped<IMessageHubClient, MessageHubAppService>();
-            services.AddScoped<ReportAppService>();
-            services.AddScoped<SearchAppService>();
-            
+            services.AddTransient<AccountAppService>();
+            services.AddTransient<CustomerAppService>();
+            services.AddTransient<HelpAppService>();
+            services.AddTransient<LocationAppService>();
+            services.AddTransient<MenuAppService>();
+            services.AddTransient<PartAppService>();
+            services.AddTransient<ProcedureAppService>();
+            services.AddTransient<ProcedureStepMonitorAppService>();
+            services.AddTransient<ProcedureStepTemplateAppService>();
+            services.AddTransient<ProcedureTypeAppService>();
+            services.AddTransient<WorkOrderAppService>();
+            services.AddTransient<RoleAppService>();
+            services.AddTransient<UserAppService>();
+            services.AddTransient<WorkflowAppService>();
+            services.AddTransient<EventServiceHandler>();
+            services.AddTransient<TimezoneAppService>();
+            services.AddTransient<IMessageHubClient, MessageHubAppService>();
+            services.AddTransient<ReportAppService>();
+            services.AddTransient<SearchAppService>();
+            services.AddTransient<IWorkOrderViewService, WorkOrderViewService>();
+
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
