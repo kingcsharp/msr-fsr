@@ -105,12 +105,12 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("Invoiceable")]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<dynamic>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<InvoiceableWorkOrderView>>))]
         public async Task<IActionResult> GetInvoiceableWorkOrders()
         {
             var workOrders = await _workOrderViewService.GetInvoiceableWorkOrders();
 
-            return Ok(new AuditActionResult<ICollection<dynamic>>()
+            return Ok(new AuditActionResult<ICollection<InvoiceableWorkOrderView>>()
             {
                 Object = workOrders,
                 SuccessMessage = "Successfully retrieved Invoiceable WorkOrders"

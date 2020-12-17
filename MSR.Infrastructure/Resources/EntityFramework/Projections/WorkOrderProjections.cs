@@ -25,7 +25,30 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Projections
             ProductId = i.ProductId,
             ProductName = i.Product.Name,
             ActualEndDate = i.ActualEndDate,
-            TotalSalePrice = i.Product.TotalSalePrice
+            TotalSalePrice = i.Product.TotalSalePrice,
+            Status = GetWorkOrderStatusFromTasks(i.WorkOrderTasks)
         };
+
+        private static EnumStatusSteps GetWorkOrderStatusFromTasks(ICollection<WorkOrderTask> tasks)
+        {
+            int[] completed = { 3, 6, 8 };
+            if (tasks.All(x => completed.Contains(x.StatusId)))
+            {
+                return EnumStatusSteps.Complete;
+            }
+
+            if (tasks.Any(x => (x.StatusId == (int)EnumStatusSteps.InProgress || x.StatusId == (int)EnumStatusSteps.Complete)))
+            {
+                return EnumStatusSteps.InProgress;
+            }
+
+            if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.Cancelled))
+            {
+                return EnumStatusSteps.Cancelled;
+            }
+
+            return EnumStatusSteps.WaitingtoStart;
+        }
+
     }
 }

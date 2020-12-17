@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSR.Domain.Commanding.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,5 +20,6 @@ namespace MSR.Domain.Views
         public string ProductName { get; set; }
         public DateTime? ActualEndDate { get; set; }
         public decimal TotalSalePrice { get; set; }
+        public EnumStatusSteps Status { get; set; }
     }
 }

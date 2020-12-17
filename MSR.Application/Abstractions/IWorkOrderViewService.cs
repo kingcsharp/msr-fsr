@@ -8,6 +8,6 @@ namespace MSR.Application.Abstractions
 {
     public interface IWorkOrderViewService
     {
-        Task<ICollection<dynamic>> GetInvoiceableWorkOrders();
+        Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrders();
     }
 }

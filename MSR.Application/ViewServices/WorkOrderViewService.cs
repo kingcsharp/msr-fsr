@@ -23,7 +23,7 @@ namespace MSR.Application.ViewServices
             _mapper = mapper;
         }
 
-        public async Task<ICollection<dynamic>> GetInvoiceableWorkOrders()
+        public async Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrders()
         {
             return await _unitOfWork.Query<WorkOrder>().GetInvoiceableWorkOrders(WorkOrderProjections.InvoiceableWorkOrderView);
 
