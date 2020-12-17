@@ -115,9 +115,7 @@ export class InvoiceComponent implements OnInit {
     this.workOrderService.invoiceable(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         replaceArrayItems(this.allWorkorders, response.object);
-        replaceArrayItems(this.workorders, response.object);
         this.filterWorkorders();
-        this.showWorkOrders = true;
       }));
   }
 
@@ -132,6 +130,8 @@ export class InvoiceComponent implements OnInit {
   }
 
   filterWorkorders() {
+    this.showWorkOrders = false;
+    replaceArrayItems(this.workorders, this.allWorkorders);
     if (this.currentInvoice.customerId) {
       this.workorders = this.workorders.filter(x => x.customerId === this.currentInvoice.customerId);
     }
@@ -139,6 +139,7 @@ export class InvoiceComponent implements OnInit {
       this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
     }
     this.isSelectAllWorkOrders = false;
+    this.showWorkOrders = true;
   }
 
   getCustomers() {
