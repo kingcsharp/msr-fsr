@@ -16,6 +16,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Projections
             CustomerName = i.Purchase.PurchaseOrder.Customer.Name,
             CustomerId = i.Purchase.PurchaseOrder.CustomerId,
             Id = i.Id,
+            PurchaseOrderId = i.Purchase.PurchaseOrderId,
             ReferencePO = i.Purchase.PurchaseOrder.ReferencePO,
             CustomerPurchaseNumber = i.Purchase.CustomerPurchaseNumber,
             CustomerLineNumber = i.Purchase.CustomerLineNumber,
