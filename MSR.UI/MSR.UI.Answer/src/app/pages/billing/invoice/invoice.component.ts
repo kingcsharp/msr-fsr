@@ -115,28 +115,31 @@ export class InvoiceComponent implements OnInit {
     this.workOrderService.invoiceable(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         replaceArrayItems(this.allWorkorders, response.object);
-        replaceArrayItems(this.workorders, response.object);
-        if (this.currentInvoice.customerId) {
-          this.workorders = this.workorders.filter(x => x.customerId === this.currentInvoice.customerId);
-        }
-        if (this.currentInvoice.locationId) {
-          this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
-        }
-        this.isSelectAllWorkOrders = false;
-        this.showWorkOrders = true;
+        this.filterWorkorders();
       }));
   }
 
   locationChanged() {
     this.currentInvoice.locationId = this.currentInvoice.location.id;
-    this.workorders = this.allWorkorders.filter(x => x.locationId === this.currentInvoice.locationId);
-    this.isSelectAllWorkOrders = false;
+    this.filterWorkorders();
   }
 
   customerChanged() {
     this.currentInvoice.customerId = this.currentInvoice.customer.id;
-    this.workorders = this.allWorkorders.filter(x => x.customerId === this.currentInvoice.customerId);
+    this.filterWorkorders();
+  }
+
+  filterWorkorders() {
+    this.showWorkOrders = false;
+    replaceArrayItems(this.workorders, this.allWorkorders);
+    if (this.currentInvoice.customerId) {
+      this.workorders = this.workorders.filter(x => x.customerId === this.currentInvoice.customerId);
+    }
+    if (this.currentInvoice.locationId) {
+      this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
+    }
     this.isSelectAllWorkOrders = false;
+    this.showWorkOrders = true;
   }
 
   getCustomers() {
