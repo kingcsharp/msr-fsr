@@ -38,10 +38,5 @@ namespace MSR.Answer.API.V1.Models
         /// Get work orders with ANY tasks assigned to this user ID
         /// </summary>
         public int? assignedToId { get; set; }
-
-        /// <summary>
-        /// Get invoiceable work orders only
-        /// </summary>
-        public bool? invoiceableOnly { get; set; }
     }
 }

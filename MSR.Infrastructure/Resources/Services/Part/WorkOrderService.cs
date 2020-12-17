@@ -80,13 +80,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 query = query.Where(x => x.CreatedOn <= command.ToDate);
             }
 
-            if (command.invoiceableOnly.HasValue)
-            {
-                List<int> invoicedWorkOrderIds = await _unitOfWork.InvoiceItems.Query().Select(i => i.WorkOrderId).Distinct().ToListAsync();
-
-                query = query.Where(x => invoicedWorkOrderIds.Contains(x.Id) != command.invoiceableOnly.Value);
-            }
-
             // There is a 1-to-1 purchase to work order mapping.  This
             // should be a safe include with minimal impact, and it is
             // required to filter on customer ID.
