@@ -116,26 +116,28 @@ export class InvoiceComponent implements OnInit {
       .subscribe(responseHandler(response => {
         replaceArrayItems(this.allWorkorders, response.object);
         replaceArrayItems(this.workorders, response.object);
-        if (this.currentInvoice.customerId) {
-          this.workorders = this.workorders.filter(x => x.customerId === this.currentInvoice.customerId);
-        }
-        if (this.currentInvoice.locationId) {
-          this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
-        }
-        this.isSelectAllWorkOrders = false;
+        this.filterWorkorders();
         this.showWorkOrders = true;
       }));
   }
 
   locationChanged() {
     this.currentInvoice.locationId = this.currentInvoice.location.id;
-    this.workorders = this.allWorkorders.filter(x => x.locationId === this.currentInvoice.locationId);
-    this.isSelectAllWorkOrders = false;
+    this.filterWorkorders();
   }
 
   customerChanged() {
     this.currentInvoice.customerId = this.currentInvoice.customer.id;
-    this.workorders = this.allWorkorders.filter(x => x.customerId === this.currentInvoice.customerId);
+    this.filterWorkorders();
+  }
+
+  filterWorkorders() {
+    if (this.currentInvoice.customerId) {
+      this.workorders = this.workorders.filter(x => x.customerId === this.currentInvoice.customerId);
+    }
+    if (this.currentInvoice.locationId) {
+      this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
+    }
     this.isSelectAllWorkOrders = false;
   }
 
