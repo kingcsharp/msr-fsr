@@ -10,6 +10,7 @@ namespace MSR.Domain.Views
         public string CustomerName { get; set; }
         public int CustomerId { get; set; }
         public int Id { get; set; }
+        public int purchaseOrderId { get; set; }
         public string ReferencePO { get; set; }
         public string CustomerPurchaseNumber { get; set; }
         public int? CustomerLineNumber { get; set; }

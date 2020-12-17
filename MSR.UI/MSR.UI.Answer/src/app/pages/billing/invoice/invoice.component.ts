@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService, EnumMenuItem,
-  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel, AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest
+  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest, InvoiceableWorkOrderView
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -56,7 +56,8 @@ export class InvoiceComponent implements OnInit {
   combineSelected: boolean = true;
   showWorkOrders: boolean = false;
   showInvoiceItems: boolean = true;
-  workorders: Array<WorkOrderModel> = new Array<WorkOrderModel>();
+  allWorkorders: Array<InvoiceableWorkOrderView> = new Array <InvoiceableWorkOrderView>();
+  workorders: Array<InvoiceableWorkOrderView> = new Array<InvoiceableWorkOrderView>();
   calendarEn: any;
   isSelectAllWorkOrders: boolean = false;
 
@@ -86,14 +87,14 @@ export class InvoiceComponent implements OnInit {
     this.gridWoSettings = [
       new ColumnsSaved({ id: 'customerName', label: 'Customer Name', visible: true }),
       new ColumnsSaved({ id: 'id', label: 'WorkOrder #', visible: true }),
-      new ColumnsSaved({ id: 'purchase.purchaseOrder.referencePO', label: 'PO #', visible: true }),
-      new ColumnsSaved({ id: 'purchase.customerPurchaseNumber', label: 'Customer Puchase Number', visible: true }),
-      new ColumnsSaved({ id: 'purchase.customerLineNumber', label: 'Customer Line', visible: true }),
+      new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true }),
+      new ColumnsSaved({ id: 'customerPurchaseNumber', label: 'Customer Puchase Number', visible: true }),
+      new ColumnsSaved({ id: 'customerLineNumber', label: 'Customer Line', visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Work Order Item', visible: true }),
-      new ColumnsSaved({ id: 'location.name', label: 'Location', visible: true }),
-      new ColumnsSaved({ id: 'product.name', label: 'Product Name', visible: true }),
+      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true }),
+      new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true }),
       new ColumnsSaved({ id: 'actualEndDate', label: 'Work Order Complete Date', visible: true }),
-      new ColumnsSaved({ id: 'product.totalSalePrice', label: 'Total', visible: true })
+      new ColumnsSaved({ id: 'totalSalePrice', label: 'Total', visible: true })
     ];
 
     this.isKitStatus = [{ label: 'Yes', value: true },
@@ -111,16 +112,16 @@ export class InvoiceComponent implements OnInit {
   getWorkOrders() {
     this.globals.showLoader(true);
     this.showWorkOrders = false;
-    this.workOrderService.workOrder(null, this.currentInvoice.customerId,
-      this.currentInvoice.locationId, null, null, true, env.apiVersion).pipe(take(1))
+    this.workOrderService.invoiceable(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.object.forEach((wo) => {
-          const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
-          if (firstPartWithNullParent !== undefined) {
-            wo.serialNumber = firstPartWithNullParent.serialNumber;
-          }
-        });
+        replaceArrayItems(this.allWorkorders, response.object);
         replaceArrayItems(this.workorders, response.object);
+        if (this.currentInvoice.customerId) {
+          this.workorders = this.workorders.filter(x => x.customerId === this.currentInvoice.customerId);
+        }
+        if (this.currentInvoice.locationId) {
+          this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
+        }
         this.isSelectAllWorkOrders = false;
         this.showWorkOrders = true;
       }));
@@ -128,12 +129,14 @@ export class InvoiceComponent implements OnInit {
 
   locationChanged() {
     this.currentInvoice.locationId = this.currentInvoice.location.id;
-    this.getWorkOrders();
+    this.workorders = this.allWorkorders.filter(x => x.locationId === this.currentInvoice.locationId);
+    this.isSelectAllWorkOrders = false;
   }
 
   customerChanged() {
     this.currentInvoice.customerId = this.currentInvoice.customer.id;
-    this.getWorkOrders();
+    this.workorders = this.allWorkorders.filter(x => x.customerId === this.currentInvoice.customerId);
+    this.isSelectAllWorkOrders = false;
   }
 
   getCustomers() {
@@ -200,12 +203,12 @@ export class InvoiceComponent implements OnInit {
     this.display = true;
   }
 
-  selectWorkOrder(ev, workorder: WorkOrderModel) {
+  selectWorkOrder(ev, workorder: InvoiceableWorkOrderView) {
     if (ev.checked) {
       this.showInvoiceItems = false;
       let addInvoiceItem = new InvoiceItemView({
-        purchaseOrderId: workorder.purchase.purchaseOrderId,
-        purchaseNumber: workorder.purchase.customerPurchaseNumber,
+        purchaseOrderId: workorder.purchaseOrderId,
+        purchaseNumber: workorder.customerPurchaseNumber,
         workOrderId: workorder.id,
       });
 
@@ -227,8 +230,8 @@ export class InvoiceComponent implements OnInit {
       this.workorders.forEach((workorder, index) => {
         this.workorders[index]['checked'] = true;
         let addInvoiceItem = new InvoiceItemView({
-          purchaseOrderId: workorder.purchase.purchaseOrderId,
-          purchaseNumber: workorder.purchase.customerPurchaseNumber,
+          purchaseOrderId: workorder.purchaseOrderId,
+          purchaseNumber: workorder.customerPurchaseNumber,
           workOrderId: workorder.id,
         });
 

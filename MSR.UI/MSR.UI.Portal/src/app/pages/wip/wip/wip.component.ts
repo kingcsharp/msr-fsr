@@ -119,7 +119,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   showPhotos(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null, null,
+    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(true);
@@ -161,7 +161,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   showFiles(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null, null,
+    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(true);
@@ -264,7 +264,7 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.selectedReport = reportType;
     if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId) {
       this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id,
-        null, null, null, null, env.apiVersion).pipe(take(1))
+        null, null, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           response.object[0].workOrderTasks.forEach(workOrderTask => {
             workOrderTask.workOrderTaskMonitors.forEach((workOrderTaskMonitor: any) => {

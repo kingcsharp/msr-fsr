@@ -28,7 +28,7 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
 
     this.globals.addRequestToIgnore('v1/WorkOrder?assignedToId');
      this.workOrderService.workOrder(null, null, null, null,
-      this.globals.getCurrentUser().id, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+      this.globals.getCurrentUser().id, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       let workOrders = <Array<WorkOrderModel>>response.object;
       this.workOrdersAvailable = new Array<WorkOrderItem>();
