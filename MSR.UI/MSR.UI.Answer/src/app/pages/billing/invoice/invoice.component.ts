@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService, EnumMenuItem,
-  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService,AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest, InvoiceableWorkOrderView
+  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest, InvoiceableWorkOrderView
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
