@@ -7101,6 +7101,60 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfWorkOrderModel>(<any>null);
     }
 
+    /**
+     * Get InvoiceableWorkOrders
+     */
+    invoiceable(version: string): Observable<AuditActionResultOfICollectionOfInvoiceableWorkOrderView> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/Invoiceable";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processInvoiceable(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processInvoiceable(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfInvoiceableWorkOrderView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfInvoiceableWorkOrderView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processInvoiceable(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfInvoiceableWorkOrderView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfInvoiceableWorkOrderView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfInvoiceableWorkOrderView>(<any>null);
+    }
+
     portal(customerId: number | null | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | null | undefined, toDate: Date | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Portal?";
         if (version === undefined || version === null)
@@ -19696,6 +19750,155 @@ export class AuditActionResultOfICollectionOfWorkOrderModel extends AuditActionR
 /** Base class for an API call with a typed result */
 export interface IAuditActionResultOfICollectionOfWorkOrderModel extends IAuditActionResult {
     object?: WorkOrderModel[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfInvoiceableWorkOrderView extends AuditActionResult implements IAuditActionResultOfICollectionOfInvoiceableWorkOrderView {
+    object?: InvoiceableWorkOrderView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfInvoiceableWorkOrderView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(InvoiceableWorkOrderView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfInvoiceableWorkOrderView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfInvoiceableWorkOrderView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfInvoiceableWorkOrderView extends IAuditActionResult {
+    object?: InvoiceableWorkOrderView[] | undefined;
+}
+
+export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
+    customerName?: string | undefined;
+    customerId?: number;
+    id?: number;
+    purchaseOrderId?: number;
+    referencePO?: string | undefined;
+    customerPurchaseNumber?: string | undefined;
+    customerLineNumber?: number | undefined;
+    serialNumber?: string | undefined;
+    locationId?: number;
+    locationName?: string | undefined;
+    productId?: number;
+    productName?: string | undefined;
+    actualEndDate?: Date | undefined;
+    totalSalePrice?: number;
+    status?: EnumStatusSteps;
+
+    constructor(data?: IInvoiceableWorkOrderView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.customerName = _data["customerName"];
+            this.customerId = _data["customerId"];
+            this.id = _data["id"];
+            this.purchaseOrderId = _data["purchaseOrderId"];
+            this.referencePO = _data["referencePO"];
+            this.customerPurchaseNumber = _data["customerPurchaseNumber"];
+            this.customerLineNumber = _data["customerLineNumber"];
+            this.serialNumber = _data["serialNumber"];
+            this.locationId = _data["locationId"];
+            this.locationName = _data["locationName"];
+            this.productId = _data["productId"];
+            this.productName = _data["productName"];
+            this.actualEndDate = _data["actualEndDate"] ? new Date(_data["actualEndDate"].toString()) : <any>undefined;
+            this.totalSalePrice = _data["totalSalePrice"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): InvoiceableWorkOrderView {
+        data = typeof data === 'object' ? data : {};
+        let result = new InvoiceableWorkOrderView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["customerName"] = this.customerName;
+        data["customerId"] = this.customerId;
+        data["id"] = this.id;
+        data["purchaseOrderId"] = this.purchaseOrderId;
+        data["referencePO"] = this.referencePO;
+        data["customerPurchaseNumber"] = this.customerPurchaseNumber;
+        data["customerLineNumber"] = this.customerLineNumber;
+        data["serialNumber"] = this.serialNumber;
+        data["locationId"] = this.locationId;
+        data["locationName"] = this.locationName;
+        data["productId"] = this.productId;
+        data["productName"] = this.productName;
+        data["actualEndDate"] = this.actualEndDate ? this.actualEndDate.toISOString() : <any>undefined;
+        data["totalSalePrice"] = this.totalSalePrice;
+        data["status"] = this.status;
+        return data; 
+    }
+}
+
+export interface IInvoiceableWorkOrderView {
+    customerName?: string | undefined;
+    customerId?: number;
+    id?: number;
+    purchaseOrderId?: number;
+    referencePO?: string | undefined;
+    customerPurchaseNumber?: string | undefined;
+    customerLineNumber?: number | undefined;
+    serialNumber?: string | undefined;
+    locationId?: number;
+    locationName?: string | undefined;
+    productId?: number;
+    productName?: string | undefined;
+    actualEndDate?: Date | undefined;
+    totalSalePrice?: number;
+    status?: EnumStatusSteps;
+}
+
+export enum EnumStatusSteps {
+    Approved = 1,
+    InProgress = 2,
+    Complete = 3,
+    Cancelled = 4,
+    Pending = 5,
+    Rejected = 6,
+    Open = 7,
+    Closed = 8,
+    Requested = 9,
+    Assigned = 10,
+    WaitingtoStart = 11,
 }
 
 /** Base class for an API call with a typed result */

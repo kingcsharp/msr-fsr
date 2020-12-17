@@ -261,25 +261,25 @@
               <th grid-input-filter [dt]="dt2" searchField="id" [hidden]="!cg.isVisibleCol('id',gridWoSettings)"
                 [gridSettings]="gridWoSettings">
               </th>
-              <th grid-input-filter [dt]="dt2" searchField="purchase.purchaseOrder.referencePO"
-                [hidden]="!cg.isVisibleCol('purchase.purchaseOrder.referencePO',gridWoSettings)" [gridSettings]="gridWoSettings">
+              <th grid-input-filter [dt]="dt2" searchField="referencePO"
+                [hidden]="!cg.isVisibleCol('referencePO',gridWoSettings)" [gridSettings]="gridWoSettings">
               </th>
-              <th grid-input-filter [dt]="dt2" searchField="purchase.customerPurchaseNumber"
-                [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)"
+              <th grid-input-filter [dt]="dt2" searchField="customerPurchaseNumber"
+                [hidden]="!cg.isVisibleCol('customerPurchaseNumber',gridWoSettings)"
                 [gridSettings]="gridWoSettings">
               </th>
-              <th grid-input-filter [dt]="dt2" searchField="purchase.customerLineNumber"
-                [hidden]="!cg.isVisibleCol('purchase.customerLineNumber',gridWoSettings)"
+              <th grid-input-filter [dt]="dt2" searchField="customerLineNumber"
+                [hidden]="!cg.isVisibleCol('customerLineNumber',gridWoSettings)"
                 [gridSettings]="gridWoSettings">
               </th>
               <th grid-input-filter [dt]="dt2" searchField="serialNumber"
                 [hidden]="!cg.isVisibleCol('serialNumber',gridWoSettings)" [gridSettings]="gridWoSettings">
               </th>
-              <th grid-input-filter [dt]="dt2" searchField="location.name"
-                [hidden]="!cg.isVisibleCol('location.name',gridWoSettings)" [gridSettings]="gridWoSettings">
+              <th grid-input-filter [dt]="dt2" searchField="locationName"
+                [hidden]="!cg.isVisibleCol('locationName',gridWoSettings)" [gridSettings]="gridWoSettings">
               </th>
-              <th grid-input-filter [dt]="dt2" searchField="product.name"
-                [hidden]="!cg.isVisibleCol('product.name',gridWoSettings)" [gridSettings]="gridWoSettings">
+              <th grid-input-filter [dt]="dt2" searchField="productName"
+                [hidden]="!cg.isVisibleCol('productName',gridWoSettings)" [gridSettings]="gridWoSettings">
               </th>
               <th [hidden]="!cg.isVisibleCol('actualEndDate',gridWoSettings)">
                 <div class="position-relative" tooltip="Search by Work Order Complete Date">
@@ -287,8 +287,8 @@
                   </pcalendar-wrapper>
                 </div>
               </th>
-              <th grid-input-filter [dt]="dt2" searchField="product.totalSalePrice"
-                [hidden]="!cg.isVisibleCol('product.totalSalePrice',gridWoSettings)" [gridSettings]="gridWoSettings">
+              <th grid-input-filter [dt]="dt2" searchField="totalSalePrice"
+                [hidden]="!cg.isVisibleCol('totalSalePrice',gridWoSettings)" [gridSettings]="gridWoSettings">
               </th>
             </tr>
           </ng-template>
@@ -305,29 +305,29 @@
               <td class="text-capitalize" [hidden]="!cg.isVisibleCol('id',gridWoSettings)">
                 {{workOrderModel.id}}
               </td>
-              <td class="text-capitalize" [hidden]="!cg.isVisibleCol('purchase.purchaseOrder.referencePO',gridWoSettings)">
-                {{workOrderModel.purchase.purchaseOrder.referencePO}}
+              <td class="text-capitalize" [hidden]="!cg.isVisibleCol('referencePO',gridWoSettings)">
+                {{workOrderModel.referencePO}}
               </td>
-              <td class="text-capitalize" [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)">
-                {{workOrderModel.purchase.customerPurchaseNumber}}
+              <td class="text-capitalize" [hidden]="!cg.isVisibleCol('customerPurchaseNumber',gridWoSettings)">
+                {{workOrderModel.customerPurchaseNumber}}
               </td>
-              <td class="text-capitalize" [hidden]="!cg.isVisibleCol('purchase.customerLineNumber',gridWoSettings)">
-                {{workOrderModel.purchase.customerLineNumber}}
+              <td class="text-capitalize" [hidden]="!cg.isVisibleCol('customerLineNumber',gridWoSettings)">
+                {{workOrderModel.customerLineNumber}}
               </td>
               <td class="text-capitalize" [hidden]="!cg.isVisibleCol('serialNumber',gridWoSettings)">
                 {{workOrderModel.serialNumber}}
               </td>
-              <td [hidden]="!cg.isVisibleCol('location.name',gridWoSettings)" class="text-capitalize">
-                {{workOrderModel.location.name}}
+              <td [hidden]="!cg.isVisibleCol('locationName',gridWoSettings)" class="text-capitalize">
+                {{workOrderModel.locationName}}
               </td>
-              <td [hidden]="!cg.isVisibleCol('product.name',gridWoSettings)" class="text-capitalize">
-                {{workOrderModel.product.name }}
+              <td [hidden]="!cg.isVisibleCol('productName',gridWoSettings)" class="text-capitalize">
+                {{workOrderModel.productName }}
               </td>
               <td [hidden]="!cg.isVisibleCol('actualEndDate',gridWoSettings)" class="text-capitalize">
                 {{workOrderModel.actualEndDate | userTimezone }}
               </td>
-              <td [hidden]="!cg.isVisibleCol('product.totalSalePrice',gridWoSettings)" class="text-capitalize">
-                {{workOrderModel.product.totalSalePrice | currency}}
+              <td [hidden]="!cg.isVisibleCol('totalSalePrice',gridWoSettings)" class="text-capitalize">
+                {{workOrderModel.totalSalePrice | currency}}
               </td>
             </tr>
           </ng-template>
