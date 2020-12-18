@@ -3,14 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MSR.Answer.API.Extentions;
-using MSR.Answer.API.Infrastructure.Converters;
-using NSwag;
-using NSwag.Generation.Processors.Security;
-using System.Linq;
-using System.Net;
+using MSR.Application.Hubs;
 
-namespace MSR.Answer.API
+namespace MSR.Answer.MessageHub
 {
     public class Startup
     {
@@ -31,37 +26,6 @@ namespace MSR.Answer.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
-            });
-
-            services.AddApiVersioning();
-
-            services.AddApiServices(Configuration);
-            services.AddOpenApiDocument(settings =>
-            {
-                settings.DocumentName = "Answer3";
-                settings.PostProcess = document =>
-                {
-                    document.Info.Version = "v1";
-                    document.Info.Title = "MSR API";
-                    document.Info.Description = "REST API Answer 3";
-                };
-
-                settings.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
-                settings.AddSecurity("Bearer", Enumerable.Empty<string>(),
-                    new OpenApiSecurityScheme()
-                    {
-                        Type = OpenApiSecuritySchemeType.ApiKey,
-                        Name = nameof(Authorization),
-                        In = OpenApiSecurityApiKeyLocation.Header,
-                        Description = "Copy this into the value field: Bearer {token}"
-                    }
-                );
-            });
             services.AddSignalR();
         }
 
@@ -88,15 +52,13 @@ namespace MSR.Answer.API
                     .AllowAnyHeader();
             });
 
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapHub<Application.Hubs.MessageHub>("/msg");
             });
         }
     }

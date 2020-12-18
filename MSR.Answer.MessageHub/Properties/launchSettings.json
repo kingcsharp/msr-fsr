@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "MSR.Answer.MessageHub": {
+      "commandName": "IISExpress",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Localhost"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
