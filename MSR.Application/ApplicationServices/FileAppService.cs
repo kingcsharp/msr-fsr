@@ -37,7 +37,8 @@ namespace MSR.Application.ApplicationServices
             ImportUnknown,
             ImportTextCSV,
             ImportTextPlain,
-            ImportExcel
+            ImportExcel,
+            ImportOctetStream,
         };
         static ImportFileType ImportFileTypeFromString(string type)
         {
@@ -49,6 +50,8 @@ namespace MSR.Application.ApplicationServices
                 case "APPLICATION/VND.MS-EXCEL":
                 case "APPLICATION/VND.OPENXMLFORMATS-OFFICEDOCUMENT.SPREADSHEETML.SHEET":
                     return ImportFileType.ImportExcel;
+                case "APPLICATION/OCTET-STREAM":
+                    return ImportFileType.ImportOctetStream;
                 default:
                     return ImportFileType.ImportUnknown;
             }
@@ -125,6 +128,7 @@ namespace MSR.Application.ApplicationServices
                         binData = csvData.ToCharArray().Select(x => (byte)x).ToArray();
                     break;
                 case ImportFileType.ImportExcel:
+                case ImportFileType.ImportOctetStream:
                     binData = base64File.FileContents;
                     break;
                 default:
