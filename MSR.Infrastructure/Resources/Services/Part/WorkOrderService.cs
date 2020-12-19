@@ -1003,6 +1003,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             int[] inProgress = {
                 (int)EnumStatusSteps.InProgress,
                 (int)EnumStatusSteps.Approved,
+                (int)EnumStatusSteps.WaitingtoStart,
                 (int)EnumStatusSteps.Complete
             };
             string status;
