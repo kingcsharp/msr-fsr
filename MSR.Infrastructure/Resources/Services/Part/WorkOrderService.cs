@@ -999,7 +999,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 (int)EnumStatusSteps.Closed,
                 (int)EnumStatusSteps.Cancelled,
             };
-
+            int[] waiting = {
+                (int)EnumStatusSteps.Approved,
+                (int)EnumStatusSteps.WaitingtoStart
+            };
             int[] inProgress = {
                 (int)EnumStatusSteps.InProgress,
                 (int)EnumStatusSteps.Approved,
@@ -1011,7 +1014,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
             }
-            else if (tasks.All(x => x.StatusId == (int)EnumStatusSteps.Approved))
+            else if (tasks.All(x => waiting.Contains(x.StatusId)))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.WaitingtoStart);
             }
