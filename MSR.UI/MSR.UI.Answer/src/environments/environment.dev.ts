@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   url: 'https://qa-api.answer.msr-fsr.com',
   API_BASE_URL: 'https://qa-api.answer.msr-fsr.com',
-  MESSAGE_URL: 'FIXME',
+  MESSAGE_URL: 'https://qa-message.answer.msr-fsr.com',
   hmr: false,
   backend: true,
   version: 'v1',

@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   url: 'https://stage-api.answer.msr-fsr.com',
   API_BASE_URL: 'https://stage-api.answer.msr-fsr.com',
-  MESSAGE_URL: 'FIXME',
+  MESSAGE_URL: 'https://stage-message.answer.msr-fsr.com',
   hmr: false,
   backend: true,
   version: 'v1',
