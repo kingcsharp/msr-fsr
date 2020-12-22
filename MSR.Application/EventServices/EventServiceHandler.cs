@@ -29,7 +29,6 @@ namespace MSR.Application.EventServices
         private readonly IProcedureService _procedureService;
         private IQuoteService _quoteService;
         private IMessageHubClient _messageHub;
-        private GeneralInformation _processorConfig;
         private IWorkOrderService _workOrderService;
         private IMapper _mapper;
         private ILogger _logger;
@@ -51,7 +50,6 @@ namespace MSR.Application.EventServices
             _partService = partService;
             _procedureService = procedureService;
             _quoteService = quoteService;
-            _processorConfig = processorConfig;
             _messageHub = messageHub;
             _workOrderService = workOrderService;
             _mapper = mapper;
@@ -60,9 +58,6 @@ namespace MSR.Application.EventServices
 
         public async Task HandleAsync(ImportEvent handledEvent, CancellationToken cancellationToken = default)
         {
-            Uri baseUri = new Uri(_processorConfig.APIURL);
-            UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
-            await _messageHub.Connect(hubUri.ToString());
             int count;
 
             try
@@ -127,9 +122,6 @@ namespace MSR.Application.EventServices
         {
             try
             {
-                Uri baseUri = new Uri(_processorConfig.APIURL);
-                UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
-                await _messageHub.Connect(hubUri.ToString());
 
                 var command = _mapper.Map<CreateWorkOrder>(handledEvent.purchaseInfo);
                 command.ScheduledStartDate = DateTime.Now;

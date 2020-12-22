@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using MSR.Application.Hubs;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -25,12 +25,12 @@ namespace MSR.Answer.API.V1.Controllers
     public class ProcedureController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
+        private readonly IMessageHubClient _messageHub;
 
         /// <summary>
         /// Procedure Controller
         /// </summary>
-        public ProcedureController(ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public ProcedureController(ICommandDispatcher dispatcher, IMessageHubClient messageHub)
         {
             _dispatcher = dispatcher;
             _messageHub = messageHub;
@@ -49,7 +49,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToCreateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            await SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
+            SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
 
             return ret.ToOkObjectResponse<Procedure>("Procedure successfully added");
         }
@@ -145,7 +145,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToUpdateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            await SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
+            SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
             return ret.ToOkObjectResponse<Procedure>("Procedure successfully updated");
         }
 
@@ -173,7 +173,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             if (!string.IsNullOrWhiteSpace(procStep.ApprovalStatus))
             {
-                await SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
+                SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
                 response = $"Procedure step {action} Pending Approval";
             }
 

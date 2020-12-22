@@ -30,7 +30,6 @@ namespace MSR.Answer.Processor.SQSServices
         private readonly ICommandDispatcher _dispatcher;
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventHandlers _eventHandlers;
-        private GeneralInformation _processorConfig;
         private string _queueURL;
 
         private CancellationTokenSource _tokenSource;
@@ -53,7 +52,6 @@ namespace MSR.Answer.Processor.SQSServices
             _dispatcher = dispatcher;
             _serviceProvider = serviceProvider;
             _messageHub = messageHub;
-            _processorConfig = processorConfig;
 
         }
 
@@ -96,9 +94,6 @@ namespace MSR.Answer.Processor.SQSServices
         {
             try
             {
-                Uri baseUri = new Uri(_processorConfig.APIURL);
-                UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
-                await _messageHub.Connect(hubUri.ToString());
 
                 while (!_tokenSource.Token.IsCancellationRequested)
                 {

@@ -12,8 +12,8 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
-using MSR.Application.Hubs;
 using MSR.Domain.Commands;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -23,9 +23,9 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private const string PrivilegeApiName = "PurchaseOrder";
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
+        private readonly IMessageHubClient _messageHub;
 
-        public PurchaseOrderController(ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public PurchaseOrderController(ICommandDispatcher dispatcher, IMessageHubClient  messageHub)
         {
             _dispatcher = dispatcher;
             _messageHub = messageHub;
@@ -86,7 +86,7 @@ namespace MSR.Answer.API.V1.Controllers
             {
                 response = $"PurchaseOrder {action} Successful";
             }
-            await SendApprovalNotificationHubMessage(EnumApprovalTables.PurchaseOrderApproval, _messageHub);
+            SendApprovalNotificationHubMessage(EnumApprovalTables.PurchaseOrderApproval, _messageHub);
 
             return response;
         }

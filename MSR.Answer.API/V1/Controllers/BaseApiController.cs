@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -22,16 +22,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// Sends message to the ui notifying of a pending approval
         /// </summary>
         /// <returns></returns>
-        protected async Task SendApprovalNotificationHubMessage(EnumApprovalTables approvalTable, IHubContext<MessageHub> messageHub, int count = 1)
+        protected void SendApprovalNotificationHubMessage(EnumApprovalTables approvalTable, IMessageHubClient messageHub, int count = 1)
         {
-            if (!CurrentUser.CanApproveActivity(approvalTable))
+            messageHub.SendNotification(Guid.NewGuid(), new PendingNotificationItem()
             {
-                await messageHub.Clients.All.SendAsync("WorkflowNotification", Guid.NewGuid(), new PendingNotificationItem()
-                {
-                    Table = (int)approvalTable,
-                    Count = count
-                });
-            }
+                Table = (int)approvalTable,
+                Count = count
+            });
         }
     }
 }

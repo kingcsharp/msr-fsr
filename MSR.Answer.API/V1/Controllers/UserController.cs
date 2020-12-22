@@ -9,7 +9,6 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
-using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -17,6 +16,7 @@ using MSR.Domain.Models;
 using MSR.Domain.Views;
 using NSwag.Annotations;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -29,14 +29,14 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
+        private readonly IMessageHubClient _messageHub;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="dispatcher"></param>
-        public UserController(ILogger<UserController> logger, ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public UserController(ILogger<UserController> logger, ICommandDispatcher dispatcher, IMessageHubClient messageHub)
         {
             _logger = logger;
             _dispatcher = dispatcher;
@@ -98,7 +98,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            await SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval,_messageHub);
+            SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval,_messageHub);
 
             return ret.ToOkObjectResponse<UserModel>("User has been successfully created.");
         }
@@ -114,7 +114,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            await SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
+            SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
 
             return ret.ToOkObjectResponse<UserModel>("User has been successfully updated.");
         }
@@ -135,7 +135,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            await SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
+            SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
 
             return ret.ToOkObjectResponse("User has been Deactivated");
         }

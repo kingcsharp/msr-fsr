@@ -11,8 +11,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Filters;
-using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -22,9 +22,9 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
+        private readonly IMessageHubClient _messageHub;
         //PendingApprovals
-        public WorkflowPendingApprovalController(ILogger<WorkflowPendingApprovalController> logger, ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public WorkflowPendingApprovalController(ILogger<WorkflowPendingApprovalController> logger, ICommandDispatcher dispatcher, IMessageHubClient  messageHub)
         {
             _logger = logger;
             _dispatcher = dispatcher;
@@ -58,7 +58,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
+            SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
 
             return ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was approved successfully.");
         }
@@ -70,7 +70,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
+            SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
 
             var result = ret.ToOkObjectResponse("Pending Approval was cancelled successfully.");
             return result;

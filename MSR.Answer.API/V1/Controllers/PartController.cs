@@ -4,7 +4,6 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
-using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -12,6 +11,7 @@ using MSR.Domain.Models;
 using NSwag.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -23,13 +23,13 @@ namespace MSR.Answer.API.V1.Controllers
     public class PartController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
+        private readonly IMessageHubClient _messageHub;
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="dispatcher"></param>
-        public PartController(ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public PartController(ICommandDispatcher dispatcher, IMessageHubClient messageHub)
         {
             _dispatcher = dispatcher;
             _messageHub = messageHub;
@@ -70,7 +70,7 @@ namespace MSR.Answer.API.V1.Controllers
             }
             else
             {
-                await SendApprovalNotificationHubMessage(EnumApprovalTables.PartApproval, _messageHub);
+                SendApprovalNotificationHubMessage(EnumApprovalTables.PartApproval, _messageHub);
 
             }
             return ret.ToOkObjectResponse<PartModel>(message);
@@ -95,7 +95,7 @@ namespace MSR.Answer.API.V1.Controllers
             }
             else
             {
-                await SendApprovalNotificationHubMessage(EnumApprovalTables.PartApproval, _messageHub);
+                SendApprovalNotificationHubMessage(EnumApprovalTables.PartApproval, _messageHub);
             }
             return ret.ToOkObjectResponse<PartModel>(message);
         }

@@ -13,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.SignalR;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
-using MSR.Application.Hubs;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -23,9 +23,9 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
+        private readonly IMessageHubClient _messageHub;
 
-        public LocationController(ILogger<LocationController> logger, ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public LocationController(ILogger<LocationController> logger, ICommandDispatcher dispatcher, IMessageHubClient messageHub)
         {
             _logger = logger;
             _dispatcher = dispatcher;
@@ -104,7 +104,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             if (!string.IsNullOrWhiteSpace(location.Status))
             {
-                await SendApprovalNotificationHubMessage(EnumApprovalTables.LocationApproval, _messageHub);
+                SendApprovalNotificationHubMessage(EnumApprovalTables.LocationApproval, _messageHub);
                 response = $"Location {action} Pending Approval";
             }
 

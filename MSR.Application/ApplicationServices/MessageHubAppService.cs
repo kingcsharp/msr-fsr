@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
 using System;
 using MSR.Domain.Hub;
+using MSR.Domain.Models;
+using MSR.Domain.Models.Config;
 using Microsoft.Extensions.Logging;
 
 namespace MSR.Application.ApplicationServices
@@ -11,62 +13,71 @@ namespace MSR.Application.ApplicationServices
     {
         private HubConnection connection = null;
         private ILogger _logger;
+        private string _url;
 
         public static int pingCounterSend = 0;
         public static int pingCounterRcv = 0;
 
-        public MessageHubAppService(ILogger<MessageHubAppService> logger)
+        public MessageHubAppService(ILogger<MessageHubAppService> logger, GeneralInformation config)
         {
+            Uri baseUri = new Uri(config.MessageURL);
+            UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
+            _url = hubUri.ToString();
             _logger = logger;
         }
 
-        public async Task Connect(string url)
+        public async Task Connect()
+        {
+            if (connection != null)
+            {
+                return;
+            }
+            connection = new HubConnectionBuilder()
+                .WithAutomaticReconnect()
+                .WithUrl(_url)
+                .Build();
+
+            connection.Closed += async (error) =>
+            {
+                await Task.Delay(new Random().Next(0, 5) * 1000);
+                await connection.StartAsync();
+            };
+
+            await connection.StartAsync();
+
+            connection.On<Toaster>("ToasterMessage", (msg) =>
+            {
+                if (_logger != null)
+                {
+                    if (pingCounterRcv % 20 == 0)
+                    {
+                        _logger.LogDebug($"Received SignalR Heartbeat {msg.Message} " +
+                            $"(repeated {pingCounterRcv} times)");
+                        pingCounterRcv = 0;
+                    }
+                    pingCounterRcv += 1;
+                }
+            });
+        }
+
+        public async void SendNotification(Guid guid, PendingNotificationItem message)
         {
             try
             {
-                if (connection != null)
-                {
-                    return;
-                }
-                connection = new HubConnectionBuilder()
-                    .WithAutomaticReconnect()
-                    .WithUrl(url)
-                    .Build();
-
-                connection.Closed += async (error) =>
-                {
-                    await Task.Delay(new Random().Next(0, 5) * 1000);
-                    await connection.StartAsync();
-                };
-
-                await connection.StartAsync();
-
-                connection.On<Toaster>("ToasterMessage", (msg) =>
-                {
-                    if (_logger != null)
-                    {
-                        if (pingCounterRcv % 20 == 0)
-                        {
-                            _logger.LogDebug($"Received SignalR Heartbeat {msg.Message} " +
-                                $"(repeated {pingCounterRcv} times)");
-                            pingCounterRcv = 0;
-                        }
-                        pingCounterRcv += 1;
-                    }
-                });
+                await Connect();
+                connection.InvokeAsync("WorkflowMessage", guid, message);
             }
             catch(Exception ex)
             {
-                //If this fails swallow the error
                 _logger.LogError(ex, ex.Message);
             }
-
         }
 
-        public void SendNotification(string userId, Toaster message)
+        public async void SendNotification(string userId, Toaster message)
         {
             try
             {
+                await Connect();
                 connection.InvokeAsync("SendMessage", userId, message);
 
                 // Log the message.  If it's a ping, show it only once

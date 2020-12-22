@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
-using MSR.Application.Hubs;
 using MSR.Domain.Models;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -21,9 +21,9 @@ namespace MSR.Answer.API.V1.Controllers
     public class CustomerController : BaseApiController
     {
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
+        private readonly IMessageHubClient _messageHub;
 
-        public CustomerController(ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public CustomerController(ICommandDispatcher dispatcher, IMessageHubClient messageHub)
         {
             _dispatcher = dispatcher;
             _messageHub = messageHub;
@@ -75,7 +75,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             if (!string.IsNullOrWhiteSpace(customer.Status))
             {
-                await SendApprovalNotificationHubMessage(EnumApprovalTables.CustomerApproval, _messageHub);
+                SendApprovalNotificationHubMessage(EnumApprovalTables.CustomerApproval, _messageHub);
 
                 response = $"Customer {action} Pending Approval";
             }
