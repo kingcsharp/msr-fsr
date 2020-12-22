@@ -7,7 +7,7 @@ using System.Web.Http;
 using MSR.Domain.Hub;
 using MSR.Domain.Models;
 
-namespace MSR.Application.Hubs
+namespace MSR.Answer.MessageHub.Hubs
 {
     /// <summary>
     /// Connection mapping
