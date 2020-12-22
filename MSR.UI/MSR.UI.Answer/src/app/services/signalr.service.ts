@@ -30,9 +30,10 @@ export class SignalRService implements OnDestroy {
       return;
     }
 
+    const messageUrl = env.MESSAGE_URL + '/msg';
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withAutomaticReconnect()
-      .withUrl(env.url + '/msg', {
+      .withUrl(messageUrl, {
         accessTokenFactory: () => token
       })
       .build();
@@ -42,7 +43,10 @@ export class SignalRService implements OnDestroy {
         this.addToasterMessageNotificationListener();
         this.addWorkflowNotificationListener();
       })
-      .catch(err => console.log('Error while starting connection: ' + err));
+      .catch(err => {
+          console.log('Error while starting connection to ' + messageUrl)
+          console.log(err);
+      });
   }
 
   public discconecctHub = () => {

@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   url: 'https://localhost:44398',
   API_BASE_URL: 'https://localhost:44398',
+  MESSAGE_URL: 'https://localhost:44341',
   hmr: false,
   backend: true,
   version: 'v1',

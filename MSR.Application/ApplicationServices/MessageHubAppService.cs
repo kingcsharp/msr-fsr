@@ -65,7 +65,7 @@ namespace MSR.Application.ApplicationServices
             try
             {
                 await Connect();
-                connection.InvokeAsync("WorkflowMessage", guid, message);
+                await connection.InvokeAsync("WorkflowMessage", guid, message);
             }
             catch(Exception ex)
             {
@@ -78,7 +78,7 @@ namespace MSR.Application.ApplicationServices
             try
             {
                 await Connect();
-                connection.InvokeAsync("SendMessage", userId, message);
+                await connection.InvokeAsync("SendMessage", userId, message);
 
                 // Log the message.  If it's a ping, show it only once
                 // ever 20 times (approx. every 400 seconds).
