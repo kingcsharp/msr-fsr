@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MSR.Answer.API.Extentions;
-using MSR.Application.Hubs;
+using MSR.Answer.MessageHub.Extensions;
 
 namespace MSR.Answer.MessageHub
 {

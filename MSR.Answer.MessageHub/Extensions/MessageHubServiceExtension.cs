@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using IronPdf;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MSR.Application.Extentions;
+using MSR.Answer.API.Extentions;
 using MSR.Domain.Extensions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models.Config;
@@ -24,7 +25,7 @@ namespace MSR.Answer.MessageHub.Extensions
             {
                 i.AddMaps(new[]
                 {
-                    "MSR.Answer.Processor",
+                    "MSR.Answer.MessageHub",
                     "MSR.Application",
                     "MSR.Domain",
                     "MSR.Infrastructure"
@@ -40,6 +41,7 @@ namespace MSR.Answer.MessageHub.Extensions
             // where using Instance isn't required or feesable like
             // the Api Request Class => Domain Command extention
             // methods.
+            services.AddSingleton(mapperConfiguration.CreateMapper());
             AutoMapperHelper.Initialize(mapperConfiguration);
             services.AddApplicationServices();
             services.AddDomainServices(config);
