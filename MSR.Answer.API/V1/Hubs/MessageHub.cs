@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MSR.Domain.Hub;
+using MSR.Domain.Models;
 
 namespace MSR.Application.Hubs
 {
@@ -101,6 +102,17 @@ namespace MSR.Application.Hubs
             foreach (var client in Connections.GetConnections(user)) {
                 await Clients.Clients(client).SendAsync("ToasterMessage", message);
             }
+        }
+
+        /// <summary>
+        /// Send workflow messages to all clients
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public async Task WorkflowMessage(Guid guid, PendingNotificationItem message)
+        {
+            await Clients.All.SendAsync("WorkflowNotification", guid, message);
         }
 
         /// <summary>
