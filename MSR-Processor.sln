@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Answer.API", "MSR.Answer.API\MSR.Answer.API.csproj", "{92CF4545-EBFE-416B-B25E-364FD35E4CDC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Domain", "MSR.Domain\MSR.Domain.csproj", "{BF34D0FD-A252-4EDB-8E99-744B97B61151}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Application", "MSR.Application\MSR.Application.csproj", "{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34}"
@@ -47,10 +45,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{92CF4545-EBFE-416B-B25E-364FD35E4CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{92CF4545-EBFE-416B-B25E-364FD35E4CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{92CF4545-EBFE-416B-B25E-364FD35E4CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{92CF4545-EBFE-416B-B25E-364FD35E4CDC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF34D0FD-A252-4EDB-8E99-744B97B61151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF34D0FD-A252-4EDB-8E99-744B97B61151}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF34D0FD-A252-4EDB-8E99-744B97B61151}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -90,7 +84,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{92CF4545-EBFE-416B-B25E-364FD35E4CDC} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
 		{BF34D0FD-A252-4EDB-8E99-744B97B61151} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
 		{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
 		{999D6BF0-64C4-40E1-8784-B8BADD281DCC} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
