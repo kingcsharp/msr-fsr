@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MSR.Answer.MessageHub.Extentions;
 using MSR.Application.Extentions;
-using MSR.Answer.API.Extentions;
 using MSR.Domain.Extensions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models.Config;

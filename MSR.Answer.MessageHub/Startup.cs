@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.MessageHub.Extensions;
+using MSR.Answer.MessageHub.Hubs;
 
 namespace MSR.Answer.MessageHub
 {
@@ -59,7 +60,7 @@ namespace MSR.Answer.MessageHub
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<Application.Hubs.MessageHub>("/msg");
+                endpoints.MapHub<Hubs.MessageHub>("/msg");
             });
         }
     }
