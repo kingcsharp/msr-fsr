@@ -207,11 +207,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
-            var purchase = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => s.Id == command.PurchaseId);
-            var parentPart = workorder.WorkOrderParts.FirstOrDefault(s => s.ParentId == null);
+            var parentParts = workorder.WorkOrderParts.Where(s => s.ParentId == null).ToList();
 
-            await GetCycleCount(parentPart, purchase.SerialNumber);
-
+            foreach (var parentPart in parentParts)
+            {
+                await SetCycleCount(parentPart);
+            }
 
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
@@ -427,7 +428,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             WorkOrderPart workOrderPartEntity = await current.FirstOrDefaultAsync(s => s.Id == command.WorkOrderPartId);
 
-            await GetCycleCount(workOrderPartEntity, command.SerialNumber);
+            await SetCycleCount(workOrderPartEntity, command.SerialNumber);
 
             _ = _mapper.Map(command, workOrderPartEntity);
 
@@ -1118,49 +1119,55 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return (completedDenominator, completedNumerator, pctComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration);
         }
 
-        private async Task GetCycleCount(WorkOrderPart workOrderPart, string serialNumber)
+        private async Task SetCycleCount(WorkOrderPart workOrderPart, string newSerialNumber = null)
         {
-            if (workOrderPart != null)
+            if (workOrderPart == null)
             {
-                workOrderPart.SerialNumber = serialNumber;
-                var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
-                    .Where(s => s.SerialNumber == workOrderPart.SerialNumber && s.Part != null &&
-                                s.Part.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+                return;
+            }
 
-                if (!workOrderParts.Any())
+            string serialNumber = newSerialNumber == null ? workOrderPart.SerialNumber : newSerialNumber;
+            if (serialNumber == null)
+            {
+                return;
+            }
+
+            workOrderPart.SerialNumber = serialNumber;
+            var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
+                .Where(s => s.SerialNumber == workOrderPart.SerialNumber && s.Part != null &&
+                            s.Part.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+
+            if (!workOrderParts.Any())
+            {
+                var workOrderPartsFromHistoryTable = await _unitOfWork.CycleCountHistory.Query().Where(s =>
+                    s.SerialNumber == workOrderPart.SerialNumber &&
+                    s.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+
+                if (workOrderPartsFromHistoryTable.Any())
                 {
-                    var workOrderPartsFromHistoryTable = await _unitOfWork.CycleCountHistory.Query().Where(s =>
-                        s.SerialNumber == workOrderPart.SerialNumber &&
-                        s.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
-
-                    if (workOrderPartsFromHistoryTable.Any())
-                    {
-                        workOrderPart.CycleCount = workOrderPartsFromHistoryTable.OrderByDescending(s => s.CycleCount).FirstOrDefault()
-                            ?.CycleCount + 1;
-                    }
-                    else
-                    {
-                        workOrderPart.CycleCount = 1;
-                    }
+                    workOrderPart.CycleCount = workOrderPartsFromHistoryTable.OrderByDescending(s => s.CycleCount).FirstOrDefault()
+                        ?.CycleCount + 1;
                 }
                 else
                 {
-
-                    var cycleCount = workOrderParts.OrderByDescending(s => s.CycleCount)
-                        .FirstOrDefault(m => m.Id != workOrderPart.Id)
-                        ?.CycleCount;
-
-                    if (cycleCount == null)
-                    {
-                        workOrderPart.CycleCount = 1;
-                    }
-                    else
-                    {
-                        workOrderPart.CycleCount = cycleCount + 1;
-                    }
-
+                    workOrderPart.CycleCount = 1;
                 }
+            }
+            else
+            {
 
+                var cycleCount = workOrderParts.OrderByDescending(s => s.CycleCount)
+                    .FirstOrDefault(m => m.Id != workOrderPart.Id)
+                    ?.CycleCount;
+
+                if (cycleCount == null)
+                {
+                    workOrderPart.CycleCount = 1;
+                }
+                else
+                {
+                    workOrderPart.CycleCount = cycleCount + 1;
+                }
 
             }
         }
