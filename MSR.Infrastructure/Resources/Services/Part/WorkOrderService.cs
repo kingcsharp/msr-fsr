@@ -1045,6 +1045,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 var workOrderGridSummary = _mapper.Map<WorkOrderGridSummary>(workOrderModel);
 
+                // WorkOrderPartSerialNumber
+                if (workOrderModel.WorkOrderParts != null && workOrderModel.WorkOrderParts.Count > 0)
+                {
+                    workOrderGridSummary.SerialNumber = workOrderModel.WorkOrderParts.First().SerialNumber;
+                }
+                else
+                {
+                    workOrderGridSummary.SerialNumber = "";
+                }
+
                 var workOrderTaskEntitiesInProgress = workOrderModel.WorkOrderTasks
                     .Where(x => x.StatusId == (int)EnumStatusSteps.InProgress)
                     .OrderBy(s => s.TaskStepOrder).ToList();
