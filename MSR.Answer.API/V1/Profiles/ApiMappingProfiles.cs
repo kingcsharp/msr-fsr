@@ -3,6 +3,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System;
+using System.Linq;
 
 namespace MSR.Answer.API.V1.Profiles
 {
@@ -98,8 +99,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
             CreateMap<GetWorkOrderStatus, GetWorkOrder>();
             CreateMap<WorkOrderModel, WorkOrderGridSummary>()
-                // SerialNumber (entered at purchase time, if any)
-                .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => src.Purchase != null ? src.Purchase.SerialNumber : ""))
+                // SerialNumber
+                .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => (src.WorkOrderParts != null && src.WorkOrderParts.Count > 0) ? src.WorkOrderParts.First().SerialNumber : ""))
                 // PurchaseOrderNumber
                 .ForMember(dest => dest.PurchaseOrderNumber, opts => opts.MapFrom(src =>
                     src.Purchase != null ?
