@@ -130,6 +130,8 @@ export class InvoiceComponent implements OnInit {
   }
 
   filterWorkorders() {
+    this.globals.showLoader(true);
+    localStorage.removeItem(this.gridWoStorageId);
     this.showWorkOrders = false;
     replaceArrayItems(this.workorders, this.allWorkorders);
     if (this.currentInvoice.customerId) {
@@ -139,7 +141,11 @@ export class InvoiceComponent implements OnInit {
       this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
     }
     this.isSelectAllWorkOrders = false;
-    this.showWorkOrders = true;
+    setTimeout(() => {
+      this.showWorkOrders = true;
+      this.globals.showLoader(false);
+    }, 300);
+
   }
 
   getCustomers() {
