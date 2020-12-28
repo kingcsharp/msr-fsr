@@ -138,10 +138,26 @@ export class InvoiceComponent implements OnInit {
       this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
     }
     this.isSelectAllWorkOrders = false;
+
+    if (this.currentInvoice.id === undefined) {
+      this.currentInvoice.invoiceItems = [];
+      this.invoiceItemOptions = [];
+      this.workorders.forEach((workorder, index) => {
+        this.workorders[index]['checked'] = false;
+
+        const addInvoiceItem = new InvoiceItemView({
+          purchaseOrderId: workorder.purchaseOrderId,
+          purchaseNumber: workorder.customerPurchaseNumber,
+          workOrderId: workorder.id,
+        });
+        this.invoiceItemOptions.push(addInvoiceItem);
+      });
+    }
+
     setTimeout(() => {
       this.showWorkOrders = true;
       this.globals.showLoader(false);
-    }, 300);
+    }, 100);
 
   }
 
@@ -210,8 +226,9 @@ export class InvoiceComponent implements OnInit {
   }
 
   selectWorkOrder(ev, workorder: InvoiceableWorkOrderView) {
+    this.showInvoiceItems = false;
+
     if (ev.checked) {
-      this.showInvoiceItems = false;
       let addInvoiceItem = new InvoiceItemView({
         purchaseOrderId: workorder.purchaseOrderId,
         purchaseNumber: workorder.customerPurchaseNumber,
@@ -220,19 +237,23 @@ export class InvoiceComponent implements OnInit {
 
       pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'workOrderId');
       pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'workOrderId');
-
-      setTimeout(() => {
-        this.showInvoiceItems = true;
-      }, 10);
     } else {
       this.isSelectAllWorkOrders = false;
+      const itemIndex = this.currentInvoice.invoiceItems.findIndex(x => x.workOrderId === workorder.id);
+      if (itemIndex > -1) {
+        this.currentInvoice.invoiceItems.splice(itemIndex, 1);
+      }
     }
+
+    setTimeout(() => {
+      this.showInvoiceItems = true;
+    }, 10);
   }
 
   selectAllWorkOrders(event) {
-    if (event.checked) {
-      this.showInvoiceItems = false;
+    this.showInvoiceItems = false;
 
+    if (event.checked) {
       this.workorders.forEach((workorder, index) => {
         this.workorders[index]['checked'] = true;
         let addInvoiceItem = new InvoiceItemView({
@@ -244,15 +265,18 @@ export class InvoiceComponent implements OnInit {
         pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'workOrderId');
         pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'workOrderId');
       });
-
-      setTimeout(() => {
-        this.showInvoiceItems = true;
-      }, 10);
     } else {
-      this.workorders.forEach((_, index) => {
+      this.workorders.forEach((workorder, index) => {
         this.workorders[index]['checked'] = false;
+        const itemIndex = this.currentInvoice.invoiceItems.findIndex(x => x.workOrderId === workorder.id);
+        if (itemIndex > -1) {
+          this.currentInvoice.invoiceItems.splice(itemIndex, 1);
+        }
       });
     }
+    setTimeout(() => {
+      this.showInvoiceItems = true;
+    }, 10);
   }
 
   closeDialog() {
