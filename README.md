@@ -10,7 +10,7 @@
     -  [Windows Version](https://visualstudio.microsoft.com/downloads/)
         - Modules Required
             - ASP.NET and web development
-            - .Net Core cross-platform development 
+            - .Net Core cross-platform development
     -  [Mac Version](https://visualstudio.microsoft.com/vs/mac/)
         - **Note:** Since Database projects are not supported on Visual Studio for Mac, if you are doing backend development it might be best to use a Windows 10 Pro Environment
 - [Visual Studio Code](https://code.visualstudio.com/download)
@@ -30,9 +30,17 @@
 **Note:** Refer to the README located in **\MSR.UI\MSR.UI.Answer** for more information about the UI and running UI tests
 
 **API:**
-    To run the backend, open the solution in Visual Studio 2019 and run it with MSR.Answer.API as your startup project
 
-**UI:** 
+To run the backend:
+
+1. Open the solution in Visual Studio 2019
+2. Context-click on the solution, and go to "Properties" and select "Startup Project"
+3. Select "Multiple Startup Projects" and select the following items to start in this order:
+  * `MSR.Answer.MessageHub`
+  * `MSR.Answer.Processor`
+  * `MSR.Answer.API`
+
+**UI:**
 Beware that the UI will not start if the backend isn't running or
 otherwise cannot be connected to.  Usually running it first in visual
 studio will suffice.
@@ -49,15 +57,15 @@ UI is running on port 3000
 
 **Note:** When openning the solution in Visual Studio 2019, the Database and Angular project will not load. The backend will still build and run properly, but this is due to VS for Mac not supporting Database Projects and the Angular project not having a **.csproj** file.
 
-**API:** 
+**API:**
 
     dotnet run -p MSR.Answer.API/MSR.Answer.API.csproj --launch-profile local
 
 API is running on port 5000 (http) & 5001 (https)
 
-**UI:** 
+**UI:**
 
-    cd MSR.UI/MSR.UI.Answer && yarn install && npm run start 
+    cd MSR.UI/MSR.UI.Answer && yarn install && npm run start
 
 UI is running on port 3000
 
@@ -100,7 +108,7 @@ UI is running on port 3000
 4. `docker push 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-rp:latest`
 
 ## Deploy to AWS ECS Fargate
-#### UI 
+#### UI
 **Map cluster:** `ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2`
 <br/>
 **Configure profile (You should have your AWS CLI setup locally) :** `ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile`
