@@ -582,7 +582,9 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return retUser;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var userRoles = _unitOfWork.UserRoles.Query();
 

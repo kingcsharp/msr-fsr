@@ -24,7 +24,10 @@ namespace MSR.Infrastructure.Resources.Services.Menu
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IEnumerable<Domain.Models.MenuItem>> GetMenuAsync(GetMenu command)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var menuItems = _unitOfWork.MenuItems.Query().Include(i => i.Roles).ThenInclude(i => i.MenuRolePermission)
                                                          .Include(i => i.MenuGroup)
