@@ -45,7 +45,7 @@ namespace MSR.Infrastructure.Resources.Services
             _fileService = fileService;
             _productService = productService;
             _procedureService = procedureService;
-            _messageHub = _messageHub;
+            _messageHub = messageHub;
         }
 
         public async Task<PendingApprovalModel> CreateApprovalAsync(PostApprovalModel command)
