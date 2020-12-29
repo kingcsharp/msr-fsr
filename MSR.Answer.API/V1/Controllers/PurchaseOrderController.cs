@@ -23,12 +23,10 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private const string PrivilegeApiName = "PurchaseOrder";
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IMessageHubClient _messageHub;
 
-        public PurchaseOrderController(ICommandDispatcher dispatcher, IMessageHubClient  messageHub)
+        public PurchaseOrderController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-            _messageHub = messageHub;
         }
 
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseOrderView>>))]

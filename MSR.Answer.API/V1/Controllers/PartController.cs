@@ -23,12 +23,10 @@ namespace MSR.Answer.API.V1.Controllers
     public class PartController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
-        private readonly IMessageHubClient _messageHub;
 
-        public PartController(ICommandDispatcher dispatcher, IMessageHubClient messageHub)
+        public PartController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-            _messageHub = messageHub;
         }
 
         /// <summary>

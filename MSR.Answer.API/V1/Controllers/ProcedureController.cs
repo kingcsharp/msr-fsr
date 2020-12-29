@@ -25,15 +25,13 @@ namespace MSR.Answer.API.V1.Controllers
     public class ProcedureController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
-        private readonly IMessageHubClient _messageHub;
 
         /// <summary>
         /// Procedure Controller
         /// </summary>
-        public ProcedureController(ICommandDispatcher dispatcher, IMessageHubClient messageHub)
+        public ProcedureController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-            _messageHub = messageHub;
         }
 
         /// <summary>
