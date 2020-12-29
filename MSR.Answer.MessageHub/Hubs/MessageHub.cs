@@ -38,7 +38,6 @@ namespace MSR.Answer.MessageHub.Hubs
                 }
 
                 lock (connections) {
-                    connections.Clear();
                     connections.Add(connectionId);
                 }
             }
