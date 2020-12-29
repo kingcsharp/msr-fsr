@@ -27,7 +27,6 @@ namespace MSR.Answer.Processor.SQSServices
         private readonly IAmazonSQS _sqsClient;
         private readonly ILogger<SqsConsumerService> _logger;
         private readonly SQSInformation _sQSInformation;
-        private readonly ICommandDispatcher _dispatcher;
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventHandlers _eventHandlers;
         private string _queueURL;
@@ -37,7 +36,6 @@ namespace MSR.Answer.Processor.SQSServices
         public SqsConsumerService(
             IAmazonSQS sqsClient,
             SQSInformation sQSInformation,
-            ICommandDispatcher dispatcher,
             IServiceProvider serviceProvider,
             IEventHandlers eventHandlers,
             ILogger<SqsConsumerService> logger)
@@ -46,7 +44,6 @@ namespace MSR.Answer.Processor.SQSServices
             _logger = logger;
             _sqsClient = sqsClient;
             _sQSInformation = sQSInformation;
-            _dispatcher = dispatcher;
             _serviceProvider = serviceProvider;
         }
 
@@ -207,6 +204,10 @@ namespace MSR.Answer.Processor.SQSServices
                 }
 
                 return true;
+            };
+            CurrentUser.GetAccessToken = () =>
+            {
+                return tokenData.RawData;
             };
         }
     }
