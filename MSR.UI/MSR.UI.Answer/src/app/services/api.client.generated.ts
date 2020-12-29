@@ -9344,7 +9344,6 @@ export interface ITimeZoneModel {
 }
 
 export class Role extends TrackableModel implements IRole {
-    id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
     menus?: MenuItem[] | undefined;
@@ -9360,7 +9359,6 @@ export class Role extends TrackableModel implements IRole {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.id = _data["id"];
             this.name = _data["name"];
             this.isCertificationRole = _data["isCertificationRole"];
             if (Array.isArray(_data["menus"])) {
@@ -9388,7 +9386,6 @@ export class Role extends TrackableModel implements IRole {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["name"] = this.name;
         data["isCertificationRole"] = this.isCertificationRole;
         if (Array.isArray(this.menus)) {
@@ -9410,7 +9407,6 @@ export class Role extends TrackableModel implements IRole {
 }
 
 export interface IRole extends ITrackableModel {
-    id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
     menus?: MenuItem[] | undefined;
@@ -15906,7 +15902,6 @@ export interface IWorkOrderModel {
 }
 
 export class PurchaseModel extends CreatableModel implements IPurchaseModel {
-    id?: number;
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
@@ -15932,7 +15927,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.id = _data["id"];
             this.purchaseOrderId = _data["purchaseOrderId"];
             this.purchaseOrderProductId = _data["purchaseOrderProductId"];
             this.customerPurchaseNumber = _data["customerPurchaseNumber"];
@@ -15966,7 +15960,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["purchaseOrderId"] = this.purchaseOrderId;
         data["purchaseOrderProductId"] = this.purchaseOrderProductId;
         data["customerPurchaseNumber"] = this.customerPurchaseNumber;
@@ -15994,7 +15987,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
 }
 
 export interface IPurchaseModel extends ICreatableModel {
-    id?: number;
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
@@ -16015,7 +16007,6 @@ export interface IPurchaseModel extends ICreatableModel {
 }
 
 export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrderModel {
-    id?: number;
     customer?: Customer | undefined;
     customerId?: number;
     name?: string | undefined;
@@ -16035,7 +16026,6 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.id = _data["id"];
             this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : <any>undefined;
             this.customerId = _data["customerId"];
             this.name = _data["name"];
@@ -16059,7 +16049,6 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["customer"] = this.customer ? this.customer.toJSON() : <any>undefined;
         data["customerId"] = this.customerId;
         data["name"] = this.name;
@@ -16077,7 +16066,6 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
 }
 
 export interface IPurchaseOrderModel extends ICreatableModel {
-    id?: number;
     customer?: Customer | undefined;
     customerId?: number;
     name?: string | undefined;
