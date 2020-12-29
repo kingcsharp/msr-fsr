@@ -818,8 +818,9 @@ namespace MSR.Infrastructure.Resources.Services
             {
                 var procedureCommand = _mapper.Map<UpdateProcedure>(procedureApproval);
                 await _procedureService.UpdateProcedureAsync(procedureCommand);
+                var procedureStepApprovals = procedureApproval.ProcedureStepApprovals.ToList();
 
-                foreach (ProcedureStepApproval step in procedureApproval.ProcedureStepApprovals)
+                foreach (ProcedureStepApproval step in procedureStepApprovals)
                 {
                     string approvalJSON = step.ApprovalJSON;
                     var dataFormat = new {
