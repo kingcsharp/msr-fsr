@@ -7,6 +7,7 @@ using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using Microsoft.Extensions.Logging;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Helpers;
 
 namespace MSR.Infrastructure.Resources.Services.MessageHub
 {
@@ -35,7 +36,10 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
             }
             connection = new HubConnectionBuilder()
                 .WithAutomaticReconnect()
-                .WithUrl(_url)
+                .WithUrl(_url, options =>
+                {
+                    options.AccessTokenProvider = () => Task.FromResult(CurrentUser.GetAccessToken());
+                })
                 .Build();
 
             connection.Closed += async (error) =>

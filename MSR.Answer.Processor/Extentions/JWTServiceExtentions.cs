@@ -56,6 +56,7 @@ namespace MSR.Answer.Processor.Extentions
 
                             return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
                         };
+
                         CurrentUser.CanReadActivity = (EnumApprovalTables) =>
                         {
                             var activityToBeApproved = (int)EnumApprovalTables;
@@ -67,7 +68,7 @@ namespace MSR.Answer.Processor.Extentions
                         CurrentUser.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
                         {
                             var menuItemPrivileges = deserializedUserPrivileges[(int)EnumMenuItem];
-                            if (Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
+                            if (menuItemPrivileges == null || Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
                             {
                                 return false;
                             }

@@ -33,16 +33,13 @@ namespace MSR.Answer.Processor.SQSServices
         private string _queueURL;
 
         private CancellationTokenSource _tokenSource;
-        private IMessageHubClient _messageHub;
 
         public SqsConsumerService(
             IAmazonSQS sqsClient,
             SQSInformation sQSInformation,
-            GeneralInformation processorConfig,
             ICommandDispatcher dispatcher,
             IServiceProvider serviceProvider,
             IEventHandlers eventHandlers,
-            IMessageHubClient messageHub,
             ILogger<SqsConsumerService> logger)
         {
             _eventHandlers = eventHandlers;
@@ -51,8 +48,6 @@ namespace MSR.Answer.Processor.SQSServices
             _sQSInformation = sQSInformation;
             _dispatcher = dispatcher;
             _serviceProvider = serviceProvider;
-            _messageHub = messageHub;
-
         }
 
         public async Task StartConsuming()
