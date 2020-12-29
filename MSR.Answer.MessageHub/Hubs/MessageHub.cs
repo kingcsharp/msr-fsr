@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using MSR.Domain.Hub;
 using MSR.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MSR.Answer.MessageHub.Hubs
 {
