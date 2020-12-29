@@ -27,6 +27,7 @@ namespace MSR.Infrastructure.Resources.Services
         private readonly IFileService _fileService;
         private readonly IProductService _productService;
         private readonly IProcedureService _procedureService;
+        private readonly IMessageHubClient _messageHub;
 
         public WorkflowApprovalService(
             IUnitOfWork unitOfWork,
@@ -34,7 +35,8 @@ namespace MSR.Infrastructure.Resources.Services
             IPartService partService,
             IFileService fileService,
             IProductService productService,
-            IProcedureService procedureService
+            IProcedureService procedureService,
+            IMessageHubClient messageHub
             )
         {
             _unitOfWork = unitOfWork;
@@ -43,6 +45,7 @@ namespace MSR.Infrastructure.Resources.Services
             _fileService = fileService;
             _productService = productService;
             _procedureService = procedureService;
+            _messageHub = _messageHub;
         }
 
         public async Task<PendingApprovalModel> CreateApprovalAsync(PostApprovalModel command)
@@ -112,6 +115,7 @@ namespace MSR.Infrastructure.Resources.Services
                     break;
             }
 
+            _messageHub.SendApprovalNotification(command.Table, -1);
 
             var ret = _mapper.Map<PendingApprovalModel>(result);
             ret.Comments = command.Comments;
@@ -172,9 +176,10 @@ namespace MSR.Infrastructure.Resources.Services
                     await _unitOfWork.LogApprovalTransaction(userApprovals, userApprovals.Id, EnumUtils.GetDescription(ApprovalStatusEnum.Cancelled), command.Comment);
                     break;
                 default:
-                    throw new DomainException("Deactivate Action Does Not Exists", DomainError.NotFound);
+                    throw new DomainException("Deactivate Action Does Not Exist", DomainError.NotFound);
             }
 
+            _messageHub.SendApprovalNotification(command.Table, -1);
 
             await _unitOfWork.SaveChangesAsync();
         }

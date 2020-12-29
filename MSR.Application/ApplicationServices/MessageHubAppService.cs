@@ -6,6 +6,7 @@ using MSR.Domain.Hub;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using Microsoft.Extensions.Logging;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -103,6 +104,15 @@ namespace MSR.Application.ApplicationServices
             {
                 _logger.LogError(ex, ex.Message);
             }
+        }
+
+        public void SendApprovalNotification(EnumApprovalTables approvalTable, int count = 1)
+        {
+            SendNotification(Guid.NewGuid(), new PendingNotificationItem()
+            {
+                Table = (int) approvalTable,
+                Count = count
+            });
         }
     }
 }

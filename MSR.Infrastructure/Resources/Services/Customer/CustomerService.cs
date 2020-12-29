@@ -23,12 +23,14 @@ namespace MSR.Infrastructure.Resources.Services.Customers
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
         private ILogger _logger;
+        private readonly IMessageHubClient _messageHub;
 
-        public CustomerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CustomerService> logger)
+        public CustomerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CustomerService> logger, IMessageHubClient messageHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _messageHub = messageHub;
         }
 
         public async Task<Domain.Models.Customer> CreateCustomerAsync(CreateCustomer command, bool import = false)
@@ -74,6 +76,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 await _unitOfWork.CustomerApprovals.AddAsync(customerApproval);
                 await _unitOfWork.SaveChangesAsync();
                 retCustomer = _mapper.Map<Domain.Models.Customer>(customerApproval);
+                _messageHub.SendApprovalNotification(EnumApprovalTables.CustomerApproval);
             }
             return retCustomer;
         }
@@ -114,6 +117,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 await _unitOfWork.SaveChangesAsync();
 
                 retCustomer = _mapper.Map<Domain.Models.Customer>(customerApproval);
+                _messageHub.SendApprovalNotification(EnumApprovalTables.CustomerApproval);
             }
 
 
@@ -159,6 +163,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 await _unitOfWork.SaveChangesAsync();
 
                 retCustomer = _mapper.Map<Domain.Models.Customer>(customerApproval);
+                _messageHub.SendApprovalNotification(EnumApprovalTables.CustomerApproval);
             }
             return retCustomer;
         }

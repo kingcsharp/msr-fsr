@@ -20,11 +20,13 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
+        private readonly IMessageHubClient _messageHub;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IMessageHubClient messageHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _messageHub = messageHub;
         }
 
         public async Task<ICollection<ProductModel>> GetProductsAsync()
@@ -110,6 +112,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }
             await _unitOfWork.SaveChangesAsync();
 
+            _messageHub.SendApprovalNotification(EnumApprovalTables.ProductApproval);
             return _mapper.Map<ProductModel>(approval);
         }
 
@@ -248,6 +251,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }
             await _unitOfWork.SaveChangesAsync();
 
+            _messageHub.SendApprovalNotification(EnumApprovalTables.ProductApproval);
             return _mapper.Map<ProductModel>(approval);
         }
 

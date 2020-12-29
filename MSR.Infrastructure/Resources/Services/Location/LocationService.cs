@@ -20,11 +20,13 @@ namespace MSR.Infrastructure.Resources.Services.Location
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IMessageHubClient _messageHub;
 
-        public LocationService(IUnitOfWork unitOfWork, IMapper mapper)
+        public LocationService(IUnitOfWork unitOfWork, IMapper mapper, IMessageHubClient messageHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _messageHub = messageHub;
         }
 
         public async Task<ICollection<LocationModel>> GetLocationsAsync(GetLocations command)
@@ -146,6 +148,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
                 retLocation = _mapper.Map<LocationModel>(locationApproval);
                 retLocation.TimeZone = locationApproval.TimeZoneId.HasValue ? _mapper.Map<TimeZoneModel>((await _unitOfWork.Timezones.FirstOrDefaultAsync(false, i => i.Id == locationApproval.TimeZoneId.Value))) : null;
+                _messageHub.SendApprovalNotification(EnumApprovalTables.LocationApproval);
             }
 
             return retLocation;
@@ -187,6 +190,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
                 retLocation = _mapper.Map<LocationModel>(locationApproval);
                 retLocation.TimeZone = locationApproval.TimeZoneId.HasValue ? _mapper.Map<TimeZoneModel>((await _unitOfWork.Timezones.FirstOrDefaultAsync(false, i => i.Id == locationApproval.TimeZoneId.Value))) : null;
+                _messageHub.SendApprovalNotification(EnumApprovalTables.LocationApproval);
             }
 
             return retLocation;
@@ -234,6 +238,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 await _unitOfWork.SaveChangesAsync();
 
                 retLocation = _mapper.Map<LocationModel>(locationApproval);
+                _messageHub.SendApprovalNotification(EnumApprovalTables.LocationApproval);
             }
 
             return retLocation;
