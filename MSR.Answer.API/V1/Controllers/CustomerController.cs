@@ -21,12 +21,10 @@ namespace MSR.Answer.API.V1.Controllers
     public class CustomerController : BaseApiController
     {
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IMessageHubClient _messageHub;
 
-        public CustomerController(ICommandDispatcher dispatcher, IMessageHubClient messageHub)
+        public CustomerController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-            _messageHub = messageHub;
         }
 
         [HttpGet]
