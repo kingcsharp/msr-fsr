@@ -61,7 +61,7 @@ namespace MSR.Application.ApplicationServices
             });
         }
 
-        public async void SendNotification(Guid guid, PendingNotificationItem message)
+        public async Task SendNotification(Guid guid, PendingNotificationItem message)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace MSR.Application.ApplicationServices
             }
         }
 
-        public async void SendNotification(string userId, Toaster message)
+        public async Task SendNotification(string userId, Toaster message)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace MSR.Application.ApplicationServices
 
         public void SendApprovalNotification(EnumApprovalTables approvalTable, int count = 1)
         {
-            SendNotification(Guid.NewGuid(), new PendingNotificationItem()
+            _ = SendNotification(Guid.NewGuid(), new PendingNotificationItem()
             {
                 Table = (int) approvalTable,
                 Count = count
