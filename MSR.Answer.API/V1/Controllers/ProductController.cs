@@ -26,18 +26,10 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private const string PrivilegeApiName = "QuotesProducts";
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IMessageHubClient _messageHub;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dispatcher"></param>
-        /// <param name="messageHub" />
-        /// 
-        public ProductController(ICommandDispatcher dispatcher, IMessageHubClient messageHub)
+        public ProductController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-            _messageHub = messageHub;
         }
 
         /// <summary>
@@ -53,8 +45,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = product.ToCreateProductCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            SendApprovalNotificationHubMessage(EnumApprovalTables.ProductApproval, _messageHub);
-            return ret.ToOkObjectResponse<ProductModel>(await DetermineResponseMessage(ret, "Create"));
+            return ret.ToOkObjectResponse<ProductModel>(DetermineResponseMessage(ret, "Create"));
         }
 
         /// <summary>
@@ -81,18 +72,16 @@ namespace MSR.Answer.API.V1.Controllers
         {
             UpdateProduct updateProduct = request.ToUpdateProductCommand();
             var ret = await _dispatcher.DispatchAsync(updateProduct);
-            SendApprovalNotificationHubMessage(EnumApprovalTables.ProductApproval, _messageHub);
-            return ret.ToOkObjectResponse<ProductModel>(await DetermineResponseMessage(ret, "Update"));
+            return ret.ToOkObjectResponse<ProductModel>(DetermineResponseMessage(ret, "Update"));
         }
 
-        private async Task<string> DetermineResponseMessage(ICommandResponse commandResponse, string action)
+        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
             var product = commandResponse.ToEntity<ProductModel>();
             var response = $"Product {action} Successful";
 
             if (!string.IsNullOrWhiteSpace(product.ApprovalStatus))
             {
-                SendApprovalNotificationHubMessage(EnumApprovalTables.LocationApproval, _messageHub);
                 response = $"Product {action} Pending Approval";
             }
 

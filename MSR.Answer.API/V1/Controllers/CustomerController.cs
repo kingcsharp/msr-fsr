@@ -45,7 +45,7 @@ namespace MSR.Answer.API.V1.Controllers
             var createCustomer = request.ToCreateCustomerCommand();
 
             var ret = await _dispatcher.DispatchAsync(createCustomer);
-            return ret.ToOkObjectResponse<Customer>(await DetermineResponseMessage(ret, "Creation"));
+            return ret.ToOkObjectResponse<Customer>(DetermineResponseMessage(ret, "Creation"));
         }
 
         [HttpPatch, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanEdit)]
@@ -54,7 +54,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var updateCustomer = request.ToUpdateCustomerCommand();
             var ret = await _dispatcher.DispatchAsync(updateCustomer);
-            return ret.ToOkObjectResponse(await DetermineResponseMessage(ret, "Update"));
+            return ret.ToOkObjectResponse(DetermineResponseMessage(ret, "Update"));
         }
 
         [HttpDelete("{id}"), HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanDelete)]
@@ -63,19 +63,18 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var disableCustomer = new DeactivateCustomer() { CustomerId = id };
             var ret = await _dispatcher.DispatchAsync(disableCustomer);
-            return ret.ToOkObjectResponse(await DetermineResponseMessage(ret, "Deactivate"));
+            return ret.ToOkObjectResponse(DetermineResponseMessage(ret, "Deactivate"));
         }
 
 
         //TODO: Refactor to Generic
-        private async Task<string> DetermineResponseMessage(ICommandResponse commandResponse, string action)
+        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
             var customer = commandResponse.ToEntity<Customer>();
             var response = $"Customer {action} Successful";
 
             if (!string.IsNullOrWhiteSpace(customer.Status))
             {
-                SendApprovalNotificationHubMessage(EnumApprovalTables.CustomerApproval, _messageHub);
 
                 response = $"Customer {action} Pending Approval";
             }

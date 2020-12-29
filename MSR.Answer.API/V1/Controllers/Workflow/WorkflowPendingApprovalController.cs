@@ -58,8 +58,6 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
-
             return ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was approved successfully.");
         }
 
@@ -69,8 +67,6 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToDeleteApprovalCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
-
-            SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
 
             var result = ret.ToOkObjectResponse("Pending Approval was cancelled successfully.");
             return result;

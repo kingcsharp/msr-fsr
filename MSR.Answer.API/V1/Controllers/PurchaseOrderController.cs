@@ -45,7 +45,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToCreatePurchaseOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(await DetermineResponseMessage(ret, "Create"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Create"));
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdatePurchaseOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(await DetermineResponseMessage(ret, "Update"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Update"));
         }
         
         /// <summary>
@@ -73,10 +73,10 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeletePurchaseOrder() { Id = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(await DetermineResponseMessage(ret, "Delete"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Delete"));
         }
 
-        private async Task<string> DetermineResponseMessage(ICommandResponse commandResponse, string action)
+        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
             var poView = commandResponse.ToEntity<PurchaseOrderView>();
             var response = $"PurchaseOrder {action} Pending Approval";
@@ -86,7 +86,6 @@ namespace MSR.Answer.API.V1.Controllers
             {
                 response = $"PurchaseOrder {action} Successful";
             }
-            SendApprovalNotificationHubMessage(EnumApprovalTables.PurchaseOrderApproval, _messageHub);
 
             return response;
         }

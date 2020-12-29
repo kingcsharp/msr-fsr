@@ -25,10 +25,6 @@ namespace MSR.Answer.API.V1.Controllers
         private ICommandDispatcher _dispatcher;
         private readonly IMessageHubClient _messageHub;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="dispatcher"></param>
         public PartController(ICommandDispatcher dispatcher, IMessageHubClient messageHub)
         {
             _dispatcher = dispatcher;
@@ -68,11 +64,6 @@ namespace MSR.Answer.API.V1.Controllers
             {
                 message = "Part was successfully added.";
             }
-            else
-            {
-                SendApprovalNotificationHubMessage(EnumApprovalTables.PartApproval, _messageHub);
-
-            }
             return ret.ToOkObjectResponse<PartModel>(message);
         }
 
@@ -92,10 +83,6 @@ namespace MSR.Answer.API.V1.Controllers
             if (!(ret as ICommandResponse<PartModel>).Data.IsPending)
             {
                 message = "Part was successfully updated.";
-            }
-            else
-            {
-                SendApprovalNotificationHubMessage(EnumApprovalTables.PartApproval, _messageHub);
             }
             return ret.ToOkObjectResponse<PartModel>(message);
         }

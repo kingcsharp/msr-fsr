@@ -40,7 +40,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// Add Procedure
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
@@ -49,7 +48,6 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToCreateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
 
             return ret.ToOkObjectResponse<Procedure>("Procedure successfully added");
         }
@@ -68,7 +66,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = body.ToCreateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepModel>(await DetermineStepResponseMessage(ret, "add"));
+            return ret.ToOkObjectResponse<ProcedureStepModel>(DetermineStepResponseMessage(ret, "add"));
         }
 
         /// <summary>
@@ -97,7 +95,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedureStep() { procedureID = id, procedureStepID = stepid };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse(await DetermineStepResponseMessage(ret, "delete"));
+            return ret.ToOkObjectResponse(DetermineStepResponseMessage(ret, "delete"));
         }
 
         /// <summary>
@@ -145,7 +143,6 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToUpdateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
             return ret.ToOkObjectResponse<Procedure>("Procedure successfully updated");
         }
 
@@ -163,17 +160,16 @@ namespace MSR.Answer.API.V1.Controllers
             var command = body.ToUpdateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepModel>(await DetermineStepResponseMessage(ret, "update"));
+            return ret.ToOkObjectResponse<ProcedureStepModel>(DetermineStepResponseMessage(ret, "update"));
         }
 
-        private async Task<string> DetermineStepResponseMessage(ICommandResponse commandResponse, string action)
+        private string DetermineStepResponseMessage(ICommandResponse commandResponse, string action)
         {
             var procStep = commandResponse.ToEntity<ProcedureStepModel>();
             var response = $"Procedure step {action} Successful";
 
             if (!string.IsNullOrWhiteSpace(procStep.ApprovalStatus))
             {
-                SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
                 response = $"Procedure step {action} Pending Approval";
             }
 

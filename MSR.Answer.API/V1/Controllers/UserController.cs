@@ -29,18 +29,16 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IMessageHubClient _messageHub;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="dispatcher"></param>
-        public UserController(ILogger<UserController> logger, ICommandDispatcher dispatcher, IMessageHubClient messageHub)
+        public UserController(ILogger<UserController> logger, ICommandDispatcher dispatcher)
         {
             _logger = logger;
             _dispatcher = dispatcher;
-            _messageHub = messageHub;
         }
 
         /// <summary>
@@ -98,7 +96,6 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval,_messageHub);
 
             return ret.ToOkObjectResponse<UserModel>("User has been successfully created.");
         }
@@ -114,7 +111,6 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
 
             return ret.ToOkObjectResponse<UserModel>("User has been successfully updated.");
         }
@@ -135,7 +131,6 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
 
             return ret.ToOkObjectResponse("User has been Deactivated");
         }
