@@ -21,6 +21,7 @@ using MSR.Infrastructure.Resources.Services.Users;
 using MSR.Infrastructure.Resources.Services.Workflow;
 using MSR.Infrastructure.Resources.Services.Help;
 using MSR.Infrastructure.Resources.Services.Invoices;
+using MSR.Infrastructure.Resources.Services.MessageHub;
 using MSR.Domain.Abstractions;
 using MSR.Infrastructure.Factories;
 using MSR.Infrastructure.Resources.AWS;
@@ -82,6 +83,8 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IEquipmentMaintenanceService, EquipmentMaintenanceService>();
             services.AddScoped<IDocumentService, DocumentService>();
+
+            services.AddTransient<IMessageHubClient, MessageHubService>();
 
             return services;
         }

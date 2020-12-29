@@ -91,8 +91,6 @@ namespace MSR.Answer.Processor.Extentions
             Log.Logger = loggerConfig.CreateLogger();
             services.AddLogging(loggerConfig => loggerConfig.AddSerilog(dispose: true));
 
-            services.AddScoped<IMessageHubClient, MessageHubAppService>();
-
             return services;
         }
     }

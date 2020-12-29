@@ -8,9 +8,9 @@ using MSR.Domain.Models.Config;
 using Microsoft.Extensions.Logging;
 using MSR.Domain.Commanding.Enums;
 
-namespace MSR.Application.ApplicationServices
+namespace MSR.Infrastructure.Resources.Services.MessageHub
 {
-    public class MessageHubAppService : IMessageHubClient
+    public class MessageHubService : IMessageHubClient
     {
         private HubConnection connection = null;
         private ILogger _logger;
@@ -19,7 +19,7 @@ namespace MSR.Application.ApplicationServices
         public static int pingCounterSend = 0;
         public static int pingCounterRcv = 0;
 
-        public MessageHubAppService(ILogger<MessageHubAppService> logger, GeneralInformation config)
+        public MessageHubService(ILogger<MessageHubService> logger, GeneralInformation config)
         {
             Uri baseUri = new Uri(config.MessageURL);
             UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
