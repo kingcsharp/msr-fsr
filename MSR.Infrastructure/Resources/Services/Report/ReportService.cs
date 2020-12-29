@@ -56,7 +56,7 @@ namespace MSR.Infrastructure.Resources.Services.Report
 
         public async Task<ReportDashboardModel> GetDashboard(GetDashboard command, CancellationToken cancellationToken = default)
         {
-            var dashboard = _unitOfWork.ReportDashboards.Query().Include(i => i.Reports).ThenInclude(j => j.Report).FirstOrDefault(i => i.Id == command.Id);
+            var dashboard = await _unitOfWork.ReportDashboards.Query().Include(i => i.Reports).ThenInclude(j => j.Report).FirstOrDefaultAsync(i => i.Id == command.Id);
 
             var domDashboard = _mapper.Map<ReportDashboardModel>(dashboard);
 

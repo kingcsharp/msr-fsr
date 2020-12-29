@@ -257,7 +257,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                     var ret = await CreateLocationAsync(_mapper.Map<CreateLocation>(record), true);
                     locations.Add(ret);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //If we get an error on a single import dump it and keep going. 
                 }

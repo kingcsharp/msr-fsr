@@ -27,7 +27,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         ///
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="dispatcher"></param>
         public AdminCostSettingsController(ICommandDispatcher dispatcher)
         {

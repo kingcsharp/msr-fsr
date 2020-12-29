@@ -120,11 +120,11 @@ namespace MSR.Answer.Processor.SQSServices
                             await ProcessMessageAsync(x);
                         }
                     }
-                    catch (TaskCanceledException e)
+                    catch (TaskCanceledException)
                     {
                         _logger.LogWarning($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName} because the task was canceled");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         _logger.LogError($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName}");
                     }

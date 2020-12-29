@@ -24,9 +24,8 @@ namespace MSR.Application.ApplicationServices
         /// it is "procedure step template."
         /// </description>
         private readonly IProcedureStepTemplateService _procedureService;
-        private readonly IFileService _fileService;
 
-        public ProcedureStepTemplateAppService(IProcedureStepTemplateService procedureService, IFileService _fileService)
+        public ProcedureStepTemplateAppService(IProcedureStepTemplateService procedureService)
         {
             _procedureService = procedureService;
         }

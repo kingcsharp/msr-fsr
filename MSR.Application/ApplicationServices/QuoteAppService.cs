@@ -16,7 +16,6 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<DeleteQuote>
     {
         private readonly IQuoteService _quoteService;
-        private readonly IMapper _mapper;
 
         public QuoteAppService(IQuoteService quoteService)
         {
