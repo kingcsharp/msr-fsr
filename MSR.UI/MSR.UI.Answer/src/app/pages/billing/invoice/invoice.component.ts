@@ -30,7 +30,6 @@ export class InvoiceComponent implements OnInit {
   approvalTables = EnumApprovalTables;
   defaultView: ViewSaved;
   gridStorageId: string;
-  gridWoStorageId: string;
   gridSettings: ColumnsSaved[];
   gridWoSettings: ColumnsSaved[];
   gridVersion: string;
@@ -83,7 +82,6 @@ export class InvoiceComponent implements OnInit {
     new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
     ];
 
-    this.gridWoStorageId = 'invoiceWorkorderGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridWoSettings = [
       new ColumnsSaved({ id: 'customerName', label: 'Customer Name', visible: true }),
       new ColumnsSaved({ id: 'id', label: 'WorkOrder #', visible: true }),
@@ -130,6 +128,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   filterWorkorders() {
+    this.globals.showLoader(true);
     this.showWorkOrders = false;
     replaceArrayItems(this.workorders, this.allWorkorders);
     if (this.currentInvoice.customerId) {
@@ -139,7 +138,11 @@ export class InvoiceComponent implements OnInit {
       this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
     }
     this.isSelectAllWorkOrders = false;
-    this.showWorkOrders = true;
+    setTimeout(() => {
+      this.showWorkOrders = true;
+      this.globals.showLoader(false);
+    }, 300);
+
   }
 
   getCustomers() {
