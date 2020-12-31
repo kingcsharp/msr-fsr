@@ -74,27 +74,31 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
         {
-            List<EntityFramework.Entities.Procedure> procedures;
+            IQueryable<EntityFramework.Entities.ProcedureExtra> proceduresQuery =
+                _unitOfWork.Query<EntityFramework.Entities.ProcedureExtra>()
+                    .FromSqlRaw(@"
+                        SELECT [procedure].*, (
+                            SELECT COUNT([product].id)
+                            FROM [product]
+                            WHERE [procedure].id = [product].ProcedureId
+                        ) AS ProductsUsing,
+                        'ProcedureExtra' as Discriminator
+                        FROM [procedure]
+                    ")
+                    .Include(x => x.ProcedureType)
+                    .Include(x => x.ReferenceFiles)
+                    .Include(x => x.LastUpdated);
+
             if (command.procedureID.HasValue)
             {
-                procedures = await _unitOfWork.Procedures
-                    .Query()
-                    .Where(x => x.Id == command.procedureID.Value)
-                    .Include(x => x.ProcedureType)
-                    .Include(x => x.ReferenceFiles)
-                    .ToListAsync();
-                if (procedures.Count == 0)
-                {
-                    throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
-                }
+                proceduresQuery = proceduresQuery
+                    .Where(x => x.Id == command.procedureID.Value);
             }
-            else
+
+            List<EntityFramework.Entities.ProcedureExtra> procedures = await proceduresQuery.ToListAsync();
+            if (procedures.Count == 0)
             {
-                procedures = await _unitOfWork.Procedures
-                    .Query()
-                    .Include(x => x.ProcedureType)
-                    .Include(x => x.ReferenceFiles)
-                    .ToListAsync();
+                throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
             }
 
             // map and attach the right files for this object, if any
@@ -112,6 +116,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         _mapper.Map<Domain.Models.FileModel>(map.FileObject)
                     );
                 }
+
+                model.IsRelatedToAProduct = x.ProductsUsing > 0;
+
                 return model;
             }).OrderBy(x => x.Name).ToList();
 
@@ -358,9 +365,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }
                     await _unitOfWork.SaveChangesAsync();
                 }
-
-
-                
 
                 if (updatedProcedureStepEntity.ProcedureStepRoles != null)
                 {

@@ -58,6 +58,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<DocumentEntityMap> DocumentEntityMap { get; set; }
         public DbSet<Part> Part { get; set; }
         public DbSet<Procedure> Procedure { get; set; }
+        public DbSet<ProcedureExtra> ProcedureExtra { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<ProductStep> ProductStep { get; set; }
@@ -76,7 +77,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<ReportDashboard> ReportDashboard { get; set; }
         public DbSet<ReportDashboardMap> ReportDashboardMap { get; set; }
         public DbSet<PortalWorkOrder> PortalWorkOrderView { get; set; }
-
         public DbSet<EquipmentMaintenance> EquipmentMaintenance { get; set; }
         public DbSet<WorkOrderMessage> WorkOrderMessage { get; set; }
 
