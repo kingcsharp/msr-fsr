@@ -24,7 +24,7 @@ pipeline {
         PROD_PROJECT_UI='prod-answer-ui'
         API_COMPOSE='docker-compose-api.yml'
         API_COMPOSE_PROCESSOR='docker-compose-api-processor.yml'
-        API_COMPOSE_MESSAGE='docker-compose-api-message.yml'
+        API_COMPOSE_MESSAGE='docker-compose-message.yml'
         UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
