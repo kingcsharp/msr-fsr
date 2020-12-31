@@ -24,6 +24,7 @@ pipeline {
         PROD_PROJECT_UI='prod-answer-ui'
         API_COMPOSE='docker-compose-api.yml'
         API_COMPOSE_PROCESSOR='docker-compose-api-processor.yml'
+        API_COMPOSE_MESSAGE='docker-compose-api-message.yml'
         UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
@@ -140,8 +141,10 @@ pipeline {
                             try {
                                 sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE}"
                                 sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
+                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
                                 sh "cat ${API_COMPOSE}"
                                 sh "cat ${API_COMPOSE_PROCESSOR}"
+                                sh "cat ${API_COMPOSE_MESSAGE}"
 
                                 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                                     //sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
