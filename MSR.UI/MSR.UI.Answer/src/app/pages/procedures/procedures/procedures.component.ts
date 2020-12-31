@@ -84,6 +84,7 @@ export class ProceduresComponent implements OnInit {
       let idx = this.data.findIndex((x) => (x.id == this.procedureToDelete.id));
       if (idx >= 0) {
         this.data.splice(idx, 1);
+        this.data = this.data.slice(0);
       }
       this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     }, () => {
