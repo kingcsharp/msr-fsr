@@ -28,11 +28,9 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             _userService = userService;
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IEnumerable<QuickbooksFormatterModel>> FormatAsync(FormatQuickbooks command)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            return command.Invoices.Select(invoice =>
+            return await Task.FromResult(command.Invoices.Select(invoice =>
             {
                 (string invoiceNumber, string data, string type) = FormatInvoiceDataAsync(invoice.Id, command.FormatType)
                                                                     .ConfigureAwait(false)
@@ -47,7 +45,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 };
 
                 return quickbooksFormatter;
-            }).ToList();
+            }).ToList());
         }
 
         private async Task<(string, string, string)> FormatInvoiceDataAsync(int invoiceId, string formatType)
