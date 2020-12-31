@@ -74,56 +74,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
         {
-            IQueryable<EntityFramework.Entities.ProcedureExtra> proceduresQuery =
-                _unitOfWork.Query<EntityFramework.Entities.ProcedureExtra>()
-                    .FromSqlRaw(@"
-                        SELECT [procedure].*, (
-                            SELECT COUNT([product].id)
-                            FROM [product]
-                            WHERE [procedure].id = [product].ProcedureId
-                        ) AS ProductsUsing,
-                        'ProcedureExtra' as Discriminator
-                        FROM [procedure]
-                    ")
-                    .Include(x => x.ProcedureType)
-                    .Include(x => x.ReferenceFiles)
-                    .Include(x => x.LastUpdated);
-
-            if (command.procedureID.HasValue)
-            {
-                proceduresQuery = proceduresQuery
-                    .Where(x => x.Id == command.procedureID.Value);
+            if (command.procedureID.HasValue) {
+                return await GetSingleProcedureAsync(command);
+            } else {
+                return await GetMultipleProcedureAsync(command);
             }
-
-            List<EntityFramework.Entities.ProcedureExtra> procedures = await proceduresQuery.ToListAsync();
-            if (procedures.Count == 0)
-            {
-                throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
-            }
-
-            // map and attach the right files for this object, if any
-            var result = procedures.Select(x =>
-            {
-                var model = _mapper.Map<Domain.Models.Procedure>(x);
-                model.ReferenceFiles = new List<Domain.Models.FileModel>();
-                foreach (FileEntityMap map in x.ReferenceFiles)
-                {
-                    if (map.EntityTableName != nameof(EntityFramework.Entities.Procedure))
-                    {
-                        continue;
-                    }
-                    model.ReferenceFiles.Add(
-                        _mapper.Map<Domain.Models.FileModel>(map.FileObject)
-                    );
-                }
-
-                model.IsRelatedToAProduct = x.ProductsUsing > 0;
-
-                return model;
-            }).OrderBy(x => x.Name).ToList();
-
-            return result;
         }
+
         public async Task<Domain.Models.Procedure> CreateProcedureAsync(CreateProcedure command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
@@ -805,5 +762,66 @@ namespace MSR.Infrastructure.Resources.Services.Part
             parsedData.procedureStepExtras = newStepsExtra;
             return errors;
         }
+
+        private async Task<ICollection<Domain.Models.Procedure>> GetSingleProcedureAsync(GetProcedure command)
+        {
+            if (!command.procedureID.HasValue)
+            {
+                throw new DomainException("ID must have value", DomainError.BadRequest);
+            }
+
+            List<EntityFramework.Entities.Procedure> procedures;
+            procedures = await _unitOfWork.Procedures
+                .Query()
+                .Include(x => x.ProcedureType)
+                .Include(x => x.ReferenceFiles)
+                .Where(x => x.Id == command.procedureID.Value)
+                .ToListAsync();
+
+            // map and attach the right files for this object, if any
+            var result = procedures.Select(x =>
+            {
+                var model = _mapper.Map<Domain.Models.Procedure>(x);
+                model.ReferenceFiles = new List<Domain.Models.FileModel>();
+                foreach (FileEntityMap map in x.ReferenceFiles)
+                {
+                    if (map.EntityTableName != nameof(EntityFramework.Entities.Procedure))
+                    {
+                        continue;
+                    }
+                    model.ReferenceFiles.Add(
+                        _mapper.Map<Domain.Models.FileModel>(map.FileObject)
+                    );
+                }
+                return model;
+            }).OrderBy(x => x.Name).ToList();
+
+            return result;
+
+        }
+
+        private async Task<ICollection<Domain.Models.Procedure>> GetMultipleProcedureAsync(GetProcedure command)
+        {
+            IQueryable<ProcedureExtra> proceduresQuery =
+                _unitOfWork.Query<ProcedureExtra>()
+                    .FromSqlRaw(@"
+                        SELECT [procedure].*, (
+                            SELECT COUNT([product].id)
+                            FROM [product]
+                            WHERE [procedure].id = [product].ProcedureId
+                        ) AS ProductsUsing
+                        FROM [procedure]
+                    ")
+                    .Include(x => x.ProcedureType)
+                    .Include(x => x.LastUpdated);
+
+            List<ProcedureExtra> procedures = await proceduresQuery.ToListAsync();
+
+            // map and attach the right files for this object, if any
+            var result = _mapper.Map<List<Domain.Models.Procedure>>(procedures);
+
+            return result;
+        }
+
     }
 }
