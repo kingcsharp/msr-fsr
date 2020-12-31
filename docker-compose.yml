@@ -26,6 +26,17 @@ services:
     restart: always
     links:
       - api
+  message:
+    build:
+      context: .
+      dockerfile: MSR.Answer.MessageHub/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=QA
+    expose:
+      - "5001"
+    restart: always
+    links:
+      - api
   reverseproxy:
     build:
       context: ./reverseproxy

@@ -74,7 +74,7 @@ pipeline {
 
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
-                                        deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
+                                        //deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
                                     }
                                 //}
 
@@ -124,6 +124,13 @@ pipeline {
 
                                 sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                 sh "docker push ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
+
+                                echo "Building Message container...."
+                                sh "docker build -f MSR.Answer.MessageHub/Dockerfile -t msr-message ."
+                                sh "docker tag msr-message ${ACCOUNT_URL}/msr-message:${env.GIT_COMMIT}"
+
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-message:${env.GIT_COMMIT}"
                             } catch(e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the API image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
@@ -141,8 +148,8 @@ pipeline {
                                     //sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
                                 echo "Deploying Develop"
-                                deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
-                                deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
+                                //deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
+                                //deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
