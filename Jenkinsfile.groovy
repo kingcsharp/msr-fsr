@@ -16,11 +16,15 @@ pipeline {
         UAT_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
         PROD_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-prod/0d264f923b3ca5c5"
         PROD_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-prod/a05ebf3f959d039b"
+        MESSAGE_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-message-qa/a77318365ce97cd4"
         QA_PROJECT_API='qa-answer-api'
+        QA_PROJECT_MESSAGE='qa-answer-message'
         QA_PROJECT_UI='qa-answer-ui'
         UAT_PROJECT_API='uat-answer-api'
+        UAT_PROJECT_MESSAGE='uat-answer-message'
         UAT_PROJECT_UI='uat-answer-ui'
         PROD_PROJECT_API='prod-answer-api'
+        PROD_PROJECT_MESSAGE='prod-answer-message'
         PROD_PROJECT_UI='prod-answer-ui'
         API_COMPOSE='docker-compose-api.yml'
         API_COMPOSE_PROCESSOR='docker-compose-api-processor.yml'
@@ -153,6 +157,7 @@ pipeline {
                                 echo "Deploying Develop"
                                 //deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
                                 //deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
+                                deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${MESSAGE_TARGET_ARN}", "message")
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
@@ -366,7 +371,5 @@ void deploy_processor(composeFile,name,target, app) {
         sh "ecs-cli configure profile --access-key AKIAWGEEZQATRVZEHMGB --secret-key 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 --profile-name answer-profile"
 
         sh "ecs-cli compose --file ${composeFile} --project-name ${name}-processor service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --timeout 15"
-        //sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 0 -—timeout 15"
-
     }
 }
