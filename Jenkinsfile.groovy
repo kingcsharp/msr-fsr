@@ -353,7 +353,7 @@ pipeline {
     }
 }
 
-void deploy(composeFile,name,target, app) {
+def deploy(composeFile,name,target, app) {
     withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
         sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
         sh "ecs-cli configure profile --access-key ${KEY} --secret-key ${PASS} --profile-name answer-profile"
@@ -363,7 +363,7 @@ void deploy(composeFile,name,target, app) {
     }
 }
 
-void deploy_processor(composeFile,name,target, app) {
+def deploy_processor(composeFile,name,target, app) {
     withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
         sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
         sh "ecs-cli configure profile --access-key ${KEY} --secret-key ${PASS} --profile-name answer-profile"
