@@ -415,7 +415,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
             {
-                _unitOfWork.Procedures.Delete(false, current);
+                _unitOfWork.Procedures.LoadCollection(current, "ProcedureSteps");
+                var procedureStepIds = current.ProcedureSteps.Select(x => x.Id).ToList();
+
+                _unitOfWork.ProcedureStepRoleMaps
+                    .Query()
+                    .Where(x => procedureStepIds.Contains(x.ProcedureStepId))
+                    .Select(x => x.Id)
+                    .ToList()
+                    .ForEach(id => {
+                        _unitOfWork.ProcedureStepRoleMaps.Delete(false, id);
+                    });
+
+                _unitOfWork.CascadeDelete(current);
                 await _unitOfWork.SaveChangesAsync();
             }
             else
