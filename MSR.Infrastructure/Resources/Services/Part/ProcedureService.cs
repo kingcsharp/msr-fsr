@@ -388,6 +388,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         _unitOfWork.ProcedureStepRoleMaps.Delete(false, id);
                     });
 
+                _unitOfWork.ProcedureStepMonitors
+                    .Query()
+                    .Where(x => procedureStepIds.Contains(x.ProcedureStepId))
+                    .Select(x => x.Id)
+                    .ToList()
+                    .ForEach(id => {
+                        _unitOfWork.ProcedureStepMonitors.Delete(false, id);
+                    });
+
                 _unitOfWork.CascadeDelete(current);
                 await _unitOfWork.SaveChangesAsync();
             }
