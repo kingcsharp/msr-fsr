@@ -586,9 +586,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return retUser;
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var userRoles = _unitOfWork.UserRoles.Query();
 
@@ -597,14 +595,20 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 userRoles = userRoles.Where(i => i.UserId == command.Id.Value);
             }
 
-            return userRoles.Include(i => i.User).Include(i => i.Role).Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value).Select(i => new TrainingCertificationView()
-            {
-                CertificationFromDate = i.CertificationFromDate,
-                CertificationToDate = i.CertificationToDate,
-                EmployeeName = i.User.GetFullName(),
-                Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active"),
-                CertificationName = i.Role.Name
-            }).AsEnumerable();
+            return await Task.FromResult(userRoles
+                .Include(i => i.User)
+                .Include(i => i.Role)
+                .Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value)
+                .Select(i => new TrainingCertificationView()
+                    {
+                        CertificationFromDate = i.CertificationFromDate,
+                        CertificationToDate = i.CertificationToDate,
+                        EmployeeName = i.User.GetFullName(),
+                        Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active"),
+                        CertificationName = i.Role.Name
+                    }
+                ).AsEnumerable()
+            );
         }
     }
 }
