@@ -17,6 +17,8 @@ services:
         awslogs-stream-prefix: answer3-message-dev
   status:
     image: nginx
+    ports:
+      - "8080:8080"
   messageproxy:
     image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-message:Dev04
     ports:

@@ -304,12 +304,8 @@ def deploy(composeFile,name,target, app) {
         sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
         sh "ecs-cli configure profile --access-key ${KEY} --secret-key ${PASS} --profile-name answer-profile"
 
-        if(app == "messagehub") {
-            sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
-        } else {
-            sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
-            //sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 2"
-        }
+        sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
+        //sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 2"
     }
 }
 
