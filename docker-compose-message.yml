@@ -1,20 +1,20 @@
 version: '3'
 
 services:
-  messagehub:
-    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-message:1be43534978fa661dbd9d8c9649e3a2cc62495e4
-    expose:
-      - "5003"
-    ports:
-      - "5003:5003"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=QA
-    logging:
-      driver: awslogs
-      options:
-        awslogs-group: answer3
-        awslogs-region: us-west-2
-        awslogs-stream-prefix: answer3-message-dev
+#  messagehub:
+#    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-message:1be43534978fa661dbd9d8c9649e3a2cc62495e4
+#    expose:
+#      - "5003"
+#    ports:
+#      - "5003:5003"
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=QA
+#    logging:
+#      driver: awslogs
+#      options:
+#        awslogs-group: answer3
+#        awslogs-region: us-west-2
+#        awslogs-stream-prefix: answer3-message-dev
   status:
     image: nginx
     ports:
