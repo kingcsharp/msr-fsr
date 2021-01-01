@@ -200,7 +200,7 @@ namespace MSR.Infrastructure.Profiles
 
             #region Procedure
             CreateMap<ProcedureExtra, Domain.Models.Procedure>()
-                .ForMember(dest => dest.IsRelatedToAProduct, opts => opts.MapFrom(src => src.ProductsUsing > 0));
+                .ForMember(dest => dest.IsRelatedToAProduct, opts => opts.MapFrom(src => src.CountProductsUsing > 0));
             CreateMap<Procedure, Domain.Models.Procedure>();
             CreateMap<ProcedureStepApproval, ProcedureStepModel>()
                 // if the approval exists, the step is pending approval

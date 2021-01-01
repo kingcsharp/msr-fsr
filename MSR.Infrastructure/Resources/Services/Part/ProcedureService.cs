@@ -18,6 +18,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Data;
 using System;
+using MSR.Infrastructure.Resources.EntityFramework.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -77,7 +78,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (command.procedureID.HasValue) {
                 return await GetSingleProcedureAsync(command);
             } else {
-                return await GetMultipleProcedureAsync(command);
+                return await GetAllProceduresAsync();
             }
         }
 
@@ -809,18 +810,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         }
 
-        private async Task<ICollection<Domain.Models.Procedure>> GetMultipleProcedureAsync(GetProcedure command)
+        private async Task<ICollection<Domain.Models.Procedure>> GetAllProceduresAsync()
         {
             IQueryable<ProcedureExtra> proceduresQuery =
                 _unitOfWork.Query<ProcedureExtra>()
-                    .FromSqlRaw(@"
-                        SELECT [procedure].*, (
-                            SELECT COUNT([product].id)
-                            FROM [product]
-                            WHERE [procedure].id = [product].ProcedureId
-                        ) AS ProductsUsing
-                        FROM [procedure]
-                    ")
+                    .GetProceduresWithProductCount()
                     .Include(x => x.ProcedureType)
                     .Include(x => x.LastUpdated);
 
