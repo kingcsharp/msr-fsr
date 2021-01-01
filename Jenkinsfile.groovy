@@ -32,22 +32,6 @@ pipeline {
         UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
-        //stage("Running xUnit Tests") {
-        //    agent { label 'ubuntu-node' }
-        //    steps {
-        //        script {
-        //            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-        //                sh "git mv Msr.Infrastructure MSR.Infrastructure"
-        //                sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
-        //                sh 'dotnet test MSR.Application.Tests/ --logger trx;LogFileName=unit_tests.xml'
-        //                sh 'dotnet test MSR.Domain.Tests/ --logger trx;LogFileName=unit_tests.xml'
-        //                sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
-        //                step([$class: 'MSTestPublisher', testResultsFile: "**/*.trx", failOnError: true, keepLongStdio: true])
-        //                sh "exit 1"
-        //            }
-        //        }
-        //    }
-        //}
         stage('Build & Deploy') {
             parallel {
                 stage('Build & Deploy UI to QA') {
@@ -56,7 +40,6 @@ pipeline {
                         script {
                             try {
                                 dir('MSR.UI/MSR.UI.Answer') {
-                                    //sh "sudo chmod 777 /var/run/docker.sock"
                                     sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui ."
                                     sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
@@ -73,14 +56,11 @@ pipeline {
                                 sh "sh update_image.sh QA ${env.GIT_COMMIT} ${UI_COMPOSE}"
                                 sh "cat ${UI_COMPOSE}"
 
-                                //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                                    //sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
-                                    //sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
+                                if(env.BRANCH_NAME == 'Develop') {
+                                    echo "Deploying Develop"
+                                    //deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
+                                }
 
-                                    if(env.BRANCH_NAME == 'Develop') {
-                                        echo "Deploying Develop"
-                                    }
-                                //}
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
@@ -156,12 +136,10 @@ pipeline {
                                 sh "cat ${API_COMPOSE_PROCESSOR}"
                                 sh "cat ${API_COMPOSE_MESSAGE}"
 
-                                //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                                    //sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
-                                    //sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
-
                                 echo "Deploying Develop"
-                                deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${MESSAGE_TARGET_ARN}", "message")
+                                //deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
+                                //deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
+                                deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${MESSAGE_TARGET_ARN}", "messagehub")
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
@@ -222,7 +200,6 @@ pipeline {
                     steps {
                         script {
                             dir('MSR.UI/MSR.UI.Answer') {
-                                //sh "sudo chmod 777 /var/run/docker.sock"
                                 sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
                                 sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
@@ -319,41 +296,6 @@ pipeline {
                 }
             }
         }
-
-        /*
-        stage("Running API Tests") {
-            agent { label 'jenkins-ecs-slave' }
-            steps {
-                script {
-                    sh label: '', script: '''curl -u Vi5GHlZj0Cb5sUlC: "https://assertible.com/deployments" -d\'{
-                        "service": "7c13748e-0e5d-43e5-9d74-6f4e7f09bb0a",
-                        "environment": "dev",
-                        "version": "v1",
-                        "ref": "'"$(git rev-parse HEAD)"'",
-                        "github": true
-                    }\''''
-                }
-            }
-        }
-        */
-        /*
-        stage("Run Cypress Test") {
-            agent { label 'master' }
-            steps {
-                script {
-                    sh "sudo chmod 777 /var/run/docker.sock"
-                    sh "git mv Msr.Infrastructure MSR.Infrastructure"
-                    sh 'docker-compose up --build -d'
-                    sh './count_containers.sh running'
-                    dir('MSR.UI/MSR.UI.Answer') {
-                        sh 'yarn'
-                        sh './node_modules/.bin/cypress run --record --key 48818e2d-4f0f-4541-8176-b9541ee0064d'
-                    }
-                    sh 'ocker-compose down'
-                }
-            }
-        }
-        */
     }
 }
 
@@ -362,8 +304,12 @@ def deploy(composeFile,name,target, app) {
         sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
         sh "ecs-cli configure profile --access-key ${KEY} --secret-key ${PASS} --profile-name answer-profile"
 
-        sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
-        //sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 2"
+        if(app == "messagehub") {
+            sh "ecs-cli compose --file ${composeFile} --ecs-params ecs-params-message.yml --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
+        } else {
+            sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
+            //sh "ecs-cli compose --file ${composeFile} --project-name ${name} --cluster-config answer-config --ecs-profile answer-profile service scale 2"
+        }
     }
 }
 
