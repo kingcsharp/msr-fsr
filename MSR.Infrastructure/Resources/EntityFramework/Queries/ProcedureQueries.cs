@@ -20,12 +20,24 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Queries
         {
             try
             {
+
                 return dbSet.FromSqlRaw(@"
-                        SELECT [procedure].*, (
-                            SELECT COUNT([product].id)
-                            FROM [product]
-                            WHERE [procedure].id = [product].ProcedureId
-                        ) AS CountProductsUsing
+                        SELECT
+                            [procedure].Name,
+                            [procedure].ProcedureTypeId,
+                            [procedure].Revision,
+                            [procedure].Duration,
+                            [procedure].DurationType,
+                            [procedure].LastUpdatedOn,
+                            [procedure].LastUpdatedBy,
+                            [procedure].Id,
+                            [procedure].CreatedBy,
+                            [procedure].CreatedOn,
+                            (
+                                SELECT COUNT([product].id)
+                                FROM [product]
+                                WHERE [procedure].id = [product].ProcedureId
+                            ) AS CountProductsUsing
                         FROM [procedure]
                 ");
             }
