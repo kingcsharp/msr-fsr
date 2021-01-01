@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace MSR.Infrastructure.Resources.EntityFramework.Projections
+namespace MSR.Infrastructure.Resources.Projections
 {
     public static class InvoiceProjection
     {

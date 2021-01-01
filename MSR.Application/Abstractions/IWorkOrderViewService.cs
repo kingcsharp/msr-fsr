@@ -1,4 +1,5 @@
-﻿using MSR.Domain.Views;
+﻿using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,7 @@ namespace MSR.Application.Abstractions
 {
     public interface IWorkOrderViewService
     {
-        Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrders();
+        Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersAsync();
+        Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistoryAsync();
     }
 }

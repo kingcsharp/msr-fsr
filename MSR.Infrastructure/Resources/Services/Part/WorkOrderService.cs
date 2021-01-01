@@ -170,8 +170,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             // Note the menu permission here: Purchases.  Work orders are created by a user
             // entering a purchase against a purchase order.  The Processor then creates the
-            // work order as that user.  Therefore, per REQ61, the permission required
-            // is EnumMenuItem.Purchases (see SBB-304).
+            // work order as that user.  
             if (!CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
             {
                 throw new DomainException(
@@ -1033,6 +1032,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             return status;
         }
+
         private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
         {
             var getWorkOrderCommand = new GetWorkOrder()
@@ -1056,30 +1056,24 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     workOrderGridSummary.CurrentActiveTaskName = workOrderTaskEntityInProgress.ProcedureStep?.Title;
                 }
 
-                workOrderGridSummary.CustomerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name;
-                if (string.IsNullOrEmpty(workOrderGridSummary.CustomerName))
-                {
-                    workOrderGridSummary.CustomerName = String.Empty;
-                }
-
+                workOrderGridSummary.CustomerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name ?? string.Empty;
                 workOrderGridSummary.WorkOrderItemNumber = GetWorkOrderItemNumber(workOrderModel);
-
                 workOrderGridSummary.ReferencePO = workOrderModel.Purchase?.PurchaseOrder?.ReferencePO;
 
                 var firstWorkOrderTask = workOrderModel.WorkOrderTasks.OrderBy(s => s.TaskStepOrder).FirstOrDefault();
-                workOrderGridSummary.ProcedureName = firstWorkOrderTask == null ? String.Empty : firstWorkOrderTask.ProcedureStep?.Procedure?.Name;
+                workOrderGridSummary.ProcedureName = firstWorkOrderTask == null ? string.Empty : firstWorkOrderTask.ProcedureStep?.Procedure?.Name;
 
                 // Disposition
                 // This is a string join of the text values of
                 // all procedure steps with a type of "NC Disposition"
-                workOrderGridSummary.Disposition = String.Empty;
+                workOrderGridSummary.Disposition = string.Empty;
                 if (workOrderModel.HasNCR.GetValueOrDefault())
                 {
                     var workOrderTaskModels = workOrderModel.WorkOrderTasks.Where(x =>
                         x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC).ToList();
                     if (workOrderTaskModels.Any())
                     {
-                        string dispositionMessage = String.Empty;
+                        string dispositionMessage = string.Empty;
                         foreach (WorkOrderTaskModel workOrderTaskModel in workOrderTaskModels)
                         {
                             dispositionMessage +=
