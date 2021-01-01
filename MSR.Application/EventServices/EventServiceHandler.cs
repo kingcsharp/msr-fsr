@@ -111,7 +111,7 @@ namespace MSR.Application.EventServices
                 await _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
                 {
                     Message = $"Import {Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem)} " +
-                              $"ERROR: {e.Message}",
+                              $"ERROR: {e}",
                     Status = EnumToasterStatus.Error
                 });
                 throw;

@@ -79,7 +79,6 @@ pipeline {
 
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
-                                        //deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
                                     }
                                 //}
 
@@ -155,8 +154,6 @@ pipeline {
                                     //sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
                                 echo "Deploying Develop"
-                                //deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
-                                //deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
                                 deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${MESSAGE_TARGET_ARN}", "message")
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"

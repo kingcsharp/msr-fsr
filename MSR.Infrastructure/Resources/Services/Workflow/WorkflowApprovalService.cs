@@ -387,7 +387,9 @@ namespace MSR.Infrastructure.Resources.Services
                                 pendingApprovalModel.Rows
                                     .Add($"Procedure Step {oldStep.Id}: {s}");
                             }
-                        } catch (Exception) {
+                        }
+                        catch (Exception)
+                        {
                             // there was an error comparing
                             // the objects, use generic message
                             pendingApprovalModel.Rows
