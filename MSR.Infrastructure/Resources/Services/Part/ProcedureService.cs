@@ -812,13 +812,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         private async Task<ICollection<Domain.Models.Procedure>> GetAllProceduresAsync()
         {
-            IQueryable<ProcedureExtra> proceduresQuery =
-                _unitOfWork.Query<ProcedureExtra>()
+            IQueryable<ProcedureWithUsedProductCount> proceduresQuery =
+                _unitOfWork.Query<ProcedureWithUsedProductCount>()
                     .GetProceduresWithProductCount()
                     .Include(x => x.ProcedureType)
                     .Include(x => x.LastUpdated);
 
-            List<ProcedureExtra> procedures = await proceduresQuery.ToListAsync();
+            List<ProcedureWithUsedProductCount> procedures = await proceduresQuery.ToListAsync();
 
             var result = _mapper.Map<List<Domain.Models.Procedure>>(procedures);
 

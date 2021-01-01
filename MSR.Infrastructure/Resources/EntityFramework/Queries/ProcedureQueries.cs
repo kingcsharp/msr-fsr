@@ -16,7 +16,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Queries
 {
     public static class ProcedureQueries
     {
-        public static IQueryable<ProcedureExtra> GetProceduresWithProductCount(this DbSet<ProcedureExtra> dbSet)
+        public static IQueryable<ProcedureWithUsedProductCount> GetProceduresWithProductCount(this DbSet<ProcedureWithUsedProductCount> dbSet)
         {
             try
             {

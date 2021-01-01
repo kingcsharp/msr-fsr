@@ -58,7 +58,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<DocumentEntityMap> DocumentEntityMap { get; set; }
         public DbSet<Part> Part { get; set; }
         public DbSet<Procedure> Procedure { get; set; }
-        public DbSet<ProcedureExtra> ProcedureExtra { get; set; }
+        public DbSet<ProcedureWithUsedProductCount> ProcedureWithUsedProductCount { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<ProductStep> ProductStep { get; set; }

@@ -199,7 +199,7 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             #region Procedure
-            CreateMap<ProcedureExtra, Domain.Models.Procedure>()
+            CreateMap<ProcedureWithUsedProductCount, Domain.Models.Procedure>()
                 .ForMember(dest => dest.IsRelatedToAProduct, opts => opts.MapFrom(src => src.CountProductsUsing > 0));
             CreateMap<Procedure, Domain.Models.Procedure>();
             CreateMap<ProcedureStepApproval, ProcedureStepModel>()

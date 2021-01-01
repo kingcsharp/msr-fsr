@@ -1,7 +1,7 @@
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     // read-only view for the procedure grid
-    public partial class ProcedureExtra: TrackableEntity
+    public partial class ProcedureWithUsedProductCount: TrackableEntity
     {
         public string Name { get; protected set; }
         public int ProcedureTypeId { get; protected set; }
