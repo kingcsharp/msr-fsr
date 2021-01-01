@@ -826,7 +826,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             List<ProcedureExtra> procedures = await proceduresQuery.ToListAsync();
 
-            // map and attach the right files for this object, if any
             var result = _mapper.Map<List<Domain.Models.Procedure>>(procedures);
 
             return result;
