@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  message:
+  messagehub:
     image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-message:1be43534978fa661dbd9d8c9649e3a2cc62495e4
     expose:
       - "5001"
