@@ -250,6 +250,17 @@ export class InvoiceComponent implements OnInit {
     }, 10);
   }
 
+  onChangeWorkorders() {
+    this.isSelectAllWorkOrders = true;
+    this.workorders.forEach((workorder, index) => {
+      const isChecked = this.currentInvoice.invoiceItems.some(i => i.workOrderId === workorder.id);
+      this.workorders[index]['checked']  = isChecked;
+      if (!isChecked) {
+        this.isSelectAllWorkOrders = false;
+      }
+    });
+  }
+
   selectAllWorkOrders(event) {
     this.showInvoiceItems = false;
 

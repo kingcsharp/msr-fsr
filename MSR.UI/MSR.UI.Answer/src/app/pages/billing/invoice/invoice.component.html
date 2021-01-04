@@ -218,7 +218,7 @@
             <div class="col-md-10 col-12">
               <multiselect-wrapper-form *ngIf="showInvoiceItems" [options]="invoiceItemOptions"
                 [(model)]="currentInvoice.invoiceItems" defaultId="workOrderId" defaultLabelProperty="workOrderId"
-                defaultLabel="Select Work Orders">
+                defaultLabel="Select Work Orders" (onSelectChange)="onChangeWorkorders()">
               </multiselect-wrapper-form>
               <input pInputText type="text" hidden class="form-control input-transparent" name="invoiceitemshdn"
                 [value]="currentInvoice.invoiceItems.length" data-validate="parsley" data-parsley-trigger="change"
