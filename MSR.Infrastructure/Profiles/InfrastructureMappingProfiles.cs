@@ -199,7 +199,25 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             #region Procedure
-            CreateMap<ProcedureWithUsedProductCount, Domain.Models.Procedure>()
+            CreateMap<ProcedureWithUsedProductCountView, Domain.Models.Procedure>()
+                .ForMember(dest => dest.ProcedureType, opts => opts.MapFrom(src => new MSR.Domain.Models.ProcedureType()
+                {
+                    Id = src.ProcedureTypeId,
+                    Name = src.ProcedureTypeName
+                }))
+                .ForMember(dest => dest.LastUpdated, opts => opts.MapFrom(src => new MSR.Domain.Models.UserModel()
+                {
+                    Id = src.LastUpdatedById,
+                    FirstName = src.LastUpdatedByFirstName,
+                    LastName = src.LastUpdatedByLastName
+                }))
+                .ForMember(dest => dest.CreatedBy, opts => opts.MapFrom(src => src.CreatedById))
+                .ForMember(dest => dest.Created, opts => opts.MapFrom(src => new MSR.Domain.Models.UserModel()
+                {
+                    Id = src.CreatedById,
+                    FirstName = src.CreatedByFirstName,
+                    LastName = src.CreatedByLastName
+                }))
                 .ForMember(dest => dest.IsRelatedToAProduct, opts => opts.MapFrom(src => src.CountProductsUsing > 0));
             CreateMap<Procedure, Domain.Models.Procedure>();
             CreateMap<ProcedureStepApproval, ProcedureStepModel>()

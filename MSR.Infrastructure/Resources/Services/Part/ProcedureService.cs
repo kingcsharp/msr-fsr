@@ -19,6 +19,8 @@ using System.Threading.Tasks;
 using System.Data;
 using System;
 using MSR.Infrastructure.Resources.EntityFramework.Queries;
+using MSR.Infrastructure.Resources.EntityFramework.Projections;
+using MSR.Domain.Views;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -812,15 +814,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         private async Task<ICollection<Domain.Models.Procedure>> GetAllProceduresAsync()
         {
-            IQueryable<ProcedureWithUsedProductCount> proceduresQuery =
-                _unitOfWork.Query<ProcedureWithUsedProductCount>()
-                    .GetProceduresWithProductCount()
-                    .Include(x => x.ProcedureType)
-                    .Include(x => x.LastUpdated);
+            ICollection<ProcedureWithUsedProductCountView> procedures =
+                await _unitOfWork.Query<EntityFramework.Entities.Procedure>()
+                    .GetProceduresWithProductCount(
+                        ProcedureProjections.ProcedureWithUsedProductCountView);
 
-            List<ProcedureWithUsedProductCount> procedures = await proceduresQuery.ToListAsync();
-
-            var result = _mapper.Map<List<Domain.Models.Procedure>>(procedures);
+            var result = _mapper.Map<ICollection<Domain.Models.Procedure>>(procedures);
 
             return result;
         }

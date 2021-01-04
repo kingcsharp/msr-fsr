@@ -16,30 +16,16 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Queries
 {
     public static class ProcedureQueries
     {
-        public static IQueryable<ProcedureWithUsedProductCount> GetProceduresWithProductCount(this DbSet<ProcedureWithUsedProductCount> dbSet)
+        public async static Task<ICollection<ProcedureWithUsedProductCountView>> GetProceduresWithProductCount(this DbSet<Procedure> dbSet, Expression<Func<Procedure, dynamic>> projection)
         {
             try
             {
+                var dynamicData =  await dbSet.Select(projection)
+                    .ToListAsync();
 
-                return dbSet.FromSqlRaw(@"
-                        SELECT
-                            [procedure].Name,
-                            [procedure].ProcedureTypeId,
-                            [procedure].Revision,
-                            [procedure].Duration,
-                            [procedure].DurationType,
-                            [procedure].LastUpdatedOn,
-                            [procedure].LastUpdatedBy,
-                            [procedure].Id,
-                            [procedure].CreatedBy,
-                            [procedure].CreatedOn,
-                            (
-                                SELECT COUNT([product].id)
-                                FROM [product]
-                                WHERE [procedure].id = [product].ProcedureId
-                            ) AS CountProductsUsing
-                        FROM [procedure]
-                ");
+                var procedureViews = JsonConvert.DeserializeObject<ICollection<ProcedureWithUsedProductCountView>>(JsonConvert.SerializeObject(dynamicData));
+
+                return procedureViews;
             }
             catch(Exception ex)
             {
