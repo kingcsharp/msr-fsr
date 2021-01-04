@@ -80,6 +80,12 @@ export class ProceduresComponent implements OnInit {
   delete() {
     this.globals.showLoader(true);
     this.procedureService.procedureDelete(this.procedureToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+      // success, remove row
+      let idx = this.data.findIndex((x) => (x.id == this.procedureToDelete.id));
+      if (idx >= 0) {
+        this.data.splice(idx, 1);
+        this.data = this.data.slice(0);
+      }
       this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     }, () => {
       this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;

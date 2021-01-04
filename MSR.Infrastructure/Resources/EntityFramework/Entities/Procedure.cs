@@ -33,6 +33,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual ICollection<ProcedureStep> ProcedureSteps { get; set; }
 
+        /// <summary>
+        /// Products in which this procedure is used.
+        /// </summary>
+        public virtual ICollection<Product> Products { get; set; }
+
         // Because of EF limitations, this list of files will be all files with
         // this entity ID OF ANY TYPE, and must be further filtered in the
         // query to get the real list.
