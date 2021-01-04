@@ -39,6 +39,7 @@ export class MultiselectWrapperFormComponent implements OnInit {
     const selectedObjIndex = this.selectedObjs.items.findIndex(x => x.id === elem.id);
     this.selectedObjs.items.splice(selectedObjIndex, 1);
     this.model.splice(index, 1);
+    this.modelChange.emit(this.model);
   }
 
   getElementValue(elem) {
