@@ -220,7 +220,8 @@ namespace MSR.Infrastructure.Profiles
                     LastName = src.CreatedByLastName
                 }))
                 .ForMember(dest => dest.IsRelatedToAProduct, opts => opts.MapFrom(src => src.CountProductsUsing > 0));
-            CreateMap<Procedure, Domain.Models.Procedure>();
+            CreateMap<Procedure, Domain.Models.Procedure>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore());
             CreateMap<ProcedureStepApproval, ProcedureStepModel>()
                 // if the approval exists, the step is pending approval
                 .ForMember(i => i.ApprovalStatus, opts => opts.MapFrom(src => "Pending"));
@@ -278,6 +279,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureApproval, UpdateProcedure>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProcedureId));
             CreateMap<UpdateProcedure, Procedure>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<UpdateProcedureStep, ProcedureStepApproval>()

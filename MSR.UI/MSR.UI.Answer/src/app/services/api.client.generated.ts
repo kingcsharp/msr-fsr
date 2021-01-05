@@ -12845,6 +12845,7 @@ export class Procedure extends TrackableModel implements IProcedure {
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
+    referenceFileIds?: number[] | undefined;
 
     constructor(data?: IProcedure) {
         super(data);
@@ -12872,6 +12873,11 @@ export class Procedure extends TrackableModel implements IProcedure {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
                     this.roles!.push(Role.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
             }
         }
     }
@@ -12905,6 +12911,11 @@ export class Procedure extends TrackableModel implements IProcedure {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
         super.toJSON(data);
         return data; 
     }
@@ -12923,6 +12934,7 @@ export interface IProcedure extends ITrackableModel {
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
+    referenceFileIds?: number[] | undefined;
 }
 
 export class ProcedureType implements IProcedureType {
