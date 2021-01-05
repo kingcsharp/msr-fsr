@@ -173,7 +173,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
 
                 procedureModel.ReferenceFiles = fileReferences;
-                procedureModel.ReferenceFileIds = fileReferences.Select(f => f.FileId).Cast<int>().ToList();
             }
             else
             {
