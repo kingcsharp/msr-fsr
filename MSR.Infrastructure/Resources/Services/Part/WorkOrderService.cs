@@ -98,6 +98,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .ThenInclude(y => y.Role)
                 .Where(s => workOrderTaskEntities.Select(m => m.ProcedureStepId).Contains(s.Id)).ToListAsync();
 
+            _ = await _unitOfWork.WorkOrderMessages.Query().Where(x => workOrderIds.Contains(x.WorkOrderId)).ToListAsync();
             _ = await _unitOfWork.Procedures.Query().Where(s => procedureStepEntities.Select(m => m.ProcedureId).Contains(s.Id)).ToListAsync();
             _ = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(m => m.ProcedureStepMonitor)
                 .Where(s => workOrderTaskEntities.Select(m => m.Id).Contains(s.WorkOrderTaskId)).ToListAsync();
@@ -1077,20 +1078,28 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 {
                     var workOrderTaskModels = workOrderModel.WorkOrderTasks.Where(x =>
                         x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC).ToList();
+                    string dispositionMessage = String.Empty;
                     if (workOrderTaskModels.Any())
                     {
-                        string dispositionMessage = String.Empty;
                         foreach (WorkOrderTaskModel workOrderTaskModel in workOrderTaskModels)
                         {
                             dispositionMessage +=
                                 String.Join(" ",
                                     workOrderTaskModel.WorkOrderTaskMonitors.Select(x =>
-                                        x.TextVal
+                                        x.TextVal == null ? "" : x.TextVal
                                     ).ToList()
                                 ) + " ";
                         }
-                        workOrderGridSummary.Disposition = dispositionMessage;
                     }
+                    if (workOrderModel.WorkOrderMessages != null)
+                    {
+                        dispositionMessage += String.Join(" ",
+                            workOrderModel.WorkOrderMessages.Select(x =>
+                                x.Message == null ? "" : x.Message
+                            ).ToList()
+                        );
+                    }
+                    workOrderGridSummary.Disposition = dispositionMessage.Trim();
                 }
 
                 var statusValues = GetStatusValues(workOrderModel);
