@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSR.Infrastructure.Resources.EntityFramework.Queries
+namespace MSR.Infrastructure.Resources.Queries
 {
     public static class InvoiceQueries
     {

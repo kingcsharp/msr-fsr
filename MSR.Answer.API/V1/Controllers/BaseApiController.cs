@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using MSR.Answer.API.V1.Models;
 using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Helpers;
@@ -32,6 +33,14 @@ namespace MSR.Answer.API.V1.Controllers
                     Count = count
                 });
             }
+        }
+
+        protected IActionResult GenerateOkViewResponse<T>(T responseData)
+        {
+            return Ok(new AuditActionResult<T>()
+            {
+                Object = responseData
+            });
         }
     }
 }
