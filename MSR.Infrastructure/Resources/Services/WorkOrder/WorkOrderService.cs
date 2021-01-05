@@ -18,7 +18,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 
-namespace MSR.Infrastructure.Resources.Services.Part
+namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
     public class WorkOrderService : IWorkOrderService
     {
@@ -48,7 +48,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
 
-            IQueryable<WorkOrder> query = _unitOfWork.WorkOrders.Query();
+            IQueryable<EntityFramework.Entities.WorkOrder> query = _unitOfWork.WorkOrders.Query();
 
             if (command.Id.HasValue && command.Id > 0)
             {
@@ -89,7 +89,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 query = query.Where(i => i.Purchase.PurchaseOrder.CustomerId == command.CustomerId.Value);
             }
 
-            List<WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
+            List<EntityFramework.Entities.WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
             List<int> workOrderIds = workOrderEntities.Select(m => m.Id).ToList();
             _ = await _unitOfWork.WorkOrderParts.Query().Include(m => m.Part).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
             List<WorkOrderTask> workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Include(u => u.ReferenceFiles).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
@@ -183,7 +183,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 command.ScheduledStartDate = DateTime.Now;
             }
 
-            WorkOrder workorder = _mapper.Map<WorkOrder>(command);
+            var workorder = _mapper.Map<EntityFramework.Entities.WorkOrder>(command);
 
             var created = _unitOfWork.WorkOrders.Add(workorder);
 
@@ -614,8 +614,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _unitOfWork.WorkOrderTasks.LoadReference(workOrderTaskEntity, x => x.Status);
             _unitOfWork.WorkOrderTasks.LoadReference(workOrderTaskEntity, x => x.WorkOrder);
 
-            WorkOrder wo = workOrderTaskEntity.WorkOrder;
-            _unitOfWork.WorkOrders.LoadCollection(wo, "WorkOrderTasks");
+            var workOrderEntity = workOrderTaskEntity.WorkOrder;
+            _unitOfWork.WorkOrders.LoadCollection(workOrderEntity, "WorkOrderTasks");
             // "DONE" states are:
             // 4   Cancelled
             // 8   Closed
@@ -626,17 +626,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 if (!workOrderTaskEntity.WorkOrder.ActualStartDate.HasValue)
                 {
-                    wo.ActualStartDate = DateTime.Now;
-                    _unitOfWork.WorkOrders.Update(wo);
+                    workOrderEntity.ActualStartDate = DateTime.Now;
+                    _unitOfWork.WorkOrders.Update(workOrderEntity);
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
-            else if (wo.WorkOrderTasks.All(x => completed.Contains(x.StatusId)))
+            else if (workOrderEntity.WorkOrderTasks.All(x => completed.Contains(x.StatusId)))
             {
                 if (!workOrderTaskEntity.WorkOrder.ActualEndDate.HasValue)
                 {
-                    wo.ActualEndDate = DateTime.Now;
-                    _unitOfWork.WorkOrders.Update(wo);
+                    workOrderEntity.ActualEndDate = DateTime.Now;
+                    _unitOfWork.WorkOrders.Update(workOrderEntity);
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
