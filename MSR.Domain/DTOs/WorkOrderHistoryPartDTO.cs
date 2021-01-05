@@ -7,5 +7,6 @@ namespace MSR.Domain.DTOs
     public class WorkOrderHistoryPartDTO
     {
         public int? Qty { get; set; }
+        public string SerialNumber { get; set; }
     }
 }

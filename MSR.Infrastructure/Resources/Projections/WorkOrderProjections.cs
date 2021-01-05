@@ -39,7 +39,6 @@ namespace MSR.Infrastructure.Resources.Projections
             CustomerName = i.Purchase.PurchaseOrder.Customer.Name,
             LocationId = i.LocationId.Value,
             LocationName = i.Location.Name,
-            SerialNumber = i.Purchase.SerialNumber,
             PurchaseOrderNumber = i.Purchase.PurchaseOrderId,
             ReferencePO = i.Purchase.PurchaseOrder.ReferencePO,
             ScheduledStartDate = i.ScheduledStartDate,

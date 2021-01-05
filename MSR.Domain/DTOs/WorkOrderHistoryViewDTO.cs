@@ -11,7 +11,6 @@ namespace MSR.Domain.DTOs
         public string WorkOrderItemNumber { get; set; }
         public string CustomerName { get; set; }
         public string LocationName { get; set; }
-        public string SerialNumber { get; set; }
         public int? PurchaseOrderNumber { get; set; }
         public string ReferencePO { get; set; }
         public DateTime? ScheduledStartDate { get; set; }

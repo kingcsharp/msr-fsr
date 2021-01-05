@@ -9,6 +9,7 @@ using MSR.Infrastructure.Resources.Queries;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace MSR.Application.ViewServices
 {
@@ -21,11 +22,12 @@ namespace MSR.Application.ViewServices
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrders()
+        public async Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersAsync()
         {
             List<int> invoicedWorkOrderIds = await _unitOfWork.InvoiceItems.Query().Select(i => i.WorkOrderId).Distinct().ToListAsync();
-            
+
             return await _unitOfWork.Query<WorkOrder>().GetInvoiceableWorkOrders(WorkOrderProjections.InvoiceableWorkOrderView, invoicedWorkOrderIds);
+        }
 
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistoryAsync() => await _unitOfWork.Query<WorkOrder>().GetWorkOrderHistory(WorkOrderProjections.WorkOrders);
     }
