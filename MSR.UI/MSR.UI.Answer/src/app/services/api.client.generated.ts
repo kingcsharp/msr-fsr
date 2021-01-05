@@ -13702,27 +13702,16 @@ export interface IAuditActionResultOfICollectionOfProcedureStepModel extends IAu
     object?: ProcedureStepModel[] | undefined;
 }
 
-/**  */
 export class UpdateProcedureRequest implements IUpdateProcedureRequest {
-    /** Gets or Sets the Id */
     id?: number;
-    /** Gets or Sets Name */
     name!: string;
-    /** Gets or Sets IsRelatedToAProduct */
     isRelatedToAProduct?: boolean;
-    /** Gets or Sets ProcedureTypeId */
     procedureTypeId?: number | undefined;
-    /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets RoleIds */
     roleIds?: (number | undefined)[] | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType!: string;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
-    /** Gets or Sets ReferenceFileIds */
     referenceFileIds?: number[] | undefined;
 
     constructor(data?: IUpdateProcedureRequest) {
@@ -13796,27 +13785,16 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
     }
 }
 
-/**  */
 export interface IUpdateProcedureRequest {
-    /** Gets or Sets the Id */
     id?: number;
-    /** Gets or Sets Name */
     name: string;
-    /** Gets or Sets IsRelatedToAProduct */
     isRelatedToAProduct?: boolean;
-    /** Gets or Sets ProcedureTypeId */
     procedureTypeId?: number | undefined;
-    /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets RoleIds */
     roleIds?: (number | undefined)[] | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType: string;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
-    /** Gets or Sets ReferenceFileIds */
     referenceFileIds?: number[] | undefined;
 }
 
