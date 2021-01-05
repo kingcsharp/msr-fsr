@@ -16,7 +16,8 @@
 
   <ItemGroup>
     <Folder Include="Resources\AWS\Abstractions\" />
-    <Folder Include="Resources\Email\Abstrations\" />
+    <Folder Include="Resources\Email\Abstractions\" />
+    <Folder Include="Resources\Dapper\" />
   </ItemGroup>
 
   <ItemGroup>

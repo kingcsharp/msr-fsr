@@ -18,7 +18,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Data;
 using System;
-using MSR.Infrastructure.Resources.EntityFramework.Queries;
+using MSR.Infrastructure.Resources.Queries;
 using MSR.Infrastructure.Resources.EntityFramework.Projections;
 using MSR.Domain.Views;
 

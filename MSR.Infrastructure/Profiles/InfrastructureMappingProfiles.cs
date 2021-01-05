@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using Castle.Core.Internal;
 using MSR.Domain.Validators;
 using System.Runtime.InteropServices.ComTypes;
+using MSR.Domain.DTOs;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -526,6 +527,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.HasNCRs, opts => opts.MapFrom(src => src.HasNCR));
 
             CreateMap<GetPortalWorkOrder, GetWorkOrder>();
+
+            CreateMap<WorkOrderHistoryViewDTO, WorkOrderGridSummary>();
         }
 
         private static bool ignoreNullOrZero(object srcMember)
