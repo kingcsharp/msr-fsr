@@ -131,7 +131,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.Procedure ret;
+            Domain.Models.Procedure procedureModel;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
@@ -143,7 +143,36 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
-                ret = _mapper.Map<Domain.Models.Procedure>(procedure);
+                procedureModel = _mapper.Map<Domain.Models.Procedure>(procedure);
+
+                // Update Reference Files mapping
+                var currentFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), command.Id);
+                var currentFileIds = currentFiles.Select(i => i.FileId).ToList();
+                var fileIdsToAdd = command.ReferenceFileIds.Where(i => !currentFileIds.Contains(i)).ToList();
+                var fileIdsToRemove = currentFileIds.Where(i => !command.ReferenceFileIds.Contains(i.Value)).ToList();
+
+                var fileReferences = new List<FileModel>();
+
+                foreach (var addFileId in fileIdsToAdd)
+                {
+                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Procedure), command.Id, addFileId);
+                }
+
+                foreach (var removeFileId in fileIdsToRemove)
+                {
+                    await _fileService.DetachFilesAsync(nameof(EntityFramework.Entities.Procedure), command.Id, removeFileId);
+                }
+
+                fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), command.Id));
+
+                 foreach (var file in command.ReferenceFiles)
+                {
+                    var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Procedure), procedureModel.Id, file);
+
+                    fileReferences.Add(fileModel);
+                }
+
+                procedureModel.ReferenceFiles = fileReferences;
             }
             else
             {
@@ -154,10 +183,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.Procedure>(approval);
+                procedureModel = _mapper.Map<Domain.Models.Procedure>(approval);
             }
 
-            return ret;
+            return procedureModel;
 
         }
         public async Task<ICollection<Domain.Models.ProcedureStepModel>> GetProcedureStepAsync(GetProcedureStep command)
@@ -785,27 +814,21 @@ namespace MSR.Infrastructure.Resources.Services.Part
             List<EntityFramework.Entities.Procedure> procedures;
             procedures = await _unitOfWork.Procedures
                 .Query()
-                .Include(x => x.ProcedureType)
-                .Include(x => x.ReferenceFiles)
                 .Where(x => x.Id == command.procedureID.Value)
+                .Include(x => x.ProcedureType)
                 .ToListAsync();
+            if (procedures.Count == 0)
+            {
+                throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
+            }
 
             // map and attach the right files for this object, if any
             var result = procedures.Select(x =>
             {
-                var model = _mapper.Map<Domain.Models.Procedure>(x);
-                model.ReferenceFiles = new List<Domain.Models.FileModel>();
-                foreach (FileEntityMap map in x.ReferenceFiles)
-                {
-                    if (map.EntityTableName != nameof(EntityFramework.Entities.Procedure))
-                    {
-                        continue;
-                    }
-                    model.ReferenceFiles.Add(
-                        _mapper.Map<Domain.Models.FileModel>(map.FileObject)
-                    );
-                }
-                return model;
+                var procedureModel = _mapper.Map<Domain.Models.Procedure>(x);
+                procedureModel.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), procedureModel.Id).ToList();
+                
+                return procedureModel;
             }).OrderBy(x => x.Name).ToList();
 
             return result;

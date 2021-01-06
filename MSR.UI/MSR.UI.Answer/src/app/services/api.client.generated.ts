@@ -13702,26 +13702,17 @@ export interface IAuditActionResultOfICollectionOfProcedureStepModel extends IAu
     object?: ProcedureStepModel[] | undefined;
 }
 
-/**  */
 export class UpdateProcedureRequest implements IUpdateProcedureRequest {
-    /** Gets or Sets the Id */
     id?: number;
-    /** Gets or Sets Name */
     name!: string;
-    /** Gets or Sets IsRelatedToAProduct */
     isRelatedToAProduct?: boolean;
-    /** Gets or Sets ProcedureTypeId */
     procedureTypeId?: number | undefined;
-    /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets RoleIds */
     roleIds?: (number | undefined)[] | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType!: string;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    referenceFileIds?: number[] | undefined;
 
     constructor(data?: IUpdateProcedureRequest) {
         if (data) {
@@ -13750,6 +13741,11 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileRequest.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
             }
         }
     }
@@ -13780,30 +13776,26 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
         return data; 
     }
 }
 
-/**  */
 export interface IUpdateProcedureRequest {
-    /** Gets or Sets the Id */
     id?: number;
-    /** Gets or Sets Name */
     name: string;
-    /** Gets or Sets IsRelatedToAProduct */
     isRelatedToAProduct?: boolean;
-    /** Gets or Sets ProcedureTypeId */
     procedureTypeId?: number | undefined;
-    /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets RoleIds */
     roleIds?: (number | undefined)[] | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType: string;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    referenceFileIds?: number[] | undefined;
 }
 
 /**  */
