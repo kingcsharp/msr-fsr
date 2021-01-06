@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MSR.Domain.Helpers;
 using MSR.Domain.DTOs;
+using System.Collections.Concurrent;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -26,11 +27,13 @@ namespace MSR.Infrastructure.Resources.Queries
         public static async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistory(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection)
         {
             var workOrderHistoryViewDTOs = await QueryHelper.GetViewDataFor<WorkOrder,ICollection<WorkOrderHistoryViewDTO>>(dbSet, projection);
-            var workOrderGridSummaryViews = new List<WorkOrderGridSummary>();
+            var workOrderGridSummaryViews = new ConcurrentBag<WorkOrderGridSummary>();
+            var workOrderHistoryBag = new ConcurrentBag<WorkOrderHistoryViewDTO>(workOrderHistoryViewDTOs);
+            var taskList = new List<Task>();
 
-            foreach (var workOrderHistoryViewDTO in workOrderHistoryViewDTOs) 
+            Parallel.ForEach(workOrderHistoryViewDTOs, workOrderHistoryViewDTO => 
             {
-                var workOrderGridSummary = new WorkOrderGridSummary()
+                workOrderGridSummaryViews.Add(new WorkOrderGridSummary()
                 {
                     PercentageOfTasksCompleted = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompleted,
                     PercentageOfTasksCompletedNumerator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompletedNumerator,
@@ -58,13 +61,10 @@ namespace MSR.Infrastructure.Resources.Queries
                     ActualEndDate = workOrderHistoryViewDTO.ActualEndDate,
                     ProductName = workOrderHistoryViewDTO.ProductName,
                     HasNcr = workOrderHistoryViewDTO.HasNcr
-                };
-                
+                });
+            });
 
-                workOrderGridSummaryViews.Add(workOrderGridSummary);
-            }
-
-            return workOrderGridSummaryViews;
+            return workOrderGridSummaryViews.ToList();
         }
 
         private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,
