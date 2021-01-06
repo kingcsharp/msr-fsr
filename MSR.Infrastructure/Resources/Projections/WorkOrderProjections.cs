@@ -57,7 +57,11 @@ namespace MSR.Infrastructure.Resources.Projections
                 ProcedureStepTypeId = j.ProcedureStepTypeId,
                 WorkOrderTaskMonitors = j.WorkOrderTaskMonitors.Select(x => x.TextVal)
             }),
-            WorkOrderPart = i.WorkOrderParts.FirstOrDefault(),
+            WorkOrderPart = i.WorkOrderParts.Select(j => new
+            {
+                SerialNumber = j.SerialNumber,
+                Qty = j.Qty
+            }).FirstOrDefault(),
             HasNcr = i.HasNCR
         };
 

@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MSR.Domain.Helpers;
 using MSR.Domain.DTOs;
+using System.Collections.Concurrent;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -26,45 +27,51 @@ namespace MSR.Infrastructure.Resources.Queries
         public static async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistory(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection)
         {
             var workOrderHistoryViewDTOs = await QueryHelper.GetViewDataFor<WorkOrder,ICollection<WorkOrderHistoryViewDTO>>(dbSet, projection);
-            var workOrderGridSummaryViews = new List<WorkOrderGridSummary>();
+            var workOrderGridSummaryViews = new ConcurrentBag<WorkOrderGridSummary>();
+            var workOrderHistoryBag = new ConcurrentBag<WorkOrderHistoryViewDTO>(workOrderHistoryViewDTOs);
+            var taskList = new List<Task>();
 
-            foreach (var workOrderHistoryViewDTO in workOrderHistoryViewDTOs) 
+            while (!workOrderHistoryBag.IsEmpty)
             {
-                var workOrderGridSummary = new WorkOrderGridSummary()
+                taskList.Add(Task.Run(() =>
                 {
-                    PercentageOfTasksCompleted = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompleted,
-                    PercentageOfTasksCompletedNumerator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompletedNumerator,
-                    PercentageOfTasksCompletedDenominator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompletedDenominator,
-                    PercentageOfExpectedDurationTimeLogged = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLogged,
-                    PercentageOfExpectedDurationTimeLoggedNumerator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedNumerator,
-                    PercentageOfExpectedDurationTimeLoggedDenominator = (double)CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedDenominator,
-                    Disposition = workOrderHistoryViewDTO.HasNcr ? GetWorkOrderDisposition(workOrderHistoryViewDTO.WorkOrderTasks.Where(j => j.ProcedureStepTypeId == Constants.PROCEDURESTEPTYPENC).SelectMany(k => k.WorkOrderTaskMonitors))
+                    if (workOrderHistoryBag.TryTake(out var workOrderHistoryViewDTO))
+                    {
+                        workOrderGridSummaryViews.Add(new WorkOrderGridSummary()
+                        {
+                            PercentageOfTasksCompleted = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompleted,
+                            PercentageOfTasksCompletedNumerator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompletedNumerator,
+                            PercentageOfTasksCompletedDenominator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompletedDenominator,
+                            PercentageOfExpectedDurationTimeLogged = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLogged,
+                            PercentageOfExpectedDurationTimeLoggedNumerator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedNumerator,
+                            PercentageOfExpectedDurationTimeLoggedDenominator = (double)CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedDenominator,
+                            Disposition = workOrderHistoryViewDTO.HasNcr ? GetWorkOrderDisposition(workOrderHistoryViewDTO.WorkOrderTasks.Where(j => j.ProcedureStepTypeId == Constants.PROCEDURESTEPTYPENC).SelectMany(k => k.WorkOrderTaskMonitors))
                                                                                       : string.Empty,
-                    ProcedureName = workOrderHistoryViewDTO.WorkOrderTasks != null && workOrderHistoryViewDTO.WorkOrderTasks.Any() ? workOrderHistoryViewDTO.WorkOrderTasks.First().ProcedureName : string.Empty,
-                    CurrentActiveTaskName = GetCurrentActiveTaskName(workOrderHistoryViewDTO.WorkOrderTasks),
-                    Quantity = workOrderHistoryViewDTO.WorkOrderPart?.Qty,
-                    Status = GetWorkOrderStatusFromTasks(workOrderHistoryViewDTO.WorkOrderTasks).ToString(),
-                    Id = workOrderHistoryViewDTO.Id,
-                    PurchaseId = workOrderHistoryViewDTO.PurchaseId,
-                    WorkOrderItemNumber = workOrderHistoryViewDTO.WorkOrderItemNumber,
-                    CustomerName = workOrderHistoryViewDTO.CustomerName,
-                    LocationName = workOrderHistoryViewDTO.LocationName,
-                    SerialNumber = workOrderHistoryViewDTO.WorkOrderPart?.SerialNumber,
-                    PurchaseOrderNumber = workOrderHistoryViewDTO.PurchaseOrderNumber,
-                    ReferencePO = workOrderHistoryViewDTO.ReferencePO,
-                    ScheduledStartDate = workOrderHistoryViewDTO.ScheduledStartDate,
-                    ScheduledEndDate = workOrderHistoryViewDTO.ScheduledEndDate,
-                    ActualStartDate = workOrderHistoryViewDTO.ActualStartDate,
-                    ActualEndDate = workOrderHistoryViewDTO.ActualEndDate,
-                    ProductName = workOrderHistoryViewDTO.ProductName,
-                    HasNcr = workOrderHistoryViewDTO.HasNcr
-                };
-                
-
-                workOrderGridSummaryViews.Add(workOrderGridSummary);
+                            ProcedureName = workOrderHistoryViewDTO.WorkOrderTasks != null && workOrderHistoryViewDTO.WorkOrderTasks.Any() ? workOrderHistoryViewDTO.WorkOrderTasks.First().ProcedureName : string.Empty,
+                            CurrentActiveTaskName = GetCurrentActiveTaskName(workOrderHistoryViewDTO.WorkOrderTasks),
+                            Quantity = workOrderHistoryViewDTO.WorkOrderPart?.Qty,
+                            Status = GetWorkOrderStatusFromTasks(workOrderHistoryViewDTO.WorkOrderTasks).ToString(),
+                            Id = workOrderHistoryViewDTO.Id,
+                            PurchaseId = workOrderHistoryViewDTO.PurchaseId,
+                            WorkOrderItemNumber = workOrderHistoryViewDTO.WorkOrderItemNumber,
+                            CustomerName = workOrderHistoryViewDTO.CustomerName,
+                            LocationName = workOrderHistoryViewDTO.LocationName,
+                            SerialNumber = workOrderHistoryViewDTO.WorkOrderPart?.SerialNumber,
+                            PurchaseOrderNumber = workOrderHistoryViewDTO.PurchaseOrderNumber,
+                            ReferencePO = workOrderHistoryViewDTO.ReferencePO,
+                            ScheduledStartDate = workOrderHistoryViewDTO.ScheduledStartDate,
+                            ScheduledEndDate = workOrderHistoryViewDTO.ScheduledEndDate,
+                            ActualStartDate = workOrderHistoryViewDTO.ActualStartDate,
+                            ActualEndDate = workOrderHistoryViewDTO.ActualEndDate,
+                            ProductName = workOrderHistoryViewDTO.ProductName,
+                            HasNcr = workOrderHistoryViewDTO.HasNcr
+                        });
+                    }
+                }));
             }
 
-            return workOrderGridSummaryViews;
+            Task.WaitAll(taskList.ToArray());
+            return workOrderGridSummaryViews.ToList();
         }
 
         private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,
