@@ -144,7 +144,7 @@
           {{partmodel.maximumCycles }}
         </td>
         <td [hidden]="!cg.isVisibleCol('files',gridSettings)">
-          <grid-file-viewer [menuItem]="menuItems.Parts" [files]="partmodel.files"></grid-file-viewer>
+          <grid-file-viewer [menuItem]="menuItems.Parts" [files]="partmodel.files" showDeleteButton="true"></grid-file-viewer>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
           {{partmodel.createdOn | userTimezone }}
@@ -347,7 +347,7 @@
         <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
           Save
         </button>
-        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+        <button type="button" (click)="closeDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
           Cancel
         </button>
       </div>

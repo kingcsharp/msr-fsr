@@ -92,14 +92,13 @@ export class PartsComponent implements OnInit {
   }
 
   getPartsDropdown() {
-    const ctrl = this;
-    this.emptyArr(ctrl.allParts);
+    this.emptyArr(this.allParts);
     const allPartsObjects = this.getAllPartsAndUsedIn();
     Object.keys(allPartsObjects).forEach(function (key) {
       const item = allPartsObjects[key];
       const usedIn = item.usedIn.join(',');
       const usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : '';
-      ctrl.allParts.push({ label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`, value: item.element.id });
+      this.allParts.push({ label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`, value: item.element.id });
     });
   }
 
@@ -159,7 +158,7 @@ export class PartsComponent implements OnInit {
     }
   }
 
-  clseDialog() {
+  closeDialog() {
     this.resetParsleyjs();
     this.display = false;
   }
@@ -212,7 +211,6 @@ export class PartsComponent implements OnInit {
   }
 
   removeRow(part) {
-    const ctrl = this;
     this.globals.showLoader(true);
     this.partsService.partDelete(part.id, env.apiVersion)
       .pipe(take(1)).subscribe(responseHandler((resp) => {
@@ -226,7 +224,6 @@ export class PartsComponent implements OnInit {
 
   onpartSubmit() {
     jQuery('.parsleyjs').parsley().validate();
-    const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
       let method: Observable<AuditActionResultOfPartModel> = null;
       this.currPart.files.push(...this.uploadedFiles);
@@ -245,8 +242,8 @@ export class PartsComponent implements OnInit {
         this.globals.showLoader(true);
         method.pipe(take(1)).subscribe(responseHandler((resp) => {
           if (!resp.hasErrors) {
-            if (ctrl.currPart.id === undefined) {
-              ctrl.data.push(resp.object);
+            if (this.currPart.id === undefined) {
+              this.data.push(resp.object);
               this.data = this.data.slice(0);
             } else {
               const index = this.data.findIndex(x => x.id === this.currPart.id);
@@ -254,7 +251,7 @@ export class PartsComponent implements OnInit {
               this.data.splice(index, 0, resp.object);
               this.data = this.data.slice(0);
             }
-            ctrl.clseDialog();
+            this.closeDialog();
           }
         }));
       });

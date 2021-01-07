@@ -22,6 +22,8 @@ export class GridFileViewerComponent implements OnInit {
 
   @Input() files: FileModel[];
   @Input() menuItem: EnumMenuItem;
+  @Input() showDeleteButton: Boolean;
+
   constructor(private fileService: FileService, private globals: Globals) {
 
   }
@@ -55,7 +57,7 @@ export class GridFileViewerComponent implements OnInit {
       }));
   }
 
-  clseDialog() {
+  closeDialog() {
     this.display = false;
   }
 
@@ -83,5 +85,15 @@ export class GridFileViewerComponent implements OnInit {
       default:
         return 'url';
     }
+  }
+
+  onClickDelete() {
+    this.globals.showLoader(true);
+    this.fileService.fileDelete(this.globals.getSingularMenuName(this.menuItem), this.selectedFile.entityId, this.selectedFile.fileId, env.apiVersion)
+      .pipe(take(1)).subscribe(responseHandler((resp) => {
+        const index = this.files.findIndex(x => x.fileId === this.selectedFile.fileId);
+        this.files.splice(index, 1);
+        this.display = false;
+      }));
   }
 }
