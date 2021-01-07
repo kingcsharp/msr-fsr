@@ -16,9 +16,9 @@ namespace MSR.Domain.Models
         public int? PurchaseId { get; set; }
 
         /// <summary>
-        /// This is a combination of: {CustomerName}-{CustomerPurchaseNumber}
+        /// This is a combination of: {CustomerName}-{WorkOrderId}
         /// </summary>
-        /// <value>This is a combination of: {CustomerName}-{CustomerPurchaseNumber}</value>
+        /// <value>This is a combination of: {CustomerName}-{WorkOrderId}</value>
         public string WorkOrderItemNumber { get; set; }
 
         /// <summary>
