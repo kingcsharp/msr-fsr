@@ -152,3 +152,11 @@ selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown {
 selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown .ui-dropdown-label-container{
   width:100% !important;
 }
+
+.help-content-container {
+  figure.image {
+    img {
+      max-width: 100%;
+    }
+  }
+}
