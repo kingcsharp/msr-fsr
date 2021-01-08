@@ -92,13 +92,14 @@ export class PartsComponent implements OnInit {
   }
 
   getPartsDropdown() {
-    this.emptyArr(this.allParts);
+    const ctrl = this;
+    this.emptyArr(ctrl.allParts);
     const allPartsObjects = this.getAllPartsAndUsedIn();
     Object.keys(allPartsObjects).forEach(function (key) {
       const item = allPartsObjects[key];
       const usedIn = item.usedIn.join(',');
       const usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : '';
-      this.allParts.push({ label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`, value: item.element.id });
+      ctrl.allParts.push({ label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`, value: item.element.id });
     });
   }
 
