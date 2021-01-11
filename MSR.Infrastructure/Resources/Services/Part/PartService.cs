@@ -174,7 +174,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<PartModel> DeletePartAsync(DeletePart command)
         {
-            EntityFramework.Entities.Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
+            EntityFramework.Entities.Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Include(x => x.WorkOrderParts).Where(x => x.Id == command.Id)
                 .FirstOrDefaultAsync();
             if (current is null)
             {
@@ -182,6 +182,32 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             if (CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanDelete))
             {
+                var subPartIds = current.Subparts.Select(x => x.Id).ToList();
+
+                _unitOfWork.PartSubPartMaps
+                    .Query()
+                    .Where(x => subPartIds.Contains(x.Id))
+                    .ToList()
+                    .ForEach(x => {
+                        _unitOfWork.PartSubPartMaps.Delete(false, x, true);
+                    });
+
+                var workOrderPartIds = current.WorkOrderParts.Select(x => x.Id).ToList();
+
+                _unitOfWork.WorkOrderParts
+                    .Query()
+                    .Include(x => x.Children)
+                    .Where(x => workOrderPartIds.Contains(x.Id))
+                    .ToList()
+                    .ForEach(x => {
+                        foreach (var child in x.Children)
+                        {
+                            _unitOfWork.WorkOrderParts.Delete(false, child, true);
+                        }
+                        
+                        _unitOfWork.WorkOrderParts.Delete(false, x, true);
+                    });
+
                 _unitOfWork.Parts.Delete(false, current, true);
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(current, current.Id);
@@ -191,8 +217,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"Permission denied for DELETE on {nameof(Part)} ID: {command.Id}", DomainError.BadRequest);
             }
 
-            var ret = _mapper.Map<PartModel>(current);
-            return ret;
+            var partModel = _mapper.Map<PartModel>(current);
+            return partModel;
         }
 
         private int GetWorkflowID()
