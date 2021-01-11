@@ -3,11 +3,11 @@
   Help
 </button>
 <p-dialog header="{{modalTitle}}" [(visible)]="display" appendTo="body" [baseZIndex]="100001" [modal]='true'
-  [style]="{width: '50vw'}" data-cy="user-header">
+  [style]="{width: '50vw'}" data-cy="user-header" [focusOnShow]="false">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
-      <div class="widget-body" [innerHTML]="helpContent" *ngIf="helpContent != null">
+      <div class="widget-body help-content-container" [innerHTML]="helpContent" *ngIf="helpContent != null">
       </div>
     </section>
     <p-footer>
