@@ -29,7 +29,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   @Output() workOrderTaskToViewChange = new EventEmitter<any>();
   @Output() updateWorkOrderTaskToViewAndInProgress = new EventEmitter<any>();
-  @Output() slideToTaskInProgress = new EventEmitter<any>();
   @Output() areMonitorsValidCheck = new EventEmitter<{ areValid: Function }>();
 
   stepTimer;
@@ -170,12 +169,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       }
 
     }));
-
-  }
-
-  slideToTask() {
-
-    this.slideToTaskInProgress.emit();
 
   }
 

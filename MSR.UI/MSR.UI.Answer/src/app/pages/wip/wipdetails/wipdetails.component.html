@@ -106,7 +106,7 @@
         <div class="d-flex col-4 justify-content-start pl-0">
           <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks"
             [hasAccessToTaskBeingViewed]="hasAccessToTaskBeingViewed" [workOrderIsComplete]="workOrderIsComplete"
-            [(workOrderTaskInProgress)]="workOrderTaskInProgress" (slideToTaskInProgress)="slideToTaskInProgress()"
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress"
             *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id" [areMonitorsValid]="areMonitorsValid"
             (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)" (areMonitorsValidCheck)="areMonitorsValidCheck($event.areValid)"
             [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
