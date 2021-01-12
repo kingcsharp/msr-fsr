@@ -15809,6 +15809,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     purchase?: PurchaseModel | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
+    workOrderMessages?: WorkOrderMessageModel[] | undefined;
     status?: string | undefined;
 
     constructor(data?: IWorkOrderModel) {
@@ -15844,6 +15845,11 @@ export class WorkOrderModel implements IWorkOrderModel {
                 this.workOrderTasks = [] as any;
                 for (let item of _data["workOrderTasks"])
                     this.workOrderTasks!.push(WorkOrderTaskModel.fromJS(item));
+            }
+            if (Array.isArray(_data["workOrderMessages"])) {
+                this.workOrderMessages = [] as any;
+                for (let item of _data["workOrderMessages"])
+                    this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
             }
             this.status = _data["status"];
         }
@@ -15881,6 +15887,11 @@ export class WorkOrderModel implements IWorkOrderModel {
             for (let item of this.workOrderTasks)
                 data["workOrderTasks"].push(item.toJSON());
         }
+        if (Array.isArray(this.workOrderMessages)) {
+            data["workOrderMessages"] = [];
+            for (let item of this.workOrderMessages)
+                data["workOrderMessages"].push(item.toJSON());
+        }
         data["status"] = this.status;
         return data; 
     }
@@ -15902,6 +15913,7 @@ export interface IWorkOrderModel {
     purchase?: PurchaseModel | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
+    workOrderMessages?: WorkOrderMessageModel[] | undefined;
     status?: string | undefined;
 }
 
@@ -16442,6 +16454,50 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     sensorValue?: string | undefined;
     sensorName?: string | undefined;
     monitorNumber?: number;
+}
+
+export class WorkOrderMessageModel implements IWorkOrderMessageModel {
+    name?: string | undefined;
+    message?: string | undefined;
+    date?: Date;
+
+    constructor(data?: IWorkOrderMessageModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.message = _data["message"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): WorkOrderMessageModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderMessageModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["message"] = this.message;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IWorkOrderMessageModel {
+    name?: string | undefined;
+    message?: string | undefined;
+    date?: Date;
 }
 
 export class ProductStepModel implements IProductStepModel {
@@ -20131,50 +20187,6 @@ export interface IPortalWorkOrderView {
     messages?: WorkOrderMessageModel[] | undefined;
     subParts?: WorkOrderPartModel[] | undefined;
     stepText?: string | undefined;
-}
-
-export class WorkOrderMessageModel implements IWorkOrderMessageModel {
-    name?: string | undefined;
-    message?: string | undefined;
-    date?: Date;
-
-    constructor(data?: IWorkOrderMessageModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.message = _data["message"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): WorkOrderMessageModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkOrderMessageModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["message"] = this.message;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IWorkOrderMessageModel {
-    name?: string | undefined;
-    message?: string | undefined;
-    date?: Date;
 }
 
 /** Base class for an API call with a typed result */
