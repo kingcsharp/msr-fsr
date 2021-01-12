@@ -21,7 +21,7 @@ pipeline {
     stages {
         stage('Build & Deploy UI to QA') {
             agent { label 'master'}
-            when { changeset "MSR.UI/MSR.UI.Portal"}
+            //when { changeset "MSR.UI/MSR.UI.Portal"}
             steps {
                 script {
                     try {
@@ -60,7 +60,7 @@ pipeline {
 
         stage("Deploy Rollbar QA") {
             agent { label 'master' }
-            when { changeset "MSR.UI/MSR.UI.Portal"}
+            //when { changeset "MSR.UI/MSR.UI.Portal"}
             steps {
                 script {
                     sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +

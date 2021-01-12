@@ -31,11 +31,11 @@ namespace MSR.Infrastructure.Resources.Projections
             Status = GetWorkOrderStatusFromTasks(i.WorkOrderTasks)
         };
 
-        public static Expression<Func<WorkOrder, dynamic>> WorkOrders => i => new
+        public static Expression<Func<WorkOrder, dynamic>> WorkOrderGridSummaryView => i => new
         {
             Id = i.Id,
             PurchaseId = i.PurchaseId,
-            WorkOrderItemNumber = $"{i.Purchase.PurchaseOrder.Customer.Name}-{i.Purchase.CustomerPurchaseNumber}",
+            WorkOrderItemNumber = $"{i.Purchase.PurchaseOrder.Customer.Name}-{i.Id}",
             CustomerName = i.Purchase.PurchaseOrder.Customer.Name,
             LocationId = i.LocationId.Value,
             LocationName = i.Location.Name,
@@ -57,7 +57,11 @@ namespace MSR.Infrastructure.Resources.Projections
                 ProcedureStepTypeId = j.ProcedureStepTypeId,
                 WorkOrderTaskMonitors = j.WorkOrderTaskMonitors.Select(x => x.TextVal)
             }),
-            WorkOrderPart = i.WorkOrderParts.FirstOrDefault(),
+            WorkOrderPart = i.WorkOrderParts.Select(j => new
+            {
+                SerialNumber = j.SerialNumber,
+                Qty = j.Qty
+            }).FirstOrDefault(),
             HasNcr = i.HasNCR
         };
 

@@ -38,7 +38,7 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
 
             CreateMap<CreateProcedureRequest, CreateProcedure>();
-            CreateMap<UpdateProcedureRequest, UpdateProcedure>();
+            CreateMap<UpdateProcedureRequest, UpdateProcedure>().ReverseMap();
             CreateMap<CreateProcedureStepRequest, CreateProcedureStep>();
             CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>();
             CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>()
