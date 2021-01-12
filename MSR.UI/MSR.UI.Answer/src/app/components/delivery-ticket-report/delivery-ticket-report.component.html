@@ -21,13 +21,12 @@
             </div>
             <div class="col-6">
                 <div class="row">
-                    <div class="col-6 text-right">Ship Date:</div><div class="col-6"></div>
+                    <div class="col-6 text-right">Ship Date:</div><div class="col-6">{{ WorkOrder.actualEndDate | userTimezone }}</div>
                     <div class="col-6 text-right">Material Transfer #:</div><div class="col-6">{{ WorkOrder.purchase?.mttn }}</div>
                     <div class="col-6 text-right">Customer PO #:</div><div class="col-6">{{ WorkOrder.purchase?.purchaseOrder?.referencePO }}</div>
                     <div class="col-6 text-right">Order QTY:</div><div class="col-6">{{ WorkOrder.purchase?.qty }}</div>
-                    <div class="col-6 text-right">Purcahse #:</div><div class="col-6">{{ WorkOrder.purchase?.id }}</div>
+                    <div class="col-6 text-right">Purchase #:</div><div class="col-6">{{ WorkOrder.purchase?.id }}</div>
                     <div class="col-6 text-right">Customer WO Item #:</div><div class="col-6">{{ WorkOrder.id }}</div>
-                    <div class="col-6 text-right">Blanket PO #:</div><div class="col-6"></div>
                     <div class="col-6 text-right">Barcode:</div>
                     <div class="col-6">
                         <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"

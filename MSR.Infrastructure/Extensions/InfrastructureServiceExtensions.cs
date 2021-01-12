@@ -29,6 +29,7 @@ using MSR.Infrastructure.Resources.Services.Sensor;
 using MSR.Infrastructure.Resources.Services.PurchaseOrder;
 using MSR.Infrastructure.Resources.Services.Timezone;
 using MSR.Infrastructure.Resources.Services.Part;
+using MSR.Infrastructure.Resources.Services.WorkOrder;
 using MSR.Infrastructure.Resources.Services.AdminCostSetting;
 using MSR.Infrastructure.Resources.Services.Report;
 using MSR.Infrastructure.Resources.Services.Search;

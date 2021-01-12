@@ -18,6 +18,9 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Data;
 using System;
+using MSR.Infrastructure.Resources.Queries;
+using MSR.Infrastructure.Resources.EntityFramework.Projections;
+using MSR.Domain.Views;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -77,49 +80,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
         {
-            List<EntityFramework.Entities.Procedure> procedures;
-            if (command.procedureID.HasValue)
-            {
-                procedures = await _unitOfWork.Procedures
-                    .Query()
-                    .Where(x => x.Id == command.procedureID.Value)
-                    .Include(x => x.ProcedureType)
-                    .Include(x => x.ReferenceFiles)
-                    .ToListAsync();
-                if (procedures.Count == 0)
-                {
-                    throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
-                }
+            if (command.procedureID.HasValue) {
+                return await GetSingleProcedureAsync(command);
+            } else {
+                return await GetAllProceduresAsync();
             }
-            else
-            {
-                procedures = await _unitOfWork.Procedures
-                    .Query()
-                    .Include(x => x.ProcedureType)
-                    .Include(x => x.ReferenceFiles)
-                    .ToListAsync();
-            }
-
-            // map and attach the right files for this object, if any
-            var result = procedures.Select(x =>
-            {
-                var model = _mapper.Map<Domain.Models.Procedure>(x);
-                model.ReferenceFiles = new List<Domain.Models.FileModel>();
-                foreach (FileEntityMap map in x.ReferenceFiles)
-                {
-                    if (map.EntityTableName != nameof(EntityFramework.Entities.Procedure))
-                    {
-                        continue;
-                    }
-                    model.ReferenceFiles.Add(
-                        _mapper.Map<Domain.Models.FileModel>(map.FileObject)
-                    );
-                }
-                return model;
-            }).OrderBy(x => x.Name).ToList();
-
-            return result;
         }
+
         public async Task<Domain.Models.Procedure> CreateProcedureAsync(CreateProcedure command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
@@ -168,7 +135,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.Procedure ret;
+            Domain.Models.Procedure procedureModel;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
@@ -180,7 +147,36 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
-                ret = _mapper.Map<Domain.Models.Procedure>(procedure);
+                procedureModel = _mapper.Map<Domain.Models.Procedure>(procedure);
+
+                // Update Reference Files mapping
+                var currentFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), command.Id);
+                var currentFileIds = currentFiles.Select(i => i.FileId).ToList();
+                var fileIdsToAdd = command.ReferenceFileIds.Where(i => !currentFileIds.Contains(i)).ToList();
+                var fileIdsToRemove = currentFileIds.Where(i => !command.ReferenceFileIds.Contains(i.Value)).ToList();
+
+                var fileReferences = new List<FileModel>();
+
+                foreach (var addFileId in fileIdsToAdd)
+                {
+                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Procedure), command.Id, addFileId);
+                }
+
+                foreach (var removeFileId in fileIdsToRemove)
+                {
+                    await _fileService.DetachFilesAsync(nameof(EntityFramework.Entities.Procedure), command.Id, removeFileId);
+                }
+
+                fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), command.Id));
+
+                 foreach (var file in command.ReferenceFiles)
+                {
+                    var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Procedure), procedureModel.Id, file);
+
+                    fileReferences.Add(fileModel);
+                }
+
+                procedureModel.ReferenceFiles = fileReferences;
             }
             else
             {
@@ -191,11 +187,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.Procedure>(approval);
+                procedureModel = _mapper.Map<Domain.Models.Procedure>(approval);
                 _messageHub.SendApprovalNotification(EnumApprovalTables.ProcedureApproval);
             }
 
-            return ret;
+            return procedureModel;
 
         }
         public async Task<ICollection<Domain.Models.ProcedureStepModel>> GetProcedureStepAsync(GetProcedureStep command)
@@ -414,7 +410,28 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
             {
-                _unitOfWork.Procedures.Delete(false, current);
+                _unitOfWork.Procedures.LoadCollection(current, "ProcedureSteps");
+                var procedureStepIds = current.ProcedureSteps.Select(x => x.Id).ToList();
+
+                _unitOfWork.ProcedureStepRoleMaps
+                    .Query()
+                    .Where(x => procedureStepIds.Contains(x.ProcedureStepId))
+                    .Select(x => x.Id)
+                    .ToList()
+                    .ForEach(id => {
+                        _unitOfWork.ProcedureStepRoleMaps.Delete(false, id);
+                    });
+
+                _unitOfWork.ProcedureStepMonitors
+                    .Query()
+                    .Where(x => procedureStepIds.Contains(x.ProcedureStepId))
+                    .Select(x => x.Id)
+                    .ToList()
+                    .ForEach(id => {
+                        _unitOfWork.ProcedureStepMonitors.Delete(false, id);
+                    });
+
+                _unitOfWork.CascadeDelete(current);
                 await _unitOfWork.SaveChangesAsync();
             }
             else
@@ -788,5 +805,49 @@ namespace MSR.Infrastructure.Resources.Services.Part
             parsedData.procedureStepExtras = newStepsExtra;
             return errors;
         }
+
+        private async Task<ICollection<Domain.Models.Procedure>> GetSingleProcedureAsync(GetProcedure command)
+        {
+            if (!command.procedureID.HasValue)
+            {
+                throw new DomainException("ID must have value", DomainError.BadRequest);
+            }
+
+            List<EntityFramework.Entities.Procedure> procedures;
+            procedures = await _unitOfWork.Procedures
+                .Query()
+                .Where(x => x.Id == command.procedureID.Value)
+                .Include(x => x.ProcedureType)
+                .ToListAsync();
+            if (procedures.Count == 0)
+            {
+                throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
+            }
+
+            // map and attach the right files for this object, if any
+            var result = procedures.Select(x =>
+            {
+                var procedureModel = _mapper.Map<Domain.Models.Procedure>(x);
+                procedureModel.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), procedureModel.Id).ToList();
+                
+                return procedureModel;
+            }).OrderBy(x => x.Name).ToList();
+
+            return result;
+
+        }
+
+        private async Task<ICollection<Domain.Models.Procedure>> GetAllProceduresAsync()
+        {
+            ICollection<ProcedureWithUsedProductCountView> procedures =
+                await _unitOfWork.Query<EntityFramework.Entities.Procedure>()
+                    .GetProceduresWithProductCount(
+                        ProcedureProjections.ProcedureWithUsedProductCountView);
+
+            var result = _mapper.Map<ICollection<Domain.Models.Procedure>>(procedures);
+
+            return result;
+        }
+
     }
 }

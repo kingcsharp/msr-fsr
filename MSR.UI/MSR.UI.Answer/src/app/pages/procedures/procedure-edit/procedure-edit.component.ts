@@ -298,6 +298,16 @@ export class ProcedureEditComponent implements OnInit {
   }
 
   updateProcedure(procedure: Procedure) {
+    const referenceFiles = new Array<FileRequest>();
+    const referenceFileIds = new Array<number>();
+
+    procedure.referenceFiles.forEach(file => {
+      if (file.fileId !== undefined) {
+        referenceFileIds.push(file.fileId);
+      } else {
+        referenceFiles.push(new FileRequest(file));
+      }
+    });
 
     let updateProcedureRequest = new UpdateProcedureRequest();
     updateProcedureRequest.id = procedure.id;
@@ -306,7 +316,8 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureRequest.durationType = procedure.durationType;
     updateProcedureRequest.name = procedure.name;
     updateProcedureRequest.procedureTypeId = procedure.procedureTypeId;
-    updateProcedureRequest.referenceFiles = procedure.referenceFiles;
+    updateProcedureRequest.referenceFiles = referenceFiles;
+    updateProcedureRequest.referenceFileIds = referenceFileIds;
     updateProcedureRequest.roleIds = this.selectedRoles.map(s => s.id);
     this.globals.showLoader(true);
     this.procedureService.procedurePatch(env.apiVersion, updateProcedureRequest).pipe(take(1)).subscribe(() => {

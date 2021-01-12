@@ -191,7 +191,9 @@ namespace MSR.Infrastructure.Resources.Services.Customers
         public async Task<IEnumerable<Domain.Models.Customer>> GetCustomersAsync(GetMultipleCustomers command)
         {
             var customerList = new List<Domain.Models.Customer>();
-            var customers = _unitOfWork.Customers.Query().Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).Where(i => i.IsActive);
+            var customers = _unitOfWork.Customers.Query();
+            
+            customers = customers.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser);
 
             if (command.Id != null)
             {

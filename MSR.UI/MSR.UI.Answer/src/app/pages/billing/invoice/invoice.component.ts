@@ -30,7 +30,6 @@ export class InvoiceComponent implements OnInit {
   approvalTables = EnumApprovalTables;
   defaultView: ViewSaved;
   gridStorageId: string;
-  gridWoStorageId: string;
   gridSettings: ColumnsSaved[];
   gridWoSettings: ColumnsSaved[];
   gridVersion: string;
@@ -83,7 +82,6 @@ export class InvoiceComponent implements OnInit {
     new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
     ];
 
-    this.gridWoStorageId = 'invoiceWorkorderGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridWoSettings = [
       new ColumnsSaved({ id: 'customerName', label: 'Customer Name', visible: true }),
       new ColumnsSaved({ id: 'id', label: 'WorkOrder #', visible: true }),
@@ -130,6 +128,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   filterWorkorders() {
+    this.globals.showLoader(true);
     this.showWorkOrders = false;
     replaceArrayItems(this.workorders, this.allWorkorders);
     if (this.currentInvoice.customerId) {
@@ -139,12 +138,32 @@ export class InvoiceComponent implements OnInit {
       this.workorders = this.workorders.filter(x => x.locationId === this.currentInvoice.locationId);
     }
     this.isSelectAllWorkOrders = false;
-    this.showWorkOrders = true;
+
+    if (this.currentInvoice.id === undefined) {
+      this.currentInvoice.invoiceItems = [];
+      this.invoiceItemOptions = [];
+      this.workorders.forEach((workorder, index) => {
+        this.workorders[index]['checked'] = false;
+
+        const addInvoiceItem = new InvoiceItemView({
+          purchaseOrderId: workorder.purchaseOrderId,
+          purchaseNumber: workorder.customerPurchaseNumber,
+          workOrderId: workorder.id,
+        });
+        this.invoiceItemOptions.push(addInvoiceItem);
+      });
+    }
+
+    setTimeout(() => {
+      this.showWorkOrders = true;
+      this.globals.showLoader(false);
+    }, 100);
+
   }
 
   getCustomers() {
     this.globals.showLoader(true);
-    this.customerService.customerGet(null, null, null, null, null, null, null, true, env.apiVersion).pipe(take(1))
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customers = response.object;
       }));
@@ -207,8 +226,9 @@ export class InvoiceComponent implements OnInit {
   }
 
   selectWorkOrder(ev, workorder: InvoiceableWorkOrderView) {
+    this.showInvoiceItems = false;
+
     if (ev.checked) {
-      this.showInvoiceItems = false;
       let addInvoiceItem = new InvoiceItemView({
         purchaseOrderId: workorder.purchaseOrderId,
         purchaseNumber: workorder.customerPurchaseNumber,
@@ -217,19 +237,34 @@ export class InvoiceComponent implements OnInit {
 
       pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'workOrderId');
       pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'workOrderId');
-
-      setTimeout(() => {
-        this.showInvoiceItems = true;
-      }, 10);
     } else {
       this.isSelectAllWorkOrders = false;
+      const itemIndex = this.currentInvoice.invoiceItems.findIndex(x => x.workOrderId === workorder.id);
+      if (itemIndex > -1) {
+        this.currentInvoice.invoiceItems.splice(itemIndex, 1);
+      }
     }
+
+    setTimeout(() => {
+      this.showInvoiceItems = true;
+    }, 10);
+  }
+
+  onChangeWorkorders() {
+    this.isSelectAllWorkOrders = true;
+    this.workorders.forEach((workorder, index) => {
+      const isChecked = this.currentInvoice.invoiceItems.some(i => i.workOrderId === workorder.id);
+      this.workorders[index]['checked']  = isChecked;
+      if (!isChecked) {
+        this.isSelectAllWorkOrders = false;
+      }
+    });
   }
 
   selectAllWorkOrders(event) {
-    if (event.checked) {
-      this.showInvoiceItems = false;
+    this.showInvoiceItems = false;
 
+    if (event.checked) {
       this.workorders.forEach((workorder, index) => {
         this.workorders[index]['checked'] = true;
         let addInvoiceItem = new InvoiceItemView({
@@ -241,15 +276,18 @@ export class InvoiceComponent implements OnInit {
         pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'workOrderId');
         pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'workOrderId');
       });
-
-      setTimeout(() => {
-        this.showInvoiceItems = true;
-      }, 10);
     } else {
-      this.workorders.forEach((_, index) => {
+      this.workorders.forEach((workorder, index) => {
         this.workorders[index]['checked'] = false;
+        const itemIndex = this.currentInvoice.invoiceItems.findIndex(x => x.workOrderId === workorder.id);
+        if (itemIndex > -1) {
+          this.currentInvoice.invoiceItems.splice(itemIndex, 1);
+        }
       });
     }
+    setTimeout(() => {
+      this.showInvoiceItems = true;
+    }, 10);
   }
 
   closeDialog() {

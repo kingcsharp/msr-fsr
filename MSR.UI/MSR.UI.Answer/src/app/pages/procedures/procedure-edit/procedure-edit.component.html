@@ -87,7 +87,9 @@
                         </div>
                         <div class="col-12 col-xl-10">
                             <cmh-file-uploader name="referencefiles" class="col-12"
-                                *ngIf="procedure.referenceFiles !== undefined" [menuItem]="menuItems.Templates"
+                                *ngIf="procedure.referenceFiles !== undefined"
+                                [showSelectButton]="true"
+                                [menuItem]="menuItems.Templates"
                                 multiple="multiple" [(files)]="procedure.referenceFiles">
                             </cmh-file-uploader>
                         </div>
@@ -183,7 +185,7 @@
                                         </ckeditor-wrapper>
                                     </div>
                                 </div>
-    
+
                                 <div class="row">
                                     <div class="form-group form-row">
                                         <label for="labortime{{i}}" class="col-form-label text-left col-3">
@@ -214,7 +216,7 @@
                                         </div>
                                     </div>
                                 </div>
-    
+
                                 <div class="row">
                                     <div class="form-group form-row">
                                         <label for="replacementcost{{i}}" class="col-form-label text-left col-2">
@@ -243,7 +245,7 @@
                                             tooltip="Useful Life of Procedure Step" data-cy="usefullife-input">
                                     </div>
                                 </div>
-    
+
                                 <div class="row ml-2">
                                     <button *ngIf="procedureStep.value.id === 0" type="button" name="savebutton{{i}}"
                                         class="btn btn-primary m-2"
@@ -324,13 +326,13 @@
                             </div>
                         </div>
                     </ng-template>
-    
+
                     <bs-sortable *ngIf="procedureSteps !== undefined && procedureSteps?.length > 0"
                         [(ngModel)]="procedureSteps" [itemTemplate]="itemTemplate" itemClass="sortable-item"
                         itemActiveClass="sortable-item-active" placeholderItem="Drag here"
                         (onChange)="updateProcedurePredecessorAndOrder($event)" placeholderClass="placeholderStyle"
                         wrapperClass="sortable-wrapper"></bs-sortable>
-    
+
                 </div>
             </div>
         </div>

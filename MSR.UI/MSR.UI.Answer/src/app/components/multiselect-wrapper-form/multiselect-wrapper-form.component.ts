@@ -14,6 +14,7 @@ export class MultiselectWrapperFormComponent implements OnInit {
   @Input() defaultId: number;
   @Input() limit: number;
   @Output() modelChange = new EventEmitter<any>();
+  @Output() onSelectChange = new EventEmitter();
   currentOptions: any = [];
   selectedObjs: any;
   basicOptions: any;
@@ -39,6 +40,7 @@ export class MultiselectWrapperFormComponent implements OnInit {
     const selectedObjIndex = this.selectedObjs.items.findIndex(x => x.id === elem.id);
     this.selectedObjs.items.splice(selectedObjIndex, 1);
     this.model.splice(index, 1);
+    this.onSelectChange.emit();
   }
 
   getElementValue(elem) {
@@ -71,6 +73,7 @@ export class MultiselectWrapperFormComponent implements OnInit {
       this.model.push(elem);
     });
     this.modelChange.emit(this.model);
+    this.onSelectChange.emit();
   }
 
   emptyArr(arr) {

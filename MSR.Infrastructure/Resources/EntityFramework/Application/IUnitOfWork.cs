@@ -107,5 +107,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         /// Reloads entity from the database. See <see cref="DbEntityEntry.ReloadAsync"/>
         /// </summary>
         Task ReloadEntityAsync<T>(T entity) where T : class;
+        /// <summary>
+        /// Sets an entity and all loaded foreign keys to be removed
+        /// </summary>
+        public void CascadeDelete<T>(T entity) where T : class;
     }
 }

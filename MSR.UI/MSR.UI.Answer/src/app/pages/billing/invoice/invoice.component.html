@@ -218,7 +218,7 @@
             <div class="col-md-10 col-12">
               <multiselect-wrapper-form *ngIf="showInvoiceItems" [options]="invoiceItemOptions"
                 [(model)]="currentInvoice.invoiceItems" defaultId="workOrderId" defaultLabelProperty="workOrderId"
-                defaultLabel="Select Work Orders">
+                defaultLabel="Select Work Orders" (onSelectChange)="onChangeWorkorders()">
               </multiselect-wrapper-form>
               <input pInputText type="text" hidden class="form-control input-transparent" name="invoiceitemshdn"
                 [value]="currentInvoice.invoiceItems.length" data-validate="parsley" data-parsley-trigger="change"
@@ -241,7 +241,7 @@
         <p-table #dt2 [value]="workorders" dataKey="id" styleClass="ui-table-customers formTbl" [rowHover]="true"
           [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
           currentPageReportTemplate="Showing {first}-{last} of {{workorders?.length}}" [filterDelay]="0"
-          stateStorage="local" stateKey="{{gridWoStorageId}}">
+          >
           <ng-template pTemplate="header">
             <tr>
               <th>

@@ -55,7 +55,10 @@
     </section>
     <p-footer>
       <div class="pull-right">
-        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+        <button *ngIf="showDeleteButton" type="button" (click)="onClickDelete()" class="btn btn-outline-inverse width-100 mb-xs mr-2" role="button">
+          Delete
+        </button>
+        <button type="button" (click)="closeDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
           Close
         </button>
       </div>

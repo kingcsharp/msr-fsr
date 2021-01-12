@@ -259,5 +259,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         {
             await Context.Entry(entity).ReloadAsync();
         }
+
+        /// <summary>
+        /// Sets an entity and all loaded foreign keys to be removed.  See <see cref="DbContext.Remove(object)"/>
+        /// </summary>
+        public void CascadeDelete<T>(T entity) where T : class
+        {
+            Context.Remove(entity);
+        }
     }
 }

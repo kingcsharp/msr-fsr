@@ -18,7 +18,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 
-namespace MSR.Infrastructure.Resources.Services.Part
+namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
     public class WorkOrderService : IWorkOrderService
     {
@@ -48,7 +48,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
 
-            IQueryable<WorkOrder> query = _unitOfWork.WorkOrders.Query();
+            IQueryable<EntityFramework.Entities.WorkOrder> query = _unitOfWork.WorkOrders.Query();
 
             if (command.Id.HasValue && command.Id > 0)
             {
@@ -89,7 +89,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 query = query.Where(i => i.Purchase.PurchaseOrder.CustomerId == command.CustomerId.Value);
             }
 
-            List<WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
+            List<EntityFramework.Entities.WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
             List<int> workOrderIds = workOrderEntities.Select(m => m.Id).ToList();
             _ = await _unitOfWork.WorkOrderParts.Query().Include(m => m.Part).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
             List<WorkOrderTask> workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Include(u => u.ReferenceFiles).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
@@ -98,6 +98,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .ThenInclude(y => y.Role)
                 .Where(s => workOrderTaskEntities.Select(m => m.ProcedureStepId).Contains(s.Id)).ToListAsync();
 
+            _ = await _unitOfWork.WorkOrderMessages.Query().Where(x => workOrderIds.Contains(x.WorkOrderId)).ToListAsync();
             _ = await _unitOfWork.Procedures.Query().Where(s => procedureStepEntities.Select(m => m.ProcedureId).Contains(s.Id)).ToListAsync();
             _ = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(m => m.ProcedureStepMonitor)
                 .Where(s => workOrderTaskEntities.Select(m => m.Id).Contains(s.WorkOrderTaskId)).ToListAsync();
@@ -170,8 +171,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             // Note the menu permission here: Purchases.  Work orders are created by a user
             // entering a purchase against a purchase order.  The Processor then creates the
-            // work order as that user.  Therefore, per REQ61, the permission required
-            // is EnumMenuItem.Purchases (see SBB-304).
+            // work order as that user.
             if (!CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
             {
                 throw new DomainException(
@@ -184,7 +184,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 command.ScheduledStartDate = DateTime.Now;
             }
 
-            WorkOrder workorder = _mapper.Map<WorkOrder>(command);
+            var workorder = _mapper.Map<EntityFramework.Entities.WorkOrder>(command);
 
             var created = _unitOfWork.WorkOrders.Add(workorder);
 
@@ -207,11 +207,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
-            var purchase = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => s.Id == command.PurchaseId);
-            var parentPart = workorder.WorkOrderParts.FirstOrDefault(s => s.ParentId == null);
+            var parentParts = workorder.WorkOrderParts.Where(s => s.ParentId == null).ToList();
 
-            await GetCycleCount(parentPart, purchase.SerialNumber);
-
+            foreach (var parentPart in parentParts)
+            {
+                await SetCycleCount(parentPart);
+            }
 
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
@@ -427,7 +428,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             WorkOrderPart workOrderPartEntity = await current.FirstOrDefaultAsync(s => s.Id == command.WorkOrderPartId);
 
-            await GetCycleCount(workOrderPartEntity, command.SerialNumber);
+            await SetCycleCount(workOrderPartEntity, command.SerialNumber);
 
             _ = _mapper.Map(command, workOrderPartEntity);
 
@@ -614,8 +615,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _unitOfWork.WorkOrderTasks.LoadReference(workOrderTaskEntity, x => x.Status);
             _unitOfWork.WorkOrderTasks.LoadReference(workOrderTaskEntity, x => x.WorkOrder);
 
-            WorkOrder wo = workOrderTaskEntity.WorkOrder;
-            _unitOfWork.WorkOrders.LoadCollection(wo, "WorkOrderTasks");
+            var workOrderEntity = workOrderTaskEntity.WorkOrder;
+            _unitOfWork.WorkOrders.LoadCollection(workOrderEntity, "WorkOrderTasks");
             // "DONE" states are:
             // 4   Cancelled
             // 8   Closed
@@ -626,17 +627,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 if (!workOrderTaskEntity.WorkOrder.ActualStartDate.HasValue)
                 {
-                    wo.ActualStartDate = DateTime.Now;
-                    _unitOfWork.WorkOrders.Update(wo);
+                    workOrderEntity.ActualStartDate = DateTime.Now;
+                    _unitOfWork.WorkOrders.Update(workOrderEntity);
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
-            else if (wo.WorkOrderTasks.All(x => completed.Contains(x.StatusId)))
+            else if (workOrderEntity.WorkOrderTasks.All(x => completed.Contains(x.StatusId)))
             {
                 if (!workOrderTaskEntity.WorkOrder.ActualEndDate.HasValue)
                 {
-                    wo.ActualEndDate = DateTime.Now;
-                    _unitOfWork.WorkOrders.Update(wo);
+                    workOrderEntity.ActualEndDate = DateTime.Now;
+                    _unitOfWork.WorkOrders.Update(workOrderEntity);
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
@@ -907,6 +908,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     portalView.StartDate = associatedWorkOrder.ActualStartDate;
                     portalView.DueDate = associatedWorkOrder.ScheduledEndDate;
                     portalView.Price = associatedWorkOrder.Price;
+                    portalView.Disposition = getWorkOrderDisposition(associatedWorkOrder);
 
                 }
 
@@ -999,10 +1001,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 (int)EnumStatusSteps.Closed,
                 (int)EnumStatusSteps.Cancelled,
             };
-
+            int[] waiting = {
+                (int)EnumStatusSteps.Approved,
+                (int)EnumStatusSteps.WaitingtoStart
+            };
             int[] inProgress = {
                 (int)EnumStatusSteps.InProgress,
                 (int)EnumStatusSteps.Approved,
+                (int)EnumStatusSteps.WaitingtoStart,
                 (int)EnumStatusSteps.Complete
             };
             string status;
@@ -1010,7 +1016,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
             }
-            else if (tasks.All(x => x.StatusId == (int)EnumStatusSteps.Approved))
+            else if (tasks.All(x => waiting.Contains(x.StatusId)))
             {
                 status = EnumUtils.GetDescription(EnumStatusSteps.WaitingtoStart);
             }
@@ -1028,6 +1034,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             return status;
         }
+
         private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
         {
             var getWorkOrderCommand = new GetWorkOrder()
@@ -1051,42 +1058,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     workOrderGridSummary.CurrentActiveTaskName = workOrderTaskEntityInProgress.ProcedureStep?.Title;
                 }
 
-                workOrderGridSummary.CustomerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name;
-                if (string.IsNullOrEmpty(workOrderGridSummary.CustomerName))
-                {
-                    workOrderGridSummary.CustomerName = String.Empty;
-                }
-
+                workOrderGridSummary.CustomerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name ?? string.Empty;
                 workOrderGridSummary.WorkOrderItemNumber = GetWorkOrderItemNumber(workOrderModel);
-
                 workOrderGridSummary.ReferencePO = workOrderModel.Purchase?.PurchaseOrder?.ReferencePO;
 
                 var firstWorkOrderTask = workOrderModel.WorkOrderTasks.OrderBy(s => s.TaskStepOrder).FirstOrDefault();
-                workOrderGridSummary.ProcedureName = firstWorkOrderTask == null ? String.Empty : firstWorkOrderTask.ProcedureStep?.Procedure?.Name;
+                workOrderGridSummary.ProcedureName = firstWorkOrderTask == null ? string.Empty : firstWorkOrderTask.ProcedureStep?.Procedure?.Name;
 
-                // Disposition
-                // This is a string join of the text values of
-                // all procedure steps with a type of "NC Disposition"
-                workOrderGridSummary.Disposition = String.Empty;
-                if (workOrderModel.HasNCR.GetValueOrDefault())
-                {
-                    var workOrderTaskModels = workOrderModel.WorkOrderTasks.Where(x =>
-                        x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC).ToList();
-                    if (workOrderTaskModels.Any())
-                    {
-                        string dispositionMessage = String.Empty;
-                        foreach (WorkOrderTaskModel workOrderTaskModel in workOrderTaskModels)
-                        {
-                            dispositionMessage +=
-                                String.Join(" ",
-                                    workOrderTaskModel.WorkOrderTaskMonitors.Select(x =>
-                                        x.TextVal
-                                    ).ToList()
-                                ) + " ";
-                        }
-                        workOrderGridSummary.Disposition = dispositionMessage;
-                    }
-                }
+                workOrderGridSummary.Disposition = getWorkOrderDisposition(workOrderModel, true);
 
                 var statusValues = GetStatusValues(workOrderModel);
                 workOrderGridSummary.PercentageOfTasksCompleted = statusValues.percentComplete;
@@ -1114,49 +1093,55 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return (completedDenominator, completedNumerator, pctComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration);
         }
 
-        private async Task GetCycleCount(WorkOrderPart workOrderPart, string serialNumber)
+        private async Task SetCycleCount(WorkOrderPart workOrderPart, string newSerialNumber = null)
         {
-            if (workOrderPart != null)
+            if (workOrderPart == null)
             {
-                workOrderPart.SerialNumber = serialNumber;
-                var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
-                    .Where(s => s.SerialNumber == workOrderPart.SerialNumber && s.Part != null &&
-                                s.Part.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+                return;
+            }
 
-                if (!workOrderParts.Any())
+            string serialNumber = newSerialNumber == null ? workOrderPart.SerialNumber : newSerialNumber;
+            if (serialNumber == null)
+            {
+                return;
+            }
+
+            workOrderPart.SerialNumber = serialNumber;
+            var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
+                .Where(s => s.SerialNumber == workOrderPart.SerialNumber && s.Part != null &&
+                            s.Part.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+
+            if (!workOrderParts.Any())
+            {
+                var workOrderPartsFromHistoryTable = await _unitOfWork.CycleCountHistory.Query().Where(s =>
+                    s.SerialNumber == workOrderPart.SerialNumber &&
+                    s.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+
+                if (workOrderPartsFromHistoryTable.Any())
                 {
-                    var workOrderPartsFromHistoryTable = await _unitOfWork.CycleCountHistory.Query().Where(s =>
-                        s.SerialNumber == workOrderPart.SerialNumber &&
-                        s.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
-
-                    if (workOrderPartsFromHistoryTable.Any())
-                    {
-                        workOrderPart.CycleCount = workOrderPartsFromHistoryTable.OrderByDescending(s => s.CycleCount).FirstOrDefault()
-                            ?.CycleCount + 1;
-                    }
-                    else
-                    {
-                        workOrderPart.CycleCount = 1;
-                    }
+                    workOrderPart.CycleCount = workOrderPartsFromHistoryTable.OrderByDescending(s => s.CycleCount).FirstOrDefault()
+                        ?.CycleCount + 1;
                 }
                 else
                 {
-
-                    var cycleCount = workOrderParts.OrderByDescending(s => s.CycleCount)
-                        .FirstOrDefault(m => m.Id != workOrderPart.Id)
-                        ?.CycleCount;
-
-                    if (cycleCount == null)
-                    {
-                        workOrderPart.CycleCount = 1;
-                    }
-                    else
-                    {
-                        workOrderPart.CycleCount = cycleCount + 1;
-                    }
-
+                    workOrderPart.CycleCount = 1;
                 }
+            }
+            else
+            {
 
+                var cycleCount = workOrderParts.OrderByDescending(s => s.CycleCount)
+                    .FirstOrDefault(m => m.Id != workOrderPart.Id)
+                    ?.CycleCount;
+
+                if (cycleCount == null)
+                {
+                    workOrderPart.CycleCount = 1;
+                }
+                else
+                {
+                    workOrderPart.CycleCount = cycleCount + 1;
+                }
 
             }
         }
@@ -1236,5 +1221,44 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         }
 
+        /// <summary>
+        /// This is a string join of the text values of
+        /// all procedure steps with a type of "NC Disposition"
+        /// and optionally the messages for the work order.
+        /// </summary>
+        /// <param name="workOrderModel">Work Order Model</param>
+        /// <returns>The formatted disposition string</returns>
+        private string getWorkOrderDisposition(WorkOrderModel workOrderModel, bool includeMessages = false)
+        {
+            string dispositionMessage = string.Empty;
+
+            if (workOrderModel.HasNCR.GetValueOrDefault())
+            {
+                var workOrderTaskModels = workOrderModel.WorkOrderTasks.Where(x =>
+                    x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC).ToList();
+                if (workOrderTaskModels.Any())
+                {
+                    foreach (WorkOrderTaskModel workOrderTaskModel in workOrderTaskModels)
+                    {
+                        dispositionMessage +=
+                            String.Join(string.Empty,
+                                workOrderTaskModel.WorkOrderTaskMonitors.Select(x =>
+                                    x.TextVal == null ? "" : x.TextVal + " | "
+                                ).ToList()
+                            );
+                    }
+                }
+            }
+
+            if (includeMessages && workOrderModel.WorkOrderMessages != null)
+            {
+                dispositionMessage += String.Join(string.Empty,
+                    workOrderModel.WorkOrderMessages.Select(x =>
+                        x.Message == null ? "" : x.Message + " | "
+                    ).ToList()
+                );
+            }
+            return dispositionMessage.Trim().Trim('|').Trim();
+        }
     }
 }

@@ -116,6 +116,9 @@
 </p-dialog>
 
 <ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
+    <div>
+        <span>{{colsDataAndSettings.colData.disposition}}</span>
+    </div>
     <div *ngFor="let item of colsDataAndSettings.colData.messages; last as isLast">
         <div>
             <span class="disp-label">{{item.name}} {{item.date | userTimezone}} </span> <span
@@ -125,7 +128,7 @@
     </div>
     <span *ngIf="!globals.user.isAnswerUser" class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
         (click)="addInstructions(colsDataAndSettings.colData)">
-        Add Insturctions </span>
+        Add Instructions </span>
 </ng-template>
 
 <ng-template #expandedRowTemplate let-expandRowData='expandRowData'>

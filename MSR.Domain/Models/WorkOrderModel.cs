@@ -107,6 +107,11 @@ namespace MSR.Domain.Models
         public ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
 
         /// <summary>
+        /// Instructions added to work order from Portal
+        /// </summary>
+        public ICollection<WorkOrderMessageModel> WorkOrderMessages { get; set; }
+
+        /// <summary>
         /// Status of string, calculated based on state of WO tasks
         /// </summary>
         [DataMember(Name="status")]

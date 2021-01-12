@@ -218,7 +218,7 @@ export class PurchaseOrdersComponent implements OnInit {
     jQuery('#totalPurchaseLimit').parsley().validate();
     if (jQuery('#totalPurchaseLimit').parsley().isValid()) {
       if ($event.target.value) {
-        const totalPurchaseLimit = parseInt($event.target.value, 10);
+        const totalPurchaseLimit = parseFloat(parseFloat($event.target.value).toFixed(2));
         this.currentPO.totalPurchaseLimit = totalPurchaseLimit;
       } else {
         this.currentPO.totalPurchaseLimit = null;

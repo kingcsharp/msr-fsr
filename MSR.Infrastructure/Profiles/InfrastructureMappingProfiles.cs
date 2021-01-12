@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using Castle.Core.Internal;
 using MSR.Domain.Validators;
 using System.Runtime.InteropServices.ComTypes;
+using MSR.Domain.DTOs;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -199,7 +200,28 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             #region Procedure
-            CreateMap<Procedure, Domain.Models.Procedure>();
+            CreateMap<ProcedureWithUsedProductCountView, Domain.Models.Procedure>()
+                .ForMember(dest => dest.ProcedureType, opts => opts.MapFrom(src => new MSR.Domain.Models.ProcedureType()
+                {
+                    Id = src.ProcedureTypeId,
+                    Name = src.ProcedureTypeName
+                }))
+                .ForMember(dest => dest.LastUpdated, opts => opts.MapFrom(src => new MSR.Domain.Models.UserModel()
+                {
+                    Id = src.LastUpdatedById,
+                    FirstName = src.LastUpdatedByFirstName,
+                    LastName = src.LastUpdatedByLastName
+                }))
+                .ForMember(dest => dest.CreatedBy, opts => opts.MapFrom(src => src.CreatedById))
+                .ForMember(dest => dest.Created, opts => opts.MapFrom(src => new MSR.Domain.Models.UserModel()
+                {
+                    Id = src.CreatedById,
+                    FirstName = src.CreatedByFirstName,
+                    LastName = src.CreatedByLastName
+                }))
+                .ForMember(dest => dest.IsRelatedToAProduct, opts => opts.MapFrom(src => src.CountProductsUsing > 0));
+            CreateMap<Procedure, Domain.Models.Procedure>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore());
             CreateMap<ProcedureStepApproval, ProcedureStepModel>()
                 // if the approval exists, the step is pending approval
                 .ForMember(i => i.ApprovalStatus, opts => opts.MapFrom(src => "Pending"));
@@ -257,6 +279,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureApproval, UpdateProcedure>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProcedureId));
             CreateMap<UpdateProcedure, Procedure>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<UpdateProcedureStep, ProcedureStepApproval>()
@@ -506,6 +529,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.HasNCRs, opts => opts.MapFrom(src => src.HasNCR));
 
             CreateMap<GetPortalWorkOrder, GetWorkOrder>();
+
+            CreateMap<WorkOrderHistoryViewDTO, WorkOrderGridSummary>();
         }
 
         private static bool ignoreNullOrZero(object srcMember)
