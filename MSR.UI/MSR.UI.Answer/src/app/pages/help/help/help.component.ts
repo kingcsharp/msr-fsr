@@ -8,6 +8,7 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
+import { AllowedActions } from '../../../models/lib/AllowedActions';
 
 @Component({
   selector: 'app-help',
@@ -22,17 +23,20 @@ export class HelpComponent implements OnInit {
   roleFilter: string;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   gridStorageId: string;
-  canAddHelpPage: boolean = false;
-  canEditHelpPage: boolean = false;
-  canDeleteHelpPage: boolean = false;
   showConfirmDeleteDialog: boolean = false;
   helpPageToDelete: HelpPage;
+  gridVersion: string;
+  menuItems = EnumMenuItem;
+  userPrivileges: AllowedActions;
+  helpContent: string;
+  modalTitle: string;
+  showPreviewDialog: boolean = false;
 
   constructor(private helpService: HelpService, private roleService: RoleService,
-    private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+    public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
-
+    this.gridVersion = '1.0.0';
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
@@ -41,10 +45,7 @@ export class HelpComponent implements OnInit {
       new ColumnsSaved({ id: 'roles', label: 'Roles', visible: true }),
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
     ];
-
-    this.canAddHelpPage = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDeleteHelpPage = this.hasPrivilege(this.privileges.CanActivate);
-    this.canEditHelpPage = this.hasPrivilege(this.privileges.CanEdit);
+    this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.HelpPages);
     this.getHelpPages();
   }
 
@@ -64,8 +65,10 @@ export class HelpComponent implements OnInit {
 
   }
 
-  hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
+  openHelpPage(helpage: HelpPage) {
+    this.helpContent = helpage.content;
+    this.modalTitle = helpage.title;
+    this.showPreviewDialog = true;
   }
 
   openConfirmDeleteDialog(helpPage: HelpPage) {
