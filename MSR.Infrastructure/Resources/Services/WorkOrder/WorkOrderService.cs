@@ -171,7 +171,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         {
             // Note the menu permission here: Purchases.  Work orders are created by a user
             // entering a purchase against a purchase order.  The Processor then creates the
-            // work order as that user.  
+            // work order as that user.
             if (!CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
             {
                 throw new DomainException(
@@ -908,6 +908,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     portalView.StartDate = associatedWorkOrder.ActualStartDate;
                     portalView.DueDate = associatedWorkOrder.ScheduledEndDate;
                     portalView.Price = associatedWorkOrder.Price;
+                    portalView.Disposition = getWorkOrderDisposition(associatedWorkOrder);
 
                 }
 
@@ -1064,37 +1065,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 var firstWorkOrderTask = workOrderModel.WorkOrderTasks.OrderBy(s => s.TaskStepOrder).FirstOrDefault();
                 workOrderGridSummary.ProcedureName = firstWorkOrderTask == null ? string.Empty : firstWorkOrderTask.ProcedureStep?.Procedure?.Name;
 
-                // Disposition
-                // This is a string join of the text values of
-                // all procedure steps with a type of "NC Disposition"
-                workOrderGridSummary.Disposition = string.Empty;
-                if (workOrderModel.HasNCR.GetValueOrDefault())
-                {
-                    var workOrderTaskModels = workOrderModel.WorkOrderTasks.Where(x =>
-                        x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC).ToList();
-                    string dispositionMessage = String.Empty;
-                    if (workOrderTaskModels.Any())
-                    {
-                        foreach (WorkOrderTaskModel workOrderTaskModel in workOrderTaskModels)
-                        {
-                            dispositionMessage +=
-                                String.Join(" ",
-                                    workOrderTaskModel.WorkOrderTaskMonitors.Select(x =>
-                                        x.TextVal == null ? "" : x.TextVal
-                                    ).ToList()
-                                ) + " ";
-                        }
-                    }
-                    if (workOrderModel.WorkOrderMessages != null)
-                    {
-                        dispositionMessage += String.Join(" ",
-                            workOrderModel.WorkOrderMessages.Select(x =>
-                                x.Message == null ? "" : x.Message
-                            ).ToList()
-                        );
-                    }
-                    workOrderGridSummary.Disposition = dispositionMessage.Trim();
-                }
+                workOrderGridSummary.Disposition = getWorkOrderDisposition(workOrderModel, true);
 
                 var statusValues = GetStatusValues(workOrderModel);
                 workOrderGridSummary.PercentageOfTasksCompleted = statusValues.percentComplete;
@@ -1250,5 +1221,44 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         }
 
+        /// <summary>
+        /// This is a string join of the text values of
+        /// all procedure steps with a type of "NC Disposition"
+        /// and optionally the messages for the work order.
+        /// </summary>
+        /// <param name="workOrderModel">Work Order Model</param>
+        /// <returns>The formatted disposition string</returns>
+        private string getWorkOrderDisposition(WorkOrderModel workOrderModel, bool includeMessages = false)
+        {
+            string dispositionMessage = string.Empty;
+
+            if (workOrderModel.HasNCR.GetValueOrDefault())
+            {
+                var workOrderTaskModels = workOrderModel.WorkOrderTasks.Where(x =>
+                    x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC).ToList();
+                if (workOrderTaskModels.Any())
+                {
+                    foreach (WorkOrderTaskModel workOrderTaskModel in workOrderTaskModels)
+                    {
+                        dispositionMessage +=
+                            String.Join(string.Empty,
+                                workOrderTaskModel.WorkOrderTaskMonitors.Select(x =>
+                                    x.TextVal == null ? "" : x.TextVal + " | "
+                                ).ToList()
+                            );
+                    }
+                }
+            }
+
+            if (includeMessages && workOrderModel.WorkOrderMessages != null)
+            {
+                dispositionMessage += String.Join(string.Empty,
+                    workOrderModel.WorkOrderMessages.Select(x =>
+                        x.Message == null ? "" : x.Message + " | "
+                    ).ToList()
+                );
+            }
+            return dispositionMessage.Trim().Trim('|').Trim();
+        }
     }
 }

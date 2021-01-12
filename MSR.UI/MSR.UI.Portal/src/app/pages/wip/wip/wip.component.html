@@ -116,6 +116,9 @@
 </p-dialog>
 
 <ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
+    <div>
+        <span>{{colsDataAndSettings.colData.disposition}}</span>
+    </div>
     <div *ngFor="let item of colsDataAndSettings.colData.messages; last as isLast">
         <div>
             <span class="disp-label">{{item.name}} {{item.date | userTimezone}} </span> <span
