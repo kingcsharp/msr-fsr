@@ -16490,7 +16490,7 @@ export class WorkOrderMessageModel implements IWorkOrderMessageModel {
         data["name"] = this.name;
         data["message"] = this.message;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        return data;
+        return data; 
     }
 }
 
