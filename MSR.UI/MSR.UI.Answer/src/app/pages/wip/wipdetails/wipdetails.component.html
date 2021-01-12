@@ -95,7 +95,7 @@
                   'text-dark': workOrderTask.status?.name === 'In Progress',
                   'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed' 
                   || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled',
-                  'step-viewed': workOrderTaskToView.id === workOrderTask.id}">
+                  'step-viewed': workOrderTaskToView?.id === workOrderTask.id}">
               <div class="h-100 d-flex">
                 <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title}}</div>
               </div>
