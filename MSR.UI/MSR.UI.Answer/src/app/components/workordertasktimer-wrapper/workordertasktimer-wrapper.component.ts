@@ -8,7 +8,6 @@ import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 
 @Component({
@@ -61,7 +60,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
         this.workOrderTaskInProgress.taskIsRunning = false;
         this.workOrderTaskInProgress.taskRunningSince = null;
         this.stopTimer();
-        this.resetTimerDisplay()
+        this.resetTimerDisplay();
         this.setTaskToCompleted();
         this.resetTimerDisplay();
         this.workOrderTaskInProgress.lastUpdatedOn = moment().toDate();
@@ -126,44 +125,44 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   }
 
 
-  start(){
+  start() {
     this.globals.showLoader(true);
     this.setTaskToInProgressStatus();
     this.workOrderTaskInProgress.startedOn = moment().toDate();
     this.workOrderTaskInProgress.taskIsRunning = true;
     this.workOrderTaskInProgress.taskRunningSince = moment().toDate();
     this.startTimer();
-    this.saveTaskTimerState(false); 
+    this.saveTaskTimerState(false);
   }
 
-  pause(){
+  pause() {
     this.globals.showLoader(true);
     this.stopTimer();
     this.updateTotalTaskTime();
     this.workOrderTaskInProgress.taskIsRunning = false;
     this.workOrderTaskInProgress.taskRunningSince = null;
-    this.saveTaskTimerState(false); 
+    this.saveTaskTimerState(false);
   }
 
-  resume(){
+  resume() {
     this.globals.showLoader(true);
     this.workOrderTaskInProgress.taskIsRunning = true;
     this.workOrderTaskInProgress.taskRunningSince = moment().toDate();
     this.startTimer();
-    this.saveTaskTimerState(false); 
+    this.saveTaskTimerState(false);
   }
 
-  done(){
+  done() {
     this.globals.showLoader(true);
     this.stopTimer();
     this.setTaskToCompleted();
     this.updateTotalTaskTime();
     this.workOrderTaskInProgress.taskIsRunning = false;
     this.workOrderTaskInProgress.taskRunningSince = null;
-    this.saveTaskTimerState(true); 
+    this.saveTaskTimerState(true);
   }
 
-  startTimer(){
+  startTimer() {
     this.stepTimer = setInterval(() => {
 
       this.updateTimerDisplay();
@@ -171,19 +170,18 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     }, 1000);
   }
 
-  stopTimer(){
+  stopTimer() {
     clearInterval(this.stepTimer);
   }
 
   updateTimerDisplay() {
 
-    if(this.workOrderTaskInProgress.taskIsRunning){
+    if (this.workOrderTaskInProgress.taskIsRunning) {
 
       const taskHasBeenRunningSince = moment(this.workOrderTaskInProgress.taskRunningSince);
       const currentDate = moment();
 
       this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime + (-taskHasBeenRunningSince.diff(currentDate, 'seconds'));
-      console.log(this.stepSeconds);
 
     } else {
       this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime;
@@ -194,13 +192,13 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   }
 
-  resetTimerDisplay(){
+  resetTimerDisplay() {
     this.stepSeconds = 0;
     this.stepMinutes = 0;
     this.stepHours = 0;
   }
 
-  setTaskToInProgressStatus(){
+  setTaskToInProgressStatus() {
     this.workOrderTaskInProgress.statusId = 2;
     this.workOrderTaskInProgress.status = new StatusModel({
       id: 2,
@@ -208,7 +206,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     } as IStatusModel);
   }
 
-  setTaskToCompleted(){
+  setTaskToCompleted() {
     this.workOrderTaskInProgress.statusId = 3;
     this.workOrderTaskInProgress.status = new StatusModel({
       id: 3,
@@ -216,13 +214,13 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     } as IStatusModel);
   }
 
-  updateTotalTaskTime(){
+  updateTotalTaskTime() {
     const taskHasBeenRunningSince = moment(this.workOrderTaskInProgress.taskRunningSince);
     const currentDate = moment();
     this.workOrderTaskInProgress.totalTaskTime = this.workOrderTaskInProgress.totalTaskTime + (-taskHasBeenRunningSince.diff(currentDate, 'seconds'));
   }
 
-  convertDateToUTC(date): Date { 
-    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()); 
+  convertDateToUTC(date): Date {
+    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
   }
 }
