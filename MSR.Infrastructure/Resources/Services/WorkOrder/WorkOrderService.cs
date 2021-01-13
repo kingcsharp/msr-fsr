@@ -11,6 +11,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
+using MSR.Domain.Hub;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using MSR.Domain.Views;
@@ -31,9 +32,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         private readonly IEmailService _emailService;
         private readonly EmailInformation _emailInformation;
         private readonly GeneralInformation _generalInformation;
+        private readonly IMessageHubClient _messageHub;
 
         public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService,
-            EmailInformation emailInformation, GeneralInformation generalInformation)
+            EmailInformation emailInformation, GeneralInformation generalInformation, IMessageHubClient messageHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -41,9 +43,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _emailService = emailService;
             _emailInformation = emailInformation;
             _generalInformation = generalInformation;
+            _messageHub = messageHub;
         }
-
-
 
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
@@ -259,8 +260,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             ret = _mapper.Map<WorkOrderModel>(workorder);
 
-            return ret;
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate());
 
+            return ret;
         }
         public async Task<bool> DeleteWorkOrderAsync(DeleteWorkOrder command)
         {
@@ -641,9 +643,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate());
 
             return workOrderTaskModel;
         }
+
         public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SignalRService } from '../../../services/signalr.service';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({
@@ -8,11 +9,10 @@ import { Globals } from '../../../models/lib/globals';
 })
 export class WipstatusComponent implements OnInit {
 
-  constructor(public globals: Globals) { }
+  constructor(private signalrService: SignalRService, private globalService: Globals) { }
 
   ngOnInit(): void {
-
-
+    this.signalrService.subscribeWorkOrderUpdate();
   }
 
 

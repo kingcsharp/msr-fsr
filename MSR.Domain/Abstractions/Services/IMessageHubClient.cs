@@ -9,6 +9,7 @@ namespace MSR.Domain.Abstractions.Services
     public interface IMessageHubClient
     {
         public Task SendNotification(string userId, Toaster message);
+        public Task SendWorkOrderUpdate(WorkOrderStatusUpdate update);
         public Task SendNotification(Guid guid, PendingNotificationItem message);
         public void SendApprovalNotification(EnumApprovalTables approvalTable, int count = 1);
     }

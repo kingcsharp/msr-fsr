@@ -78,6 +78,19 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
             }
         }
 
+        public async Task SendWorkOrderUpdate(WorkOrderStatusUpdate update)
+        {
+            try
+            {
+                await Connect();
+                await connection.InvokeAsync("SendWorkOrderUpdate", update);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+        }
+
         public async Task SendNotification(string userId, Toaster message)
         {
             try

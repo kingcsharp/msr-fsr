@@ -49,6 +49,17 @@ export class SignalRService implements OnDestroy {
       });
   }
 
+  public subscribeWorkOrderUpdate = () => {
+    setTimeout(() => {
+        if (this.hubConnection === undefined ||
+            this.hubConnection.state !== 'Connected') {
+            this.subscribeWorkOrderUpdate();
+            return;
+        }
+        this.hubConnection.invoke('SubscribeWorkOrderUpdate');
+    }, 1000);
+  }
+
   public discconecctHub = () => {
     if (this.hubConnection !== undefined) {
       this.hubConnection.stop();
