@@ -49,11 +49,12 @@ p {
   margin: 0 0 2px;
 }
 .part-image {
-  margin-top: 36px;
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: center;
 }
 .part-image img {
-    width: 136px;
-    max-width: 136px;
-    min-width: 136px;
+    max-width: 1.25in;
+    max-height: 2in;
 }
 
