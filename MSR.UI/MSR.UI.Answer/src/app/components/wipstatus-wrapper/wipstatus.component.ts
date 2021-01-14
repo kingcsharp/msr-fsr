@@ -112,20 +112,19 @@ export class WipstatusWrapperComponent implements OnInit {
   }
 
   workOrderStatusUpdate(component, data): void {
-    let productIdx : number;
-    let summary : WorkOrderSummary = undefined;
-    for (productIdx = 0;
-         productIdx < component.workOrderStatuses.length;
-         productIdx += 1) {
-      let product = component.workOrderStatuses[productIdx];
-      summary = product.workOrderSummaries.find(x =>
+    let workOrderSummary : WorkOrderSummary = undefined;
+    for (let productIndex : number = 0;
+         productIndex < component.workOrderStatuses.length;
+         productIndex += 1) {
+      let product = component.workOrderStatuses[productIndex];
+      workOrderSummary = product.workOrderSummaries.find(x =>
         x.workOrderId === data.workOrderId);
-      if (summary) {
-        summary.workOrderStatus = data.workOrderStatus;
+      if (workOrderSummary) {
+        workOrderSummary.workOrderStatus = data.workOrderStatus;
         break;
       }
     }
-    if (summary === undefined && data.workOrderStatus === 'Waiting to Start') {
+    if (workOrderSummary === undefined && data.workOrderStatus === 'Waiting to Start') {
         // work order created
         data.workOrderSummary = {
             workOrderId: data.workOrderId,
