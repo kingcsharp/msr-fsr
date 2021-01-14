@@ -48,7 +48,7 @@ export class WipstatusWrapperComponent implements OnInit {
       let workOrderStatuses = new Array<any>();
 
       response.object.map(workOrderStatus => {
-        this.displayProductSet(workOrderStatuses, workOrderStatus);
+        this.displayWorkOrderByProduct(workOrderStatuses, workOrderStatus);
       });
 
       this.workOrderStatuses = workOrderStatuses;
@@ -86,7 +86,7 @@ export class WipstatusWrapperComponent implements OnInit {
 
   }
 
-  displayProductSet(workOrderStatuses: Array<any>, workOrderStatus: any) {
+  displayWorkOrderByProduct(workOrderStatuses: Array<any>, workOrderStatus: any) {
     let workOrderStatusToUse = workOrderStatuses.find(s =>
       s.productName === workOrderStatus.productName &&
       s.locationName === workOrderStatus.locationName);
@@ -148,7 +148,7 @@ export class WipstatusWrapperComponent implements OnInit {
             workOrderId: data.workOrderId,
             workOrderStatus: data.workOrderStatus
         };
-        this.displayProductSet(this.workOrderStatuses, data);
+        this.displayWorkOrderByProduct(this.workOrderStatuses, data);
     }
   }
 
