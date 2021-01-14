@@ -118,10 +118,26 @@ export class WipstatusWrapperComponent implements OnInit {
          productIndex < this.workOrderStatuses.length;
          productIndex += 1) {
       let product = this.workOrderStatuses[productIndex];
-      workOrderSummary = product.workOrderSummaries.find(x =>
-        x.workOrderId === data.workOrderId);
+      for (let summaryIndex : number = 0;
+           summaryIndex < product.workOrderSummaries.length;
+           summaryIndex += 1) {
+        if (product.workOrderSummaries[summaryIndex].workOrderId !==
+            data.workOrderId) {
+          continue;
+        }
+
+        workOrderSummary = product.workOrderSummaries[summaryIndex];
+
+        if (data.workOrderStatus === 'Complete' ||
+            data.workOrderStatus === 'Cancelled') {
+          product.workOrderSummaries.splice(summaryIndex, 1);
+        } else {
+          workOrderSummary.workOrderStatus = data.workOrderStatus;
+        }
+        break;
+      }
+
       if (workOrderSummary) {
-        workOrderSummary.workOrderStatus = data.workOrderStatus;
         break;
       }
     }
