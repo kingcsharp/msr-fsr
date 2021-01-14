@@ -104,6 +104,22 @@ namespace MSR.Answer.MessageHub.Hubs
         }
 
         /// <summary>
+        /// Subscribe this connection to work order update messages.
+        /// </summary>
+        /// <returns></returns>
+        public void SubscribeWorkOrderUpdate()
+        {
+            Connections.Add("status", Context.ConnectionId);
+        }
+
+        public async Task SendWorkOrderUpdate(WorkOrderStatusUpdate update)
+        {
+            foreach (var client in Connections.GetConnections("status")) {
+                await Clients.Clients(client).SendAsync("WorkOrderUpdate", update);
+            }
+        }
+
+        /// <summary>
         /// Send workflow messages to all clients
         /// </summary>
         /// <param name="guid"></param>
