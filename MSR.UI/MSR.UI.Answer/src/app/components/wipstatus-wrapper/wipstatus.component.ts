@@ -40,7 +40,8 @@ export class WipstatusWrapperComponent implements OnInit {
     if (!this.isDisplayedInWipList) {
       this.globals.showLoader(true);
     }
-    this.signalrService.subscribeWorkOrderUpdate(this, this.workOrderStatusUpdate);
+    this.signalrService.subscribeWorkOrderUpdate((data) =>
+        this.workOrderStatusUpdate(data));
 
     this.workOrderService.status(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
@@ -111,12 +112,12 @@ export class WipstatusWrapperComponent implements OnInit {
     }
   }
 
-  workOrderStatusUpdate(component, data): void {
+  workOrderStatusUpdate(data): void {
     let workOrderSummary : WorkOrderSummary = undefined;
     for (let productIndex : number = 0;
-         productIndex < component.workOrderStatuses.length;
+         productIndex < this.workOrderStatuses.length;
          productIndex += 1) {
-      let product = component.workOrderStatuses[productIndex];
+      let product = this.workOrderStatuses[productIndex];
       workOrderSummary = product.workOrderSummaries.find(x =>
         x.workOrderId === data.workOrderId);
       if (workOrderSummary) {
@@ -124,13 +125,14 @@ export class WipstatusWrapperComponent implements OnInit {
         break;
       }
     }
-    if (workOrderSummary === undefined && data.workOrderStatus === 'Waiting to Start') {
+    if (workOrderSummary === undefined &&
+        data.workOrderStatus === 'Waiting to Start') {
         // work order created
         data.workOrderSummary = {
             workOrderId: data.workOrderId,
             workOrderStatus: data.workOrderStatus
         };
-        component.displayProductSet(component.workOrderStatuses, data);
+        this.displayProductSet(this.workOrderStatuses, data);
     }
   }
 
