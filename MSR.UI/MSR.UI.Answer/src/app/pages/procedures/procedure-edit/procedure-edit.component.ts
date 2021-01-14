@@ -29,7 +29,6 @@ export class ProcedureEditComponent implements OnInit {
   availableProcedureTypes: Array<SelectItem>;
   menuItems = EnumMenuItem;
   availableRoles: Array<Role>;
-  selectedRoles: Array<Role>;
   durationTypeOptions: Array<SelectItem>;
   procedureStepTypeOptions: Array<SelectItem>;
   canEdit: boolean = false;
@@ -104,13 +103,6 @@ export class ProcedureEditComponent implements OnInit {
         this.procedureService.procedureGet(this.procedure.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedrueGetResponse) => {
 
           this.procedure = procedrueGetResponse.object[0];
-          this.selectedRoles = new Array<Role>();
-          this.procedure.roles?.forEach(role => {
-
-            let selectedRole = this.availableRoles.find(s => s.id === role.id);
-
-            this.selectedRoles.push(selectedRole);
-          });
 
           if (this.procedure.referenceFiles === undefined) {
             this.procedure.referenceFiles = [];
@@ -318,7 +310,6 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureRequest.procedureTypeId = procedure.procedureTypeId;
     updateProcedureRequest.referenceFiles = referenceFiles;
     updateProcedureRequest.referenceFileIds = referenceFileIds;
-    updateProcedureRequest.roleIds = this.selectedRoles.map(s => s.id);
     this.globals.showLoader(true);
     this.procedureService.procedurePatch(env.apiVersion, updateProcedureRequest).pipe(take(1)).subscribe(() => {
 

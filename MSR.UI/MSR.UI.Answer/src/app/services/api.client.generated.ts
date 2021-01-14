@@ -12844,7 +12844,6 @@ export class Procedure extends TrackableModel implements IProcedure {
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
-    roles?: Role[] | undefined;
 
     constructor(data?: IProcedure) {
         super(data);
@@ -12867,11 +12866,6 @@ export class Procedure extends TrackableModel implements IProcedure {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileModel.fromJS(item));
-            }
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles!.push(Role.fromJS(item));
             }
         }
     }
@@ -12900,11 +12894,6 @@ export class Procedure extends TrackableModel implements IProcedure {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item.toJSON());
-        }
         super.toJSON(data);
         return data; 
     }
@@ -12922,7 +12911,6 @@ export interface IProcedure extends ITrackableModel {
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
-    roles?: Role[] | undefined;
 }
 
 export class ProcedureType implements IProcedureType {
@@ -13708,7 +13696,6 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
     isRelatedToAProduct?: boolean;
     procedureTypeId?: number | undefined;
     comments?: string | undefined;
-    roleIds?: (number | undefined)[] | undefined;
     duration?: number | undefined;
     durationType!: string;
     referenceFiles?: FileRequest[] | undefined;
@@ -13730,11 +13717,6 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
             this.isRelatedToAProduct = _data["isRelatedToAProduct"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.comments = _data["comments"];
-            if (Array.isArray(_data["roleIds"])) {
-                this.roleIds = [] as any;
-                for (let item of _data["roleIds"])
-                    this.roleIds!.push(item);
-            }
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
             if (Array.isArray(_data["referenceFiles"])) {
@@ -13764,11 +13746,6 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
         data["isRelatedToAProduct"] = this.isRelatedToAProduct;
         data["procedureTypeId"] = this.procedureTypeId;
         data["comments"] = this.comments;
-        if (Array.isArray(this.roleIds)) {
-            data["roleIds"] = [];
-            for (let item of this.roleIds)
-                data["roleIds"].push(item);
-        }
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
         if (Array.isArray(this.referenceFiles)) {
@@ -13791,7 +13768,6 @@ export interface IUpdateProcedureRequest {
     isRelatedToAProduct?: boolean;
     procedureTypeId?: number | undefined;
     comments?: string | undefined;
-    roleIds?: (number | undefined)[] | undefined;
     duration?: number | undefined;
     durationType: string;
     referenceFiles?: FileRequest[] | undefined;

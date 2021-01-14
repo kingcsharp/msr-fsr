@@ -1,5 +1,4 @@
 ﻿using MSR.Domain.Commanding;
-using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
@@ -28,12 +27,6 @@ namespace MSR.Domain.Commands
         /// </summary>
         /// <example>A comment 1598366448</example>
         public string Comments { get; set; }
-
-        /// <summary>
-        /// Gets or Sets RoleIds
-        /// </summary>
-        /// <example>[1,2,3]</example>
-        public ICollection<int> RoleIds { get; set; }
 
         /// <summary>
         /// Gets or Sets Duration
