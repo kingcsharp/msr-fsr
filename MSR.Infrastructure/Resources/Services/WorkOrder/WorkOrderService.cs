@@ -223,7 +223,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             created.Context.Entry(workorder)
                 .Collection(x => x.WorkOrderTasks).Load();
             created.Context.Entry(workorder)
+                .Reference(x => x.Location).Load();
+            created.Context.Entry(workorder)
                 .Reference(x => x.Purchase).Load();
+            created.Context.Entry(workorder)
+                .Reference(x => x.Product).Load();
             created.Context.Entry(workorder.Purchase)
                 .Reference(x => x.PurchaseOrder).Load();
             created.Context.Entry(workorder.Purchase.PurchaseOrder)
@@ -232,6 +236,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             WorkOrderModel workOrderModel = DetachBackPointers(
                 _mapper.Map<WorkOrderModel>(workorder)
             );
+
+            // Build out minimal information so this can be
+            // displayed on the WO status screen without a reload.
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            {
+                workOrderId = workorder.Id,
+                workOrderStatus = TranslateWOStatusToViewModel(workorder.WorkOrderTasks),
+                productName = workorder.Product?.Name,
+                partNumber = workorder.WorkOrderParts.First().Part.PartNumber,
+                procedureName = workorder.WorkOrderTasks.First().ProcedureStep?.Procedure?.Name,
+                locationName = workorder.Location.Name,
+            });
 
             return workOrderModel;
         }

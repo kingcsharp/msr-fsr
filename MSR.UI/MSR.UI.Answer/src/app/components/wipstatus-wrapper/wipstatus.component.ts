@@ -46,30 +46,8 @@ export class WipstatusWrapperComponent implements OnInit {
 
       let workOrderStatuses = new Array<any>();
 
-      response.object.map(workOrderSummary => {
-
-        let workOrderStatusToUse = workOrderStatuses.find(s => s.productName === workOrderSummary.productName && s.locationName === workOrderSummary.locationName);
-        if (workOrderStatusToUse === undefined) {
-
-          let newWorkOrderStatus = {
-            productName: workOrderSummary.productName,
-            partNumber: workOrderSummary.partNumber,
-            procedureName: workOrderSummary.procedureName,
-            locationName: workOrderSummary.locationName,
-            workOrderSummaries: new Array<WorkOrderSummary>()
-          };
-
-          newWorkOrderStatus.workOrderSummaries.push(workOrderSummary.workOrderSummary);
-
-          workOrderStatuses.push(newWorkOrderStatus);
-
-        } else {
-
-          workOrderStatusToUse.workOrderSummaries.push(workOrderSummary.workOrderSummary);
-
-        }
-
-
+      response.object.map(workOrderStatus => {
+        this.displayProductSet(workOrderStatuses, workOrderStatus);
       });
 
       this.workOrderStatuses = workOrderStatuses;
@@ -94,7 +72,6 @@ export class WipstatusWrapperComponent implements OnInit {
               newlocationSavedList.push(locationSaved);
             }
 
-
           });
           localStorage.setItem('wipstatus', newlocationSavedList.toString());
           this.selectedLocations = this.locationOptions.map(s => s.value).filter(m => newlocationSavedList.includes(m));
@@ -108,19 +85,53 @@ export class WipstatusWrapperComponent implements OnInit {
 
   }
 
-  workOrderStatusUpdate(object, data): void {
+  displayProductSet(workOrderStatuses: Array<any>, workOrderStatus: any) {
+    let workOrderStatusToUse = workOrderStatuses.find(s =>
+      s.productName === workOrderStatus.productName &&
+      s.locationName === workOrderStatus.locationName);
+
+    if (workOrderStatusToUse === undefined) {
+
+      let newWorkOrderStatus = {
+        productName: workOrderStatus.productName,
+        partNumber: workOrderStatus.partNumber,
+        procedureName: workOrderStatus.procedureName,
+        locationName: workOrderStatus.locationName,
+        workOrderSummaries: new Array<WorkOrderSummary>()
+      };
+
+      newWorkOrderStatus.workOrderSummaries.push(workOrderStatus.workOrderSummary);
+
+      workOrderStatuses.push(newWorkOrderStatus);
+
+    } else {
+
+      workOrderStatusToUse.workOrderSummaries.push(workOrderStatus.workOrderSummary);
+
+    }
+  }
+
+  workOrderStatusUpdate(component, data): void {
     let productIdx : number;
-    let summary : WorkOrderSummary;
+    let summary : WorkOrderSummary = undefined;
     for (productIdx = 0;
-         productIdx < object.workOrderStatuses.length;
+         productIdx < component.workOrderStatuses.length;
          productIdx += 1) {
-      let product = object.workOrderStatuses[productIdx];
+      let product = component.workOrderStatuses[productIdx];
       summary = product.workOrderSummaries.find(x =>
         x.workOrderId === data.workOrderId);
       if (summary) {
         summary.workOrderStatus = data.workOrderStatus;
         break;
       }
+    }
+    if (summary === undefined && data.workOrderStatus === 'Waiting to Start') {
+        // work order created
+        data.workOrderSummary = {
+            workOrderId: data.workOrderId,
+            workOrderStatus: data.workOrderStatus
+        };
+        component.displayProductSet(component.workOrderStatuses, data);
     }
   }
 
@@ -188,17 +199,9 @@ export class WipstatusWrapperComponent implements OnInit {
               this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
             }));
           }
-
-
-
         }));
-
       }));
-
-
-
     }
-
   }
 
   locationsSelectedUpdated() {
