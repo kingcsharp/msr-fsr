@@ -8,19 +8,19 @@
     </div>
     <button class="timer-btn btn btn-primary print-btn pull-left start-timer-btn start-step hidden mt-0 mr-1 mb-2"
       *ngIf="hasAccessToTaskBeingViewed && workOrderTaskInProgress.taskIsRunning === false && stepSeconds === 0 && !workOrderIsComplete && workOrderTaskInProgress?.id === workOrderTaskToView?.id"
-      (click)="startTask()">
+      (click)="start()">
       <i class="glyphicon glyphicon-step-forward"></i> Start</button>
     <button class="timer-btn btn btn-warning print-btn pull-left hidden mt-0 mr-1 mb-2"
       *ngIf="hasAccessToTaskBeingViewed && workOrderTaskInProgress.taskIsRunning === false && stepSeconds !== 0 && !workOrderIsComplete && workOrderTaskInProgress?.id === workOrderTaskToView?.id"
-      (click)="resumeAndStartTask()">
+      (click)="resume()">
       <i class="glyphicon glyphicon-step-forward"></i> Resume</button>
     <button class="timer-btn btn btn-warning print-btn pull-left mt-0 mr-1 mb-2"
       *ngIf="hasAccessToTaskBeingViewed && workOrderTaskInProgress.taskIsRunning === true && !workOrderIsComplete && workOrderTaskInProgress?.id === workOrderTaskToView?.id"
-      (click)="pauseTask()">
+      (click)="pause()">
       <i class="glyphicon glyphicon-pause"></i> Pause</button>
     <button class="timer-btn btn btn-primary print-btn pull-left mt-0 mr-1 mb-2"
       *ngIf="hasAccessToTaskBeingViewed && stepSeconds !== 0 && !workOrderIsComplete && workOrderTaskInProgress?.id === workOrderTaskToView?.id"
-      (click)="completeTask()">
+      (click)="done()">
       <i class="glyphicon glyphicon-stop"></i> Done
     </button>
   </div>

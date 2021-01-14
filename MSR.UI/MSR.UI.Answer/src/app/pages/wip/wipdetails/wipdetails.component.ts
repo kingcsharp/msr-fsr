@@ -549,11 +549,6 @@ export class WipdetailsComponent implements OnInit {
     this.showCarousel = true;
   }
 
-  slideToTaskInProgress() {
-    let index = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
-    this.carousel.selectSlide(index);
-  }
-
   uploadFilesAndDocumentsForTask() {
 
     let updatedWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
