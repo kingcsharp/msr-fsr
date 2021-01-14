@@ -260,15 +260,19 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             ret = _mapper.Map<WorkOrderModel>(workorder);
 
-            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate());
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            {
+                workOrderId = workorder.Id,
+                workOrderStatus = TranslateWOStatusToViewModel(workorder.WorkOrderTasks)
+            });
 
             return ret;
         }
         public async Task<bool> DeleteWorkOrderAsync(DeleteWorkOrder command)
         {
-            var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var workOrder = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if (current is null)
+            if (workOrder is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
@@ -280,10 +284,16 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            _unitOfWork.WorkOrders.Delete(false, current.Id);
+            _unitOfWork.WorkOrders.Delete(false, workOrder.Id);
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(current, current.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrder, workOrder.Id);
+
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            {
+                workOrderId = workOrder.Id,
+                workOrderStatus = TranslateWOStatusToViewModel(workOrder.WorkOrderTasks)
+            });
 
             return true;
         }
@@ -643,7 +653,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
-            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate());
+
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            {
+                workOrderId = workOrderEntity.Id,
+                workOrderStatus = TranslateWOStatusToViewModel(workOrderEntity.WorkOrderTasks)
+            });
 
             return workOrderTaskModel;
         }
@@ -980,6 +995,13 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
             return model;
         }
+
+        private string TranslateWOStatusToViewModel(ICollection<WorkOrderTask> tasks)
+        {
+            return TranslateWOStatusToViewModel(
+                _mapper.Map<ICollection<WorkOrderTaskModel>>(tasks));
+        }
+
         private string TranslateWOStatusToViewModel(ICollection<WorkOrderTaskModel> tasks)
         {
             // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']

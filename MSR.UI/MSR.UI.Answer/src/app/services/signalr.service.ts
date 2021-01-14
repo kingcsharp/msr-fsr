@@ -49,14 +49,15 @@ export class SignalRService implements OnDestroy {
       });
   }
 
-  public subscribeWorkOrderUpdate = () => {
+  public subscribeWorkOrderUpdate = (component, callback) => {
     setTimeout(() => {
         if (this.hubConnection === undefined ||
             this.hubConnection.state !== 'Connected') {
-            this.subscribeWorkOrderUpdate();
+            this.subscribeWorkOrderUpdate(component, callback);
             return;
         }
         this.hubConnection.invoke('SubscribeWorkOrderUpdate');
+        this.addWorkOrderUpdateListener(component, callback);
     }, 1000);
   }
 
@@ -90,6 +91,12 @@ export class SignalRService implements OnDestroy {
           this.toastr.error(data.message);
           break;
       }
+    });
+  }
+
+  public addWorkOrderUpdateListener = (component, callback) => {
+    this.hubConnection.on('WorkOrderUpdate', (data) => {
+        callback(component, data);
     });
   }
 

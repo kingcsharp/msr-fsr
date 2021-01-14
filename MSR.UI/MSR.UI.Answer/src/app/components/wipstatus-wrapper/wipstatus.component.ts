@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UpdateWorkOrderTaskRequest, WorkOrderService, WorkOrderStatus, WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel, WorkOrderSummary } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
+import { SignalRService } from '../../services/signalr.service';
 import { Globals } from '../../models/lib/globals';
 import { forkJoin } from 'rxjs';
 import { AxisDateTimeLabelFormatsOptions } from 'highcharts';
@@ -30,7 +31,8 @@ export class WipstatusWrapperComponent implements OnInit {
   currentDate: Date = new Date;
   warningDate: Date = new Date(new Date().setDate(new Date().getDate() - 1));
   constructor(private router: Router, private workOrderService: WorkOrderService, public globals: Globals,
-    private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
+    private workOrderTaskService: WorkOrderTaskService, private userService: UserService,
+    private signalrService: SignalRService) { }
 
 
   ngOnInit(): void {
@@ -38,6 +40,7 @@ export class WipstatusWrapperComponent implements OnInit {
     if (!this.isDisplayedInWipList) {
       this.globals.showLoader(true);
     }
+    this.signalrService.subscribeWorkOrderUpdate(this, this.workOrderStatusUpdate);
 
     this.workOrderService.status(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
@@ -68,7 +71,6 @@ export class WipstatusWrapperComponent implements OnInit {
 
 
       });
-
 
       this.workOrderStatuses = workOrderStatuses;
       this.displayWorkOrderStatuses = workOrderStatuses;
@@ -104,6 +106,22 @@ export class WipstatusWrapperComponent implements OnInit {
 
     }));
 
+  }
+
+  workOrderStatusUpdate(object, data): void {
+    let productIdx : number;
+    let summary : WorkOrderSummary;
+    for (productIdx = 0;
+         productIdx < object.workOrderStatuses.length;
+         productIdx += 1) {
+      let product = object.workOrderStatuses[productIdx];
+      summary = product.workOrderSummaries.find(x =>
+        x.workOrderId === data.workOrderId);
+      if (summary) {
+        summary.workOrderStatus = data.workOrderStatus;
+        break;
+      }
+    }
   }
 
   openTakeOverAsUserConfirmationDialog(workOrderId: number, assignedToFullName: string) {
