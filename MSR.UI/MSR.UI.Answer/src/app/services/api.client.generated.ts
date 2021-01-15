@@ -12967,22 +12967,14 @@ export interface IProcedureType {
 
 /**  */
 export class CreateProcedureRequest implements ICreateProcedureRequest {
-    /** Gets or Sets Name */
     name!: string;
-    /** Gets or Sets IsRelatedToAProduct */
     isRelatedToAProduct?: boolean;
-    /** Gets or Sets ProcedureTypeId */
     procedureTypeId!: number;
-    /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets RoleIds */
-    roleIds?: (number | undefined)[] | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType!: string;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    referenceFileIds?: number[] | undefined;
 
     constructor(data?: ICreateProcedureRequest) {
         if (data) {
@@ -12999,17 +12991,17 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
             this.isRelatedToAProduct = _data["isRelatedToAProduct"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.comments = _data["comments"];
-            if (Array.isArray(_data["roleIds"])) {
-                this.roleIds = [] as any;
-                for (let item of _data["roleIds"])
-                    this.roleIds!.push(item);
-            }
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
             if (Array.isArray(_data["referenceFiles"])) {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileRequest.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
             }
         }
     }
@@ -13027,11 +13019,6 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
         data["isRelatedToAProduct"] = this.isRelatedToAProduct;
         data["procedureTypeId"] = this.procedureTypeId;
         data["comments"] = this.comments;
-        if (Array.isArray(this.roleIds)) {
-            data["roleIds"] = [];
-            for (let item of this.roleIds)
-                data["roleIds"].push(item);
-        }
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
         if (Array.isArray(this.referenceFiles)) {
@@ -13039,28 +13026,25 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
         return data; 
     }
 }
 
 /**  */
 export interface ICreateProcedureRequest {
-    /** Gets or Sets Name */
     name: string;
-    /** Gets or Sets IsRelatedToAProduct */
     isRelatedToAProduct?: boolean;
-    /** Gets or Sets ProcedureTypeId */
     procedureTypeId: number;
-    /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets RoleIds */
-    roleIds?: (number | undefined)[] | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType: string;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    referenceFileIds?: number[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

@@ -87,21 +87,39 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public async Task<Domain.Models.Procedure> CreateProcedureAsync(CreateProcedure command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.Procedure ret;
+            Domain.Models.Procedure procedureModel;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
-                var procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
-                procedure.Revision = 1;
-                await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
-
-                var created = _unitOfWork.Procedures.Add(procedure);
+                var procedureEntity = _mapper.Map<EntityFramework.Entities.Procedure>(command);
+                procedureEntity.Revision = 1;
+                var created = _unitOfWork.Procedures.Add(procedureEntity);
                 await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(procedureEntity, procedureEntity.Id);  
 
                 // The API return expects the procedure type object to be loaded.
-                created.Context.Entry(procedure).Reference(x => x.ProcedureType).Load();
+                created.Context.Entry(procedureEntity).Reference(x => x.ProcedureType).Load();
 
-                ret = _mapper.Map<Domain.Models.Procedure>(procedure);
+                var fileReferences = new List<FileModel>();
+                if (command.ReferenceFiles?.Count > 0)
+                {
+                    foreach (FileModel file in command.ReferenceFiles)
+                    {
+                        FileModel newFile = await _fileService.CreateFileAsync(
+                            nameof(EntityFramework.Entities.Procedure),
+                            procedureEntity.Id,
+                            file
+                        );
+                    }
+                }
+                foreach (var commandReferenceFileId in command.ReferenceFileIds)
+                {
+                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Procedure), procedureEntity.Id, commandReferenceFileId);
+                }
+                fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), procedureEntity.Id));
+
+                procedureModel = _mapper.Map<Domain.Models.Procedure>(procedureEntity);
+                procedureModel.ReferenceFiles = fileReferences;
             }
             else
             {
@@ -112,10 +130,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.Procedure>(approval);
+                procedureModel = _mapper.Map<Domain.Models.Procedure>(approval);
             }
 
-            return ret;
+            return procedureModel;
         }
         public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command)
         {

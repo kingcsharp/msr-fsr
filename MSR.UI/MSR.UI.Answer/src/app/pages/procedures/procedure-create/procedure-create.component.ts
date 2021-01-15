@@ -1,10 +1,9 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
-import { RoleService, Role, EnumMenuItem } from '../../../services/api.client.generated';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
-import { Procedure, ProcedureService, CreateProcedureRequest, ProcedureTypeService} from '../../../services/api.client.generated';
+import { Procedure, ProcedureService, CreateProcedureRequest, ProcedureTypeService, EnumMenuItem, FileRequest} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 
@@ -20,34 +19,34 @@ export class ProcedureCreateComponent implements OnInit {
   availableProcedureTypes: Array<SelectItem>;
   selectedProcedureType: string;
   menuItems = EnumMenuItem;
-  availableRoles: Array<Role>;
-  selectedRoles: Array<Role>;
   durationTypeOptions: Array<SelectItem>;
 
   constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,
-    private router: Router, private roleService: RoleService, private procedureService: ProcedureService, private procedureTypeService: ProcedureTypeService) { }
+    private router: Router, private procedureService: ProcedureService, private procedureTypeService: ProcedureTypeService) { }
 
   ngOnInit(): void {
 
     this.globals.showLoader(true);
     this.durationTypeOptions = new LookUpItems().DurationType();
-
-    this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((response) => {
-
-      this.availableRoles = response.object;
-      this.selectedRoles = new Array<Role>();
-      this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe(responseHandler((procedureTypeGetResponse) => {
-        this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
-      }));
-
-      this.procedure.comment = '';
-      this.procedure.referenceFiles = [];
-
+    this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe(responseHandler((procedureTypeGetResponse) => {
+      this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
     }));
 
+    this.procedure.comment = '';
+    this.procedure.referenceFiles = [];
   }
 
   save() {
+    const referenceFiles = new Array<FileRequest>();
+    const referenceFileIds = new Array<number>();
+
+    this.procedure.referenceFiles.forEach(file => {
+      if (file.fileId !== undefined) {
+        referenceFileIds.push(file.fileId);
+      } else {
+        referenceFiles.push(new FileRequest(file));
+      }
+    });
 
     let createProcedureRequest = new CreateProcedureRequest();
     createProcedureRequest.comments = this.procedure.comment;
@@ -55,8 +54,8 @@ export class ProcedureCreateComponent implements OnInit {
     createProcedureRequest.durationType = this.procedure.durationType;
     createProcedureRequest.name = this.procedure.name;
     createProcedureRequest.procedureTypeId = this.selectedProcedureType === undefined ? undefined : Number(this.selectedProcedureType);
-    createProcedureRequest.referenceFiles = this.procedure.referenceFiles;
-    createProcedureRequest.roleIds = this.selectedRoles.map(s => s.id);
+    createProcedureRequest.referenceFiles = referenceFiles;
+    createProcedureRequest.referenceFileIds = referenceFileIds;
 
     this.globals.showLoader(true);
     this.procedureService.procedurePost(env.apiVersion, createProcedureRequest).subscribe(responseHandler((response) => {
