@@ -16246,8 +16246,8 @@ export interface IWorkOrderPartModel {
 export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     id?: number;
     workOrderId?: number;
-    procedureStepId?: number;
-    procedureStepTypeId?: number;
+    procedureStepId?: number | undefined;
+    procedureStepTypeId?: number | undefined;
     statusId?: number;
     taskStepOrder?: number;
     assignedTo?: number | undefined;
@@ -16264,6 +16264,8 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     workOrderTaskMonitors?: WorkOrderTaskMonitorModel[] | undefined;
     lastUpdatedOn?: Date | undefined;
     referenceFiles?: FileModel[] | undefined;
+    title?: string | undefined;
+    stepText?: string | undefined;
 
     constructor(data?: IWorkOrderTaskModel) {
         if (data) {
@@ -16304,6 +16306,8 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileModel.fromJS(item));
             }
+            this.title = _data["title"];
+            this.stepText = _data["stepText"];
         }
     }
 
@@ -16344,6 +16348,8 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
+        data["title"] = this.title;
+        data["stepText"] = this.stepText;
         return data; 
     }
 }
@@ -16351,8 +16357,8 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
 export interface IWorkOrderTaskModel {
     id?: number;
     workOrderId?: number;
-    procedureStepId?: number;
-    procedureStepTypeId?: number;
+    procedureStepId?: number | undefined;
+    procedureStepTypeId?: number | undefined;
     statusId?: number;
     taskStepOrder?: number;
     assignedTo?: number | undefined;
@@ -16369,6 +16375,8 @@ export interface IWorkOrderTaskModel {
     workOrderTaskMonitors?: WorkOrderTaskMonitorModel[] | undefined;
     lastUpdatedOn?: Date | undefined;
     referenceFiles?: FileModel[] | undefined;
+    title?: string | undefined;
+    stepText?: string | undefined;
 }
 
 export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOrderTaskMonitorModel {
@@ -16384,6 +16392,13 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     sensorValue?: string | undefined;
     sensorName?: string | undefined;
     monitorNumber?: number;
+    description?: string | undefined;
+    monitorListId?: number | undefined;
+    shouldBe?: string | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
+    targetValue?: string | undefined;
+    faultHandling?: string | undefined;
 
     constructor(data?: IWorkOrderTaskMonitorModel) {
         super(data);
@@ -16404,6 +16419,13 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
             this.sensorValue = _data["sensorValue"];
             this.sensorName = _data["sensorName"];
             this.monitorNumber = _data["monitorNumber"];
+            this.description = _data["description"];
+            this.monitorListId = _data["monitorListId"];
+            this.shouldBe = _data["shouldBe"];
+            this.highTarget = _data["highTarget"];
+            this.lowTarget = _data["lowTarget"];
+            this.targetValue = _data["targetValue"];
+            this.faultHandling = _data["faultHandling"];
         }
     }
 
@@ -16428,6 +16450,13 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         data["sensorValue"] = this.sensorValue;
         data["sensorName"] = this.sensorName;
         data["monitorNumber"] = this.monitorNumber;
+        data["description"] = this.description;
+        data["monitorListId"] = this.monitorListId;
+        data["shouldBe"] = this.shouldBe;
+        data["highTarget"] = this.highTarget;
+        data["lowTarget"] = this.lowTarget;
+        data["targetValue"] = this.targetValue;
+        data["faultHandling"] = this.faultHandling;
         super.toJSON(data);
         return data; 
     }
@@ -16446,6 +16475,13 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     sensorValue?: string | undefined;
     sensorName?: string | undefined;
     monitorNumber?: number;
+    description?: string | undefined;
+    monitorListId?: number | undefined;
+    shouldBe?: string | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
+    targetValue?: string | undefined;
+    faultHandling?: string | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {

@@ -157,6 +157,25 @@ namespace MSR.Application.EventServices
                 }
                 command.WorkOrderParts = parts;
 
+                foreach (var commandWorkOrderTask in command.WorkOrderTasks)
+                {
+                    commandWorkOrderTask.Title = commandWorkOrderTask.ProcedureStep.Title;
+                    commandWorkOrderTask.StepText = commandWorkOrderTask.ProcedureStep.StepText;
+
+                    foreach (var workOrderTaskMonitor in commandWorkOrderTask.WorkOrderTaskMonitors)
+                    {
+                        workOrderTaskMonitor.Description = workOrderTaskMonitor.ProcedureStepMonitor.Description;
+                        workOrderTaskMonitor.MonitorListId = workOrderTaskMonitor.ProcedureStepMonitor.MonitorListId;
+                        workOrderTaskMonitor.ShouldBe = workOrderTaskMonitor.ProcedureStepMonitor.ShouldBe;
+                        workOrderTaskMonitor.HighTarget = workOrderTaskMonitor.ProcedureStepMonitor.HighTarget;
+                        workOrderTaskMonitor.LowTarget = workOrderTaskMonitor.ProcedureStepMonitor.LowTarget;
+                        workOrderTaskMonitor.TargetValue = workOrderTaskMonitor.ProcedureStepMonitor.TargetValue;
+                        workOrderTaskMonitor.FaultHandling = workOrderTaskMonitor.ProcedureStepMonitor.FaultHandling;
+                        workOrderTaskMonitor.SensorName = workOrderTaskMonitor.ProcedureStepMonitor.SensorName;
+                    }
+                }
+
+
                 WorkOrderModel model = await _workOrderService.CreateWorkOrderAsync(command);
                 string wonum = _workOrderService.GetWorkOrderItemNumber(model);
 

@@ -25,19 +25,27 @@ namespace MSR.Domain.Models
         /// This needs to be added
         /// </summary>
         /// <value>This needs to be added</value>
-        [DataMember(Name="sensorValue")]
+        [DataMember(Name = "sensorValue")]
         public string SensorValue { get; set; }
 
         /// <summary>
         /// This needs to be added
         /// </summary>
         /// <value>This needs to be added</value>
-        [DataMember(Name="sensorName")]
+        [DataMember(Name = "sensorName")]
         public string SensorName { get; set; }
 
         /// <summary>
         /// Integer index of this monitor in a list, can be 0.
         /// </summary>
         public int MonitorNumber { get; set; }
+
+        public string Description { get; set; }
+        public int? MonitorListId { get; set; }
+        public string ShouldBe { get; set; }
+        public float? HighTarget { get; set; }
+        public float? LowTarget { get; set; }
+        public string TargetValue { get; set; }
+        public string FaultHandling { get; set; }
     }
 }
