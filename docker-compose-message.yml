@@ -2,7 +2,7 @@ version: '3'
 
 services:
   api:
-#   image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-message:509543845b8e8b6e53cf6c5bca4c15154c726092
+   image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-message:509543845b8e8b6e53cf6c5bca4c15154c726092
 #    build:
 #      context: .
 #      dockerfile: MSR.Answer.MessageHub/Dockerfile
