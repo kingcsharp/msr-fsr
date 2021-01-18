@@ -24,6 +24,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENV ASPNETCORE_ENVIRONMENT=Development
-ENV ASPNETCORE_URLS http://+:5003
-EXPOSE 5003
+ENV ASPNETCORE_URLS http://+:5001
+EXPOSE 5001
 ENTRYPOINT ["dotnet", "MSR.Answer.MessageHub.dll"]

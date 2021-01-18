@@ -86,10 +86,10 @@ pipeline {
                                     sh "docker push ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
                                 }
 
-                                dir('messageproxy') {
+                                dir('reverseproxy') {
                                     echo "Building message proxy container...."
 
-                                    sh "docker build --build-arg NGINX_CONF=dev -t msr-mp ."
+                                    sh "docker build --build-arg NGINX_CONF=devmsg -t msr-mp ."
                                     sh "docker tag msr-mp ${ACCOUNT_URL}/msr-mp:${env.GIT_COMMIT}"
 
                                     sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
