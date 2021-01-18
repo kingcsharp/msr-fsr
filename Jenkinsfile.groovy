@@ -21,6 +21,8 @@ pipeline {
         PROD_MESSAGE_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-message-prod/234f938c0ca82cb1"
         QA_PROJECT_API='qa-answer-api'
         QA_PROJECT_MESSAGE='qa-answer-message'
+        UAT_PROJECT_MESSAGE='stage-answer-message'
+        PROD_PROJECT_MESSAGE='prod-answer-message'
         QA_PROJECT_UI='qa-answer-ui'
         UAT_PROJECT_API='uat-answer-api'
         UAT_PROJECT_MESSAGE='uat-answer-message'
@@ -193,7 +195,7 @@ pipeline {
                             sh "cat ${API_COMPOSE_PROCESSOR}"
 
                             //deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
-                            deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
+                            deploy("${API_COMPOSE_MESSAGE}", "${STAGE_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
                             //deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
                         }
                     }
@@ -259,7 +261,7 @@ pipeline {
                             sh "cat ${API_COMPOSE_PROCESSOR}"
                             //deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
                             sh "ecs-cli compose --file docker-compose-api.yml --ecs-params ecs-params-api.yml --project-name prod-answer-api service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${PROD_API_TARGET_ARN} --container-name reverseproxy --container-port 80 --timeout 15"
-                            deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${PROD_MESSAGE_TARGET_ARN}", "messageproxy")
+                            deploy("${API_COMPOSE_MESSAGE}", "${PROD_PROJECT_MESSAGE}", "${PROD_MESSAGE_TARGET_ARN}", "messageproxy")
                             //deploy_processor("${API_COMPOSE_PROCESSOR}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "processor")
                         }
                     }
