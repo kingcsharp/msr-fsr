@@ -29,7 +29,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   @Output() workOrderTaskToViewChange = new EventEmitter<any>();
   @Output() updateWorkOrderTaskToViewAndInProgress = new EventEmitter<any>();
-  @Output() slideToTaskInProgress = new EventEmitter<any>();
   @Output() areMonitorsValidCheck = new EventEmitter<{ areValid: Function }>();
 
   stepTimer;
@@ -42,58 +41,16 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime, true);
-
-    if (this.workOrderTaskInProgress.taskIsRunning === true) {
-      this.startTask();
-    }
+    this.startTimer();
 
   }
 
   ngOnChanges() {
     if (this.workOrderIsComplete) {
-      this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime, true);
+      this.updateTimerDisplay();
     }
 
   }
-
-  startTask() {
-
-    this.workOrderTaskInProgress.status.id = 2;
-    this.workOrderTaskInProgress.status.name = 'In Progress';
-    this.workOrderTaskInProgress.startedOn = moment().toDate();
-    this.resumeAndStartTask(true);
-
-  }
-
-  pauseTask() {
-    this.workOrderTaskInProgress.taskIsRunning = false;
-    this.workOrderTaskInProgress.taskRunningSince = undefined;
-    clearInterval(this.stepTimer);
-    this.saveTaskTimerState(false, false);
-  }
-
-  resumeAndStartTask(isStartingTask: boolean = false) {
-
-    this.workOrderTaskInProgress.taskIsRunning = true;
-    this.workOrderTaskInProgress.taskRunningSince = new Date();
-    this.stepTimer = setInterval(() => {
-
-      this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime, false);
-
-    }, 1000);
-    this.saveTaskTimerState(false, true);
-
-  }
-
-  setTimerDisplay(seconds: number, justForDisplay: boolean) {
-
-    this.stepSeconds = justForDisplay ? this.workOrderTaskInProgress.totalTaskTime : this.workOrderTaskInProgress.totalTaskTime++;
-    this.stepMinutes = Math.floor(this.stepSeconds / 60);
-    this.stepHours = Math.floor(this.stepMinutes / 60);
-
-  }
-
 
   completeTask() {
 
@@ -102,38 +59,31 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
         this.workOrderTaskInProgress.taskIsRunning = false;
         this.workOrderTaskInProgress.taskRunningSince = null;
-        clearInterval(this.stepTimer);
-        this.stepSeconds = 0;
-        this.stepMinutes = 0;
-        this.stepHours = 0;
-
-        this.workOrderTaskInProgress.statusId = 3;
-        this.workOrderTaskInProgress.status = new StatusModel({
-          id: 3,
-          name: 'Complete'
-        } as IStatusModel);
+        this.stopTimer();
+        this.resetTimerDisplay();
+        this.setTaskToCompleted();
+        this.resetTimerDisplay();
         this.workOrderTaskInProgress.lastUpdatedOn = moment().toDate();
 
-        this.saveTaskTimerState(true, false);
+        this.saveTaskTimerState(true);
 
       }
     });
   }
 
-  saveTaskTimerState(closeStep: boolean, isStartingTask: boolean) {
+  saveTaskTimerState(closeStep: boolean) {
 
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
       assignedUserId: this.globals.getCurrentUser().id,
-      status: closeStep ? 'Complete' : this.workOrderTaskInProgress.status.name,
+      status: this.workOrderTaskInProgress.status.name,
       taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
-      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
+      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince === null ? null : this.convertDateToUTC(this.workOrderTaskInProgress.taskRunningSince),
       totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
       taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
       workOrderTaskId: this.workOrderTaskInProgress.id,
-      startedOn: isStartingTask ? moment() : this.workOrderTaskInProgress.startedOn
+      startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.convertDateToUTC(this.workOrderTaskInProgress.startedOn)
     } as IUpdateWorkOrderTaskRequest);
 
-    this.globals.showLoader(true);
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
 
       if (closeStep) {
@@ -163,6 +113,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
           this.globals.showLoader(true);
           this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateNextWorkOrderTaskRequest).subscribe(responseHandler(nextWorkOrderTaskPatchResponse => {
             this.updateWorkOrderTaskToViewAndInProgress.emit(nextWorkOrderTask);
+            this.resetTimerDisplay();
           }));
 
 
@@ -173,10 +124,103 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   }
 
-  slideToTask() {
 
-    this.slideToTaskInProgress.emit();
+  start() {
+    this.globals.showLoader(true);
+    this.setTaskToInProgressStatus();
+    this.workOrderTaskInProgress.startedOn = moment().toDate();
+    this.workOrderTaskInProgress.taskIsRunning = true;
+    this.workOrderTaskInProgress.taskRunningSince = moment().toDate();
+    this.startTimer();
+    this.saveTaskTimerState(false);
+  }
+
+  pause() {
+    this.globals.showLoader(true);
+    this.stopTimer();
+    this.updateTotalTaskTime();
+    this.workOrderTaskInProgress.taskIsRunning = false;
+    this.workOrderTaskInProgress.taskRunningSince = null;
+    this.saveTaskTimerState(false);
+  }
+
+  resume() {
+    this.globals.showLoader(true);
+    this.workOrderTaskInProgress.taskIsRunning = true;
+    this.workOrderTaskInProgress.taskRunningSince = moment().toDate();
+    this.startTimer();
+    this.saveTaskTimerState(false);
+  }
+
+  done() {
+    this.globals.showLoader(true);
+    this.stopTimer();
+    this.setTaskToCompleted();
+    this.updateTotalTaskTime();
+    this.workOrderTaskInProgress.taskIsRunning = false;
+    this.workOrderTaskInProgress.taskRunningSince = null;
+    this.saveTaskTimerState(true);
+  }
+
+  startTimer() {
+    this.stepTimer = setInterval(() => {
+
+      this.updateTimerDisplay();
+
+    }, 1000);
+  }
+
+  stopTimer() {
+    clearInterval(this.stepTimer);
+  }
+
+  updateTimerDisplay() {
+
+    if (this.workOrderTaskInProgress.taskIsRunning) {
+
+      const taskHasBeenRunningSince = moment(this.workOrderTaskInProgress.taskRunningSince);
+      const currentDate = moment();
+
+      this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime + (-taskHasBeenRunningSince.diff(currentDate, 'seconds'));
+
+    } else {
+      this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime;
+    }
+
+    this.stepMinutes = Math.floor(this.stepSeconds / 60);
+    this.stepHours = Math.floor(this.stepMinutes / 60);
 
   }
 
+  resetTimerDisplay() {
+    this.stepSeconds = 0;
+    this.stepMinutes = 0;
+    this.stepHours = 0;
+  }
+
+  setTaskToInProgressStatus() {
+    this.workOrderTaskInProgress.statusId = 2;
+    this.workOrderTaskInProgress.status = new StatusModel({
+      id: 2,
+      name: 'In Progress'
+    } as IStatusModel);
+  }
+
+  setTaskToCompleted() {
+    this.workOrderTaskInProgress.statusId = 3;
+    this.workOrderTaskInProgress.status = new StatusModel({
+      id: 3,
+      name: 'Complete'
+    } as IStatusModel);
+  }
+
+  updateTotalTaskTime() {
+    const taskHasBeenRunningSince = moment(this.workOrderTaskInProgress.taskRunningSince);
+    const currentDate = moment();
+    this.workOrderTaskInProgress.totalTaskTime = this.workOrderTaskInProgress.totalTaskTime + (-taskHasBeenRunningSince.diff(currentDate, 'seconds'));
+  }
+
+  convertDateToUTC(date): Date {
+    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+  }
 }

@@ -61,10 +61,5 @@ namespace MSR.Domain.Models
         /// Gets or Sets ReferenceFiles
         /// </summary>
         public List<FileModel> ReferenceFiles { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Roles
-        /// </summary>
-        public List<Role> Roles { get; set; }
     }
 }

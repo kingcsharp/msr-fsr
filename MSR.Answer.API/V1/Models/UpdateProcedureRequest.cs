@@ -26,8 +26,6 @@ namespace MSR.Answer.API.V1.Models
 
         public string Comments { get; set; }
 
-        public List<int?> RoleIds { get; set; }
-
         public double? Duration { get; set; }
 
         [Required]
