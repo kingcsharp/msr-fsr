@@ -16,7 +16,9 @@ pipeline {
         UAT_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
         PROD_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-prod/0d264f923b3ca5c5"
         PROD_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-prod/a05ebf3f959d039b"
-        MESSAGE_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-message-qa/a77318365ce97cd4"
+        QA_MESSAGE_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-message-qa/a77318365ce97cd4"
+        STAGE_MESSAGE_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-message-stage/4397bae7ec33c820"
+        PROD_MESSAGE_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-message-prod/234f938c0ca82cb1"
         QA_PROJECT_API='qa-answer-api'
         QA_PROJECT_MESSAGE='qa-answer-message'
         QA_PROJECT_UI='qa-answer-ui'
@@ -140,7 +142,7 @@ pipeline {
                                 echo "Deploying Develop"
                                 //deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
                                 //deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
-                                deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${MESSAGE_TARGET_ARN}", "messageproxy")
+                                deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${QA_MESSAGE_TARGET_ARN}", "messageproxy")
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
@@ -190,8 +192,9 @@ pipeline {
                             sh "cat ${API_COMPOSE}"
                             sh "cat ${API_COMPOSE_PROCESSOR}"
 
-                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
-                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
+                            //deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
+                            deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
+                            //deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
                         }
                     }
                 }
@@ -211,7 +214,7 @@ pipeline {
                             sh "sh update_image.sh Stage ${env.GIT_COMMIT} ${UI_COMPOSE}"
                             sh "cat ${UI_COMPOSE}"
 
-                            deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
+                            //deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
                             office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
                         }
                     }
@@ -256,8 +259,8 @@ pipeline {
                             sh "cat ${API_COMPOSE_PROCESSOR}"
                             //deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
                             sh "ecs-cli compose --file docker-compose-api.yml --ecs-params ecs-params-api.yml --project-name prod-answer-api service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${PROD_API_TARGET_ARN} --container-name reverseproxy --container-port 80 --timeout 15"
-
-                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "processor")
+                            deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${PROD_MESSAGE_TARGET_ARN}", "messageproxy")
+                            //deploy_processor("${API_COMPOSE_PROCESSOR}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "processor")
                         }
                     }
                 }
@@ -277,7 +280,7 @@ pipeline {
                             sh "sh update_image.sh Production ${env.GIT_COMMIT} ${UI_COMPOSE}"
                             sh "cat ${UI_COMPOSE}"
 
-                            deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
+                            //deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
                             office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
                         }
                     }
