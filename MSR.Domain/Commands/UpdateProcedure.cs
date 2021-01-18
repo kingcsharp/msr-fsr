@@ -18,8 +18,6 @@ namespace MSR.Domain.Commands
 
         public string Comments { get; set; }
 
-        public ICollection<int> RoleIds { get; set; }
-
         public double? Duration { get; set; }
 
         public string DurationType { get; set; }

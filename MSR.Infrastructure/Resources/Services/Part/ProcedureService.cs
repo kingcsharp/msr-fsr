@@ -87,21 +87,39 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public async Task<Domain.Models.Procedure> CreateProcedureAsync(CreateProcedure command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.Procedure ret;
+            Domain.Models.Procedure procedureModel;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
-                var procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
-                procedure.Revision = 1;
-                await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
-
-                var created = _unitOfWork.Procedures.Add(procedure);
+                var procedureEntity = _mapper.Map<EntityFramework.Entities.Procedure>(command);
+                procedureEntity.Revision = 1;
+                var created = _unitOfWork.Procedures.Add(procedureEntity);
                 await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(procedureEntity, procedureEntity.Id);  
 
                 // The API return expects the procedure type object to be loaded.
-                created.Context.Entry(procedure).Reference(x => x.ProcedureType).Load();
+                created.Context.Entry(procedureEntity).Reference(x => x.ProcedureType).Load();
 
-                ret = _mapper.Map<Domain.Models.Procedure>(procedure);
+                var fileReferences = new List<FileModel>();
+                if (command.ReferenceFiles?.Count > 0)
+                {
+                    foreach (FileModel file in command.ReferenceFiles)
+                    {
+                        FileModel newFile = await _fileService.CreateFileAsync(
+                            nameof(EntityFramework.Entities.Procedure),
+                            procedureEntity.Id,
+                            file
+                        );
+                    }
+                }
+                foreach (var commandReferenceFileId in command.ReferenceFileIds)
+                {
+                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Procedure), procedureEntity.Id, commandReferenceFileId);
+                }
+                fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), procedureEntity.Id));
+
+                procedureModel = _mapper.Map<Domain.Models.Procedure>(procedureEntity);
+                procedureModel.ReferenceFiles = fileReferences;
             }
             else
             {
@@ -112,10 +130,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.Procedure>(approval);
+                procedureModel = _mapper.Map<Domain.Models.Procedure>(approval);
             }
 
-            return ret;
+            return procedureModel;
         }
         public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command)
         {
@@ -243,7 +261,39 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 await _unitOfWork.ProcedureSteps.AddAsync(procedureStepEntity);
                 await _unitOfWork.LogApprovalTransaction(procedureStepEntity, procedureStepEntity.Id);
 
-                return _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepEntity);
+                var fileReferences = new List<FileModel>();
+                if (command.ReferenceFiles?.Count > 0)
+                {
+                    foreach (FileModel file in command.ReferenceFiles)
+                    {
+                        FileModel newFile = await _fileService.CreateFileAsync(
+                            nameof(EntityFramework.Entities.ProcedureStep),
+                            procedureStepEntity.Id,
+                            file
+                        );
+                    }
+                }
+                foreach (var commandReferenceFileId in command.ReferenceFileIds)
+                {
+                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.ProcedureStep), procedureStepEntity.Id, commandReferenceFileId);
+                }
+                fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStepEntity.Id));
+
+                var roleModels = new List<Domain.Models.Role>();
+                if (procedureStepEntity.ProcedureStepRoles != null)
+                {
+                    foreach (ProcedureStepRoleMap m in procedureStepEntity.ProcedureStepRoles)
+                    {
+                        m.ProcedureStepId = procedureStepEntity.Id;
+                        await _unitOfWork.ProcedureStepRoleMaps.AddAsync(m);
+                        roleModels.Add(_mapper.Map<Domain.Models.Role>(m.Role));
+                    }
+                }
+
+                var procedureStepModel = _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepEntity);
+                procedureStepModel.Roles = roleModels;
+                procedureStepModel.ReferenceFiles = fileReferences;
+                return procedureStepModel;
             }
 
             var currentProcedure = await _unitOfWork.Procedures
@@ -750,7 +800,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     newStepExtra.COMMENT = step.ItemArray[fieldMap["COMMENT"]].ToString();
                     newStep.LaborTime = Convert.ToInt32(((double) step.ItemArray[fieldMap["STEP_TIME"]]));
                     newStepExtra.EXTRA_NOTE1 = step.ItemArray[fieldMap["EXTRA_NOTE1"]].ToString();
-                    newStep.Roles = ((double) step.ItemArray[fieldMap["DEFAULT_ROLE_ID"]]).ToString();
+                    var defaultRoleId = Convert.ToInt32(((double) step.ItemArray[fieldMap["DEFAULT_ROLE_ID"]]));
+                    var defaultRoleModel = new List<Domain.Models.Role>();
+                    defaultRoleModel.Add(new Domain.Models.Role() { Id = defaultRoleId });
+                    newStep.Roles = defaultRoleModel;
                     newStepExtra.SERIALIZE = step.ItemArray[fieldMap["SERIALIZE"]].ToString();
                     newStepExtra.SUCCESS_MONITOR = step.ItemArray[fieldMap["SUCCESS_MONITOR"]].ToString();
                     newStepExtra.INTERNAL_LOCATION = step.ItemArray[fieldMap["INTERNAL_LOCATION"]].ToString();
