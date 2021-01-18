@@ -21,8 +21,6 @@ pipeline {
         PROD_MESSAGE_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-message-prod/234f938c0ca82cb1"
         QA_PROJECT_API='qa-answer-api'
         QA_PROJECT_MESSAGE='qa-answer-message'
-        UAT_PROJECT_MESSAGE='stage-answer-message'
-        PROD_PROJECT_MESSAGE='prod-answer-message'
         QA_PROJECT_UI='qa-answer-ui'
         UAT_PROJECT_API='uat-answer-api'
         UAT_PROJECT_MESSAGE='uat-answer-message'
