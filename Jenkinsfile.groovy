@@ -42,12 +42,11 @@ pipeline {
                         script {
                             try {
                                 dir('MSR.UI/MSR.UI.Answer') {
-                                    echo "Hello"
-//                                    sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui ."
-//                                    sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
-//
-//                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-//                                    sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                                    sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui ."
+                                    sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+
+                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                    sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
                                 }
                             } catch(e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
@@ -61,7 +60,7 @@ pipeline {
 
                                 if(env.BRANCH_NAME == 'Develop') {
                                     echo "Deploying Develop"
-                                    //deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
+                                    deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
                                 }
 
 
@@ -80,14 +79,14 @@ pipeline {
                     steps {
                         script {
                             try {
-//                                dir('reverseproxy') {
-//                                    echo "Building api proxy container...."
-//                                    sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
-//                                    sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
-//
-//                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-//                                    sh "docker push ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
-//                                }
+                                dir('reverseproxy') {
+                                    echo "Building api proxy container...."
+                                    sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
+                                    sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
+
+                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                    sh "docker push ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
+                                }
 
                                 dir('reverseproxy') {
                                     echo "Building message proxy container...."
@@ -105,19 +104,19 @@ pipeline {
                             }
 
                             try {
-//                                echo "Building API container...."
-//                                sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
-//                                sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
-//
-//                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-//                                sh "docker push ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
-//
-//                                echo "Building Processor container...."
-//                                sh "docker build -f MSR.Answer.Processor/Dockerfile -t msr-processor ."
-//                                sh "docker tag msr-processor ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
-//
-//                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-//                                sh "docker push ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
+                                echo "Building API container...."
+                                sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
+                                sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
+
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
+
+                                echo "Building Processor container...."
+                                sh "docker build -f MSR.Answer.Processor/Dockerfile -t msr-processor ."
+                                sh "docker tag msr-processor ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
+
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
 
                                 echo "Building Message container...."
                                 sh "docker build -f MSR.Answer.MessageHub/Dockerfile -t msr-message ."
@@ -132,16 +131,16 @@ pipeline {
                             }
 
                             try {
-//                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE}"
-//                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
+                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE}"
+                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
                                 sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
                                 sh "cat ${API_COMPOSE}"
                                 sh "cat ${API_COMPOSE_PROCESSOR}"
                                 sh "cat ${API_COMPOSE_MESSAGE}"
 
                                 echo "Deploying Develop"
-                                //deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
-                                //deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
+                                deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
+                                deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
                                 deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${QA_MESSAGE_TARGET_ARN}", "messageproxy")
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
