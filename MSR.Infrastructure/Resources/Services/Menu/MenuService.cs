@@ -24,6 +24,7 @@ namespace MSR.Infrastructure.Resources.Services.Menu
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
         public async Task<IEnumerable<Domain.Models.MenuItem>> GetMenuAsync(GetMenu command)
         {
             var menuItems = _unitOfWork.MenuItems.Query().Include(i => i.Roles).ThenInclude(i => i.MenuRolePermission)
@@ -92,7 +93,7 @@ namespace MSR.Infrastructure.Resources.Services.Menu
                 retMenuItems.Add(domainMenuItem);
             }
 
-            return retMenuItems;
+            return await Task.FromResult(retMenuItems);
         }
 
         public async Task<bool> RemoveMenuRoleMap(RemoveMenuRoleMap command)

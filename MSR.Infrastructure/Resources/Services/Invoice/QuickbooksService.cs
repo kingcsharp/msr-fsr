@@ -30,7 +30,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<IEnumerable<QuickbooksFormatterModel>> FormatAsync(FormatQuickbooks command)
         {
-            return command.Invoices.Select(invoice =>
+            return await Task.FromResult(command.Invoices.Select(invoice =>
             {
                 (string invoiceNumber, string data, string type) = FormatInvoiceDataAsync(invoice.Id, command.FormatType)
                                                                     .ConfigureAwait(false)
@@ -45,7 +45,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 };
 
                 return quickbooksFormatter;
-            }).ToList();
+            }).ToList());
         }
 
         private async Task<(string, string, string)> FormatInvoiceDataAsync(int invoiceId, string formatType)

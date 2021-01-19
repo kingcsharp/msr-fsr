@@ -23,12 +23,14 @@ namespace MSR.Infrastructure.Resources.Services.Users
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly IMessageHubClient _messageHub;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IAuthenticationHelper authenticationHelper)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IAuthenticationHelper authenticationHelper, IMessageHubClient messageHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _authenticationHelper = authenticationHelper;
+            _messageHub = messageHub;
         }
 
         public async Task<Domain.Models.UserModel> CreateUserAsync(CreateUser command)
@@ -506,6 +508,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             _unitOfWork.UserRoleApprovals.Add(userRoleApproval);
             await _unitOfWork.SaveChangesAsync();
 
+            _messageHub.SendApprovalNotification(EnumApprovalTables.UserApproval);
             return _mapper.Map<Domain.Models.UserModel>(user);
         }
 
@@ -548,6 +551,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 };
 
                 _unitOfWork.UserRoleApprovals.Add(userRoleApproval);
+                _messageHub.SendApprovalNotification(EnumApprovalTables.UserApproval);
                 await _unitOfWork.SaveChangesAsync();
             }
 
@@ -591,14 +595,20 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 userRoles = userRoles.Where(i => i.UserId == command.Id.Value);
             }
 
-            return userRoles.Include(i => i.User).Include(i => i.Role).Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value).Select(i => new TrainingCertificationView()
-            {
-                CertificationFromDate = i.CertificationFromDate,
-                CertificationToDate = i.CertificationToDate,
-                EmployeeName = i.User.GetFullName(),
-                Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active"),
-                CertificationName = i.Role.Name
-            }).AsEnumerable();
+            return await Task.FromResult(userRoles
+                .Include(i => i.User)
+                .Include(i => i.Role)
+                .Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value)
+                .Select(i => new TrainingCertificationView()
+                    {
+                        CertificationFromDate = i.CertificationFromDate,
+                        CertificationToDate = i.CertificationToDate,
+                        EmployeeName = i.User.GetFullName(),
+                        Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active"),
+                        CertificationName = i.Role.Name
+                    }
+                ).AsEnumerable()
+            );
         }
     }
 }

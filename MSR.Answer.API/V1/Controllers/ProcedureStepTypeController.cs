@@ -41,7 +41,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         /// Get procedure step type
         /// </summary>
-        /// <param name="version"></param>
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]

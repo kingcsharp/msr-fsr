@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using MSR.Domain.Hub;
+using MSR.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 
-namespace MSR.Application.Hubs
+namespace MSR.Answer.MessageHub.Hubs
 {
     /// <summary>
     /// Connection mapping
@@ -37,7 +38,6 @@ namespace MSR.Application.Hubs
                 }
 
                 lock (connections) {
-                    connections.Clear();
                     connections.Add(connectionId);
                 }
             }
@@ -101,6 +101,33 @@ namespace MSR.Application.Hubs
             foreach (var client in Connections.GetConnections(user)) {
                 await Clients.Clients(client).SendAsync("ToasterMessage", message);
             }
+        }
+
+        /// <summary>
+        /// Subscribe this connection to work order update messages.
+        /// </summary>
+        /// <returns></returns>
+        public void SubscribeWorkOrderUpdate()
+        {
+            Connections.Add("status", Context.ConnectionId);
+        }
+
+        public async Task SendWorkOrderUpdate(WorkOrderStatusUpdate update)
+        {
+            foreach (var client in Connections.GetConnections("status")) {
+                await Clients.Clients(client).SendAsync("WorkOrderUpdate", update);
+            }
+        }
+
+        /// <summary>
+        /// Send workflow messages to all clients
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public async Task WorkflowMessage(Guid guid, PendingNotificationItem message)
+        {
+            await Clients.All.SendAsync("WorkflowNotification", guid, message);
         }
 
         /// <summary>
