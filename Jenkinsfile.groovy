@@ -189,6 +189,8 @@ pipeline {
                         script {
                             sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
                             sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
+                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
+
                             sh "cat ${API_COMPOSE}"
                             sh "cat ${API_COMPOSE_PROCESSOR}"
 
@@ -254,6 +256,8 @@ pipeline {
                         script {
                             sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
                             sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
+                            sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
+
 
                             sh "cat ${API_COMPOSE}"
                             sh "cat ${API_COMPOSE_PROCESSOR}"
