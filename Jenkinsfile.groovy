@@ -193,6 +193,7 @@ pipeline {
 
                             sh "cat ${API_COMPOSE}"
                             sh "cat ${API_COMPOSE_PROCESSOR}"
+                            sh "cat ${API_COMPOSE_MESSAGE}"
 
                             //deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
                             deploy("${API_COMPOSE_MESSAGE}", "${STAGE_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
@@ -261,6 +262,8 @@ pipeline {
 
                             sh "cat ${API_COMPOSE}"
                             sh "cat ${API_COMPOSE_PROCESSOR}"
+                            sh "cat ${API_COMPOSE_MESSAGE}"
+
                             //deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
                             sh "ecs-cli compose --file docker-compose-api.yml --ecs-params ecs-params-api.yml --project-name prod-answer-api service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${PROD_API_TARGET_ARN} --container-name reverseproxy --container-port 80 --timeout 15"
                             deploy("${API_COMPOSE_MESSAGE}", "${PROD_PROJECT_MESSAGE}", "${PROD_MESSAGE_TARGET_ARN}", "messageproxy")
