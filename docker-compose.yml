@@ -27,16 +27,12 @@ services:
     restart: always
   messageproxy:
     build:
-      context: ./messageproxy
+      context: ./reverseproxy
       dockerfile: Dockerfile
       args:
-        - 'NGINX_CONF=local'
+        - 'NGINX_CONF=localmsg'
     ports:
       - "65377:80"
-  status:
-    image: nginx
-#    ports:
-#      - "8080:80"
   processor:
     build:
       context: .
