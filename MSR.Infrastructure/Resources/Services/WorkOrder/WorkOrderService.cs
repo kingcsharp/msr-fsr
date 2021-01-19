@@ -579,6 +579,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             WorkOrderTask workOrderTaskEntity = _mapper.Map(command, current);
 
+            if (command.TaskRunningSince == null)
+            {
+                workOrderTaskEntity.TaskRunningSince = null;
+            }
+
             _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
 
             // attach files, if any
