@@ -43,6 +43,11 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
     this.startTimer();
 
+    if(this.workOrderTaskInProgress.taskRunningSince !== null){
+      this.workOrderTaskInProgress.taskRunningSince = this.convertDateToUTC(this.workOrderTaskInProgress.taskRunningSince);
+    }
+    
+
   }
 
   ngOnChanges() {
@@ -77,11 +82,11 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       assignedUserId: this.globals.getCurrentUser().id,
       status: this.workOrderTaskInProgress.status.name,
       taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
-      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince === null ? null : this.convertDateToUTC(this.workOrderTaskInProgress.taskRunningSince),
+      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince === null ? null : this.workOrderTaskInProgress.taskRunningSince,
       totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
       taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
       workOrderTaskId: this.workOrderTaskInProgress.id,
-      startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.convertDateToUTC(this.workOrderTaskInProgress.startedOn)
+      startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.workOrderTaskInProgress.startedOn
     } as IUpdateWorkOrderTaskRequest);
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
