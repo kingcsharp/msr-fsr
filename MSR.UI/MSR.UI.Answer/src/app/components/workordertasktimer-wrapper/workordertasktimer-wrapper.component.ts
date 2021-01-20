@@ -41,10 +41,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if(this.workOrderTaskInProgress.taskRunningSince !== null && this.workOrderTaskInProgress.taskRunningSince !== undefined){
-      this.workOrderTaskInProgress.taskRunningSince = this.convertDateToUTC(this.workOrderTaskInProgress.taskRunningSince);
-    }
-
     this.startTimer();
 
   }
