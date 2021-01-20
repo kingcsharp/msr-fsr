@@ -1,5 +1,5 @@
 <button type="button" class="btn btn-sm btn-primary mr-0" (click)="togglePrintOtherDialog()"><i class="fas fa-print mx-1"></i>Print Other</button>
-<p-dialog [(visible)]="showPrintOtherDialog" (onHide)="onHideePrintOtherDialog()" appendTo="body" styleClass="report"
+<p-dialog [(visible)]="showPrintOtherDialog" appendTo="body" styleClass="report"
     [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
     <p-header>
         Print Other

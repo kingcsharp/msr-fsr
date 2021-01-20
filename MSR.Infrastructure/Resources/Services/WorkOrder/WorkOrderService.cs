@@ -135,7 +135,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 var workOrderModel = _mapper.Map<WorkOrderModel>(workOrderEntity);
 
                 workOrderModel.Status = TranslateWOStatusToViewModel(workOrderModel.WorkOrderTasks);
-                var workOrderTaskModels = new List<WorkOrderTaskModel>();
 
                 foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
                 {
@@ -156,10 +155,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     {
                         workOrderTaskModel.ReferenceFiles = _fileService.ListFiles(nameof(WorkOrderTask), workOrderTaskModel.Id).ToList();
                     }
-                    workOrderTaskModels.Add(workOrderTaskModel);
 
                 }
-                workOrderModel.WorkOrderTasks = workOrderTaskModels;
                 workOrderModels.Add(DetachBackPointers(workOrderModel));
             };
 
@@ -559,7 +556,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            var current = await _unitOfWork.WorkOrderTasks.Query().Include(i => i.ProcedureStep).Include(i => i.ProcedureStepType).FirstOrDefaultAsync(i => i.Id == command.Id);
+            var current = await _unitOfWork.WorkOrderTasks.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
             if (current is null)
             {
@@ -589,40 +586,61 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
 
-            // Update Reference Files mapping
-            var currentFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), command.Id);
-            var currentFileIds = currentFiles.Select(i => i.FileId).ToList();
-            var fileIdsToAdd = command.ReferenceFilesIds.Where(i => !currentFileIds.Contains(i)).ToList();
-            var fileIdsToRemove = currentFileIds.Where(i => !command.ReferenceFilesIds.Contains(i.Value)).ToList();
-
-            var fileReferences = new List<FileModel>();
-
-            foreach (var addFileId in fileIdsToAdd)
+            // attach files, if any
+            if (command.ReferenceFilesIds != null)
             {
-                await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.WorkOrderTask), command.Id, addFileId);
-            }
+                // First, blank the existing list and the attach the new one.
+                List<int> origList = _unitOfWork.FileEntityMap.Query().Where(x =>
+                    x.EntityId == workOrderTaskEntity.Id &&
+                    x.EntityTableName.ToUpper().Equals("WORKORDERTASK")
+                ).Select(x => x.Id).ToList();
 
-            foreach (var removeFileId in fileIdsToRemove)
-            {
-                await _fileService.DetachFilesAsync(nameof(EntityFramework.Entities.WorkOrderTask), command.Id, removeFileId);
-            }
+                foreach (int id in origList)
+                {
+                    _unitOfWork.FileEntityMap.Delete(false, id);
+                }
 
-            fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), command.Id));
-
-            foreach (var file in command.ReferenceFiles)
-            {
-                var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.WorkOrderTask), command.Id, file);
-
-                fileReferences.Add(fileModel);
+                workOrderTaskEntity.ReferenceFiles = new List<FileEntityMap>();
+                foreach (int id in command.ReferenceFilesIds)
+                {
+                    FileEntityMap fem = new FileEntityMap()
+                    {
+                        EntityId = workOrderTaskEntity.Id,
+                        EntityTableName = "WorkOrderTask",
+                        FileId = id
+                    };
+                    workOrderTaskEntity.ReferenceFiles.Add(fem);
+                }
             }
 
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(workOrderTaskEntity, workOrderTaskEntity.Id);
 
+            // upload files, if any.
+            // This has to happen _after_ the reference file ID list
+            // is re-created.
+            if (command.ReferenceFiles != null &&
+                command.ReferenceFiles?.Count > 0 &&
+                command.ReferenceFiles.All(x => x != null))
+            {
+                foreach (FileModel fmodel in command.ReferenceFiles)
+                {
+                    FileModel m =
+                        await _fileService.CreateFileAsync("WorkOrderTask", current.Id, fmodel);
+                }
+            }
+
+            // Load any attached files
+            _unitOfWork.WorkOrderTasks.LoadCollection(workOrderTaskEntity, "ReferenceFiles");
+            foreach (FileEntityMap m in workOrderTaskEntity.ReferenceFiles)
+            {
+                _unitOfWork.FileEntityMap.LoadReference(m, x => x.FileObject);
+            }
+
             // Build the return object model
             WorkOrderTaskModel workOrderTaskModel = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workOrderTaskEntity);
 
-            workOrderTaskModel.ReferenceFiles = fileReferences;
+            workOrderTaskModel.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), workOrderTaskModel.Id).ToList();
 
             // Update the work order datetimes, if needed
             // IMPORTANT: the return object cannot be remapped after this
