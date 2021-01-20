@@ -193,9 +193,9 @@ pipeline {
                             sh "cat ${API_COMPOSE_PROCESSOR}"
                             sh "cat ${API_COMPOSE_MESSAGE}"
 
-                            echo "Deploying to Stage"
+                            echo "Deploying to UAT"
                             deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
-                            deploy("${API_COMPOSE_MESSAGE}", "${STAGE_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
+                            //deploy("${API_COMPOSE_MESSAGE}", "${STAGE_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
                             deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
                         }
                     }
