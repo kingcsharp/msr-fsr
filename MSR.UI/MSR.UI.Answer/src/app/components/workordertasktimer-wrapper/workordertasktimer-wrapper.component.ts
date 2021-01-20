@@ -187,6 +187,10 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime;
     }
 
+    if(isNaN(this.stepSeconds)){
+      this.stepSeconds = 0;
+    }
+
     this.stepMinutes = Math.floor(this.stepSeconds / 60);
     this.stepHours = Math.floor(this.stepMinutes / 60);
 
