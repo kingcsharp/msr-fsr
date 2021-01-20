@@ -33,13 +33,7 @@
             </div>
             <div class="col-3 font-weight-bold text-right">Associated Digital Pictures:</div>
             <div class="col-9">
-                <div class="row">
-                    <div class="col-4 mt-4" *ngFor="let fileModel of associatedDigitalPictures">
-                        <a href="{{fileModel.fileURL}}" target="_blank">
-                            <img class="card-img-top" src="{{fileModel.fileURL}}" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
-                        </a>
-                    </div>
-                </div>
+              <grid-file-viewer [menuItem]="menuItems.WorkOrderTasks" [files]="associatedDigitalPictures" class="m-2"></grid-file-viewer>
             </div>
             <div class="col-3 font-weight-bold text-right">Comments:</div><div class="col-9"></div>
         </div>
