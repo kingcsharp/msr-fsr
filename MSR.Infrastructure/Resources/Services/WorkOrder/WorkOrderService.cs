@@ -228,6 +228,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 .Reference(x => x.Purchase).Load();
             created.Context.Entry(workorder)
                 .Reference(x => x.Product).Load();
+            created.Context.Entry(workorder.Product)
+                .Reference(x => x.Procedure).Load();
             created.Context.Entry(workorder.Purchase)
                 .Reference(x => x.PurchaseOrder).Load();
             created.Context.Entry(workorder.Purchase.PurchaseOrder)
@@ -245,12 +247,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderStatus = TranslateWOStatusToViewModel(workorder.WorkOrderTasks),
                 productName = workorder.Product?.Name,
                 partNumber = workorder.WorkOrderParts.First().Part.PartNumber,
-                procedureName = workorder.WorkOrderTasks.First().ProcedureStep?.Procedure?.Name,
+                procedureName = workorder.Product?.Procedure?.Name,
                 locationName = workorder.Location.Name,
+                customerName = workorder.Product?.Customer?.Name,
+                serialNumber = workorder.WorkOrderParts.First().SerialNumber,
             });
 
             return workOrderModel;
         }
+
         public async Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))

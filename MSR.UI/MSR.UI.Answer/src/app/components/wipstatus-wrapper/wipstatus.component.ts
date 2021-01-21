@@ -137,6 +137,11 @@ export class WipstatusWrapperComponent implements OnInit {
         break;
       }
 
+      // product has no more work orders, remove it
+      if (product.workOrderSummaries.length === 0) {
+        this.workOrderStatuses.splice(productIndex, 1);
+      }
+
       if (workOrderSummary) {
         break;
       }
@@ -146,10 +151,15 @@ export class WipstatusWrapperComponent implements OnInit {
         // work order created
         data.workOrderSummary = {
             workOrderId: data.workOrderId,
-            workOrderStatus: data.workOrderStatus
+            workOrderStatus: data.workOrderStatus,
+            workOrderItemNumber: data.customerName.toUpperCase() + '-' + data.workOrderId,
+            workOrderPartSerialNumber: data.serialNumber,
+            procedureName: data.procedureName
         };
         this.displayWorkOrderByProduct(this.workOrderStatuses, data);
     }
+    // refresh table
+    this.locationsSelectedUpdated()
   }
 
   openTakeOverAsUserConfirmationDialog(workOrderId: number, assignedToFullName: string) {
