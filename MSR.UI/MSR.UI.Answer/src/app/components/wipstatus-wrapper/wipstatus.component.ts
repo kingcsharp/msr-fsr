@@ -113,12 +113,12 @@ export class WipstatusWrapperComponent implements OnInit {
   }
 
   workOrderStatusUpdate(data): void {
-    let workOrderSummary : WorkOrderSummary = undefined;
-    for (let productIndex : number = 0;
+    let workOrderSummary: WorkOrderSummary;
+    for (let productIndex: number = 0;
          productIndex < this.workOrderStatuses.length;
          productIndex += 1) {
       let product = this.workOrderStatuses[productIndex];
-      for (let summaryIndex : number = 0;
+      for (let summaryIndex: number = 0;
            summaryIndex < product.workOrderSummaries.length;
            summaryIndex += 1) {
         if (product.workOrderSummaries[summaryIndex].workOrderId !==
