@@ -44,7 +44,7 @@ export class SignalRService implements OnDestroy {
         this.addWorkflowNotificationListener();
       })
       .catch(err => {
-          console.log('Error while starting connection to ' + messageUrl)
+          console.log('Error while starting connection to ' + messageUrl);
           console.log(err);
       });
   }

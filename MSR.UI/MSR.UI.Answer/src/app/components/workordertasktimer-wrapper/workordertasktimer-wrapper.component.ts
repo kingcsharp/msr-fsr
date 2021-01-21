@@ -187,7 +187,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime;
     }
 
-    if(isNaN(this.stepSeconds)){
+    if (isNaN(this.stepSeconds)) {
       this.stepSeconds = 0;
     }
 
