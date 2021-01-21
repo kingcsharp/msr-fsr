@@ -137,6 +137,11 @@ export class WipstatusWrapperComponent implements OnInit {
         break;
       }
 
+      // product has no more work orders, remove it
+      if (product.workOrderSummaries.length === 0) {
+        this.workOrderStatuses.splice(productIndex, 1);
+      }
+
       if (workOrderSummary) {
         break;
       }
