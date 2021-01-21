@@ -184,20 +184,45 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 command.ScheduledStartDate = DateTime.Now;
             }
 
-            var workorder = _mapper.Map<EntityFramework.Entities.WorkOrder>(command);
+            var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(command);
+            var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
+            var procedureSteps = _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id));
+            var procedureStepMonitors = _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId));
 
-            var created = _unitOfWork.WorkOrders.Add(workorder);
+            foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
+            {
+                var procedureStep = await procedureSteps.FirstOrDefaultAsync(s => s.Id == workOrderTask.ProcedureStepId);
+                workOrderTask.Title = procedureStep.Title;
+                workOrderTask.Description = procedureStep.StepText;
+
+                foreach (var workOrderTaskMonitor in workOrderTask.WorkOrderTaskMonitors)
+                {
+
+                    var procedureStepMonitor =  await procedureStepMonitors.FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitor.ProcedureMonitorId);
+
+                    workOrderTaskMonitor.Description = procedureStepMonitor.Description;
+                    workOrderTaskMonitor.MonitorListId = procedureStepMonitor.MonitorListId;
+                    workOrderTaskMonitor.ShouldBe = procedureStepMonitor.ShouldBe;
+                    workOrderTaskMonitor.HighTarget = procedureStepMonitor.HighTarget;
+                    workOrderTaskMonitor.LowTarget = procedureStepMonitor.LowTarget;
+                    workOrderTaskMonitor.Target = procedureStepMonitor.Target;
+                    workOrderTaskMonitor.FailAction = procedureStepMonitor.FailAction;
+                    workOrderTaskMonitor.SensorName = procedureStepMonitor.SensorName;
+                }
+            }
+
+            var created = await _unitOfWork.WorkOrders.AddAsync(workOrderEntity);
 
             // link work order IDs for all parts
             Stack<WorkOrderPart> parts = new Stack<WorkOrderPart>();
-            foreach (var p in workorder.WorkOrderParts)
+            foreach (var p in workOrderEntity.WorkOrderParts)
             {
                 parts.Push(p);
             }
             while (parts.Count > 0)
             {
                 var p = parts.Pop();
-                p.WorkOrder = workorder;
+                p.WorkOrder = workOrderEntity;
                 if (p.Children != null && p.Children.Count > 0)
                 {
                     foreach (var sp in p.Children)
@@ -207,29 +232,29 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
             }
 
-            var parentParts = workorder.WorkOrderParts.Where(s => s.ParentId == null).ToList();
+            var parentParts = workOrderEntity.WorkOrderParts.Where(s => s.ParentId == null).ToList();
 
             foreach (var parentPart in parentParts)
             {
                 await SetCycleCount(parentPart);
             }
 
-            await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrderEntity, workOrderEntity.Id);
 
             // load required navigation fields
-            created.Context.Entry(workorder)
+            created.Context.Entry(workOrderEntity)
                 .Collection(x => x.WorkOrderParts).Load();
-            created.Context.Entry(workorder)
+            created.Context.Entry(workOrderEntity)
                 .Collection(x => x.WorkOrderTasks).Load();
-            created.Context.Entry(workorder)
+            created.Context.Entry(workOrderEntity)
                 .Reference(x => x.Purchase).Load();
-            created.Context.Entry(workorder.Purchase)
+            created.Context.Entry(workOrderEntity.Purchase)
                 .Reference(x => x.PurchaseOrder).Load();
-            created.Context.Entry(workorder.Purchase.PurchaseOrder)
+            created.Context.Entry(workOrderEntity.Purchase.PurchaseOrder)
                 .Reference(x => x.Customer).Load();
 
             WorkOrderModel workOrderModel = DetachBackPointers(
-                _mapper.Map<WorkOrderModel>(workorder)
+                _mapper.Map<WorkOrderModel>(workOrderEntity)
             );
 
             return workOrderModel;
