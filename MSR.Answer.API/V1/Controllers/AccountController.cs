@@ -42,7 +42,11 @@ namespace MSR.Answer.API.V1.Controllers
         public async Task<IActionResult> Login([FromBody, Required] SystemLoginRequest request)
         {
             var command = request.ToSystemLoginCommand();
-            command.Host = Request.Host.Value;
+
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            HttpContext.Request.Headers.TryGetValue("Referer", out value);
+
+            command.Host = value;
 
             var result = await _dispatcher.DispatchAsync(command);
 
