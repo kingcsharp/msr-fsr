@@ -73,6 +73,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                         RoleId = x.RoleId
                     }).ToList(),
                     Id = x.Id,
+                    IsAnswerUser = x.IsAnswerUser,
                     PasswordHash = x.PasswordHash,
                     PasswordSalt = x.PasswordSalt
                 })
@@ -116,6 +117,11 @@ namespace MSR.Infrastructure.Resources.Services.Account
             if (user == null)
             {
                 throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
+            }
+
+            if (user.IsAnswerUser.HasValue && !user.IsAnswerUser.Value && command.Host.IndexOf("answer") != -1 && command.Host.IndexOf("localhost") == -1)
+            {
+                throw new DomainException("Your account does not have acces to Answer Application.", DomainError.NotFound);
             }
 
             if (!_authenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
