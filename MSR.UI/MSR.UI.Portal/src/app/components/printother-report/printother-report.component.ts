@@ -33,6 +33,10 @@ export class PrintotherReportComponent implements OnInit {
     this.showPrintOtherDialog = !this.showPrintOtherDialog;
   }
 
+  onHideePrintOtherDialog() {
+    this.selectedReport = undefined;
+  }
+
   print() {
     window.print();
   }
