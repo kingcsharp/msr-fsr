@@ -35,9 +35,12 @@
             <div class="col-9">
                 <div class="row">
                     <div class="col-4 mt-4" *ngFor="let fileModel of associatedDigitalPictures">
-                        <a href="{{fileModel.fileURL}}" target="_blank">
+                        <a *ngIf="fileModel.fileId !== undefined" href="{{fileModel.fileURL}}" target="_blank">
                             <img class="card-img-top" src="{{fileModel.fileURL}}" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
                         </a>
+                        <a *ngIf="fileModel.fileId === undefined || fileModel.fileId === null">
+                          <img class="card-img-top" [src]="fileModel.base64String" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
+                      </a>
                     </div>
                 </div>
             </div>
