@@ -146,7 +146,10 @@ export class WipstatusWrapperComponent implements OnInit {
         // work order created
         data.workOrderSummary = {
             workOrderId: data.workOrderId,
-            workOrderStatus: data.workOrderStatus
+            workOrderStatus: data.workOrderStatus,
+            workOrderItemNumber: data.customerName.toUpperCase() + '-' + data.workOrderId,
+            workOrderPartSerialNumber: data.serialNumber,
+            procedureName: data.procedureName
         };
         this.displayWorkOrderByProduct(this.workOrderStatuses, data);
     }

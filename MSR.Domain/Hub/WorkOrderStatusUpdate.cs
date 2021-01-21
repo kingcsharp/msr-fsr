@@ -7,5 +7,7 @@ namespace MSR.Domain.Hub
         public string partNumber { get; set; }
         public string procedureName { get; set; }
         public string locationName { get; set; }
+        public string customerName { get; set; }
+        public string serialNumber { get; set; }
     }
 }
