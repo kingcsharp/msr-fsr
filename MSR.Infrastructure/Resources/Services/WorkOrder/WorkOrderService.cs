@@ -521,6 +521,29 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             workOrderTaskEntity.WorkOrderTaskMonitors =
                 _mapper.Map<List<WorkOrderTaskMonitor>>(procedureStepEntity.ProcedureStepMonitors);
 
+            workOrderTaskEntity.Description = procedureStepEntity.StepText;
+            workOrderTaskEntity.Title = procedureStepEntity.Title;
+            foreach (var workOrderTaskMonitor in workOrderTaskEntity.WorkOrderTaskMonitors)
+            {
+                var procedureStepMonitor =
+                    procedureStepEntity.ProcedureStepMonitors.FirstOrDefault(s =>
+                        s.Id == workOrderTaskMonitor.ProcedureMonitorId);
+
+                if (procedureStepMonitor != null)
+                {
+                    workOrderTaskMonitor.FailAction = procedureStepMonitor.FailAction;
+                    workOrderTaskMonitor.Description = procedureStepMonitor.Description;
+                    workOrderTaskMonitor.MonitorListId = procedureStepMonitor.MonitorListId;
+                    workOrderTaskMonitor.ShouldBe = procedureStepMonitor.ShouldBe;
+                    workOrderTaskMonitor.HighTarget = procedureStepMonitor.HighTarget;
+                    workOrderTaskMonitor.LowTarget = procedureStepMonitor.LowTarget;
+                    workOrderTaskMonitor.Target = procedureStepMonitor.Target;
+                    workOrderTaskMonitor.FailAction = procedureStepMonitor.FailAction;
+                    workOrderTaskMonitor.SensorName = procedureStepMonitor.SensorName;
+                }
+            }
+
+
             var created = await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
 
             // This will call SaveChangesAsync

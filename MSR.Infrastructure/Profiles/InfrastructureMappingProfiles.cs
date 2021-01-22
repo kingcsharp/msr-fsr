@@ -89,8 +89,13 @@ namespace MSR.Infrastructure.Profiles
                     src.StartedOn != null && src.StartedOn.Value.Ticks > 0
                 )));
             CreateMap<WorkOrderPartModel, WorkOrderPart>();
-            CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
-            CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
+            CreateMap<WorkOrderTask, WorkOrderTaskModel>()
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Description))
+                .ReverseMap();
+            CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>()
+                .ForMember(dest => dest.FaultHandling, opts => opts.MapFrom(src => src.FailAction))
+                .ForMember(dest => dest.TargetValue, opts => opts.MapFrom(src => src.Target))
+                .ReverseMap();
             CreateMap<UpdateWorkOrderTaskMonitor, WorkOrderTaskMonitor>();
 
             #region Location
