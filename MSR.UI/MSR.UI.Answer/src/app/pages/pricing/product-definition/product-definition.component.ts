@@ -157,6 +157,16 @@ export class ProductDefinitionComponent implements OnInit {
         }
         if (this.quoteData.customerRequirementJson) {
           this.customerRequirementJson = JSON.parse(this.quoteData.customerRequirementJson);
+          if (!this.quoteData.quoteJson) {
+            this.quoteJson = {
+              customerId: this.quoteData.customerId,
+              contact: this.customerRequirementJson.CommercialName,
+              title: this.customerRequirementJson.CommercialTitle,
+              phone: this.customerRequirementJson.CommercialPhone,
+              representative: this.quoteData.submittedBy.fullName,
+              representativeTitle: this.quoteData.submittedBy.title,
+            }
+          }
         }
 
         this.getQuoteDataFlag = true;
