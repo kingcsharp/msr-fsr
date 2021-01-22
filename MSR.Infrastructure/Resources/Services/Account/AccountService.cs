@@ -121,7 +121,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
             if (user.IsAnswerUser.HasValue && !user.IsAnswerUser.Value && command.Host.IndexOf("answer") != -1 && command.Host.IndexOf("localhost") == -1)
             {
-                throw new DomainException("Your account does not have acces to Answer Application.", DomainError.NotFound);
+                throw new DomainException("Your account does not have access to Answer Application.", DomainError.NotFound);
             }
 
             if (!_authenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
