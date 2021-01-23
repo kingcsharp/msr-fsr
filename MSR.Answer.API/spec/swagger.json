@@ -2598,6 +2598,59 @@
         }
       }
     },
+    "/v{version}/Procedure/copy/{id}": {
+      "post": {
+        "tags": [
+          "Procedure"
+        ],
+        "summary": "Copy Procedure",
+        "operationId": "Procedure_ProcedureCopyProcedure",
+        "parameters": [
+          {
+            "name": "procedureId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 3
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedure"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/Procedure/{id}/step": {
       "post": {
         "tags": [
@@ -2613,7 +2666,7 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "example": 3
+              "example": 305
             },
             "x-position": 1
           },
