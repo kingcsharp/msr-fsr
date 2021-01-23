@@ -537,16 +537,6 @@ namespace MSR.Answer.API.V1.Extentions
         }
 
         /// <summary>
-        /// Copy Procedure
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public static CopyProcedure ToCopyProcedureCommand(this CopyProcedureRequest request)
-        {
-            return AutoMapperHelper.Mapper.Map<CopyProcedure>(request);
-        }
-
-        /// <summary>
         ///
         /// </summary>
         /// <param name="request"></param>
