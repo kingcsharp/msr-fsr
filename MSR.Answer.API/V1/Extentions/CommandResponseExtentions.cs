@@ -4,6 +4,7 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
+using MSR.Domain.Models.BaseModels;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -20,10 +21,17 @@ namespace MSR.Answer.API.V1.Extentions
         public static IActionResult ToOkObjectResponse<TResult>(this ICommandResponse commandResponse, string message = null)
         {
             var result = ValidateCommandResponse(commandResponse);
+            var dataObject = ((ICommandResponse<TResult>)commandResponse).Data;
+            int id = 0;
+            if (dataObject is EntityModel)
+            {
+                id = (dataObject as EntityModel).Id;
+            }
             return result ?? new OkObjectResult(new AuditActionResult<TResult>()
             {
-                Object = ((ICommandResponse<TResult>)commandResponse).Data,
-                SuccessMessage = message
+                Object = dataObject,
+                SuccessMessage = message,
+                Id = id
             });
         }
 
