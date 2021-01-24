@@ -20,6 +20,7 @@ namespace MSR.Domain.Models
         public int? MaximumCycles { get; set; }
         public string CreatedByName { get; set; }
         public string LastUpdatedByName { get; set; }
+        public string SegregationType { get; set; }
         public virtual ICollection<SubPartModel> CreateSubParts { get; set; }
         public virtual ICollection<FileModel> Files { get; set; }
         public bool? IsActive { get; set; }

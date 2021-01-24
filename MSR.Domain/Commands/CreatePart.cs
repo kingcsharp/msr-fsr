@@ -18,6 +18,7 @@ namespace MSR.Domain.Commands
         public ICollection<SubPartModel> SubParts { get; set; }
         public string Comment { get; set; }
         public bool IsActive { get; set; }
+        public string SegregationType { get; set; }
         public List<FileModel> Files { get; set; }
     }
 }
