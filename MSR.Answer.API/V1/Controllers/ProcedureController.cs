@@ -55,7 +55,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="procedureId"></param>
         /// <returns></returns>
-        [HttpPost("copy/{id}")]
+        [HttpPost("copy/{procedureId}")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
         public async Task<IActionResult> ProcedureCopyProcedure([FromRoute][Required] int procedureId)

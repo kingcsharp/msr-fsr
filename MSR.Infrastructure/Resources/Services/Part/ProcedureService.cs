@@ -139,6 +139,60 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             return procedureModel;
         }
+
+        public async Task<Domain.Models.Procedure> CopyProcedureAsync(CopyProcedure command)
+        {
+            EntityFramework.Entities.Procedure procedure = await _unitOfWork.Procedures
+                .Query()
+                .Where(i => i.Id == command.SourceProcedureId)
+                .Include(x => x.ProcedureSteps)
+                .Include(x => x.ReferenceFiles)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            if (procedure is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Procedure)} not found with ID: {command.SourceProcedureId}", DomainError.NotFound);
+            }
+
+            var newProcedure = new EntityFramework.Entities.Procedure();
+            _mapper.Map(procedure, newProcedure);
+            newProcedure.Id = 0;
+            newProcedure.Name = procedure.Name + " - Copy";
+            newProcedure.Revision = 1;
+
+            foreach (var newStep in newProcedure.ProcedureSteps)
+            {
+                newStep.Id = 0;
+                newStep.ProcedureId = 0;
+            }
+            newProcedure.ReferenceFiles = new List<FileEntityMap>();
+            foreach (var file in procedure.ReferenceFiles)
+            {
+                if (!file.EntityTableName.Equals(nameof(EntityFramework.Entities.Procedure)))
+                {
+                    continue;
+                }
+                var newFile = _mapper.Map<FileEntityMap>(file);
+                newFile.Id = 0;
+                newFile.EntityId = 0;
+                newProcedure.ReferenceFiles.Add(newFile);
+            }
+
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
+            {
+                // user has approval permission, create the record
+                _unitOfWork.Procedures.Add(newProcedure);
+
+                await _unitOfWork.LogApprovalTransaction(newProcedure, newProcedure.Id);
+
+                return _mapper.Map<Domain.Models.Procedure>(newProcedure);
+            }
+
+            // no approval permission, create command and submit to normal process
+            return await CreateProcedureAsync(_mapper.Map<CreateProcedure>(newProcedure));
+        }
+
         public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command)
         {
             var current = await _unitOfWork.Procedures

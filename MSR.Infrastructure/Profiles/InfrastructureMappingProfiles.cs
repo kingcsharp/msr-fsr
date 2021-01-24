@@ -200,6 +200,13 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             #region Procedure
+            CreateMap<Procedure, Procedure>()
+                .ForMember(dest => dest.Created, opts => opts.Ignore())
+                .ForMember(dest => dest.CreatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.CreatedOn, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdated, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedOn, opts => opts.Ignore());
             CreateMap<ProcedureWithUsedProductCountView, Domain.Models.Procedure>()
                 .ForMember(dest => dest.ProcedureType, opts => opts.MapFrom(src => new MSR.Domain.Models.ProcedureType()
                 {
