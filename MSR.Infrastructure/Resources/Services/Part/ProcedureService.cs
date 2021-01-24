@@ -142,6 +142,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<Domain.Models.Procedure> CopyProcedureAsync(CopyProcedure command)
         {
+            if (!CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
+            {
+                throw new DomainException($"Permission denied to create procedures", DomainError.BadRequest);
+            }
+
             EntityFramework.Entities.Procedure procedure = await _unitOfWork.Procedures
                 .Query()
                 .Where(i => i.Id == command.SourceProcedureId)
@@ -179,18 +184,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 newProcedure.ReferenceFiles.Add(newFile);
             }
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
-            {
-                // user has approval permission, create the record
-                _unitOfWork.Procedures.Add(newProcedure);
+            // user has approval permission, create the record
+            _unitOfWork.Procedures.Add(newProcedure);
 
-                await _unitOfWork.LogApprovalTransaction(newProcedure, newProcedure.Id);
+            await _unitOfWork.LogApprovalTransaction(newProcedure, newProcedure.Id);
 
-                return _mapper.Map<Domain.Models.Procedure>(newProcedure);
-            }
-
-            // no approval permission, create command and submit to normal process
-            return await CreateProcedureAsync(_mapper.Map<CreateProcedure>(newProcedure));
+            return _mapper.Map<Domain.Models.Procedure>(newProcedure);
         }
 
         public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command)
