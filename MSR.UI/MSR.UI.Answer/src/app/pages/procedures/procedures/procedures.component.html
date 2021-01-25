@@ -114,7 +114,7 @@
                 data-cy="delete-button" (click)="openConfirmDeleteDialog(model)"></i>
               <i class="fal fa-eye pointer" tooltip="View Procedure Summary and Steps"
                 [routerLink]="['../procedure-view']" [queryParams]="{id: model.id}" data-cy="view-button"></i>
-              <i *ngIf="false" class="far fa-copy pointer" tooltip="Copy Procedure" (click)="copyProcedure(model)"
+              <i *ngIf="procedurePrivileges.canCreate" class="far fa-copy pointer" tooltip="Copy Procedure" (click)="copyProcedure(model)"
                 data-cy="copy-button"></i>
             </td>
           </tr>
