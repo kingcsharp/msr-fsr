@@ -397,7 +397,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             {
                                 PartId = partSubPartMapForSubPart.PartId,
                                 ParentId = partSubPartMapForSubPart.ParentPartId,
-                                Qty = partSubPartMapForSubPart.Qty
+                                Qty = partSubPartMapForSubPart.Qty,
+                                SegregationType = partSubPartMapForSubPart.Part.SegregationType
                             });
                         }
                     }
