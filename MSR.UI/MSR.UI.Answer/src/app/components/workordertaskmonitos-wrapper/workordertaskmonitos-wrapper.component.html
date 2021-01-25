@@ -3,7 +3,7 @@
   <div class="d-flex flex-wrap">
     <div class="col-4" *ngFor="let workOrderTaskMonitor of  workOrderMonitorsToView; let i = index">
       <div class="card my-2 border shadow">
-        <div class="card-header" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor.description">
+        <div class="card-header" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description">
         </div>
         <div class="card-body">
           <div class="form-group col-12 d-flex flex-row">
@@ -19,7 +19,7 @@
               Monitor Type:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.monitorType}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.monitorType | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.monitorType}}
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.EQUAL
@@ -28,7 +28,7 @@
               Equal To:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.targetValue}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.targetValue| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue}}
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.ABOVE 
@@ -37,7 +37,7 @@
               Above:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.targetValue}}
+              {{workOrderTaskMonitor.procedureStepMonitor.targetValue| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue}}
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.BELOW 
@@ -46,7 +46,7 @@
               Below:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.targetValue}}
+              {{workOrderTaskMonitor.procedureStepMonitor.targetValue| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue}}
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.BETWEEN 
@@ -55,8 +55,8 @@
               Between:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.lowTarget}} and
-              {{workOrderTaskMonitor.procedureStepMonitor.highTarget}}
+              {{workOrderTaskMonitor.procedureStepMonitor.lowTarget | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.lowTarget}} and
+              {{workOrderTaskMonitor.procedureStepMonitor.highTarget | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.lowTarget}}
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number 
@@ -65,7 +65,7 @@
               Sensor:
             </label>
             <div class="col-9 px-0">
-              {{workOrderTaskMonitor.procedureStepMonitor?.sensorName}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.sensorName | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.sensorName}}
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row"
@@ -74,7 +74,7 @@
               Correct Answer:
             </label>
             <div class="col-9 px-0">
-              {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'No' : 'Yes'}}
+              {{workOrderTaskMonitor.procedureStepMonitor.targetValue | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue : false : true }} <!-- TODO: this needs a custom pipe or logic-->
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Equipment 
@@ -160,7 +160,7 @@
                   (workOrderTaskMonitor.numVal === null ||
                   workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.procedureStepMonitor.targetValue)">
                   Value should be equal to
-                  {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'Fail' : 'Pass'}}
+                  {{workOrderTaskMonitor.procedureStepMonitor.targetValue | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue : true : false}}
                 </li>
                 <li class="parsley-custom-error-message" *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.RecordAndContinue 
                 && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)">
@@ -184,7 +184,7 @@
                   (workOrderTaskMonitor.numVal === null ||
                   workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.procedureStepMonitor.targetValue)">
                   Value should be equal to
-                  {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'No' : 'Yes'}}
+                  {{workOrderTaskMonitor.procedureStepMonitor.targetValue | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue : false : true}}
                 </li>
                 <li class="parsley-custom-error-message" *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.RecordAndContinue 
                 && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)">

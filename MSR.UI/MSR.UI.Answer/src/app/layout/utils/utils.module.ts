@@ -40,6 +40,7 @@ import { GridComponent } from '../../../app/components/grid/grid.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { GalleriaModule } from 'primeng/galleria';
 import { MonitorStatusPipe } from '../../../app/pipes/monitorstatus';
+import { WorkOrderTaskAndMonitorPipe } from '../../pipes/work-order-task-and-monitor.pipe';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { MonitorStatusPipe } from '../../../app/pipes/monitorstatus';
     BootstrapSwitchComponent,
     CkeditorWrapperComponent,
     GridComponent,
-    MonitorStatusPipe
+    MonitorStatusPipe,
+    WorkOrderTaskAndMonitorPipe
   ],
   exports: [
     GridComponent,
@@ -87,7 +89,8 @@ import { MonitorStatusPipe } from '../../../app/pipes/monitorstatus';
     MonitorResultPipe,
     BootstrapSwitchComponent,
     CkeditorWrapperComponent,
-    MonitorStatusPipe
+    MonitorStatusPipe,
+    WorkOrderTaskAndMonitorPipe
   ],
   imports: [
     TableModule,

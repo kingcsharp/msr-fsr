@@ -97,7 +97,7 @@
                   || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled',
                   'step-viewed': workOrderTaskToView.id === workOrderTask.id}">
               <div class="h-100 d-flex">
-                <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title}}</div>
+                <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title | workOrderTaskAndMonitor: workOrderTask.procedureStepId : workOrderTask.title }}</div>
               </div>
             </slide>
           </carousel>
@@ -148,11 +148,11 @@
                 </div>
                 <div class="row">
                   <div class="text-right col-2 p-2" colspan="1">Task:</div>
-                  <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.title }}</div>
+                  <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.title | workOrderTaskAndMonitor: workOrderTaskToView.procedureStepId : workOrderTaskToView.title}}</div>
                 </div>
                 <div class="row">
                   <div class="text-right col-2 p-2" colspan="1">Description:</div>
-                  <div class="col-10 p-2" [innerHTML]="workOrderTaskToView?.procedureStep?.stepText"></div>
+                  <div class="col-10 p-2" [innerHTML]="workOrderTaskToView?.procedureStep?.stepText | workOrderTaskAndMonitor: workOrderTaskToView.procedureStepId : workOrderTaskToView.stepText"></div>
                 </div>
                 <div class="row">
                   <div class="text-right col-2 p-2" colspan="1">Related Documents:</div>
