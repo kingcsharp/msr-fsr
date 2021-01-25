@@ -65,7 +65,7 @@ namespace MSR.Answer.API.V1.Controllers
             };
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<Procedure>("Procedure successfully copied");
+            return ret.ToOkObjectResponse<Procedure>("Procedure successfully copied: " + ret.DisplayString);
         }
 
         /// <summary>

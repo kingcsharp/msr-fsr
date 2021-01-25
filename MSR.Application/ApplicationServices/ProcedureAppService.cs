@@ -79,8 +79,10 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(CopyProcedure command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.CopyProcedureAsync(command);
-            return new CommandResponse<Procedure>(ret);
+            var newProcedure = await _procedureService.CopyProcedureAsync(command);
+            var response = new CommandResponse<Procedure>(newProcedure);
+            response.DisplayString = " [" + newProcedure.Id + "] " + newProcedure.Name;
+            return response;
         }
     }
 }
