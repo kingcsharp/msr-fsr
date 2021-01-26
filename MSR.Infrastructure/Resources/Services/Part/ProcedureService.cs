@@ -222,7 +222,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 s.EntityTableName == nameof(EntityFramework.Entities.ProcedureStep)).ToListAsync();
 
             var workOrderTasksInUse = _unitOfWork.WorkOrderTasks.Query()
-                .Where(s => procedureStepIds.Contains(s.ProcedureStepId));
+                .Where(s => procedureStepIds.Contains(s.ProcedureStepId)
+                            && (s.StatusId == (int)EnumStatusSteps.InProgress 
+                               || s.StatusId == (int)EnumStatusSteps.WaitingtoStart
+                               || s.StatusId == (int)EnumStatusSteps.Approved));
 
             procedureStepModels.ForEach(procedureStep =>
             {
