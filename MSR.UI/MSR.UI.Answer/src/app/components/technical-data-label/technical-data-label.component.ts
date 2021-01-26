@@ -38,11 +38,11 @@ export class TechnicalDataLabelComponent implements OnInit {
         let dataLabel = new DataLabel();
         dataLabel.CustomerPurchaseNumber  = this.WorkOrder.purchase.customerPurchaseNumber;
         dataLabel.Date = this.WorkOrder.scheduledEndDate;
-        dataLabel.MonitorName = workOrderTask.workOrderTaskMonitors[index].procedureStepMonitor?.description;
+        dataLabel.MonitorName = workOrderTask.workOrderTaskMonitors[index].procedureMonitorId !== null ? workOrderTask.workOrderTaskMonitors[index].procedureStepMonitor?.description : workOrderTask.workOrderTaskMonitors[index]?.description;
         dataLabel.PartName = this.WorkOrder.product?.part?.name;
         dataLabel.PartNumber = this.WorkOrder.product?.part?.partNumber;
         dataLabel.Requestee = workOrderTask.assignedToUser?.fullName;
-        dataLabel.TaskDescription = workOrderTask.procedureStep?.stepText;
+        dataLabel.TaskDescription = workOrderTask.procedureStepId !== null ? workOrderTask.procedureStep?.stepText : workOrderTask.stepText;
         this.labels.push(dataLabel);
 
       }

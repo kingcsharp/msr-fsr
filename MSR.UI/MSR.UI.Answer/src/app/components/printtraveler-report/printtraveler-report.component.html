@@ -70,9 +70,9 @@
                         <tr class="workordertask-container" *ngFor="let workOrderTask of WorkOrder.workOrderTasks">
                             <td>
                                 <div class="col-12 p-2 workordertask-title">
-                                    <span>{{workOrderTask.procedureStep?.title}}</span>
+                                    <span>{{workOrderTask.procedureStep?.title | workOrderTaskAndMonitor: workOrderTask.procedureStepId : workOrderTask.title}}</span>
                                 </div>
-                                <div class="col-12 p-2 workordertask-steptext" [innerHTML]="workOrderTask.procedureStep?.stepText">
+                                <div class="col-12 p-2 workordertask-steptext" [innerHTML]="workOrderTask.procedureStep?.stepText | workOrderTaskAndMonitor: workOrderTask.procedureStepId : workOrderTask.stepText">
                                 </div>
                             </td>
                         </tr>
