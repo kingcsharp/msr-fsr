@@ -81,7 +81,7 @@ namespace MSR.Application.ApplicationServices
         {
             var newProcedure = await _procedureService.CopyProcedureAsync(command);
             var response = new CommandResponse<Procedure>(newProcedure);
-            response.DisplayString = " [" + newProcedure.Id + "] " + newProcedure.Name;
+            response.DisplayString = "[" + newProcedure.Id + "] " + newProcedure.Name;
             return response;
         }
     }
