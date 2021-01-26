@@ -51,6 +51,24 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
+        /// Copy Procedure
+        /// </summary>
+        /// <param name="procedureId"></param>
+        /// <returns></returns>
+        [HttpPost("copy/{procedureId}")]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
+        public async Task<IActionResult> ProcedureCopyProcedure([FromRoute][Required] int procedureId)
+        {
+            var command = new CopyProcedure() {
+                SourceProcedureId = procedureId
+            };
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToOkObjectResponse<Procedure>("Procedure successfully copied: " + ret.DisplayString);
+        }
+
+        /// <summary>
         /// Add Procedure Step
         /// </summary>
         /// <param name="body"></param>

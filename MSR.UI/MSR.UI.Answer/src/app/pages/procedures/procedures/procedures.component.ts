@@ -93,7 +93,10 @@ export class ProceduresComponent implements OnInit {
   }
 
   copyProcedure(procedure) {
-    this.data.length = 0;
-    this.getProcedures();
+    this.globals.showLoader(true);
+    this.procedureService.copy(procedure.id, env.apiVersion).subscribe(responseHandler((response) => {
+        this.data.length = 0;
+        this.getProcedures();
+    }));
   }
 }

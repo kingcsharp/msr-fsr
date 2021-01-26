@@ -31,6 +31,8 @@ namespace MSR.Domain.Commanding
 
         public Error ResponseError { get; }
 
+        public string DisplayString { get; set; }
+
         public static ICommandResponse Error(Exception ex) => new CommandResponse(ex) { Success = false };
 
         public static ICommandResponse SuccessCommand => new CommandResponse() { Success = true };
