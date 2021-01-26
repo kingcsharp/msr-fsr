@@ -223,8 +223,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // Update Reference Files mapping
                 var currentFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), command.Id);
                 var currentFileIds = currentFiles.Select(i => i.FileId).ToList();
-                var fileIdsToAdd = command.ReferenceFileIds.Where(i => !currentFileIds.Contains(i)).ToList();
-                var fileIdsToRemove = currentFileIds.Where(i => !command.ReferenceFileIds.Contains(i.Value)).ToList();
+                var fileIdsToAdd = command.ReferenceFileIds == null ? new List<int>() : command.ReferenceFileIds.Where(i => !currentFileIds.Contains(i)).ToList();
+                var fileIdsToRemove = currentFileIds.Where(i => command.ReferenceFileIds == null ? false : command.ReferenceFileIds.Contains(i.Value)).ToList();
 
                 var fileReferences = new List<FileModel>();
 
@@ -240,11 +240,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), command.Id));
 
-                 foreach (var file in command.ReferenceFiles)
+                if (command.ReferenceFiles != null)
                 {
-                    var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Procedure), procedureModel.Id, file);
+                    foreach (var file in command.ReferenceFiles)
+                    {
+                        var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Procedure), procedureModel.Id, file);
 
-                    fileReferences.Add(fileModel);
+                        fileReferences.Add(fileModel);
+                    }
                 }
 
                 procedureModel.ReferenceFiles = fileReferences;
