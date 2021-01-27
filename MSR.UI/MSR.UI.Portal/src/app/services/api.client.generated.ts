@@ -3254,17 +3254,14 @@ export class ProcedureService {
     /**
      * Copy Procedure
      */
-    copy(procedureId: number, version: string, id: string): Observable<AuditActionResultOfProcedure> {
-        let url_ = this.baseUrl + "/v{version}/Procedure/copy/{id}";
+    copy(procedureId: number, version: string): Observable<AuditActionResultOfProcedure> {
+        let url_ = this.baseUrl + "/v{version}/Procedure/copy/{procedureId}";
         if (procedureId === undefined || procedureId === null)
             throw new Error("The parameter 'procedureId' must be defined.");
         url_ = url_.replace("{procedureId}", encodeURIComponent("" + procedureId));
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
