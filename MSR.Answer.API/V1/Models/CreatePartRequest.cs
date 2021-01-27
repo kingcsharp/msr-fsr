@@ -1,6 +1,7 @@
 using MSR.Domain.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Answer.API.V1.Models
 {
@@ -19,7 +20,7 @@ namespace MSR.Answer.API.V1.Models
         public string NickName { get; set; }
         public bool IsActive { get; set; }
         public int? MaximumCycles { get; set; }
-        public string SegregationType { get; set; }
+        public EnumSegregationType? SegregationType { get; set; }
         public virtual ICollection<SubPartModel> CreateSubParts { get; set; }
         public string Comment { get; set; }
         public List<FileRequest> Files { get; set; }

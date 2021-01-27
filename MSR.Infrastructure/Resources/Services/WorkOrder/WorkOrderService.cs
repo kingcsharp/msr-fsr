@@ -391,6 +391,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             subPartQuantity = 1;
                         }
 
+                        var PartSegregationTypeValue = partSubPartMapForSubPart.Part.SegregationType;
+
                         for ( ; subPartQuantity > 0; subPartQuantity -= 1)
                         {
                             subs.Add(new WorkOrderPartModel()
@@ -398,7 +400,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                 PartId = partSubPartMapForSubPart.PartId,
                                 ParentId = partSubPartMapForSubPart.ParentPartId,
                                 Qty = partSubPartMapForSubPart.Qty,
-                                SegregationType = partSubPartMapForSubPart.Part.SegregationType
+                                SegregationType = PartSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(PartSegregationTypeValue) : EnumSegregationType.NONCU
                             });
                         }
                     }

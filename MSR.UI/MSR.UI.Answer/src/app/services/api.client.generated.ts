@@ -12517,7 +12517,7 @@ export class PartModel extends TrackableModel implements IPartModel {
     maximumCycles?: number | undefined;
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     files?: FileModel[] | undefined;
     isActive?: boolean | undefined;
@@ -12598,10 +12598,16 @@ export interface IPartModel extends ITrackableModel {
     maximumCycles?: number | undefined;
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     files?: FileModel[] | undefined;
     isActive?: boolean | undefined;
+}
+
+export enum EnumSegregationType {
+    CU = 1,
+    NONCU = 2,
+    DESEG = 3,
 }
 
 export class SubPartModel implements ISubPartModel {
@@ -12694,7 +12700,7 @@ export class CreatePartRequest implements ICreatePartRequest {
     nickName?: string | undefined;
     isActive?: boolean;
     maximumCycles?: number | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
     files?: FileRequest[] | undefined;
@@ -12769,7 +12775,7 @@ export interface ICreatePartRequest {
     nickName?: string | undefined;
     isActive?: boolean;
     maximumCycles?: number | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
     files?: FileRequest[] | undefined;
@@ -16180,7 +16186,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     parentId?: number | undefined;
     serialNumber?: string | undefined;
     qty?: number | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     part?: PartModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
@@ -16253,7 +16259,7 @@ export interface IWorkOrderPartModel {
     parentId?: number | undefined;
     serialNumber?: string | undefined;
     qty?: number | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     part?: PartModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
@@ -20354,7 +20360,7 @@ export interface IAuditActionResultOfWorkOrderPartModel extends IAuditActionResu
 export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
     workOrderPartId?: number;
     serialNumber?: string | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 
     constructor(data?: IUpdateWorkOrderPartRequest) {
         if (data) {
@@ -20392,7 +20398,7 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
 export interface IUpdateWorkOrderPartRequest {
     workOrderPartId?: number;
     serialNumber?: string | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 }
 
 /** Base class for an API call with a typed result */

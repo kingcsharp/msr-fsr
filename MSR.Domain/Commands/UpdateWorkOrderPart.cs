@@ -1,4 +1,5 @@
 ﻿using MSR.Domain.Commanding;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Domain.Commands
 {
@@ -6,6 +7,6 @@ namespace MSR.Domain.Commands
     {
         public int WorkOrderPartId { get; set; }
         public string SerialNumber { get; set; }
-        public string SegregationType { get; set; }
+        public EnumSegregationType? SegregationType { get; set; }
     }
 }
