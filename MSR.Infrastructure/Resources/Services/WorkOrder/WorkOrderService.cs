@@ -391,7 +391,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             subPartQuantity = 1;
                         }
 
-                        var PartSegregationTypeValue = partSubPartMapForSubPart.Part.SegregationType;
+                        var partSegregationTypeValue = partSubPartMapForSubPart.Part.SegregationType;
 
                         for ( ; subPartQuantity > 0; subPartQuantity -= 1)
                         {
@@ -400,7 +400,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                 PartId = partSubPartMapForSubPart.PartId,
                                 ParentId = partSubPartMapForSubPart.ParentPartId,
                                 Qty = partSubPartMapForSubPart.Qty,
-                                SegregationType = PartSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(PartSegregationTypeValue) : EnumSegregationType.NONCU
+                                SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
                             });
                         }
                     }
