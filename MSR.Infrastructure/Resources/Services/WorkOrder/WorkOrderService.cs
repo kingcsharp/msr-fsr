@@ -731,13 +731,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             return workOrderTaskMonitorModel;
         }
-        public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderHistory command)
-        {
-            return await GetWorkOrderGridSummaryImpl(true);
-        }
+
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command)
         {
-            return await GetWorkOrderGridSummaryImpl(false);
+            return await GetWorkOrderGridSummaryImpl();
         }
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command)
         {
@@ -1087,11 +1084,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return status;
         }
 
-        private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
+        private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl()
         {
             var getWorkOrderCommand = new GetWorkOrder()
             {
-                completedOnly = isHistory
+                completedOnly = false
             };
 
             ICollection<WorkOrderModel> workOrderModels = await GetWorkOrderAsync(getWorkOrderCommand);

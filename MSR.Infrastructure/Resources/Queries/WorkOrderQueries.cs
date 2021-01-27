@@ -45,8 +45,7 @@ namespace MSR.Infrastructure.Resources.Queries
                         PercentageOfExpectedDurationTimeLogged = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLogged,
                         PercentageOfExpectedDurationTimeLoggedNumerator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedNumerator,
                         PercentageOfExpectedDurationTimeLoggedDenominator = (double)CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedDenominator,
-                        Disposition = workOrderHistoryViewDTO.HasNcr ? GetWorkOrderDisposition(workOrderHistoryViewDTO.WorkOrderTasks.Where(j => j.ProcedureStepTypeId == Constants.PROCEDURESTEPTYPENC).SelectMany(k => k.WorkOrderTaskMonitors))
-                                                                                          : string.Empty,
+                        Disposition = GetWorkOrderDisposition(workOrderHistoryViewDTO),
                         ProcedureName = workOrderHistoryViewDTO.WorkOrderTasks != null && workOrderHistoryViewDTO.WorkOrderTasks.Any() ? workOrderHistoryViewDTO.WorkOrderTasks.First().ProcedureName : string.Empty,
                         CurrentActiveTaskName = GetCurrentActiveTaskName(workOrderHistoryViewDTO.WorkOrderTasks),
                         Quantity = workOrderHistoryViewDTO.WorkOrderPart?.Qty,
@@ -64,8 +63,8 @@ namespace MSR.Infrastructure.Resources.Queries
                         ActualStartDate = workOrderHistoryViewDTO.ActualStartDate,
                         ActualEndDate = workOrderHistoryViewDTO.ActualEndDate,
                         ProductName = workOrderHistoryViewDTO.ProductName,
-                        HasNcr = workOrderHistoryViewDTO.HasNcr
-                    });
+                        HasNcr = workOrderHistoryViewDTO.HasNcr,
+                    });;
                 }
             });
 
@@ -85,12 +84,6 @@ namespace MSR.Infrastructure.Resources.Queries
             decimal percentExpectedDuration = expectedDurationDenominator == 0 ? 0 : expectedDurationNumerator / expectedDurationDenominator;
 
             return (completedDenominator, completedNumerator, pctComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration);
-        }
-
-        private static string GetWorkOrderDisposition(IEnumerable<string> workOrderTaskMonitors)
-        {
-            var dispositionMessage = workOrderTaskMonitors.Any() ? string.Join(" ", workOrderTaskMonitors) : string.Empty;
-            return dispositionMessage;
         }
 
         private static string GetCurrentActiveTaskName(ICollection<WorkOrderHistoryTaskDTO> workOrderTasks)
@@ -118,6 +111,39 @@ namespace MSR.Infrastructure.Resources.Queries
             }
 
             return EnumStatusSteps.WaitingtoStart;
+        }
+
+        private static string GetWorkOrderDisposition(WorkOrderHistoryViewDTO workOrderModel)
+        {
+            string dispositionMessage = string.Empty;
+
+            if (workOrderModel.HasNcr)
+            {
+                var workOrderTaskModels = workOrderModel.WorkOrderTasks.Where(x =>
+                    x.ProcedureStepTypeId == Constants.PROCEDURESTEPTYPENC).ToList();
+                if (workOrderTaskModels.Any())
+                {
+                    foreach (var workOrderTaskModel in workOrderTaskModels)
+                    {
+                        dispositionMessage +=
+                            String.Join(
+                                " | ",
+                                workOrderTaskModel.WorkOrderTaskMonitors
+                            ) + " | ";
+                    }
+                }
+            }
+
+            if (workOrderModel.WorkOrderMessages != null &&
+                workOrderModel.WorkOrderMessages.Count > 0)
+            {
+                dispositionMessage += String.Join(string.Empty,
+                    workOrderModel.WorkOrderMessages.Select(x =>
+                        x.Message == null ? "" : x.Message + " | "
+                    ).ToList()
+                );
+            }
+            return dispositionMessage.Trim().Trim('|').Trim();
         }
     }
 }
