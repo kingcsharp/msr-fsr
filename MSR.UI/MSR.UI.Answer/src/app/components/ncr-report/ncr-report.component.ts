@@ -36,16 +36,17 @@ export class NcrReportComponent implements OnInit {
 
   generateMonitorSummaries() {
     this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
-      if (workOrderTask.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR) {
+      if ((workOrderTask.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR) 
+      || (workOrderTask.isNCRTask === true)) {
         let taskSummary = {
-          taskName: workOrderTask.procedureStep.title,
+          taskName: workOrderTask.procedureStepId === null ? workOrderTask.title :workOrderTask.procedureStep.title,
           taskId: workOrderTask.id,
           monitors: new Array<any>()
         };
 
         workOrderTask.workOrderTaskMonitors.forEach(workOrderTaskMonitor => {
           taskSummary.monitors.push({
-            monitorTitle: workOrderTaskMonitor.procedureStepMonitor?.description,
+            monitorTitle: workOrderTaskMonitor.procedureMonitorId !== null ? workOrderTaskMonitor.procedureStepMonitor?.description : workOrderTaskMonitor.description,
             result: workOrderTaskMonitor,
             comment: workOrderTaskMonitor.comment
           });

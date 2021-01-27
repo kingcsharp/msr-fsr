@@ -16266,6 +16266,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     referenceFiles?: FileModel[] | undefined;
     title?: string | undefined;
     stepText?: string | undefined;
+    isNCRTask?: boolean | undefined;
 
     constructor(data?: IWorkOrderTaskModel) {
         if (data) {
@@ -16308,6 +16309,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             }
             this.title = _data["title"];
             this.stepText = _data["stepText"];
+            this.isNCRTask = _data["isNCRTask"];
         }
     }
 
@@ -16350,6 +16352,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
         }
         data["title"] = this.title;
         data["stepText"] = this.stepText;
+        data["isNCRTask"] = this.isNCRTask;
         return data; 
     }
 }
@@ -16377,6 +16380,7 @@ export interface IWorkOrderTaskModel {
     referenceFiles?: FileModel[] | undefined;
     title?: string | undefined;
     stepText?: string | undefined;
+    isNCRTask?: boolean | undefined;
 }
 
 export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOrderTaskMonitorModel {

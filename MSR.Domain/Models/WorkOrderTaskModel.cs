@@ -33,5 +33,6 @@ namespace MSR.Domain.Models
         public List<FileModel> ReferenceFiles { get; set; }
         public string Title { get; set; }
         public string StepText { get; set; }
+        public bool? IsNCRTask { get; set; }
     }
 }

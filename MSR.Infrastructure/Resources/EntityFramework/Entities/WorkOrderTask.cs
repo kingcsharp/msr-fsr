@@ -49,5 +49,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public ICollection<FileEntityMap> ReferenceFiles { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+
+        public bool? IsNCRTask { get; set; }
     }
 }
