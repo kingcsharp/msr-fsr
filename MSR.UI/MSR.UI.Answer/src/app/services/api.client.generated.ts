@@ -12517,6 +12517,7 @@ export class PartModel extends TrackableModel implements IPartModel {
     maximumCycles?: number | undefined;
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     files?: FileModel[] | undefined;
     isActive?: boolean | undefined;
@@ -12537,6 +12538,7 @@ export class PartModel extends TrackableModel implements IPartModel {
             this.maximumCycles = _data["maximumCycles"];
             this.createdByName = _data["createdByName"];
             this.lastUpdatedByName = _data["lastUpdatedByName"];
+            this.segregationType = _data["segregationType"];
             if (Array.isArray(_data["createSubParts"])) {
                 this.createSubParts = [] as any;
                 for (let item of _data["createSubParts"])
@@ -12569,6 +12571,7 @@ export class PartModel extends TrackableModel implements IPartModel {
         data["maximumCycles"] = this.maximumCycles;
         data["createdByName"] = this.createdByName;
         data["lastUpdatedByName"] = this.lastUpdatedByName;
+        data["segregationType"] = this.segregationType;
         if (Array.isArray(this.createSubParts)) {
             data["createSubParts"] = [];
             for (let item of this.createSubParts)
@@ -12595,9 +12598,16 @@ export interface IPartModel extends ITrackableModel {
     maximumCycles?: number | undefined;
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     files?: FileModel[] | undefined;
     isActive?: boolean | undefined;
+}
+
+export enum EnumSegregationType {
+    CU = 1,
+    NONCU = 2,
+    DESEG = 3,
 }
 
 export class SubPartModel implements ISubPartModel {
@@ -12690,6 +12700,7 @@ export class CreatePartRequest implements ICreatePartRequest {
     nickName?: string | undefined;
     isActive?: boolean;
     maximumCycles?: number | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
     files?: FileRequest[] | undefined;
@@ -12711,6 +12722,7 @@ export class CreatePartRequest implements ICreatePartRequest {
             this.nickName = _data["nickName"];
             this.isActive = _data["isActive"];
             this.maximumCycles = _data["maximumCycles"];
+            this.segregationType = _data["segregationType"];
             if (Array.isArray(_data["createSubParts"])) {
                 this.createSubParts = [] as any;
                 for (let item of _data["createSubParts"])
@@ -12740,6 +12752,7 @@ export class CreatePartRequest implements ICreatePartRequest {
         data["nickName"] = this.nickName;
         data["isActive"] = this.isActive;
         data["maximumCycles"] = this.maximumCycles;
+        data["segregationType"] = this.segregationType;
         if (Array.isArray(this.createSubParts)) {
             data["createSubParts"] = [];
             for (let item of this.createSubParts)
@@ -12762,6 +12775,7 @@ export interface ICreatePartRequest {
     nickName?: string | undefined;
     isActive?: boolean;
     maximumCycles?: number | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
     files?: FileRequest[] | undefined;
@@ -16172,6 +16186,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     parentId?: number | undefined;
     serialNumber?: string | undefined;
     qty?: number | undefined;
+    segregationType?: EnumSegregationType | undefined;
     part?: PartModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
@@ -16195,6 +16210,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             this.parentId = _data["parentId"];
             this.serialNumber = _data["serialNumber"];
             this.qty = _data["qty"];
+            this.segregationType = _data["segregationType"];
             this.part = _data["part"] ? PartModel.fromJS(_data["part"]) : <any>undefined;
             this.workOrder = _data["workOrder"] ? WorkOrderModel.fromJS(_data["workOrder"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
@@ -16222,6 +16238,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         data["parentId"] = this.parentId;
         data["serialNumber"] = this.serialNumber;
         data["qty"] = this.qty;
+        data["segregationType"] = this.segregationType;
         data["part"] = this.part ? this.part.toJSON() : <any>undefined;
         data["workOrder"] = this.workOrder ? this.workOrder.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
@@ -16242,6 +16259,7 @@ export interface IWorkOrderPartModel {
     parentId?: number | undefined;
     serialNumber?: string | undefined;
     qty?: number | undefined;
+    segregationType?: EnumSegregationType | undefined;
     part?: PartModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
@@ -20339,12 +20357,10 @@ export interface IAuditActionResultOfWorkOrderPartModel extends IAuditActionResu
     object?: WorkOrderPartModel | undefined;
 }
 
-/**  */
 export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
-    /** Work Order Part ID */
     workOrderPartId?: number;
-    /** Gets or Sets SerialNumber */
     serialNumber?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 
     constructor(data?: IUpdateWorkOrderPartRequest) {
         if (data) {
@@ -20359,6 +20375,7 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
         if (_data) {
             this.workOrderPartId = _data["workOrderPartId"];
             this.serialNumber = _data["serialNumber"];
+            this.segregationType = _data["segregationType"];
         }
     }
 
@@ -20373,16 +20390,15 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
         data = typeof data === 'object' ? data : {};
         data["workOrderPartId"] = this.workOrderPartId;
         data["serialNumber"] = this.serialNumber;
+        data["segregationType"] = this.segregationType;
         return data; 
     }
 }
 
-/**  */
 export interface IUpdateWorkOrderPartRequest {
-    /** Work Order Part ID */
     workOrderPartId?: number;
-    /** Gets or Sets SerialNumber */
     serialNumber?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 }
 
 /** Base class for an API call with a typed result */

@@ -26,6 +26,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(100)]
         public string NickName { get; set; }
         public int? MaximumCycles { get; set; }
+        [StringLength(10)]
+        public string SegregationType { get; set; }
         public virtual ICollection<PartSubPartMap> Subparts { get; set; }
         public virtual ICollection<WorkOrderPart> WorkOrderParts { get; set; }
     }
