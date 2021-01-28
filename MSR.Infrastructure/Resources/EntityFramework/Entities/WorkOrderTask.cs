@@ -14,7 +14,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int WorkOrderId { get; set; }
 
-        public int ProcedureStepId { get; set; }
+        public int? ProcedureStepId { get; set; }
 
         public int ProcedureStepTypeId { get; set; }
 

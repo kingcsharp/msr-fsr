@@ -5,7 +5,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     [Table(nameof(WorkOrderTaskMonitor))]
     public partial class WorkOrderTaskMonitor: TrackableEntity
     {
-        public int ProcedureMonitorId { get; set; }
+        public int? ProcedureMonitorId { get; set; }
 
         [ForeignKey("ProcedureMonitorId")]
         public virtual ProcedureStepMonitor ProcedureStepMonitor { get; set; }
