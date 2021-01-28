@@ -39,7 +39,8 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
         public async Task<ICollection<Domain.Models.PurchaseModel>> GetPurchasesAsync(GetPurchases command)
         {
             List<Purchase> purchases = null;
-            if (command.Id.HasValue) {
+            if (command.Id.HasValue)
+            {
                 purchases = await _unitOfWork.Purchases.Query()
                     .Where(x => x.Id == command.Id.Value)
                     .Include(x => x.Status)
@@ -49,10 +50,13 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                     .Include(x => x.PurchaseOrderProduct)
                     .ThenInclude(s => s.Product)
                     .ToListAsync();
-                if (purchases.Count == 0) {
+                if (purchases.Count == 0)
+                {
                     throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
                 }
-            } else {
+            }
+            else
+            {
                 purchases = await _unitOfWork.Purchases.Query()
                     .Include(x => x.Status)
                     .Include(x => x.Location)
@@ -69,11 +73,13 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
         {
             Domain.Models.PurchaseModel ret;
 
-            if (command.StatusId == 0) {
+            if (command.StatusId == 0)
+            {
                 throw new DomainException("Invalid Status of 0", DomainError.BadRequest);
             }
 
-            if (CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate)) {
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
+            {
                 var purchase = _mapper.Map<Purchase>(command);
                 var created = _unitOfWork.Purchases.Add(purchase);
 

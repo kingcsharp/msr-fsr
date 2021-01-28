@@ -44,48 +44,49 @@ namespace MSR.Infrastructure.Extensions
         {
             var dbConfig = config.GetSection(nameof(DatabaseInformation)).Get<DatabaseInformation>();
 
-            services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseSqlServer(dbConfig.ConnectionString));
+            services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseSqlServer(dbConfig.ConnectionString), contextLifetime:ServiceLifetime.Transient,optionsLifetime:ServiceLifetime.Transient);
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<ILocationService, LocationService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IMenuService, MenuService>();
-            services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IPartService, PartService>();
-            services.AddScoped<IProcedureService, ProcedureService>();
-            services.AddScoped<IProcedureStepMonitorService, ProcedureStepMonitorService>();
-            services.AddScoped<IProcedureStepTemplateService, ProcedureStepTemplateService>();
-            services.AddScoped<IProcedureTypeService, ProcedureTypeService>();
-            services.AddScoped<IWorkOrderService, WorkOrderService>();
-            services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IWorkflowStageService, WorkflowStageService>();
-            services.AddScoped<IWorkflowApprovalService, WorkflowApprovalService>();
-            services.AddScoped<IWorkflowGroupService, WorkflowGroupService>();
-            services.AddScoped<IWorkflowService, WorkflowService>();
-            services.AddScoped<ICustomerService, CustomerService>();
-            services.AddScoped<ILocationService, LocationService>();
-            services.AddScoped<IHelpService, HelpService>();
-            services.AddScoped<IInvoiceService, InvoiceService>();
-            services.AddScoped<IQuickbooksService, QuickbooksService>();
-            services.AddSingleton<IFileHandlerFactory, FileHandlerFactory>();
-            services.AddScoped<IFileService, FileService>();
-            services.AddScoped<ISensorService, SensorService>();
-            services.AddScoped<IImportValidatorFactory, ImportValidatorFactory>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<ILocationService, LocationService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IMenuService, MenuService>();
+            services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<IPartService, PartService>();
+            services.AddTransient<IProcedureService, ProcedureService>();
+            services.AddTransient<IProcedureStepMonitorService, ProcedureStepMonitorService>();
+            services.AddTransient<IProcedureStepTemplateService, ProcedureStepTemplateService>();
+            services.AddTransient<IProcedureTypeService, ProcedureTypeService>();
+            services.AddTransient<IWorkOrderService, WorkOrderService>();
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IWorkflowStageService, WorkflowStageService>();
+            services.AddTransient<IWorkflowApprovalService, WorkflowApprovalService>();
+            services.AddTransient<IWorkflowGroupService, WorkflowGroupService>();
+            services.AddTransient<IWorkflowService, WorkflowService>();
+            services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<ILocationService, LocationService>();
+            services.AddTransient<IHelpService, HelpService>();
+            services.AddTransient<IInvoiceService, InvoiceService>();
+            services.AddTransient<IQuickbooksService, QuickbooksService>();
+            services.AddTransient<IFileService, FileService>();
+            services.AddTransient<ISensorService, SensorService>();
+            services.AddTransient<IPurchaseService, PurchaseService>();
+            services.AddTransient<IPurchaseOrderService, PurchaseOrderService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IQuoteService, QuoteService>();
+            services.AddTransient<ITimezoneService, TimezoneService>();
+            services.AddTransient<IAuthenticationHelper, AuthenticationHelper>();
+            services.AddTransient<IAdminCostSettingsService, AdminCostSettingsService>();
+            services.AddTransient<IReportService, ReportService>();
+            services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<IEquipmentMaintenanceService, EquipmentMaintenanceService>();
+            services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<S3FileHandler>();
-            services.AddScoped<IPurchaseService, PurchaseService>();
-            services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IQuoteService, QuoteService>();
-            services.AddScoped<ITimezoneService, TimezoneService>();
-            services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
-            services.AddScoped<IAdminCostSettingsService, AdminCostSettingsService>();
-            services.AddScoped<IReportService, ReportService>();
-            services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<IEquipmentMaintenanceService, EquipmentMaintenanceService>();
-            services.AddScoped<IDocumentService, DocumentService>();
-
             services.AddTransient<IMessageHubClient, MessageHubService>();
+
+            services.AddSingleton<IFileHandlerFactory, FileHandlerFactory>();
+            services.AddSingleton<IImportValidatorFactory, ImportValidatorFactory>();
+
 
             return services;
         }

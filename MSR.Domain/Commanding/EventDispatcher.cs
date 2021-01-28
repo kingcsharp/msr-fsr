@@ -15,17 +15,12 @@ namespace MSR.Domain.Commanding
 
         public async override Task Dispatch(IEvent @event)
         {
-            try
-            {
-                using var scope = _provider.CreateScope();
-                var handler = scope.ServiceProvider.GetService<IEventHandler<T>>();
+            //We are no longer going to catch errors here so that it bubbles up to the caller.  This wil make sure that messages that mess up will go to the DL queue
 
-                await handler.HandleAsync((T)@event, new CancellationToken());
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-            }
+            using var scope = _provider.CreateScope();
+            var handler = scope.ServiceProvider.GetService<IEventHandler<T>>();
+
+            await handler.HandleAsync((T)@event, new CancellationToken());
         }
     }
 

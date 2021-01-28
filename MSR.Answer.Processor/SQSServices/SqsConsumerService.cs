@@ -30,6 +30,7 @@ namespace MSR.Answer.Processor.SQSServices
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventHandlers _eventHandlers;
         private string _queueURL;
+        private string _dlQueueURL;
 
         private CancellationTokenSource _tokenSource;
 
@@ -55,6 +56,7 @@ namespace MSR.Answer.Processor.SQSServices
                 {
                     _tokenSource = new CancellationTokenSource();
                     _queueURL = _sQSInformation.QueueURL;
+                    _dlQueueURL = _sQSInformation.DLQueueURL;
                     _logger.LogInformation("Starting to Consume");
                     // This must be await-ed and processed in order, because
                     // there is only one DbContext to use.
@@ -63,8 +65,6 @@ namespace MSR.Answer.Processor.SQSServices
                 catch(Exception ex)
                 {
                     _logger.LogError(ex, ex.Message);
-
-                    throw;
                 }
             }
         }
@@ -99,18 +99,19 @@ namespace MSR.Answer.Processor.SQSServices
                             MessageAttributeNames = new List<string> { "All" }
                         });
 
-                        _logger.LogInformation($"Number of messages Recevied: {response.Messages.Count}");
                         if (response.HttpStatusCode != HttpStatusCode.OK)
                         {
                             throw new AmazonSQSException($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName}. Response: {response.HttpStatusCode}");
                         }
-
-                        // Need to use foreach keyword here to ensure that
-                        // processing stops and the entire SQS item completes before
-                        // moving on to the next one.
-                        foreach (Message x in response.Messages) {
-                            await ProcessMessageAsync(x);
+                        if (!response.Messages.Any())
+                        {
+                            //Short circuit it if there are no messages.  
+                            continue;
                         }
+
+                        _logger.LogInformation($"Number of messages Recevied: {response.Messages.Count}");
+                        
+                        Parallel.ForEach(response.Messages, async (x) => await ProcessMessageAsync(x));
                     }
                     catch (TaskCanceledException)
                     {
@@ -162,6 +163,11 @@ namespace MSR.Answer.Processor.SQSServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Cannot process message [id: {message.MessageId}, receiptHandle: {message.ReceiptHandle}, body: {message.Body}] from queue");
+                await _sqsClient.SendMessageAsync(new SendMessageRequest(_dlQueueURL, message.Body)
+                {
+                    MessageGroupId = Guid.NewGuid().ToString(),
+                    MessageDeduplicationId = Guid.NewGuid().ToString()
+                });
                 await _sqsClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle);
             }
         }
