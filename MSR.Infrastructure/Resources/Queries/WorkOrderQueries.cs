@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MSR.Domain.Helpers;
 using MSR.Domain.DTOs;
 using System.Collections.Concurrent;
+using System.Text;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -31,7 +32,7 @@ namespace MSR.Infrastructure.Resources.Queries
             var workOrderHistoryBag = new ConcurrentBag<WorkOrderHistoryViewDTO>(workOrderHistoryViewDTOs);
             var taskList = new List<Task>();
 
-            Parallel.ForEach(workOrderHistoryViewDTOs, workOrderHistoryViewDTO => 
+            Parallel.ForEach(workOrderHistoryViewDTOs, workOrderHistoryViewDTO =>
             {
                 var status = GetWorkOrderStatusFromTasks(workOrderHistoryViewDTO.WorkOrderTasks);
 
@@ -63,8 +64,8 @@ namespace MSR.Infrastructure.Resources.Queries
                         ActualStartDate = workOrderHistoryViewDTO.ActualStartDate,
                         ActualEndDate = workOrderHistoryViewDTO.ActualEndDate,
                         ProductName = workOrderHistoryViewDTO.ProductName,
-                        HasNcr = workOrderHistoryViewDTO.HasNcr,
-                    });;
+                        HasNcr = workOrderHistoryViewDTO.HasNcr
+                    });
                 }
             });
 
@@ -115,7 +116,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
         private static string GetWorkOrderDisposition(WorkOrderHistoryViewDTO workOrderModel)
         {
-            string dispositionMessage = string.Empty;
+            StringBuilder dispositionMessage = new StringBuilder();
 
             if (workOrderModel.HasNcr)
             {
@@ -123,27 +124,24 @@ namespace MSR.Infrastructure.Resources.Queries
                     x.ProcedureStepTypeId == Constants.PROCEDURESTEPTYPENC).ToList();
                 if (workOrderTaskModels.Any())
                 {
-                    foreach (var workOrderTaskModel in workOrderTaskModels)
-                    {
-                        dispositionMessage +=
-                            String.Join(
-                                " | ",
-                                workOrderTaskModel.WorkOrderTaskMonitors
-                            ) + " | ";
-                    }
+                    dispositionMessage.Append(string.Join(
+                        " | ",
+                        workOrderTaskModels.SelectMany(x => x.WorkOrderTaskMonitors)))
+                        .Append(" | ");
                 }
             }
 
             if (workOrderModel.WorkOrderMessages != null &&
                 workOrderModel.WorkOrderMessages.Count > 0)
             {
-                dispositionMessage += String.Join(string.Empty,
-                    workOrderModel.WorkOrderMessages.Select(x =>
-                        x.Message == null ? "" : x.Message + " | "
-                    ).ToList()
-                );
+                dispositionMessage.Append(
+                    string.Join(
+                        " | ",
+                        workOrderModel.WorkOrderMessages.Select(x =>
+                            x.Message == null ? "" : x.Message)
+                    ));
             }
-            return dispositionMessage.Trim().Trim('|').Trim();
+            return dispositionMessage.ToString().Trim().Trim('|').Trim();
         }
     }
 }
