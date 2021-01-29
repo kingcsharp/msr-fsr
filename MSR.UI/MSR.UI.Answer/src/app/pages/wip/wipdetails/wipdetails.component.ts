@@ -321,12 +321,12 @@ export class WipdetailsComponent implements OnInit {
 
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
 
-    if (this.canUserAccessWorkOrderTask(workOrderTask)) {
+    if (this.canUserAccessWorkOrderTask(workOrderTask) || workOrderTask.procedureStep === undefined) {
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
       this.hasAccessToTaskBeingViewed = true;
       this.rolesRequiredMessage = undefined;
-    } else {
+    } else if(!this.canUserAccessWorkOrderTask(workOrderTask) && workOrderTask.procedureStep !== undefined) {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
       this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
       this.hasAccessToTaskBeingViewed = false;
