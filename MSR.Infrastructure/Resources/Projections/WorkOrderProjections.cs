@@ -62,7 +62,8 @@ namespace MSR.Infrastructure.Resources.Projections
                 SerialNumber = j.SerialNumber,
                 Qty = j.Qty
             }).FirstOrDefault(),
-            HasNcr = i.HasNCR
+            HasNcr = i.HasNCR,
+            WorkOrderMessages = i.WorkOrderMessages
         };
 
         private static EnumStatusSteps GetWorkOrderStatusFromTasks(ICollection<WorkOrderTask> tasks)
