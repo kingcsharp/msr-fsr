@@ -25,6 +25,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(50)]
         public string SerialNumber { get; set; }
 
+        [StringLength(10)]
+        public string SegregationType { get; set; }
+
         public virtual Part Part { get; set; }
 
         public virtual WorkOrder WorkOrder { get; set; }

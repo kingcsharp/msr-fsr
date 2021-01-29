@@ -228,6 +228,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 .Reference(x => x.Purchase).Load();
             created.Context.Entry(workorder)
                 .Reference(x => x.Product).Load();
+            created.Context.Entry(workorder.Product)
+                .Reference(x => x.Procedure).Load();
             created.Context.Entry(workorder.Purchase)
                 .Reference(x => x.PurchaseOrder).Load();
             created.Context.Entry(workorder.Purchase.PurchaseOrder)
@@ -245,12 +247,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderStatus = TranslateWOStatusToViewModel(workorder.WorkOrderTasks),
                 productName = workorder.Product?.Name,
                 partNumber = workorder.WorkOrderParts.First().Part.PartNumber,
-                procedureName = workorder.WorkOrderTasks.First().ProcedureStep?.Procedure?.Name,
+                procedureName = workorder.Product?.Procedure?.Name,
                 locationName = workorder.Location.Name,
+                customerName = workorder.Product?.Customer?.Name,
+                serialNumber = workorder.WorkOrderParts.First().SerialNumber,
             });
 
             return workOrderModel;
         }
+
         public async Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
@@ -386,13 +391,16 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             subPartQuantity = 1;
                         }
 
+                        var partSegregationTypeValue = partSubPartMapForSubPart.Part.SegregationType;
+
                         for ( ; subPartQuantity > 0; subPartQuantity -= 1)
                         {
                             subs.Add(new WorkOrderPartModel()
                             {
                                 PartId = partSubPartMapForSubPart.PartId,
                                 ParentId = partSubPartMapForSubPart.ParentPartId,
-                                Qty = partSubPartMapForSubPart.Qty
+                                Qty = partSubPartMapForSubPart.Qty,
+                                SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
                             });
                         }
                     }
@@ -579,6 +587,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             WorkOrderTask workOrderTaskEntity = _mapper.Map(command, current);
 
+            if (command.TaskRunningSince == null)
+            {
+                workOrderTaskEntity.TaskRunningSince = null;
+            }
+
             _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
 
             // attach files, if any
@@ -721,13 +734,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             return workOrderTaskMonitorModel;
         }
-        public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderHistory command)
-        {
-            return await GetWorkOrderGridSummaryImpl(true);
-        }
+
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command)
         {
-            return await GetWorkOrderGridSummaryImpl(false);
+            return await GetWorkOrderGridSummaryImpl();
         }
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command)
         {
@@ -1077,11 +1087,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return status;
         }
 
-        private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
+        private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl()
         {
             var getWorkOrderCommand = new GetWorkOrder()
             {
-                completedOnly = isHistory
+                completedOnly = false
             };
 
             ICollection<WorkOrderModel> workOrderModels = await GetWorkOrderAsync(getWorkOrderCommand);

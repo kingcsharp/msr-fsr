@@ -1,10 +1,8 @@
 using System.Collections.Generic;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Domain.Models
 {
-    /// <summary>
-    /// WorkOrderPartModel
-    /// </summary>
     public class WorkOrderPartModel
     {
         public int Id { get; set; }
@@ -14,6 +12,7 @@ namespace MSR.Domain.Models
         public int? ParentId { get; set; }
         public string SerialNumber { get; set; }
         public int? Qty { get; set; }
+        public EnumSegregationType? SegregationType { get; set; }
         public virtual PartModel Part { get; set; }
         public virtual WorkOrderModel WorkOrder { get; set; }
         public virtual ICollection<WorkOrderPartModel> Children { get; set; }

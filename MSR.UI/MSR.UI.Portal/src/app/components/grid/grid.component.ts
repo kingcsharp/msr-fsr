@@ -91,7 +91,7 @@ export class GridComponent implements OnInit {
       this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
-      this.reportCubeService.getReport(reportInfo).then((resp) => {
+      this.reportCubeService.getReport(reportInfo).then((resp:any) => {
         if (resp.chartOptions !== undefined) {
           this.hasChart = true;
           this.gridData = resp.resultData;

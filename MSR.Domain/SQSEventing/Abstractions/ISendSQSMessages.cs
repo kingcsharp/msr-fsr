@@ -5,6 +5,6 @@ namespace MSR.Domain.SQSEventing.Abstractions
 {
     public interface ISendSQSMessages
     {
-        public Task SendMessage(MessageEnvelope data);
+        public Task<string> SendMessage(MessageEnvelope data);
     }
 }

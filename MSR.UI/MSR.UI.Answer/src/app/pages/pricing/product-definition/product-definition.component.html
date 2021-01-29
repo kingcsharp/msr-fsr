@@ -6,11 +6,11 @@
       </h1>
     </div>
     <div *ngIf="quoteData" class="col-md-6 d-flex justify-content-end align-items-end">
-      <button *ngIf="quoteJson" class="pull-right btn btn-primary" tooltip="Generates a Quote Preview"
+      <button *ngIf="quoteJson" class="btn btn-primary" tooltip="Generates a Quote Preview"
         (click)="openQuoteViewModal()">
         <i class="fa fa-eye mr-2"></i>Preview Quote
       </button>
-      <button *ngIf="customerRequirementJson" class="pull-right btn btn-primary" tooltip="View Orginally Submitted Requirements from Customer"
+      <button *ngIf="customerRequirementJson" class="btn btn-primary ml-2" tooltip="View Orginally Submitted Requirements from Customer"
         (click)="openRequirementViewModal()">
         <i class="fa fa-eye mr-2"></i>Preview Requirements
       </button>
@@ -568,7 +568,7 @@
             </td>
             <th class="text-right">Contact:</th>
             <td>
-              {{quoteData.contact}}
+              {{quoteData.contact || quoteJson.contact}}
             </td>
             <th class="text-right">Delivery</th>
             <td>
@@ -580,7 +580,7 @@
             <td></td>
             <th class="text-right">Title:</th>
             <td>
-              {{quoteData.title}}
+              {{quoteData.title || quoteJson.title}}
             </td>
             <th class="text-right"></th>
             <td></td>
@@ -590,7 +590,7 @@
             <td></td>
             <th class="text-right">Phone:</th>
             <td>
-              {{quoteData.phone}}
+              {{quoteData.phone || quoteJson.phone}}
             </td>
             <th class="text-right"></th>
             <td></td>
@@ -702,10 +702,10 @@
           <tr>
             <td colspan="5" width="60%"></td>
             <td width="20%" style="border-bottom: 1px solid #000 !important;">
-              {{quoteData.representative}}
+              {{quoteData.representative || quoteJson.representative }}
             </td>
             <td width="30%" style="border-bottom: 1px solid #000 !important;">
-              {{quoteData.representativeTitle}}
+              {{quoteData.representativeTitle || quoteJson.representativeTitle}}
             </td>
           </tr>
           <tr>
@@ -716,7 +716,7 @@
           <tr>
             <td colspan="5" width="60%"></td>
             <td colspan="2" width="40%" style="border-bottom: 1px solid #000 !important;">
-              {{quoteData.representativeAddress}}
+              {{quoteData.representativeAddress || quoteJson.representativeAddress}}
             </td>
           </tr>
           <tr>

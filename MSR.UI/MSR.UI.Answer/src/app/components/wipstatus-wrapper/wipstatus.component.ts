@@ -113,12 +113,12 @@ export class WipstatusWrapperComponent implements OnInit {
   }
 
   workOrderStatusUpdate(data): void {
-    let workOrderSummary : WorkOrderSummary = undefined;
-    for (let productIndex : number = 0;
+    let workOrderSummary: WorkOrderSummary;
+    for (let productIndex: number = 0;
          productIndex < this.workOrderStatuses.length;
          productIndex += 1) {
       let product = this.workOrderStatuses[productIndex];
-      for (let summaryIndex : number = 0;
+      for (let summaryIndex: number = 0;
            summaryIndex < product.workOrderSummaries.length;
            summaryIndex += 1) {
         if (product.workOrderSummaries[summaryIndex].workOrderId !==
@@ -137,6 +137,11 @@ export class WipstatusWrapperComponent implements OnInit {
         break;
       }
 
+      // product has no more work orders, remove it
+      if (product.workOrderSummaries.length === 0) {
+        this.workOrderStatuses.splice(productIndex, 1);
+      }
+
       if (workOrderSummary) {
         break;
       }
@@ -146,10 +151,15 @@ export class WipstatusWrapperComponent implements OnInit {
         // work order created
         data.workOrderSummary = {
             workOrderId: data.workOrderId,
-            workOrderStatus: data.workOrderStatus
+            workOrderStatus: data.workOrderStatus,
+            workOrderItemNumber: data.customerName.toUpperCase() + '-' + data.workOrderId,
+            workOrderPartSerialNumber: data.serialNumber,
+            procedureName: data.procedureName
         };
         this.displayWorkOrderByProduct(this.workOrderStatuses, data);
     }
+    // refresh table
+    this.locationsSelectedUpdated()
   }
 
   openTakeOverAsUserConfirmationDialog(workOrderId: number, assignedToFullName: string) {

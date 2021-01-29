@@ -115,9 +115,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         );
                     }
                 }
-                foreach (var commandReferenceFileId in command.ReferenceFileIds)
+                if (command.ReferenceFileIds?.Count > 0)
                 {
-                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Procedure), procedureEntity.Id, commandReferenceFileId);
+                    foreach (var commandReferenceFileId in command.ReferenceFileIds)
+                    {
+                        await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Procedure), procedureEntity.Id, commandReferenceFileId);
+                    }
                 }
                 fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), procedureEntity.Id));
 
@@ -139,6 +142,59 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             return procedureModel;
         }
+
+        public async Task<Domain.Models.Procedure> CopyProcedureAsync(CopyProcedure command)
+        {
+            if (!CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
+            {
+                throw new DomainException($"Permission denied to create procedures", DomainError.BadRequest);
+            }
+
+            EntityFramework.Entities.Procedure procedure = await _unitOfWork.Procedures
+                .Query()
+                .Where(i => i.Id == command.SourceProcedureId)
+                .Include(x => x.ProcedureSteps)
+                .Include(x => x.ReferenceFiles)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            if (procedure is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Procedure)} not found with ID: {command.SourceProcedureId}", DomainError.NotFound);
+            }
+
+            var newProcedure = new EntityFramework.Entities.Procedure();
+            _mapper.Map(procedure, newProcedure);
+            newProcedure.Id = 0;
+            newProcedure.Name = procedure.Name + " - Copy";
+            newProcedure.Revision = 1;
+
+            foreach (var newStep in newProcedure.ProcedureSteps)
+            {
+                newStep.Id = 0;
+                newStep.ProcedureId = 0;
+            }
+            newProcedure.ReferenceFiles = new List<FileEntityMap>();
+            foreach (var file in procedure.ReferenceFiles)
+            {
+                if (!file.EntityTableName.Equals(nameof(EntityFramework.Entities.Procedure)))
+                {
+                    continue;
+                }
+                var newFile = _mapper.Map<FileEntityMap>(file);
+                newFile.Id = 0;
+                newFile.EntityId = 0;
+                newProcedure.ReferenceFiles.Add(newFile);
+            }
+
+            // user has approval permission, create the record
+            _unitOfWork.Procedures.Add(newProcedure);
+
+            await _unitOfWork.LogApprovalTransaction(newProcedure, newProcedure.Id);
+
+            return _mapper.Map<Domain.Models.Procedure>(newProcedure);
+        }
+
         public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command)
         {
             var current = await _unitOfWork.Procedures
@@ -170,8 +226,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // Update Reference Files mapping
                 var currentFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), command.Id);
                 var currentFileIds = currentFiles.Select(i => i.FileId).ToList();
-                var fileIdsToAdd = command.ReferenceFileIds.Where(i => !currentFileIds.Contains(i)).ToList();
-                var fileIdsToRemove = currentFileIds.Where(i => !command.ReferenceFileIds.Contains(i.Value)).ToList();
+                var fileIdsToAdd = command.ReferenceFileIds == null ? new List<int>() : command.ReferenceFileIds.Where(i => !currentFileIds.Contains(i)).ToList();
+                var fileIdsToRemove = currentFileIds.Where(i => command.ReferenceFileIds == null ? false : command.ReferenceFileIds.Contains(i.Value)).ToList();
 
                 var fileReferences = new List<FileModel>();
 
@@ -187,11 +243,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), command.Id));
 
-                 foreach (var file in command.ReferenceFiles)
+                if (command.ReferenceFiles != null)
                 {
-                    var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Procedure), procedureModel.Id, file);
+                    foreach (var file in command.ReferenceFiles)
+                    {
+                        var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Procedure), procedureModel.Id, file);
 
-                    fileReferences.Add(fileModel);
+                        fileReferences.Add(fileModel);
+                    }
                 }
 
                 procedureModel.ReferenceFiles = fileReferences;
@@ -278,9 +337,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         );
                     }
                 }
-                foreach (var commandReferenceFileId in command.ReferenceFileIds)
+                if (command.ReferenceFileIds?.Count > 0)
                 {
-                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.ProcedureStep), procedureStepEntity.Id, commandReferenceFileId);
+                    foreach (var commandReferenceFileId in command.ReferenceFileIds)
+                    {
+                        await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.ProcedureStep), procedureStepEntity.Id, commandReferenceFileId);
+                    }
                 }
                 fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStepEntity.Id));
 
@@ -350,10 +412,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     idsOfFilesToBeMappedAndSaved.Add(newFile.FileId.Value);
                 }
             }
-
-            foreach (var commandReferenceFileId in command.ReferenceFileIds)
+            if (command.ReferenceFileIds?.Count > 0)
             {
-                idsOfFilesToBeMappedAndSaved.Add(commandReferenceFileId);
+                foreach (var commandReferenceFileId in command.ReferenceFileIds)
+                {
+                    idsOfFilesToBeMappedAndSaved.Add(commandReferenceFileId);
+                }
             }
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
@@ -610,11 +674,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     foreach (var step in steps)
                     {
                         step.procedureId = createdProcedure.Id;
-                        ProcedureStepModel newStep =
-                            await CreateProcedureStepAsync(step);
-                        // TODO: there's no place in the procedure model to store
-                        // the new procedure step ids.
+                        var procedureStepEntity = _mapper.Map<ProcedureStep>(step);
+                        _unitOfWork.ProcedureSteps.Add(procedureStepEntity);
                     }
+                    await _unitOfWork.SaveChangesAsync();
                 }
 
                 createdProcs.Add(createdProcedure);
