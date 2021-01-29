@@ -463,18 +463,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
             {
 
-                try
-                {
-                    await DeleteProcedureStepMonitorsAsync(procedureStepEntity.Id);
-                    await DeleteProcedureStepsAsync(procedureStepEntity.Id);
-                    //                    _unitOfWork.ProcedureSteps.Delete(false, procedureStepEntity);
-                    //                    await _unitOfWork.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e.Message);
-                }
-
+                await DeleteProcedureStepMonitorsAsync(procedureStepEntity.Id);
+                await DeleteProcedureStepsAsync(procedureStepEntity.Id);
+                await _unitOfWork.SaveChangesAsync();
 
             }
             else
@@ -873,9 +864,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 workOrderTaskMonitorEntity.ProcedureMonitorId = null;
             });
 
-            await _unitOfWork.SaveChangesAsync();
-
-
             var procedureStepMonitorEntities = await _unitOfWork.ProcedureStepMonitors.Query()
                 .Where(s => s.ProcedureStepId == procedureStepId).ToListAsync();
 
@@ -884,14 +872,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 procedureStepMonitorEntity.ProcedureStepId = null;
             });
 
-            await _unitOfWork.SaveChangesAsync();
-
             procedureStepMonitorEntities.ForEach( procedureStepMonitorEntity =>
             {
                 _unitOfWork.ProcedureStepMonitors.Delete(false, procedureStepMonitorEntity);
             });
 
-            await _unitOfWork.SaveChangesAsync();
         }
 
         private async Task DeleteProcedureStepsAsync(int procedureStepId)
@@ -904,13 +889,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 workOrderTaskEntity.ProcedureStepId = null;
             });
 
-            await _unitOfWork.SaveChangesAsync();
-
             var procedureStepEntity = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, s => s.Id == procedureStepId);
 
             procedureStepEntity.ProcedureId = null;
-
-            await _unitOfWork.SaveChangesAsync();
 
             var productStepEntities = await _unitOfWork.ProductSteps.Query()
                 .Where(s => s.ProcedureStepId == procedureStepId).ToListAsync();
@@ -920,11 +901,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 productStepEntity.ProcedureStepId = null;
             });
 
-            await _unitOfWork.SaveChangesAsync();
-
             _unitOfWork.ProcedureSteps.Delete(false, procedureStepEntity);
 
-            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
