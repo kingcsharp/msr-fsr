@@ -84,7 +84,7 @@
           </p-tabView>
         </div>
       </div>
-      <div class="row mb-3 v-25 wipstep-selector" *ngIf="workOrderModel.workOrderTasks !== undefined && showCarousel">
+      <div class="row mb-3 v-25 wipstep-selector" *ngIf="workOrderModel.workOrderTasks !== undefined && showCarousel && workOrderTaskToView !== undefined">
           <carousel id="step-carousel" #stepCarousel class="col-12 align-items-center" style="margin-left:25px"
             [itemsPerSlide]="itemsPerASlide" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="false"
             [interval]="false" [startFromIndex]="startSlideIndex" [(activeSlide)]="activeSlideIndex"

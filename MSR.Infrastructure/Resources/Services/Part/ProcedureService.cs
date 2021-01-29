@@ -912,6 +912,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             await _unitOfWork.SaveChangesAsync();
 
+            var productStepEntities = await _unitOfWork.ProductSteps.Query()
+                .Where(s => s.ProcedureStepId == procedureStepId).ToListAsync();
+
+            productStepEntities.ForEach(productStepEntity =>
+            {
+                productStepEntity.ProcedureStepId = null;
+            });
+
+            await _unitOfWork.SaveChangesAsync();
+
             _unitOfWork.ProcedureSteps.Delete(false, procedureStepEntity);
 
             await _unitOfWork.SaveChangesAsync();
