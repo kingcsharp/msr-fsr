@@ -25,11 +25,6 @@ namespace MSR.Domain.Models
         public virtual WorkOrderModel WorkOrder { get; set; }
         public virtual ICollection<WorkOrderTaskMonitorModel> WorkOrderTaskMonitors { get; set; }
         public virtual DateTime? LastUpdatedOn { get; set; }
-        /// <summary>
-        /// This needs to be added
-        /// </summary>
-        /// <value>This needs to be added</value>
-        [DataMember(Name = "referenceFiles")]
         public List<FileModel> ReferenceFiles { get; set; }
         public string Title { get; set; }
         public string StepText { get; set; }

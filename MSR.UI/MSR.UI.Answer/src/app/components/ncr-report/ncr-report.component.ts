@@ -37,7 +37,7 @@ export class NcrReportComponent implements OnInit {
   generateMonitorSummaries() {
     this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
       if ((workOrderTask.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR) 
-      || (workOrderTask.isNCRTask === true)) {
+      || workOrderTask.isNCRTask) {
         let taskSummary = {
           taskName: workOrderTask.procedureStepId === null ? workOrderTask.title :workOrderTask.procedureStep.title,
           taskId: workOrderTask.id,

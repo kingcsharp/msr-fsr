@@ -870,10 +870,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
             procedureStepMonitorEntities.ForEach(procedureStepMonitorEntity =>
             {
                 procedureStepMonitorEntity.ProcedureStepId = null;
-            });
-
-            procedureStepMonitorEntities.ForEach( procedureStepMonitorEntity =>
-            {
                 _unitOfWork.ProcedureStepMonitors.Delete(false, procedureStepMonitorEntity);
             });
 

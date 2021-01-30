@@ -41,17 +41,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Extensions
                 ProcessedOn = DateTimeOffset.UtcNow
             };
 
-            try
-            {
-                await unitOfWork.ApprovalTransactionLogs.AddAsync(log);
-                await unitOfWork.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-                return false;
-            }
+
+            await unitOfWork.ApprovalTransactionLogs.AddAsync(log);
+            await unitOfWork.SaveChangesAsync();
+            return true;
             
         }
 
