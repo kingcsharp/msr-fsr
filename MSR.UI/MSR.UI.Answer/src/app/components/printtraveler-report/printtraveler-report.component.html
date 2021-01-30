@@ -18,24 +18,27 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="row">
-                            <div class="col-4 text-right">Customer:</div>
-                            <div class="col-8">{{WorkOrder.product?.customer?.name}}</div>
+                            <div class="col-5 text-right">Customer:</div>
+                            <div class="col-7">{{WorkOrder.product?.customer?.name}}</div>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-5 text-right">Product:</div>
+                            <div class="col-7">{{WorkOrder.product?.name}}</div>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-5 text-right">Procedure:</div>
+                            <div class="col-7">{{WorkOrder.product?.procedure?.name}}</div>
                         </div>
                         <div class="row">
-                            <div class="col-4 text-right">Product:</div>
-                            <div class="col-8">{{WorkOrder.product?.name}}</div>
+                            <div class="col-5 text-right">Work Order Id:</div>
+                            <div class="col-7">{{WorkOrder.id}}</div>
                         </div>
-                        <div class="row">
-                            <div class="col-4 text-right">Procedure:</div>
-                            <div class="col-8">{{WorkOrder.product?.procedure?.name}}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4 text-right">Work Order Id:</div>
-                            <div class="col-8">{{WorkOrder.id}}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4 text-right">Customer P/O Line:</div>
-                            <div class="col-8">{{WorkOrder.purchase?.customerLineNumber}}</div>
+                        <div class="row align-items-center">
+                            <div class="col-5 text-right">Reference Number:</div>
+                            <div class="col-7">
+                            {{WorkOrder.purchase?.purchaseOrder?.referencePO}} /
+                            {{WorkOrder.purchase?.customerLineNumber}}
+                            </div>
                         </div>
                     </div>
                     <div class="col-6">

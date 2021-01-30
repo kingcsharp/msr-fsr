@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MSR.Domain.Helpers;
 using MSR.Domain.DTOs;
 using System.Collections.Concurrent;
+using System.Text;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -31,7 +32,7 @@ namespace MSR.Infrastructure.Resources.Queries
             var workOrderHistoryBag = new ConcurrentBag<WorkOrderHistoryViewDTO>(workOrderHistoryViewDTOs);
             var taskList = new List<Task>();
 
-            Parallel.ForEach(workOrderHistoryViewDTOs, workOrderHistoryViewDTO => 
+            Parallel.ForEach(workOrderHistoryViewDTOs, workOrderHistoryViewDTO =>
             {
                 var status = GetWorkOrderStatusFromTasks(workOrderHistoryViewDTO.WorkOrderTasks);
 
@@ -45,8 +46,7 @@ namespace MSR.Infrastructure.Resources.Queries
                         PercentageOfExpectedDurationTimeLogged = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLogged,
                         PercentageOfExpectedDurationTimeLoggedNumerator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedNumerator,
                         PercentageOfExpectedDurationTimeLoggedDenominator = (double)CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedDenominator,
-                        Disposition = workOrderHistoryViewDTO.HasNcr ? GetWorkOrderDisposition(workOrderHistoryViewDTO.WorkOrderTasks.Where(j => j.ProcedureStepTypeId == Constants.PROCEDURESTEPTYPENC).SelectMany(k => k.WorkOrderTaskMonitors))
-                                                                                          : string.Empty,
+                        Disposition = GetWorkOrderDisposition(workOrderHistoryViewDTO),
                         ProcedureName = workOrderHistoryViewDTO.WorkOrderTasks != null && workOrderHistoryViewDTO.WorkOrderTasks.Any() ? workOrderHistoryViewDTO.WorkOrderTasks.First().ProcedureName : string.Empty,
                         CurrentActiveTaskName = GetCurrentActiveTaskName(workOrderHistoryViewDTO.WorkOrderTasks),
                         Quantity = workOrderHistoryViewDTO.WorkOrderPart?.Qty,
@@ -87,12 +87,6 @@ namespace MSR.Infrastructure.Resources.Queries
             return (completedDenominator, completedNumerator, pctComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration);
         }
 
-        private static string GetWorkOrderDisposition(IEnumerable<string> workOrderTaskMonitors)
-        {
-            var dispositionMessage = workOrderTaskMonitors.Any() ? string.Join(" ", workOrderTaskMonitors) : string.Empty;
-            return dispositionMessage;
-        }
-
         private static string GetCurrentActiveTaskName(ICollection<WorkOrderHistoryTaskDTO> workOrderTasks)
         {
             var workOrderTaskEntitiesInProgress = workOrderTasks.Where(x => x.StatusId == (int)EnumStatusSteps.InProgress).OrderBy(s => s.TaskStepOrder).ToList();
@@ -118,6 +112,36 @@ namespace MSR.Infrastructure.Resources.Queries
             }
 
             return EnumStatusSteps.WaitingtoStart;
+        }
+
+        private static string GetWorkOrderDisposition(WorkOrderHistoryViewDTO workOrderModel)
+        {
+            StringBuilder dispositionMessage = new StringBuilder();
+
+            if (workOrderModel.HasNcr)
+            {
+                var workOrderTaskModels = workOrderModel.WorkOrderTasks.Where(x =>
+                    x.ProcedureStepTypeId == Constants.PROCEDURESTEPTYPENC).ToList();
+                if (workOrderTaskModels.Any())
+                {
+                    dispositionMessage.Append(string.Join(
+                        " | ",
+                        workOrderTaskModels.SelectMany(x => x.WorkOrderTaskMonitors)))
+                        .Append(" | ");
+                }
+            }
+
+            if (workOrderModel.WorkOrderMessages != null &&
+                workOrderModel.WorkOrderMessages.Count > 0)
+            {
+                dispositionMessage.Append(
+                    string.Join(
+                        " | ",
+                        workOrderModel.WorkOrderMessages.Select(x =>
+                            x.Message == null ? "" : x.Message)
+                    ));
+            }
+            return dispositionMessage.ToString().Trim().Trim('|').Trim();
         }
     }
 }

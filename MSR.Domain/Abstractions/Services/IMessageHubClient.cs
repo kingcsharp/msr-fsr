@@ -1,12 +1,16 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Threading.Tasks;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Hub;
+using MSR.Domain.Models;
 
 namespace MSR.Domain.Abstractions.Services
 {
     public interface IMessageHubClient
     {
-        public Task Connect(string url);
-        public void SendNotification(string userId, Toaster message);
+        public Task SendNotification(string userId, Toaster message);
+        public Task SendWorkOrderUpdate(WorkOrderStatusUpdate update);
+        public Task SendNotification(Guid guid, PendingNotificationItem message);
+        public void SendApprovalNotification(EnumApprovalTables approvalTable, int count = 1);
     }
 }

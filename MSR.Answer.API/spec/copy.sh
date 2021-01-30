@@ -7,7 +7,7 @@
 set -x
 
 rm -f ~/xfer/swagger.json
-curl https://localhost:44398/swagger/Answer3/swagger.json > ~/xfer/swagger.json
+curl -k https://localhost:44398/swagger/Answer3/swagger.json > ~/xfer/swagger.json
 
 cp ~/xfer/swagger.json swagger-work.json
 dos2unix swagger-work.json

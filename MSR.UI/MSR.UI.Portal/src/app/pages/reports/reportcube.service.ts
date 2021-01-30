@@ -10,6 +10,7 @@ import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { Globals } from '../../models/lib/globals';
 import { EnumChartType } from '../../../app/models/enums/ChartType';
 import { EnumChartStackType } from '../../../app/models/enums/EnumChartStackType';
+import cloneDeep from 'lodash.cloneDeep';
 
 @Injectable({
     providedIn: 'root'
@@ -33,6 +34,7 @@ export class ReportCubeService {
         }).toPromise().then(response => {
             return this.filterReportData(response, reportInfo);
         });
+
     }
 
     public getReportColumns(reportInfo: ReportModel) {
@@ -413,7 +415,7 @@ export class ReportCubeService {
 
     private groupChartDataFromGridRows(chartInfo: ChartInfo) {
         let chartData = {};
-        const gridData = chartInfo.gridData;
+        const gridData = cloneDeep(chartInfo.gridData);
         let length = chartInfo.gridData.length;
         while (length--) {
             const gridDataRow = gridData[length];

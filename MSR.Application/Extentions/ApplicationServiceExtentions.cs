@@ -34,7 +34,6 @@ namespace MSR.Application.Extentions
             services.AddTransient<WorkflowAppService>();
             services.AddTransient<EventServiceHandler>();
             services.AddTransient<TimezoneAppService>();
-            services.AddTransient<IMessageHubClient, MessageHubAppService>();
             services.AddTransient<ReportAppService>();
             services.AddTransient<SearchAppService>();
             services.AddTransient<IWorkOrderViewService, WorkOrderViewService>();

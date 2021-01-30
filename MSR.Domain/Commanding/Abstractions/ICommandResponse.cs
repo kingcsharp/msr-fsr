@@ -3,6 +3,7 @@
     public interface ICommandResponse
     {
         Error ResponseError { get; }
+        string DisplayString { get; }
     }
 
     public interface ICommandResponse<TResult> : ICommandResponse

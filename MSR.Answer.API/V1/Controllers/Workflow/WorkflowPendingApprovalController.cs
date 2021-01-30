@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Domain.Commanding.Abstractions;
@@ -9,9 +8,7 @@ using MSR.Answer.API.V1.Models;
 using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Filters;
-using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -20,15 +17,12 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     public class WorkflowPendingApprovalController : BaseApiController
     {
-        private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
+
         //PendingApprovals
-        public WorkflowPendingApprovalController(ILogger<WorkflowPendingApprovalController> logger, ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public WorkflowPendingApprovalController(ICommandDispatcher dispatcher)
         {
-            _logger = logger;
             _dispatcher = dispatcher;
-            _messageHub = messageHub;
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<PendingApprovalModel>>))]
@@ -58,8 +52,6 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
-
             return ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was approved successfully.");
         }
 
@@ -69,8 +61,6 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToDeleteApprovalCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
-
-            await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
 
             var result = ret.ToOkObjectResponse("Pending Approval was cancelled successfully.");
             return result;

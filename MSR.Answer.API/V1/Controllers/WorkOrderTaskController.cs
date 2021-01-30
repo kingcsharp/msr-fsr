@@ -55,7 +55,6 @@ namespace MSR.Answer.API.V1.Controllers
         ///
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpPatch]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskModel>))]

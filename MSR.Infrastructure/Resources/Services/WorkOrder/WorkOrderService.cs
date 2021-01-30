@@ -11,6 +11,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
+using MSR.Domain.Hub;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using MSR.Domain.Views;
@@ -31,9 +32,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         private readonly IEmailService _emailService;
         private readonly EmailInformation _emailInformation;
         private readonly GeneralInformation _generalInformation;
+        private readonly IMessageHubClient _messageHub;
 
         public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService,
-            EmailInformation emailInformation, GeneralInformation generalInformation)
+            EmailInformation emailInformation, GeneralInformation generalInformation, IMessageHubClient messageHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -41,9 +43,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _emailService = emailService;
             _emailInformation = emailInformation;
             _generalInformation = generalInformation;
+            _messageHub = messageHub;
         }
-
-
 
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
@@ -246,9 +247,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 .Collection(x => x.WorkOrderParts).Load();
             created.Context.Entry(workOrderEntity)
                 .Collection(x => x.WorkOrderTasks).Load();
-            created.Context.Entry(workOrderEntity)
+            created.Context.Entry(workorder)
+                .Reference(x => x.Location).Load();
+            created.Context.Entry(workorder)
                 .Reference(x => x.Purchase).Load();
-            created.Context.Entry(workOrderEntity.Purchase)
+            created.Context.Entry(workorder)
+                .Reference(x => x.Product).Load();
+            created.Context.Entry(workorder.Product)
+                .Reference(x => x.Procedure).Load();
+            created.Context.Entry(workorder.Purchase)
                 .Reference(x => x.PurchaseOrder).Load();
             created.Context.Entry(workOrderEntity.Purchase.PurchaseOrder)
                 .Reference(x => x.Customer).Load();
@@ -257,8 +264,23 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 _mapper.Map<WorkOrderModel>(workOrderEntity)
             );
 
+            // Build out minimal information so this can be
+            // displayed on the WO status screen without a reload.
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            {
+                workOrderId = workorder.Id,
+                workOrderStatus = TranslateWOStatusToViewModel(workorder.WorkOrderTasks),
+                productName = workorder.Product?.Name,
+                partNumber = workorder.WorkOrderParts.First().Part.PartNumber,
+                procedureName = workorder.Product?.Procedure?.Name,
+                locationName = workorder.Location.Name,
+                customerName = workorder.Product?.Customer?.Name,
+                serialNumber = workorder.WorkOrderParts.First().SerialNumber,
+            });
+
             return workOrderModel;
         }
+
         public async Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
@@ -284,14 +306,19 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             ret = _mapper.Map<WorkOrderModel>(workorder);
 
-            return ret;
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            {
+                workOrderId = workorder.Id,
+                workOrderStatus = TranslateWOStatusToViewModel(workorder.WorkOrderTasks)
+            });
 
+            return ret;
         }
         public async Task<bool> DeleteWorkOrderAsync(DeleteWorkOrder command)
         {
-            var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var workOrder = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if (current is null)
+            if (workOrder is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
@@ -303,10 +330,16 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            _unitOfWork.WorkOrders.Delete(false, current.Id);
+            _unitOfWork.WorkOrders.Delete(false, workOrder.Id);
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(current, current.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrder, workOrder.Id);
+
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            {
+                workOrderId = workOrder.Id,
+                workOrderStatus = TranslateWOStatusToViewModel(workOrder.WorkOrderTasks)
+            });
 
             return true;
         }
@@ -383,13 +416,16 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             subPartQuantity = 1;
                         }
 
+                        var partSegregationTypeValue = partSubPartMapForSubPart.Part.SegregationType;
+
                         for ( ; subPartQuantity > 0; subPartQuantity -= 1)
                         {
                             subs.Add(new WorkOrderPartModel()
                             {
                                 PartId = partSubPartMapForSubPart.PartId,
                                 ParentId = partSubPartMapForSubPart.ParentPartId,
-                                Qty = partSubPartMapForSubPart.Qty
+                                Qty = partSubPartMapForSubPart.Qty,
+                                SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
                             });
                         }
                     }
@@ -599,6 +635,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             WorkOrderTask workOrderTaskEntity = _mapper.Map(command, current);
 
+            if (command.TaskRunningSince == null)
+            {
+                workOrderTaskEntity.TaskRunningSince = null;
+            }
+
             _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
 
             // attach files, if any
@@ -690,8 +731,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
             }
 
+            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            {
+                workOrderId = workOrderEntity.Id,
+                workOrderStatus = TranslateWOStatusToViewModel(workOrderEntity.WorkOrderTasks)
+            });
+
             return workOrderTaskModel;
         }
+
         public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
@@ -734,13 +782,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             return workOrderTaskMonitorModel;
         }
-        public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderHistory command)
-        {
-            return await GetWorkOrderGridSummaryImpl(true);
-        }
+
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command)
         {
-            return await GetWorkOrderGridSummaryImpl(false);
+            return await GetWorkOrderGridSummaryImpl();
         }
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command)
         {
@@ -1024,6 +1069,13 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
             return model;
         }
+
+        private string TranslateWOStatusToViewModel(ICollection<WorkOrderTask> tasks)
+        {
+            return TranslateWOStatusToViewModel(
+                _mapper.Map<ICollection<WorkOrderTaskModel>>(tasks));
+        }
+
         private string TranslateWOStatusToViewModel(ICollection<WorkOrderTaskModel> tasks)
         {
             // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
@@ -1083,11 +1135,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return status;
         }
 
-        private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
+        private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl()
         {
             var getWorkOrderCommand = new GetWorkOrder()
             {
-                completedOnly = isHistory
+                completedOnly = false
             };
 
             ICollection<WorkOrderModel> workOrderModels = await GetWorkOrderAsync(getWorkOrderCommand);

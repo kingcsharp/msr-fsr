@@ -77,11 +77,11 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       assignedUserId: this.globals.getCurrentUser().id,
       status: this.workOrderTaskInProgress.status.name,
       taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
-      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince === null ? null : this.convertDateToUTC(this.workOrderTaskInProgress.taskRunningSince),
+      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince === null ? null : this.workOrderTaskInProgress.taskRunningSince,
       totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
       taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
       workOrderTaskId: this.workOrderTaskInProgress.id,
-      startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.convertDateToUTC(this.workOrderTaskInProgress.startedOn)
+      startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.workOrderTaskInProgress.startedOn
     } as IUpdateWorkOrderTaskRequest);
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
@@ -185,6 +185,10 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
     } else {
       this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime;
+    }
+
+    if (isNaN(this.stepSeconds)) {
+      this.stepSeconds = 0;
     }
 
     this.stepMinutes = Math.floor(this.stepSeconds / 60);

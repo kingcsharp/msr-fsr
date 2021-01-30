@@ -29,7 +29,6 @@ export class ProcedureEditComponent implements OnInit {
   availableProcedureTypes: Array<SelectItem>;
   menuItems = EnumMenuItem;
   availableRoles: Array<Role>;
-  selectedRoles: Array<Role>;
   durationTypeOptions: Array<SelectItem>;
   procedureStepTypeOptions: Array<SelectItem>;
   canEdit: boolean = false;
@@ -104,13 +103,6 @@ export class ProcedureEditComponent implements OnInit {
         this.procedureService.procedureGet(this.procedure.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedrueGetResponse) => {
 
           this.procedure = procedrueGetResponse.object[0];
-          this.selectedRoles = new Array<Role>();
-          this.procedure.roles?.forEach(role => {
-
-            let selectedRole = this.availableRoles.find(s => s.id === role.id);
-
-            this.selectedRoles.push(selectedRole);
-          });
 
           if (this.procedure.referenceFiles === undefined) {
             this.procedure.referenceFiles = [];
@@ -318,7 +310,6 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureRequest.procedureTypeId = procedure.procedureTypeId;
     updateProcedureRequest.referenceFiles = referenceFiles;
     updateProcedureRequest.referenceFileIds = referenceFileIds;
-    updateProcedureRequest.roleIds = this.selectedRoles.map(s => s.id);
     this.globals.showLoader(true);
     this.procedureService.procedurePatch(env.apiVersion, updateProcedureRequest).pipe(take(1)).subscribe(() => {
 
@@ -397,20 +388,23 @@ export class ProcedureEditComponent implements OnInit {
 
       let procedureStepToAdd: any = {};
       procedureStepToAdd.id = stepPostResponse.object.id;
-      procedureStepToAdd.duration = createProcedureStepRequest.duration;
-      procedureStepToAdd.durationType = createProcedureStepRequest.durationType;
-      procedureStepToAdd.equipmentTime = createProcedureStepRequest.equipmentTime;
-      procedureStepToAdd.laborTime = createProcedureStepRequest.laborTime;
-      procedureStepToAdd.printOrder = createProcedureStepRequest.printOrder;
-      procedureStepToAdd.procedureId = createProcedureStepRequest.procedureId;
-      procedureStepToAdd.referenceFiles = [];
-      procedureStepToAdd.replacementCost = createProcedureStepRequest.replacementCost;
-      procedureStepToAdd.roles = createProcedureStepRequest.roles;
+      procedureStepToAdd.duration = stepPostResponse.object.duration;
+      procedureStepToAdd.durationType = stepPostResponse.object.durationType;
+      procedureStepToAdd.equipmentTime = stepPostResponse.object.equipmentTime;
+      procedureStepToAdd.laborTime = stepPostResponse.object.laborTime;
+      procedureStepToAdd.printOrder = stepPostResponse.object.printOrder;
+      procedureStepToAdd.procedureId = stepPostResponse.object.procedureId;
+      procedureStepToAdd.referenceFiles = stepPostResponse.object.referenceFiles;
+      procedureStepToAdd.replacementCost = stepPostResponse.object.replacementCost;
+      procedureStepToAdd.roles = stepPostResponse.object.roles;
       procedureStepToAdd.selectedRoles = new Array<Role>();
-      procedureStepToAdd.stepText = createProcedureStepRequest.stepText;
-      procedureStepToAdd.title = createProcedureStepRequest.title;
-      procedureStepToAdd.usefulLife = createProcedureStepRequest.usefulLife;
-      procedureStepToAdd.utilization = createProcedureStepRequest.utilization;
+      procedureStepToAdd.roles?.forEach(role => {
+        procedureStepToAdd.selectedRoles.push(this.availableRoles.find(s => s.id === role.id));
+      });
+      procedureStepToAdd.stepText = stepPostResponse.object.stepText;
+      procedureStepToAdd.title = stepPostResponse.object.title;
+      procedureStepToAdd.usefulLife = stepPostResponse.object.usefulLife;
+      procedureStepToAdd.utilization = stepPostResponse.object.utilization;
       procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length - 1]?.title;
       procedureStepToAdd.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === 1)?.value;
       procedureStepToAdd.referenceFiles = fileModels === undefined ? new Array<FileModel>() : fileModels;

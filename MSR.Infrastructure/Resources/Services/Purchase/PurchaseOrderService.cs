@@ -22,11 +22,13 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IMessageHubClient _messageHub;
 
-        public PurchaseOrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        public PurchaseOrderService(IUnitOfWork unitOfWork, IMapper mapper, IMessageHubClient messageHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _messageHub = messageHub;
         }
 
         public async Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderAsync(GetPurchaseOrder command)
@@ -131,11 +133,11 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrderEntity);
                 await _unitOfWork.SaveChangesAsync();
 
-                var productEntities = await _unitOfWork.Products.Query()
+                var productsForOrder = await _unitOfWork.Products.Query()
                     .Where(i => command.Products.Contains(i.Id))
                     .ToListAsync();
 
-                foreach (var productEntity in productEntities)
+                foreach (var productEntity in productsForOrder)
                 {
                     var purchaseOrderProductEntity = new PurchaseOrderProduct()
                     {
@@ -149,39 +151,38 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
                 await _unitOfWork.LogApprovalTransaction(purchaseOrderEntity, purchaseOrderEntity.Id, "Approved", "Auto Approved");
                 var purchaseOrderView = _mapper.Map<PurchaseOrderView>(purchaseOrderEntity);
-                purchaseOrderView.Products = productEntities.Select(i => _mapper.Map<PurchaseOrderProductView>(i)).ToList();
+                purchaseOrderView.Products = productsForOrder.Select(i => _mapper.Map<PurchaseOrderProductView>(i)).ToList();
                 purchaseOrderView.CustomerName = (await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == command.CustomerId)).Name;
 
                 return purchaseOrderView;
             }
-            else
+
+            var purchaseOrderApprovalEntity = _mapper.Map<PurchaseOrderApproval>(command);
+            purchaseOrderApprovalEntity.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(purchaseOrderApprovalEntity);
+            purchaseOrderApprovalEntity.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(purchaseOrderApprovalEntity.Workflow?.Id ?? 0);
+            purchaseOrderApprovalEntity.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+
+            await _unitOfWork.PurchaseOrderApprovals.AddAsync(purchaseOrderApprovalEntity);
+            await _unitOfWork.SaveChangesAsync();
+
+            var productEntities = await _unitOfWork.Products.Query()
+                .Where(i => command.Products.Contains(i.Id))
+                .ToListAsync();
+
+            foreach (var productEntity in productEntities)
             {
-                var purchaseOrderApprovalEntity = _mapper.Map<PurchaseOrderApproval>(command);
-                purchaseOrderApprovalEntity.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(purchaseOrderApprovalEntity);
-                purchaseOrderApprovalEntity.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(purchaseOrderApprovalEntity.Workflow?.Id ?? 0);
-                purchaseOrderApprovalEntity.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
-
-                await _unitOfWork.PurchaseOrderApprovals.AddAsync(purchaseOrderApprovalEntity);
-                await _unitOfWork.SaveChangesAsync();
-
-                var productEntities = await _unitOfWork.Products.Query()
-                    .Where(i => command.Products.Contains(i.Id))
-                    .ToListAsync();
-
-                foreach (var productEntity in productEntities)
+                var PurchaseOrderProductApprovalEntity = new PurchaseOrderProductApproval()
                 {
-                    var PurchaseOrderProductApprovalEntity = new PurchaseOrderProductApproval()
-                    {
-                        PurchaseOrderApprovalId = purchaseOrderApprovalEntity.Id,
-                        ProductId = productEntity.Id
-                    };
+                    PurchaseOrderApprovalId = purchaseOrderApprovalEntity.Id,
+                    ProductId = productEntity.Id
+                };
 
-                    await _unitOfWork.PurchaseOrderProductApprovals.AddAsync(PurchaseOrderProductApprovalEntity);
-                }
-
-                await _unitOfWork.SaveChangesAsync();
-                return _mapper.Map<PurchaseOrderView>(purchaseOrderApprovalEntity);
+                await _unitOfWork.PurchaseOrderProductApprovals.AddAsync(PurchaseOrderProductApprovalEntity);
             }
+
+            await _unitOfWork.SaveChangesAsync();
+            _messageHub.SendApprovalNotification(EnumApprovalTables.PurchaseOrderApproval);
+            return _mapper.Map<PurchaseOrderView>(purchaseOrderApprovalEntity);
         }
 
         public async Task<PurchaseOrderView> UpdatePurchaseOrderAsync(UpdatePurchaseOrder command)
@@ -243,38 +244,37 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.LogApprovalTransaction(purchaseOrderEntity, purchaseOrderEntity.Id, "Approved", "Auto Approved");
-                var purchaseOrderViews = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
-                return purchaseOrderViews.FirstOrDefault();
+                var approvedPurchaseOrderViews = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
+                return approvedPurchaseOrderViews.FirstOrDefault();
             }
-            else
+
+            var purchaseOrderApprovalEntity = _mapper.Map<PurchaseOrderApproval>(purchaseOrderEntity);
+            _mapper.Map(command, purchaseOrderApprovalEntity);
+            purchaseOrderApprovalEntity.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(purchaseOrderApprovalEntity);
+            purchaseOrderApprovalEntity.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(purchaseOrderApprovalEntity.Workflow?.Id ?? 0);
+            purchaseOrderApprovalEntity.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+
+            await _unitOfWork.PurchaseOrderApprovals.AddAsync(purchaseOrderApprovalEntity);
+            await _unitOfWork.SaveChangesAsync();
+
+            var productEntities = _unitOfWork.Products.Query().Where(i => command.Products.Contains(i.Id));
+
+            foreach (var productEntity in productEntities)
             {
-                var purchaseOrderApprovalEntity = _mapper.Map<PurchaseOrderApproval>(purchaseOrderEntity);
-                _mapper.Map(command, purchaseOrderApprovalEntity);
-                purchaseOrderApprovalEntity.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(purchaseOrderApprovalEntity);
-                purchaseOrderApprovalEntity.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(purchaseOrderApprovalEntity.Workflow?.Id ?? 0);
-                purchaseOrderApprovalEntity.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
-
-                await _unitOfWork.PurchaseOrderApprovals.AddAsync(purchaseOrderApprovalEntity);
-                await _unitOfWork.SaveChangesAsync();
-
-                var productEntities = _unitOfWork.Products.Query().Where(i => command.Products.Contains(i.Id));
-
-                foreach (var productEntity in productEntities)
+                var purchaseOrderProductApprovalEntity = new PurchaseOrderProductApproval()
                 {
-                    var purchaseOrderProductApprovalEntity = new PurchaseOrderProductApproval()
-                    {
-                        PurchaseOrderApprovalId = purchaseOrderApprovalEntity.Id,
-                        ProductId = productEntity.Id
-                    };
+                    PurchaseOrderApprovalId = purchaseOrderApprovalEntity.Id,
+                    ProductId = productEntity.Id
+                };
 
-                    await _unitOfWork.PurchaseOrderProductApprovals.AddAsync(purchaseOrderProductApprovalEntity);
-                }
-
-                await _unitOfWork.SaveChangesAsync();
-
-                var purchaseOrderViews = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
-                return purchaseOrderViews.FirstOrDefault();
+                await _unitOfWork.PurchaseOrderProductApprovals.AddAsync(purchaseOrderProductApprovalEntity);
             }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var purchaseOrderViews = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
+            _messageHub.SendApprovalNotification(EnumApprovalTables.PurchaseOrderApproval);
+            return purchaseOrderViews.FirstOrDefault();
         }
 
         public async Task<PurchaseOrderView> DeletePurchaseOrderAsync(DeletePurchaseOrder command)

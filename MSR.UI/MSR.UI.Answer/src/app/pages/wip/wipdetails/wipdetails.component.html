@@ -95,7 +95,7 @@
                   'text-dark': workOrderTask.status?.name === 'In Progress',
                   'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed' 
                   || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled',
-                  'step-viewed': workOrderTaskToView.id === workOrderTask.id}">
+                  'step-viewed': workOrderTaskToView?.id === workOrderTask.id}">
               <div class="h-100 d-flex">
                 <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title | workOrderTaskAndMonitor: workOrderTask.procedureStepId : workOrderTask.title }}</div>
               </div>
@@ -168,9 +168,7 @@
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="workOrderTaskToView !== undefined && parentPart.serialNumber !== 'N/A' && (
-             (workOrderTaskToView.procedureStep?.title.trim().toLocaleUpperCase() === 'SERIALIZE') ||
-             (workOrderTaskToView.id === workOrderModel.workOrderTasks['0'].id && !hasSerializationStep) )">
+            <div class="row" *ngIf="workOrderTaskToView !== undefined && parentPart?.serialNumber !== 'N/A' && workOrderTaskToView.procedureStep?.procedureStepType.trim().toLocaleUpperCase() === 'SERIALIZATION'">
               <div class="container-fluid product-container m-2">
                 <table class="table">
                   <thead class="thead-dark">

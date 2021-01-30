@@ -564,19 +564,19 @@ export class WipdetailsComponent implements OnInit {
   uploadFilesAndDocumentsForTask() {
 
     let updatedWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-      assignedUserId: this.workOrderTaskInProgress.assignedTo,
-      status: this.workOrderTaskInProgress.status.name,
-      taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
-      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
-      taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
-      totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
-      workOrderTaskId: this.workOrderTaskInProgress.id,
+      assignedUserId: this.workOrderTaskToView.assignedTo,
+      status: this.workOrderTaskToView.status.name,
+      taskIsRunning: this.workOrderTaskToView.taskIsRunning,
+      taskRunningSince: this.workOrderTaskToView.taskRunningSince,
+      taskStepOrder: this.workOrderTaskToView.taskStepOrder,
+      totalTaskTime: this.workOrderTaskToView.totalTaskTime,
+      workOrderTaskId: this.workOrderTaskToView.id,
       referenceFiles: new Array<FileModel>(),
       referenceFilesIds: new Array<number>()
     } as IUpdateWorkOrderTaskRequest);
 
 
-    this.workOrderTaskInProgress.referenceFiles.map(referenceFile => {
+    this.workOrderTaskToView.referenceFiles.map(referenceFile => {
 
       if (referenceFile.fileId === undefined) {
         updatedWorkOrderTaskRequest.referenceFiles.push(referenceFile);
@@ -588,7 +588,7 @@ export class WipdetailsComponent implements OnInit {
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updatedWorkOrderTaskRequest).pipe(take(1)).subscribe(response => {
 
-      this.workOrderModel.workOrderTasks.find(s => s.id === this.workOrderTaskInProgress.id).referenceFiles = response.object.referenceFiles;
+      this.workOrderModel.workOrderTasks.find(s => s.id === this.workOrderTaskToView.id).referenceFiles = response.object.referenceFiles;
 
     });
 

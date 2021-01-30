@@ -27,34 +27,24 @@ namespace MSR.Answer.Processor.SQSServices
         private readonly IAmazonSQS _sqsClient;
         private readonly ILogger<SqsConsumerService> _logger;
         private readonly SQSInformation _sQSInformation;
-        private readonly ICommandDispatcher _dispatcher;
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventHandlers _eventHandlers;
-        private GeneralInformation _processorConfig;
         private string _queueURL;
 
         private CancellationTokenSource _tokenSource;
-        private IMessageHubClient _messageHub;
 
         public SqsConsumerService(
             IAmazonSQS sqsClient,
             SQSInformation sQSInformation,
-            GeneralInformation processorConfig,
-            ICommandDispatcher dispatcher,
             IServiceProvider serviceProvider,
             IEventHandlers eventHandlers,
-            IMessageHubClient messageHub,
             ILogger<SqsConsumerService> logger)
         {
             _eventHandlers = eventHandlers;
             _logger = logger;
             _sqsClient = sqsClient;
             _sQSInformation = sQSInformation;
-            _dispatcher = dispatcher;
             _serviceProvider = serviceProvider;
-            _messageHub = messageHub;
-            _processorConfig = processorConfig;
-
         }
 
         public async Task StartConsuming()
@@ -96,9 +86,6 @@ namespace MSR.Answer.Processor.SQSServices
         {
             try
             {
-                Uri baseUri = new Uri(_processorConfig.APIURL);
-                UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
-                await _messageHub.Connect(hubUri.ToString());
 
                 while (!_tokenSource.Token.IsCancellationRequested)
                 {
@@ -125,11 +112,11 @@ namespace MSR.Answer.Processor.SQSServices
                             await ProcessMessageAsync(x);
                         }
                     }
-                    catch (TaskCanceledException e)
+                    catch (TaskCanceledException)
                     {
                         _logger.LogWarning($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName} because the task was canceled");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         _logger.LogError($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName}");
                     }
@@ -217,6 +204,10 @@ namespace MSR.Answer.Processor.SQSServices
                 }
 
                 return true;
+            };
+            CurrentUser.GetAccessToken = () =>
+            {
+                return tokenData.RawData;
             };
         }
     }

@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
-using MSR.Application.Hubs;
 using MSR.Domain.Models;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -21,12 +21,10 @@ namespace MSR.Answer.API.V1.Controllers
     public class CustomerController : BaseApiController
     {
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
 
-        public CustomerController(ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public CustomerController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-            _messageHub = messageHub;
         }
 
         [HttpGet]
@@ -45,7 +43,7 @@ namespace MSR.Answer.API.V1.Controllers
             var createCustomer = request.ToCreateCustomerCommand();
 
             var ret = await _dispatcher.DispatchAsync(createCustomer);
-            return ret.ToOkObjectResponse<Customer>(await DetermineResponseMessage(ret, "Creation"));
+            return ret.ToOkObjectResponse<Customer>(DetermineResponseMessage(ret, "Creation"));
         }
 
         [HttpPatch, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanEdit)]
@@ -54,7 +52,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var updateCustomer = request.ToUpdateCustomerCommand();
             var ret = await _dispatcher.DispatchAsync(updateCustomer);
-            return ret.ToOkObjectResponse(await DetermineResponseMessage(ret, "Update"));
+            return ret.ToOkObjectResponse(DetermineResponseMessage(ret, "Update"));
         }
 
         [HttpDelete("{id}"), HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanDelete)]
@@ -63,19 +61,18 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var disableCustomer = new DeactivateCustomer() { CustomerId = id };
             var ret = await _dispatcher.DispatchAsync(disableCustomer);
-            return ret.ToOkObjectResponse(await DetermineResponseMessage(ret, "Deactivate"));
+            return ret.ToOkObjectResponse(DetermineResponseMessage(ret, "Deactivate"));
         }
 
 
         //TODO: Refactor to Generic
-        private async Task<string> DetermineResponseMessage(ICommandResponse commandResponse, string action)
+        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
             var customer = commandResponse.ToEntity<Customer>();
             var response = $"Customer {action} Successful";
 
             if (!string.IsNullOrWhiteSpace(customer.Status))
             {
-                await SendApprovalNotificationHubMessage(EnumApprovalTables.CustomerApproval, _messageHub);
 
                 response = $"Customer {action} Pending Approval";
             }

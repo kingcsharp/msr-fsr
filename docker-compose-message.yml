@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  api:
+   image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-message:509543845b8e8b6e53cf6c5bca4c15154c726092
+   environment:
+    - ASPNETCORE_ENVIRONMENT=QA
+   expose:
+    - "5001"
+   ports:
+    - "5001:5001"
+   logging:
+      driver: awslogs
+      options:
+        awslogs-group: answer3
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: answer3-message-dev
+  messageproxy:
+    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-mp:509543845b8e8b6e53cf6c5bca4c15154c726092
+    ports:
+      - "80:80"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: answer3
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: answer3-messageproxy-dev

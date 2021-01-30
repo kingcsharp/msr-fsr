@@ -43,6 +43,11 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToSystemLoginCommand();
 
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            HttpContext.Request.Headers.TryGetValue("Referer", out value);
+
+            command.Host = value;
+
             var result = await _dispatcher.DispatchAsync(command);
 
             return result.ToOkObjectResponse<string>();

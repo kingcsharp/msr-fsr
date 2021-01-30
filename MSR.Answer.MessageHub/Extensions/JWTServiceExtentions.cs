@@ -1,0 +1,155 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Models.Config;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using MSR.Domain.Helpers;
+using Newtonsoft.Json;
+using System.Linq;
+using System.Collections.Generic;
+using MSR.Domain.Commanding.Enums;
+using System;
+
+namespace MSR.Answer.MessageHub.Extentions
+{
+    public static class JWTServiceExtentions
+    {
+        public static IServiceCollection AddJWTServices(this IServiceCollection services, IConfiguration config)
+        {
+            var jwtData = config.GetSection(nameof(JwtData)).Get<JwtData>();
+            services.AddSingleton(jwtData);
+            var key = Encoding.ASCII.GetBytes(jwtData.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // Check if the request is for our SignalR hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/msg")))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        var accountService = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
+                        if (!int.TryParse(context.Principal.FindFirst(ClaimTypes.Name)?.Value, out var accountId)) context.Fail("Unauthorized");
+                        if (!accountService.ValidateAccount(accountId))
+                        {// return unauthorized if user no longer exists
+                            context.Fail("Unauthorized");
+                        }
+
+                        string claimVal = context.Principal.FindFirst(c => c.Type == "ApprovalPrivileges").Value;
+                        var approvalPrivilegesDic = JsonConvert.DeserializeObject<Dictionary<int, int[]>>(claimVal);
+
+                        string userPrivileges = context.Principal.FindFirst(c => c.Type == "Privileges").Value;
+                        var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
+
+                        CurrentUser.GetId = () => accountId;
+                        CurrentUser.CanApproveActivity = (EnumApprovalTables tbl) =>
+                        {
+                            // First check if user has approval power on the menu item.  If
+                            // not, then check if they have it on the workflow.
+
+                            EnumMenuItem? menuItem;
+                            switch(tbl)
+                            {
+                                case EnumApprovalTables.CustomerApproval:
+                                    menuItem = EnumMenuItem.CustomersDepartments;
+                                    break;
+                                case EnumApprovalTables.DocumentApproval:
+                                    menuItem = EnumMenuItem.Documents;
+                                    break;
+                                case EnumApprovalTables.LocationApproval:
+                                    menuItem = EnumMenuItem.Locations;
+                                    break;
+                                case EnumApprovalTables.PartApproval:
+                                    menuItem = EnumMenuItem.Parts;
+                                    break;
+                                case EnumApprovalTables.ProcedureApproval:
+                                    menuItem = EnumMenuItem.Procedures;
+                                    break;
+                                case EnumApprovalTables.ProductApproval:
+                                    menuItem = EnumMenuItem.QuotesProducts;
+                                    break;
+                                case EnumApprovalTables.PurchaseOrderApproval:
+                                    menuItem = EnumMenuItem.PurchaseOrders;
+                                    break;
+                                case EnumApprovalTables.UserApproval:
+                                    menuItem = EnumMenuItem.Users;
+                                    break;
+                                default:
+                                    menuItem = null;
+                                    break;
+                            }
+
+                            if (menuItem.HasValue)
+                            {
+                                var menuItemPrivileges = deserializedUserPrivileges[(int)menuItem.Value];
+                                if (menuItemPrivileges != null &&
+                                    Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege.CanApprove) != -1)
+                                {
+                                    return true;
+                                }
+                            }
+
+                            var activityToBeApproved = (int)tbl;
+
+                            approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
+
+                            return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
+                        };
+
+                        CurrentUser.CanReadActivity = (EnumApprovalTables) =>
+                        {
+                            var activityToBeApproved = (int)EnumApprovalTables;
+
+                            approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
+
+                            return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanRead);
+                        };
+                        CurrentUser.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
+                        {
+                            var menuItemPrivileges = deserializedUserPrivileges[(int)EnumMenuItem];
+                            if (menuItemPrivileges == null || Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
+                            {
+                                return false;
+                            }
+
+                            return true;
+                        };
+
+                        return Task.CompletedTask;
+                    }
+                };
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
+            return services;
+        }
+    }
+}

@@ -3252,6 +3252,63 @@ export class ProcedureService {
     }
 
     /**
+     * Copy Procedure
+     */
+    copy(procedureId: number, version: string): Observable<AuditActionResultOfProcedure> {
+        let url_ = this.baseUrl + "/v{version}/Procedure/copy/{procedureId}";
+        if (procedureId === undefined || procedureId === null)
+            throw new Error("The parameter 'procedureId' must be defined.");
+        url_ = url_.replace("{procedureId}", encodeURIComponent("" + procedureId));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCopy(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCopy(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedure>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedure>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCopy(response: HttpResponseBase): Observable<AuditActionResultOfProcedure> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedure.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedure>(<any>null);
+    }
+
+    /**
      * Add Procedure Step
      */
     stepPost(id: number, version: string, body: CreateProcedureStepRequest): Observable<AuditActionResultOfProcedureStepModel> {
@@ -9344,7 +9401,6 @@ export interface ITimeZoneModel {
 }
 
 export class Role extends TrackableModel implements IRole {
-    id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
     menus?: MenuItem[] | undefined;
@@ -9360,7 +9416,6 @@ export class Role extends TrackableModel implements IRole {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.id = _data["id"];
             this.name = _data["name"];
             this.isCertificationRole = _data["isCertificationRole"];
             if (Array.isArray(_data["menus"])) {
@@ -9388,7 +9443,6 @@ export class Role extends TrackableModel implements IRole {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["name"] = this.name;
         data["isCertificationRole"] = this.isCertificationRole;
         if (Array.isArray(this.menus)) {
@@ -9410,7 +9464,6 @@ export class Role extends TrackableModel implements IRole {
 }
 
 export interface IRole extends ITrackableModel {
-    id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
     menus?: MenuItem[] | undefined;
@@ -12464,6 +12517,7 @@ export class PartModel extends TrackableModel implements IPartModel {
     maximumCycles?: number | undefined;
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     files?: FileModel[] | undefined;
     isActive?: boolean | undefined;
@@ -12484,6 +12538,7 @@ export class PartModel extends TrackableModel implements IPartModel {
             this.maximumCycles = _data["maximumCycles"];
             this.createdByName = _data["createdByName"];
             this.lastUpdatedByName = _data["lastUpdatedByName"];
+            this.segregationType = _data["segregationType"];
             if (Array.isArray(_data["createSubParts"])) {
                 this.createSubParts = [] as any;
                 for (let item of _data["createSubParts"])
@@ -12516,6 +12571,7 @@ export class PartModel extends TrackableModel implements IPartModel {
         data["maximumCycles"] = this.maximumCycles;
         data["createdByName"] = this.createdByName;
         data["lastUpdatedByName"] = this.lastUpdatedByName;
+        data["segregationType"] = this.segregationType;
         if (Array.isArray(this.createSubParts)) {
             data["createSubParts"] = [];
             for (let item of this.createSubParts)
@@ -12542,9 +12598,16 @@ export interface IPartModel extends ITrackableModel {
     maximumCycles?: number | undefined;
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     files?: FileModel[] | undefined;
     isActive?: boolean | undefined;
+}
+
+export enum EnumSegregationType {
+    CU = 1,
+    NONCU = 2,
+    DESEG = 3,
 }
 
 export class SubPartModel implements ISubPartModel {
@@ -12637,6 +12700,7 @@ export class CreatePartRequest implements ICreatePartRequest {
     nickName?: string | undefined;
     isActive?: boolean;
     maximumCycles?: number | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
     files?: FileRequest[] | undefined;
@@ -12658,6 +12722,7 @@ export class CreatePartRequest implements ICreatePartRequest {
             this.nickName = _data["nickName"];
             this.isActive = _data["isActive"];
             this.maximumCycles = _data["maximumCycles"];
+            this.segregationType = _data["segregationType"];
             if (Array.isArray(_data["createSubParts"])) {
                 this.createSubParts = [] as any;
                 for (let item of _data["createSubParts"])
@@ -12687,6 +12752,7 @@ export class CreatePartRequest implements ICreatePartRequest {
         data["nickName"] = this.nickName;
         data["isActive"] = this.isActive;
         data["maximumCycles"] = this.maximumCycles;
+        data["segregationType"] = this.segregationType;
         if (Array.isArray(this.createSubParts)) {
             data["createSubParts"] = [];
             for (let item of this.createSubParts)
@@ -12709,6 +12775,7 @@ export interface ICreatePartRequest {
     nickName?: string | undefined;
     isActive?: boolean;
     maximumCycles?: number | undefined;
+    segregationType?: EnumSegregationType | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
     files?: FileRequest[] | undefined;
@@ -12844,7 +12911,6 @@ export class Procedure extends TrackableModel implements IProcedure {
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
-    roles?: Role[] | undefined;
 
     constructor(data?: IProcedure) {
         super(data);
@@ -12867,11 +12933,6 @@ export class Procedure extends TrackableModel implements IProcedure {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileModel.fromJS(item));
-            }
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles!.push(Role.fromJS(item));
             }
         }
     }
@@ -12900,11 +12961,6 @@ export class Procedure extends TrackableModel implements IProcedure {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item.toJSON());
-        }
         super.toJSON(data);
         return data; 
     }
@@ -12922,7 +12978,6 @@ export interface IProcedure extends ITrackableModel {
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
-    roles?: Role[] | undefined;
 }
 
 export class ProcedureType implements IProcedureType {
@@ -12979,22 +13034,14 @@ export interface IProcedureType {
 
 /**  */
 export class CreateProcedureRequest implements ICreateProcedureRequest {
-    /** Gets or Sets Name */
     name!: string;
-    /** Gets or Sets IsRelatedToAProduct */
     isRelatedToAProduct?: boolean;
-    /** Gets or Sets ProcedureTypeId */
     procedureTypeId!: number;
-    /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets RoleIds */
-    roleIds?: (number | undefined)[] | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType!: string;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    referenceFileIds?: number[] | undefined;
 
     constructor(data?: ICreateProcedureRequest) {
         if (data) {
@@ -13011,17 +13058,17 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
             this.isRelatedToAProduct = _data["isRelatedToAProduct"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.comments = _data["comments"];
-            if (Array.isArray(_data["roleIds"])) {
-                this.roleIds = [] as any;
-                for (let item of _data["roleIds"])
-                    this.roleIds!.push(item);
-            }
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
             if (Array.isArray(_data["referenceFiles"])) {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileRequest.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
             }
         }
     }
@@ -13039,11 +13086,6 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
         data["isRelatedToAProduct"] = this.isRelatedToAProduct;
         data["procedureTypeId"] = this.procedureTypeId;
         data["comments"] = this.comments;
-        if (Array.isArray(this.roleIds)) {
-            data["roleIds"] = [];
-            for (let item of this.roleIds)
-                data["roleIds"].push(item);
-        }
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
         if (Array.isArray(this.referenceFiles)) {
@@ -13051,28 +13093,25 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
         return data; 
     }
 }
 
 /**  */
 export interface ICreateProcedureRequest {
-    /** Gets or Sets Name */
     name: string;
-    /** Gets or Sets IsRelatedToAProduct */
     isRelatedToAProduct?: boolean;
-    /** Gets or Sets ProcedureTypeId */
     procedureTypeId: number;
-    /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets RoleIds */
-    roleIds?: (number | undefined)[] | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType: string;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    referenceFileIds?: number[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -13708,7 +13747,6 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
     isRelatedToAProduct?: boolean;
     procedureTypeId?: number | undefined;
     comments?: string | undefined;
-    roleIds?: (number | undefined)[] | undefined;
     duration?: number | undefined;
     durationType!: string;
     referenceFiles?: FileRequest[] | undefined;
@@ -13730,11 +13768,6 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
             this.isRelatedToAProduct = _data["isRelatedToAProduct"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.comments = _data["comments"];
-            if (Array.isArray(_data["roleIds"])) {
-                this.roleIds = [] as any;
-                for (let item of _data["roleIds"])
-                    this.roleIds!.push(item);
-            }
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
             if (Array.isArray(_data["referenceFiles"])) {
@@ -13764,11 +13797,6 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
         data["isRelatedToAProduct"] = this.isRelatedToAProduct;
         data["procedureTypeId"] = this.procedureTypeId;
         data["comments"] = this.comments;
-        if (Array.isArray(this.roleIds)) {
-            data["roleIds"] = [];
-            for (let item of this.roleIds)
-                data["roleIds"].push(item);
-        }
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
         if (Array.isArray(this.referenceFiles)) {
@@ -13791,7 +13819,6 @@ export interface IUpdateProcedureRequest {
     isRelatedToAProduct?: boolean;
     procedureTypeId?: number | undefined;
     comments?: string | undefined;
-    roleIds?: (number | undefined)[] | undefined;
     duration?: number | undefined;
     durationType: string;
     referenceFiles?: FileRequest[] | undefined;
@@ -15910,7 +15937,6 @@ export interface IWorkOrderModel {
 }
 
 export class PurchaseModel extends CreatableModel implements IPurchaseModel {
-    id?: number;
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
@@ -15936,7 +15962,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.id = _data["id"];
             this.purchaseOrderId = _data["purchaseOrderId"];
             this.purchaseOrderProductId = _data["purchaseOrderProductId"];
             this.customerPurchaseNumber = _data["customerPurchaseNumber"];
@@ -15970,7 +15995,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["purchaseOrderId"] = this.purchaseOrderId;
         data["purchaseOrderProductId"] = this.purchaseOrderProductId;
         data["customerPurchaseNumber"] = this.customerPurchaseNumber;
@@ -15998,7 +16022,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
 }
 
 export interface IPurchaseModel extends ICreatableModel {
-    id?: number;
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
@@ -16019,7 +16042,6 @@ export interface IPurchaseModel extends ICreatableModel {
 }
 
 export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrderModel {
-    id?: number;
     customer?: Customer | undefined;
     customerId?: number;
     name?: string | undefined;
@@ -16039,7 +16061,6 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.id = _data["id"];
             this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : <any>undefined;
             this.customerId = _data["customerId"];
             this.name = _data["name"];
@@ -16063,7 +16084,6 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["customer"] = this.customer ? this.customer.toJSON() : <any>undefined;
         data["customerId"] = this.customerId;
         data["name"] = this.name;
@@ -16081,7 +16101,6 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
 }
 
 export interface IPurchaseOrderModel extends ICreatableModel {
-    id?: number;
     customer?: Customer | undefined;
     customerId?: number;
     name?: string | undefined;
@@ -16167,6 +16186,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     parentId?: number | undefined;
     serialNumber?: string | undefined;
     qty?: number | undefined;
+    segregationType?: EnumSegregationType | undefined;
     part?: PartModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
@@ -16190,6 +16210,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             this.parentId = _data["parentId"];
             this.serialNumber = _data["serialNumber"];
             this.qty = _data["qty"];
+            this.segregationType = _data["segregationType"];
             this.part = _data["part"] ? PartModel.fromJS(_data["part"]) : <any>undefined;
             this.workOrder = _data["workOrder"] ? WorkOrderModel.fromJS(_data["workOrder"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
@@ -16217,6 +16238,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         data["parentId"] = this.parentId;
         data["serialNumber"] = this.serialNumber;
         data["qty"] = this.qty;
+        data["segregationType"] = this.segregationType;
         data["part"] = this.part ? this.part.toJSON() : <any>undefined;
         data["workOrder"] = this.workOrder ? this.workOrder.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
@@ -16237,6 +16259,7 @@ export interface IWorkOrderPartModel {
     parentId?: number | undefined;
     serialNumber?: string | undefined;
     qty?: number | undefined;
+    segregationType?: EnumSegregationType | undefined;
     part?: PartModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
@@ -20374,12 +20397,10 @@ export interface IAuditActionResultOfWorkOrderPartModel extends IAuditActionResu
     object?: WorkOrderPartModel | undefined;
 }
 
-/**  */
 export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
-    /** Work Order Part ID */
     workOrderPartId?: number;
-    /** Gets or Sets SerialNumber */
     serialNumber?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 
     constructor(data?: IUpdateWorkOrderPartRequest) {
         if (data) {
@@ -20394,6 +20415,7 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
         if (_data) {
             this.workOrderPartId = _data["workOrderPartId"];
             this.serialNumber = _data["serialNumber"];
+            this.segregationType = _data["segregationType"];
         }
     }
 
@@ -20408,16 +20430,15 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
         data = typeof data === 'object' ? data : {};
         data["workOrderPartId"] = this.workOrderPartId;
         data["serialNumber"] = this.serialNumber;
+        data["segregationType"] = this.segregationType;
         return data; 
     }
 }
 
-/**  */
 export interface IUpdateWorkOrderPartRequest {
-    /** Work Order Part ID */
     workOrderPartId?: number;
-    /** Gets or Sets SerialNumber */
     serialNumber?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 }
 
 /** Base class for an API call with a typed result */

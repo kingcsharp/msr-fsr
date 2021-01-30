@@ -20,6 +20,8 @@ using Castle.Core.Internal;
 using MSR.Domain.Validators;
 using System.Runtime.InteropServices.ComTypes;
 using MSR.Domain.DTOs;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Helpers;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -83,7 +85,9 @@ namespace MSR.Infrastructure.Profiles
                 // A purchase will take the first item's serial as the main serial number.  This
                 // follows the behavior of Answer 2.
                 .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => src.SerialNumbers == null ? null : src.SerialNumbers[0]));
-            CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
+            CreateMap<WorkOrderPart, WorkOrderPartModel>()
+                .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU))
+                .ReverseMap();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>()
                 .ForMember(dest => dest.TaskStarted, opts => opts.MapFrom(src => (
                     src.StartedOn != null && src.StartedOn.Value.Ticks > 0
@@ -91,7 +95,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderPartModel, WorkOrderPart>();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>()
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Description))
-                .ReverseMap();
+                .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => EnumUtils.GetDescription<EnumSegregationType>(src.SegregationType.HasValue ? src.SegregationType.Value : EnumSegregationType.NONCU)))
+               .ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>()
                 .ForMember(dest => dest.FaultHandling, opts => opts.MapFrom(src => src.FailAction))
                 .ForMember(dest => dest.TargetValue, opts => opts.MapFrom(src => src.Target))
@@ -183,7 +188,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Part, PartModel>()
                 .ForMember(dest => dest.CreateSubParts, opt => opt.MapFrom(src => src.Subparts))
                 .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.Created.GetFullName()))
-                .ForMember(dest => dest.LastUpdatedByName, opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
+                .ForMember(dest => dest.LastUpdatedByName, opt => opt.MapFrom(src => src.LastUpdated.GetFullName()))
+                .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU));
 
 
             CreateMap<PartSubPartMap, SubPartModel>()
@@ -193,18 +199,28 @@ namespace MSR.Infrastructure.Profiles
 
 
             CreateMap<CreatePart, PartApproval>();
-            CreateMap<CreatePart, Part>().ForMember("Subparts", opts => opts.Ignore());
+            CreateMap<CreatePart, Part>()
+                .ForMember("Subparts", opts => opts.Ignore())
+                .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => EnumUtils.GetDescription<EnumSegregationType>(src.SegregationType.HasValue ? src.SegregationType.Value : EnumSegregationType.NONCU)));
             CreateMap<SubPartModel, PartSubPartMap>();
             CreateMap<UpdatePart, PartApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.Id));
             CreateMap<UpdatePart, Part>()
+                .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => EnumUtils.GetDescription<EnumSegregationType>(src.SegregationType.HasValue ? src.SegregationType.Value : EnumSegregationType.NONCU)))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<Domain.Models.PartModel, CreatePart>();
             CreateMap<Domain.Models.PartModel, UpdatePart>();
             #endregion
 
             #region Procedure
+            CreateMap<Procedure, Procedure>()
+                .ForMember(dest => dest.Created, opts => opts.Ignore())
+                .ForMember(dest => dest.CreatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.CreatedOn, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdated, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedOn, opts => opts.Ignore());
             CreateMap<ProcedureWithUsedProductCountView, Domain.Models.Procedure>()
                 .ForMember(dest => dest.ProcedureType, opts => opts.MapFrom(src => new MSR.Domain.Models.ProcedureType()
                 {
@@ -273,9 +289,16 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Procedure, ProcedureApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.Id));
-            CreateMap<CreateProcedure, Procedure>();
+            CreateMap<CreateProcedure, Procedure>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedureStep, ProcedureStepApproval>();
-            CreateMap<CreateProcedureStep, ProcedureStep>();
+            CreateMap<CreateProcedureStep, ProcedureStep>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
+                .ForMember(dest => dest.ProcedureStepRoles, opts => opts.MapFrom(src => src.Roles))
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !srcMember.Equals(0)));
             CreateMap<UpdateProcedure, ProcedureApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.Id))
@@ -498,7 +521,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ScheduledEndDate, opts => opts.MapFrom(src => src.DueDate));
 
             CreateMap<UpdateWorkOrderPart, WorkOrderPart>()
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderPartId));
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderPartId))
+                .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => EnumUtils.GetDescription<EnumSegregationType>(src.SegregationType.HasValue ? src.SegregationType.Value : EnumSegregationType.NONCU)));
 
             CreateMap<CreateWorkOrderTask, WorkOrderTask>();
             CreateMap<UpdateWorkOrderTask, WorkOrderTask>()

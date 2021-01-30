@@ -10,7 +10,6 @@ namespace MSR.Domain.Models
             Menus = new HashSet<MenuItem>();
             ParentRoles = new HashSet<Role>();
         }
-        public int Id { get; set; }
         public string Name { get; set; }
 
         public bool? IsCertificationRole { get; set; }

@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Amazon.SQS.Model;
 using System;
+using MSR.Domain.Exceptions;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Domain.SQSEventing
 {
@@ -19,16 +21,22 @@ namespace MSR.Domain.SQSEventing
             _handler = handler;
             _sQSInformation = sQSInformation;
         }
-       
-        public async Task SendMessage(MessageEnvelope data)
+
+        public async Task<string> SendMessage(MessageEnvelope data)
         {
             //TODO: Work with Tim to figure out why permissions are not allowing to get QUEUE URL
             var queueURL = _sQSInformation.QueueURL;
-            await _handler.SendMessageAsync(new SendMessageRequest(queueURL, JsonConvert.SerializeObject(data))
+            SendMessageResponse response =
+                await _handler.SendMessageAsync(new SendMessageRequest(queueURL, JsonConvert.SerializeObject(data))
+                {
+                    MessageGroupId = Guid.NewGuid().ToString(),
+                    MessageDeduplicationId = Guid.NewGuid().ToString()
+                });
+            if (string.IsNullOrEmpty(response.MessageId))
             {
-                MessageGroupId = Guid.NewGuid().ToString(),
-                MessageDeduplicationId = Guid.NewGuid().ToString()
-            });
+                throw new DomainException("Failure to submit message to queue", DomainError.InternalServerError);
+            }
+            return response.MessageId;
         }
     }
 }

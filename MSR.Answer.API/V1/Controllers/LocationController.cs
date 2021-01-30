@@ -13,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.SignalR;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
-using MSR.Application.Hubs;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -23,13 +23,11 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IHubContext<MessageHub> _messageHub;
 
-        public LocationController(ILogger<LocationController> logger, ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
+        public LocationController(ILogger<LocationController> logger, ICommandDispatcher dispatcher)
         {
             _logger = logger;
             _dispatcher = dispatcher;
-            _messageHub = messageHub;
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<LocationModel>>))]
@@ -56,7 +54,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToCreateLocationCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<LocationModel>(await DetermineResponseMessage(ret, "Create"));
+            return ret.ToOkObjectResponse<LocationModel>(DetermineResponseMessage(ret, "Create"));
         }
 
         [HttpPost("{locationId}/Sensor/{sensorId}"), SwaggerResponse(typeof(AuditActionResult))]
@@ -74,7 +72,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdateLocationCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse(await DetermineResponseMessage(ret, "Update"));
+            return ret.ToOkObjectResponse(DetermineResponseMessage(ret, "Update"));
         }
 
 
@@ -85,7 +83,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = new DeactivateLocation() { LocationId = id };
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse(await DetermineResponseMessage(ret, "Deactivate"));
+            return ret.ToOkObjectResponse(DetermineResponseMessage(ret, "Deactivate"));
         }
 
         [HttpDelete("{locationId}/Sensor/{sensorId}"), SwaggerResponse(typeof(AuditActionResult))]
@@ -97,14 +95,13 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse("Sensor Successfully Removed");
         }
 
-        private async Task<string> DetermineResponseMessage(ICommandResponse commandResponse, string action)
+        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
             var location = commandResponse.ToEntity<LocationModel>();
             var response = $"Location {action} Successful";
 
             if (!string.IsNullOrWhiteSpace(location.Status))
             {
-                await SendApprovalNotificationHubMessage(EnumApprovalTables.LocationApproval, _messageHub);
                 response = $"Location {action} Pending Approval";
             }
 

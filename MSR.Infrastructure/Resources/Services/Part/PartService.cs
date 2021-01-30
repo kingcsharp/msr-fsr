@@ -6,7 +6,6 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
-using MSR.Domain.Validators;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -23,12 +22,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
+        private readonly IMessageHubClient _messageHub;
 
-        public PartService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
+        public PartService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IMessageHubClient messageHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _fileService = fileService;
+            _messageHub = messageHub;
         }
 
         public async Task<ICollection<PartModel>> GetPartsAsync(GetParts command)
@@ -103,6 +104,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 {
                     IsPending = true
                 };
+                _messageHub.SendApprovalNotification(EnumApprovalTables.PartApproval);
             }
 
             return ret;
@@ -168,6 +170,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 current.IsKit = command.SubParts.Count > 0;
                 ret = _mapper.Map<PartModel>(current);
                 ret.IsPending = true;
+                _messageHub.SendApprovalNotification(EnumApprovalTables.PartApproval);
             }
 
             return ret;

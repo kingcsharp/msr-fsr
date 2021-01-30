@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.API.Extentions;
 using MSR.Answer.API.Infrastructure.Converters;
-using MSR.Application.Hubs;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using System.Linq;
@@ -98,7 +97,6 @@ namespace MSR.Answer.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<MessageHub>("/msg");
             });
         }
     }

@@ -25,13 +25,10 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetArchiveDocument>
     {
         private readonly IDocumentService _documentService;
-        private readonly IMapper _mapper;
-        private readonly ISendSQSMessages _bus;
 
-        public DocumentAppService(IDocumentService documentService, IMapper mapper)
+        public DocumentAppService(IDocumentService documentService)
         {
             _documentService = documentService;
-            _mapper = mapper;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetDocument command, CancellationToken cancellationToken = default)

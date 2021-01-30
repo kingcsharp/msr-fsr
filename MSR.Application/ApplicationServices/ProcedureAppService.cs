@@ -12,6 +12,7 @@ namespace MSR.Application.ApplicationServices
     public class ProcedureAppService :
         ICommandHandler<GetProcedure>,
         ICommandHandler<CreateProcedure>,
+        ICommandHandler<CopyProcedure>,
         ICommandHandler<CreateProcedureStep>,
         ICommandHandler<GetProcedureStep>,
         ICommandHandler<UpdateProcedureStep>,
@@ -74,6 +75,14 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _procedureService.GetProcedureStepType(command);
             return new CommandResponse<ICollection<ProcedureStepTypeModel>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(CopyProcedure command, CancellationToken cancellationToken = default)
+        {
+            var newProcedure = await _procedureService.CopyProcedureAsync(command);
+            var response = new CommandResponse<Procedure>(newProcedure);
+            response.DisplayString = "[" + newProcedure.Id + "] " + newProcedure.Name;
+            return response;
         }
     }
 }
