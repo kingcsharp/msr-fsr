@@ -247,15 +247,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 .Collection(x => x.WorkOrderParts).Load();
             created.Context.Entry(workOrderEntity)
                 .Collection(x => x.WorkOrderTasks).Load();
-            created.Context.Entry(workorder)
+            created.Context.Entry(workOrderEntity)
                 .Reference(x => x.Location).Load();
-            created.Context.Entry(workorder)
+            created.Context.Entry(workOrderEntity)
                 .Reference(x => x.Purchase).Load();
-            created.Context.Entry(workorder)
+            created.Context.Entry(workOrderEntity)
                 .Reference(x => x.Product).Load();
-            created.Context.Entry(workorder.Product)
+            created.Context.Entry(workOrderEntity.Product)
                 .Reference(x => x.Procedure).Load();
-            created.Context.Entry(workorder.Purchase)
+            created.Context.Entry(workOrderEntity.Purchase)
                 .Reference(x => x.PurchaseOrder).Load();
             created.Context.Entry(workOrderEntity.Purchase.PurchaseOrder)
                 .Reference(x => x.Customer).Load();
@@ -268,14 +268,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             // displayed on the WO status screen without a reload.
             _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
             {
-                workOrderId = workorder.Id,
-                workOrderStatus = TranslateWOStatusToViewModel(workorder.WorkOrderTasks),
-                productName = workorder.Product?.Name,
-                partNumber = workorder.WorkOrderParts.First().Part.PartNumber,
-                procedureName = workorder.Product?.Procedure?.Name,
-                locationName = workorder.Location.Name,
-                customerName = workorder.Product?.Customer?.Name,
-                serialNumber = workorder.WorkOrderParts.First().SerialNumber,
+                workOrderId = workOrderEntity.Id,
+                workOrderStatus = TranslateWOStatusToViewModel(workOrderEntity.WorkOrderTasks),
+                productName = workOrderEntity.Product?.Name,
+                partNumber = workOrderEntity.WorkOrderParts.First().Part.PartNumber,
+                procedureName = workOrderEntity.Product?.Procedure?.Name,
+                locationName = workOrderEntity.Location.Name,
+                customerName = workOrderEntity.Product?.Customer?.Name,
+                serialNumber = workOrderEntity.WorkOrderParts.First().SerialNumber,
             });
 
             return workOrderModel;

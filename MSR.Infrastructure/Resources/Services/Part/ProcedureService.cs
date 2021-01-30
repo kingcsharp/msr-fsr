@@ -499,7 +499,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             _unitOfWork.ProcedureSteps.LoadReference(originalProcedureStepEntity, x => x.Procedure);
             int procApprovalId = await FlagProcedureForApproval(
-                originalProcedureStepEntity.Procedure, originalProcedureStepEntity.ProcedureId
+                originalProcedureStepEntity.Procedure, originalProcedureStepEntity.ProcedureId.Value
             );
             var approval = _mapper.Map<ProcedureStepApproval>(command);
             approval.ProcedureApprovalId = procApprovalId;
