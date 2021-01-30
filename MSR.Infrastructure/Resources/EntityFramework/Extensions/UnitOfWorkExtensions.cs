@@ -4,6 +4,7 @@ using MSR.Domain.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Extensions
@@ -40,10 +41,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Extensions
                 ProcessedOn = DateTimeOffset.UtcNow
             };
 
-            unitOfWork.ApprovalTransactionLogs.Add(log);
-            await unitOfWork.SaveChangesAsync();
 
+            await unitOfWork.ApprovalTransactionLogs.AddAsync(log);
+            await unitOfWork.SaveChangesAsync();
             return true;
+            
         }
 
         public static async Task<Workflow> GetWorkflowForEntityAsync<T>(this IUnitOfWork unitOfWork, T entity)

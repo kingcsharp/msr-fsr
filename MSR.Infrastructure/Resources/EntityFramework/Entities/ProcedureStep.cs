@@ -13,7 +13,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             WorkOrderTasks = new HashSet<WorkOrderTask>();
         }
 
-        public int ProcedureId { get; set; }
+        public int? ProcedureId { get; set; }
 
         [Required]
         [StringLength(100)]

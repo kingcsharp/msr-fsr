@@ -8,8 +8,8 @@ namespace MSR.Domain.Models
     {
         public int Id { get; set; }
         public int WorkOrderId { get; set; }
-        public int ProcedureStepId { get; set; }
-        public int ProcedureStepTypeId { get; set; }
+        public int? ProcedureStepId { get; set; }
+        public int? ProcedureStepTypeId { get; set; }
         public int StatusId { get; set; }
         public int TaskStepOrder { get; set; }
         public int? AssignedTo { get; set; }
@@ -25,12 +25,9 @@ namespace MSR.Domain.Models
         public virtual WorkOrderModel WorkOrder { get; set; }
         public virtual ICollection<WorkOrderTaskMonitorModel> WorkOrderTaskMonitors { get; set; }
         public virtual DateTime? LastUpdatedOn { get; set; }
-
-        /// <summary>
-        /// This needs to be added
-        /// </summary>
-        /// <value>This needs to be added</value>
-        [DataMember(Name="referenceFiles")]
         public List<FileModel> ReferenceFiles { get; set; }
+        public string Title { get; set; }
+        public string StepText { get; set; }
+        public bool? IsNCRTask { get; set; }
     }
 }

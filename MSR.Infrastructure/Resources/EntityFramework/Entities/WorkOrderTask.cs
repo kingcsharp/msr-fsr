@@ -14,7 +14,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int WorkOrderId { get; set; }
 
-        public int ProcedureStepId { get; set; }
+        public int? ProcedureStepId { get; set; }
 
         public int ProcedureStepTypeId { get; set; }
 
@@ -47,5 +47,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ICollection<WorkOrderTaskMonitor> WorkOrderTaskMonitors { get; set; }
 
         public ICollection<FileEntityMap> ReferenceFiles { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+
+        public bool? IsNCRTask { get; set; }
     }
 }

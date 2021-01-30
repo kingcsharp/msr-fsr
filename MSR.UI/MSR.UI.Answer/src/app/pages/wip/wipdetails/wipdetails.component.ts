@@ -116,7 +116,7 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderModel = this.cleanData(response.object[0]);
       this.getCustomerContacts(this.workOrderModel.purchase?.purchaseOrder?.customer?.id);
       this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
-      this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.procedureStepType).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZATION') !== undefined;
+      this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
       this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
       this.workOrderParts = this.workOrderModel.workOrderParts;
       this.parentPart = this.workOrderModel.workOrderParts[0];
@@ -162,7 +162,9 @@ export class WipdetailsComponent implements OnInit {
 
     workOrderModel.workOrderTasks.map(workOrderTask => {
 
-      procedureStepGetRequests.push(this.procedureService.stepGet(workOrderTask.procedureStep.procedureId, workOrderTask.procedureStep.id, env.apiVersion));
+      if(workOrderTask.procedureStep !== undefined){
+        procedureStepGetRequests.push(this.procedureService.stepGet(workOrderTask.procedureStep?.procedureId, workOrderTask.procedureStep?.id, env.apiVersion));
+      }
 
     });
 
@@ -170,7 +172,7 @@ export class WipdetailsComponent implements OnInit {
 
       let procedureStepModels = <Array<ProcedureStepModel>>responses.map(s => s.object[0]);
 
-      workOrderModel.workOrderTasks.map(workOrderTask => {
+      workOrderModel.workOrderTasks?.filter(s => s.procedureStep !== undefined).map(workOrderTask => {
 
         let procedureStepModel = procedureStepModels.find(s => s.id === workOrderTask.procedureStep.id);
         workOrderTask.procedureStep.referenceDocumentIds = procedureStepModel.referenceDocumentIds;
@@ -190,7 +192,7 @@ export class WipdetailsComponent implements OnInit {
       forkJoin(documentRequests).subscribe(responseHandler(documentResponses => {
 
         let documents = documentResponses.map(s => s.object[0]);
-        workOrderModel.workOrderTasks.map(workOrderTask => {
+        workOrderModel.workOrderTasks.filter(s => s.procedureStep !== undefined).map(workOrderTask => {
 
           workOrderTask.procedureStep.referenceDocument = new Array<FileModel>();
 
@@ -212,18 +214,28 @@ export class WipdetailsComponent implements OnInit {
 
   checkRoleAccessAndSetTaskAsViewable(workOrderTask: WorkOrderTaskModel) {
 
-    if (this.canUserAccessWorkOrderTask(workOrderTask)) {
+    if (this.canUserAccessWorkOrderTask(workOrderTask) && workOrderTask.procedureStep !== undefined) {
       this.workOrderTaskInProgress = workOrderTask;
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
       this.hasAccessToTaskBeingViewed = true;
       this.rolesRequiredMessage = undefined;
-    } else {
-      this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
+    } 
+    
+    if(workOrderTask.procedureStep !== undefined && !this.canUserAccessWorkOrderTask(workOrderTask)) {
+      this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep === undefined ? workOrderTask.title : workOrderTask.procedureStep?.title;
       this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
       this.hasAccessToTaskBeingViewed = false;
       this.workOrderTaskInProgress = workOrderTask;
       this.workOrderTaskToView = workOrderTask;
+    }
+
+    if(workOrderTask.procedureStep === undefined) {
+      this.workOrderTaskInProgress = workOrderTask;
+      this.workOrderTaskToView = workOrderTask;
+      this.rolesRequiredToViewTask.length = 0;
+      this.hasAccessToTaskBeingViewed = true;
+      this.rolesRequiredMessage = undefined;
     }
 
   }
@@ -309,12 +321,12 @@ export class WipdetailsComponent implements OnInit {
 
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
 
-    if (this.canUserAccessWorkOrderTask(workOrderTask)) {
+    if (this.canUserAccessWorkOrderTask(workOrderTask) || workOrderTask.procedureStep === undefined) {
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
       this.hasAccessToTaskBeingViewed = true;
       this.rolesRequiredMessage = undefined;
-    } else {
+    } else if(!this.canUserAccessWorkOrderTask(workOrderTask) && workOrderTask.procedureStep !== undefined) {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
       this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
       this.hasAccessToTaskBeingViewed = false;

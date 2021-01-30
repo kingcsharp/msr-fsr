@@ -28,7 +28,7 @@
           <ng-container *ngFor="let workOrderTask of workOrderTasks; let stepCount = index">
             <tr>
               <td scope="row">{{stepCount + 1}}</td>
-              <td>{{workOrderTask.procedureStep?.title}}</td>
+              <td>{{workOrderTask.procedureStep?.title| workOrderTaskAndMonitor: workOrderTask.procedureStepId : workOrderTask.title}}</td>
               <td>{{workOrderTask.assignedToUser?.fullName}}</td>
               <td>{{workOrderTask.startedOn | userTimezone}}</td>
               <td>{{workOrderTask.completedOn | userTimezone}}</td>
@@ -44,7 +44,7 @@
             <ng-container *ngFor="let workOrderTaskMonitor of workOrderTask.workOrderTaskMonitors">
               <tr>
                 <td></td>
-                <td colspan="4" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description"></td>
+                <td colspan="4" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureStepId : workOrderTaskMonitor.description"></td>
                 <td>{{workOrderTaskMonitor | monitorResult }}</td>
                 <td [ngClass]="(workOrderTaskMonitor | monitorstatus) ? 'bg-success' : 'bg-danger'">{{ (workOrderTaskMonitor | monitorstatus) ? 'Pass' : 'Fail' }}</td>
               </tr>

@@ -88,7 +88,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<EquipmentMaintenance> EquipmentMaintenances { get; }
         IRepository<WorkOrderMessage> WorkOrderMessages { get; }
         IRepository<PortalWorkOrder> PortalWorkOrderViews { get; }
-        
+        IRepository<ProductStep> ProductSteps { get; }
+
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;

@@ -5,7 +5,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     [Table(nameof(ProcedureStepMonitor))]
     public partial class ProcedureStepMonitor: TrackableEntity
     {
-        public int ProcedureStepId { get; set; }
+        public int? ProcedureStepId { get; set; }
 
         public int MonitorTypeId { get; set; }
         public MonitorType MonitorType { get; set; }

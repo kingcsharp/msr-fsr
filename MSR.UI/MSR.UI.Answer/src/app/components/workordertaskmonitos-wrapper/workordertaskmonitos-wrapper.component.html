@@ -3,7 +3,7 @@
   <div class="d-flex flex-wrap">
     <div class="col-4" *ngFor="let workOrderTaskMonitor of  workOrderMonitorsToView; let i = index">
       <div class="card my-2 border shadow">
-        <div class="card-header" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor.description">
+        <div class="card-header" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description">
         </div>
         <div class="card-body">
           <div class="form-group col-12 d-flex flex-row">
@@ -19,67 +19,74 @@
               Monitor Type:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.monitorType}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.monitorType | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.monitorType}}
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.EQUAL
-            && workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number">
+          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.EQUAL
+            && workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number) || (workOrderTaskMonitor.shouldBe === monitorShouldBe.EQUAL
+            && workOrderTaskMonitor.monitorTypeId === monitorTypes.Number)">
             <label for="equal" class="col-form-label text-left col-3">
               Equal To:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.targetValue}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.targetValue| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue}}
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.ABOVE 
-            && workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number">
+          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.ABOVE 
+            && workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number) || (workOrderTaskMonitor.shouldBe === monitorShouldBe.ABOVE 
+            && workOrderTaskMonitor.monitorTypeId === monitorTypes.Number)">
             <label for="equal" class="col-form-label text-left col-3">
               Above:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.targetValue}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.targetValue| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue}}
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.BELOW 
-            && workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number">
+          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.BELOW 
+            && workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number) || (workOrderTaskMonitor.shouldBe === monitorShouldBe.BELOW 
+            && workOrderTaskMonitor.monitorTypeId === monitorTypes.Number)">
             <label for="equal" class="col-form-label text-left col-3">
               Below:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.targetValue}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.targetValue| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue}}
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.BETWEEN 
-            && workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number">
+          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.BETWEEN 
+            && workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number) || (workOrderTaskMonitor.shouldBe === monitorShouldBe.BETWEEN 
+            && workOrderTaskMonitor.monitorTypeId === monitorTypes.Number)">
             <label for="equal" class="col-form-label text-left col-3">
               Between:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor.lowTarget}} and
-              {{workOrderTaskMonitor.procedureStepMonitor.highTarget}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.lowTarget | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.lowTarget}} and
+              {{workOrderTaskMonitor.procedureStepMonitor?.highTarget | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.lowTarget}}
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number 
-            && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
+          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number 
+            && workOrderTaskMonitor.procedureStepMonitor?.inputType === 'Sensor') || (workOrderTaskMonitor.monitorTypeId === monitorTypes.Number 
+            && workOrderTaskMonitor.inputType === 'Sensor')">
             <label for="equipmentsensorresult" class="col-form-label text-left col-3">
               Sensor:
             </label>
             <div class="col-9 px-0">
-              {{workOrderTaskMonitor.procedureStepMonitor?.sensorName}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.sensorName | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.sensorName}}
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row"
-            *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.YesOrNo">
+            *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.YesOrNo) || (workOrderTaskMonitor.monitorTypeId === monitorTypes.YesOrNo)">
             <label class="col-form-label text-left col-3">
               Correct Answer:
             </label>
             <div class="col-9 px-0">
-              {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'No' : 'Yes'}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.targetValue | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue : false : true }}
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Equipment 
-            && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Manual') 
-            || workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Text">
+          <div class="form-group col-12 d-flex flex-row" *ngIf="((workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Equipment 
+            && workOrderTaskMonitor.procedureStepMonitor?.inputType === 'Manual') 
+            || workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Text) || ((workOrderTaskMonitor.monitorTypeId === monitorTypes.Equipment 
+            && workOrderTaskMonitor.inputType === 'Manual') 
+            || workOrderTaskMonitor.monitorTypeId === monitorTypes.Text)">
             <label for="result" class="col-form-label text-left col-3">
               Result:
             </label>
@@ -89,8 +96,9 @@
                 class="form-control input-transparent" tooltip="Result">
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number 
-            && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
+          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number 
+            && workOrderTaskMonitor.procedureStepMonitor?.inputType === 'Sensor') || (workOrderTaskMonitor.monitorTypeId === monitorTypes.Number 
+            && workOrderTaskMonitor.inputType === 'Sensor')">
             <label for="equipmentsensorresult" class="col-form-label text-left col-3">
               Result:
             </label>
@@ -106,47 +114,73 @@
                 Value</button>
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row" *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Number 
-          && workOrderTaskMonitor.procedureStepMonitor.inputType !== 'Sensor'">
+          <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number 
+          && workOrderTaskMonitor.procedureStepMonitor?.inputType !== 'Sensor') || (workOrderTaskMonitor.monitorTypeId === monitorTypes.Number 
+          && workOrderTaskMonitor.inputType !== 'Sensor')">
             <label for="result" class="col-form-label text-left col-3">
               Result:
             </label>
-            <div class="col-9 px-0"
-              *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.StopUntilFaultCleared">
+            <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.procedureMonitorId !== null && workOrderTaskMonitor.procedureStepMonitor?.faultHandling === failActions.StopUntilFaultCleared">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
                 class="form-control input-transparent"
-                *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.EQUAL"
+                *ngIf="workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.EQUAL"
                 data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true"
-                [attr.data-parsley-equaltotarget]="workOrderTaskMonitor.procedureStepMonitor.targetValue"
+                [attr.data-parsley-equaltotarget]="workOrderTaskMonitor.procedureStepMonitor?.targetValue"
                 data-parsley-error-message="Value is not equal to the target value">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
                 class="form-control input-transparent"
-                *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.ABOVE"
+                *ngIf="workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.ABOVE"
                 data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true"
-                [attr.data-parsley-min]="workOrderTaskMonitor.procedureStepMonitor.targetValue"
+                [attr.data-parsley-min]="workOrderTaskMonitor.procedureStepMonitor?.targetValue"
                 data-parsley-error-message="Value is not above or equal to target value">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
                 class="form-control input-transparent"
-                *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.BELOW"
+                *ngIf="workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.BELOW"
                 data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true"
-                [attr.data-parsley-max]="workOrderTaskMonitor.procedureStepMonitor.targetValue"
+                [attr.data-parsley-max]="workOrderTaskMonitor.procedureStepMonitor?.targetValue"
                 data-parsley-error-message="Value is not below or equal to target value">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
                 class="form-control input-transparent"
-                *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === monitorShouldBe.BETWEEN"
+                *ngIf="workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.BETWEEN"
                 data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true"
-                [attr.data-parsley-range]="'[' + workOrderTaskMonitor.procedureStepMonitor.lowTarget + ',' + workOrderTaskMonitor.procedureStepMonitor.highTarget + ']'"
+                [attr.data-parsley-range]="'[' + workOrderTaskMonitor.procedureStepMonitor?.lowTarget + ',' + workOrderTaskMonitor.procedureStepMonitor?.highTarget + ']'"
+                data-parsley-error-message="Value is not within acceptable range">
+            </div>
+            <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.procedureMonitorId === null && workOrderTaskMonitor.faultHandling === failActions.StopUntilFaultCleared">
+              <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
+                class="form-control input-transparent"
+                *ngIf="workOrderTaskMonitor.shouldBe === monitorShouldBe.EQUAL"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true"
+                [attr.data-parsley-equaltotarget]="workOrderTaskMonitor.targetValue"
+                data-parsley-error-message="Value is not equal to the target value">
+              <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
+                class="form-control input-transparent"
+                *ngIf="workOrderTaskMonitor.shouldBe === monitorShouldBe.ABOVE"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true"
+                [attr.data-parsley-min]="workOrderTaskMonitor.targetValue"
+                data-parsley-error-message="Value is not above or equal to target value">
+              <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
+                class="form-control input-transparent"
+                *ngIf="workOrderTaskMonitor.shouldBe === monitorShouldBe.BELOW"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true"
+                [attr.data-parsley-max]="workOrderTaskMonitor.targetValue"
+                data-parsley-error-message="Value is not below or equal to target value">
+              <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
+                class="form-control input-transparent"
+                *ngIf="workOrderTaskMonitor.shouldBe === monitorShouldBe.BETWEEN"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true"
+                [attr.data-parsley-range]="'[' + workOrderTaskMonitor.lowTarget + ',' + workOrderTaskMonitor.highTarget + ']'"
                 data-parsley-error-message="Value is not within acceptable range">
             </div>
             <div class="col-9 px-0"
-              *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.RecordAndContinue">
+              *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.faultHandling === failActions.RecordAndContinue) || (workOrderTaskMonitor.faultHandling === failActions.RecordAndContinue)">
               <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
                 class="form-control input-transparent" data-validate="parsley" data-parsley-trigger="change"
                 data-parsley-required="true" data-parsley-error-message="This monitor requires feedback">
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row"
-            *ngIf=" workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.PassOrFail">
+            *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.PassOrFail) || (workOrderTaskMonitor.monitorTypeId === monitorTypes.PassOrFail)">
             <label for="result" class="col-form-label text-left col-3">
               Result:
             </label>
@@ -156,21 +190,24 @@
                 [(ngModel)]="workOrderTaskMonitor.numVal">
               </p-dropdown>
               <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
-                <li class="parsley-custom-error-message" *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.StopUntilFaultCleared && 
+                <li class="parsley-custom-error-message" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.faultHandling === failActions.StopUntilFaultCleared && 
                   (workOrderTaskMonitor.numVal === null ||
-                  workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.procedureStepMonitor.targetValue)">
+                  workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.procedureStepMonitor?.targetValue)) || (workOrderTaskMonitor.faultHandling === failActions.StopUntilFaultCleared && 
+                  (workOrderTaskMonitor.numVal === null ||
+                  workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.targetValue))">
                   Value should be equal to
-                  {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'Fail' : 'Pass'}}
+                  {{workOrderTaskMonitor.procedureStepMonitor?.targetValue | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue : true : false}}
                 </li>
-                <li class="parsley-custom-error-message" *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.RecordAndContinue 
-                && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)">
+                <li class="parsley-custom-error-message" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.faultHandling === failActions.RecordAndContinue 
+                && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)) || (workOrderTaskMonitor.faultHandling === failActions.RecordAndContinue 
+                && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null))">
                   This monitor requires feedback
                 </li>
               </ul>
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row"
-            *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.YesOrNo">
+            *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.YesOrNo) || (workOrderTaskMonitor.monitorTypeId === monitorTypes.YesOrNo)">
             <label for="yourAnswer" class="col-form-label text-left col-3">
               Your Answer:
             </label>
@@ -180,21 +217,24 @@
                 [(ngModel)]="workOrderTaskMonitor.numVal">
               </p-dropdown>
               <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">
-                <li class="parsley-custom-error-message" *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.StopUntilFaultCleared && 
+                <li class="parsley-custom-error-message" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.faultHandling === failActions.StopUntilFaultCleared && 
                   (workOrderTaskMonitor.numVal === null ||
-                  workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.procedureStepMonitor.targetValue)">
+                  workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.procedureStepMonitor?.targetValue)) || (workOrderTaskMonitor.faultHandling === failActions.StopUntilFaultCleared && 
+                  (workOrderTaskMonitor.numVal === null ||
+                  workOrderTaskMonitor.numVal.toString() !== workOrderTaskMonitor.targetValue))">
                   Value should be equal to
-                  {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'No' : 'Yes'}}
+                  {{workOrderTaskMonitor.procedureStepMonitor?.targetValue | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue : false : true}}
                 </li>
-                <li class="parsley-custom-error-message" *ngIf="workOrderTaskMonitor.procedureStepMonitor.faultHandling === failActions.RecordAndContinue 
-                && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)">
+                <li class="parsley-custom-error-message" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.faultHandling === failActions.RecordAndContinue 
+                && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null)) || (workOrderTaskMonitor.faultHandling === failActions.RecordAndContinue 
+                && (workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null))">
                   This monitor requires feedback
                 </li>
               </ul>
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row"
-            *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorTypeId === monitorTypes.Select">
+            *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Select) || (workOrderTaskMonitor.monitorTypeId === monitorTypes.Select)">
             <label for="selectresult" class="col-form-label text-left col-3">
               Result:
             </label>
@@ -215,10 +255,10 @@
               If Fails:
             </label>
             <div class="col-9 px-0 col-form-label">
-              <span *ngIf="workOrderTaskMonitor?.procedureStepMonitor?.faultHandling === failActions.RecordAndContinue">
+              <span *ngIf="(workOrderTaskMonitor?.procedureStepMonitor?.faultHandling === failActions.RecordAndContinue) || (workOrderTaskMonitor?.faultHandling === failActions.RecordAndContinue)">
                 Continue to next step</span>
               <span
-                *ngIf="workOrderTaskMonitor?.procedureStepMonitor?.faultHandling === failActions.StopUntilFaultCleared">
+                *ngIf="(workOrderTaskMonitor?.procedureStepMonitor?.faultHandling === failActions.StopUntilFaultCleared) || (workOrderTaskMonitor?.faultHandling === failActions.StopUntilFaultCleared)">
                 Stay at this step until passing result is entered</span>
             </div>
           </div>

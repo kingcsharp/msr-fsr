@@ -18,6 +18,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Data;
 using System;
+using System.Diagnostics;
 using MSR.Infrastructure.Resources.Queries;
 using MSR.Infrastructure.Resources.EntityFramework.Projections;
 using MSR.Domain.Views;
@@ -304,7 +305,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 s.EntityTableName == nameof(EntityFramework.Entities.ProcedureStep)).ToListAsync();
 
             var workOrderTasksInUse = _unitOfWork.WorkOrderTasks.Query()
-                .Where(s => procedureStepIds.Contains(s.ProcedureStepId));
+                .Where(s => procedureStepIds.Contains(s.ProcedureStepId.Value)
+                            && (s.StatusId == (int)EnumStatusSteps.InProgress 
+                               || s.StatusId == (int)EnumStatusSteps.WaitingtoStart
+                               || s.StatusId == (int)EnumStatusSteps.Approved));
 
             procedureStepModels.ForEach(procedureStep =>
             {
@@ -495,7 +499,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             _unitOfWork.ProcedureSteps.LoadReference(originalProcedureStepEntity, x => x.Procedure);
             int procApprovalId = await FlagProcedureForApproval(
-                originalProcedureStepEntity.Procedure, originalProcedureStepEntity.ProcedureId
+                originalProcedureStepEntity.Procedure, originalProcedureStepEntity.ProcedureId.Value
             );
             var approval = _mapper.Map<ProcedureStepApproval>(command);
             approval.ProcedureApprovalId = procApprovalId;
@@ -538,7 +542,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 _unitOfWork.ProcedureStepMonitors
                     .Query()
-                    .Where(x => procedureStepIds.Contains(x.ProcedureStepId))
+                    .Where(x => procedureStepIds.Contains(x.ProcedureStepId.Value))
                     .Select(x => x.Id)
                     .ToList()
                     .ForEach(id => {
@@ -558,33 +562,36 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ProcedureStepModel> DeleteProcedureStepAsync(DeleteProcedureStep command)
         {
-            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false,
+            var procedureStepEntity = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false,
                 i => i.ProcedureId == command.procedureID && i.Id == command.procedureStepID
             );
 
-            current.ProcedureStepRoles = await _unitOfWork.ProcedureStepRoleMaps.Query()
+            procedureStepEntity.ProcedureStepRoles = await _unitOfWork.ProcedureStepRoleMaps.Query()
                 .Where(s => s.ProcedureStepId == command.procedureStepID).ToListAsync();
 
-            current.ProcedureStepMonitors = await _unitOfWork.ProcedureStepMonitors.Query()
+            procedureStepEntity.ProcedureStepMonitors = await _unitOfWork.ProcedureStepMonitors.Query()
                 .Where(s => s.ProcedureStepId == command.procedureStepID).ToListAsync();
 
-            if (current is null)
+            if (procedureStepEntity is null)
             {
                 throw new DomainException($"{nameof(ProcedureStep)} not found with ID: {command.procedureID}/{command.procedureStepID}", DomainError.NotFound);
             }
             if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
             {
-                _unitOfWork.ProcedureSteps.Delete(false, current);
+
+                await DeleteProcedureStepMonitorsAsync(procedureStepEntity.Id);
+                await DeleteProcedureStepsAsync(procedureStepEntity.Id);
                 await _unitOfWork.SaveChangesAsync();
+
             }
             else
             {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepModel)} uid {CurrentUser.GetId()}");
+                throw new DomainException($"Permission denied for {nameof(Domain.Models.ProcedureStepModel)} uid {CurrentUser.GetId()}");
             }
 
-            var ProcedureStepModel = _mapper.Map<ProcedureStepModel>(current);
+            var procedureStepModel = _mapper.Map<ProcedureStepModel>(procedureStepEntity);
 
-            return ProcedureStepModel;
+            return procedureStepModel;
         }
 
         public async Task<ICollection<Domain.Models.ProcedureStepTypeModel>> GetProcedureStepType(GetProcedureStepType command)
@@ -965,5 +972,51 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return result;
         }
 
+        private async Task DeleteProcedureStepMonitorsAsync(int procedureStepId)
+        {
+            var workOrderTaskMonitorEntities =  await _unitOfWork.WorkOrderTaskMonitors.Query()
+                .Where(s => s.ProcedureMonitorId == procedureStepId).ToListAsync();
+
+            workOrderTaskMonitorEntities.ForEach(workOrderTaskMonitorEntity =>
+            {
+                workOrderTaskMonitorEntity.ProcedureMonitorId = null;
+            });
+
+            var procedureStepMonitorEntities = await _unitOfWork.ProcedureStepMonitors.Query()
+                .Where(s => s.ProcedureStepId == procedureStepId).ToListAsync();
+
+            procedureStepMonitorEntities.ForEach(procedureStepMonitorEntity =>
+            {
+                procedureStepMonitorEntity.ProcedureStepId = null;
+                _unitOfWork.ProcedureStepMonitors.Delete(false, procedureStepMonitorEntity);
+            });
+
+        }
+
+        private async Task DeleteProcedureStepsAsync(int procedureStepId)
+        {
+            var workOrderTaskEntities =
+                await _unitOfWork.WorkOrderTasks.Query().Where(s => s.ProcedureStepId == procedureStepId).ToListAsync();
+
+            workOrderTaskEntities.ForEach(workOrderTaskEntity =>
+            {
+                workOrderTaskEntity.ProcedureStepId = null;
+            });
+
+            var procedureStepEntity = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, s => s.Id == procedureStepId);
+
+            procedureStepEntity.ProcedureId = null;
+
+            var productStepEntities = await _unitOfWork.ProductSteps.Query()
+                .Where(s => s.ProcedureStepId == procedureStepId).ToListAsync();
+
+            productStepEntities.ForEach(productStepEntity =>
+            {
+                productStepEntity.ProcedureStepId = null;
+            });
+
+            _unitOfWork.ProcedureSteps.Delete(false, procedureStepEntity);
+
+        }
     }
 }
