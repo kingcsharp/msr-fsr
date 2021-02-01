@@ -27,14 +27,17 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{woTaskMonitor.procedureStepMonitor?.description}}</td>
+                        <td [innerHTML]="woTaskMonitor.procedureStepMonitor?.description">
+                        </td>
                         <td>
                             {{woTaskMonitor | monitorResult}}
                         </td>
                         <td *ngIf="woTaskMonitor?.procedureStepMonitor?.monitorTypeId === enumMonitorType.Text">
 
                         </td>
-                        <td *ngIf="woTaskMonitor?.procedureStepMonitor?.monitorTypeId !== enumMonitorType.Text" class="text-center" [ngClass]="{'alert-success':woTaskMonitor.pass,'alert-danger':!woTaskMonitor.pass}">
+                        <td *ngIf="woTaskMonitor?.procedureStepMonitor?.monitorTypeId !== enumMonitorType.Text"
+                            class="text-center"
+                            [ngClass]="{'alert-success':woTaskMonitor.pass,'alert-danger':!woTaskMonitor.pass}">
                             {{woTaskMonitor.pass?'Pass':'Fail'}}
                         </td>
                         <td>{{woTaskMonitor?.comment}}</td>
