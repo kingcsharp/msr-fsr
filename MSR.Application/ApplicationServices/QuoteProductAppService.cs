@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -52,6 +53,21 @@ namespace MSR.Application.ApplicationServices
                     var qpModel = _mapper.Map<QuotesProductsView>(quote);
                     qpModel.IsProduct = false;
                     qpModel.IsDeletable = true;
+
+                    if (quote.PartKitNo == null)
+                    {
+                        if (quote.QuoteJson != null)
+                        {
+                            var quoteJson = JsonConvert.DeserializeObject<dynamic>(quote.QuoteJson);
+                            qpModel.PartKitNo = quoteJson?.quoteItems?[0]?.customerPartNo;
+
+                        }
+                        else if (quote.CustomerRequirementJson != null)
+                        {
+                            var customerRequirementJson = JsonConvert.DeserializeObject<dynamic>(quote.CustomerRequirementJson);
+                            qpModel.PartKitNo = customerRequirementJson?.PartKitNo;
+                        }
+                    }
                     retQuotesProductsViewsList.Add(qpModel);
                 }               
             }
