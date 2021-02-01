@@ -57,14 +57,11 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     this.areMonitorsValidCheck.emit({
       areValid: (result) => {
 
+        this.stopTimer();
+        this.setTaskToCompleted();
+        this.updateTotalTaskTime();
         this.workOrderTaskInProgress.taskIsRunning = false;
         this.workOrderTaskInProgress.taskRunningSince = null;
-        this.stopTimer();
-        this.resetTimerDisplay();
-        this.setTaskToCompleted();
-        this.resetTimerDisplay();
-        this.workOrderTaskInProgress.lastUpdatedOn = moment().toDate();
-
         this.saveTaskTimerState(true);
 
       }
@@ -153,13 +150,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   }
 
   done() {
-    this.globals.showLoader(true);
-    this.stopTimer();
-    this.setTaskToCompleted();
-    this.updateTotalTaskTime();
-    this.workOrderTaskInProgress.taskIsRunning = false;
-    this.workOrderTaskInProgress.taskRunningSince = null;
-    this.saveTaskTimerState(true);
+    this.completeTask();
   }
 
   startTimer() {

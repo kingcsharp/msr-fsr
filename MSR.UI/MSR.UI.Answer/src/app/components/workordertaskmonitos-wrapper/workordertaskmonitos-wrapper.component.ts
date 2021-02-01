@@ -171,7 +171,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     let toatlRequests = this.workOrderMonitorsToView.length;
 
     this.showNcrEmailNotificationDialog = false;
-    this.globals.showLoader(true);
     this.workOrderMonitorsToView.map(monitor => {
       let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
         comment: monitor.comment === undefined ? '' : monitor.comment,
