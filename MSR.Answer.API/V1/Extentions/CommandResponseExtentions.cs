@@ -20,14 +20,19 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static IActionResult ToOkObjectResponse<TResult>(this ICommandResponse commandResponse, string message = null)
         {
-            var result = ValidateCommandResponse(commandResponse);
+            IActionResult error = ValidateCommandResponse(commandResponse);
+            if (error != null)
+            {
+                // error case
+                return error;
+            }
             var dataObject = ((ICommandResponse<TResult>)commandResponse).Data;
             int id = 0;
             if (dataObject is EntityModel)
             {
                 id = (dataObject as EntityModel).Id;
             }
-            return result ?? new OkObjectResult(new AuditActionResult<TResult>()
+            return new OkObjectResult(new AuditActionResult<TResult>()
             {
                 Object = dataObject,
                 SuccessMessage = message,
