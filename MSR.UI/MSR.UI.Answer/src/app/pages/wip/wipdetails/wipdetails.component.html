@@ -204,10 +204,10 @@
           <p-tabPanel class="content-tabs" header="Monitors">
             <span
               *ngIf="hasAccessToTaskBeingViewed && workOrderTaskToView.workOrderTaskMonitors !== undefined && workOrderModel !== undefined">
-              <workordertaskmonitos-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
+              <workordertaskmonitors-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
                 [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id"
                 [workOrderModel]="workOrderModel" (closeCurrentTaskInProgress)="closeCurrentTask()" #workordertaskmonitors>
-              </workordertaskmonitos-wrapper>
+              </workordertaskmonitors-wrapper>
             </span>
           </p-tabPanel>
           <p-tabPanel class="content-tabs" header="Files">
