@@ -13,12 +13,12 @@ declare let jQuery: any;
 declare let Parsley: any;
 
 @Component({
-  selector: 'workordertaskmonitos-wrapper',
-  templateUrl: './workordertaskmonitos-wrapper.component.html',
-  styleUrls: ['./workordertaskmonitos-wrapper.component.scss'],
+  selector: 'workordertaskmonitors-wrapper',
+  templateUrl: './workordertaskmonitors-wrapper.component.html',
+  styleUrls: ['./workordertaskmonitors-wrapper.component.scss'],
   providers: [SensorService, WorkOrderTaskMonitorService]
 })
-export class WorkordertaskmonitosWrapperComponent implements OnInit {
+export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
   @Input() workOrderMonitorsToView: Array<any>;
   @Input() locationId: number;
@@ -171,7 +171,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     let toatlRequests = this.workOrderMonitorsToView.length;
 
     this.showNcrEmailNotificationDialog = false;
-    this.globals.showLoader(true);
     this.workOrderMonitorsToView.map(monitor => {
       let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
         comment: monitor.comment === undefined ? '' : monitor.comment,

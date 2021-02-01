@@ -19,7 +19,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { WorkordertasktimerWrapperComponent } from '../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-import { WorkordertaskmonitosWrapperComponent } from '../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component';
+import { WorkordertaskmonitorsWrapperComponent } from '../../components/workordertaskmonitors-wrapper/workordertaskmonitors-wrapper.component';
 import { EmPmButtonWrapperComponent } from '../../components/em-pm-button-wrapper/em-pm-button-wrapper.component';
 import { AddNcrButtonWrapperComponent } from '../../components/add-ncr-button-wrapper/add-ncr-button-wrapper.component';
 import { TakeOverTaskButtonWrapperComponent } from '../../components/take-over-task-button-wrapper/take-over-task-button-wrapper.component';
@@ -47,7 +47,7 @@ export const routes = [
 
 @NgModule({
   declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent,
-    WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
+    WorkordertasktimerWrapperComponent, WorkordertaskmonitorsWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
     WipListButtonWrapperComponent, SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent, PrintotherReportComponent,
     DeliveryTicketReportComponent, WipHistoryReportComponent, NcrReportComponent, PartLabelRollComponent, TechnicalDataLabelComponent,
     WorkReportComponent, TakeOverTaskButtonWrapperComponent],

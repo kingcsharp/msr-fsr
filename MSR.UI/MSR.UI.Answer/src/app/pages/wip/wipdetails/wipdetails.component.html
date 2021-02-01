@@ -168,7 +168,9 @@
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="workOrderTaskToView !== undefined && parentPart?.serialNumber !== 'N/A' && workOrderTaskToView.procedureStep?.procedureStepType.trim().toLocaleUpperCase() === 'SERIALIZATION'">
+            <div class="row" *ngIf="workOrderTaskToView !== undefined && parentPart?.serialNumber !== 'N/A' 
+            && (workOrderTaskToView.procedureStep?.procedureStepType?.trim().toLocaleUpperCase() === 'SERIALIZATION'
+            || workOrderTaskToView.procedureStepType?.name?.trim().toLocaleUpperCase() === 'SERIALIZATION')">
               <div class="container-fluid product-container m-2">
                 <table class="table">
                   <thead class="thead-dark">
@@ -202,10 +204,10 @@
           <p-tabPanel class="content-tabs" header="Monitors">
             <span
               *ngIf="hasAccessToTaskBeingViewed && workOrderTaskToView.workOrderTaskMonitors !== undefined && workOrderModel !== undefined">
-              <workordertaskmonitos-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
+              <workordertaskmonitors-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
                 [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id"
                 [workOrderModel]="workOrderModel" (closeCurrentTaskInProgress)="closeCurrentTask()" #workordertaskmonitors>
-              </workordertaskmonitos-wrapper>
+              </workordertaskmonitors-wrapper>
             </span>
           </p-tabPanel>
           <p-tabPanel class="content-tabs" header="Files">

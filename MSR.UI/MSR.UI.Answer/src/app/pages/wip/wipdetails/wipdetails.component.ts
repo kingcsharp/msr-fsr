@@ -13,7 +13,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
-import { WorkordertaskmonitosWrapperComponent } from '../../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component';
+import { WorkordertaskmonitorsWrapperComponent } from '../../../components/workordertaskmonitors-wrapper/workordertaskmonitors-wrapper.component';
 import { PrintotherReportComponent } from '../../../components/printother-report/printother-report.component';
 import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { SelectItem } from 'primeng/api';
@@ -34,7 +34,7 @@ export class WipdetailsComponent implements OnInit {
   @ViewChild('workordertasktimer') workOrderTaskTimer: WorkordertasktimerWrapperComponent;
   @ViewChild('selectworkorderdropdown') selectWorkOrderDropDown: SelectWorkOrderDropDownWrapperComponent;
   @ViewChild('stepCarousel') carousel: CarouselComponent;
-  @ViewChild('workordertaskmonitors') workordertaskmonitors: WorkordertaskmonitosWrapperComponent;
+  @ViewChild('workordertaskmonitors') workordertaskmonitors: WorkordertaskmonitorsWrapperComponent;
   @ViewChild('printotherreport') printOtherReport: PrintotherReportComponent;
   workOrderModel: WorkOrderModel = new WorkOrderModel();
   parentPart: WorkOrderPartModel = new WorkOrderPartModel();
@@ -116,8 +116,8 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderModel = this.cleanData(response.object[0]);
       this.getCustomerContacts(this.workOrderModel.purchase?.purchaseOrder?.customer?.id);
       this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
-      this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
-      this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
+      this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.title)?.find(m => m?.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
+      this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
       this.workOrderParts = this.workOrderModel.workOrderParts;
       this.parentPart = this.workOrderModel.workOrderParts[0];
       this.procedure = this.workOrderModel.product.procedure;
