@@ -4,6 +4,7 @@ export interface IAllowedActions {
     canDelete: boolean | undefined;
     canEdit: boolean | undefined;
     canRead: boolean | undefined;
+    canApprove: boolean | undefined;
 }
 
 export class AllowedActions {
@@ -12,6 +13,7 @@ export class AllowedActions {
     canDelete: boolean | undefined;
     canEdit: boolean | undefined;
     canRead: boolean | undefined;
+    canApprove: boolean | undefined;
 
     constructor(data?: IAllowedActions) {
         if (data) {
