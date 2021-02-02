@@ -19,7 +19,7 @@ export class GridOptionsComponent implements OnInit {
   columnPicker: any;
   columnDropdown: boolean = false;
   gridOptionsRotate: boolean = false;
-  viewsSaved: Array<ViewSaved>;
+  viewsSaved: Array<ViewSaved> = new Array<ViewSaved>();
   viewToSave: ViewSaved;
   showSaveView: boolean = false;
   savedViewsOptions: any;
