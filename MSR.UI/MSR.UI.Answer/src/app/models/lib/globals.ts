@@ -129,7 +129,8 @@ export class Globals {
             canActivate: this.hasPrivilege(controllerEnum, EnumPrivilege.CanActivate),
             canDelete: this.hasPrivilege(controllerEnum, EnumPrivilege.CanDelete),
             canEdit: this.hasPrivilege(controllerEnum, EnumPrivilege.CanEdit),
-            canRead: this.hasPrivilege(controllerEnum, EnumPrivilege.CanRead)
+            canRead: this.hasPrivilege(controllerEnum, EnumPrivilege.CanRead),
+            canApprove: this.hasPrivilege(controllerEnum, EnumPrivilege.CanCreate)
         });
 
         return allowedActions;
