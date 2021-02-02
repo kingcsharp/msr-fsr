@@ -41,7 +41,13 @@ namespace MSR.Infrastructure.Resources.Services.Sensor
             }
 
 
-            return sensors.Include(i => i.AssignedLocation).Include(i => i.Site).Where(i => !i.AssignedLocationId.HasValue).Select(i => _mapper.Map<SensorModel>(i)).AsEnumerable();
+            return sensors
+                .Include(i => i.AssignedLocation)
+                .Include(i => i.Site)
+                .Where(i => !i.AssignedLocationId.HasValue)
+                .Select(i => _mapper.Map<SensorModel>(i))
+                .ToList()
+                .AsEnumerable();
         }
 
         public async Task<IEnumerable<string>> GetSensorName(GetSensorName command)
