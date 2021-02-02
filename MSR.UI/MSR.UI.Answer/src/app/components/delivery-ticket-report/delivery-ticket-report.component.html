@@ -13,7 +13,10 @@
         <div class="row mx-2">
             <div class="col-3">
                 <u>Ship From</u><br />
-                MSR-FSR
+                MSR-FSR<br/>
+                {{ WorkOrder.location?.name }}<br/>
+                {{ WorkOrder.location?.address1 }} {{ WorkOrder.location?.address2 }}<br/>
+                {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} {{ WorkOrder.location?.postalCode }}<br/>
             </div>
             <div class="col-3">
                 <u>Ship To</u><br />
