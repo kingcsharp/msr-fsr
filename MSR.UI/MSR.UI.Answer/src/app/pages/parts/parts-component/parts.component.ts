@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  PartService, PartModel, SubPartModel, EnumMenuItem, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
+  PartService, PartModel, SubPartModel, EnumMenuItem, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel, EnumSegregationType
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -150,6 +150,9 @@ export class PartsComponent implements OnInit {
     this.getPartsDropdown();
     this.uploadedFiles = [];
     this.currPart = this.getPart(part);
+    if(this.currPart.segregationType === undefined){
+      this.currPart.segregationType = EnumSegregationType.NONCU;
+    }
     this.display = true;
   }
 
@@ -295,7 +298,8 @@ export class PartsComponent implements OnInit {
       maximumCycles: currentPart.maximumCycles,
       nickName: currentPart.nickName,
       oemPartNumber: currentPart.oemPartNumber,
-      files: currentPart.files
+      files: currentPart.files,
+      segregationType: currentPart.segregationType
     });
     return ret;
   }

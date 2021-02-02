@@ -18,6 +18,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { SegregationTypeComponent } from '../../components/segregation-type/segregation-type.component';
 
 export const routes = [
   { path: '', redirectTo: 'parts', pathMatch: 'prefix' },
@@ -27,6 +28,7 @@ export const routes = [
 @NgModule({
   declarations: [
     PartsComponent,
+    SegregationTypeComponent
   ],
   imports: [
     CommonModule,

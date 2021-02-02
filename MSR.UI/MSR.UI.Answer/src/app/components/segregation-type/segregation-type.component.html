@@ -1,0 +1,16 @@
+<div>
+  <div class="btn-group btn-group-toggle " data-toggle="buttons">
+    <label [ngClass]="{ 'btn btn-seg-type d-flex flex-column justify-content-center cu' : true, 'active': segregationType === EnumSegregationType.CU}" (click)="segregationTypeSelected(EnumSegregationType.CU)">
+      <input type="radio" name="segregationtype" autocomplete="off" > 
+      <span>Cu</span>
+    </label>
+    <label [ngClass]="{ 'btn btn-seg-type d-flex flex-column justify-content-center non-cu' : true, 'active': segregationType === EnumSegregationType.NONCU}" (click)="segregationTypeSelected(EnumSegregationType.NONCU)">
+      <input type="radio" name="segregationtype" autocomplete="off" [checked]="segregationType === EnumSegregationType.NONCU">
+      <span>Non-Cu</span>
+    </label>
+    <label [ngClass]="{ 'btn btn-seg-type d-flex flex-column justify-content-center deseg' : true, 'active': segregationType === EnumSegregationType.DESEG}" (click)="segregationTypeSelected(EnumSegregationType.DESEG)">
+      <input type="radio" name="segregationtype" autocomplete="off" [checked]="segregationType === EnumSegregationType.DESEG">
+      <span>Deseg</span>
+    </label>
+  </div>
+</div>
