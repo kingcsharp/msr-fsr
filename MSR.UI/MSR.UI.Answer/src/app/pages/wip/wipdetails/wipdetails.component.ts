@@ -6,7 +6,7 @@ import {
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
-  ProcedureStepModel, DocumentView, Role, UserModel
+  ProcedureStepModel, DocumentView, Role, UserModel, EnumSegregationType
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -19,6 +19,7 @@ import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { SelectItem } from 'primeng/api';
 import { take } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
+import { ProductSegregationService } from '../../../services/product-segregation.service';
 
 @Component({
   selector: 'app-wipdetails',
@@ -64,10 +65,12 @@ export class WipdetailsComponent implements OnInit {
   monitorsAreInvalidDialog: boolean = false;
   roles: Array<Role> = new Array<Role>();
   allUserRoleIds: Array<number>;
+  EnumSegregationType = EnumSegregationType;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, private customerService: CustomerService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
-    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, private roleService: RoleService) { }
+    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, 
+    private roleService: RoleService, public productSegregationService: ProductSegregationService) { }
 
   @HostListener('window:resize', ['$event'])
   getScreenSize() {
@@ -139,6 +142,16 @@ export class WipdetailsComponent implements OnInit {
 
         this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[0]);
       }
+
+      this.productSegregationService.SegregationType = this.parentPart.part?.segregationType;
+      this.productSegregationService.PartTitle = `Customer Part # ${this.parentPart?.part?.partNumber}`;
+      
+      if(this.parentPart.serialNumber === null){
+        this.productSegregationService.PartTitle += `, (Serial #: N/A), ${this.parentPart?.part?.name}`
+      } else {
+        this.productSegregationService.PartTitle += `, (Serial #: ${this.parentPart.serialNumber}), ${this.parentPart?.part?.name}`
+      }
+
       this.globals.showLoader(false);
     }));
 

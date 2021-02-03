@@ -1,5 +1,5 @@
 <div class="container-flex">
-  <div class="row">
+  <div class="row" *ngIf="productSegregationService.SegregationType === EnumSegregationType.NONCU">
     <div class="col-10 wip-detail-header">
       <h1>Customer Part # {{parentPart?.part?.partNumber}}, (Serial #: <span
           *ngIf="parentPart?.serialNumber !== null">{{parentPart?.serialNumber}}</span><span

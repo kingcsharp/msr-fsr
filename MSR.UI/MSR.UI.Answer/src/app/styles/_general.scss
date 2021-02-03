@@ -164,3 +164,25 @@ selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown .ui-dropdown-label-c
     }
   }
 }
+
+.cu-background-color{
+  background-color: #f04403eb;
+  z-index: 5;
+}
+
+.deseg-background-color{
+  background-color: #f0c803eb;
+  z-index: 5;
+}
+
+.default-left-margin{
+  margin-left: $sidebar-width-active + 15px;
+}
+
+.segregation-left-padding{
+  padding: 0px 35px 0px 35px;
+}
+
+.default-left-padding{
+  margin-right: 35px;
+}

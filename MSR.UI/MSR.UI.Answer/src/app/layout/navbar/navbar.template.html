@@ -1,5 +1,7 @@
 <nav class="navbar-collapse">
-  <form id="search-form" class="navbar-form" role="search">
+  <h1 *ngIf="productSegregationService.SegregationType !== EnumSegregationType.NONCU">{{productSegregationService.PartTitle}}</h1>
+  <form id="search-form" class="navbar-form" role="search" 
+  *ngIf="productSegregationService.SegregationType === EnumSegregationType.NONCU">
     <div class="form-group mb-0">
       <div class="input-group-transparent input-group">
         <div class="input-group-addon">
