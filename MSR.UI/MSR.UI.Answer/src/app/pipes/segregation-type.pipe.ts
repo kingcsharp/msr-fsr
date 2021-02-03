@@ -7,7 +7,6 @@ import { EnumSegregationType } from '../services/api.client.generated';
 export class SegregationTypePipe implements PipeTransform {
 
   transform(segregationType: EnumSegregationType): string {
-    console.log(segregationType);
     switch(Number(segregationType)) { 
       case EnumSegregationType.CU: { 
          return 'CU';
