@@ -51,7 +51,7 @@
     <approval-comment [modalData]="globals.modalData">
     </approval-comment>
 
-    <footer class="content-footer">
+    <footer class="content-footer" *ngIf="productSegregationService.SegregationType === EnumSegregationType.NONCU">
       © 2016-{{ currDate |  date:'yyyy' }} MSR-FSR. All Rights Reserved.
     </footer>
   </main>
