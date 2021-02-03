@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit, Input } from '@angular/core';
 import { LoginService } from '../../pages/login/login.service';
 import { Globals } from '../../models/lib/globals';
 import { NotificationService } from './notification.service';
@@ -16,6 +16,8 @@ export class Navbar implements OnInit {
   @Output() changeSidebarPosition = new EventEmitter();
   @Output() changeSidebarDisplay = new EventEmitter();
   @Output() openSidebar = new EventEmitter();
+  @Input() closed: boolean;
+  @Output() closedChange = new EventEmitter<boolean>()
 
   display: string = 'Left';
   radioModel: string = 'Left';
@@ -95,5 +97,11 @@ export class Navbar implements OnInit {
 
   logout() {
     this.loginService.logoutUser();
+  }
+
+  toggleSideBar(){
+    this.closed = !this.closed;
+    this.closedChange.emit(this.closed);
+    
   }
 }

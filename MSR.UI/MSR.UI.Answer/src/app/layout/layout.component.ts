@@ -20,7 +20,7 @@ import { EnumSegregationType} from '../services/api.client.generated';
   templateUrl: './layout.template.html'
 })
 export class Layout {
-  open: boolean = true;
+  closed: boolean = true;
   sidebarState: boolean = true;
   globals: Globals;
   currDate: Date = new Date();

@@ -2,16 +2,21 @@
   <i class="fad fa-spinner-third fa-spin"
     style="position:absolute;top:35%;left:50%;font-size: 60px;font-weight: bold"></i>
 </p-blockUI>
-<nav sidebar id="sidebar" [ngClass]="open?'active':''" (mouseenter)="open=false" (mouseleave)="open=true"
-  *ngIf="productSegregationService.SegregationType === EnumSegregationType.NONCU"
-  class="sidebar nav-collapse collapse" (displaySupportTicketModalDisplay)="displaySupportTicketModalDisplay()">
+<nav sidebar id="sidebar" (mouseenter)="closed=false" (mouseleave)="closed=true"
+  [ngClass]="{ 'sidebar nav-collapse collapse': true, 'active': closed,
+  'segregation-z-index':productSegregationService.SegregationType !== EnumSegregationType.NONCU,
+  'active-width': productSegregationService.SegregationType === EnumSegregationType.NONCU,
+  'segregation-active-width': productSegregationService.SegregationType !== EnumSegregationType.NONCU,
+  'open-width-non-segregation': !closed && productSegregationService.SegregationType === EnumSegregationType.NONCU,
+  'open-width-segregation': !closed && productSegregationService.SegregationType !== EnumSegregationType.NONCU
+  }" (displaySupportTicketModalDisplay)="displaySupportTicketModalDisplay()">
 </nav>
 
 <div [ngClass]="{ 'wrap': true, 'default-left-margin': productSegregationService.SegregationType === EnumSegregationType.NONCU,
 'cu-background-color': productSegregationService.SegregationType === EnumSegregationType.CU,
 'deseg-background-color': productSegregationService.SegregationType === EnumSegregationType.DESEG}">
   <header navbar (changeSidebarPosition)="sidebarPosition($event)" (changeSidebarDisplay)="sidebarDisplay($event)"
-    (openSidebar)="openSidebar()" class="page-header"></header>
+    (openSidebar)="openSidebar()" class="page-header"  [(closed)]="closed"></header>
   <main id="content" [ngClass]="{ 'view-animate': true, 'fade-up': true,
   'default-left-padding': productSegregationService.SegregationType === EnumSegregationType.NONCU,
   'segregation-left-padding': productSegregationService.SegregationType !== EnumSegregationType.NONCU }" role="main">
