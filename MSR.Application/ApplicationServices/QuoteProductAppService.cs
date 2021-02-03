@@ -42,6 +42,7 @@ namespace MSR.Application.ApplicationServices
                 qpModel.IsDeletable = false;
                 qpModel.Representative = product.Quote?.Representative;
                 qpModel.SubmittedDate = product.QuoteId == null ? product.CreatedOn : product.Quote.SubmittedDate;
+                qpModel.SegregationType = product.Part.SegregationType;
                 retQuotesProductsViewsList.Add(qpModel);
             }
 

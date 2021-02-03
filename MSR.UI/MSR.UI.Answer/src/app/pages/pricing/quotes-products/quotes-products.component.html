@@ -80,6 +80,11 @@
               (click)="cg.filter(dt,'partKitNo')"></i>
           </div>
         </th>
+        <th [hidden]="!cg.isVisibleCol('segregationType',gridSettings)" data-cy="segregationType-grid">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="segregationTypes" filterId="segregationType"
+            defaultText="Select Segregation Type" [datatable]="dt">
+          </multiselect-wrapper>
+        </th>
         <th [hidden]="!cg.isVisibleCol('procedureName',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" tooltip="Search by Procedure Name" data-cy="searchbyprocedure-grid"
@@ -195,6 +200,9 @@
         </td>
         <td [hidden]="!cg.isVisibleCol('partKitNo', gridSettings)">
           {{quoteproductmodel.partKitNo}}
+        </td>
+        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('segregationType',gridSettings)">
+          {{quoteproductmodel.segregationType | segregationType}}
         </td>
         <td [hidden]="!cg.isVisibleCol('procedureName',gridSettings)">
           {{quoteproductmodel.procedureName }}

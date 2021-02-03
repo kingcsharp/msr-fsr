@@ -1,4 +1,5 @@
-﻿using MSR.Domain.Models;
+﻿using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Models;
 using System;
 
 namespace MSR.Domain.Views
@@ -24,5 +25,6 @@ namespace MSR.Domain.Views
         public decimal TotalPrice { get; set; }
         public int CycleTime { get; set; }
         public string DivisionFab { get; set; }
+        public EnumSegregationType? SegregationType { get; set; }
     }
 }

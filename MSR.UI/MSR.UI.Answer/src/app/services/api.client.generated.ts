@@ -17565,6 +17565,7 @@ export class QuotesProductsView implements IQuotesProductsView {
     totalPrice?: number;
     cycleTime?: number;
     divisionFab?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 
     constructor(data?: IQuotesProductsView) {
         if (data) {
@@ -17595,6 +17596,7 @@ export class QuotesProductsView implements IQuotesProductsView {
             this.totalPrice = _data["totalPrice"];
             this.cycleTime = _data["cycleTime"];
             this.divisionFab = _data["divisionFab"];
+            this.segregationType = _data["segregationType"];
         }
     }
 
@@ -17625,6 +17627,7 @@ export class QuotesProductsView implements IQuotesProductsView {
         data["totalPrice"] = this.totalPrice;
         data["cycleTime"] = this.cycleTime;
         data["divisionFab"] = this.divisionFab;
+        data["segregationType"] = this.segregationType;
         return data; 
     }
 }
@@ -17648,6 +17651,7 @@ export interface IQuotesProductsView {
     totalPrice?: number;
     cycleTime?: number;
     divisionFab?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 }
 
 /** Base class for an API call with a typed result */

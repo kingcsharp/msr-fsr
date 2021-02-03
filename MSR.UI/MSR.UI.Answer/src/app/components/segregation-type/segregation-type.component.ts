@@ -1,4 +1,3 @@
-import { ChangeDetectorRef } from '@angular/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EnumSegregationType } from '../../services/api.client.generated';
 
@@ -13,7 +12,7 @@ export class SegregationTypeComponent implements OnInit {
   @Output() segregationTypeChange: EventEmitter<EnumSegregationType> = new EventEmitter<EnumSegregationType>();
   EnumSegregationType = EnumSegregationType;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
