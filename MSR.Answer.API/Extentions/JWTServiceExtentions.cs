@@ -49,13 +49,13 @@ namespace MSR.Answer.API.Extentions
                         var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
 
                         CurrentUser.GetId = () => accountId;
-                        CurrentUser.CanApproveActivity = (EnumApprovalTables tbl) =>
+                        CurrentUser.CanApproveActivity = (EnumApprovalTables approvalTable) =>
                         {
                             // First check if user has approval power on the menu item.  If
                             // not, then check if they have it on the workflow.
 
                             EnumMenuItem? menuItem;
-                            switch(tbl)
+                            switch(approvalTable)
                             {
                                 case EnumApprovalTables.CustomerApproval:
                                     menuItem = EnumMenuItem.CustomersDepartments;
@@ -70,7 +70,7 @@ namespace MSR.Answer.API.Extentions
                                     menuItem = EnumMenuItem.Parts;
                                     break;
                                 case EnumApprovalTables.ProcedureApproval:
-                                    menuItem = EnumMenuItem.Procedures;
+                                    menuItem = EnumMenuItem.RunnableProcedures;
                                     break;
                                 case EnumApprovalTables.ProductApproval:
                                     menuItem = EnumMenuItem.QuotesProducts;
@@ -96,7 +96,7 @@ namespace MSR.Answer.API.Extentions
                                 }
                             }
 
-                            var activityToBeApproved = (int)tbl;
+                            var activityToBeApproved = (int)approvalTable;
 
                             approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
 

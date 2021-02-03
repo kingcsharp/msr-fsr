@@ -70,7 +70,7 @@ namespace MSR.Answer.Processor.Extentions
                                     menuItem = EnumMenuItem.Parts;
                                     break;
                                 case EnumApprovalTables.ProcedureApproval:
-                                    menuItem = EnumMenuItem.Procedures;
+                                    menuItem = EnumMenuItem.RunnableProcedures;
                                     break;
                                 case EnumApprovalTables.ProductApproval:
                                     menuItem = EnumMenuItem.QuotesProducts;
