@@ -45,6 +45,7 @@ export class PartsComponent implements OnInit {
   uploadedFinished: boolean = false;
   showApproveButtons: boolean = true;
   gridVersion: string;
+  segregationTypes: any[] = [];
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
@@ -56,6 +57,7 @@ export class PartsComponent implements OnInit {
     this.gridStorageId = 'partsGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
+    new ColumnsSaved({ id: 'segregationType', label: 'Segregation Type', visible: true }),
     new ColumnsSaved({ id: 'partNumber', label: 'Part Number', visible: true }),
     new ColumnsSaved({ id: 'oemPartNumber', label: 'OEM Part Number', visible: true }),
     new ColumnsSaved({ id: 'isKit', label: 'Is Kit', visible: true }),
@@ -71,6 +73,11 @@ export class PartsComponent implements OnInit {
     { label: 'No', value: false }];
     this.isActive = [{ label: 'Yes', value: true },
     { label: 'No', value: false }];
+    this.segregationTypes = [
+      { label: 'Cu', value: EnumSegregationType.CU },
+      { label: 'Non-Cu', value: EnumSegregationType.NONCU },
+      { label: 'Deseg', value: EnumSegregationType.DESEG }
+    ]
 
     this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);

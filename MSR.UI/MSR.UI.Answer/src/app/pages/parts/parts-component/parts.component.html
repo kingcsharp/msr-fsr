@@ -46,6 +46,11 @@
             <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
           </div>
         </th>
+        <th [hidden]="!cg.isVisibleCol('segregationType',gridSettings)" data-cy="segregationType-grid">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="segregationTypes" filterId="segregationType"
+            defaultText="Select Segregation Type" [datatable]="dt">
+          </multiselect-wrapper>
+        </th>
         <th [hidden]="!cg.isVisibleCol('partNumber',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" tooltip="Search by Part Number" data-cy="partNumber-grid"
@@ -127,6 +132,9 @@
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
           {{partmodel.name}}
+        </td>
+        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('segregationType',gridSettings)">
+          {{partmodel.segregationType | segregationType}}
         </td>
         <td [hidden]="!cg.isVisibleCol('partNumber',gridSettings)">
           {{partmodel.partNumber}}
