@@ -21,7 +21,7 @@
         , Monitors = 12
         , Operational = 13
         , Parts = 14
-        , Procedures = 15
+        , Reserved1 = 15 // was "Procedures", use "RunnableProcedures" instead
         , PendingApprovals = 16
         , ProcedureTypes = 17
         , PurchaseOrders = 18
