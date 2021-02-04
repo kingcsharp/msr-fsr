@@ -152,7 +152,7 @@
                             <div *ngIf=" model.status === 'In Progress'">
                                 <div class="activetask-container">{{model.currentActiveTaskName}}</div>
                                 <div class="progressbar-container">
-                                    <progressbar [value]="model.percentageOfTasksCompleted * 100"
+                                    <progressbar [value]="model.percentageOfTasksCompleted | noCommaNumber"
                                         [type]="model.tasksCompletedType" [striped]="true" [animate]="true">
                                     </progressbar>
                                     <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">
@@ -165,7 +165,7 @@
                                     </ng-template>
                                 </div>
                                 <div class="progressbar-container">
-                                    <progressbar [value]="model.percentageOfExpectedDurationTimeLogged * 100"
+                                    <progressbar [value]="model.percentageOfExpectedDurationTimeLoggedW | noCommaNumber"
                                         [type]="model.timeLoggedType" [striped]="true" [animate]="true"></progressbar>
                                     <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
                                         {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}</div>

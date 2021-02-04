@@ -42,6 +42,7 @@ import { GalleriaModule } from 'primeng/galleria';
 import { MonitorStatusPipe } from '../../../app/pipes/monitorstatus';
 import { WorkOrderTaskAndMonitorPipe } from '../../pipes/work-order-task-and-monitor.pipe';
 import { SegregationTypePipe} from '../../pipes/segregation-type.pipe';
+import { NoCommaNumberPipe } from '../../pipes/no-comma-number.pipe';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { SegregationTypePipe} from '../../pipes/segregation-type.pipe';
     GridComponent,
     MonitorStatusPipe,
     WorkOrderTaskAndMonitorPipe,
-    SegregationTypePipe
+    SegregationTypePipe,
+    NoCommaNumberPipe
   ],
   exports: [
     GridComponent,
@@ -93,7 +95,8 @@ import { SegregationTypePipe} from '../../pipes/segregation-type.pipe';
     CkeditorWrapperComponent,
     MonitorStatusPipe,
     WorkOrderTaskAndMonitorPipe,
-    SegregationTypePipe
+    SegregationTypePipe,
+    NoCommaNumberPipe
   ],
   imports: [
     TableModule,
