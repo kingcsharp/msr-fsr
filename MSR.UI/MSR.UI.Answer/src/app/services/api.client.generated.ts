@@ -12900,6 +12900,7 @@ export interface IAuditActionResultOfProcedure extends IAuditActionResult {
 }
 
 export class Procedure extends TrackableModel implements IProcedure {
+    approvalStatus?: string | undefined;
     name?: string | undefined;
     procedureTypeId?: number;
     isRelatedToAProduct?: boolean;
@@ -12919,6 +12920,7 @@ export class Procedure extends TrackableModel implements IProcedure {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
+            this.approvalStatus = _data["approvalStatus"];
             this.name = _data["name"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.isRelatedToAProduct = _data["isRelatedToAProduct"];
@@ -12946,6 +12948,7 @@ export class Procedure extends TrackableModel implements IProcedure {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["approvalStatus"] = this.approvalStatus;
         data["name"] = this.name;
         data["procedureTypeId"] = this.procedureTypeId;
         data["isRelatedToAProduct"] = this.isRelatedToAProduct;
@@ -12967,6 +12970,7 @@ export class Procedure extends TrackableModel implements IProcedure {
 }
 
 export interface IProcedure extends ITrackableModel {
+    approvalStatus?: string | undefined;
     name?: string | undefined;
     procedureTypeId?: number;
     isRelatedToAProduct?: boolean;
