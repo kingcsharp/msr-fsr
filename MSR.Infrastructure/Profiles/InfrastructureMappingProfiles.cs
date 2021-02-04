@@ -17,8 +17,6 @@ using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
 using System.Collections.Generic;
 using Castle.Core.Internal;
-using MSR.Domain.Validators;
-using System.Runtime.InteropServices.ComTypes;
 using MSR.Domain.DTOs;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Helpers;
@@ -284,7 +282,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateWorkOrder, WorkOrder>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
-            CreateMap<CreateProcedure, ProcedureApproval>();
+            CreateMap<CreateProcedure, ProcedureApproval>().ReverseMap();
             CreateMap<Procedure, ProcedureApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.Id));
@@ -302,7 +300,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.Id))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<ProcedureApproval, Domain.Models.Procedure>();
+            CreateMap<ProcedureApproval, Domain.Models.Procedure>()
+                // if the approval exists, the procedure is pending approval
+                .ForMember(i => i.ApprovalStatus, opts => opts.MapFrom(src => "Pending"));
             CreateMap<ProcedureApproval, UpdateProcedure>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProcedureId));
             CreateMap<UpdateProcedure, Procedure>()

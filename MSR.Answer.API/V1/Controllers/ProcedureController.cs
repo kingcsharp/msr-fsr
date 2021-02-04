@@ -46,8 +46,13 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToCreateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
+            string message = "Procedure successfully added";
+            if (ret.DisplayString != null)
+            {
+                message = ret.DisplayString;
+            }
 
-            return ret.ToOkObjectResponse<Procedure>("Procedure successfully added");
+            return ret.ToOkObjectResponse<Procedure>(message);
         }
 
         /// <summary>
