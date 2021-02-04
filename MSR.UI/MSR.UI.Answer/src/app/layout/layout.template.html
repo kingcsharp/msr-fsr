@@ -12,7 +12,7 @@
   }" (displaySupportTicketModalDisplay)="displaySupportTicketModalDisplay()">
 </nav>
 
-<div [ngClass]="{ 'wrap content-div': true, 'default-left-margin': productSegregationService.SegregationType === EnumSegregationType.NONCU,
+<div [ngClass]="{ 'wrap content content-div': true, 'default-left-margin': productSegregationService.SegregationType === EnumSegregationType.NONCU,
 'cu-background-color': productSegregationService.SegregationType === EnumSegregationType.CU,
 'deseg-background-color': productSegregationService.SegregationType === EnumSegregationType.DESEG}">
   <header navbar (changeSidebarPosition)="sidebarPosition($event)" (changeSidebarDisplay)="sidebarDisplay($event)"

@@ -194,3 +194,27 @@ selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown .ui-dropdown-label-c
 .menu-toggle{
   cursor: pointer;
 }
+
+.cu-color > div{
+  background: #f04403eb !important;
+}
+
+.deseg-color > div{
+  background: #f0c803eb !important;
+}
+
+.non-cu-color > div{
+  background: #4ebfbb !important;
+}
+
+.wip-alert > div{
+  position: relative;
+}
+
+.wip-badge{
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 1em !important;
+  padding: .65em .4em !important;
+}

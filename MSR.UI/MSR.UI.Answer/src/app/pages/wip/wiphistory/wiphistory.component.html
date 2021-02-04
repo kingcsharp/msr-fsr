@@ -113,11 +113,13 @@
                             {{model.purchaseId}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)">
-                            <alert type="warning" class="px-0 py-1 my-0 text-center" *ngIf="model.hasNcr" [routerLink]="['../details',model.id]">
+                            <alert type="warning" [ngClass]="{ 'px-0 py-1 my-0 text-center wip-alert':true, 
+                            'cu-color': model.segregationType === EnumSegregationType.CU,
+                            'non-cu-color': model.segregationType === EnumSegregationType.NONCU || model.segregationType === null,
+                            'deseg-color': model.segregationType === EnumSegregationType.DESEG
+                            }" [routerLink]="['../details',model.id]">
                                 {{model.workOrderItemNumber}}
-                            </alert>
-                            <alert type="info" class="px-0 py-1 my-0 text-center" *ngIf="!model.hasNcr" [routerLink]="['../details',model.id]">
-                                {{model.workOrderItemNumber}}
+                                <span class="badge badge-danger wip-badge" *ngIf="model.hasNcr">NC</span>
                             </alert>
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('customerName', gridSettings)">
