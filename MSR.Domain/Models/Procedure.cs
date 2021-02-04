@@ -61,5 +61,11 @@ namespace MSR.Domain.Models
         /// Gets or Sets ReferenceFiles
         /// </summary>
         public List<FileModel> ReferenceFiles { get; set; }
+
+        /// <summary>
+        /// Copy of the status field of the ProcedureApproval row
+        /// </summary>
+        public string ApprovalStatus;
+
     }
 }

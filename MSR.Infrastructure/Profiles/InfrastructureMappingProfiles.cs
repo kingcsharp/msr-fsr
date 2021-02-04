@@ -302,7 +302,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.Id))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<ProcedureApproval, Domain.Models.Procedure>();
+            CreateMap<ProcedureApproval, Domain.Models.Procedure>()
+                // if the approval exists, the procedure is pending approval
+                .ForMember(i => i.ApprovalStatus, opts => opts.MapFrom(src => "Pending"));
             CreateMap<ProcedureApproval, UpdateProcedure>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProcedureId));
             CreateMap<UpdateProcedure, Procedure>()
