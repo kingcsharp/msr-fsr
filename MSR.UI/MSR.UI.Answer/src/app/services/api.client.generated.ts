@@ -9681,7 +9681,7 @@ export enum EnumMenuItem {
     Monitors = 12,
     Operational = 13,
     Parts = 14,
-    Procedures = 15,
+    Reserved1 = 15,
     PendingApprovals = 16,
     ProcedureTypes = 17,
     PurchaseOrders = 18,
