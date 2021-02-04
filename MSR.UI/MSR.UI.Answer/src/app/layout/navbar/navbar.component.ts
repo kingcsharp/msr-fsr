@@ -1,11 +1,12 @@
-import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit, Input } from '@angular/core';
 import { LoginService } from '../../pages/login/login.service';
 import { Globals } from '../../models/lib/globals';
 import { NotificationService } from './notification.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { EnumMenuItem } from '../../../app/services/api.client.generated';
+import { EnumMenuItem, EnumSegregationType } from '../../../app/services/api.client.generated';
 import { EnumPrivilege } from '../../../app/models/enums/privileges';
+import { ProductSegregationService } from '../../../app/services/product-segregation.service';
 
 @Component({
   selector: '[navbar]',
@@ -15,6 +16,8 @@ export class Navbar implements OnInit {
   @Output() changeSidebarPosition = new EventEmitter();
   @Output() changeSidebarDisplay = new EventEmitter();
   @Output() openSidebar = new EventEmitter();
+  @Input() closed: boolean;
+  @Output() closedChange = new EventEmitter<boolean>();
 
   display: string = 'Left';
   radioModel: string = 'Left';
@@ -25,6 +28,7 @@ export class Navbar implements OnInit {
   searchValue: string;
   hideImg: boolean = false;
   canViewNotifications: boolean = false;
+  EnumSegregationType = EnumSegregationType;
 
   constructor(
     private renderer: Renderer2,
@@ -33,7 +37,8 @@ export class Navbar implements OnInit {
     public globals: Globals,
     public notificationservice: NotificationService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public productSegregationService: ProductSegregationService
   ) { }
 
 
@@ -92,5 +97,10 @@ export class Navbar implements OnInit {
 
   logout() {
     this.loginService.logoutUser();
+  }
+
+  toggleSideBar() {
+    this.closed = !this.closed;
+    this.closedChange.emit(this.closed);
   }
 }

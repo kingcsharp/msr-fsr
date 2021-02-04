@@ -4,9 +4,11 @@
   border: 1px solid #c8c8c8;
   color: #333333;
 }
+
 .content {
   padding-left:0
 }
+
 .custom-panel {
   min-height: 79vh;
 }
@@ -214,6 +216,10 @@ ol{
   right: 9px;
 }
 /* updates for tablets */
+
+.wip-detail-header{
+  min-height: 45px;
+}
 
 @media (max-width: 1024px) {
   .wip-detail-header h1 {

@@ -15,6 +15,7 @@ import { Navbar } from './navbar/navbar.component';
 import { BlockUIModule } from 'primeng/blockui';
 import { DialogModule } from 'primeng/dialog';
 import { ApprovalCommentComponent } from '../components/approval-comment/approval-comment.component';
+import { ProductSegregationService } from '../services/product-segregation.service';
 
 @NgModule({
   imports: [
@@ -32,6 +33,9 @@ import { ApprovalCommentComponent } from '../components/approval-comment/approva
   declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent, HelpbuttonWrapperComponent],
   exports: [
     HelpbuttonWrapperComponent
+  ],
+  providers: [
+    ProductSegregationService
   ]
 })
 export class LayoutModule {

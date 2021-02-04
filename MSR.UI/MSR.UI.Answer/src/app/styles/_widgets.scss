@@ -1186,7 +1186,6 @@ body .ui-dropdown.ui-dropdown-clearable .ui-dropdown-label {
   text-align: center;
   // z-index: 100000;
   position: fixed;
-  width: $sidebar-width-active;
   height: 100%;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -1233,6 +1232,21 @@ body .ui-dropdown.ui-dropdown-clearable .ui-dropdown-label {
       }
     }
   }
+}
+
+#sidebar.active-width{
+  width: $sidebar-width-active;
+}
+#sidebar.segregation-active-width{
+  width: $sidebar-width-hidden-active;
+}
+
+#sidebar.open-width-non-segregation{
+  width: $sidebar-width;
+}
+
+#sidebar.open-width-segregation{
+  width: $sidebar-width;
 }
 /* Toggling the sidebar header content, hide the big heading [h3] and showing the small heading [strong] and vice versa*/
 #sidebar .sidebar-header strong {

@@ -15,6 +15,7 @@ import {
   CustomerService,
   Customer,
   CreateQuoteRequest,
+  EnumSegregationType,
 } from '../../../services/api.client.generated';
 import { CSRJsonModel, ProcessModel, PartModel } from '../../../models/csr-json-model';
 import { EnumCRFTabs } from '../../../models/enums/EnumCRFTabs';
@@ -66,7 +67,7 @@ export class QuotesProductsComponent implements OnInit {
 
   tabMenus = EnumCRFTabs;
   activeTab: string;
-
+  segregationTypes: any[] = [];
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
@@ -84,6 +85,7 @@ export class QuotesProductsComponent implements OnInit {
       new ColumnsSaved({ id: 'submittedBy.fullName', label: 'Submitted By', visible: true }),
       new ColumnsSaved({ id: 'divisionFab', label: 'Division/Fab #', visible: true }),
       new ColumnsSaved({ id: 'partKitNo', label: 'Part/Kit Number', visible: true }),
+      new ColumnsSaved({ id: 'segregationType', label: 'Segregation Type', visible: true }),
       new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true }),
       new ColumnsSaved({ id: 'representative', label: 'Representative', visible: false }),
@@ -99,6 +101,11 @@ export class QuotesProductsComponent implements OnInit {
     this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.QuotesProducts);
     this.showConfirmDeleteDialog = false;
     this.data = [];
+    this.segregationTypes = [
+      { label: 'Cu', value: EnumSegregationType.CU },
+      { label: 'Non-Cu', value: EnumSegregationType.NONCU },
+      { label: 'Deseg', value: EnumSegregationType.DESEG }
+    ];
 
     this.getQuotesProducts();
     this.getCustomers();

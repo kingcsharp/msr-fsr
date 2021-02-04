@@ -159,7 +159,7 @@ export class WipstatusWrapperComponent implements OnInit {
         this.displayWorkOrderByProduct(this.workOrderStatuses, data);
     }
     // refresh table
-    this.locationsSelectedUpdated()
+    this.locationsSelectedUpdated();
   }
 
   openTakeOverAsUserConfirmationDialog(workOrderId: number, assignedToFullName: string) {

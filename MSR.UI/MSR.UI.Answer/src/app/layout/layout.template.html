@@ -2,14 +2,24 @@
   <i class="fad fa-spinner-third fa-spin"
     style="position:absolute;top:35%;left:50%;font-size: 60px;font-weight: bold"></i>
 </p-blockUI>
-<nav sidebar id="sidebar" [ngClass]="open?'active':''" (mouseenter)="open=false" (mouseleave)="open=true"
-  class="sidebar nav-collapse collapse" (displaySupportTicketModalDisplay)="displaySupportTicketModalDisplay()">
+<nav sidebar id="sidebar" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()"
+  [ngClass]="{ 'sidebar nav-collapse collapse': true, 'active': closed,
+  'segregation-z-index': productSegregationService.SegregationType !== EnumSegregationType.NONCU,
+  'active-width': productSegregationService.SegregationType === EnumSegregationType.NONCU,
+  'segregation-active-width': productSegregationService.SegregationType !== EnumSegregationType.NONCU,
+  'open-width-non-segregation': !closed && productSegregationService.SegregationType === EnumSegregationType.NONCU,
+  'open-width-segregation': !closed && productSegregationService.SegregationType !== EnumSegregationType.NONCU
+  }" (displaySupportTicketModalDisplay)="displaySupportTicketModalDisplay()">
 </nav>
 
-<div class="wrap">
+<div [ngClass]="{ 'wrap content-div': true, 'default-left-margin': productSegregationService.SegregationType === EnumSegregationType.NONCU,
+'cu-background-color': productSegregationService.SegregationType === EnumSegregationType.CU,
+'deseg-background-color': productSegregationService.SegregationType === EnumSegregationType.DESEG}">
   <header navbar (changeSidebarPosition)="sidebarPosition($event)" (changeSidebarDisplay)="sidebarDisplay($event)"
-    (openSidebar)="openSidebar()" class="page-header"></header>
-  <main id="content" class="content view-animate fade-up" role="main">
+    (openSidebar)="openSidebar()" class="page-header"  [(closed)]="closed"></header>
+  <main id="content" [ngClass]="{ 'view-animate': true, 'fade-up': true,
+  'default-left-padding': productSegregationService.SegregationType === EnumSegregationType.NONCU,
+  'segregation-left-padding': productSegregationService.SegregationType !== EnumSegregationType.NONCU }" role="main">
     <div class="loading-overlay" #spinnerElement>
       <div class="sk-fading-circle">
         <div class="sk-circle1 sk-circle"></div>
@@ -46,7 +56,7 @@
     <approval-comment [modalData]="globals.modalData">
     </approval-comment>
 
-    <footer class="content-footer">
+    <footer class="content-footer" *ngIf="productSegregationService.SegregationType === EnumSegregationType.NONCU">
       © 2016-{{ currDate |  date:'yyyy' }} MSR-FSR. All Rights Reserved.
     </footer>
   </main>

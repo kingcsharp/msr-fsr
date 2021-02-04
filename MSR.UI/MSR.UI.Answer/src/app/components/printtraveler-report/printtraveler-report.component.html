@@ -40,6 +40,18 @@
                             {{WorkOrder.purchase?.customerLineNumber}}
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-5 text-right">WO Start Date:</div>
+                            <div class="col-7">{{WorkOrder.actualStartDate | userTimezone}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5 text-right">WO Due Date:</div>
+                            <div class="col-7">{{WorkOrder.actualEndDate | userTimezone}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5 text-right">MTTN:</div>
+                            <div class="col-7">{{WorkOrder.purchase.mttn}}</div>
+                        </div>
                     </div>
                     <div class="col-6">
                         <div class="d-flex justify-content-center">
@@ -60,10 +72,22 @@
             </div>
             <div class="col-12 ml-4 mb-4">
                 <div class="row">
-                    <div class="col-12"
-                        *ngIf="WorkOrder !== undefined && WorkOrder.workOrderParts !== undefined && WorkOrder.workOrderParts?.length !== 0">
-                        Customer Part Number {{WorkOrder.workOrderParts[0]?.part?.partNumber}}, (Serial #:
-                        {{WorkOrder.workOrderParts[0]?.serialNumber}}),{{WorkOrder.workOrderParts[0]?.part?.name}}
+                    <div class="col-12" *ngIf="WorkOrder !== undefined && WorkOrder.workOrderParts !== undefined 
+                    && WorkOrder.workOrderParts?.length !== 0">
+                    <ul>
+                        <li *ngFor="let part of WorkOrder.workOrderParts">
+                          <span *ngIf="part.serialNumber; else noSerial">
+                          Part # {{part.part?.partNumber}}, {{part.part?.name}}, S/N: ({{part.serialNumber}}), (CycleCount: {{part.cycleCount}})
+                          (Qty: {{part.qty}})
+                          </span>
+                          <ng-template #noSerial>
+                            <span>
+                              Part # {{part.part?.partNumber}}, {{part.part?.name}}, S/N: (N/A), (CycleCount: {{part.cycleCount}})
+                            (Qty: {{part.qty}})
+                            </span>
+                          </ng-template>
+                        </li>
+                      </ul>    
                     </div>
                 </div>
             </div>

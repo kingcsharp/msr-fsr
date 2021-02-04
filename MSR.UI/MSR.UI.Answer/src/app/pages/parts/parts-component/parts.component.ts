@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  PartService, PartModel, SubPartModel, EnumMenuItem, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
+  PartService, PartModel, SubPartModel, EnumMenuItem, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel, EnumSegregationType
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -45,6 +45,7 @@ export class PartsComponent implements OnInit {
   uploadedFinished: boolean = false;
   showApproveButtons: boolean = true;
   gridVersion: string;
+  segregationTypes: any[] = [];
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
@@ -56,6 +57,7 @@ export class PartsComponent implements OnInit {
     this.gridStorageId = 'partsGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
+    new ColumnsSaved({ id: 'segregationType', label: 'Segregation Type', visible: true }),
     new ColumnsSaved({ id: 'partNumber', label: 'Part Number', visible: true }),
     new ColumnsSaved({ id: 'oemPartNumber', label: 'OEM Part Number', visible: true }),
     new ColumnsSaved({ id: 'isKit', label: 'Is Kit', visible: true }),
@@ -71,6 +73,11 @@ export class PartsComponent implements OnInit {
     { label: 'No', value: false }];
     this.isActive = [{ label: 'Yes', value: true },
     { label: 'No', value: false }];
+    this.segregationTypes = [
+      { label: 'Cu', value: EnumSegregationType.CU },
+      { label: 'Non-Cu', value: EnumSegregationType.NONCU },
+      { label: 'Deseg', value: EnumSegregationType.DESEG }
+    ];
 
     this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
@@ -150,6 +157,9 @@ export class PartsComponent implements OnInit {
     this.getPartsDropdown();
     this.uploadedFiles = [];
     this.currPart = this.getPart(part);
+    if (this.currPart.segregationType === undefined) {
+      this.currPart.segregationType = EnumSegregationType.NONCU;
+    }
     this.display = true;
   }
 
@@ -295,7 +305,8 @@ export class PartsComponent implements OnInit {
       maximumCycles: currentPart.maximumCycles,
       nickName: currentPart.nickName,
       oemPartNumber: currentPart.oemPartNumber,
-      files: currentPart.files
+      files: currentPart.files,
+      segregationType: currentPart.segregationType
     });
     return ret;
   }

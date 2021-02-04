@@ -8,6 +8,8 @@ import {
   NavigationError
 } from '@angular/router';
 import { Globals } from '../models/lib/globals';
+import { ProductSegregationService } from '../services/product-segregation.service';
+import { EnumSegregationType} from '../services/api.client.generated';
 
 // declare let Raphael: any;
 
@@ -18,7 +20,7 @@ import { Globals } from '../models/lib/globals';
   templateUrl: './layout.template.html'
 })
 export class Layout {
-  open: boolean = true;
+  closed: boolean = true;
   sidebarState: boolean = true;
   globals: Globals;
   currDate: Date = new Date();
@@ -26,7 +28,9 @@ export class Layout {
   supportTicketModalDisplayed: boolean = false;
   @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
   @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;
-  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone, private _globals: Globals) {
+  EnumSegregationType = EnumSegregationType;
+  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router,
+    private ngZone: NgZone, private _globals: Globals, public productSegregationService: ProductSegregationService) {
     this.globals = this._globals;
 
     router.events.subscribe((event: RouterEvent) => {
@@ -114,5 +118,13 @@ export class Layout {
 
   displaySupportTicketModalDisplay(): void {
     this.supportTicketModalDisplayed = true;
+  }
+
+  mouseEnter() {
+    this.closed = false;
+  }
+
+  mouseLeave() {
+    this.closed = true;
   }
 }
