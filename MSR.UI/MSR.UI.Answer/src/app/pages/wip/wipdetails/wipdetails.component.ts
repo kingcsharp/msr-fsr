@@ -83,6 +83,10 @@ export class WipdetailsComponent implements OnInit {
 
   }
 
+  ngOnDestroy(){
+    this.productSegregationService.SegregationType = EnumSegregationType.NONCU;
+  }
+
   ngOnInit(): void {
     this.getScreenSize();
 

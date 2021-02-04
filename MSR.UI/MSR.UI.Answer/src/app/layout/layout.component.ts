@@ -119,4 +119,12 @@ export class Layout {
   displaySupportTicketModalDisplay(): void {
     this.supportTicketModalDisplayed = true;
   }
+
+  mouseEnter(){
+    this.closed = false;
+  }
+
+  mouseLeave(){
+    this.closed = true;
+  }
 }

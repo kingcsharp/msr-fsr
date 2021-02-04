@@ -2,9 +2,9 @@
   <i class="fad fa-spinner-third fa-spin"
     style="position:absolute;top:35%;left:50%;font-size: 60px;font-weight: bold"></i>
 </p-blockUI>
-<nav sidebar id="sidebar" (mouseenter)="closed=false" (mouseleave)="closed=true"
+<nav sidebar id="sidebar" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()"
   [ngClass]="{ 'sidebar nav-collapse collapse': true, 'active': closed,
-  'segregation-z-index':productSegregationService.SegregationType !== EnumSegregationType.NONCU,
+  'segregation-z-index': productSegregationService.SegregationType !== EnumSegregationType.NONCU,
   'active-width': productSegregationService.SegregationType === EnumSegregationType.NONCU,
   'segregation-active-width': productSegregationService.SegregationType !== EnumSegregationType.NONCU,
   'open-width-non-segregation': !closed && productSegregationService.SegregationType === EnumSegregationType.NONCU,
