@@ -102,6 +102,7 @@ export class Navbar implements OnInit {
   toggleSideBar(){
     this.closed = !this.closed;
     this.closedChange.emit(this.closed);
+    console.log(this.closed);
     
   }
 }
