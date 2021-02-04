@@ -547,7 +547,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     });
 
                 _unitOfWork.CascadeDelete(current);
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(current, current.Id, "Deleted");
             }
             else
             {
