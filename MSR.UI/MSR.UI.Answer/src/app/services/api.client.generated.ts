@@ -19552,6 +19552,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
+    segregationType?: EnumSegregationType | undefined;
 
     constructor(data?: IWorkOrderGridSummary) {
         if (data) {
@@ -19589,6 +19590,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             this.percentageOfExpectedDurationTimeLoggedNumerator = _data["percentageOfExpectedDurationTimeLoggedNumerator"];
             this.percentageOfExpectedDurationTimeLoggedDenominator = _data["percentageOfExpectedDurationTimeLoggedDenominator"];
             this.hasNcr = _data["hasNcr"];
+            this.segregationType = _data["segregationType"];
         }
     }
 
@@ -19626,6 +19628,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
         data["percentageOfExpectedDurationTimeLoggedNumerator"] = this.percentageOfExpectedDurationTimeLoggedNumerator;
         data["percentageOfExpectedDurationTimeLoggedDenominator"] = this.percentageOfExpectedDurationTimeLoggedDenominator;
         data["hasNcr"] = this.hasNcr;
+        data["segregationType"] = this.segregationType;
         return data; 
     }
 }
@@ -19656,6 +19659,7 @@ export interface IWorkOrderGridSummary {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
+    segregationType?: EnumSegregationType | undefined;
 }
 
 /** Base class for an API call with a typed result */

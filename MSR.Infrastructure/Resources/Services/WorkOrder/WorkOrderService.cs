@@ -1175,6 +1175,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = (double)statusValues.expectedDurationDenominator;
                 workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = statusValues.expectedDurationNumerator;
 
+
+                var parentPart = workOrderModel.Product.Part;
+                workOrderGridSummary.SegregationType = parentPart == null ? EnumSegregationType.NONCU : parentPart.SegregationType;
+
                 workOrderGridSummaries.Add(workOrderGridSummary);
             }
 

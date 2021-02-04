@@ -3,7 +3,7 @@ import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary } from '../../../services/api.client.generated';
+import { WorkOrderService, EnumSegregationType } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
@@ -22,6 +22,7 @@ export class WipComponent implements OnInit {
   statusOptions: Array<SelectItem>;
   locationOptions: Array<SelectItem>;
   gridVersion: string;
+  EnumSegregationType = EnumSegregationType;
 
   constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 

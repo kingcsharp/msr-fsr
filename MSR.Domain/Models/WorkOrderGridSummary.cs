@@ -1,3 +1,4 @@
+using MSR.Domain.Commanding.Enums;
 using System;
 using System.Runtime.Serialization;
 
@@ -137,5 +138,10 @@ namespace MSR.Domain.Models
         /// Has NCR
         /// </summary>
         public bool HasNcr { get; set; }
+
+        /// <summary>
+        /// Segregation Type
+        /// </summary>
+        public EnumSegregationType? SegregationType { get;set;}
     }
 }

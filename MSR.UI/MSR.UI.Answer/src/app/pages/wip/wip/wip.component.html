@@ -11,8 +11,8 @@
         <widget>
             <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
                 [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-                [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"  [filterDelay]="0"
-                stateStorage="local"  stateKey="{{gridStorageId}}">
+                [rowsPerPageOptions]="[10,25,50,100]"  [paginator]="true"  [filterDelay]="0" stateStorage="local"
+                 stateKey="{{gridStorageId}}">
                 <ng-template pTemplate="caption">
                     <div class="text-right">
                         <button *ngIf="false" [routerLink]="['../proceduretype-create']"
@@ -106,10 +106,11 @@
                             {{model.purchaseId}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)">
-                            <alert type="warning" class="px-0 py-1 my-0 text-center" *ngIf="model.hasNcr" [routerLink]="['../details',model.id]">
-                                {{model.workOrderItemNumber}}
-                            </alert>
-                            <alert type="info" class="px-0 py-1 my-0 text-center" *ngIf="!model.hasNcr"  [routerLink]="['../details',model.id]">
+                            <alert type="warning" [ngClass]="{ 'px-0 py-1 my-0 text-center':true, 
+                            'cu-color': model.segregationType === EnumSegregationType.CU,
+                            'non-cu-color': model.segregationType === EnumSegregationType.NONCU,
+                            'deseg-color': model.segregationType === EnumSegregationType.DESEG
+                            }" [routerLink]="['../details',model.id]">
                                 {{model.workOrderItemNumber}}
                             </alert>
                         </td>
@@ -151,12 +152,15 @@
                                 <div class="activetask-container">{{model.currentActiveTaskName}}</div>
                                 <div class="progressbar-container">
                                     <progressbar [value]="model.percentageOfTasksCompleted * 100"
-                                        [type]="model.tasksCompletedType" [striped]="true" [animate]="true"></progressbar>
-                                    <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">{{model.percentageOfTasksCompleted | percent : '2.2-2'}}
+                                        [type]="model.tasksCompletedType" [striped]="true" [animate]="true">
+                                    </progressbar>
+                                    <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">
+                                        {{model.percentageOfTasksCompleted | percent : '2.2-2'}}
                                     </div>
                                     <ng-template #percentOfTaskCompletedTemplate>
                                         {{model.percentageOfTasksCompleted | percent : '2.2-2'}}
-                                        {{model.percentageOfTasksCompletedNumerator}}/{{model.percentageOfTasksCompletedDenominator}} steps completed
+                                        {{model.percentageOfTasksCompletedNumerator}}/{{model.percentageOfTasksCompletedDenominator}}
+                                        steps completed
                                     </ng-template>
                                 </div>
                                 <div class="progressbar-container">
@@ -165,8 +169,10 @@
                                     <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
                                         {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}</div>
                                     <ng-template #percentageOfExpectedDurationTimeLogged>
-                                        {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}} 
-                                        {{model.percentageOfExpectedDurationTimeLoggedNumerator/60 | number:'1.1-1'}}/{{model.percentageOfExpectedDurationTimeLoggedDenominator/60 | number:'1.1-1'}} hours completed
+                                        {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}
+                                        {{model.percentageOfExpectedDurationTimeLoggedNumerator/60 |
+                                        number:'1.1-1'}}/{{model.percentageOfExpectedDurationTimeLoggedDenominator/60 |
+                                        number:'1.1-1'}} hours completed
                                     </ng-template>
                                 </div>
                             </div>
