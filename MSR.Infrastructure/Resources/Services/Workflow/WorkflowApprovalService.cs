@@ -813,12 +813,14 @@ namespace MSR.Infrastructure.Resources.Services
             if (!procedureApproval.ProcedureId.HasValue)
             {
                 var procedureCommand = _mapper.Map<CreateProcedure>(procedureApproval);
+                procedureCommand.Comments = command.Comments;
                 procedureCommand.Revision = 1;
                 await _procedureService.CreateProcedureAsync(procedureCommand);
             }
             else
             {
                 var procedureCommand = _mapper.Map<UpdateProcedure>(procedureApproval);
+                procedureCommand.Comments = command.Comments;
                 await _procedureService.UpdateProcedureAsync(procedureCommand);
                 var procedureStepApprovals = procedureApproval.ProcedureStepApprovals.ToList();
 

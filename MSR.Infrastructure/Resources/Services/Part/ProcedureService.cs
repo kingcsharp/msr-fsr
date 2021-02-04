@@ -96,7 +96,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 procedureEntity.Revision = 1;
                 var created = _unitOfWork.Procedures.Add(procedureEntity);
                 await _unitOfWork.SaveChangesAsync();
-                await _unitOfWork.LogApprovalTransaction(procedureEntity, procedureEntity.Id);  
+                await _unitOfWork.LogApprovalTransaction(procedureEntity, procedureEntity.Id, "Approved", command.Comments);
 
                 // The API return expects the procedure type object to be loaded.
                 created.Context.Entry(procedureEntity).Reference(x => x.ProcedureType).Load();
@@ -217,7 +217,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 _unitOfWork.Procedures.Update(procedure);
 
                 // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
+                await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id, "Approved", command.Comments);
 
                 procedureModel = _mapper.Map<Domain.Models.Procedure>(procedure);
 
@@ -303,7 +303,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             var workOrderTasksInUse = _unitOfWork.WorkOrderTasks.Query()
                 .Where(s => procedureStepIds.Contains(s.ProcedureStepId.Value)
-                            && (s.StatusId == (int)EnumStatusSteps.InProgress 
+                            && (s.StatusId == (int)EnumStatusSteps.InProgress
                                || s.StatusId == (int)EnumStatusSteps.WaitingtoStart
                                || s.StatusId == (int)EnumStatusSteps.Approved));
 
@@ -949,7 +949,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 var procedureModel = _mapper.Map<Domain.Models.Procedure>(x);
                 procedureModel.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), procedureModel.Id).ToList();
-                
+
                 return procedureModel;
             }).OrderBy(x => x.Name).ToList();
 
