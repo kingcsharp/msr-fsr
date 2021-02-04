@@ -4,7 +4,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary } from '../../../services/api.client.generated';
+import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, EnumSegregationType } from '../../../services/api.client.generated';
 import { Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -26,7 +26,7 @@ export class WiphistoryComponent implements OnInit {
   privileges = EnumPrivilege;
   locationOptions: Array<SelectItem>;
   gridVersion: string;
-
+  EnumSegregationType = EnumSegregationType;
   constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private router: Router, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
