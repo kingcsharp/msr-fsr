@@ -17,7 +17,7 @@ export class SegregationTypeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  segregationTypeSelected(selectedSegregationType:EnumSegregationType){
+  segregationTypeSelected(selectedSegregationType: EnumSegregationType) {
     this.segregationTypeChange.emit(selectedSegregationType);
   }
 

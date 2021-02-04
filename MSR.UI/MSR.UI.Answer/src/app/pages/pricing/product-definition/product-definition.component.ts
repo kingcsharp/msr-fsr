@@ -165,7 +165,7 @@ export class ProductDefinitionComponent implements OnInit {
               phone: this.customerRequirementJson.CommercialPhone,
               representative: this.quoteData.submittedBy.fullName,
               representativeTitle: this.quoteData.submittedBy.title,
-            }
+            };
           }
         }
 

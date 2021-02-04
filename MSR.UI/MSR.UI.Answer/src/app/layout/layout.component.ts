@@ -29,7 +29,7 @@ export class Layout {
   @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
   @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;
   EnumSegregationType = EnumSegregationType;
-  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, 
+  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router,
     private ngZone: NgZone, private _globals: Globals, public productSegregationService: ProductSegregationService) {
     this.globals = this._globals;
 
@@ -120,11 +120,11 @@ export class Layout {
     this.supportTicketModalDisplayed = true;
   }
 
-  mouseEnter(){
+  mouseEnter() {
     this.closed = false;
   }
 
-  mouseLeave(){
+  mouseLeave() {
     this.closed = true;
   }
 }

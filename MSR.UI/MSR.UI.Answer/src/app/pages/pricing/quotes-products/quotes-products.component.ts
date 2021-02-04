@@ -105,7 +105,7 @@ export class QuotesProductsComponent implements OnInit {
       { label: 'Cu', value: EnumSegregationType.CU },
       { label: 'Non-Cu', value: EnumSegregationType.NONCU },
       { label: 'Deseg', value: EnumSegregationType.DESEG }
-    ]
+    ];
 
     this.getQuotesProducts();
     this.getCustomers();

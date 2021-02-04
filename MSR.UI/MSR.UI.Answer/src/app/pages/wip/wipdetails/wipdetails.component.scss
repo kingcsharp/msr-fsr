@@ -217,6 +217,10 @@ ol{
 }
 /* updates for tablets */
 
+.wip-detail-header{
+  min-height: 45px;
+}
+
 @media (max-width: 1024px) {
   .wip-detail-header h1 {
     font-size:1.5rem

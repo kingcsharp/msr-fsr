@@ -17,7 +17,7 @@ export class Navbar implements OnInit {
   @Output() changeSidebarDisplay = new EventEmitter();
   @Output() openSidebar = new EventEmitter();
   @Input() closed: boolean;
-  @Output() closedChange = new EventEmitter<boolean>()
+  @Output() closedChange = new EventEmitter<boolean>();
 
   display: string = 'Left';
   radioModel: string = 'Left';
@@ -99,10 +99,8 @@ export class Navbar implements OnInit {
     this.loginService.logoutUser();
   }
 
-  toggleSideBar(){
+  toggleSideBar() {
     this.closed = !this.closed;
     this.closedChange.emit(this.closed);
-    console.log(this.closed);
-    
   }
 }

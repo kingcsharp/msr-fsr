@@ -69,7 +69,7 @@ export class WipdetailsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, private customerService: CustomerService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
-    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, 
+    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService,
     private roleService: RoleService, public productSegregationService: ProductSegregationService) { }
 
   @HostListener('window:resize', ['$event'])
@@ -83,7 +83,7 @@ export class WipdetailsComponent implements OnInit {
 
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.productSegregationService.SegregationType = EnumSegregationType.NONCU;
   }
 
@@ -149,11 +149,11 @@ export class WipdetailsComponent implements OnInit {
 
       this.productSegregationService.SegregationType = this.parentPart.part?.segregationType;
       this.productSegregationService.PartTitle = `Customer Part # ${this.parentPart?.part?.partNumber}`;
-      
-      if(this.parentPart.serialNumber === null){
-        this.productSegregationService.PartTitle += `, (Serial #: N/A), ${this.parentPart?.part?.name}`
+
+      if (this.parentPart.serialNumber === null) {
+        this.productSegregationService.PartTitle += `, (Serial #: N/A), ${this.parentPart?.part?.name}`;
       } else {
-        this.productSegregationService.PartTitle += `, (Serial #: ${this.parentPart.serialNumber}), ${this.parentPart?.part?.name}`
+        this.productSegregationService.PartTitle += `, (Serial #: ${this.parentPart.serialNumber}), ${this.parentPart?.part?.name}`;
       }
 
       this.globals.showLoader(false);
@@ -179,7 +179,7 @@ export class WipdetailsComponent implements OnInit {
 
     workOrderModel.workOrderTasks.map(workOrderTask => {
 
-      if(workOrderTask.procedureStep !== undefined){
+      if (workOrderTask.procedureStep !== undefined) {
         procedureStepGetRequests.push(this.procedureService.stepGet(workOrderTask.procedureStep?.procedureId, workOrderTask.procedureStep?.id, env.apiVersion));
       }
 
@@ -237,9 +237,9 @@ export class WipdetailsComponent implements OnInit {
       this.rolesRequiredToViewTask.length = 0;
       this.hasAccessToTaskBeingViewed = true;
       this.rolesRequiredMessage = undefined;
-    } 
-    
-    if(workOrderTask.procedureStep !== undefined && !this.canUserAccessWorkOrderTask(workOrderTask)) {
+    }
+
+    if (workOrderTask.procedureStep !== undefined && !this.canUserAccessWorkOrderTask(workOrderTask)) {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep === undefined ? workOrderTask.title : workOrderTask.procedureStep?.title;
       this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
       this.hasAccessToTaskBeingViewed = false;
@@ -247,7 +247,7 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskToView = workOrderTask;
     }
 
-    if(workOrderTask.procedureStep === undefined) {
+    if (workOrderTask.procedureStep === undefined) {
       this.workOrderTaskInProgress = workOrderTask;
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
@@ -343,7 +343,7 @@ export class WipdetailsComponent implements OnInit {
       this.rolesRequiredToViewTask.length = 0;
       this.hasAccessToTaskBeingViewed = true;
       this.rolesRequiredMessage = undefined;
-    } else if(!this.canUserAccessWorkOrderTask(workOrderTask) && workOrderTask.procedureStep !== undefined) {
+    } else if (!this.canUserAccessWorkOrderTask(workOrderTask) && workOrderTask.procedureStep !== undefined) {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
       this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
       this.hasAccessToTaskBeingViewed = false;

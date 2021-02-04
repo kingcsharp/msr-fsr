@@ -7,20 +7,20 @@ import { EnumSegregationType } from '../services/api.client.generated';
 export class SegregationTypePipe implements PipeTransform {
 
   transform(segregationType: EnumSegregationType): string {
-    switch(Number(segregationType)) { 
-      case EnumSegregationType.CU: { 
+    switch (Number(segregationType)) {
+      case EnumSegregationType.CU: {
          return 'CU';
-      } 
-      case EnumSegregationType.NONCU: { 
+      }
+      case EnumSegregationType.NONCU: {
          return 'Non-Cu';
-      } 
-      case EnumSegregationType.DESEG: { 
+      }
+      case EnumSegregationType.DESEG: {
         return 'Deseg';
-     } 
-      default: { 
+     }
+      default: {
          return 'N/A';
-      } 
-   } 
+      }
+   }
   }
 
 }

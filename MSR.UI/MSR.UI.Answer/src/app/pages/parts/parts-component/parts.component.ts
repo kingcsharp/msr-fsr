@@ -77,7 +77,7 @@ export class PartsComponent implements OnInit {
       { label: 'Cu', value: EnumSegregationType.CU },
       { label: 'Non-Cu', value: EnumSegregationType.NONCU },
       { label: 'Deseg', value: EnumSegregationType.DESEG }
-    ]
+    ];
 
     this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
@@ -157,7 +157,7 @@ export class PartsComponent implements OnInit {
     this.getPartsDropdown();
     this.uploadedFiles = [];
     this.currPart = this.getPart(part);
-    if(this.currPart.segregationType === undefined){
+    if (this.currPart.segregationType === undefined) {
       this.currPart.segregationType = EnumSegregationType.NONCU;
     }
     this.display = true;

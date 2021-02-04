@@ -11,19 +11,19 @@ export class ProductSegregationService {
 
   constructor() { }
 
-  get SegregationType(){
+  get SegregationType() {
     return this.segregationType;
   }
 
-  set SegregationType(segregationType: EnumSegregationType){
+  set SegregationType(segregationType: EnumSegregationType) {
     this.segregationType = segregationType;
   }
 
-  get PartTitle(){
+  get PartTitle() {
     return this.partTitle;
   }
 
-  set PartTitle(partTitle: string){
+  set PartTitle(partTitle: string) {
     this.partTitle = partTitle;
   }
 }
