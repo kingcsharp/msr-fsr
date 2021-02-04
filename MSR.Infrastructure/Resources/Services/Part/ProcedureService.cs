@@ -1,4 +1,3 @@
-using AutoMapper.Mappers;
 using AutoMapper;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -14,11 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Data;
 using System;
-using System.Diagnostics;
 using MSR.Infrastructure.Resources.Queries;
 using MSR.Infrastructure.Resources.EntityFramework.Projections;
 using MSR.Domain.Views;

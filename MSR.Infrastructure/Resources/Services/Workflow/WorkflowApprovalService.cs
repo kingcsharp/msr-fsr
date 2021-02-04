@@ -810,7 +810,7 @@ namespace MSR.Infrastructure.Resources.Services
                 throw new DomainException($"Procedure Approval id {command.Id} not found", DomainError.NotFound);
             }
 
-            if (procedureApproval.ProcedureId == 0)
+            if (!procedureApproval.ProcedureId.HasValue)
             {
                 var procedureCommand = _mapper.Map<CreateProcedure>(procedureApproval);
                 procedureCommand.Revision = 1;
@@ -832,7 +832,7 @@ namespace MSR.Infrastructure.Resources.Services
                     };
                     var dataObj = JsonConvert.DeserializeAnonymousType(approvalJSON, dataFormat);
                     var update = _mapper.Map<UpdateProcedureStep>(step);
-                    update.procedureId = step.ProcedureApproval.ProcedureId;
+                    update.procedureId = step.ProcedureApproval.ProcedureId.Value;
                     update.ReferenceFileIds = dataObj.fileIds;
                     update.ReferenceDocumentIds = dataObj.documentIds;
                     update.Roles = _mapper.Map<List<Domain.Models.Role>>(dataObj.roleIds);
