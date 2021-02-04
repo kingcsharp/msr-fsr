@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'noCommaNumber'
+  name: 'numberToPercent'
 })
-export class NoCommaNumberPipe implements PipeTransform {
+export class NumberToPercentrPipe implements PipeTransform {
 
   transform(value: number): number {
     if (value !== undefined && value !== null) {

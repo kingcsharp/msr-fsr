@@ -42,7 +42,7 @@ import { GalleriaModule } from 'primeng/galleria';
 import { MonitorStatusPipe } from '../../../app/pipes/monitorstatus';
 import { WorkOrderTaskAndMonitorPipe } from '../../pipes/work-order-task-and-monitor.pipe';
 import { SegregationTypePipe} from '../../pipes/segregation-type.pipe';
-import { NoCommaNumberPipe } from '../../pipes/no-comma-number.pipe';
+import { NumberToPercentrPipe } from '../../pipes/number-to-percent.pipe';
 
 @NgModule({
   declarations: [
@@ -66,7 +66,7 @@ import { NoCommaNumberPipe } from '../../pipes/no-comma-number.pipe';
     MonitorStatusPipe,
     WorkOrderTaskAndMonitorPipe,
     SegregationTypePipe,
-    NoCommaNumberPipe
+    NumberToPercentrPipe
   ],
   exports: [
     GridComponent,
@@ -96,7 +96,7 @@ import { NoCommaNumberPipe } from '../../pipes/no-comma-number.pipe';
     MonitorStatusPipe,
     WorkOrderTaskAndMonitorPipe,
     SegregationTypePipe,
-    NoCommaNumberPipe
+    NumberToPercentrPipe
   ],
   imports: [
     TableModule,
