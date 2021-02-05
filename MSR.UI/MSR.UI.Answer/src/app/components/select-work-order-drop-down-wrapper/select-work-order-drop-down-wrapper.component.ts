@@ -15,9 +15,7 @@ import { take } from 'rxjs/operators';
 })
 export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
 
-  hideCompleted: boolean = false;
   workOrdersAvailable: Array<WorkOrderItem>;
-  orignalworkOrdersOptions: Array<WorkOrderItem>;
   selectedWorkOrder: string;
   disableDropDown: boolean = true;
   placeHolder: string = 'Loading Available WorkOrders...';
@@ -55,7 +53,6 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
 
       });
 
-      this.orignalworkOrdersOptions = this.workOrdersAvailable;
       this.placeHolder = 'Select a WorkOrder';
       this.disableDropDown = false;
      }));
@@ -65,18 +62,6 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
   workOrderSelected($event) {
     this.selectedWorkOrder = '';
     this.router.navigate(['app/wip/details', $event.value.WorkOrderId]);
-  }
-
-  updateWorkOrders() {
-
-    this.hideCompleted = !this.hideCompleted;
-
-    if (this.hideCompleted) {
-      this.workOrdersAvailable = this.orignalworkOrdersOptions.filter(s => s.Status !== 'Finished');
-    } else {
-      this.workOrdersAvailable = this.orignalworkOrdersOptions;
-    }
-
   }
 
 }
