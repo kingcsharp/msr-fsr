@@ -33,7 +33,6 @@ import { ProductSegregationService } from '../../../services/product-segregation
 export class WipdetailsComponent implements OnInit {
 
   @ViewChild('workordertasktimer') workOrderTaskTimer: WorkordertasktimerWrapperComponent;
-  @ViewChild('selectworkorderdropdown') selectWorkOrderDropDown: SelectWorkOrderDropDownWrapperComponent;
   @ViewChild('stepCarousel') carousel: CarouselComponent;
   @ViewChild('workordertaskmonitors') workordertaskmonitors: WorkordertaskmonitorsWrapperComponent;
   @ViewChild('printotherreport') printOtherReport: PrintotherReportComponent;
@@ -444,11 +443,6 @@ export class WipdetailsComponent implements OnInit {
 
   closeCurrentTask() {
     this.workOrderTaskTimer.completeTask();
-  }
-
-  toggleHideCompletedWorkOrders() {
-    this.hideCompletedWorkOrders = !this.hideCompletedWorkOrders;
-    this.selectWorkOrderDropDown.updateWorkOrders();
   }
 
   toggleCancelRemainingStepsDialog() {
