@@ -165,6 +165,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderModels = workOrderModels.Where(x => x.Status == EnumUtils.GetDescription(EnumStatusSteps.Cancelled) || x.Status == EnumUtils.GetDescription(EnumStatusSteps.Complete)).ToList();
             }
 
+            if (command.openOnly.HasValue && command.openOnly.Value)
+            {
+                workOrderModels = workOrderModels.Where(x => x.Status != EnumUtils.GetDescription(EnumStatusSteps.Cancelled) && x.Status != EnumUtils.GetDescription(EnumStatusSteps.Complete)).ToList();
+            }
+
             return workOrderModels.OrderBy(x => x.Id).ToList();
         }
 
