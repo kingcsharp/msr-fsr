@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WorkOrderModel, WorkOrderService} from '../../services/api.client.generated';
+import { EnumStatusSteps, WorkOrderModel, WorkOrderService} from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Router } from '@angular/router';
@@ -28,7 +28,7 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
 
     this.globals.addRequestToIgnore('v1/WorkOrder?assignedToId');
      this.workOrderService.workOrder(null, null, null, null,
-      this.globals.getCurrentUser().id, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+      this.globals.getCurrentUser().id, true,env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       let workOrders = <Array<WorkOrderModel>>response.object;
       this.workOrdersAvailable = new Array<WorkOrderItem>();
@@ -41,17 +41,17 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
         workOrderItem.ProcedureName = workOrder.product?.procedure?.name;
         workOrderItem.SerialNumber = workOrder.purchase?.serialNumber;
 
-        if (workOrder.workOrderTasks.map(s => s.status.name).find(s => s === 'Waiting to Start' || s === 'Requested')) {
-          workOrderItem.Status = 'Requested';
-        } else if (workOrder.workOrderTasks.map(s => s.status.name).find(s => s === 'Finished' || s === 'Complete')) {
-          workOrderItem.Status = 'Finished';
-        } else if (workOrder.workOrderTasks.map(s => s.status.name).find(s => s === 'Accepted' || s === 'Waiting to Start')) {
-          workOrderItem.Status = 'Accepted';
-        } else {
-          workOrderItem.Status = 'Closed';
-        }
+        if(workOrder.workOrderTasks.map(s => s.statusId).find(s => s === EnumStatusSteps.WaitingtoStart)){
 
-        this.workOrdersAvailable.push(workOrderItem);
+          workOrderItem.Status = 'Requested';
+          this.workOrdersAvailable.push(workOrderItem);
+
+        } else if(workOrder.workOrderTasks.map(s => s.statusId).find(s => s === EnumStatusSteps.InProgress)){
+
+          workOrderItem.Status = 'Accepted';
+          this.workOrdersAvailable.push(workOrderItem);
+
+        }
 
       });
 

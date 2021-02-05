@@ -194,7 +194,7 @@ export class WipstatusWrapperComponent implements OnInit {
         let loggedInUser = <UserModel>response.object;
 
         this.globals.showLoader(true);
-        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(workOrderGetResponse => {
+        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, null, null,env.apiVersion).pipe(take(1)).subscribe(responseHandler(workOrderGetResponse => {
 
           let tasks = <Array<WorkOrderTaskModel>>workOrderGetResponse.object[0].workOrderTasks;
 

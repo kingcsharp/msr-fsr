@@ -7093,8 +7093,9 @@ export class WorkOrderService {
      * @param locationId (optional) Get work orders by location ID
      * @param invoiceDate (optional) Get work orders by invoice Date
      * @param assignedToId (optional) Get work orders with ANY tasks assigned to this user ID
+     * @param openOnly (optional) 
      */
-    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, openOnly: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7109,6 +7110,8 @@ export class WorkOrderService {
             url_ += "invoiceDate=" + encodeURIComponent("" + invoiceDate) + "&";
         if (assignedToId !== undefined && assignedToId !== null)
             url_ += "assignedToId=" + encodeURIComponent("" + assignedToId) + "&";
+        if (openOnly !== undefined && openOnly !== null)
+            url_ += "openOnly=" + encodeURIComponent("" + openOnly) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

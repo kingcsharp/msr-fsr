@@ -38,5 +38,7 @@ namespace MSR.Answer.API.V1.Models
         /// Get work orders with ANY tasks assigned to this user ID
         /// </summary>
         public int? assignedToId { get; set; }
+
+        public bool? openOnly { get; set; }
     }
 }

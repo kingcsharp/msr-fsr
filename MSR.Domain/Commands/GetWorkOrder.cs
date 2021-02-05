@@ -40,5 +40,7 @@ namespace MSR.Domain.Commands
         /// If null, do not filter.
         /// </description>
         public bool? completedOnly { get; set; }
+
+        public bool? openOnly { get; set; }
     }
 }
