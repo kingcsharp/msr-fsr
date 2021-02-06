@@ -787,6 +787,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         {
             return await GetWorkOrderGridSummaryImpl();
         }
+
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command)
         {
             var gwo = _mapper.Map<GetWorkOrder>(command);

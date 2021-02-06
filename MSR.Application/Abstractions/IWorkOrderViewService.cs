@@ -11,5 +11,6 @@ namespace MSR.Application.Abstractions
     {
         Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersAsync();
         Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistoryAsync();
+        Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync();
     }
 }

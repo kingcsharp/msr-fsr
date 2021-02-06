@@ -67,8 +67,8 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderStatus>>))]
         public async Task<IActionResult> WorkOrderGetStatus()
         {
-            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderStatus());
-            return ret.ToOkObjectResponse<ICollection<WorkOrderStatus>>();
+            var workOrderGridSummaries = await _workOrderViewService.GetWorkOrderStatusAsync();
+            return GenerateOkViewResponse(workOrderGridSummaries);
         }
 
         /// <summary>

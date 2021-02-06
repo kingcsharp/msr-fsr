@@ -18,9 +18,9 @@ namespace MSR.Domain.DTOs
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
         public string ProductName { get; set; }
-        public ICollection<WorkOrderHistoryTaskDTO> WorkOrderTasks { get; set; }
-        public ICollection<WorkOrderHistoryMessageDTO> WorkOrderMessages { get; set; }
-        public  WorkOrderHistoryPartDTO WorkOrderPart { get; set; }
+        public ICollection<WorkOrderTaskDTO> WorkOrderTasks { get; set; }
+        public ICollection<WorkOrderMessageDTO> WorkOrderMessages { get; set; }
+        public  WorkOrderPartDTO WorkOrderPart { get; set; }
         public bool HasNcr { get; set; }
     }
 }
