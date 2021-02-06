@@ -19721,10 +19721,10 @@ export interface IAuditActionResultOfICollectionOfWorkOrderStatus extends IAudit
 }
 
 export class WorkOrderStatus implements IWorkOrderStatus {
-    productName!: string;
-    partNumber!: string;
-    procedureName!: string;
-    locationName!: string;
+    productName?: string | undefined;
+    partNumber?: string | undefined;
+    procedureName?: string | undefined;
+    locationName?: string | undefined;
     workOrderSummary?: WorkOrderSummary | undefined;
 
     constructor(data?: IWorkOrderStatus) {
@@ -19765,22 +19765,22 @@ export class WorkOrderStatus implements IWorkOrderStatus {
 }
 
 export interface IWorkOrderStatus {
-    productName: string;
-    partNumber: string;
-    procedureName: string;
-    locationName: string;
+    productName?: string | undefined;
+    partNumber?: string | undefined;
+    procedureName?: string | undefined;
+    locationName?: string | undefined;
     workOrderSummary?: WorkOrderSummary | undefined;
 }
 
 export class WorkOrderSummary implements IWorkOrderSummary {
-    workOrderId!: number;
+    workOrderId?: number | undefined;
     workOrderItemNumber?: string | undefined;
     purchaseOrderLineNumber?: string | undefined;
     workOrderPartSerialNumber?: string | undefined;
-    workOrderStatus!: string;
+    workOrderStatus?: string | undefined;
     workOrderAssignedTo?: string | undefined;
     assignedTo?: number | undefined;
-    workOrderHasNcr!: boolean;
+    workOrderHasNcr?: boolean;
     workOrderScheduledEndDate?: Date | undefined;
 
     constructor(data?: IWorkOrderSummary) {
@@ -19829,14 +19829,14 @@ export class WorkOrderSummary implements IWorkOrderSummary {
 }
 
 export interface IWorkOrderSummary {
-    workOrderId: number;
+    workOrderId?: number | undefined;
     workOrderItemNumber?: string | undefined;
     purchaseOrderLineNumber?: string | undefined;
     workOrderPartSerialNumber?: string | undefined;
-    workOrderStatus: string;
+    workOrderStatus?: string | undefined;
     workOrderAssignedTo?: string | undefined;
     assignedTo?: number | undefined;
-    workOrderHasNcr: boolean;
+    workOrderHasNcr?: boolean;
     workOrderScheduledEndDate?: Date | undefined;
 }
 

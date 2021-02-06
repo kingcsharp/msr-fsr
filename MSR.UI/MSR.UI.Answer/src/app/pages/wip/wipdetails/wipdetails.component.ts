@@ -84,6 +84,7 @@ export class WipdetailsComponent implements OnInit {
 
   ngOnDestroy() {
     this.productSegregationService.SegregationType = EnumSegregationType.NONCU;
+    this.productSegregationService.WipDetailsBeingDisplayed = false;
   }
 
   ngOnInit(): void {
@@ -148,6 +149,7 @@ export class WipdetailsComponent implements OnInit {
 
       this.productSegregationService.SegregationType = this.parentPart.part?.segregationType;
       this.productSegregationService.PartTitle = `Customer Part # ${this.parentPart?.part?.partNumber}`;
+      this.productSegregationService.WipDetailsBeingDisplayed = true;
 
       if (this.parentPart.serialNumber === null) {
         this.productSegregationService.PartTitle += `, (Serial #: N/A), ${this.parentPart?.part?.name}`;

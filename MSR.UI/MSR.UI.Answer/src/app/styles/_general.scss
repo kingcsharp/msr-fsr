@@ -218,3 +218,13 @@ selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown .ui-dropdown-label-c
   border-radius: 1em !important;
   padding: .65em .4em !important;
 }
+
+.wip-content{
+  height: 100vh;  
+  padding: 0px !important;
+}
+
+.not-wip-content{
+  padding: 25px 2.5641%;
+  margin-left: $sidebar-width-active;
+}
