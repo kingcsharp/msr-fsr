@@ -97,7 +97,7 @@ export class WipdetailsComponent implements OnInit {
       { label: 'Pass or Fail', value: 5 },
       { label: 'Select', value: 6 },
     ];
-
+    
     this.globals.showLoader(true);
     this.roleService.roleGet(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
