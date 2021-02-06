@@ -404,9 +404,36 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }
                 }
 
-                var procedureStepModel = _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepEntity);
+                var referenceDocumentIds = new List<int>(); ;
+                var referenceDoucmentViews = new List<DocumentView>();
+                if (command.ReferenceDocumentIds != null)
+                {
+                    foreach (int newDocId in command.ReferenceDocumentIds)
+                    {
+                        var documentEntityMap = new DocumentEntityMap()
+                        {
+                            EntityId = procedureStepEntity.Id,
+                            EntityTableName = nameof(ProcedureStep),
+                            DocumentId = newDocId
+                        };
+                        await _unitOfWork.DocumentEntityMap.AddAsync(documentEntityMap);
+                    }
+
+                    referenceDocumentIds = await _unitOfWork.DocumentEntityMap
+                        .Query()
+                        .Where(x => x.EntityTableName == nameof(ProcedureStep) && x.EntityId == procedureStepEntity.Id)
+                        .Select(x => x.DocumentId)
+                        .ToListAsync();
+                    var referenceDocumentEntities = await _unitOfWork.Documents.Query().Where(x => referenceDocumentIds.Contains(x.Id)).ToListAsync();
+                    referenceDoucmentViews = _mapper.Map<List<DocumentView>>(referenceDocumentEntities);
+                }
+                
+
+                var procedureStepModel = _mapper.Map<ProcedureStepModel>(procedureStepEntity);
                 procedureStepModel.Roles = roleModels;
                 procedureStepModel.ReferenceFiles = fileReferences;
+                procedureStepModel.ReferenceDocumentIds = referenceDocumentIds;
+                procedureStepModel.ReferenceDocuments = referenceDoucmentViews;
                 return procedureStepModel;
             }
 
@@ -505,6 +532,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     _unitOfWork.DocumentEntityMap.Delete(false, documentId);
                 }
 
+                var referenceDocumentIds = new List<int>(); ;
+                var referenceDoucmentViews = new List<DocumentView>();
                 if (command.ReferenceDocumentIds != null)
                 {
                     foreach (int newDocId in command.ReferenceDocumentIds)
@@ -517,7 +546,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         };
                         await _unitOfWork.DocumentEntityMap.AddAsync(documentEntityMap);
                     }
-                    await _unitOfWork.SaveChangesAsync();
+
+                    referenceDocumentIds = await _unitOfWork.DocumentEntityMap
+                        .Query()
+                        .Where(x => x.EntityTableName == nameof(ProcedureStep) && x.EntityId == updatedProcedureStepEntity.Id)
+                        .Select(x => x.DocumentId)
+                        .ToListAsync();
+                    var referenceDocumentEntities = await _unitOfWork.Documents.Query().Where(x => referenceDocumentIds.Contains(x.Id)).ToListAsync();
+                    referenceDoucmentViews = _mapper.Map<List<DocumentView>>(referenceDocumentEntities);
                 }
 
                 if (updatedProcedureStepEntity.ProcedureStepRoles != null)
@@ -537,7 +573,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(updatedProcedureStepEntity, updatedProcedureStepEntity.Id);
 
-                return _mapper.Map<ProcedureStepModel>(updatedProcedureStepEntity);
+                var procedureStepModel = _mapper.Map<ProcedureStepModel>(updatedProcedureStepEntity);
+                procedureStepModel.ReferenceDocumentIds = referenceDocumentIds;
+                procedureStepModel.ReferenceDocuments = referenceDoucmentViews;
+                return procedureStepModel;
             }
 
             _unitOfWork.ProcedureSteps.LoadReference(originalProcedureStepEntity, x => x.Procedure);
@@ -747,9 +786,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     {
                         step.procedureId = createdProcedure.Id;
                         var procedureStepEntity = _mapper.Map<ProcedureStep>(step);
-                        _unitOfWork.ProcedureSteps.Add(procedureStepEntity);
+                        await _unitOfWork.ProcedureSteps.AddAsync(procedureStepEntity);
+                        await _unitOfWork.SaveChangesAsync();
+                        if (step.ReferenceDocumentIds != null)
+                        {
+                            foreach (int newDocId in step.ReferenceDocumentIds)
+                            {
+                                var documentEntityMap = new DocumentEntityMap()
+                                {
+                                    EntityId = procedureStepEntity.Id,
+                                    EntityTableName = nameof(ProcedureStep),
+                                    DocumentId = newDocId
+                                };
+                                await _unitOfWork.DocumentEntityMap.AddAsync(documentEntityMap);
+                            }
+                        }
                     }
-                    await _unitOfWork.SaveChangesAsync();
                 }
 
                 createdProcs.Add(createdProcedure);
@@ -950,6 +1002,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     // Reference documents are stored by string.  The IDs will need
                     // to be fetched from database later
                     newStepExtra.REF_DOC_ID = step.ItemArray[fieldMap["REF_DOC_ID"]].ToString();
+                    var defaultDocId = Convert.ToInt32(((double) step.ItemArray[fieldMap["REF_DOC_ID"]]));
+                    var referenceDocumentIds = new List<int>();
+                    referenceDocumentIds.Add(defaultDocId);
+                    newStep.ReferenceDocumentIds = referenceDocumentIds;
 
                     // The IDs used in the spreadsheet will need to be collated at creation
                     // time, so for now we just store a separate mapping.

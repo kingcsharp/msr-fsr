@@ -212,12 +212,12 @@ export class WipdetailsComponent implements OnInit {
         let documents = documentResponses.map(s => s.object[0]);
         workOrderModel.workOrderTasks.filter(s => s.procedureStep !== undefined).map(workOrderTask => {
 
-          workOrderTask.procedureStep.referenceDocument = new Array<FileModel>();
+          workOrderTask.procedureStep.referenceDocuments = new Array<DocumentView>();
 
           workOrderTask.procedureStep.referenceDocumentIds.forEach(documentId => {
-            let documentReferenceFiles = <Array<FileModel>>documents.find(s => s.id === documentId)?.referenceFiles;
+            let documentReferenceFiles = <Array<DocumentView>>documents.find(s => s.id === documentId)?.referenceFiles;
             documentReferenceFiles.map(documentReferenceFile => {
-              workOrderTask.procedureStep.referenceDocument.push(documentReferenceFile);
+              workOrderTask.procedureStep.referenceDocuments.push(documentReferenceFile);
             });
 
           });

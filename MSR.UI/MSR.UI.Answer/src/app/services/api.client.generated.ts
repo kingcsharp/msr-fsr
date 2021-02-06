@@ -13177,7 +13177,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
-    referenceDocument?: FileModel[] | undefined;
+    referenceDocuments?: DocumentView[] | undefined;
     isUsed?: boolean;
 
     constructor(data?: IProcedureStepModel) {
@@ -13223,10 +13223,10 @@ export class ProcedureStepModel implements IProcedureStepModel {
                 for (let item of _data["referenceDocumentIds"])
                     this.referenceDocumentIds!.push(item);
             }
-            if (Array.isArray(_data["referenceDocument"])) {
-                this.referenceDocument = [] as any;
-                for (let item of _data["referenceDocument"])
-                    this.referenceDocument!.push(FileModel.fromJS(item));
+            if (Array.isArray(_data["referenceDocuments"])) {
+                this.referenceDocuments = [] as any;
+                for (let item of _data["referenceDocuments"])
+                    this.referenceDocuments!.push(DocumentView.fromJS(item));
             }
             this.isUsed = _data["isUsed"];
         }
@@ -13273,10 +13273,10 @@ export class ProcedureStepModel implements IProcedureStepModel {
             for (let item of this.referenceDocumentIds)
                 data["referenceDocumentIds"].push(item);
         }
-        if (Array.isArray(this.referenceDocument)) {
-            data["referenceDocument"] = [];
-            for (let item of this.referenceDocument)
-                data["referenceDocument"].push(item.toJSON());
+        if (Array.isArray(this.referenceDocuments)) {
+            data["referenceDocuments"] = [];
+            for (let item of this.referenceDocuments)
+                data["referenceDocuments"].push(item.toJSON());
         }
         data["isUsed"] = this.isUsed;
         return data; 
@@ -13304,43 +13304,26 @@ export interface IProcedureStepModel {
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
-    referenceDocument?: FileModel[] | undefined;
+    referenceDocuments?: DocumentView[] | undefined;
     isUsed?: boolean;
 }
 
-/**  */
 export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
-    /** Gets or Sets ProcedureId */
     procedureId?: number | undefined;
-    /** Gets or Sets Title */
     title?: string | undefined;
-    /** Gets or Sets Text */
     stepText?: string | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType?: string | undefined;
-    /** Procedure Step Type */
     procedureStepTypeId?: number | undefined;
-    /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
-    /** Gets or Sets PredecessorStepId */
     predecessorStepId?: number | undefined;
-    /** Gets or Sets LaborTime */
     laborTime?: number | undefined;
-    /** Gets or Sets EquipmentTime */
     equipmentTime?: number | undefined;
-    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
-    /** Gets or Sets UtilizationTime */
     utilization?: number | undefined;
-    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
-    /** Gets or Sets ReferenceFileIds    */
     referenceFileIds?: number[] | undefined;
-    /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
     referenceDocumentIds?: number[] | undefined;
 
@@ -13437,39 +13420,22 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     }
 }
 
-/**  */
 export interface ICreateProcedureStepRequest {
-    /** Gets or Sets ProcedureId */
     procedureId?: number | undefined;
-    /** Gets or Sets Title */
     title?: string | undefined;
-    /** Gets or Sets Text */
     stepText?: string | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType?: string | undefined;
-    /** Procedure Step Type */
     procedureStepTypeId?: number | undefined;
-    /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
-    /** Gets or Sets PredecessorStepId */
     predecessorStepId?: number | undefined;
-    /** Gets or Sets LaborTime */
     laborTime?: number | undefined;
-    /** Gets or Sets EquipmentTime */
     equipmentTime?: number | undefined;
-    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
-    /** Gets or Sets UtilizationTime */
     utilization?: number | undefined;
-    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
-    /** Gets or Sets ReferenceFileIds    */
     referenceFileIds?: number[] | undefined;
-    /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
     referenceDocumentIds?: number[] | undefined;
 }
