@@ -72,7 +72,7 @@
                                 <div class="col-12" *ngIf="workOrderTask.workOrderTaskMonitors?.length > 0">
                                     <div class="row" *ngFor="let workOrderTaskMonitor of workOrderTask.workOrderTaskMonitors">
                                         <div class="col-8 border" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description"></div>
-                                        <div class="col-4 border">{{workOrderTaskMonitor.textVal}}</div>
+                                        <div class="col-4 border">{{workOrderTaskMonitor | monitorResult}}</div>
                                     </div>
                                 </div>
                             </div>
