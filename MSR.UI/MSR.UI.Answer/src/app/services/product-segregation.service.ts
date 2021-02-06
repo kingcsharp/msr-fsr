@@ -7,6 +7,7 @@ import { EnumSegregationType } from './api.client.generated';
 export class ProductSegregationService {
 
   private segregationType: EnumSegregationType = EnumSegregationType.NONCU;
+  private wipDetailsBeingDisplayed: boolean = false;
   private partTitle: string;
 
   constructor() { }
@@ -26,4 +27,13 @@ export class ProductSegregationService {
   set PartTitle(partTitle: string) {
     this.partTitle = partTitle;
   }
+
+  get WipDetailsBeingDisplayed() {
+    return this.wipDetailsBeingDisplayed;
+  }
+
+  set WipDetailsBeingDisplayed(wipDetailsBeingDisplayed: boolean) {
+    this.wipDetailsBeingDisplayed = wipDetailsBeingDisplayed;
+  }
+
 }

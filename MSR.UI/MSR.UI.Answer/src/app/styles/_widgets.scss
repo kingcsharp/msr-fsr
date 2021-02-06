@@ -1236,17 +1236,21 @@ body .ui-dropdown.ui-dropdown-clearable .ui-dropdown-label {
 
 #sidebar.active-width{
   width: $sidebar-width-active;
+  opacity: 1;
 }
 #sidebar.segregation-active-width{
   width: $sidebar-width-hidden-active;
+  opacity: 0;
 }
 
 #sidebar.open-width-non-segregation{
   width: $sidebar-width;
+  opacity: 1;
 }
 
 #sidebar.open-width-segregation{
   width: $sidebar-width;
+  opacity: 1;
 }
 /* Toggling the sidebar header content, hide the big heading [h3] and showing the small heading [strong] and vice versa*/
 #sidebar .sidebar-header strong {
