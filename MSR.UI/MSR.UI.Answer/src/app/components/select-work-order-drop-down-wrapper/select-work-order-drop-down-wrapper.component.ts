@@ -39,12 +39,14 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
         workOrderItem.ProcedureName = workOrder.product?.procedure?.name;
         workOrderItem.SerialNumber = workOrder.purchase?.serialNumber;
 
-        if(workOrder.workOrderTasks.map(s => s.statusId).find(s => s === EnumStatusSteps.WaitingtoStart)){
+        if(workOrder.workOrderTasks.map(s => s.statusId).every(m => m === EnumStatusSteps.WaitingtoStart)){
 
           workOrderItem.Status = 'Requested';
           this.workOrdersAvailable.push(workOrderItem);
 
-        } else if(workOrder.workOrderTasks.map(s => s.statusId).find(s => s === EnumStatusSteps.InProgress)){
+        } else if(workOrder.workOrderTasks.map(s => s.statusId).find(s => 
+          s === EnumStatusSteps.InProgress || 
+          s === EnumStatusSteps.Complete)){
 
           workOrderItem.Status = 'Accepted';
           this.workOrdersAvailable.push(workOrderItem);
