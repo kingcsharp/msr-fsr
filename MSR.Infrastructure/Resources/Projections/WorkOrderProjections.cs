@@ -28,7 +28,7 @@ namespace MSR.Infrastructure.Resources.Projections
             ProductName = i.Product.Name,
             ActualEndDate = i.ActualEndDate,
             TotalSalePrice = i.Product.TotalSalePrice,
-            Status = GetWorkOrderStatusFromTasks(i.WorkOrderTasks.Select(i => i.StatusId))
+            Status = GetWorkOrderStatusFromTasks(i.WorkOrderTasks)
         };
 
         public static Expression<Func<WorkOrder, dynamic>> WorkOrderGridSummaryView => i => new
@@ -87,25 +87,26 @@ namespace MSR.Infrastructure.Resources.Projections
             WorkOrderItemNumber = $"{i.Purchase.PurchaseOrder.Customer.Name}-{i.Id}",
             PurchaseOrderLineNumber = i.Purchase.CustomerLineNumber,
             WorkOrderHasNcr = i.HasNCR,
-            WorkOrderScheduledEndDate = i.ScheduledEndDate
+            WorkOrderScheduledEndDate = i.ScheduledEndDate,
+            ActualEndDate = i.ActualEndDate
         };
 
-        private static EnumStatusSteps GetWorkOrderStatusFromTasks(IEnumerable<int> tasks)
+        private static EnumStatusSteps GetWorkOrderStatusFromTasks(ICollection<WorkOrderTask> tasks)
         {
             int[] completed = { 3, 6, 8 };
-            if (tasks.All(x => completed.Contains(x)))
+            if (tasks.All(x => completed.Contains(x.StatusId)))
             {
                 return EnumStatusSteps.Complete;
             }
 
-            if (tasks.Any(x => x == (int)EnumStatusSteps.Cancelled))
-            {
-                return EnumStatusSteps.Cancelled;
-            }
-
-            if (tasks.Any(x => (x == (int)EnumStatusSteps.InProgress || x == (int)EnumStatusSteps.Complete)))
+            if (tasks.Any(x => (x.StatusId == (int)EnumStatusSteps.InProgress || x.StatusId == (int)EnumStatusSteps.Complete)))
             {
                 return EnumStatusSteps.InProgress;
+            }
+
+            if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.Cancelled))
+            {
+                return EnumStatusSteps.Cancelled;
             }
 
             return EnumStatusSteps.WaitingtoStart;

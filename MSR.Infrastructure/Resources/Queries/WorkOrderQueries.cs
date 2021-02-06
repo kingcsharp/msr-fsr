@@ -74,13 +74,13 @@ namespace MSR.Infrastructure.Resources.Queries
 
         public static async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatus(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection)
         {
-            var workOrderStatusDTOs = await QueryHelper.GetViewDataFor<WorkOrder, ICollection<WorkOrderStatusViewDTO>>(dbSet, projection);
+            var workOrderStatusDTOs = (await QueryHelper.GetViewDataFor<WorkOrder, ICollection<WorkOrderStatusViewDTO>>(dbSet, projection)).Where(i => !i.ActualEndDate.HasValue).ToList();
             var workOrderStatusViews = new ConcurrentBag<WorkOrderStatus>();
             var workOrderHistoryBag = new ConcurrentBag<WorkOrderStatusViewDTO>(workOrderStatusDTOs);
 
             Parallel.ForEach(workOrderStatusDTOs, workOrderStatusDTO =>
             {
-                var status = GetWorkOrderStatusFromTasks(workOrderStatusDTO.WorkOrderTasks);
+                var status = EnumUtils.GetDescription(GetWorkOrderStatusFromTasks(workOrderStatusDTO.WorkOrderTasks));
                 var firstTask = workOrderStatusDTO.WorkOrderTasks.FirstOrDefault(i => i.StatusId == 3 || i.StatusId == 6 || i.StatusId == 8);
 
                 var assignedToUser = firstTask == null ? workOrderStatusDTO.WorkOrderTasks.Any() ? workOrderStatusDTO.WorkOrderTasks.First().AssignedToUser : string.Empty : firstTask.AssignedToUser;
@@ -102,7 +102,7 @@ namespace MSR.Infrastructure.Resources.Queries
                         WorkOrderItemNumber = workOrderStatusDTO.WorkOrderItemNumber,
                         WorkOrderPartSerialNumber = workOrderStatusDTO.WorkOrderPart?.SerialNumber,
                         WorkOrderScheduledEndDate = workOrderStatusDTO.WorkOrderScheduledEndDate,
-                        WorkOrderStatus = status.ToString()
+                        WorkOrderStatus = status
                     }
                 };
 

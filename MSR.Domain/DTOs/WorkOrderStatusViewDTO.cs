@@ -13,6 +13,7 @@ namespace MSR.Domain.DTOs
         public string PurchaseOrderLineNumber { get; set; }
         public bool WorkOrderHasNcr { get; set; }
         public DateTime? WorkOrderScheduledEndDate { get; set; }
+        public DateTime? ActualEndDate { get; set; }
         public ICollection<WorkOrderTaskDTO> WorkOrderTasks { get; set; }
         public WorkOrderPartDTO WorkOrderPart { get; set; }
     }
