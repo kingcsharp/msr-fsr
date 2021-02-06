@@ -74,7 +74,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
         public static async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatus(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection)
         {
-            var workOrderStatusDTOs = await QueryHelper.GetViewDataFor<WorkOrder, ICollection<WorkOrderStatusViewDTO>>(dbSet, projection);
+            var workOrderStatusDTOs = (await QueryHelper.GetViewDataFor<WorkOrder, ICollection<WorkOrderStatusViewDTO>>(dbSet, projection)).Where(i => !i.ActualEndDate.HasValue).ToList();
             var workOrderStatusViews = new ConcurrentBag<WorkOrderStatus>();
             var workOrderHistoryBag = new ConcurrentBag<WorkOrderStatusViewDTO>(workOrderStatusDTOs);
 
