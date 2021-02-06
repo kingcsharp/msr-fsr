@@ -276,7 +276,7 @@ export class WipdetailsComponent implements OnInit {
         s.referenceFiles = new Array<FileModel>();
       }
 
-      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+      s.workOrderTaskMonitors.filter(m => m.procedureStepMonitor !== undefined).map(s => s.procedureStepMonitor).map(u => {
 
         if (u.monitorTypeId === 1 && u.inputTypeId === 1) {
           u.inputType = 'Manual';
@@ -308,7 +308,7 @@ export class WipdetailsComponent implements OnInit {
 
       });
 
-      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+      s.workOrderTaskMonitors.filter(m => m.procedureStepMonitor !== undefined).map(s => s.procedureStepMonitor).map(u => {
 
         u.monitorType = this.monitorTypes.find(t => t.value === u.monitorTypeId).label;
 

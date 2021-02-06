@@ -13,7 +13,7 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Procedure Step Monitor Id
         /// </summary>
-        public int ProcedureMonitorId { get; set; }
+        public int? ProcedureMonitorId { get; set; }
 
         public int? NumVal { get; set; }
         public string TextVal { get; set; }
@@ -47,5 +47,7 @@ namespace MSR.Domain.Models
         public float? LowTarget { get; set; }
         public string TargetValue { get; set; }
         public string FaultHandling { get; set; }
+        public int? MonitorTypeId { get; set; }
+        public int? InputTypeId { get; set; }
     }
 }

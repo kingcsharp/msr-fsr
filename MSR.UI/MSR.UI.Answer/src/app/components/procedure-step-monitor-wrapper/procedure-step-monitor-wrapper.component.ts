@@ -173,7 +173,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
       this.globals.showLoader(true);
       this.procedureStepMonitorService.procedureStepMonitorPost(env.apiVersion, createProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 
-        this.procedureStepMonitors.push(this.procedureStepMonitor);
+        this.procedureStepMonitors.push(response.object);
         this.showAddOrEditMonitorDialog = !this.showAddOrEditMonitorDialog;
 
       }));

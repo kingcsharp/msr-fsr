@@ -21,14 +21,15 @@ export class MonitorStatusPipe implements PipeTransform {
 
     isMonitorPassing(workOrderTaskMonitor: WorkOrderTaskMonitorModel) {
 
-        const monitorType = workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId;
+        const monitorType =  workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null 
+        ? workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId : workOrderTaskMonitor?.monitorTypeId;
 
         switch (monitorType) {
             case EnumMonitorType.Equipment:
                 return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
             case EnumMonitorType.Number:
 
-                if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor) {
+                if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor || workOrderTaskMonitor?.inputTypeId === EnumMonitorInputType.Sensor) {
                     return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null
                         && workOrderTaskMonitor.textVal !== '' && workOrderTaskMonitor.textVal !== 'No Sensor Value Available');
                 }
@@ -40,7 +41,13 @@ export class MonitorStatusPipe implements PipeTransform {
                         return false;
                     }
 
-                    let targetValue = Number(workOrderTaskMonitor.procedureStepMonitor.targetValue);
+                    let targetValue;
+                    if(workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null){
+                        targetValue = Number(workOrderTaskMonitor.procedureStepMonitor?.targetValue);
+                    }else{
+                        targetValue = Number(workOrderTaskMonitor.targetValue);
+                    }
+                    
 
                     switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
                         case EnumMonitorShouldBe.EQUAL: {
@@ -54,8 +61,15 @@ export class MonitorStatusPipe implements PipeTransform {
                         }
                         case EnumMonitorShouldBe.BETWEEN: {
 
-                            return (workOrderTaskMonitor.procedureStepMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
-                                workOrderTaskMonitor.procedureStepMonitor.highTarget >= workOrderTaskMonitor.numVal);
+                            if(workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null){
+                                return (workOrderTaskMonitor.procedureStepMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
+                                    workOrderTaskMonitor.procedureStepMonitor.highTarget >= workOrderTaskMonitor.numVal);
+                            }else{
+                                return (workOrderTaskMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
+                                    workOrderTaskMonitor.highTarget >= workOrderTaskMonitor.numVal);
+                                
+                            }
+                            
                         }
                         default:
                             return false;
