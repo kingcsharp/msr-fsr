@@ -576,10 +576,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
             {
-
-                await DeleteProcedureStepMonitorsAsync(procedureStepEntity.Id);
-                await DeleteProcedureStepsAsync(procedureStepEntity.Id);
-                await _unitOfWork.SaveChangesAsync();
+                try
+                {
+                    await DeleteProcedureStepMonitorsAsync(procedureStepEntity.Id);
+                    await DeleteProcedureStepsAsync(procedureStepEntity.Id);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
 
             }
             else
