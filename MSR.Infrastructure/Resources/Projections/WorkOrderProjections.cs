@@ -28,7 +28,7 @@ namespace MSR.Infrastructure.Resources.Projections
             ProductName = i.Product.Name,
             ActualEndDate = i.ActualEndDate,
             TotalSalePrice = i.Product.TotalSalePrice,
-            Status = GetWorkOrderStatusFromTasks(i.WorkOrderTasks)
+            Status = GetWorkOrderStatusFromTasks(i.WorkOrderTasks.Select(i => i.StatusId))
         };
 
         public static Expression<Func<WorkOrder, dynamic>> WorkOrderGridSummaryView => i => new
@@ -66,22 +66,46 @@ namespace MSR.Infrastructure.Resources.Projections
             WorkOrderMessages = i.WorkOrderMessages
         };
 
-        private static EnumStatusSteps GetWorkOrderStatusFromTasks(ICollection<WorkOrderTask> tasks)
+        public static Expression<Func<WorkOrder, dynamic>> WorkOrderStatusView => i => new
+        {
+            ProductName = i.Product.Name,
+            WorkOrderPart = i.WorkOrderParts.Select(j => new
+            {
+                SerialNumber = j.SerialNumber,
+                Qty = j.Qty,
+                PartNumber = j.Part.PartNumber
+            }).FirstOrDefault(),
+            WorkOrderTasks = i.WorkOrderTasks.Select(j => new
+            {
+                ProcedureName = j.ProcedureStep.Procedure.Name,
+                AssignedToUser = $"{j.AssignedToUser.FirstName} {j.AssignedToUser.LastName}",
+                AssignedTo = j.AssignedTo.Value,
+                StatusId = j.StatusId,
+            }),
+            LocationName = i.Location.Name,
+            WorkOrderId = i.Id,
+            WorkOrderItemNumber = $"{i.Purchase.PurchaseOrder.Customer.Name}-{i.Id}",
+            PurchaseOrderLineNumber = i.Purchase.CustomerLineNumber,
+            WorkOrderHasNcr = i.HasNCR,
+            WorkOrderScheduledEndDate = i.ScheduledEndDate
+        };
+
+        private static EnumStatusSteps GetWorkOrderStatusFromTasks(IEnumerable<int> tasks)
         {
             int[] completed = { 3, 6, 8 };
-            if (tasks.All(x => completed.Contains(x.StatusId)))
+            if (tasks.All(x => completed.Contains(x)))
             {
                 return EnumStatusSteps.Complete;
             }
 
-            if (tasks.Any(x => (x.StatusId == (int)EnumStatusSteps.InProgress || x.StatusId == (int)EnumStatusSteps.Complete)))
-            {
-                return EnumStatusSteps.InProgress;
-            }
-
-            if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.Cancelled))
+            if (tasks.Any(x => x == (int)EnumStatusSteps.Cancelled))
             {
                 return EnumStatusSteps.Cancelled;
+            }
+
+            if (tasks.Any(x => (x == (int)EnumStatusSteps.InProgress || x == (int)EnumStatusSteps.Complete)))
+            {
+                return EnumStatusSteps.InProgress;
             }
 
             return EnumStatusSteps.WaitingtoStart;

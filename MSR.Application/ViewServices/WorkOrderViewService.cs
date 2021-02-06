@@ -30,5 +30,7 @@ namespace MSR.Application.ViewServices
         }
 
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistoryAsync() => await _unitOfWork.Query<WorkOrder>().GetWorkOrderHistory(WorkOrderProjections.WorkOrderGridSummaryView);
+
+        public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync() => await _unitOfWork.Query<WorkOrder>().GetWorkOrderStatus(WorkOrderProjections.WorkOrderStatusView);
     }
 }

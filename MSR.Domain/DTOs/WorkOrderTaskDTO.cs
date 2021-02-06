@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MSR.Domain.DTOs
 {
-    public class WorkOrderHistoryTaskDTO
+    public class WorkOrderTaskDTO
     {
         public int StatusId { get; set; }
         public double? LaborTime { get; set; }
@@ -14,5 +14,7 @@ namespace MSR.Domain.DTOs
         public string Title { get; set; }
         public int ProcedureStepTypeId { get; set; }
         public ICollection<string> WorkOrderTaskMonitors { get; set; }
+        public string AssignedToUser { get; set; }
+        public int? AssignedTo { get; set; }
     }
 }

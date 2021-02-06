@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MSR.Domain.DTOs
 {
-    public class WorkOrderHistoryMessageDTO
+    public class WorkOrderMessageDTO
     {
         public int WorkOrderId { get; set; }
         public string Message { get; set; }
