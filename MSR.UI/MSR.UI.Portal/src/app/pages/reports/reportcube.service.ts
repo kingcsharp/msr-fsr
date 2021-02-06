@@ -10,7 +10,7 @@ import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { Globals } from '../../models/lib/globals';
 import { EnumChartType } from '../../../app/models/enums/ChartType';
 import { EnumChartStackType } from '../../../app/models/enums/EnumChartStackType';
-import cloneDeep from 'lodash.cloneDeep';
+import { cloneDeep } from 'lodash';
 
 @Injectable({
     providedIn: 'root'
