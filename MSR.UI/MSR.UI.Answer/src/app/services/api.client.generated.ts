@@ -16417,7 +16417,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
     procedureStepMonitor?: ProcedureStepMonitor | undefined;
-    procedureMonitorId?: number;
+    procedureMonitorId?: number | undefined;
     numVal?: number | undefined;
     textVal?: string | undefined;
     multiVal?: string | undefined;
@@ -16433,6 +16433,8 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     lowTarget?: number | undefined;
     targetValue?: string | undefined;
     faultHandling?: string | undefined;
+    monitorTypeId?: number | undefined;
+    inputTypeId?: number | undefined;
 
     constructor(data?: IWorkOrderTaskMonitorModel) {
         super(data);
@@ -16460,6 +16462,8 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
             this.lowTarget = _data["lowTarget"];
             this.targetValue = _data["targetValue"];
             this.faultHandling = _data["faultHandling"];
+            this.monitorTypeId = _data["monitorTypeId"];
+            this.inputTypeId = _data["inputTypeId"];
         }
     }
 
@@ -16491,6 +16495,8 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         data["lowTarget"] = this.lowTarget;
         data["targetValue"] = this.targetValue;
         data["faultHandling"] = this.faultHandling;
+        data["monitorTypeId"] = this.monitorTypeId;
+        data["inputTypeId"] = this.inputTypeId;
         super.toJSON(data);
         return data; 
     }
@@ -16500,7 +16506,7 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
     procedureStepMonitor?: ProcedureStepMonitor | undefined;
-    procedureMonitorId?: number;
+    procedureMonitorId?: number | undefined;
     numVal?: number | undefined;
     textVal?: string | undefined;
     multiVal?: string | undefined;
@@ -16516,6 +16522,8 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     lowTarget?: number | undefined;
     targetValue?: string | undefined;
     faultHandling?: string | undefined;
+    monitorTypeId?: number | undefined;
+    inputTypeId?: number | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
