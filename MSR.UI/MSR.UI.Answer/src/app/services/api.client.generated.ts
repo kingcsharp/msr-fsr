@@ -7093,8 +7093,9 @@ export class WorkOrderService {
      * @param locationId (optional) Get work orders by location ID
      * @param invoiceDate (optional) Get work orders by invoice Date
      * @param assignedToId (optional) Get work orders with ANY tasks assigned to this user ID
+     * @param openOnly (optional) 
      */
-    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, openOnly: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7109,6 +7110,8 @@ export class WorkOrderService {
             url_ += "invoiceDate=" + encodeURIComponent("" + invoiceDate) + "&";
         if (assignedToId !== undefined && assignedToId !== null)
             url_ += "assignedToId=" + encodeURIComponent("" + assignedToId) + "&";
+        if (openOnly !== undefined && openOnly !== null)
+            url_ += "openOnly=" + encodeURIComponent("" + openOnly) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -16414,7 +16417,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
     procedureStepMonitor?: ProcedureStepMonitor | undefined;
-    procedureMonitorId?: number;
+    procedureMonitorId?: number | undefined;
     numVal?: number | undefined;
     textVal?: string | undefined;
     multiVal?: string | undefined;
@@ -16430,6 +16433,8 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     lowTarget?: number | undefined;
     targetValue?: string | undefined;
     faultHandling?: string | undefined;
+    monitorTypeId?: number | undefined;
+    inputTypeId?: number | undefined;
 
     constructor(data?: IWorkOrderTaskMonitorModel) {
         super(data);
@@ -16457,6 +16462,8 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
             this.lowTarget = _data["lowTarget"];
             this.targetValue = _data["targetValue"];
             this.faultHandling = _data["faultHandling"];
+            this.monitorTypeId = _data["monitorTypeId"];
+            this.inputTypeId = _data["inputTypeId"];
         }
     }
 
@@ -16488,6 +16495,8 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         data["lowTarget"] = this.lowTarget;
         data["targetValue"] = this.targetValue;
         data["faultHandling"] = this.faultHandling;
+        data["monitorTypeId"] = this.monitorTypeId;
+        data["inputTypeId"] = this.inputTypeId;
         super.toJSON(data);
         return data; 
     }
@@ -16497,7 +16506,7 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
     procedureStepMonitor?: ProcedureStepMonitor | undefined;
-    procedureMonitorId?: number;
+    procedureMonitorId?: number | undefined;
     numVal?: number | undefined;
     textVal?: string | undefined;
     multiVal?: string | undefined;
@@ -16513,6 +16522,8 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     lowTarget?: number | undefined;
     targetValue?: string | undefined;
     faultHandling?: string | undefined;
+    monitorTypeId?: number | undefined;
+    inputTypeId?: number | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {

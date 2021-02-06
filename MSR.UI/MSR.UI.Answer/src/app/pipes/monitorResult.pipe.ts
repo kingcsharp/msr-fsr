@@ -19,13 +19,14 @@ export class MonitorResultPipe implements PipeTransform {
     }
 
     getResultFromMonitor(workOrderTaskMonitor: WorkOrderTaskMonitorModel) {
-        const monitorType = workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId;
+        const monitorType =  workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null 
+        ? workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId : workOrderTaskMonitor?.monitorTypeId;
         switch (monitorType) {
             case EnumMonitorType.Equipment:
                 return workOrderTaskMonitor.textVal;
             case EnumMonitorType.Number: {
 
-                if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor) {
+                if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor || workOrderTaskMonitor?.inputTypeId === EnumMonitorInputType.Sensor) {
                     return workOrderTaskMonitor.textVal;
                 } else {
                     return workOrderTaskMonitor.numVal;

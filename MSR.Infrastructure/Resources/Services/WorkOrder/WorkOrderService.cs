@@ -165,6 +165,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderModels = workOrderModels.Where(x => x.Status == EnumUtils.GetDescription(EnumStatusSteps.Cancelled) || x.Status == EnumUtils.GetDescription(EnumStatusSteps.Complete)).ToList();
             }
 
+            if (command.openOnly.HasValue && command.openOnly.Value)
+            {
+                workOrderModels = workOrderModels.Where(x => x.Status != EnumUtils.GetDescription(EnumStatusSteps.Cancelled) && x.Status != EnumUtils.GetDescription(EnumStatusSteps.Complete)).ToList();
+            }
+
             return workOrderModels.OrderBy(x => x.Id).ToList();
         }
 
@@ -209,6 +214,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     workOrderTaskMonitor.Target = procedureStepMonitor.Target;
                     workOrderTaskMonitor.FailAction = procedureStepMonitor.FailAction;
                     workOrderTaskMonitor.SensorName = procedureStepMonitor.SensorName;
+                    workOrderTaskMonitor.MonitorTypeId = procedureStepMonitor.MonitorTypeId;
+                    workOrderTaskMonitor.InputTypeId = procedureStepMonitor.InputTypeId;
                 }
             }
 
@@ -525,6 +532,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
             _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
 
+            bool isNcrTask = false;
             if (procedureStepEntity != null && procedureStepEntity.Procedure?.ProcedureTypeId == PROCEDURE_TYPE_NC)
             {
                 var workOrderEntity = await _unitOfWork.WorkOrders
@@ -536,6 +544,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     _unitOfWork.WorkOrders.Update(workOrderEntity);
                     await _unitOfWork.SaveChangesAsync();
                 }
+
+                isNcrTask = true;
 
             }
 
@@ -559,6 +569,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             workOrderTaskEntity.Description = procedureStepEntity.StepText;
             workOrderTaskEntity.Title = procedureStepEntity.Title;
+            workOrderTaskEntity.IsNCRTask = isNcrTask;
             foreach (var workOrderTaskMonitor in workOrderTaskEntity.WorkOrderTaskMonitors)
             {
                 var procedureStepMonitor =
@@ -576,6 +587,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     workOrderTaskMonitor.Target = procedureStepMonitor.Target;
                     workOrderTaskMonitor.FailAction = procedureStepMonitor.FailAction;
                     workOrderTaskMonitor.SensorName = procedureStepMonitor.SensorName;
+                    workOrderTaskMonitor.MonitorTypeId = procedureStepMonitor.MonitorTypeId;
+                    workOrderTaskMonitor.InputTypeId = procedureStepMonitor.InputTypeId;
                 }
             }
 

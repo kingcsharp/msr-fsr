@@ -33,7 +33,6 @@ import { ProductSegregationService } from '../../../services/product-segregation
 export class WipdetailsComponent implements OnInit {
 
   @ViewChild('workordertasktimer') workOrderTaskTimer: WorkordertasktimerWrapperComponent;
-  @ViewChild('selectworkorderdropdown') selectWorkOrderDropDown: SelectWorkOrderDropDownWrapperComponent;
   @ViewChild('stepCarousel') carousel: CarouselComponent;
   @ViewChild('workordertaskmonitors') workordertaskmonitors: WorkordertaskmonitorsWrapperComponent;
   @ViewChild('printotherreport') printOtherReport: PrintotherReportComponent;
@@ -98,7 +97,7 @@ export class WipdetailsComponent implements OnInit {
       { label: 'Pass or Fail', value: 5 },
       { label: 'Select', value: 6 },
     ];
-
+    
     this.globals.showLoader(true);
     this.roleService.roleGet(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
@@ -118,7 +117,7 @@ export class WipdetailsComponent implements OnInit {
   getWorkOrder(workOrderId: number) {
 
     this.globals.showLoader(true);
-    this.workOrdersService.workOrder(workOrderId, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.workOrdersService.workOrder(workOrderId, null, null, null, null,null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.workOrderModel = this.cleanData(response.object[0]);
       this.getCustomerContacts(this.workOrderModel.purchase?.purchaseOrder?.customer?.id);
@@ -277,7 +276,7 @@ export class WipdetailsComponent implements OnInit {
         s.referenceFiles = new Array<FileModel>();
       }
 
-      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+      s.workOrderTaskMonitors.filter(m => m.procedureStepMonitor !== undefined).map(s => s.procedureStepMonitor).map(u => {
 
         if (u.monitorTypeId === 1 && u.inputTypeId === 1) {
           u.inputType = 'Manual';
@@ -309,7 +308,7 @@ export class WipdetailsComponent implements OnInit {
 
       });
 
-      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+      s.workOrderTaskMonitors.filter(m => m.procedureStepMonitor !== undefined).map(s => s.procedureStepMonitor).map(u => {
 
         u.monitorType = this.monitorTypes.find(t => t.value === u.monitorTypeId).label;
 
@@ -444,11 +443,6 @@ export class WipdetailsComponent implements OnInit {
 
   closeCurrentTask() {
     this.workOrderTaskTimer.completeTask();
-  }
-
-  toggleHideCompletedWorkOrders() {
-    this.hideCompletedWorkOrders = !this.hideCompletedWorkOrders;
-    this.selectWorkOrderDropDown.updateWorkOrders();
   }
 
   toggleCancelRemainingStepsDialog() {

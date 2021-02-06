@@ -31,5 +31,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public float? Target { get; set; }
         public string FailAction { get; set; }
         public string SensorName { get; set; }
+        public int? MonitorTypeId { get; set; }
+        public int? InputTypeId { get; set; }
     }
 }

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using System;
+using System.Diagnostics;
 using MSR.Infrastructure.Resources.Queries;
 using MSR.Infrastructure.Resources.EntityFramework.Projections;
 using MSR.Domain.Views;
@@ -575,10 +576,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
             {
-
-                await DeleteProcedureStepMonitorsAsync(procedureStepEntity.Id);
-                await DeleteProcedureStepsAsync(procedureStepEntity.Id);
-                await _unitOfWork.SaveChangesAsync();
+                try
+                {
+                    await DeleteProcedureStepMonitorsAsync(procedureStepEntity.Id);
+                    await DeleteProcedureStepsAsync(procedureStepEntity.Id);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
 
             }
             else
@@ -971,8 +978,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         private async Task DeleteProcedureStepMonitorsAsync(int procedureStepId)
         {
+            var procedureStepMonitorIdsToDelete = await _unitOfWork.ProcedureStepMonitors.Query()
+                .Where(s => s.ProcedureStepId.Value == procedureStepId).Select(m => m.Id).ToListAsync();
+
             var workOrderTaskMonitorEntities =  await _unitOfWork.WorkOrderTaskMonitors.Query()
-                .Where(s => s.ProcedureMonitorId == procedureStepId).ToListAsync();
+                .Where(s => procedureStepMonitorIdsToDelete.Contains(s.ProcedureMonitorId.Value)).ToListAsync();
 
             workOrderTaskMonitorEntities.ForEach(workOrderTaskMonitorEntity =>
             {
