@@ -1235,7 +1235,7 @@ body .ui-dropdown.ui-dropdown-clearable .ui-dropdown-label {
 }
 
 #sidebar.active-width{
-  width: $sidebar-width-active;
+  width: $sidebar-width-active + 15px;
   opacity: 1;
 }
 #sidebar.segregation-active-width{
