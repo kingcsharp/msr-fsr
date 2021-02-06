@@ -9,13 +9,13 @@ export class WorkOrderTaskAndMonitorPipe implements PipeTransform {
 
     if (isPassOrFail) {
 
-      return this.getValueByModelId(modelId, Number(primaryValue), Number(backupValue)) === 1 ? 'Fail' : 'Pass';
+      return this.getValueByModelId(modelId, Number(primaryValue), Number(backupValue)) === 0 ? 'Fail' : 'Pass';
 
     }
 
     if (isYesOrNo) {
 
-      return this.getValueByModelId(modelId, Number(primaryValue), Number(backupValue)) === 1 ? 'No' : 'Yes';
+      return this.getValueByModelId(modelId, Number(primaryValue), Number(backupValue)) === 0 ? 'No' : 'Yes';
 
     }
 
@@ -24,7 +24,7 @@ export class WorkOrderTaskAndMonitorPipe implements PipeTransform {
   }
 
   getValueByModelId(modelId, primaryValue, backupValue) {
-    if (modelId !== null) {
+    if (modelId !== null && modelId !== undefined) {
       return primaryValue;
     } else {
       return backupValue;
