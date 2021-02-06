@@ -5,7 +5,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class WorkOrderTaskAndMonitorPipe implements PipeTransform {
 
-  transform(primaryValue: string, modelId: number, backupValue: string, isPassOrFail: boolean = false, isYesOrNo: boolean = false): any {
+  monitorTypes: Array<any> = new Array<any>();
+
+  transform(primaryValue: string, modelId: number, backupValue: string, isPassOrFail: boolean = false, isYesOrNo: boolean = false, isMonitorType: boolean = false): any {
 
     if (isPassOrFail) {
 
@@ -19,6 +21,21 @@ export class WorkOrderTaskAndMonitorPipe implements PipeTransform {
 
     }
 
+    if(isMonitorType){
+
+      const monitorTypeId = this.getValueByModelId(modelId, primaryValue, backupValue);
+
+      this.monitorTypes = [
+        { label: 'Equipment', value: 1 },
+        { label: 'Number', value: 2 },
+        { label: 'Yes or No', value: 3 },
+        { label: 'Text', value: 4 },
+        { label: 'Pass or Fail', value: 5 },
+        { label: 'Select', value: 6 },
+      ];
+      return this.monitorTypes.find(t => t.value === monitorTypeId).label;
+
+    }
 
     return this.getValueByModelId(modelId, primaryValue, backupValue);
   }

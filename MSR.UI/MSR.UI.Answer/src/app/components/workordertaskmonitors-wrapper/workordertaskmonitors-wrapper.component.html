@@ -19,7 +19,7 @@
               Monitor Type:
             </label>
             <div class="col-9 px-0 col-form-label">
-              {{workOrderTaskMonitor.procedureStepMonitor?.monitorType | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.monitorType}}
+              {{workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.monitorTypeId : false : false : true}}
             </div>
           </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.EQUAL
