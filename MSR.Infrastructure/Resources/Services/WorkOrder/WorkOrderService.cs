@@ -1382,22 +1382,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         public async Task<ICollection<MSR.Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView() {
 
-            try {
-                var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().ToListAsync();
+            var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().ToListAsync();
 
-                var workOrderHistoryViewModels = _mapper.Map<ICollection<MSR.Domain.Views.WorkOrderHistoryView>>(workOrderHistoryViewEntities);
+            var workOrderHistoryViewModels = _mapper.Map<ICollection<MSR.Domain.Views.WorkOrderHistoryView>>(workOrderHistoryViewEntities);
 
-                return workOrderHistoryViewModels;
+            return workOrderHistoryViewModels;
 
-            }
-            catch (Exception e) { 
-                
-                Debug.WriteLine(e.Message);
-                throw new NotImplementedException();
-            }
-            
-
-            throw new NotImplementedException();
         }
     }
 }
