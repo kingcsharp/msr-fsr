@@ -57,6 +57,7 @@ namespace MSR.Infrastructure.Resources.Projections
             WorkOrderPart = i.WorkOrderParts.Select(j => new
             {
                 SerialNumber = j.SerialNumber,
+                Qty = j.Qty
             }).FirstOrDefault(),
             HasNcr = i.HasNCR,
             WorkOrderMessages = i.WorkOrderMessages

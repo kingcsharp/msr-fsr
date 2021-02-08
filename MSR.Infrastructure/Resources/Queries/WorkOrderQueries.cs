@@ -42,6 +42,7 @@ namespace MSR.Infrastructure.Resources.Queries
                     {
                         Disposition = string.Join(" | ", workOrderHistoryViewDTO.WorkOrderMessages.Select(x =>x.Message == null ? "" : x.Message)),
                         ProcedureName = workOrderHistoryViewDTO.WorkOrderTasks != null && workOrderHistoryViewDTO.WorkOrderTasks.Any() ? workOrderHistoryViewDTO.WorkOrderTasks.First().ProcedureName : string.Empty,
+                        Quantity = workOrderHistoryViewDTO.WorkOrderPart?.Qty,
                         Status = status.ToString(),
                         Id = workOrderHistoryViewDTO.Id,
                         PurchaseId = workOrderHistoryViewDTO.PurchaseId,
