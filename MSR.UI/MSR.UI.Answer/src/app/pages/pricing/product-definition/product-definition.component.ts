@@ -675,5 +675,9 @@ export class ProductDefinitionComponent implements OnInit {
       }
     }
   }
+
+  print() {
+    window.print();
+  }
 }
 

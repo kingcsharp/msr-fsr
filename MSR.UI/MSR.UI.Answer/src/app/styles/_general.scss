@@ -218,11 +218,26 @@ selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown .ui-dropdown-label-c
 }
 
 .wip-content{
-  height: 100vh;  
+  height: 100vh;
   padding: 0px !important;
 }
 
 .not-wip-content{
   padding: 25px 2.5641%;
   margin-left: $sidebar-width-active;
+}
+
+
+@media print {
+  .quote-preview-dialog {
+    & > .ui-dialog-titlebar,
+    & > .ui-dialog-footer,
+    & > .ui-resizable-handle {
+      visibility: hidden;
+    }
+
+    & > .ui-dialog-content {
+      overflow: visible !important;
+    }
+  }
 }

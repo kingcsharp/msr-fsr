@@ -536,7 +536,7 @@
 </div>
 
 <p-dialog header="Quote Preview" *ngIf="quoteJson" [(visible)]="showQuoteViewModal" [baseZIndex]="100001" [modal]='true'
-  [style]="{width: '70vw'}" data-cy="user-header">
+  [style]="{width: '70vw'}" data-cy="user-header" [styleClass]="'quote-preview-dialog'">
   <div class="container">
     <div class="row mr-0 ml-0">
       <table class="table no-border quote-header" width="100%">
@@ -561,6 +561,14 @@
       </table>
       <table class="table quote-header" width="100%">
         <tbody>
+          <tr>
+            <th class="text-right">Date : </th>
+            <td>{{quoteData.submittedDate | userTimezone}}</td>
+          </tr>
+          <tr>
+            <th class="text-right">Quote ID : </th>
+            <td>{{quoteData.id}}</td>
+          </tr>
           <tr>
             <th class="text-right">Customer:</th>
             <td>
@@ -727,8 +735,12 @@
       </table>
     </div>
   </div>
-  <p-footer>
+  <p-footer class="d-print-none">
     <div class="pull-right">
+      <button type="button" (click)="print()" class="btn btn-outline-inverse width-100 mb-xs mr-2"
+        role="button" data-cy="closequoteview-button">
+        Print
+      </button>
       <button type="button" (click)="closeQuoteViewModal()" class="btn btn-outline-inverse width-100 mb-xs"
         role="button" data-cy="closequoteview-button">
         Close
