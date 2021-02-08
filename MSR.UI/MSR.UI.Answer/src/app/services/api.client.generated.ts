@@ -19563,6 +19563,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
     lastUpdatedBy?: number;
     lastUpdatedOn?: Date | undefined;
     dispostion?: string | undefined;
+    segregationType?: string | undefined;
     workOrderItemNumber?: string | undefined;
 
     constructor(data?: IWorkOrderHistoryView) {
@@ -19597,6 +19598,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
             this.lastUpdatedBy = _data["lastUpdatedBy"];
             this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
             this.dispostion = _data["dispostion"];
+            this.segregationType = _data["segregationType"];
             this.workOrderItemNumber = _data["workOrderItemNumber"];
         }
     }
@@ -19631,6 +19633,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
         data["lastUpdatedBy"] = this.lastUpdatedBy;
         data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
         data["dispostion"] = this.dispostion;
+        data["segregationType"] = this.segregationType;
         data["workOrderItemNumber"] = this.workOrderItemNumber;
         return data; 
     }
@@ -19658,6 +19661,7 @@ export interface IWorkOrderHistoryView {
     lastUpdatedBy?: number;
     lastUpdatedOn?: Date | undefined;
     dispostion?: string | undefined;
+    segregationType?: string | undefined;
     workOrderItemNumber?: string | undefined;
 }
 

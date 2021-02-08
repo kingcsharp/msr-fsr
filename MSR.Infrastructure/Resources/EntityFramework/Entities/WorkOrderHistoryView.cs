@@ -26,6 +26,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public DateTime? CreatedOn { get; set; }
         public int LastUpdatedBy { get; set; }
         public DateTime? LastUpdatedOn { get; set; }
+        public string SegregationType { get; set; }
         public string? Dispostion { get; set; }
 
     }
