@@ -30,39 +30,46 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
 
         public async Task Connect()
         {
-            if (connection != null)
+            try
             {
-                return;
-            }
-            connection = new HubConnectionBuilder()
-                .WithAutomaticReconnect()
-                .WithUrl(_url, options =>
+                if (connection != null)
                 {
-                    options.AccessTokenProvider = () => Task.FromResult(CurrentUser.GetAccessToken());
-                })
-                .Build();
-
-            connection.Closed += async (error) =>
-            {
-                await Task.Delay(new Random().Next(0, 5) * 1000);
-                await connection.StartAsync();
-            };
-
-            await connection.StartAsync();
-
-            connection.On<Toaster>("ToasterMessage", (msg) =>
-            {
-                if (_logger != null)
-                {
-                    if (pingCounterRcv % 20 == 0)
-                    {
-                        _logger.LogDebug($"Received SignalR Heartbeat {msg.Message} " +
-                            $"(repeated {pingCounterRcv} times)");
-                        pingCounterRcv = 0;
-                    }
-                    pingCounterRcv += 1;
+                    return;
                 }
-            });
+                connection = new HubConnectionBuilder()
+                    .WithAutomaticReconnect()
+                    .WithUrl(_url, options =>
+                    {
+                        options.AccessTokenProvider = () => Task.FromResult(CurrentUser.GetAccessToken());
+                    })
+                    .Build();
+
+                connection.Closed += async (error) =>
+                {
+                    await Task.Delay(new Random().Next(0, 5) * 1000);
+                    await connection.StartAsync();
+                };
+
+                await connection.StartAsync();
+
+                connection.On<Toaster>("ToasterMessage", (msg) =>
+                {
+                    if (_logger != null)
+                    {
+                        if (pingCounterRcv % 20 == 0)
+                        {
+                            _logger.LogDebug($"Received SignalR Heartbeat {msg.Message} " +
+                                $"(repeated {pingCounterRcv} times)");
+                            pingCounterRcv = 0;
+                        }
+                        pingCounterRcv += 1;
+                    }
+                });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
         }
 
         public async Task SendNotification(Guid guid, PendingNotificationItem message)

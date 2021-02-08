@@ -360,16 +360,13 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         /// <returns></returns>
         public async Task<ICollection<WorkOrderTaskModel>> GetWorkOrderTasksAsync(CreateWorkOrder command)
         {
-            var product = await _unitOfWork.Products.Query()
-                .FirstAsync(x => x.Id == command.ProductId);
+            var product = await _unitOfWork.Products.FirstOrDefaultAsync(false,x => x.Id == command.ProductId);
             List<ProcedureStep> steps = await _unitOfWork.ProcedureSteps.Query()
                 .Where(x => x.ProcedureId == product.ProcedureId)
                 .Include(x => x.ProcedureStepMonitors)
-                .OrderBy(x => x.PrintOrder)
                 .ToListAsync();
 
             List<WorkOrderTask> tasks = new List<WorkOrderTask>();
-            int taskStepOrder = 10;
             foreach (var step in steps)
             {
                 var wot = _mapper.Map<WorkOrderTask>(step);
@@ -385,15 +382,19 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 wot.WorkOrderTaskMonitors = step.ProcedureStepMonitors
                     .Select(x => _mapper.Map<WorkOrderTaskMonitor>(x))
                     .ToList();
-                wot.TaskStepOrder = taskStepOrder;
+                //Since TaskStepOrder is always done by 10's, to remove the need for the orderBy on the Print order, we will just
+                //Use the print order to set the TaskStepOrder.  This will improve performance as OrderBy on non-index columns
+                //in EF slow down queries.
+
+                wot.TaskStepOrder = step.PrintOrder * 10;
                 tasks.Add(wot);
-                taskStepOrder += 10;
             }
 
             return tasks.Select(x =>
                 _mapper.Map<WorkOrderTaskModel>(x))
                 .ToList();
         }
+
         public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command)
         {
             var product = await _unitOfWork.Products
