@@ -8,7 +8,7 @@ namespace MSR.Domain.Views
 {
     public class WorkOrderHistoryView
     {
-        private string _segregationType;
+        private EnumSegregationType _segregationType;
 
         public int? WorkOrderId { get; set; }
         public bool HasNcr { get; set; }
@@ -31,22 +31,7 @@ namespace MSR.Domain.Views
         public int LastUpdatedBy { get; set; }
         public DateTime? LastUpdatedOn { get; set; }
         public string? Dispostion { get; set; }
-        public string SegregationType { 
-            get  {
-
-
-                if (String.IsNullOrWhiteSpace(_segregationType)) {
-                    return EnumUtils.GetDescription<EnumSegregationType>(EnumSegregationType.NONCU);
-                }
-                else { 
-                    return _segregationType;    
-                }
-            } 
-
-            set { 
-               _segregationType = value;
-            } 
-        }
+        public EnumSegregationType SegregationType { get;set;}
         public string WorkOrderItemNumber
         {
             get => $"{Customer}-{WorkOrderId}";
