@@ -30,7 +30,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public bool HasNCR { get; set; }
 
-        public int? LocationId { get; set; }
+        public int LocationId { get; set; }
 
         [ForeignKey("LocationId")]
 

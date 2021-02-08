@@ -91,6 +91,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<WorkOrderMessage> _workOrderMessage;
         private IRepository<CycleCountHistory> _cycleCountHistory;
         private IRepository<PortalWorkOrder> _portalWorkOrderView;
+        private IRepository<WorkOrderHistoryView> _workOrderHistoryView;
 
         public IRepository<CycleCountHistory> CycleCountHistory { get { return _cycleCountHistory ?? (_cycleCountHistory = new EFRepository<CycleCountHistory>(Context)); } }
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
@@ -171,6 +172,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ReportDashboardMap> ReportDashboardMaps { get { return _reportDashboardMap ??= new EFRepository<ReportDashboardMap>(Context); } }
         public IRepository<WorkOrderMessage> WorkOrderMessages { get { return _workOrderMessage ??= new EFRepository<WorkOrderMessage>(Context); } }
         public IRepository<PortalWorkOrder> PortalWorkOrderViews { get { return _portalWorkOrderView ??= new EFRepository<PortalWorkOrder>(Context); } }
+
+        public IRepository<WorkOrderHistoryView> WorkOrderHistoryViews { get { return _workOrderHistoryView ??= new EFRepository<WorkOrderHistoryView>(Context); } }
 
         #endregion Repositories
 

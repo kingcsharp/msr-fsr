@@ -40,11 +40,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <response code="200"></response>
         [HttpGet("History")]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderHistoryView>>))]
         public async Task<IActionResult> WorkOrderGetHistory()
         {
-            var workOrderGridSummaries = await _workOrderViewService.GetWorkOrderHistoryAsync();
-            return GenerateOkViewResponse(workOrderGridSummaries);
+            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderHistory());
+            return ret.ToOkObjectResponse<ICollection<WorkOrderHistoryView>>();
         }
 
         /// <summary>

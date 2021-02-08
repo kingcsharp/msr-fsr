@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -1377,6 +1378,16 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 );
             }
             return dispositionMessage.Trim().Trim('|').Trim();
+        }
+
+        public async Task<ICollection<MSR.Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView() {
+
+            var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().ToListAsync();
+
+            var workOrderHistoryViewModels = _mapper.Map<ICollection<MSR.Domain.Views.WorkOrderHistoryView>>(workOrderHistoryViewEntities);
+
+            return workOrderHistoryViewModels;
+
         }
     }
 }

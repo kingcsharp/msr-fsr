@@ -78,6 +78,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<PortalWorkOrder> PortalWorkOrderView { get; set; }
         public DbSet<EquipmentMaintenance> EquipmentMaintenance { get; set; }
         public DbSet<WorkOrderMessage> WorkOrderMessage { get; set; }
+        public DbSet<WorkOrderHistoryView> WorkOrderHistoryView { get; set; }
 
         public AnswerContext() : base()
         {
@@ -180,6 +181,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework
                 dynamic configurationInstance = Activator.CreateInstance(type);
                 modelBuilder.ApplyConfiguration(configurationInstance);
             }
+
+            modelBuilder.Entity<WorkOrderHistoryView>(d =>
+            {
+                d.HasKey("WorkOrderId");
+                d.ToView("WorkOrder_History");
+            });
         }
     }
 }

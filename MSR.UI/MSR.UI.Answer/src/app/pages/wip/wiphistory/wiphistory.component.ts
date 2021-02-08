@@ -36,17 +36,17 @@ export class WiphistoryComponent implements OnInit {
     this.gridSettings = [
       new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false }),
       new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', visible: true }),
-      new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true }),
-      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true }),
+      new ColumnsSaved({ id: 'customer', label: 'Customer', visible: true }),
+      new ColumnsSaved({ id: 'location', label: 'Location', visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true }),
       new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true }),
-      new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true }),
+      new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true }),
       new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true }),
       new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true }),
       new ColumnsSaved({ id: 'actualStartDate', label: 'Actual Start Date', visible: true }),
       new ColumnsSaved({ id: 'actualEndDate', label: 'Actual End Date', visible: true }),
-      new ColumnsSaved({ id: 'productName', label: 'Product', visible: true }),
-      new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true }),
+      new ColumnsSaved({ id: 'product', label: 'Product', visible: true }),
+      new ColumnsSaved({ id: 'procedure', label: 'Procedure', visible: true }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
       new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true })
     ];

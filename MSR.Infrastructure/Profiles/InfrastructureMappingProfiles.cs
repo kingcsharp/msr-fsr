@@ -559,6 +559,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<GetPortalWorkOrder, GetWorkOrder>();
 
             CreateMap<WorkOrderHistoryViewDTO, WorkOrderGridSummary>();
+            CreateMap<Resources.EntityFramework.Entities.WorkOrderHistoryView, MSR.Domain.Views.WorkOrderHistoryView>().ReverseMap();
         }
 
         private static bool ignoreNullOrZero(object srcMember)

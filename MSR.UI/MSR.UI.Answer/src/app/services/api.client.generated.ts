@@ -6926,7 +6926,7 @@ export class WorkOrderService {
     /**
      * Returns a summary of COMPLETED or CANCELLED WorkOrders
      */
-    history(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
+    history(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6948,14 +6948,14 @@ export class WorkOrderService {
                 try {
                     return this.processHistory(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView>><any>_observableThrow(response_);
         }));
     }
 
-    protected processHistory(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
+    protected processHistory(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6966,7 +6966,7 @@ export class WorkOrderService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfWorkOrderGridSummary.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfWorkOrderHistoryView.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6974,7 +6974,7 @@ export class WorkOrderService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfICollectionOfWorkOrderGridSummary>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfWorkOrderHistoryView>(<any>null);
     }
 
     /**
@@ -19496,6 +19496,169 @@ export interface IPostPendingApprovalRequest {
     table?: EnumApprovalTables;
     id?: number;
     comments?: string | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfWorkOrderHistoryView extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderHistoryView {
+    object?: WorkOrderHistoryView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfWorkOrderHistoryView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(WorkOrderHistoryView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkOrderHistoryView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfWorkOrderHistoryView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfWorkOrderHistoryView extends IAuditActionResult {
+    object?: WorkOrderHistoryView[] | undefined;
+}
+
+export class WorkOrderHistoryView implements IWorkOrderHistoryView {
+    workOrderId?: number | undefined;
+    hasNcr?: boolean;
+    customerId?: number;
+    customer?: string | undefined;
+    location?: string | undefined;
+    serialNumber?: string | undefined;
+    purchaseId?: number;
+    purchaseOrderNumber?: string | undefined;
+    qty?: number | undefined;
+    scheduledStartDate?: Date | undefined;
+    scheduledEndDate?: Date | undefined;
+    actualStartDate?: Date | undefined;
+    actualEndDate?: Date | undefined;
+    product?: string | undefined;
+    procedure?: string | undefined;
+    status?: string | undefined;
+    createdBy?: number;
+    createdOn?: Date | undefined;
+    lastUpdatedBy?: number;
+    lastUpdatedOn?: Date | undefined;
+    dispostion?: string | undefined;
+    workOrderItemNumber?: string | undefined;
+
+    constructor(data?: IWorkOrderHistoryView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.hasNcr = _data["hasNcr"];
+            this.customerId = _data["customerId"];
+            this.customer = _data["customer"];
+            this.location = _data["location"];
+            this.serialNumber = _data["serialNumber"];
+            this.purchaseId = _data["purchaseId"];
+            this.purchaseOrderNumber = _data["purchaseOrderNumber"];
+            this.qty = _data["qty"];
+            this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
+            this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
+            this.actualStartDate = _data["actualStartDate"] ? new Date(_data["actualStartDate"].toString()) : <any>undefined;
+            this.actualEndDate = _data["actualEndDate"] ? new Date(_data["actualEndDate"].toString()) : <any>undefined;
+            this.product = _data["product"];
+            this.procedure = _data["procedure"];
+            this.status = _data["status"];
+            this.createdBy = _data["createdBy"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
+            this.dispostion = _data["dispostion"];
+            this.workOrderItemNumber = _data["workOrderItemNumber"];
+        }
+    }
+
+    static fromJS(data: any): WorkOrderHistoryView {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderHistoryView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["hasNcr"] = this.hasNcr;
+        data["customerId"] = this.customerId;
+        data["customer"] = this.customer;
+        data["location"] = this.location;
+        data["serialNumber"] = this.serialNumber;
+        data["purchaseId"] = this.purchaseId;
+        data["purchaseOrderNumber"] = this.purchaseOrderNumber;
+        data["qty"] = this.qty;
+        data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
+        data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
+        data["actualStartDate"] = this.actualStartDate ? this.actualStartDate.toISOString() : <any>undefined;
+        data["actualEndDate"] = this.actualEndDate ? this.actualEndDate.toISOString() : <any>undefined;
+        data["product"] = this.product;
+        data["procedure"] = this.procedure;
+        data["status"] = this.status;
+        data["createdBy"] = this.createdBy;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
+        data["dispostion"] = this.dispostion;
+        data["workOrderItemNumber"] = this.workOrderItemNumber;
+        return data; 
+    }
+}
+
+export interface IWorkOrderHistoryView {
+    workOrderId?: number | undefined;
+    hasNcr?: boolean;
+    customerId?: number;
+    customer?: string | undefined;
+    location?: string | undefined;
+    serialNumber?: string | undefined;
+    purchaseId?: number;
+    purchaseOrderNumber?: string | undefined;
+    qty?: number | undefined;
+    scheduledStartDate?: Date | undefined;
+    scheduledEndDate?: Date | undefined;
+    actualStartDate?: Date | undefined;
+    actualEndDate?: Date | undefined;
+    product?: string | undefined;
+    procedure?: string | undefined;
+    status?: string | undefined;
+    createdBy?: number;
+    createdOn?: Date | undefined;
+    lastUpdatedBy?: number;
+    lastUpdatedOn?: Date | undefined;
+    dispostion?: string | undefined;
+    workOrderItemNumber?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

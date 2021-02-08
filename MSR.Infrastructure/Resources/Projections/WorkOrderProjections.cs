@@ -22,7 +22,7 @@ namespace MSR.Infrastructure.Resources.Projections
             CustomerPurchaseNumber = i.Purchase.CustomerPurchaseNumber,
             CustomerLineNumber = i.Purchase.CustomerLineNumber,
             SerialNumber = i.Purchase.SerialNumber,
-            LocationId = i.LocationId.Value,
+            LocationId = i.LocationId,
             LocationName = i.Location.Name,
             ProductId = i.ProductId,
             ProductName = i.Product.Name,
@@ -37,7 +37,7 @@ namespace MSR.Infrastructure.Resources.Projections
             PurchaseId = i.PurchaseId,
             WorkOrderItemNumber = $"{i.Purchase.PurchaseOrder.Customer.Name}-{i.Id}",
             CustomerName = i.Purchase.PurchaseOrder.Customer.Name,
-            LocationId = i.LocationId.Value,
+            LocationId = i.LocationId,
             LocationName = i.Location.Name,
             PurchaseOrderNumber = i.Purchase.PurchaseOrderId,
             ReferencePO = i.Purchase.PurchaseOrder.ReferencePO,
@@ -49,13 +49,10 @@ namespace MSR.Infrastructure.Resources.Projections
             WorkOrderTasks = i.WorkOrderTasks.Select(j => new
             {
                 StatusId = j.StatusId,
-                LaborTime = j.ProcedureStep.LaborTime,
                 ProcedureName = j.ProcedureStep.Procedure.Name,
-                TotalTaskTime = j.TotalTaskTime,
                 TaskStepOrder = j.TaskStepOrder,
                 Title = j.ProcedureStep.Title,
-                ProcedureStepTypeId = j.ProcedureStepTypeId,
-                WorkOrderTaskMonitors = j.WorkOrderTaskMonitors.Select(x => x.TextVal)
+                ProcedureStepTypeId = j.ProcedureStepTypeId
             }),
             WorkOrderPart = i.WorkOrderParts.Select(j => new
             {
