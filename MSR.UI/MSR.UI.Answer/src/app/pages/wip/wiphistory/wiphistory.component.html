@@ -117,7 +117,7 @@
                             'cu-color': model.segregationType === EnumSegregationType.CU,
                             'non-cu-color': model.segregationType === EnumSegregationType.NONCU || model.segregationType === null,
                             'deseg-color': model.segregationType === EnumSegregationType.DESEG
-                            }" [routerLink]="['../details',model.id]">
+                            }" [routerLink]="['../details',model.workOrderId]">
                                 {{model.workOrderItemNumber}}
                                 <span class="badge badge-danger wip-badge" *ngIf="model.hasNcr">NC</span>
                             </alert>
