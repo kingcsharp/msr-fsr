@@ -30,7 +30,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<UpdateWorkOrder>,
         ICommandHandler<GetPortalWorkOrder>,
         ICommandHandler<CreateWorkOrderMessage>,
-        ICommandHandler<GetWorkOrderPart>
+        ICommandHandler<GetWorkOrderPart>,
+        ICommandHandler<GetWorkOrderHistory>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
@@ -126,6 +127,12 @@ namespace MSR.Application.ApplicationServices
 
 
             return new CommandResponse<ICollection<WorkOrderPartModel>>(workOrderPartModels);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetWorkOrderHistory command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.GetWorkOrderHistoryView();
+            return new CommandResponse<ICollection<Domain.Views.WorkOrderHistoryView>>(ret);
         }
     }
 }

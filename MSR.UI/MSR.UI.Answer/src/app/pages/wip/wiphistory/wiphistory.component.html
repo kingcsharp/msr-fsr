@@ -40,13 +40,13 @@
                             [hidden]="!commonGrid.isVisibleCol('workOrderItemNumber',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="customerName"
-                            [hidden]="!commonGrid.isVisibleCol('customerName',gridSettings)"
+                        <th grid-input-filter [dt]="dt" searchField="customer"
+                            [hidden]="!commonGrid.isVisibleCol('customer',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('locationName',gridSettings)">
+                        <th [hidden]="!commonGrid.isVisibleCol('location',gridSettings)">
                             <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="locationOptions"
-                                [filterId]="'locationName'" [defaultText]="'Select Location'" [defaultTextTooltip]="''"
+                                [filterId]="'location'" [defaultText]="'Select Location'" [defaultTextTooltip]="''"
                                 [datatable]="dt" data-cy="locationname-input">
                             </multiselect-wrapper>
                         </th>
@@ -58,8 +58,8 @@
                             [hidden]="!commonGrid.isVisibleCol('referencePO',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="quantity"
-                            [hidden]="!commonGrid.isVisibleCol('quantity',gridSettings)" [gridSettings]="gridSettings">
+                        <th grid-input-filter [dt]="dt" searchField="qty"
+                            [hidden]="!commonGrid.isVisibleCol('qty',gridSettings)" [gridSettings]="gridSettings">
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('scheduledStartDate',gridSettings)">
                             <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'scheduledStartDate'"
@@ -87,12 +87,12 @@
                                 </pcalendar-wrapper>
                             </div>
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="productName"
-                            [hidden]="!commonGrid.isVisibleCol('productName',gridSettings)"
+                        <th grid-input-filter [dt]="dt" searchField="product"
+                            [hidden]="!commonGrid.isVisibleCol('product',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="procedureName"
-                            [hidden]="!commonGrid.isVisibleCol('procedureName',gridSettings)"
+                        <th grid-input-filter [dt]="dt" searchField="procedure"
+                            [hidden]="!commonGrid.isVisibleCol('procedure',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
@@ -122,11 +122,11 @@
                                 <span class="badge badge-danger wip-badge" *ngIf="model.hasNcr">NC</span>
                             </alert>
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('customerName', gridSettings)">
-                            {{model.customerName}}
+                        <td [hidden]="!commonGrid.isVisibleCol('customer', gridSettings)">
+                            {{model.customer}}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('locationName', gridSettings)">
-                            {{model.locationName}}
+                        <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)">
+                            {{model.location}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)">
                             {{model.serialNumber}}
@@ -134,8 +134,8 @@
                         <td [hidden]="!commonGrid.isVisibleCol('referencePO', gridSettings)">
                             {{model.referencePO}}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('quantity', gridSettings)">
-                            {{model.quantity}}
+                        <td [hidden]="!commonGrid.isVisibleCol('qty', gridSettings)">
+                            {{model.qty}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('scheduledStartDate', gridSettings)">
                             {{model.scheduledStartDate | userTimezone }}
@@ -149,11 +149,11 @@
                         <td [hidden]="!commonGrid.isVisibleCol('actualEndDate', gridSettings)">
                             {{model.actualEndDate | userTimezone }}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('productName', gridSettings)">
-                            {{model.productName}}
+                        <td [hidden]="!commonGrid.isVisibleCol('product', gridSettings)">
+                            {{model.product}}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('procedureName', gridSettings)">
-                            {{model.procedureName}}
+                        <td [hidden]="!commonGrid.isVisibleCol('procedure', gridSettings)">
+                            {{model.procedure}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
                             {{model.status}}

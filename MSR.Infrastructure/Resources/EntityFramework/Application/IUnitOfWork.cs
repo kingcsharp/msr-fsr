@@ -89,6 +89,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<WorkOrderMessage> WorkOrderMessages { get; }
         IRepository<PortalWorkOrder> PortalWorkOrderViews { get; }
         IRepository<ProductStep> ProductSteps { get; }
+        IRepository<WorkOrderHistoryView> WorkOrderHistoryViews { get;}
 
         void SaveChanges();
         Task SaveChangesAsync();
