@@ -49,18 +49,14 @@ namespace MSR.Infrastructure.Resources.Projections
             WorkOrderTasks = i.WorkOrderTasks.Select(j => new
             {
                 StatusId = j.StatusId,
-                LaborTime = j.ProcedureStep.LaborTime,
                 ProcedureName = j.ProcedureStep.Procedure.Name,
-                TotalTaskTime = j.TotalTaskTime,
                 TaskStepOrder = j.TaskStepOrder,
                 Title = j.ProcedureStep.Title,
-                ProcedureStepTypeId = j.ProcedureStepTypeId,
-                WorkOrderTaskMonitors = j.WorkOrderTaskMonitors.Select(x => x.TextVal)
+                ProcedureStepTypeId = j.ProcedureStepTypeId
             }),
             WorkOrderPart = i.WorkOrderParts.Select(j => new
             {
                 SerialNumber = j.SerialNumber,
-                Qty = j.Qty
             }).FirstOrDefault(),
             HasNcr = i.HasNCR,
             WorkOrderMessages = i.WorkOrderMessages

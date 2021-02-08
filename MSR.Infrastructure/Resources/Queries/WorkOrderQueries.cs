@@ -40,16 +40,8 @@ namespace MSR.Infrastructure.Resources.Queries
                 {
                     workOrderGridSummaryViews.Add(new WorkOrderGridSummary()
                     {
-                        PercentageOfTasksCompleted = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompleted,
-                        PercentageOfTasksCompletedNumerator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompletedNumerator,
-                        PercentageOfTasksCompletedDenominator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfTasksCompletedDenominator,
-                        PercentageOfExpectedDurationTimeLogged = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLogged,
-                        PercentageOfExpectedDurationTimeLoggedNumerator = CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedNumerator,
-                        PercentageOfExpectedDurationTimeLoggedDenominator = (double)CalculateWorkOrderProgress(workOrderHistoryViewDTO).PercentageOfExpectedDurationTimeLoggedDenominator,
-                        Disposition = GetWorkOrderDisposition(workOrderHistoryViewDTO),
+                        Disposition = string.Join(" | ", workOrderHistoryViewDTO.WorkOrderMessages.Select(x =>x.Message == null ? "" : x.Message)),
                         ProcedureName = workOrderHistoryViewDTO.WorkOrderTasks != null && workOrderHistoryViewDTO.WorkOrderTasks.Any() ? workOrderHistoryViewDTO.WorkOrderTasks.First().ProcedureName : string.Empty,
-                        CurrentActiveTaskName = GetCurrentActiveTaskName(workOrderHistoryViewDTO.WorkOrderTasks),
-                        Quantity = workOrderHistoryViewDTO.WorkOrderPart?.Qty,
                         Status = status.ToString(),
                         Id = workOrderHistoryViewDTO.Id,
                         PurchaseId = workOrderHistoryViewDTO.PurchaseId,
