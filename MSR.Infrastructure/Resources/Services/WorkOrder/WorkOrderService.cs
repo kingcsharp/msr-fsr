@@ -401,6 +401,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 .Include(x => x.Part)
                 .ThenInclude(y => y.Subparts)
                 .FirstAsync(x => x.Id == command.ProductId);
+
+            var subPartIds = product.Part.Subparts.Select(s => s.PartId);
+            _ = await _unitOfWork.Parts.Query().Where(s => subPartIds.Contains(s.Id)).ToListAsync();
+
+
             int createCount = 1;
             int quantity = command.Qty;
 
@@ -424,7 +429,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             subPartQuantity = 1;
                         }
 
-                        var partSegregationTypeValue = partSubPartMapForSubPart.Part.SegregationType;
+                        var partSegregationTypeValue = partSubPartMapForSubPart.Part?.SegregationType;
 
                         for ( ; subPartQuantity > 0; subPartQuantity -= 1)
                         {
