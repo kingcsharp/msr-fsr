@@ -4,7 +4,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, EnumSegregationType } from '../../../services/api.client.generated';
+import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, EnumSegregationType, WorkOrderHistoryView } from '../../../services/api.client.generated';
 import { Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -20,7 +20,7 @@ export class WiphistoryComponent implements OnInit {
 
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   gridStorageId: string;
-  data: Array<WorkOrderGridSummary>;
+  data: Array<WorkOrderHistoryView>;
   statusOptions: Array<SelectItem>;
   canRead: boolean = false;
   privileges = EnumPrivilege;
@@ -64,8 +64,8 @@ export class WiphistoryComponent implements OnInit {
         (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
       ).map(x => ({ label: x.status, value: x.status }));
       this.locationOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
-      ).map(x => ({ label: x.locationName, value: x.locationName }));
+        (thing, i, arr) => arr.findIndex(t => t.location === thing.location) === i
+      ).map(x => ({ label: x.location, value: x.location }));
     }));
 
   }
