@@ -122,21 +122,30 @@ namespace MSR.Application.EventServices
         {
             try
             {
+
                 var command = _mapper.Map<CreateWorkOrder>(handledEvent.purchaseInfo);
                 command.ScheduledStartDate = DateTime.Now;
 
                 ICollection<WorkOrderTaskModel> tasks = await _workOrderService.GetWorkOrderTasksAsync(command);
                 command.WorkOrderTasks = tasks;
 
-                List<WorkOrderPartModel> parts = (await _workOrderService.GetWorkOrderPartsAsync(command)).ToList();
-                //If we don't have any serial numbers or parts the for would fail.
-                if (handledEvent.serialNumbers != null && handledEvent.serialNumbers.Any() && parts.Any())
+                List<WorkOrderPartModel> parts =
+                    (await _workOrderService.GetWorkOrderPartsAsync(command))
+                    .ToList();
+
+                // Copy in the serial numbers entered at purchase time, if any.
+                int workOrderPartIndex;
+                for (workOrderPartIndex = 0;
+                     workOrderPartIndex < handledEvent.serialNumbers.Count &&
+                     workOrderPartIndex < parts.Count;
+                     workOrderPartIndex += 1)
                 {
-                    // Copy in the serial numbers entered at purchase time, if any.
-                    for (var workOrderPartIndex = 0; workOrderPartIndex < handledEvent.serialNumbers.Count && workOrderPartIndex < parts.Count; workOrderPartIndex += 1)
+                    if (handledEvent.serialNumbers[workOrderPartIndex] != null)
                     {
-                        parts[workOrderPartIndex].SerialNumber = handledEvent.serialNumbers[workOrderPartIndex];
+                        parts[workOrderPartIndex].SerialNumber =
+                            handledEvent.serialNumbers[workOrderPartIndex];
                     }
+
                 }
                 command.WorkOrderParts = parts;
 
@@ -154,13 +163,14 @@ namespace MSR.Application.EventServices
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                string msg = $"Work Order Creation FAILED. ERROR: {e.Message}";
+                string msg = "Work Order Creation FAILED. " +
+                             $"ERROR: {e.Message}";
                 await _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
                 {
                     Message = msg,
                     Status = EnumToasterStatus.Error
                 });
-                throw;
+                // propogate up to log the error
             }
         }
     }
