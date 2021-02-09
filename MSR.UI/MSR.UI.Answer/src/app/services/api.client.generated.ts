@@ -19563,7 +19563,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
     lastUpdatedBy?: number;
     lastUpdatedOn?: Date | undefined;
     dispostion?: string | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType;
     workOrderItemNumber?: string | undefined;
 
     constructor(data?: IWorkOrderHistoryView) {
@@ -19661,7 +19661,7 @@ export interface IWorkOrderHistoryView {
     lastUpdatedBy?: number;
     lastUpdatedOn?: Date | undefined;
     dispostion?: string | undefined;
-    segregationType?: string | undefined;
+    segregationType?: EnumSegregationType;
     workOrderItemNumber?: string | undefined;
 }
 
