@@ -11,6 +11,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Models;
+using System.Collections.Concurrent;
 
 namespace MSR.Infrastructure.Resources.Services.Role
 {
@@ -96,13 +97,23 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.Role>> GetRolesMapAsync(GetRoles command)
         {
             var result = new List<Domain.Models.Role>();
-            var roles = await _unitOfWork.Roles.Query().Include(i => i.Menus).ThenInclude(i => i.MenuRolePermission)
-                                                       .Include(i => i.Menus).ThenInclude(i => i.MenuItem).ThenInclude(i => i.MenuGroup)
+            
+            var roles = await _unitOfWork.Roles.Query().ToListAsync();
+
+            _ = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuItem).ThenInclude(i => i.MenuGroup)
                                                        .ToListAsync();
+
+            _ = await _unitOfWork.MenuRolePermissions.Query().ToListAsync();
+
             var rolesIds = roles.Select(x => x.Id).ToList();
+            
             var allChildRoles = await _unitOfWork.RoleChildRoleMaps.Query().Include(x => x.ChildRole).ThenInclude(i => i.Menus)
             .ThenInclude(i => i.MenuRolePermission).Where(x => rolesIds.Contains(x.ParentRoleId)).ToListAsync();
+            
             var allParentRoles = await _unitOfWork.RoleChildRoleMaps.Query().Include(x => x.ParentRole).Where(x => rolesIds.Contains(x.ChildRoleId.Value)).ToListAsync();
+            
+            var userRoleEntities = await _unitOfWork.UserRoles.Query().Where(s => rolesIds.Contains(s.RoleId)).ToListAsync();
+            
             foreach (var role in roles)
             {
                 var domRole = _mapper.Map<Domain.Models.Role>(role);
@@ -127,7 +138,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 var domparentRoles = allParentRoles.Where(i => i.ChildRoleId == role.Id).Select(i => _mapper.Map<Domain.Models.Role>(i.ParentRole));
                 domRole.ParentRoles.AddRange(domparentRoles);
 
-                domRole.HasAssignedUsers = _unitOfWork.UserRoles.Query().Any(i => i.RoleId == role.Id);
+                domRole.HasAssignedUsers = userRoleEntities.Any(i => i.RoleId == role.Id);
 
                 result.Add(domRole);
             }
