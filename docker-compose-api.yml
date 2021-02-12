@@ -2,7 +2,7 @@ version: '3'
 
 services:
   api:
-    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-api:Dev19
+    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-api:ab5e2912944d10e80ae4f3bda935bff40be9d252
     expose:
       - "5000"
     ports:
@@ -14,9 +14,9 @@ services:
       options:
         awslogs-group: answer3
         awslogs-region: us-west-2
-        awslogs-stream-prefix: answer3-api-dev
+        awslogs-stream-prefix: answer3-api-QA
   reverseproxy:
-    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-rp:Dev04
+    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-rp:ab5e2912944d10e80ae4f3bda935bff40be9d252
     ports:
       - "80:80"
     logging:
@@ -24,4 +24,4 @@ services:
       options:
         awslogs-group: answer3
         awslogs-region: us-west-2
-        awslogs-stream-prefix: answer3-rp-dev
+        awslogs-stream-prefix: answer3-rp-QA
