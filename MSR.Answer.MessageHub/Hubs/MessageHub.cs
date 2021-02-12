@@ -98,7 +98,12 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <returns></returns>
         public async Task SendMessage(string user, Toaster message)
         {
-            foreach (var client in Connections.GetConnections(user)) {
+            IEnumerable<string> connections;
+            lock(Connections)
+            {
+                connections = Connections.GetConnections(user).ToList();
+            }
+            foreach (var client in connections) {
                 await Clients.Clients(client).SendAsync("ToasterMessage", message);
             }
         }
@@ -109,12 +114,21 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <returns></returns>
         public void SubscribeWorkOrderUpdate()
         {
-            Connections.Add("status", Context.ConnectionId);
+            lock(Connections)
+            {
+                Connections.Add("status", Context.ConnectionId);
+            }
         }
 
         public async Task SendWorkOrderUpdate(WorkOrderStatusUpdate update)
         {
-            foreach (var client in Connections.GetConnections("status")) {
+            IEnumerable<string> connections;
+            lock(Connections)
+            {
+                connections = Connections.GetConnections("status").ToList();
+            }
+            foreach (var client in connections)
+            {
                 await Clients.Clients(client).SendAsync("WorkOrderUpdate", update);
             }
         }

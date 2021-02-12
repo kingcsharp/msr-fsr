@@ -35,6 +35,9 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly IWorkflowService _workflowService;
 
+        private static readonly Dictionary<int, DateTime> _knownUsers =
+            new Dictionary<int, DateTime>();
+
         public AccountService(
             IUnitOfWork unitOfWork,
             ILogger<AccountService> logger,
@@ -219,14 +222,33 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public bool ValidateAccount(int accountId)
         {
-            var exists = _unitOfWork.Users.Exist(accountId);
+            bool exists = false;
+            lock (_knownUsers) {
+                DateTime expiration;
+                if (_knownUsers.TryGetValue(accountId, out expiration))
+                {
+                    if (expiration >= DateTime.Now)
+                    {
+                        exists = true;
+                    }
+                }
+
+                if (!exists)
+                {
+                    exists = _unitOfWork.Users.Exist(accountId);
+                    if (exists)
+                    {
+                        _knownUsers.Add(accountId, DateTime.Now.AddDays(1));
+                    }
+                }
+            }
 
             if (!exists)
             {
                 throw new DomainException($"No user with {nameof(accountId)} {accountId} found", DomainError.NotFound);
             }
 
-            return exists;
+            return true;
         }
 
         public async Task ResetMyPasswordAsync(ResetMyPassword command)
