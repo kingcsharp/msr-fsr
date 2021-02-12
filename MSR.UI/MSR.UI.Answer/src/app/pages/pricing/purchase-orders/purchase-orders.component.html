@@ -187,7 +187,8 @@
             (click)="showPurchaseOrderModal(purcahseordermodel)">
           </i>
           <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
-            class="fa fa-close pointer" tooltip="Close" data-cy="closeRow" (click)="openConfirmDialog(purcahseordermodel, false)">
+            class="fa fa-close pointer" tooltip="Close" data-cy="closeRow"
+            (click)="openConfirmDialog(purcahseordermodel, false)">
           </i>
           <i *ngIf="purchaseOrderPrivileges.canDelete && purcahseordermodel.isDeletable"
             class="far fa-trash-alt pointer" tooltip="Delete" data-cy="deleteRow"
@@ -204,15 +205,9 @@
   </p-table>
 </widget>
 
-<p-dialog
-  *ngIf="poToCloseOrDelete"
-  header="Confirm Dialog"
-  [(visible)]="showConfirmDeleteDialog || showConfirmCloseDialog"
-  [baseZIndex]="100001"
-  [modal]='true'
-  [style]="{width: '50vw'}"
-  data-cy="user-header"
->
+<p-dialog *ngIf="poToCloseOrDelete" header="Confirm Dialog"
+  [(visible)]="showConfirmDeleteDialog || showConfirmCloseDialog" [baseZIndex]="100001" [modal]='true'
+  [style]="{width: '50vw'}" data-cy="user-header">
   <div class="container">
     <div class="row">
       Are you sure you want to {{showConfirmDeleteDialog ? 'Delete' : 'Close'}} this record?
@@ -249,16 +244,9 @@
               Customer:
             </label>
             <div class="col-md-8">
-              <p-dropdown
-                placeholder="Select Client"
-                optionLabel="name" name="CutomerId"
-                [(ngModel)]="currentPO.customer"
-                [options]="customersData"
-                (onChange)="getProducts()"
-                appendTo="body"
-                [baseZIndex]="100002"
-                required
-              >
+              <p-dropdown placeholder="Select Client" optionLabel="name" name="CutomerId"
+                [(ngModel)]="currentPO.customer" [options]="customersData" (onChange)="getProducts()" appendTo="body"
+                [baseZIndex]="100002" required>
               </p-dropdown>
             </div>
           </div>
@@ -268,8 +256,7 @@
             </label>
             <div class="col-md-8 ">
               <input placeholder="Enter PO Name" type="text" class="form-control input-transparent" name="POName"
-                [(ngModel)]="currentPO.name"
-                tooltip="PO Name" data-cy="poname-input">
+                [(ngModel)]="currentPO.name" tooltip="PO Name" data-cy="poname-input">
             </div>
           </div>
           <div class="form-group row" style="display:none">
@@ -278,7 +265,8 @@
             </label>
             <div class="col-md-8 ">
               <input placeholder="Enter Reference Name" type="text" class="form-control input-transparent"
-                name="referenceName" [(ngModel)]="currentPO.referenceName"tooltip="Reference Name" data-cy="referenceName-input">
+                name="referenceName" [(ngModel)]="currentPO.referenceName" tooltip="Reference Name"
+                data-cy="referenceName-input">
             </div>
           </div>
           <div class="form-group row">
@@ -286,13 +274,10 @@
               Reference Cust PO #:
             </label>
             <div class="col-md-8 col-12">
-              <input
-                pInputText
-                placeholder="Enter Reference Customer PO # (typically a blanket PO)" type="text"
+              <input pInputText placeholder="Enter Reference Customer PO # (typically a blanket PO)" type="text"
                 [(ngModel)]="currentPO.customerReferencePO" name="RefCustPO" class="form-control input-transparent"
                 data-parsley-trigger="change" data-parsley-required="true" data-parsley-validation-threshold="1"
-                data-cy="refcustpo-input"
-              >
+                data-cy="refcustpo-input">
             </div>
           </div>
 
@@ -302,8 +287,8 @@
             </label>
             <div class="col-md-8 col-12 ">
               <input placeholder="Enter Reference Number" [(ngModel)]="currentPO.customerReferenceNo" type="text"
-                class="form-control input-transparent" name="CustRefNum"
-                tooltip="Customer Reference Number" data-cy="custrefnum-input">
+                class="form-control input-transparent" name="CustRefNum" tooltip="Customer Reference Number"
+                data-cy="custrefnum-input">
             </div>
           </div>
 
@@ -311,34 +296,25 @@
             <label class="form-control-label col-md-4 col-12 text-md-right" for="OpenDate">
               Open Date:
             </label>
-            <p-calendar
-              [(ngModel)]="currentPO.openDate"
-              placeholder="Select Open Date"
-              class="col-md-8 col-12"
-              name="OpenDate"
-              showIcon="true"
-              styleClass="input-group input-group-transparent"
+            <p-calendar [(ngModel)]="currentPO.openDate" placeholder="Select Open Date" class="col-md-8 col-12"
+              name="OpenDate" showIcon="false" styleClass="input-group input-group-transparent"
               inputStyleClass="form-control input-transparent" data-parsley-trigger="change"
-              data-parsley-required="true"
-              tooltip="Open Date"
-              data-cy="opendate-input"
-            >
+              data-parsley-required="true" tooltip="Open Date" data-cy="opendate-input">
             </p-calendar>
+            <div class="row w-100" *ngIf="!formIsValid">
+              <div class="col-md-4"></div>
+              <div class=" col-md-8">
+                <ul class="parsley-errors-list filled ml-3" id="parsley-id-11"><li class="parsley-required">This value is required.</li></ul>
+              </div>
+            </div>
           </div>
           <div class="form-group row">
             <label class="form-control-label col-md-4 col-12 text-md-right" for="ClosedDate">
               Close Date:
             </label>
-            <p-calendar
-              [(ngModel)]="currentPO.closeDate"
-              placeholder="Select Closed Date"
-              class="col-md-8 col-12"
-              name="ClosedDate"
-              showIcon="true"
-              styleClass="input-group input-group-transparent"
-              inputStyleClass="form-control input-transparent"
-              tooltip="Closed Date" data-cy="closedate-input"
-            >
+            <p-calendar [(ngModel)]="currentPO.closeDate" placeholder="Select Closed Date" class="col-md-8 col-12"
+              name="ClosedDate" showIcon="true" styleClass="input-group input-group-transparent"
+              inputStyleClass="form-control input-transparent" tooltip="Closed Date" data-cy="closedate-input">
             </p-calendar>
           </div>
 
@@ -348,20 +324,10 @@
             </label>
             <div class="col-md-8 col-12 input-group input-group-transparent">
               <span class="input-group-addon bg-secondary">$</span>
-              <input
-                id="totalPurchaseLimit"
-                pInputText
-                [(ngModel)]="currentPO.totalPurchaseLimit"
-                (change)="onChangeTotalPurchaseLimit($event)"
-                placeholder="Enter total amount"
-                type="text"
-                class="form-control input-transparent"
-                name="TotalPurchaseLimit"
-                data-validate="parsley"
-                data-parsley-trigger="change"
-                data-parsley-type="number"
-                data-cy="totalamount-input"
-              >
+              <input id="totalPurchaseLimit" pInputText [(ngModel)]="currentPO.totalPurchaseLimit"
+                (change)="onChangeTotalPurchaseLimit($event)" placeholder="Enter total amount" type="text"
+                class="form-control input-transparent" name="TotalPurchaseLimit" data-validate="parsley"
+                data-parsley-trigger="change" data-parsley-type="number" data-cy="totalamount-input">
               <span class="input-group-addon bg-secondary">.00</span>
             </div>
           </div>
@@ -371,16 +337,9 @@
               Products:
             </label>
             <div class="col-md-10 col-12">
-              <multiselect-wrapper-form
-                *ngIf="showProductsSelect"
-                [(model)]="currentPO.selectedProducts"
-                defaultLabel="Select Products"
-                name="ProductId"
-                defaultId="id"
-                defaultLabelProperty="label"
-                [options]="productsData"
-                [limit]="100"
-              >
+              <multiselect-wrapper-form *ngIf="showProductsSelect" [(model)]="currentPO.selectedProducts"
+                defaultLabel="Select Products" name="ProductId" defaultId="id" defaultLabelProperty="label"
+                [options]="productsData" [limit]="100">
               </multiselect-wrapper-form>
             </div>
           </div>

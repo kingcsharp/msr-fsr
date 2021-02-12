@@ -52,7 +52,7 @@ export class PurchaseOrdersComponent implements OnInit {
   showConfirmDeleteDialog: boolean = false;
   showConfirmCloseDialog: boolean = false;
   poToCloseOrDelete: PurchaseOrderView;
-
+  formIsValid: boolean = true;
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
@@ -226,10 +226,21 @@ export class PurchaseOrdersComponent implements OnInit {
     }
   }
 
+  isPoFormValid(){
+
+    if(this.currentPO.openDate === undefined || this.currentPO.openDate === null){
+      this.formIsValid = false;
+    } else {
+      this.formIsValid = true;
+    }
+
+    return this.formIsValid;
+  }
+
   onPurchaseSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
-    if (jQuery('.parsleyjs').parsley().isValid()) {
+    if (jQuery('.parsleyjs').parsley().isValid() && this.isPoFormValid()) {
       this.globals.showLoader(true);
       let purchaseUpdateOrderRequest = new UpdatePurchaseOrderRequest();
       this.setCustomerId(purchaseUpdateOrderRequest, this.currentPO);
