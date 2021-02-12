@@ -302,11 +302,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 procedureStepIds.Contains(s.EntityId) &&
                 s.EntityTableName == nameof(EntityFramework.Entities.ProcedureStep)).ToListAsync();
 
-            var workOrderTasksInUse = _unitOfWork.WorkOrderTasks.Query()
-                .Where(s => procedureStepIds.Contains(s.ProcedureStepId.Value)
-                            && (s.StatusId == (int)EnumStatusSteps.InProgress
+            var workOrderTasksInUse = await _unitOfWork.WorkOrderTasks.Query()
+                .Where(s => procedureStepIds.Contains(s.ProcedureStepId.Value)).ToListAsync();
+
+            workOrderTasksInUse = workOrderTasksInUse.Where(s => s.StatusId == (int)EnumStatusSteps.InProgress
                                || s.StatusId == (int)EnumStatusSteps.WaitingtoStart
-                               || s.StatusId == (int)EnumStatusSteps.Approved));
+                               || s.StatusId == (int)EnumStatusSteps.Approved).ToList();
 
             procedureStepModels.ForEach(procedureStep =>
             {
