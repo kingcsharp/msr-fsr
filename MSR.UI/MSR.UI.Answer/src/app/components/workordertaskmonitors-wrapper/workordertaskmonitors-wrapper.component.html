@@ -82,6 +82,15 @@
               {{workOrderTaskMonitor.procedureStepMonitor?.targetValue | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue : false : true }}
             </div>
           </div>
+          <div class="form-group col-12 d-flex flex-row"
+            *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.PassOrFail) || (workOrderTaskMonitor.monitorTypeId === monitorTypes.PassOrFail)">
+            <label class="col-form-label text-left col-3">
+              Correct Answer:
+            </label>
+            <div class="col-9 px-0">
+              {{workOrderTaskMonitor.procedureStepMonitor?.targetValue | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.targetValue : true : false }}
+            </div>
+          </div>
           <div class="form-group col-12 d-flex flex-row" *ngIf="((workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Equipment 
             && workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === monitorInputTypes.SensorManual) 
             || workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Text) || ((workOrderTaskMonitor.monitorTypeId === monitorTypes.Equipment 
