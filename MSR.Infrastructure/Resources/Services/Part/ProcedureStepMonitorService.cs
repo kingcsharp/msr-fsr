@@ -177,15 +177,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<bool> DeleteMonitorModelAsync(DeleteProcedureStepMonitor command)
         {
-            var current = await _unitOfWork.ProcedureStepMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var procedureStepMonitorEntity = await _unitOfWork.ProcedureStepMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if(current is null)
+            if(procedureStepMonitorEntity is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStepMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
             if (CurrentUser.HasPrivilege(EnumMenuItem.Monitors, EnumPrivilege.CanDelete)) {
-                _unitOfWork.ProcedureStepMonitors.Delete(false, current);
+
+                var workOrderTaskMonitorEntity = await _unitOfWork.WorkOrderTaskMonitors.FirstOrDefaultAsync(false, i => i.ProcedureMonitorId == command.Id);
+                workOrderTaskMonitorEntity.ProcedureMonitorId = null;
+                procedureStepMonitorEntity.ProcedureStepId = null;
+                _unitOfWork.ProcedureStepMonitors.Delete(false, procedureStepMonitorEntity);
                 await _unitOfWork.SaveChangesAsync();
             } else {
                 throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
