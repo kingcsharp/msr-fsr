@@ -153,6 +153,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Query()
                 .Where(i => i.Id == command.SourceProcedureId)
                 .Include(x => x.ProcedureSteps)
+                    .ThenInclude(y => y.ReferenceFiles)
+                .Include(x => x.ProcedureSteps)
+                    .ThenInclude(y => y.ProcedureStepRoles)
                 .Include(x => x.ReferenceFiles)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
@@ -168,10 +171,32 @@ namespace MSR.Infrastructure.Resources.Services.Part
             newProcedure.Name = procedure.Name + " - Copy";
             newProcedure.Revision = 1;
 
+            Dictionary<int, List<DocumentEntityMap>> documents =
+                new Dictionary<int, List<DocumentEntityMap>>();
+
             foreach (var newStep in newProcedure.ProcedureSteps)
             {
+                int originalProcedureStepId = newStep.Id;
+                newStep.OldId = originalProcedureStepId;
                 newStep.Id = 0;
                 newStep.ProcedureId = 0;
+                foreach (var newRole in newStep.ProcedureStepRoles)
+                {
+                    newRole.Id = 0;
+                    newRole.ProcedureStepId = 0;
+                }
+                foreach (var newFile in newStep.ReferenceFiles)
+                {
+                    newFile.Id = 0;
+                }
+
+                List<DocumentEntityMap> documentMaps = await _unitOfWork.DocumentEntityMap
+                    .Query()
+                    .Where(x => x.EntityTableName.Equals(nameof(ProcedureStep)) &&
+                           x.EntityId == originalProcedureStepId)
+                    .AsNoTracking()
+                    .ToListAsync();
+                documents.Add(originalProcedureStepId, documentMaps);
             }
             newProcedure.ReferenceFiles = new List<FileEntityMap>();
             foreach (var file in procedure.ReferenceFiles)
@@ -190,6 +215,23 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _unitOfWork.Procedures.Add(newProcedure);
 
             await _unitOfWork.LogApprovalTransaction(newProcedure, newProcedure.Id);
+
+            // The steps must be created before the documents can be linked (if any).
+            newProcedure.ProcedureSteps
+                .Where(x => x.OldId.HasValue && documents.ContainsKey(x.OldId.Value))
+                .ToList()
+                .ForEach(step => {
+                    List<DocumentEntityMap> stepDocuments =
+                        documents.GetValueOrDefault(step.OldId.Value);
+                    stepDocuments.ForEach(stepDocument => {
+                        stepDocument.EntityId = step.Id;
+                        stepDocument.Id = 0;
+                        stepDocument.Created = null;
+                        stepDocument.CreatedBy = 0;
+                        _unitOfWork.DocumentEntityMap.Add(stepDocument);
+                    });
+                });
+            await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<Domain.Models.Procedure>(newProcedure);
         }
@@ -545,6 +587,28 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ToList()
                     .ForEach(id => {
                         _unitOfWork.ProcedureStepMonitors.Delete(false, id);
+                    });
+
+                _unitOfWork.FileEntityMap
+                    .Query()
+                    .Where(x => procedureStepIds.Contains(x.EntityId) && x.EntityTableName.Equals(nameof(ProcedureStep)))
+                    .Select(x => x.Id)
+                    .ToList()
+                    .ForEach(id => {
+                        _unitOfWork.FileEntityMap.Delete(false, id);
+                    });
+
+                _unitOfWork.ProcedureStepRoleMaps
+                    .Query()
+                    .Where(x => procedureStepIds.Contains(x.ProcedureStepId))
+                    .Select(x => x.Id)
+                    .ToList()
+                    .ForEach(id => {
+                        _unitOfWork.ProcedureStepRoleMaps.Delete(false, id);
+                    });
+
+                procedureStepIds.ForEach(id => {
+                        _unitOfWork.ProcedureSteps.Delete(false, id);
                     });
 
                 _unitOfWork.CascadeDelete(current);
