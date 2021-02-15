@@ -1231,9 +1231,13 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             workOrderPart.SerialNumber = serialNumber;
-            var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
-                .Where(s => s.SerialNumber == workOrderPart.SerialNumber && s.Part != null &&
-                            s.Part.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+
+            List<WorkOrderPart> workOrderParts = await _unitOfWork.WorkOrderParts.Query().Where(s => s.SerialNumber == workOrderPart.SerialNumber).ToListAsync();
+            var workOrderPartIds = workOrderParts.Select(m => m.PartId);
+            List<EntityFramework.Entities.Part> partEntities = await _unitOfWork.Parts.Query().Where(s => workOrderPartIds.Contains(s.Id)).ToListAsync();
+            
+            workOrderParts = workOrderParts.Where(s => s.SerialNumber == workOrderPart.SerialNumber && s.Part.PartNumber == workOrderPart.Part.PartNumber).ToList();
+
 
             if (!workOrderParts.Any())
             {

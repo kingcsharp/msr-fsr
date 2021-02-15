@@ -315,6 +315,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public async Task<ICollection<Domain.Models.ProcedureStepModel>> GetProcedureStepAsync(GetProcedureStep command)
         {
             List<EntityFramework.Entities.ProcedureStep> steps;
+
             var query = _unitOfWork.ProcedureSteps
                 .Query()
                 .Include(x => x.StepType)
@@ -337,9 +338,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .Where(x => x.ProcedureId == command.procedureId)
                     .ToListAsync();
             }
+
             var procedureStepModels = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
 
             var procedureStepIds = procedureStepModels.Select(m => m.Id).ToList();
+            
             var documentEntityMaps = await _unitOfWork.DocumentEntityMap.Query().Where(s =>
                 procedureStepIds.Contains(s.EntityId) &&
                 s.EntityTableName == nameof(EntityFramework.Entities.ProcedureStep)).ToListAsync();

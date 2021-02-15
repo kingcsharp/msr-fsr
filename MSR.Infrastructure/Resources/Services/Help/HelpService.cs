@@ -139,7 +139,9 @@ namespace MSR.Infrastructure.Resources.Services.Help
 
             var pageList = new List<Domain.Models.HelpPage>();
 
-            var helpPageList = await helpPages.Include(i => i.Roles).ThenInclude(j => j.Role).ToListAsync();
+            var helpPageList = await helpPages.Include(s => s.Roles).ToListAsync();
+            
+            _ = await _unitOfWork.Roles.Query().ToListAsync();
 
             foreach (var helpPage in helpPageList ?? new List<HelpPage>())
             {
