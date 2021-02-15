@@ -16,7 +16,6 @@ using Newtonsoft.Json;
 
 namespace MSR.Answer.API.V1.Models
 {
-    [DataContract]
     public partial class CreateProcedureStepRequest
     {
         public int? ProcedureId { get; set; }
