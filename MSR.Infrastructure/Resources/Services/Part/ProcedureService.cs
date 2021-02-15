@@ -794,8 +794,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                                     EntityTableName = nameof(ProcedureStep),
                                     DocumentId = newDocId
                                 };
-                                await _unitOfWork.DocumentEntityMap.AddAsync(documentEntityMap);
+                                _unitOfWork.DocumentEntityMap.Add(documentEntityMap);
                             }
+                            await _unitOfWork.SaveChangesAsync();
                         }
                     }
                 }
