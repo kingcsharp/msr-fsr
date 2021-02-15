@@ -40,6 +40,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? UsefulLife { get; set; }
 
+        // The ID of the procedurestep from which this was
+        // copied, if any.  Used during the "copy procedure" operation.
+        [NotMapped]
+        public int? OldId { get; set; }
+
         public virtual Procedure Procedure { get; set; }
 
         public virtual ICollection<ProcedureStepMonitor> ProcedureStepMonitors { get; set; }
