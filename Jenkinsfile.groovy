@@ -37,12 +37,8 @@ pipeline {
         stage('Build & Deploy') {
             parallel {
                 stage('Build & Deploy UI to QA') {
-                    //agent { label 'ubuntu-node'}
-                    // This step should not normally be used in your script. Consult the inline help for details.
+                    agent { label 'ubuntu-node'}
                     steps {
-                        // This step should not normally be used in your script. Consult the inline help for details.
-                        ecsTaskTemplate(assignPublicIp: true, containerUser: '', cpu: 2048, executionRole: '', image: 'jenkins/inbound-agent', inheritFrom: '', label: 'ubuntu-node', launchType: 'FARGATE', logDriver: '', memory: 4096, mountPoints: [[containerPath: '/var/run/docker.sock', name: 'docker-socket', readOnly: false, sourcePath: '']], name: 'jenkins-agent', networkMode: 'awsvpc', platformVersion: '', remoteFSRoot: '/home/jenkins', securityGroups: 'sg-385a655f', subnets: 'subnet-63945615', taskDefinitionOverride: '', taskrole: '') {
-                            // some block
                         script {
                             try {
                                 dir('MSR.UI/MSR.UI.Answer') {
@@ -52,7 +48,7 @@ pipeline {
                                     sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                     sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
                                 }
-                            } catch (e) {
+                            } catch(e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
@@ -62,13 +58,13 @@ pipeline {
                                 sh "sh update_image.sh QA ${env.GIT_COMMIT} ${UI_COMPOSE}"
                                 sh "cat ${UI_COMPOSE}"
 
-                                if (env.BRANCH_NAME == 'Develop') {
+                                if(env.BRANCH_NAME == 'Develop') {
                                     echo "Deploying Develop"
                                     //deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
                                 }
 
 
-                                office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+                                office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
                             } catch (e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
@@ -76,7 +72,6 @@ pipeline {
                                 sh "exit 1"
                             }
                         }
-                    }
                     }
                 }
 //                stage('Build and Deploy API to QA') {
