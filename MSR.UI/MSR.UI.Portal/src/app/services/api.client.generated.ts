@@ -6926,7 +6926,7 @@ export class WorkOrderService {
     /**
      * Returns a summary of COMPLETED or CANCELLED WorkOrders
      */
-    history(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
+    history(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6948,14 +6948,14 @@ export class WorkOrderService {
                 try {
                     return this.processHistory(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView>><any>_observableThrow(response_);
         }));
     }
 
-    protected processHistory(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
+    protected processHistory(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6966,7 +6966,7 @@ export class WorkOrderService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfWorkOrderGridSummary.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfWorkOrderHistoryView.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6974,7 +6974,7 @@ export class WorkOrderService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfICollectionOfWorkOrderGridSummary>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfWorkOrderHistoryView>(<any>null);
     }
 
     /**
@@ -7093,8 +7093,9 @@ export class WorkOrderService {
      * @param locationId (optional) Get work orders by location ID
      * @param invoiceDate (optional) Get work orders by invoice Date
      * @param assignedToId (optional) Get work orders with ANY tasks assigned to this user ID
+     * @param openOnly (optional) 
      */
-    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, openOnly: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7109,6 +7110,8 @@ export class WorkOrderService {
             url_ += "invoiceDate=" + encodeURIComponent("" + invoiceDate) + "&";
         if (assignedToId !== undefined && assignedToId !== null)
             url_ += "assignedToId=" + encodeURIComponent("" + assignedToId) + "&";
+        if (openOnly !== undefined && openOnly !== null)
+            url_ += "openOnly=" + encodeURIComponent("" + openOnly) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -9681,7 +9684,7 @@ export enum EnumMenuItem {
     Monitors = 12,
     Operational = 13,
     Parts = 14,
-    Procedures = 15,
+    Reserved1 = 15,
     PendingApprovals = 16,
     ProcedureTypes = 17,
     PurchaseOrders = 18,
@@ -16414,7 +16417,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
     procedureStepMonitor?: ProcedureStepMonitor | undefined;
-    procedureMonitorId?: number;
+    procedureMonitorId?: number | undefined;
     numVal?: number | undefined;
     textVal?: string | undefined;
     multiVal?: string | undefined;
@@ -16430,6 +16433,8 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     lowTarget?: number | undefined;
     targetValue?: string | undefined;
     faultHandling?: string | undefined;
+    monitorTypeId?: number | undefined;
+    inputTypeId?: number | undefined;
 
     constructor(data?: IWorkOrderTaskMonitorModel) {
         super(data);
@@ -16457,6 +16462,8 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
             this.lowTarget = _data["lowTarget"];
             this.targetValue = _data["targetValue"];
             this.faultHandling = _data["faultHandling"];
+            this.monitorTypeId = _data["monitorTypeId"];
+            this.inputTypeId = _data["inputTypeId"];
         }
     }
 
@@ -16488,6 +16495,8 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         data["lowTarget"] = this.lowTarget;
         data["targetValue"] = this.targetValue;
         data["faultHandling"] = this.faultHandling;
+        data["monitorTypeId"] = this.monitorTypeId;
+        data["inputTypeId"] = this.inputTypeId;
         super.toJSON(data);
         return data; 
     }
@@ -16497,7 +16506,7 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
     procedureStepMonitor?: ProcedureStepMonitor | undefined;
-    procedureMonitorId?: number;
+    procedureMonitorId?: number | undefined;
     numVal?: number | undefined;
     textVal?: string | undefined;
     multiVal?: string | undefined;
@@ -16513,6 +16522,8 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     lowTarget?: number | undefined;
     targetValue?: string | undefined;
     faultHandling?: string | undefined;
+    monitorTypeId?: number | undefined;
+    inputTypeId?: number | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
@@ -17569,6 +17580,7 @@ export class QuotesProductsView implements IQuotesProductsView {
     totalPrice?: number;
     cycleTime?: number;
     divisionFab?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 
     constructor(data?: IQuotesProductsView) {
         if (data) {
@@ -17599,6 +17611,7 @@ export class QuotesProductsView implements IQuotesProductsView {
             this.totalPrice = _data["totalPrice"];
             this.cycleTime = _data["cycleTime"];
             this.divisionFab = _data["divisionFab"];
+            this.segregationType = _data["segregationType"];
         }
     }
 
@@ -17629,6 +17642,7 @@ export class QuotesProductsView implements IQuotesProductsView {
         data["totalPrice"] = this.totalPrice;
         data["cycleTime"] = this.cycleTime;
         data["divisionFab"] = this.divisionFab;
+        data["segregationType"] = this.segregationType;
         return data; 
     }
 }
@@ -17652,6 +17666,7 @@ export interface IQuotesProductsView {
     totalPrice?: number;
     cycleTime?: number;
     divisionFab?: string | undefined;
+    segregationType?: EnumSegregationType | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -19484,6 +19499,173 @@ export interface IPostPendingApprovalRequest {
 }
 
 /** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfWorkOrderHistoryView extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderHistoryView {
+    object?: WorkOrderHistoryView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfWorkOrderHistoryView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(WorkOrderHistoryView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkOrderHistoryView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfWorkOrderHistoryView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfWorkOrderHistoryView extends IAuditActionResult {
+    object?: WorkOrderHistoryView[] | undefined;
+}
+
+export class WorkOrderHistoryView implements IWorkOrderHistoryView {
+    workOrderId?: number | undefined;
+    hasNcr?: boolean;
+    customerId?: number;
+    customer?: string | undefined;
+    location?: string | undefined;
+    serialNumber?: string | undefined;
+    purchaseId?: number;
+    purchaseOrderNumber?: string | undefined;
+    qty?: number | undefined;
+    scheduledStartDate?: Date | undefined;
+    scheduledEndDate?: Date | undefined;
+    actualStartDate?: Date | undefined;
+    actualEndDate?: Date | undefined;
+    product?: string | undefined;
+    procedure?: string | undefined;
+    status?: string | undefined;
+    createdBy?: number;
+    createdOn?: Date | undefined;
+    lastUpdatedBy?: number;
+    lastUpdatedOn?: Date | undefined;
+    dispostion?: string | undefined;
+    segregationType?: EnumSegregationType;
+    workOrderItemNumber?: string | undefined;
+
+    constructor(data?: IWorkOrderHistoryView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.hasNcr = _data["hasNcr"];
+            this.customerId = _data["customerId"];
+            this.customer = _data["customer"];
+            this.location = _data["location"];
+            this.serialNumber = _data["serialNumber"];
+            this.purchaseId = _data["purchaseId"];
+            this.purchaseOrderNumber = _data["purchaseOrderNumber"];
+            this.qty = _data["qty"];
+            this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
+            this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
+            this.actualStartDate = _data["actualStartDate"] ? new Date(_data["actualStartDate"].toString()) : <any>undefined;
+            this.actualEndDate = _data["actualEndDate"] ? new Date(_data["actualEndDate"].toString()) : <any>undefined;
+            this.product = _data["product"];
+            this.procedure = _data["procedure"];
+            this.status = _data["status"];
+            this.createdBy = _data["createdBy"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
+            this.dispostion = _data["dispostion"];
+            this.segregationType = _data["segregationType"];
+            this.workOrderItemNumber = _data["workOrderItemNumber"];
+        }
+    }
+
+    static fromJS(data: any): WorkOrderHistoryView {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderHistoryView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["hasNcr"] = this.hasNcr;
+        data["customerId"] = this.customerId;
+        data["customer"] = this.customer;
+        data["location"] = this.location;
+        data["serialNumber"] = this.serialNumber;
+        data["purchaseId"] = this.purchaseId;
+        data["purchaseOrderNumber"] = this.purchaseOrderNumber;
+        data["qty"] = this.qty;
+        data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
+        data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
+        data["actualStartDate"] = this.actualStartDate ? this.actualStartDate.toISOString() : <any>undefined;
+        data["actualEndDate"] = this.actualEndDate ? this.actualEndDate.toISOString() : <any>undefined;
+        data["product"] = this.product;
+        data["procedure"] = this.procedure;
+        data["status"] = this.status;
+        data["createdBy"] = this.createdBy;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
+        data["dispostion"] = this.dispostion;
+        data["segregationType"] = this.segregationType;
+        data["workOrderItemNumber"] = this.workOrderItemNumber;
+        return data; 
+    }
+}
+
+export interface IWorkOrderHistoryView {
+    workOrderId?: number | undefined;
+    hasNcr?: boolean;
+    customerId?: number;
+    customer?: string | undefined;
+    location?: string | undefined;
+    serialNumber?: string | undefined;
+    purchaseId?: number;
+    purchaseOrderNumber?: string | undefined;
+    qty?: number | undefined;
+    scheduledStartDate?: Date | undefined;
+    scheduledEndDate?: Date | undefined;
+    actualStartDate?: Date | undefined;
+    actualEndDate?: Date | undefined;
+    product?: string | undefined;
+    procedure?: string | undefined;
+    status?: string | undefined;
+    createdBy?: number;
+    createdOn?: Date | undefined;
+    lastUpdatedBy?: number;
+    lastUpdatedOn?: Date | undefined;
+    dispostion?: string | undefined;
+    segregationType?: EnumSegregationType;
+    workOrderItemNumber?: string | undefined;
+}
+
+/** Base class for an API call with a typed result */
 export class AuditActionResultOfICollectionOfWorkOrderGridSummary extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderGridSummary {
     object?: WorkOrderGridSummary[] | undefined;
 
@@ -19552,6 +19734,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
+    segregationType?: EnumSegregationType | undefined;
 
     constructor(data?: IWorkOrderGridSummary) {
         if (data) {
@@ -19589,6 +19772,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             this.percentageOfExpectedDurationTimeLoggedNumerator = _data["percentageOfExpectedDurationTimeLoggedNumerator"];
             this.percentageOfExpectedDurationTimeLoggedDenominator = _data["percentageOfExpectedDurationTimeLoggedDenominator"];
             this.hasNcr = _data["hasNcr"];
+            this.segregationType = _data["segregationType"];
         }
     }
 
@@ -19626,6 +19810,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
         data["percentageOfExpectedDurationTimeLoggedNumerator"] = this.percentageOfExpectedDurationTimeLoggedNumerator;
         data["percentageOfExpectedDurationTimeLoggedDenominator"] = this.percentageOfExpectedDurationTimeLoggedDenominator;
         data["hasNcr"] = this.hasNcr;
+        data["segregationType"] = this.segregationType;
         return data; 
     }
 }
@@ -19656,6 +19841,7 @@ export interface IWorkOrderGridSummary {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
+    segregationType?: EnumSegregationType | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -19702,10 +19888,10 @@ export interface IAuditActionResultOfICollectionOfWorkOrderStatus extends IAudit
 }
 
 export class WorkOrderStatus implements IWorkOrderStatus {
-    productName!: string;
-    partNumber!: string;
-    procedureName!: string;
-    locationName!: string;
+    productName?: string | undefined;
+    partNumber?: string | undefined;
+    procedureName?: string | undefined;
+    locationName?: string | undefined;
     workOrderSummary?: WorkOrderSummary | undefined;
 
     constructor(data?: IWorkOrderStatus) {
@@ -19746,22 +19932,22 @@ export class WorkOrderStatus implements IWorkOrderStatus {
 }
 
 export interface IWorkOrderStatus {
-    productName: string;
-    partNumber: string;
-    procedureName: string;
-    locationName: string;
+    productName?: string | undefined;
+    partNumber?: string | undefined;
+    procedureName?: string | undefined;
+    locationName?: string | undefined;
     workOrderSummary?: WorkOrderSummary | undefined;
 }
 
 export class WorkOrderSummary implements IWorkOrderSummary {
-    workOrderId!: number;
+    workOrderId?: number | undefined;
     workOrderItemNumber?: string | undefined;
     purchaseOrderLineNumber?: string | undefined;
     workOrderPartSerialNumber?: string | undefined;
-    workOrderStatus!: string;
+    workOrderStatus?: string | undefined;
     workOrderAssignedTo?: string | undefined;
     assignedTo?: number | undefined;
-    workOrderHasNcr!: boolean;
+    workOrderHasNcr?: boolean;
     workOrderScheduledEndDate?: Date | undefined;
 
     constructor(data?: IWorkOrderSummary) {
@@ -19810,14 +19996,14 @@ export class WorkOrderSummary implements IWorkOrderSummary {
 }
 
 export interface IWorkOrderSummary {
-    workOrderId: number;
+    workOrderId?: number | undefined;
     workOrderItemNumber?: string | undefined;
     purchaseOrderLineNumber?: string | undefined;
     workOrderPartSerialNumber?: string | undefined;
-    workOrderStatus: string;
+    workOrderStatus?: string | undefined;
     workOrderAssignedTo?: string | undefined;
     assignedTo?: number | undefined;
-    workOrderHasNcr: boolean;
+    workOrderHasNcr?: boolean;
     workOrderScheduledEndDate?: Date | undefined;
 }
 
