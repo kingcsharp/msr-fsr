@@ -227,17 +227,39 @@ selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown .ui-dropdown-label-c
   margin-left: $sidebar-width-active;
 }
 
-
+@media screen {
+  #printSection {
+    display: none;
+  }
+}
 @media print {
-  .quote-preview-dialog {
-    & > .ui-dialog-titlebar,
-    & > .ui-dialog-footer,
-    & > .ui-resizable-handle {
-      visibility: hidden;
+  body * {
+    visibility:hidden;
+  }
+  #printSection, #printSection * {
+    visibility:visible;
+  }
+  #printSection {
+    position:absolute;
+    left:0;
+    top:0;
+
+    table {
+      border-bottom: none !important;
+
+      td {
+        border-top: none !important;
+      }
     }
 
-    & > .ui-dialog-content {
-      overflow: visible !important;
+    .table-bordered,
+    .table-bordered th,
+    .table-bordered td {
+      border: 1px solid rgba(0, 0, 0, 0.35) !important;
+    }
+
+    .table-bordered {
+      margin-bottom: 30px !important;
     }
   }
 }

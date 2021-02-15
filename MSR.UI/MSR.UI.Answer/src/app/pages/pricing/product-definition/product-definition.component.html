@@ -536,8 +536,8 @@
 </div>
 
 <p-dialog header="Quote Preview" *ngIf="quoteJson" [(visible)]="showQuoteViewModal" [baseZIndex]="100001" [modal]='true'
-  [style]="{width: '70vw'}" data-cy="user-header" [styleClass]="'quote-preview-dialog'">
-  <div class="container">
+  [style]="{width: '70vw'}" data-cy="user-header">
+  <div class="container" id="quote-preview-dialog">
     <div class="row mr-0 ml-0">
       <table class="table no-border quote-header" width="100%">
         <tbody>
@@ -637,6 +637,14 @@
             <td>
               {{quoteItem.extension | currency}}
             </td>
+          </tr>
+          <tr *ngIf="!quoteJson.quoteItems || quoteJson.quoteItems.length === 0">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
