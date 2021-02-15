@@ -40,7 +40,8 @@ pipeline {
                     //agent { label 'ubuntu-node'}
                     // This step should not normally be used in your script. Consult the inline help for details.
                     steps {
-                        ecsTaskTemplate(assignPublicIp: true, containerUser: '', cpu: 2048, executionRole: '', image: 'jenkins/inbound-agent', inheritFrom: '', label: 'cmh', launchType: 'FARGATE', logDriver: '', memory: 4096, mountPoints: [[containerPath: '/var/run/docker.sock', name: 'docker-socket', readOnly: false, sourcePath: '']], name: 'jenkins-agent', networkMode: 'awsvpc', platformVersion: '', remoteFSRoot: '/home/jenkins', securityGroups: 'sg-385a655f', subnets: 'subnet-63945615', taskDefinitionOverride: '', taskrole: '') {
+                        // This step should not normally be used in your script. Consult the inline help for details.
+                        ecsTaskTemplate(assignPublicIp: true, containerUser: '', cpu: 2048, executionRole: '', image: 'jenkins/inbound-agent', inheritFrom: '', label: 'ubuntu-node', launchType: 'FARGATE', logDriver: '', memory: 4096, mountPoints: [[containerPath: '/var/run/docker.sock', name: 'docker-socket', readOnly: false, sourcePath: '']], name: 'jenkins-agent', networkMode: 'awsvpc', platformVersion: '', remoteFSRoot: '/home/jenkins', securityGroups: 'sg-385a655f', subnets: 'subnet-63945615', taskDefinitionOverride: '', taskrole: '') {
                             // some block
                         script {
                             try {
