@@ -622,6 +622,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ForEach(id => {
                         _unitOfWork.ProcedureStepMonitors.Delete(false, id);
                     });
+                
+                procedureStepIds.ForEach(id => {
+                    _unitOfWork.ProcedureSteps.Delete(false, id);
+                });
 
                 _unitOfWork.FileEntityMap
                     .Query()
