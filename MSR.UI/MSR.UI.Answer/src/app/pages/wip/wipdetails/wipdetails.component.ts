@@ -98,7 +98,7 @@ export class WipdetailsComponent implements OnInit {
       { label: 'Pass or Fail', value: 5 },
       { label: 'Select', value: 6 },
     ];
-    
+
     this.globals.showLoader(true);
     this.roleService.roleGet(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
@@ -212,12 +212,12 @@ export class WipdetailsComponent implements OnInit {
         let documents = documentResponses.map(s => s.object[0]);
         workOrderModel.workOrderTasks.filter(s => s.procedureStep !== undefined).map(workOrderTask => {
 
-          workOrderTask.procedureStep.referenceDocuments = new Array<DocumentView>();
+          workOrderTask.procedureStep.referenceDocument = new Array<FileModel>();
 
           workOrderTask.procedureStep.referenceDocumentIds.forEach(documentId => {
-            let documentReferenceFiles = <Array<DocumentView>>documents.find(s => s.id === documentId)?.referenceFiles;
+            let documentReferenceFiles = <Array<FileModel>>documents.find(s => s.id === documentId)?.referenceFiles;
             documentReferenceFiles.map(documentReferenceFile => {
-              workOrderTask.procedureStep.referenceDocuments.push(documentReferenceFile);
+              workOrderTask.procedureStep.referenceDocument.push(documentReferenceFile);
             });
 
           });

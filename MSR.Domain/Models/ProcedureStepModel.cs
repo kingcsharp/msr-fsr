@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MSR.Domain.Views;
 
 namespace MSR.Domain.Models
 {
@@ -115,7 +114,7 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets DocumentFiles
         /// </summary>
-        public List<DocumentView> ReferenceDocuments { get; set; }
+        public List<FileModel> ReferenceDocument { get; set; }
 
         /// <summary>
         /// Copy of the status field of the ProductApproval row

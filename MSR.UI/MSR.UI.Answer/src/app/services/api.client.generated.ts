@@ -13177,7 +13177,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
-    referenceDocuments?: DocumentView[] | undefined;
+    referenceDocument?: FileModel[] | undefined;
     isUsed?: boolean;
 
     constructor(data?: IProcedureStepModel) {
@@ -13223,10 +13223,10 @@ export class ProcedureStepModel implements IProcedureStepModel {
                 for (let item of _data["referenceDocumentIds"])
                     this.referenceDocumentIds!.push(item);
             }
-            if (Array.isArray(_data["referenceDocuments"])) {
-                this.referenceDocuments = [] as any;
-                for (let item of _data["referenceDocuments"])
-                    this.referenceDocuments!.push(DocumentView.fromJS(item));
+            if (Array.isArray(_data["referenceDocument"])) {
+                this.referenceDocument = [] as any;
+                for (let item of _data["referenceDocument"])
+                    this.referenceDocument!.push(FileModel.fromJS(item));
             }
             this.isUsed = _data["isUsed"];
         }
@@ -13273,10 +13273,10 @@ export class ProcedureStepModel implements IProcedureStepModel {
             for (let item of this.referenceDocumentIds)
                 data["referenceDocumentIds"].push(item);
         }
-        if (Array.isArray(this.referenceDocuments)) {
-            data["referenceDocuments"] = [];
-            for (let item of this.referenceDocuments)
-                data["referenceDocuments"].push(item.toJSON());
+        if (Array.isArray(this.referenceDocument)) {
+            data["referenceDocument"] = [];
+            for (let item of this.referenceDocument)
+                data["referenceDocument"].push(item.toJSON());
         }
         data["isUsed"] = this.isUsed;
         return data; 
@@ -13304,7 +13304,7 @@ export interface IProcedureStepModel {
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
-    referenceDocuments?: DocumentView[] | undefined;
+    referenceDocument?: FileModel[] | undefined;
     isUsed?: boolean;
 }
 

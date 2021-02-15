@@ -404,8 +404,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }
                 }
 
-                var referenceDocumentIds = new List<int>(); ;
-                var referenceDoucmentViews = new List<DocumentView>();
+                var referenceDocumentIds = new List<int>();
                 if (command.ReferenceDocumentIds != null)
                 {
                     foreach (int newDocId in command.ReferenceDocumentIds)
@@ -424,8 +423,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         .Where(x => x.EntityTableName == nameof(ProcedureStep) && x.EntityId == procedureStepEntity.Id)
                         .Select(x => x.DocumentId)
                         .ToListAsync();
-                    var referenceDocumentEntities = await _unitOfWork.Documents.Query().Where(x => referenceDocumentIds.Contains(x.Id)).ToListAsync();
-                    referenceDoucmentViews = _mapper.Map<List<DocumentView>>(referenceDocumentEntities);
                 }
                 
 
@@ -433,7 +430,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 procedureStepModel.Roles = roleModels;
                 procedureStepModel.ReferenceFiles = fileReferences;
                 procedureStepModel.ReferenceDocumentIds = referenceDocumentIds;
-                procedureStepModel.ReferenceDocuments = referenceDoucmentViews;
                 return procedureStepModel;
             }
 
@@ -532,8 +528,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     _unitOfWork.DocumentEntityMap.Delete(false, documentId);
                 }
 
-                var referenceDocumentIds = new List<int>(); ;
-                var referenceDoucmentViews = new List<DocumentView>();
+                var referenceDocumentIds = new List<int>();
                 if (command.ReferenceDocumentIds != null)
                 {
                     foreach (int newDocId in command.ReferenceDocumentIds)
@@ -552,8 +547,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         .Where(x => x.EntityTableName == nameof(ProcedureStep) && x.EntityId == updatedProcedureStepEntity.Id)
                         .Select(x => x.DocumentId)
                         .ToListAsync();
-                    var referenceDocumentEntities = await _unitOfWork.Documents.Query().Where(x => referenceDocumentIds.Contains(x.Id)).ToListAsync();
-                    referenceDoucmentViews = _mapper.Map<List<DocumentView>>(referenceDocumentEntities);
                 }
 
                 if (updatedProcedureStepEntity.ProcedureStepRoles != null)
@@ -575,7 +568,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 var procedureStepModel = _mapper.Map<ProcedureStepModel>(updatedProcedureStepEntity);
                 procedureStepModel.ReferenceDocumentIds = referenceDocumentIds;
-                procedureStepModel.ReferenceDocuments = referenceDoucmentViews;
                 return procedureStepModel;
             }
 
