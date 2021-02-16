@@ -37,7 +37,7 @@ pipeline {
         stage('Build & Deploy') {
             parallel {
                 stage('Build & Deploy UI to QA') {
-                    agent { label 'ubuntu-node'}
+                    agent { label 'ubuntu-ondemand'}
                     steps {
                         script {
                             try {
