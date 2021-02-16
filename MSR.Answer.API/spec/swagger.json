@@ -2598,7 +2598,7 @@
         }
       }
     },
-    "/v{version}/Procedure/copy/{id}": {
+    "/v{version}/Procedure/copy/{procedureId}": {
       "post": {
         "tags": [
           "Procedure"
@@ -2625,16 +2625,6 @@
               "type": "string"
             },
             "x-position": 2
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "1"
-            },
-            "x-position": 3
           }
         ],
         "responses": {
@@ -2806,7 +2796,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepRequest"
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepModel"
                 }
               }
             }
@@ -3070,7 +3060,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "nullable": true,
+              "example": 3
             },
             "x-position": 2
           },
@@ -3243,7 +3234,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 305
             },
             "x-position": 1
           },
@@ -5457,13 +5449,22 @@
             "x-position": 5
           },
           {
+            "name": "openOnly",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
             "name": "version",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "x-position": 6
+            "x-position": 7
           }
         ],
         "responses": {
@@ -7140,7 +7141,7 @@
           "Monitors",
           "Operational",
           "Parts",
-          "Procedures",
+          "Reserved1",
           "PendingApprovals",
           "ProcedureTypes",
           "PurchaseOrders",
@@ -9008,6 +9009,14 @@
                 "type": "string",
                 "nullable": true
               },
+              "segregationType": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/EnumSegregationType"
+                  }
+                ]
+              },
               "createSubParts": {
                 "type": "array",
                 "nullable": true,
@@ -9028,6 +9037,20 @@
               }
             }
           }
+        ]
+      },
+      "EnumSegregationType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "CU",
+          "NONCU",
+          "DESEG"
+        ],
+        "enum": [
+          1,
+          2,
+          3
         ]
       },
       "SubPartModel": {
@@ -9106,6 +9129,14 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "segregationType": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EnumSegregationType"
+              }
+            ]
           },
           "createSubParts": {
             "type": "array",
@@ -9211,6 +9242,10 @@
             "type": "object",
             "additionalProperties": true,
             "properties": {
+              "approvalStatus": {
+                "type": "string",
+                "nullable": true
+              },
               "name": {
                 "type": "string",
                 "nullable": true
@@ -9259,13 +9294,6 @@
                 "nullable": true,
                 "items": {
                   "$ref": "#/components/schemas/FileModel"
-                }
-              },
-              "roles": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Role"
                 }
               }
             }
@@ -9318,7 +9346,6 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "Gets or Sets Name",
             "minLength": 1,
             "example": "NAME1598366448"
           },
@@ -9328,13 +9355,11 @@
           },
           "procedureTypeId": {
             "type": "integer",
-            "description": "Gets or Sets ProcedureTypeId",
             "format": "int32",
             "example": 1
           },
           "comments": {
             "type": "string",
-            "description": "Gets or Sets Comments",
             "nullable": true,
             "example": "A comment 1598366448"
           },
@@ -13754,6 +13779,131 @@
           }
         }
       },
+      "AuditActionResultOfICollectionOfWorkOrderHistoryView": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/WorkOrderHistoryView"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "WorkOrderHistoryView": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "workOrderId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasNcr": {
+            "type": "boolean"
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customer": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchaseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purchaseOrderNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "scheduledStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "scheduledEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "actualStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "actualEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "product": {
+            "type": "string",
+            "nullable": true
+          },
+          "procedure": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastUpdatedBy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastUpdatedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dispostion": {
+            "type": "string",
+            "nullable": true
+          },
+          "segregationType": {
+            "$ref": "#/components/schemas/EnumSegregationType"
+          },
+          "workOrderItemNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "AuditActionResultOfICollectionOfWorkOrderGridSummary": {
         "allOf": [
           {
@@ -13891,6 +14041,14 @@
           },
           "hasNcr": {
             "type": "boolean"
+          },
+          "segregationType": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EnumSegregationType"
+              }
+            ]
           }
         }
       },
@@ -13959,15 +14117,11 @@
       "WorkOrderSummary": {
         "type": "object",
         "additionalProperties": true,
-        "required": [
-          "workOrderId",
-          "workOrderStatus",
-          "workOrderHasNcr"
-        ],
         "properties": {
           "workOrderId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "workOrderItemNumber": {
             "type": "string",
@@ -13983,7 +14137,7 @@
           },
           "workOrderStatus": {
             "type": "string",
-            "minLength": 1
+            "nullable": true
           },
           "workOrderAssignedTo": {
             "type": "string",
@@ -14417,18 +14571,23 @@
       },
       "UpdateWorkOrderPartRequest": {
         "type": "object",
-        "description": " ",
         "additionalProperties": true,
         "properties": {
           "workOrderPartId": {
             "type": "integer",
-            "description": "Work Order Part ID",
             "format": "int32"
           },
           "serialNumber": {
             "type": "string",
-            "description": "Gets or Sets SerialNumber",
             "nullable": true
+          },
+          "segregationType": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EnumSegregationType"
+              }
+            ]
           }
         }
       },
