@@ -623,4 +623,8 @@ export class WipdetailsComponent implements OnInit {
     this.printOtherReport.togglePrintOtherDialog();
     this.printOtherReport.selectedReport = 'NCRReport';
   }
+
+  setStartDate(startDate: Date){
+    this.workOrderModel.actualStartDate = startDate;
+  }
 }

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   IStatusModel, IUpdateWorkOrderTaskRequest, StatusModel, UpdateWorkOrderTaskRequest,
-  WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel
+  WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel, WorkOrderModel
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
@@ -30,6 +30,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Output() workOrderTaskToViewChange = new EventEmitter<any>();
   @Output() updateWorkOrderTaskToViewAndInProgress = new EventEmitter<any>();
   @Output() areMonitorsValidCheck = new EventEmitter<{ areValid: Function }>();
+  @Output() setStartDate = new EventEmitter<any>();
 
   stepTimer;
   stepSeconds: number = 0;
@@ -130,6 +131,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     this.workOrderTaskInProgress.taskRunningSince = moment().toDate();
     this.startTimer();
     this.saveTaskTimerState(false);
+    this.setStartDateToWorkOrder();
   }
 
   pause() {
@@ -217,5 +219,12 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   convertDateToUTC(date): Date {
     return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+  }
+
+  setStartDateToWorkOrder(){
+    if(this.workOrderTaskInProgress.taskStepOrder === 10){
+      this.setStartDate.emit(moment().toDate())
+    }
+
   }
 }
