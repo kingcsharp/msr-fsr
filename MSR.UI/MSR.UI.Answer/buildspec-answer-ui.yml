@@ -14,7 +14,7 @@ phases:
 #      - git log | head -100
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build --build-arg ENV=builddevprodsetting -t msr-ui:TEST .
+      - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=builddevprodsetting -t msr-ui:TEST .
       - docker tag msr-ui:TEST 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:TEST
   post_build:
     commands:
