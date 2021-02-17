@@ -12,13 +12,13 @@ phases:
     commands:
 #      - scripts/codebuild-git-wrapper.sh git@github.com:MSR-FSR/Answer3.0.git Develop
 #      - git log | head -100
-      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo $$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Build started on `date`
       - echo Building the Docker image...
-      - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=builddevprodsetting -t msr-ui:CODEBUILD_RESOLVED_SOURCE_VERSION .
-      - docker tag msr-ui:CODEBUILD_RESOLVED_SOURCE_VERSION 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:CODEBUILD_RESOLVED_SOURCE_VERSION
+      - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=builddevprodsetting -t msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION .
+      - docker tag msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION
