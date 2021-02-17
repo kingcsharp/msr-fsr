@@ -23,5 +23,5 @@ phases:
       - echo Pushing the Docker image...
       - docker push 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Updating docker-compose-ui.yml
-      - sh update_image.sh QA $CODEBUILD_RESOLVED_SOURCE_VERSION docker-compose-ui.yml
+      - cd ../../ && sh update_image.sh QA $CODEBUILD_RESOLVED_SOURCE_VERSION docker-compose-ui.yml
       - cat docker-compose-ui.yml
