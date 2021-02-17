@@ -13308,39 +13308,22 @@ export interface IProcedureStepModel {
     isUsed?: boolean;
 }
 
-/**  */
 export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
-    /** Gets or Sets ProcedureId */
     procedureId?: number | undefined;
-    /** Gets or Sets Title */
     title?: string | undefined;
-    /** Gets or Sets Text */
     stepText?: string | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType?: string | undefined;
-    /** Procedure Step Type */
     procedureStepTypeId?: number | undefined;
-    /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
-    /** Gets or Sets PredecessorStepId */
     predecessorStepId?: number | undefined;
-    /** Gets or Sets LaborTime */
     laborTime?: number | undefined;
-    /** Gets or Sets EquipmentTime */
     equipmentTime?: number | undefined;
-    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
-    /** Gets or Sets UtilizationTime */
     utilization?: number | undefined;
-    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
-    /** Gets or Sets ReferenceFileIds    */
     referenceFileIds?: number[] | undefined;
-    /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
     referenceDocumentIds?: number[] | undefined;
 
@@ -13437,39 +13420,22 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     }
 }
 
-/**  */
 export interface ICreateProcedureStepRequest {
-    /** Gets or Sets ProcedureId */
     procedureId?: number | undefined;
-    /** Gets or Sets Title */
     title?: string | undefined;
-    /** Gets or Sets Text */
     stepText?: string | undefined;
-    /** Gets or Sets Duration */
     duration?: number | undefined;
-    /** Gets or Sets DurationType */
     durationType?: string | undefined;
-    /** Procedure Step Type */
     procedureStepTypeId?: number | undefined;
-    /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
-    /** Gets or Sets PredecessorStepId */
     predecessorStepId?: number | undefined;
-    /** Gets or Sets LaborTime */
     laborTime?: number | undefined;
-    /** Gets or Sets EquipmentTime */
     equipmentTime?: number | undefined;
-    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
-    /** Gets or Sets UtilizationTime */
     utilization?: number | undefined;
-    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
-    /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
-    /** Gets or Sets ReferenceFileIds    */
     referenceFileIds?: number[] | undefined;
-    /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
     referenceDocumentIds?: number[] | undefined;
 }
