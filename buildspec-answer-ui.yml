@@ -10,14 +10,14 @@ phases:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 425480257575.dkr.ecr.us-west-2.amazonaws.com
   build:
     commands:
-      - scripts/codebuild-git-wrapper.sh git@github.com:MSR-FSR/Answer3.0.git Develop
-      - git log | head -100
+#      - scripts/codebuild-git-wrapper.sh git@github.com:MSR-FSR/Answer3.0.git Develop
+#      - git log | head -100
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build --build-arg ENV=builddevprodsetting -t msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION .
-      - docker tag msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker build --build-arg ENV=builddevprodsetting -t msr-ui:TEST -f MSR.UI/MSR.UI.Answer/Dockerfile .
+      - docker tag msr-ui:TEST 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:TEST
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:TEST
