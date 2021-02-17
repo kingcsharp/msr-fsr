@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  git-credential-helper: yes
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 425480257575.dkr.ecr.us-west-2.amazonaws.com
+  build:
+    commands:
+#      - scripts/codebuild-git-wrapper.sh git@github.com:MSR-FSR/Answer3.0.git Develop
+#      - git log | head -100
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build --build-arg ENV=builddevprodsetting -t msr-ui:TEST .
+      - docker tag msr-ui:TEST 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:TEST
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:TEST
