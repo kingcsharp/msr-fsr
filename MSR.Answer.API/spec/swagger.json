@@ -11302,6 +11302,10 @@
             "format": "int32",
             "nullable": true
           },
+          "customerName": {
+            "type": "string",
+            "nullable": true
+          },
           "productId": {
             "type": "integer",
             "format": "int32",
@@ -11785,6 +11789,18 @@
             "items": {
               "$ref": "#/components/schemas/FileModel"
             }
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "stepText": {
+            "type": "string",
+            "nullable": true
+          },
+          "isNCRTask": {
+            "type": "boolean",
+            "nullable": true
           }
         }
       },
@@ -11854,6 +11870,47 @@
               "monitorNumber": {
                 "type": "integer",
                 "format": "int32"
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "monitorListId": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "shouldBe": {
+                "type": "string",
+                "nullable": true
+              },
+              "highTarget": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "lowTarget": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "targetValue": {
+                "type": "string",
+                "nullable": true
+              },
+              "faultHandling": {
+                "type": "string",
+                "nullable": true
+              },
+              "monitorTypeId": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "inputTypeId": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
               }
             }
           }
