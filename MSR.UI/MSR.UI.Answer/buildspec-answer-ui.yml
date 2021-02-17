@@ -12,7 +12,7 @@ phases:
     commands:
 #      - scripts/codebuild-git-wrapper.sh git@github.com:MSR-FSR/Answer3.0.git Develop
 #      - git log | head -100
-      - echo $$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Build started on `date`
       - echo Building the Docker image...
       - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=builddevprodsetting -t msr-ui:$CODEBUILD_RESOLVED_SOURCE_VERSION .
