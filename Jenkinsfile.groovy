@@ -42,10 +42,9 @@ pipeline {
                         script {
                             try {
                                 dir('MSR.UI/MSR.UI.Answer') {
+                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                     sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui ."
                                     sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
-
-                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                     sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
                                 }
                             } catch(e) {
