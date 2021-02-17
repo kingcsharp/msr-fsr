@@ -165,7 +165,29 @@ export class ProductDefinitionComponent implements OnInit {
               phone: this.customerRequirementJson.CommercialPhone,
               representative: this.quoteData.submittedBy.fullName,
               representativeTitle: this.quoteData.submittedBy.title,
+              representativeAddress: this.customerRequirementJson.StreetAddress,
             };
+
+            if (this.customerRequirementJson.Parts) {
+              this.quoteJson.quoteItems = [];
+              this.customerRequirementJson.Parts.forEach(part => {
+                this.quoteJson.quoteItems.push({
+                  qty: 1,
+                  description: part.PartDescription,
+                  leadTime: this.customerRequirementJson.ExpectedCycleTime,
+                });
+              });
+            }
+
+            if (this.customerRequirementJson.Process) {
+              this.quoteJson.process = [];
+              this.customerRequirementJson.Process.forEach(process => {
+                this.quoteJson.process.push({
+                  processName: process.ExistingProcess,
+                  description: process.Contaminents,
+                });
+              });
+            }
           }
         }
 
