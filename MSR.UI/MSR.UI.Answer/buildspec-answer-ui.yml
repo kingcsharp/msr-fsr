@@ -25,3 +25,4 @@ phases:
       - echo Updating docker-compose-ui.yml
       - cd ../../ && sh update_image.sh QA $CODEBUILD_RESOLVED_SOURCE_VERSION docker-compose-ui.yml
       - cat docker-compose-ui.yml
+      - ecs-cli --version
