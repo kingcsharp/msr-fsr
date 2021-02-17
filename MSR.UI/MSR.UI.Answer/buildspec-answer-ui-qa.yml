@@ -9,7 +9,7 @@ env:
     REGION: "us-west-2"
     UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/qa-answer3-ui/72883ae73c748f58"
     PROJECT_UI: "qa-answer-ui"
-    UI_COMPOSE: "docker-compose-ui.yml"
+    COMPOSE: "MSR.UI/MSR.UI.Answer/docker-compose-ui.yml"
     ECS_PARAMS: "ecs-params-ui.yml"
     UI_BUILD_ENV: "builddevprodsetting"
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
@@ -38,9 +38,9 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker push $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - echo Updating $UI_COMPOSE
-      - cd ../../ && sh update_image.sh QA $CODEBUILD_RESOLVED_SOURCE_VERSION $UI_COMPOSE
-      - cat $UI_COMPOSE
+      - echo Updating $COMPOSE
+      - cd ../../ && sh update_image.sh QA $CODEBUILD_RESOLVED_SOURCE_VERSION $COMPOSE
+      - cat $COMPOSE
       - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
       - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
-#      - ecs-cli compose --file $UI_COMPOSE  --ecs-params $ECS_PARAMS --project-name $PROJECT_UI service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
+      - ecs-cli compose --file $COMPOSE  --ecs-params $ECS_PARAMS --project-name $PROJECT_UI service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
