@@ -98,7 +98,7 @@ export class WipdetailsComponent implements OnInit {
       { label: 'Pass or Fail', value: 5 },
       { label: 'Select', value: 6 },
     ];
-    
+
     this.globals.showLoader(true);
     this.roleService.roleGet(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
@@ -118,7 +118,7 @@ export class WipdetailsComponent implements OnInit {
   getWorkOrder(workOrderId: number) {
 
     this.globals.showLoader(true);
-    this.workOrdersService.workOrder(workOrderId, null, null, null, null,null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.workOrdersService.workOrder(workOrderId, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.workOrderModel = this.cleanData(response.object[0]);
       this.getCustomerContacts(this.workOrderModel.purchase?.purchaseOrder?.customer?.id);
