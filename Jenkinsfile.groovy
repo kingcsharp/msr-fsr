@@ -43,7 +43,7 @@ pipeline {
 
                             awsCodeBuild artifactEncryptionDisabledOverride: 'False', artifactLocationOverride: '',
                                     artifactNameOverride: '', artifactNamespaceOverride: '', artifactPackagingOverride: 'NONE',
-                                    artifactPathOverride: '', artifactTypeOverride: 'NO_ARTIFACTS',
+                                    artifactPathOverride: '', artifactTypeOverride: '',
                                     awsAccessKey: 'AKIAWGEEZQAT64QN454I', awsSecretKey: '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',
                                     buildSpecFile: '', buildTimeoutOverride: '', cacheLocationOverride: '', cacheModesOverride: '',
                                     cacheTypeOverride: 'NO_CACHE', certificateOverride: '', cloudWatchLogsGroupNameOverride: '',
