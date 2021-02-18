@@ -1,11 +1,15 @@
 **Environment:** QA
+<br/>
 **Answer UI:** ![Answer UI QA](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZ044ZVVKN3VLTC9RcHhyV2xBNzZvcktNR1FhNzdpN2FiY0g4RnlCdXhqM3c0SGhxaDBHbG5XYnZjODhMMDU3dHdHQ3J2Q2tFL2tHQnVwdTNwNTlRUFhzPSIsIml2UGFyYW1ldGVyU3BlYyI6InZVTy9HdENPcThGV1FDUnEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
+<br/>
 **Portal UI:** ![Portal UI QA](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoibTFZTnA4UUpLTUhQQjBTcytiS2c4YjhKT1VzSk0vd25TNVdveVIwcDZxejMzWm1QYnlRaDB1eEZuSFpIZ1pCQXRQVmswdEt3K2prZ0wvYVJNVitGZVNBPSIsIml2UGFyYW1ldGVyU3BlYyI6IkN3WXdrVWNDYnIyUTFlc2EiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-
-Environment: UAT
+<br/><br/>
+**Environment:** UAT
+<br/>
 **Answer UI:** ![Answer UI  UAT](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZGhLVzZRczdrUG1EZ2FqNlUwYjZGUUJmUmxWSmh6SnN1Rytnbmc1KytnbTFCNnorSFRDR0pndmN6UXpJUFBFRjNNN0JBSHM5SUlBZkVCUWNoVUVKN0dJPSIsIml2UGFyYW1ldGVyU3BlYyI6IlZoTE84ODg2TXBLNVh4dVYiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
+<br/>
 **Portal UI:** ![Portal UI UAT](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiTVdNV0g1c1pPZlhlams3NUd6TkwwVjgwRHAxdi9qTFlUTytoeFdNNjdqVkV5WkhnaS84d1NkYnhEZzJjWStiRmVTNitUMU40bWowRFJRMUgwYnNONGdRPSIsIml2UGFyYW1ldGVyU3BlYyI6Ik1vT0lBaHQvQTNvRXF1QjkiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-
+<br/><br/>
 <a href='https://jenkins.cmhworks.com/job/MSR-FSR/job/Answer3/job/Develop/'><img src='https://jenkins.cmhworks.com/buildStatus/icon?job=MSR-FSR%2FAnswer3%2FDevelop'></a><br/>
 ![Assertible status](https://assertible.com/apis/7c13748e-0e5d-43e5-9d74-6f4e7f09bb0a/status?api_token=gtgNgcGA8j38t2TH)
 <br/>
