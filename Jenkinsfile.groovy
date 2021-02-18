@@ -48,10 +48,10 @@ pipeline {
                                     awsSecretKey: 'L8uOFI6V3bbVnRdOBkIQQTSqgY8nnYiHQs+M+gQc',
                                     projectName: 'answer-ui',
                                     region: "us-west-2",
-                                    sourceControlType: "project",
-                                    sourceLocationOverride: "git@github.com:MSR-FSR/Answer3.0.git",
-                                    sourceTypeOverride: "GITHUB",
-                                    sourceVersion: "nodes"
+                                    sourceControlType: "project"
+                                    //sourceLocationOverride: "git@github.com:MSR-FSR/Answer3.0.git",
+                                    //sourceTypeOverride: "GITHUB",
+                                    //sourceVersion: "nodes"
 
 //                            try {
 //                                dir('MSR.UI/MSR.UI.Answer') {
