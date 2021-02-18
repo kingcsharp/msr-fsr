@@ -41,21 +41,7 @@ pipeline {
                     steps {
                         script {
 
-                            awsCodeBuild artifactEncryptionDisabledOverride: 'False', artifactLocationOverride: '',
-                                    artifactNameOverride: '', artifactNamespaceOverride: '', artifactPackagingOverride: 'NONE',
-                                    artifactPathOverride: '', artifactTypeOverride: '',
-                                    awsAccessKey: 'AKIAWGEEZQAT64QN454I', awsSecretKey: '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',
-                                    buildSpecFile: '', buildTimeoutOverride: '', cacheLocationOverride: '', cacheModesOverride: '',
-                                    cacheTypeOverride: 'NO_CACHE', certificateOverride: '', cloudWatchLogsGroupNameOverride: '',
-                                    cloudWatchLogsStatusOverride: 'DISABLED', cloudWatchLogsStreamNameOverride: '', computeTypeOverride: '',
-                                    credentialsId: '', credentialsType: 'keys', cwlStreamingDisabled: 'True', downloadArtifacts: 'false',
-                                    downloadArtifactsRelativePath: '', envParameters: '', envVariables: '', environmentTypeOverride: '',
-                                    exceptionFailureMode: 'DISABLED', gitCloneDepthOverride: '', imageOverride: '', insecureSslOverride: '',
-                                    localSourcePath: '', overrideArtifactName: 'False', privilegedModeOverride: '', projectName: 'answer-ui', proxyHost: '',
-                                    proxyPort: '', region: 'us-west-2', reportBuildStatusOverride: '', s3LogsEncryptionDisabledOverride: 'False',
-                                    s3LogsLocationOverride: '', s3LogsStatusOverride: 'DISABLED', secondaryArtifactsOverride: '', secondarySourcesOverride: '',
-                                    secondarySourcesVersionOverride: '', serviceRoleOverride: '', sourceControlType: 'project', sourceLocationOverride: '',
-                                    sourceTypeOverride: '', sourceVersion: '', sseAlgorithm: '', workspaceSubdir: ''
+                            sh "aws codebuild start-build --project-name answer-ui --profile msr-fsr --region us-west-2"
 
 //                            try {
 //                                dir('MSR.UI/MSR.UI.Answer') {
