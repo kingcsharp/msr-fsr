@@ -40,36 +40,39 @@ pipeline {
                     agent { label 'ubuntu-ondemand'}
                     steps {
                         script {
-                            try {
-                                dir('MSR.UI/MSR.UI.Answer') {
-                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                    sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui ."
-                                    sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
-                                    sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
-                                }
-                            } catch(e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
-                                currentBuild.result = 'FAILURE'
-                                sh "exit 1"
-                            }
 
-                            try {
-                                sh "sh update_image.sh QA ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                                sh "cat ${UI_COMPOSE}"
+                            awsCodeBuild projectName: 'answer-ui', credentialsType: 'keys', region: 'us-west-2', sourceControlType: 'jenkins'
 
-                                if(env.BRANCH_NAME == 'Develop') {
-                                    echo "Deploying Develop"
-                                    //deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
-                                }
-
-
-                                office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
-
-                            } catch (e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
-                                currentBuild.result = 'FAILURE'
-                                sh "exit 1"
-                            }
+//                            try {
+//                                dir('MSR.UI/MSR.UI.Answer') {
+//                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+//                                    sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui ."
+//                                    sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+//                                    sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+//                                }
+//                            } catch(e) {
+//                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+//                                currentBuild.result = 'FAILURE'
+//                                sh "exit 1"
+//                            }
+//
+//                            try {
+//                                sh "sh update_image.sh QA ${env.GIT_COMMIT} ${UI_COMPOSE}"
+//                                sh "cat ${UI_COMPOSE}"
+//
+//                                if(env.BRANCH_NAME == 'Develop') {
+//                                    echo "Deploying Develop"
+//                                    //deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
+//                                }
+//
+//
+//                                office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+//
+//                            } catch (e) {
+//                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+//                                currentBuild.result = 'FAILURE'
+//                                sh "exit 1"
+//                            }
                         }
                     }
                 }
