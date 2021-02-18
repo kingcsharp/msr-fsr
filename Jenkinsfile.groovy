@@ -45,7 +45,7 @@ pipeline {
 
                             awsCodeBuild credentialsType: 'keys',
                                     awsAccessKey: 'AKIAWGEEZQAT64QN454I',
-                                    awsSecretKey: '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'
+                                    awsSecretKey: 'L8uOFI6V3bbVnRdOBkIQQTSqgY8nnYiHQs+M+gQc',
                                     projectName: 'answer-ui',
                                     region: "us-west-2",
                                     sourceControlType: "project",
