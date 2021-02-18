@@ -40,7 +40,7 @@ phases:
       - echo Pushing the Docker image...
       - docker push $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Updating $COMPOSE
-      - cd ../../ && sh update_image_portal.sh $ENVIRONMENT $CODEBUILD_RESOLVED_SOURCE_VERSION $COMPOSE
+      - cd ../../ && sh scripts/update_image_portal.sh $ENVIRONMENT $CODEBUILD_RESOLVED_SOURCE_VERSION $COMPOSE
       - cat $COMPOSE
       - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
       - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
