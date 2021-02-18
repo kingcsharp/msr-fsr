@@ -39,7 +39,7 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push $ECR_URL/$ECR_REPO:$TAG
       - echo Updating $COMPOSE
       - cd ../../ && sh scripts/update_image.sh $ENVIRONMENT $TAG $COMPOSE
       - cat $COMPOSE
