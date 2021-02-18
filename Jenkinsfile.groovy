@@ -50,6 +50,7 @@ pipeline {
                                     region: "us-west-2",
                                     //sourceControlType: "project",
                                     sourceControlType: 'jenkins',
+                                    sourceTypeOverride: 'S3',
                                     buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml'
                                     //sourceLocationOverride: "git@github.com:MSR-FSR/Answer3.0.git",
                                     //sourceTypeOverride: "GITHUB",
