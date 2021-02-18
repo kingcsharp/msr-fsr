@@ -41,7 +41,7 @@ pipeline {
                     steps {
                         script {
 
-                            awsCodeBuild projectName: 'answer-ui', credentialsType: 'keys', region: 'us-west-2', sourceControlType: 'jenkins'
+                            awsCodeBuild projectName: 'answer-ui', credentialsType: 'keys', region: 'us-west-2', sourceControlType: 'jenkins', awsAccessKey: 'AKIAWGEEZQAT64QN454I', awsSecretKey: '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'
 
 //                            try {
 //                                dir('MSR.UI/MSR.UI.Answer') {
