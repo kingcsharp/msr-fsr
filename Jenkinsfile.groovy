@@ -43,7 +43,15 @@ pipeline {
 
                             //sh "aws codebuild start-build --project-name answer-ui --profile msrfsr --region us-west-2"
 
-                            awsCodeBuild artifactEncryptionDisabledOverride: '', artifactLocationOverride: '', artifactNameOverride: '', artifactNamespaceOverride: '', artifactPackagingOverride: '', artifactPathOverride: '', artifactTypeOverride: 'NO_ARTIFACTS', awsAccessKey: 'AKIAWGEEZQAT64QN454I', awsSecretKey: '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', buildSpecFile: '', buildTimeoutOverride: '', cacheLocationOverride: '', cacheModesOverride: '', cacheTypeOverride: '', certificateOverride: '', cloudWatchLogsGroupNameOverride: '', cloudWatchLogsStatusOverride: '', cloudWatchLogsStreamNameOverride: '', computeTypeOverride: '', credentialsId: '', credentialsType: 'keys', cwlStreamingDisabled: '', downloadArtifacts: 'false', downloadArtifactsRelativePath: '', envParameters: '', envVariables: '', environmentTypeOverride: '', exceptionFailureMode: '', gitCloneDepthOverride: '', imageOverride: '', insecureSslOverride: '', localSourcePath: '', overrideArtifactName: '', privilegedModeOverride: '', projectName: 'answer-iu', proxyHost: '', proxyPort: '', region: 'us-west-2', reportBuildStatusOverride: '', s3LogsEncryptionDisabledOverride: '', s3LogsLocationOverride: '', s3LogsStatusOverride: '', secondaryArtifactsOverride: '', secondarySourcesOverride: '', secondarySourcesVersionOverride: '', serviceRoleOverride: '', sourceControlType: 'project', sourceLocationOverride: '', sourceTypeOverride: '', sourceVersion: '', sseAlgorithm: '', workspaceSubdir: ''
+                            awsCodeBuild credentialsType: 'keys',
+                                    awsAccessKey: 'AKIAWGEEZQAT64QN454I',
+                                    awsSecretKey: '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'
+                                    projectName: 'answer-ui',
+                                    region: "us-west-2",
+                                    sourceControlType: "project",
+                                    sourceLocationOverride: "git@github.com:MSR-FSR/Answer3.0.git",
+                                    sourceTypeOverride: "GITHUB",
+                                    sourceVersion: "nodes"
 
 //                            try {
 //                                dir('MSR.UI/MSR.UI.Answer') {
