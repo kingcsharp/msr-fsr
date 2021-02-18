@@ -4,7 +4,7 @@ env:
   git-credential-helper: yes
   variables:
     ENVIRONMENT: "UAT"
-    ECS_CLUSTER: "answer-qa"
+    ECS_CLUSTER: "answer-uat"
     ECS_CONFIG: "answer-config"
     ECS_PROFILE: "answer-profile"
     REGION: "us-west-2"
