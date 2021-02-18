@@ -41,7 +41,7 @@ pipeline {
                     steps {
                         script {
 
-                            sh "aws codebuild start-build --project-name answer-ui --profile msr-fsr --region us-west-2"
+                            sh "aws codebuild start-build --project-name answer-ui --profile msrfsr --region us-west-2"
 
 //                            try {
 //                                dir('MSR.UI/MSR.UI.Answer') {
