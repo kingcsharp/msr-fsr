@@ -52,7 +52,8 @@ pipeline {
                                     sourceControlType: 'jenkins',
                                     sourceTypeOverride: 'S3',
                                     sourceLocationOverride: 'answer-codebuild-input/answer-ui.zip',
-                                    buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml'
+                                    buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml',
+                                    envVariables: '[{TAG2, $GIT_COMMIT}]'
                                     //sourceLocationOverride: "git@github.com:MSR-FSR/Answer3.0.git",
                                     //sourceTypeOverride: "GITHUB",
                                     //sourceVersion: "nodes"
