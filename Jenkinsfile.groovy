@@ -42,7 +42,7 @@ pipeline {
                         script {
 
                             awsCodeBuild artifactEncryptionDisabledOverride: 'False', artifactLocationOverride: '',
-                                    artifactNameOverride: '', artifactNamespaceOverride: 'NONE', artifactPackagingOverride: 'NONE',
+                                    artifactNameOverride: '', artifactNamespaceOverride: '', artifactPackagingOverride: 'NONE',
                                     artifactPathOverride: '', artifactTypeOverride: 'NO_ARTIFACTS',
                                     awsAccessKey: 'AKIAWGEEZQAT64QN454I', awsSecretKey: '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',
                                     buildSpecFile: '', buildTimeoutOverride: '', cacheLocationOverride: '', cacheModesOverride: '',
