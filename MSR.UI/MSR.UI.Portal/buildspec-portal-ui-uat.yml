@@ -3,18 +3,18 @@ version: 0.2
 env:
   git-credential-helper: yes
   variables:
-    ENVIRONMENT: "Stage"
-    ECS_CLUSTER: "answer-uat"
+    ENVIRONMENT: "UAT"
+    ECS_CLUSTER: "answer-qa"
     ECS_CONFIG: "answer-config"
     ECS_PROFILE: "answer-profile"
     REGION: "us-west-2"
-    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/uat-answer3-ui/5d19bac41ca9296d"
-    PROJECT_UI: "uat-answer-ui"
-    COMPOSE: "MSR.UI/MSR.UI.Answer/docker-compose-ui.yml"
-    ECS_PARAMS: "MSR.UI/MSR.UI.Answer/ecs-params-ui.yml"
+    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/uat-portal-ui/42895c4843815b25"
+    PROJECT_UI: "uat-portal-ui"
+    COMPOSE: "MSR.UI/MSR.UI.Portal/docker-compose-ui-portal.yml"
+    ECS_PARAMS: "MSR.UI/MSR.UI.Portal/ecs-params-ui.yml"
     UI_BUILD_ENV: "buildstageprodsetting"
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
-    ECR_REPO: "msr-ui"
+    ECR_REPO: "msr-portal-ui"
     CONTAINER_NAME: "app"
     PORT: 80
     TIMEOUT: 15
@@ -32,7 +32,7 @@ phases:
       - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Build started on `date`
       - echo Building the Docker image...
-      - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION .
+      - cd MSR.UI/MSR.UI.Portal && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION .
       - docker tag $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
   post_build:
     commands:
@@ -40,7 +40,7 @@ phases:
       - echo Pushing the Docker image...
       - docker push $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Updating $COMPOSE
-      - cd ../../ && sh update_image.sh $ENVIRONMENT $CODEBUILD_RESOLVED_SOURCE_VERSION $COMPOSE
+      - cd ../../ && sh update_image_portal.sh $ENVIRONMENT $CODEBUILD_RESOLVED_SOURCE_VERSION $COMPOSE
       - cat $COMPOSE
       - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
       - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
