@@ -42,17 +42,17 @@ pipeline {
                         script {
 
                             echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
-//                            awsCodeBuild credentialsType: 'keys',
-//                                    awsAccessKey: 'AKIAWGEEZQAT64QN454I',
-//                                    awsSecretKey: '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',
-//                                    projectName: 'answer-ui',
-//                                    region: "us-west-2",
-//                                    //sourceControlType: "project",
-//                                    sourceControlType: 'jenkins',
-//                                    sourceTypeOverride: 'S3',
-//                                    sourceLocationOverride: 'answer-codebuild-input/answer-ui.zip',
-//                                    buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml',
-//                                    envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                            awsCodeBuild credentialsType: 'keys',
+                                    awsAccessKey: 'AKIAWGEEZQAT64QN454I',
+                                    awsSecretKey: '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',
+                                    projectName: 'answer-ui',
+                                    region: "us-west-2",
+                                    //sourceControlType: "project",
+                                    sourceControlType: 'jenkins',
+                                    sourceTypeOverride: 'S3',
+                                    sourceLocationOverride: 'answer-codebuild-input/answer-ui.zip',
+                                    buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml',
+                                    envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
 
 
 //                            try {
