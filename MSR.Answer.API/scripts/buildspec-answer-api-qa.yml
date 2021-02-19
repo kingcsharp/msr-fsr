@@ -50,6 +50,6 @@ phases:
       - echo Updating $COMPOSE
       - cd ../ && sh $COMPOSE_SCRIPT $ENVIRONMENT $TAG $COMPOSE
       - cat $COMPOSE
-#      - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
-#      - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
-#      - ecs-cli compose --file $COMPOSE --ecs-params $ECS_PARAMS --project-name $PROJECT_UI service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
+      - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
+      - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
+      - ecs-cli compose --file $COMPOSE --ecs-params $ECS_PARAMS --project-name $PROJECT_UI service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
