@@ -226,11 +226,3 @@ selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown .ui-dropdown-label-c
   padding: 25px 2.5641%;
   margin-left: $sidebar-width-active;
 }
-
-@media print {
-
-  .quote-report .ui-dialog-titlebar {
-    visibility:hidden;
-  }
-
-}
