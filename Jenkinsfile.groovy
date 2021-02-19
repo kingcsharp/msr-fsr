@@ -194,7 +194,7 @@ pipeline {
                                             sourceControlType: 'jenkins',
                                             sourceTypeOverride: 'S3',
                                             sourceLocationOverride: 'answer-codebuild-input/answer-api-uat.zip',
-                                            buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-qa.yml',
+                                            buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-uat.yml',
                                             envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
                                 }
                             } catch(e) {
@@ -233,8 +233,8 @@ pipeline {
                                             region: "us-west-2",
                                             sourceControlType: 'jenkins',
                                             sourceTypeOverride: 'S3',
-                                            sourceLocationOverride: 'answer-codebuild-input/answer-ui-qa.zip',
-                                            buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-ui-uat.zip',
+                                            buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-uat.yml',
                                             envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
                                 }
                             }
