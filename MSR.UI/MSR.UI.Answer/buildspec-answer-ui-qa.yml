@@ -30,7 +30,7 @@ phases:
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
   build:
     commands:
-      - echo Git commit hash $TAG2
+      - echo Git commit hash $TAG
       - echo Build started on `date`
       - echo Building the Docker image...
       - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$TAG .
