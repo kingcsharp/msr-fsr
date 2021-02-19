@@ -109,7 +109,7 @@ pipeline {
 //                }
 
                 stage('Build and Deploy Message') {
-                    agent { label 'master'}
+                    agent { label 'jnlp'}
                     steps {
                         script {
 
