@@ -15,6 +15,7 @@ env:
     UI_BUILD_ENV: "buildstageprodsetting"
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
     ECR_REPO: "msr-ui"
+    TAG: 'latest'
     CONTAINER_NAME: "app"
     PORT: 80
     TIMEOUT: 15
@@ -29,18 +30,18 @@ phases:
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
   build:
     commands:
-      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo Git commit hash $TAG
       - echo Build started on `date`
       - echo Building the Docker image...
-      - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION .
-      - docker tag $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$TAG .
+      - docker tag $ECR_REPO:$TAG $ECR_URL/$ECR_REPO:$TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push $ECR_URL/$ECR_REPO:$TAG
       - echo Updating $COMPOSE
-      - cd ../../ && sh scripts/update_image.sh $ENVIRONMENT $CODEBUILD_RESOLVED_SOURCE_VERSION $COMPOSE
+      - cd ../../ && sh scripts/update_image.sh $ENVIRONMENT $TAG $COMPOSE
       - cat $COMPOSE
       - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
       - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE

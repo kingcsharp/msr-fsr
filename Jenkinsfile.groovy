@@ -47,7 +47,6 @@ pipeline {
                                     awsSecretKey: 'L8uOFI6V3bbVnRdOBkIQQTSqgY8nnYiHQs+M+gQc',
                                     projectName: 'answer-ui',
                                     region: "us-west-2",
-                                    //sourceControlType: "project",
                                     sourceControlType: 'jenkins',
                                     sourceTypeOverride: 'S3',
                                     sourceLocationOverride: 'answer-codebuild-input/answer-ui.zip',
