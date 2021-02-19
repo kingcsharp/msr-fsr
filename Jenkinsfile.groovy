@@ -68,66 +68,23 @@ pipeline {
                     steps {
                         script {
 
-                            echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
-
-                            awsCodeBuild credentialsType: 'keys',
-                                    awsAccessKey: 'AKIAWGEEZQAT64QN454I',
-                                    awsSecretKey: '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',
-                                    projectName: 'answer-api-qa',
-                                    region: "us-west-2",
-                                    sourceControlType: 'jenkins',
-                                    sourceTypeOverride: 'S3',
-                                    sourceLocationOverride: 'answer-codebuild-input/answer-api.zip',
-                                    buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-qa.yml',
-                                    envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
-
-//                    agent { label 'master'}
-//                    steps {
-//                        script {
-//                            try {
-//                                dir('reverseproxy') {
-//                                    echo "Building api proxy container...."
-//                                    sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
-//                                    sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
-//
-//                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-//                                    sh "docker push ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
-//                                }
-//                            } catch(e) {
-//                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the NGINX image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
-//                                currentBuild.result = 'FAILURE'
-//                                sh "exit 1"
-//                            }
-//
-//                            try {
-//                                echo "Building API container...."
-//                                sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
-//                                sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
-//
-//                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-//                                sh "docker push ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
-//
-//                            } catch(e) {
-//                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the API image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
-//                                currentBuild.result = 'FAILURE'
-//                                sh "exit 1"
-//                            }
-//
-//                            try {
-//                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE}"
-//                                sh "cat ${API_COMPOSE}"
-//
-//                                echo "Deploying to QA"
-//                                deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
-//                                office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
-//
-//                            } catch(e) {
-//                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the API. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
-//                                currentBuild.result = 'FAILURE'
-//                                sh "exit 1"
-//                            }
-//                        }
-//                    }
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+//                                awsCodeBuild credentialsType: 'keys',
+//                                        awsAccessKey: 'AKIAWGEEZQAT64QN454I',
+//                                        awsSecretKey: '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',
+//                                        projectName: 'answer-api-qa',
+//                                        region: "us-west-2",
+//                                        sourceControlType: 'jenkins',
+//                                        sourceTypeOverride: 'S3',
+//                                        sourceLocationOverride: 'answer-codebuild-input/answer-api.zip',
+//                                        buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-qa.yml',
+//                                        envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the API. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
                         }
                     }
                 }
@@ -151,10 +108,32 @@ pipeline {
 //                    }
 //                }
 
-//                stage('Build and Deploy Message') {
-//                    agent { label 'master'}
-//                    steps {
-//                        script {
+                stage('Build and Deploy Message') {
+                    agent { label 'master'}
+                    steps {
+                        script {
+
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-message-qa',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-message.zip',
+                                            buildSpecFile: 'MSR.Answer.MessageHub/scripts/buildspec-answer-message-qa.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the API. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+
 //                            try {
 //                                dir('reverseproxy') {
 //                                    echo "Building message proxy container...."
@@ -182,9 +161,9 @@ pipeline {
 //                            sh "cat ${API_COMPOSE_MESSAGE}"
 //                            deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${QA_MESSAGE_TARGET_ARN}", "messageproxy")
 //                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} QA Message deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
-//                        }
-//                    }
-//                }
+                        }
+                    }
+                }
             }
         }
 

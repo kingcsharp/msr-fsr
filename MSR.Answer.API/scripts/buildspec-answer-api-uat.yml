@@ -3,20 +3,22 @@ version: 0.2
 env:
   git-credential-helper: yes
   variables:
-    ENVIRONMENT: "Stage"
+    ENVIRONMENT: "QA"
     ECS_CLUSTER: "answer-uat"
     ECS_CONFIG: "answer-config"
     ECS_PROFILE: "answer-profile"
     REGION: "us-west-2"
-    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/uat-answer3-ui/5d19bac41ca9296d"
-    PROJECT_UI: "uat-answer-ui"
-    COMPOSE: "MSR.UI/MSR.UI.Answer/docker-compose-ui.yml"
-    ECS_PARAMS: "MSR.UI/MSR.UI.Answer/ecs-params-ui.yml"
-    UI_BUILD_ENV: "buildstageprodsetting"
+    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/qa-answer3-api/dee01167ca5871c5"
+    PROJECT_UI: "uat-answer-api"
+    DOCKERFILE: "MSR.Answer.API/Dockerfile"
+    COMPOSE: "MSR.Answer.API/scripts/docker-compose-api.yml"
+    COMPOSE_SCRIPT: "scripts/update_image_api.sh"
+    ECS_PARAMS: "MSR.Answer.API/scripts/ecs-params-api.yml"
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
-    ECR_REPO: "msr-ui"
+    ECR_REPO: "msr-api"
+    ECR_REPO_RP: "msr-rp"
     TAG: 'latest'
-    CONTAINER_NAME: "app"
+    CONTAINER_NAME: "reverseproxy"
     PORT: 80
     TIMEOUT: 15
   parameter-store:
@@ -31,17 +33,21 @@ phases:
   build:
     commands:
       - echo Git commit hash $TAG
-      - echo Build started on `date`
+      - echo Build started on `date` for Answer3 API
       - echo Building the Docker image...
-      - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$TAG .
+      - docker build -f $DOCKERFILE -t $ECR_REPO:$TAG .
       - docker tag $ECR_REPO:$TAG $ECR_URL/$ECR_REPO:$TAG
-  post_build:
-    commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker push $ECR_URL/$ECR_REPO:$TAG
+      - echo Build started on `date` for Answer3 Reverse Proxy
+      - cd reverseproxy && docker build --build-arg NGINX_CONF=dev -t $ECR_REPO_RP:$TAG .
+      - docker tag $ECR_REPO_RP:$TAG $ECR_URL/$ECR_REPO_RP:$TAG
+      - docker push $ECR_URL/$ECR_REPO_RP:$TAG
+  post_build:
+    commands:
       - echo Updating $COMPOSE
-      - cd ../../ && sh scripts/update_image.sh $ENVIRONMENT $TAG $COMPOSE
+      - cd ../ && sh $COMPOSE_SCRIPT $ENVIRONMENT $TAG $COMPOSE
       - cat $COMPOSE
       - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
       - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
