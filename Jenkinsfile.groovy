@@ -41,8 +41,7 @@ pipeline {
                     steps {
                         script {
 
-                            //sh "aws codebuild start-build --project-name answer-ui --profile msrfsr --region us-west-2"
-
+                            echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
                             awsCodeBuild credentialsType: 'keys',
                                     awsAccessKey: 'AKIAWGEEZQAT64QN454I',
                                     awsSecretKey: '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',
@@ -53,7 +52,7 @@ pipeline {
                                     sourceTypeOverride: 'S3',
                                     sourceLocationOverride: 'answer-codebuild-input/answer-ui.zip',
                                     buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml',
-                                    envVariables: '[{TAG2, $GIT_COMMIT}]'
+                                    envVariables: "[{TAG2, ${env.GIT_COMMIT}}]"
                                     //sourceLocationOverride: "git@github.com:MSR-FSR/Answer3.0.git",
                                     //sourceTypeOverride: "GITHUB",
                                     //sourceVersion: "nodes"

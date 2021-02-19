@@ -30,9 +30,7 @@ phases:
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
   build:
     commands:
-      - PIPELINE_EXECUTION_ID=$(aws codepipeline get-pipeline-state --region $REGION --name answer-ui --query 'stageStates[?actionStates[?latestExecution.externalExecutionId==`'${CODEBUILD_BUILD_ID}'`]].latestExecution.pipelineExecutionId' --output text)
-      - SOURCE_REPO_COMMIT_HASH=$(aws codepipeline get-pipeline-execution --pipeline-name my-pipeline --pipeline-execution-id $PIPELINE_EXECUTION_ID --query "pipelineExecution.artifactRevisions[?name=='src'].revisionId" --output text)
-      - echo Git commit hash $SOURCE_REPO_COMMIT_HASH
+      - echo Git commit hash $TAG2
       - echo Build started on `date`
       - echo Building the Docker image...
       - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$TAG .
