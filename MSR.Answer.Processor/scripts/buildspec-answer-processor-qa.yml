@@ -13,7 +13,7 @@ env:
     COMPOSE: "MSR.Answer.Processor/scripts/docker-compose-api-processor.yml"
     ECS_PARAMS: "MSR.Answer.Processor/scripts/ecs-params-processor.yml"
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
-    ECR_REPO: "msr-ui"
+    ECR_REPO: "msr-processor"
     TAG: 'latest'
     CONTAINER_NAME: "app"
     PORT: 80
