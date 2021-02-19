@@ -3,19 +3,16 @@ version: 0.2
 env:
   git-credential-helper: yes
   variables:
-    ENVIRONMENT: "QA"
     ECS_CLUSTER: "answer-qa"
     ECS_CONFIG: "answer-config"
     ECS_PROFILE: "answer-profile"
     REGION: "us-west-2"
-    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/qa-portal-ui/c6a78bcc7e4e8133"
-    PROJECT_UI: "qa-portal-ui"
-    COMPOSE: "MSR.UI/MSR.UI.Portal/docker-compose-ui-portal.yml"
-    ECS_PARAMS: "MSR.UI/MSR.UI.Portal/ecs-params-ui.yml"
-    UI_BUILD_ENV: "builddevprodsetting"
+    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/qa-answer3-ui/72883ae73c748f58"
+    PROJECT_UI: "qa-answer-ui"
+    UI_COMPOSE: "docker-compose-ui.yml"
+    ECS_PARAMS: "ecs-params-ui.yml"
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
-    ECR_REPO: "msr-portal-ui"
-    TAG: 'latest'
+    ECR_REPO: "msr-ui"
     CONTAINER_NAME: "app"
     PORT: 80
     TIMEOUT: 15
@@ -30,19 +27,19 @@ phases:
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
   build:
     commands:
-      - echo $TAG
+      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Build started on `date`
       - echo Building the Docker image...
-      - cd MSR.UI/MSR.UI.Portal && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$TAG .
-      - docker tag $ECR_REPO:$TAG $ECR_URL/$ECR_REPO:$TAG
+      - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=builddevprodsetting -t $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION .
+      - docker tag $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $ECR_URL/$ECR_REPO:$TAG
-      - echo Updating $COMPOSE
-      - cd ../../ && scripts/update_image_portal.sh $ENVIRONMENT $TAG $COMPOSE
-      - cat $COMPOSE
+      - docker push $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo Updating $UI_COMPOSE
+      - cd ../../ && sh update_image.sh QA $CODEBUILD_RESOLVED_SOURCE_VERSION $UI_COMPOSE
+      - cat $UI_COMPOSE
       - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
       - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
-      - ecs-cli compose --file $COMPOSE --ecs-params $ECS_PARAMS --project-name $PROJECT_UI service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
+#      - ecs-cli compose --file $UI_COMPOSE  --ecs-params $ECS_PARAMS --project-name $PROJECT_UI service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
