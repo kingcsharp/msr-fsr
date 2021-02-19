@@ -57,7 +57,7 @@ pipeline {
                                 }
                             }
                             catch (e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image for QA. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
@@ -85,7 +85,7 @@ pipeline {
                                         envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
                                 }
                             } catch(e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the API. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the API for QA. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
@@ -113,7 +113,7 @@ pipeline {
                                             envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
                                 }
                             } catch(e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the Processor. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the Processor for QA. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
@@ -141,7 +141,7 @@ pipeline {
                                             envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
                                 }
                             } catch(e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the Message. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the Message for QA. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
@@ -179,59 +179,88 @@ pipeline {
         stage('Promoting to UAT') {
             parallel {
                 stage("Promoting API to UAT") {
-                    agent { label 'master' }
+                    agent { label 'jnlp' }
                     steps {
                         script {
-                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
-                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
-                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
-                            sh "cat ${API_COMPOSE}"
-                            sh "cat ${API_COMPOSE_PROCESSOR}"
-                            sh "cat ${API_COMPOSE_MESSAGE}"
 
-                            echo "Deploying to UAT"
-                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
-                            deploy("${API_COMPOSE_MESSAGE}", "${UAT_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
-                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-api-qa',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-api-uat.zip',
+                                            buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-qa.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting API container to UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+
+//                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+//                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
+//                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
+//                            sh "cat ${API_COMPOSE}"
+//                            sh "cat ${API_COMPOSE_PROCESSOR}"
+//                            sh "cat ${API_COMPOSE_MESSAGE}"
+//
+//                            echo "Deploying to UAT"
+//                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
+//                            deploy("${API_COMPOSE_MESSAGE}", "${UAT_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
+//                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
                         }
                     }
                 }
 
                 stage("Promote UI to UAT") {
-                    agent { label 'master' }
+                    agent { label 'jnlp' }
                     steps {
                         script {
-                            dir('MSR.UI/MSR.UI.Answer') {
-                                sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
-                                sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
-                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-ui',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-ui-qa.zip',
+                                            buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
                             }
-
-                            sh "sh update_image.sh Stage ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                            sh "cat ${UI_COMPOSE}"
-
-                            deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
-                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+                            catch (e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image for UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
                         }
                     }
                 }
             }
         }
 
-        stage("Deploy Rollbar UAT") {
-            agent { label 'master' }
-            steps {
-                script {
-                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
-                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
-                            "  -F environment=UAT \\\n" +
-                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
-                            "  -F local_username=system"
-                }
-            }
-        }
+//        stage("Deploy Rollbar UAT") {
+//            agent { label 'master' }
+//            steps {
+//                script {
+//                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
+//                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
+//                            "  -F environment=UAT \\\n" +
+//                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
+//                            "  -F local_username=system"
+//                }
+//            }
+//        }
 
         stage('Promoting to Production?') {
             agent { label 'master' }

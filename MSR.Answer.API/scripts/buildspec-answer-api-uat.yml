@@ -3,12 +3,12 @@ version: 0.2
 env:
   git-credential-helper: yes
   variables:
-    ENVIRONMENT: "QA"
+    ENVIRONMENT: "Stage"
     ECS_CLUSTER: "answer-uat"
     ECS_CONFIG: "answer-config"
     ECS_PROFILE: "answer-profile"
     REGION: "us-west-2"
-    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/qa-answer3-api/dee01167ca5871c5"
+    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/uat-answer3-api/96669907611782ca"
     PROJECT_UI: "uat-answer-api"
     DOCKERFILE: "MSR.Answer.API/Dockerfile"
     COMPOSE: "MSR.Answer.API/scripts/docker-compose-api.yml"
@@ -33,17 +33,17 @@ phases:
   build:
     commands:
       - echo Git commit hash $TAG
-      - echo Build started on `date` for Answer3 API
-      - echo Building the Docker image...
-      - docker build -f $DOCKERFILE -t $ECR_REPO:$TAG .
-      - docker tag $ECR_REPO:$TAG $ECR_URL/$ECR_REPO:$TAG
-      - echo Build completed on `date`
-      - echo Pushing the Docker image...
-      - docker push $ECR_URL/$ECR_REPO:$TAG
-      - echo Build started on `date` for Answer3 Reverse Proxy
-      - cd reverseproxy && docker build --build-arg NGINX_CONF=dev -t $ECR_REPO_RP:$TAG .
-      - docker tag $ECR_REPO_RP:$TAG $ECR_URL/$ECR_REPO_RP:$TAG
-      - docker push $ECR_URL/$ECR_REPO_RP:$TAG
+#      - echo Build started on `date` for Answer3 API
+#      - echo Building the Docker image...
+#      - docker build -f $DOCKERFILE -t $ECR_REPO:$TAG .
+#      - docker tag $ECR_REPO:$TAG $ECR_URL/$ECR_REPO:$TAG
+#      - echo Build completed on `date`
+#      - echo Pushing the Docker image...
+#      - docker push $ECR_URL/$ECR_REPO:$TAG
+#      - echo Build started on `date` for Answer3 Reverse Proxy
+#      - cd reverseproxy && docker build --build-arg NGINX_CONF=dev -t $ECR_REPO_RP:$TAG .
+#      - docker tag $ECR_REPO_RP:$TAG $ECR_URL/$ECR_REPO_RP:$TAG
+#      - docker push $ECR_URL/$ECR_REPO_RP:$TAG
   post_build:
     commands:
       - echo Updating $COMPOSE
