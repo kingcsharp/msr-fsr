@@ -18,7 +18,7 @@ env:
     ECR_REPO: "msr-message"
     ECR_REPO_RP: "msr-mp"
     TAG: 'latest'
-    CONTAINER_NAME: "reverseproxy"
+    CONTAINER_NAME: "messageproxy"
     PORT: 80
     TIMEOUT: 15
   parameter-store:
