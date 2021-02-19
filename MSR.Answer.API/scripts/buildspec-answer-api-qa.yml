@@ -17,6 +17,7 @@ env:
     UI_BUILD_ENV: "builddevprodsetting"
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
     ECR_REPO: "msr-api"
+    ECR_REPO_RP: "msr-rp"
     TAG: 'latest'
     CONTAINER_NAME: "reverseproxy"
     PORT: 80
@@ -41,11 +42,14 @@ phases:
       - echo Pushing the Docker image...
       - docker push $ECR_URL/$ECR_REPO:$TAG
       - echo Build started on `date` for Answer3 Reverse Proxy
+      - cd reverseproxy && docker build --build-arg NGINX_CONF=dev -t $ECR_REPO_RP:$TAG .
+      - docker tag msr-rp $ECR_URL/$ECR_REPO_RP:$TAG
+      - docker push $ECR_URL/$ECR_REPO_RP:$TAG
   post_build:
     commands:
       - echo Updating $COMPOSE
-      - sh $COMPOSE_SCRIPT $ENVIRONMENT $TAG $COMPOSE
+      - cd ../../ && sh $COMPOSE_SCRIPT $ENVIRONMENT $TAG $COMPOSE
       - cat $COMPOSE
-      - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
-      - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
-      - ecs-cli compose --file $COMPOSE --ecs-params $ECS_PARAMS --project-name $PROJECT_UI service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
+#      - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
+#      - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
+#      - ecs-cli compose --file $COMPOSE --ecs-params $ECS_PARAMS --project-name $PROJECT_UI service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
