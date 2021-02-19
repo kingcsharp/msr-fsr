@@ -62,20 +62,24 @@ pipeline {
                         }
                     }
                 }
+
                 stage('Build and Deploy API to QA') {
+                    agent { label 'jnlp' }
+                    steps {
+                        script {
 
-                    echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                            echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
 
-                    awsCodeBuild credentialsType: 'keys',
-                            awsAccessKey: 'AKIAWGEEZQAT64QN454I',
-                            awsSecretKey: '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',
-                            projectName: 'answer-api-qa',
-                            region: "us-west-2",
-                            sourceControlType: 'jenkins',
-                            sourceTypeOverride: 'S3',
-                            sourceLocationOverride: 'answer-codebuild-input/answer-api.zip',
-                            buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-qa.yml',
-                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                            awsCodeBuild credentialsType: 'keys',
+                                    awsAccessKey: 'AKIAWGEEZQAT64QN454I',
+                                    awsSecretKey: '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',
+                                    projectName: 'answer-api-qa',
+                                    region: "us-west-2",
+                                    sourceControlType: 'jenkins',
+                                    sourceTypeOverride: 'S3',
+                                    sourceLocationOverride: 'answer-codebuild-input/answer-api.zip',
+                                    buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-qa.yml',
+                                    envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
 
 //                    agent { label 'master'}
 //                    steps {
@@ -124,6 +128,8 @@ pipeline {
 //                            }
 //                        }
 //                    }
+                        }
+                    }
                 }
 
 //                stage('Build and Deploy Processor') {
