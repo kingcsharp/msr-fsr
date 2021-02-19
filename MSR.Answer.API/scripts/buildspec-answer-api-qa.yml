@@ -35,7 +35,7 @@ phases:
       - echo Git commit hash $TAG
       - echo Build started on `date` for Answer3 API
       - echo Building the Docker image...
-      - docker build -f $DOCKERFILE -t $ECR_REPO .
+      - docker build -f $DOCKERFILE -t $ECR_REPO:$TAG .
       - docker tag $ECR_REPO:$TAG $ECR_URL/$ECR_REPO:$TAG
       - echo Build completed on `date`
       - echo Pushing the Docker image...
