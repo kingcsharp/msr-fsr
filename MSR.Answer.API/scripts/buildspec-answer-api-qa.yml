@@ -18,7 +18,7 @@ env:
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
     ECR_REPO: "msr-api"
     ECR_REPO_RP: "msr-rp"
-    TAG: 'latest'
+#    TAG: 'latest'
     CONTAINER_NAME: "reverseproxy"
     PORT: 80
     TIMEOUT: 15
