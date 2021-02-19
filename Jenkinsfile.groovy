@@ -43,18 +43,18 @@ pipeline {
 
                             try {
                                 echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
-//                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
-//                                    awsCodeBuild credentialsType: 'keys',
-//                                            awsAccessKey: "${KEY}",
-//                                            awsSecretKey: "${PASS}",
-//                                            projectName: 'answer-ui',
-//                                            region: "us-west-2",
-//                                            sourceControlType: 'jenkins',
-//                                            sourceTypeOverride: 'S3',
-//                                            sourceLocationOverride: 'answer-codebuild-input/answer-ui-qa.zip',
-//                                            buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml',
-//                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
-//                                }
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-ui',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-ui-qa.zip',
+                                            buildSpecFile: 'MSR.UI/MSR.UI.Answer/buildspec-answer-ui-qa.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
                             }
                             catch (e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
@@ -72,18 +72,18 @@ pipeline {
 
                             try {
                                 echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
-//                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
-//                                awsCodeBuild credentialsType: 'keys',
-//                                        awsAccessKey: "${KEY}",
-//                                        awsSecretKey: "${PASS}",
-//                                        projectName: 'answer-api-qa',
-//                                        region: "us-west-2",
-//                                        sourceControlType: 'jenkins',
-//                                        sourceTypeOverride: 'S3',
-//                                        sourceLocationOverride: 'answer-codebuild-input/answer-api.zip',
-//                                        buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-qa.yml',
-//                                        envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
-//                                }
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                awsCodeBuild credentialsType: 'keys',
+                                        awsAccessKey: "${KEY}",
+                                        awsSecretKey: "${PASS}",
+                                        projectName: 'answer-api-qa',
+                                        region: "us-west-2",
+                                        sourceControlType: 'jenkins',
+                                        sourceTypeOverride: 'S3',
+                                        sourceLocationOverride: 'answer-codebuild-input/answer-api.zip',
+                                        buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-qa.yml',
+                                        envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
                             } catch(e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the API. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
@@ -99,29 +99,24 @@ pipeline {
                         script {
                             echo "Building Processor container...."
 
-                            withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
-                                awsCodeBuild credentialsType: 'keys',
-                                        awsAccessKey: "${KEY}",
-                                        awsSecretKey: "${PASS}",
-                                        projectName: 'answer-processor-qa',
-                                        region: "us-west-2",
-                                        sourceControlType: 'jenkins',
-                                        sourceTypeOverride: 'S3',
-                                        sourceLocationOverride: 'answer-codebuild-input/answer-processor.zip',
-                                        buildSpecFile: 'MSR.Answer.Processor/scripts/buildspec-answer-processor-qa.yml',
-                                        envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                            try {
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-processor-qa',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-processor.zip',
+                                            buildSpecFile: 'MSR.Answer.Processor/scripts/buildspec-answer-processor-qa.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the Processor. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
                             }
-
-//                            sh "docker build -f MSR.Answer.Processor/Dockerfile -t msr-processor ."
-//                            sh "docker tag msr-processor ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
-//
-//                            sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-//                            sh "docker push ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
-//
-//                            sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
-//                            sh "cat ${API_COMPOSE_PROCESSOR}"
-//                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
-//                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} QA Processor deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
                         }
                     }
                 }
@@ -133,20 +128,20 @@ pipeline {
 
                             try {
                                 echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
-//                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
-//                                    awsCodeBuild credentialsType: 'keys',
-//                                            awsAccessKey: "${KEY}",
-//                                            awsSecretKey: "${PASS}",
-//                                            projectName: 'answer-message-qa',
-//                                            region: "us-west-2",
-//                                            sourceControlType: 'jenkins',
-//                                            sourceTypeOverride: 'S3',
-//                                            sourceLocationOverride: 'answer-codebuild-input/answer-message.zip',
-//                                            buildSpecFile: 'MSR.Answer.MessageHub/scripts/buildspec-answer-message-qa.yml',
-//                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
-//                                }
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-message-qa',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-message.zip',
+                                            buildSpecFile: 'MSR.Answer.MessageHub/scripts/buildspec-answer-message-qa.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
                             } catch(e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the API. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the Message. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
