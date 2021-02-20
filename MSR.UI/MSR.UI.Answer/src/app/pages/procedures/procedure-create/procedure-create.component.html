@@ -47,8 +47,8 @@
                 <label for="comment" class="col-form-label text-left">
                     Comments
                 </label>
-                <ckeditor-wrapper [editorcontent]="procedure.comment"
-                    (editorContentChange)="procedure.comment = $event"></ckeditor-wrapper>
+                <ckeditor-wrapper [editorcontent]="procedure.comments"
+                    (editorContentChange)="procedure.comments = $event"></ckeditor-wrapper>
             </div>
             <div class="form-group">
                 <label for="duration" class="col-form-label text-left">

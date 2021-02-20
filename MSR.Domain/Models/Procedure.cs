@@ -40,7 +40,7 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets Comment
         /// </summary>
-        public string Comment { get; set; }
+        public string Comments { get; set; }
 
         /// <summary>
         /// Gets or Sets Duration
