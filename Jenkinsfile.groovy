@@ -202,18 +202,6 @@ pipeline {
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
-
-//                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
-//                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
-//                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
-//                            sh "cat ${API_COMPOSE}"
-//                            sh "cat ${API_COMPOSE_PROCESSOR}"
-//                            sh "cat ${API_COMPOSE_MESSAGE}"
-//
-//                            echo "Deploying to UAT"
-//                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
-//                            deploy("${API_COMPOSE_MESSAGE}", "${UAT_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
-//                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
                         }
                     }
                 }
@@ -305,18 +293,18 @@ pipeline {
             }
         }
 
-//        stage("Deploy Rollbar UAT") {
-//            agent { label 'master' }
-//            steps {
-//                script {
-//                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
-//                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
-//                            "  -F environment=UAT \\\n" +
-//                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
-//                            "  -F local_username=system"
-//                }
-//            }
-//        }
+        stage("Deploy Rollbar UAT") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
+                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
+                            "  -F environment=UAT \\\n" +
+                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
+                            "  -F local_username=system"
+                }
+            }
+        }
 
         stage('Promoting to Production?') {
             agent { label 'master' }
