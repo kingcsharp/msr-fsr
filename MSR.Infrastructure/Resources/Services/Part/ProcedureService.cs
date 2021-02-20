@@ -267,8 +267,28 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // Update Reference Files mapping
                 var currentFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Procedure), command.Id);
                 var currentFileIds = currentFiles.Select(i => i.FileId).ToList();
-                var fileIdsToAdd = command.ReferenceFileIds == null ? new List<int>() : command.ReferenceFileIds.Where(i => !currentFileIds.Contains(i)).ToList();
-                var fileIdsToRemove = currentFileIds.Where(i => command.ReferenceFileIds == null ? false : command.ReferenceFileIds.Contains(i.Value)).ToList();
+                List<int> fileIdsToAdd;
+                List<int> fileIdsToRemove;
+
+                if (command.ReferenceFileIds == null)
+                {
+                    // if the list of IDs in the comand is null, then
+                    // we assue that we're not supposed to change the list.
+                    fileIdsToAdd = new List<int>();
+                    fileIdsToRemove = new List<int>();
+                }
+                else
+                {
+                    // add the files in the command but not in the current list
+                    fileIdsToAdd = command.ReferenceFileIds
+                        .Where(i => !currentFileIds.Contains(i))
+                        .ToList();
+                    // remove the files in the list but not in the command
+                    fileIdsToRemove = currentFileIds
+                        .Where(i => i.HasValue && !command.ReferenceFileIds.Contains(i.Value))
+                        .Select(i => i.Value)
+                        .ToList();
+                }
 
                 var fileReferences = new List<FileModel>();
 
