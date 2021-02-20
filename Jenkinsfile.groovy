@@ -189,7 +189,7 @@ pipeline {
                                     awsCodeBuild credentialsType: 'keys',
                                             awsAccessKey: "${KEY}",
                                             awsSecretKey: "${PASS}",
-                                            projectName: 'answer-api-qa',
+                                            projectName: 'answer-api-uat',
                                             region: "us-west-2",
                                             sourceControlType: 'jenkins',
                                             sourceTypeOverride: 'S3',
@@ -229,7 +229,7 @@ pipeline {
                                     awsCodeBuild credentialsType: 'keys',
                                             awsAccessKey: "${KEY}",
                                             awsSecretKey: "${PASS}",
-                                            projectName: 'answer-message-qa',
+                                            projectName: 'answer-message-uat',
                                             region: "us-west-2",
                                             sourceControlType: 'jenkins',
                                             sourceTypeOverride: 'S3',
@@ -239,6 +239,34 @@ pipeline {
                                 }
                             } catch(e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting MessageHub container to UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+                        }
+                    }
+                }
+
+                stage("Promoting Processor to UAT") {
+                    agent { label 'jnlp' }
+                    steps {
+                        script {
+
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-processor-uat',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-processor-uat.zip',
+                                            buildSpecFile: 'MSR.Answer.Processor/scripts/buildspec-answer-processor-uat.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting Processor container to UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
@@ -257,7 +285,7 @@ pipeline {
                                     awsCodeBuild credentialsType: 'keys',
                                             awsAccessKey: "${KEY}",
                                             awsSecretKey: "${PASS}",
-                                            projectName: 'answer-ui',
+                                            projectName: 'answer-ui-uat',
                                             region: "us-west-2",
                                             sourceControlType: 'jenkins',
                                             sourceTypeOverride: 'S3',
