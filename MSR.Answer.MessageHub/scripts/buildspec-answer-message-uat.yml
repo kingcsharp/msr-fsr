@@ -8,7 +8,7 @@ env:
     ECS_CONFIG: "answer-config"
     ECS_PROFILE: "answer-profile"
     REGION: "us-west-2"
-    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/uat-answer3-message/992f1f5b2fadea3d"
+    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/uat-answer3-message/2e18c5c15d5ac5e1"
     PROJECT: "uat-answer-message"
     DOCKERFILE: "MSR.Answer.MessageHub/Dockerfile"
     COMPOSE: "MSR.Answer.MessageHub/scripts/docker-compose-message.yml"
