@@ -14,5 +14,5 @@ phases:
       - echo Git commit hash $TAG
       - echo Build started on `date` for Answer3 MessageHub
       - echo Building the Message Docker image...
-      - docker build -f $DOCKERFILE -t $ECR_REPO:$TAG .
+      - docker build -f $DOCKERFILE -t .
       - echo Build completed on `date`

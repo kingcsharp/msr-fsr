@@ -14,4 +14,4 @@ phases:
       - echo Git commit hash $TAG
       - echo Build started on `date`
       - echo Building the Procecssor Docker image...
-      - docker build -f $DOCKERFILE -t $ECR_REPO:$TAG .
+      - docker build -f $DOCKERFILE .

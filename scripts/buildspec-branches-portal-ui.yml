@@ -14,4 +14,4 @@ phases:
       - echo Git commit hash $TAG
       - echo Build started on `date`
       - echo Building Portal UI Docker image...
-      - cd MSR.UI/MSR.UI.Portal && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$TAG .
+      - cd MSR.UI/MSR.UI.Portal && docker build --build-arg ENV=$UI_BUILD_ENV .
