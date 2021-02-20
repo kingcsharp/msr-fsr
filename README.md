@@ -1,29 +1,5 @@
 **Jenkins:** [![Build Status](https://jenkins.cmhworks.com/buildStatus/icon?job=MSR-FSR%2FAnswer3%2Fnodes)](https://jenkins.cmhworks.com/job/MSR-FSR/job/Answer3/job/nodes/)
 <br/>
-**Environment:** QA
-<br/>
-**Answer UI:** ![Answer UI QA](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZ044ZVVKN3VLTC9RcHhyV2xBNzZvcktNR1FhNzdpN2FiY0g4RnlCdXhqM3c0SGhxaDBHbG5XYnZjODhMMDU3dHdHQ3J2Q2tFL2tHQnVwdTNwNTlRUFhzPSIsIml2UGFyYW1ldGVyU3BlYyI6InZVTy9HdENPcThGV1FDUnEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/>
-**Answer API:** ![Answer API QA](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZGUvV2tna2tBOVNobE1vbWwrOEV0RWJTTXBjK20xM0RYenBGb3FyT3g4SG5Cc2hsd0V3Qjdtb0V4U3pmZFBtbHQ1QjV6MVpvdWlCeDcxK2s3RTJDNkhBPSIsIml2UGFyYW1ldGVyU3BlYyI6IklCdk1qbnNrUGZsc2NtaUgiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/>
-**Answer Processor:** ![Answer Processor QA](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoib3NBMzFhcjZYRWpoakFobmIwNW9qdXVqVmoxOVU1L3FtbHM4VDcwVmQvSm1rZjhYc1QxeTVsZjN5WjVKRnQrQlBTMjgzbHg5d0MwenJpdTN0cHR4L24wPSIsIml2UGFyYW1ldGVyU3BlYyI6InBjNUp5blgreDd1NG9VVkYiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/>
-**Answer MessageHub:** ![Answer Message QA](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiMVdtczBiRVZrakwvNTdibnZVUDhDUGhjZGpIZFFnVjFHL0dSYmpXRkpLMlZ5N3Frc3RTK2dDKy9YeWxtMHB5Mkp5WUtzZDhoM2RpbVN0aWc3MTROZFBFPSIsIml2UGFyYW1ldGVyU3BlYyI6Ikgvek5CaDdBeFRLUHZTUFMiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/>
-**Portal UI:** ![Portal UI QA](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoibTFZTnA4UUpLTUhQQjBTcytiS2c4YjhKT1VzSk0vd25TNVdveVIwcDZxejMzWm1QYnlRaDB1eEZuSFpIZ1pCQXRQVmswdEt3K2prZ0wvYVJNVitGZVNBPSIsIml2UGFyYW1ldGVyU3BlYyI6IkN3WXdrVWNDYnIyUTFlc2EiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/><br/>
-**Environment:** UAT
-<br/>
-**Answer UI:** ![Answer UI  UAT](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZGhLVzZRczdrUG1EZ2FqNlUwYjZGUUJmUmxWSmh6SnN1Rytnbmc1KytnbTFCNnorSFRDR0pndmN6UXpJUFBFRjNNN0JBSHM5SUlBZkVCUWNoVUVKN0dJPSIsIml2UGFyYW1ldGVyU3BlYyI6IlZoTE84ODg2TXBLNVh4dVYiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/>
-**Answer API:** ![Answer API UAT](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiem1XUzBackU0LzBpY25kVGxRZDNCdVExZ3JXZitWbUx3WDVTK0lIenArVkdBNmVMYnNzeVF0TlBNaDZPZDllallzVDFJVjdEMTlqK29sSjE4WHRxVFZFPSIsIml2UGFyYW1ldGVyU3BlYyI6IkZKdkNmLzBxVTdHeTRpQ3ciLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/>
-**Answer Processor:** ![Answer Processor UAT](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiQ0pPUSs3TXRkYmE5bVZTbm5aTnZvVm9MdVgwR0syZExaY3lXNFh4Vmc0VHNxNS9iUjBSU1hXRElMOWtLcnM1QzRmek9MRlUrcHdHRlVnTnBpNkNKRDlNPSIsIml2UGFyYW1ldGVyU3BlYyI6IndTeUYyZC9zNXMwaVR2MG8iLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/>
-**Answer MessageHub:** ![Answer Message UAT](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiNExZZzNTZ3ZyVC9HcDJNeTA5dkhCbXFURkR6czJ5Y0MwSWtDQURjRVhrZm5GdlIxSDdWcmVaeCtFcEJxV1JPN3RpTHRHUDdudXFnMkhmbWdTbXRzWTFJPSIsIml2UGFyYW1ldGVyU3BlYyI6IiszVVBpVW9HQnNNa3RyUVUiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/>
-**Portal UI:** ![Portal UI UAT](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiTVdNV0g1c1pPZlhlams3NUd6TkwwVjgwRHAxdi9qTFlUTytoeFdNNjdqVkV5WkhnaS84d1NkYnhEZzJjWStiRmVTNitUMU40bWowRFJRMUgwYnNONGdRPSIsIml2UGFyYW1ldGVyU3BlYyI6Ik1vT0lBaHQvQTNvRXF1QjkiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=nodes)
-<br/><br/>
 **Assertable:** ![Assertible status](https://assertible.com/apis/7c13748e-0e5d-43e5-9d74-6f4e7f09bb0a/status?api_token=gtgNgcGA8j38t2TH)
 <br/>
 (https://assertible.com/dashboard#/services/7c13748e-0e5d-43e5-9d74-6f4e7f09bb0a/results)
