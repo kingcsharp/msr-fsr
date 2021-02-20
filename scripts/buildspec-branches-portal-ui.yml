@@ -7,6 +7,7 @@ env:
     UI_BUILD_ENV: "builddevprodsetting"
     ECR_REPO_RP: "msr-portal-ui"
     TAG: 'latest'
+    ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
   parameter-store:
     AWS_ACCESS_KEY_ID_PARAM: /JENKINS/AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY_PARAM: /JENKINS/AWS_SECRET_ACCESS_KEY
