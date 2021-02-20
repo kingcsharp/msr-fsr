@@ -1,0 +1,18 @@
+version: 0.2
+
+env:
+  git-credential-helper: yes
+  variables:
+    REGION: "us-west-2"
+    DOCKERFILE: "MSR.Answer.MessageHub/Dockerfile"
+    ECR_REPO_RP: "msr-message"
+    TAG: 'latest'
+
+phases:
+  build:
+    commands:
+      - echo Git commit hash $TAG
+      - echo Build started on `date` for Answer3 MessageHub
+      - echo Building the Message Docker image...
+      - docker build -f $DOCKERFILE -t $ECR_REPO:$TAG .
+      - echo Build completed on `date`

@@ -1,0 +1,17 @@
+version: 0.2
+
+env:
+  git-credential-helper: yes
+  variables:
+    REGION: "us-west-2"
+    UI_BUILD_ENV: "builddevprodsetting"
+    ECR_REPO_RP: "msr-portal-ui"
+    TAG: 'latest'
+
+phases:
+  build:
+    commands:
+      - echo Git commit hash $TAG
+      - echo Build started on `date`
+      - echo Building Portal UI Docker image...
+      - cd MSR.UI/MSR.UI.Portal && docker build --build-arg ENV=$UI_BUILD_ENV -t $ECR_REPO:$TAG .
