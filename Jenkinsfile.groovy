@@ -121,7 +121,7 @@ pipeline {
                     }
                 }
 
-                stage('Build and Deploy Message') {
+                stage('Build and Deploy MessageHub') {
                     agent { label 'jnlp'}
                     steps {
                         script {
@@ -152,18 +152,18 @@ pipeline {
         }
 
 
-//        stage("Deploy Rollbar QA") {
-//            agent { label 'master' }
-//            steps {
-//                script {
-//                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
-//                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
-//                            "  -F environment=QA \\\n" +
-//                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
-//                            "  -F local_username=system"
-//                }
-//            }
-//        }
+        stage("Deploy Rollbar QA") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
+                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
+                            "  -F environment=QA \\\n" +
+                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
+                            "  -F local_username=system"
+                }
+            }
+        }
 
         stage('Promoting to UAT?') {
             agent { label 'master' }
@@ -214,6 +214,34 @@ pipeline {
 //                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
 //                            deploy("${API_COMPOSE_MESSAGE}", "${UAT_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
 //                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
+                        }
+                    }
+                }
+
+                stage("Promoting MessageHub to UAT") {
+                    agent { label 'jnlp' }
+                    steps {
+                        script {
+
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-message-qa',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-message-uat.zip',
+                                            buildSpecFile: 'MSR.Answer.MessageHub/scripts/buildspec-answer-message-uat.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting MessageHub container to UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
                         }
                     }
                 }

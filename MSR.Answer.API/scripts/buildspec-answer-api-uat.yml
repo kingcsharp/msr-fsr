@@ -33,17 +33,6 @@ phases:
   build:
     commands:
       - echo Git commit hash $TAG
-#      - echo Build started on `date` for Answer3 API
-#      - echo Building the Docker image...
-#      - docker build -f $DOCKERFILE -t $ECR_REPO:$TAG .
-#      - docker tag $ECR_REPO:$TAG $ECR_URL/$ECR_REPO:$TAG
-#      - echo Build completed on `date`
-#      - echo Pushing the Docker image...
-#      - docker push $ECR_URL/$ECR_REPO:$TAG
-#      - echo Build started on `date` for Answer3 Reverse Proxy
-#      - cd reverseproxy && docker build --build-arg NGINX_CONF=dev -t $ECR_REPO_RP:$TAG .
-#      - docker tag $ECR_REPO_RP:$TAG $ECR_URL/$ECR_REPO_RP:$TAG
-#      - docker push $ECR_URL/$ECR_REPO_RP:$TAG
   post_build:
     commands:
       - echo Updating $COMPOSE
