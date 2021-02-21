@@ -3,16 +3,19 @@ version: 0.2
 env:
   git-credential-helper: yes
   variables:
-    ECS_CLUSTER: "answer-qa"
+    ENVIRONMENT: "Production"
+    ECS_CLUSTER: "answer"
     ECS_CONFIG: "answer-config"
     ECS_PROFILE: "answer-profile"
     REGION: "us-west-2"
-    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/qa-answer3-ui/72883ae73c748f58"
-    PROJECT_UI: "qa-answer-ui"
-    UI_COMPOSE: "docker-compose-ui.yml"
-    ECS_PARAMS: "ecs-params-ui.yml"
+    PROJECT: "prod-answer-api-processor"
+    DOCKERFILE: "MSR.Answer.Processor/Dockerfile"
+    COMPOSE: "MSR.Answer.Processor/scripts/docker-compose-api-processor.yml"
+    COMPOSE_SCRIPT: "scripts/update_image_api.sh"
+    ECS_PARAMS: "MSR.Answer.Processor/scripts/ecs-params-processor.yml"
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
-    ECR_REPO: "msr-ui"
+    ECR_REPO: "msr-processor"
+    TAG: 'latest'
     CONTAINER_NAME: "app"
     PORT: 80
     TIMEOUT: 15
@@ -27,19 +30,12 @@ phases:
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
   build:
     commands:
-      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - cd MSR.UI/MSR.UI.Answer && docker build --build-arg ENV=builddevprodsetting -t $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION .
-      - docker tag $ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo Git commit hash $TAG
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image...
-      - docker push $ECR_URL/$ECR_REPO:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - echo Updating $UI_COMPOSE
-      - cd ../../ && sh update_image.sh QA $CODEBUILD_RESOLVED_SOURCE_VERSION $UI_COMPOSE
-      - cat $UI_COMPOSE
+      - echo Updating $COMPOSE
+      - sh $COMPOSE_SCRIPT $ENVIRONMENT $TAG $COMPOSE
+      - cat $COMPOSE
       - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
       - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
-#      - ecs-cli compose --file $UI_COMPOSE  --ecs-params $ECS_PARAMS --project-name $PROJECT_UI service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
+      - ecs-cli compose --file $COMPOSE --ecs-params $ECS_PARAMS --project-name $PROJECT service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --timeout $TIMEOUT

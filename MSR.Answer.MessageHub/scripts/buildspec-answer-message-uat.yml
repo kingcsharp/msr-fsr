@@ -8,7 +8,7 @@ env:
     ECS_CONFIG: "answer-config"
     ECS_PROFILE: "answer-profile"
     REGION: "us-west-2"
-    UI_TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/uat-answer3-message/2e18c5c15d5ac5e1"
+    TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/uat-answer3-message/2e18c5c15d5ac5e1"
     PROJECT: "uat-answer-message"
     DOCKERFILE: "MSR.Answer.MessageHub/Dockerfile"
     COMPOSE: "MSR.Answer.MessageHub/scripts/docker-compose-message.yml"
@@ -40,4 +40,4 @@ phases:
       - cat $COMPOSE
       - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
       - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
-      - ecs-cli compose --file $COMPOSE --ecs-params $ECS_PARAMS --project-name $PROJECT service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $UI_TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
+      - ecs-cli compose --file $COMPOSE --ecs-params $ECS_PARAMS --project-name $PROJECT service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
