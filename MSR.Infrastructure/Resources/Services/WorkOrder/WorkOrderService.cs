@@ -59,7 +59,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             if (command.completedOnly.HasValue)
             {
-                query = query.Where(x => x.ActualEndDate.HasValue == command.completedOnly.Value);
+                if (command.completedOnly.Value)
+                {
+                    query = query.Where(x => x.ActualEndDate.HasValue);
+                }
+                else
+                {
+                    query = query.Where(x => !x.ActualEndDate.HasValue);
+                }
             }
 
             if (command.assignedToId.HasValue)
@@ -85,81 +92,121 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             // There is a 1-to-1 purchase to work order mapping.  This
             // should be a safe include with minimal impact, and it is
             // required to filter on customer ID.
-            query = query.Include(x => x.Purchase).ThenInclude(y => y.PurchaseOrder);
             if (command.CustomerId.HasValue)
             {
                 query = query.Where(i => i.Purchase.PurchaseOrder.CustomerId == command.CustomerId.Value);
             }
 
-            List<EntityFramework.Entities.WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
-            List<int> workOrderIds = workOrderEntities.Select(m => m.Id).ToList();
-            _ = await _unitOfWork.WorkOrderParts.Query().Include(m => m.Part).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
-            List<WorkOrderTask> workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Include(u => u.ReferenceFiles).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
-            List<ProcedureStep> procedureStepEntities = await _unitOfWork.ProcedureSteps.Query()
-                .Include(y => y.ProcedureStepRoles)
-                .ThenInclude(y => y.Role)
-                .Where(s => workOrderTaskEntities.Select(m => m.ProcedureStepId).Contains(s.Id)).ToListAsync();
+            var workOrderModels = await query.Select(i => new WorkOrderModel
+            {
+                Id = i.Id,
+                CustomerName = i.Purchase.PurchaseOrder.Customer.Name,
+                Price = i.Price,
+                ScheduledStartDate = i.ScheduledStartDate,
+                ScheduledEndDate = i.ScheduledEndDate,
+                ActualStartDate = i.ActualStartDate,
+                ActualEndDate = i.ActualEndDate,
+                HasNCR = i.HasNCR,
+                LocationId = i.LocationId,
+                ProductId = i.ProductId,
+                PurchaseId = i.PurchaseId,
+                WorkOrderMessages = i.WorkOrderMessages.Select(j => new WorkOrderMessageModel
+                {
+                    Name = $"{j.Created.FirstName} {j.Created.LastName}",
+                    Message = j.Message,
+                    Date = j.CreatedOn
+                }).ToList()
+            }).ToListAsync();
 
-            _ = await _unitOfWork.WorkOrderMessages.Query().Where(x => workOrderIds.Contains(x.WorkOrderId)).ToListAsync();
-            _ = await _unitOfWork.Procedures.Query().Where(s => procedureStepEntities.Select(m => m.ProcedureId).Contains(s.Id)).ToListAsync();
-            _ = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(m => m.ProcedureStepMonitor)
-                .Where(s => workOrderTaskEntities.Select(m => m.Id).Contains(s.WorkOrderTaskId)).ToListAsync();
-            _ = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
-            _ = await _unitOfWork.Status.Query().ToListAsync();
-
-            _ = await _unitOfWork.Products.Query()
-                .Include(u => u.Part)
-                .Include(t => t.Customer)
-                .Include(v => v.Procedure)
-                .Where(s => workOrderEntities.Select(m => m.ProductId).Contains(s.Id)).ToListAsync();
-
-            _ = await _unitOfWork.Purchases.Query()
-                .Include(s => s.PurchaseOrder)
-                .ThenInclude(u => u.Customer)
-                .Include(m => m.Location)
-                .Where(s => workOrderEntities.Select(m => m.PurchaseId).Contains(s.Id))
-                .ToListAsync();
-
-
-            if (workOrderEntities.Count == 0 && command.Id.HasValue)
+            if (workOrderModels.Count == 0 && command.Id.HasValue)
             {
                 throw new DomainException($"Work Order ID {command.Id.GetValueOrDefault()} not found", DomainError.NotFound);
             }
 
-            var workOrderModels = new List<WorkOrderModel>();
+            var workOrderIds = workOrderModels.Select(m => m.Id.Value).ToList();
+            var purchaseIds = workOrderModels.Select(i => i.PurchaseId).ToList();
+            var locationIds = workOrderModels.Select(i => i.LocationId).ToList();
+            var productIds = workOrderModels.Select(i => i.ProductId).ToList();
 
-            _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
-            _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
+            var locationEntities = await _unitOfWork.Locations.Query().Where(i => locationIds.Contains(i.Id)).ToListAsync();
+            var purchaseEntities = await _unitOfWork.Purchases.Query().Include(s => s.PurchaseOrder).ThenInclude(u => u.Customer).Include(m => m.Location).Where(j => purchaseIds.Contains(j.Id)).ToListAsync();
+            var productEntities = await _unitOfWork.Products.Query().Include(u => u.Part).Include(t => t.Customer).Include(v => v.Procedure).Where(s => productIds.Contains(s.Id)).ToListAsync();
+            var workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
+            var workOrderPartEntities = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).ThenInclude(i => i.Subparts).ThenInclude(i => i.Part).Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
 
-            foreach (var workOrderEntity in workOrderEntities)
+            var workOrderTaskIds = workOrderTaskEntities.Select(i => i.Id).ToList();
+            var procedureStepIds = workOrderTaskEntities.Select(i => i.ProcedureStepId).ToList();
+            var procedureStepTypeIds = workOrderTaskEntities.Select(i => i.ProcedureStepTypeId).ToList();
+
+            var referenceFiles = await _unitOfWork.FileEntityMap.Query().Where(i => i.EntityTableName == nameof(WorkOrderTask) && workOrderTaskIds.Contains(i.EntityId)).ToListAsync();
+            var procedureStepEntities = await _unitOfWork.ProcedureSteps.Query().Include(y => y.ProcedureStepRoles).ThenInclude(y => y.Role).Where(s => procedureStepIds.Contains(s.Id)).ToListAsync();
+            var procedureStepTypeEntities = await _unitOfWork.ProcedureStepTypes.Query().Where(i => procedureStepTypeIds.Contains(i.Id)).ToListAsync();
+            var workOrderTaskMonitorEntities = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(m => m.ProcedureStepMonitor).Where(s => workOrderTaskIds.Contains(s.WorkOrderTaskId)).ToListAsync();
+
+            var statusEntities = await _unitOfWork.Status.Query().ToListAsync();
+            //_ = await _unitOfWork.WorkOrderMessages.Query().Where(x => workOrderIds.Contains(x.WorkOrderId)).ToListAsync();
+            //_ = await _unitOfWork.Procedures.Query().Where(s => procedureStepEntities.Select(m => m.ProcedureId).Contains(s.Id)).ToListAsync();
+            //_ = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(m => m.ProcedureStepMonitor)
+            //    .Where(s => workOrderTaskEntities.Select(m => m.Id).Contains(s.WorkOrderTaskId)).ToListAsync();
+            //_ = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
+            //_ = await _unitOfWork.Status.Query().ToListAsync();
+
+
+            //var workOrderModels = new List<WorkOrderModel>();
+            var halfway = workOrderModels.Count / 2;
+            var counter = 1;
+            try
             {
-                var workOrderModel = _mapper.Map<WorkOrderModel>(workOrderEntity);
-
-                workOrderModel.Status = TranslateWOStatusToViewModel(workOrderModel.WorkOrderTasks);
-
-                foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
+                foreach (var workOrderModel in workOrderModels)
                 {
-                    // enforce sane data by limiting the status IDs returned by the API
-                    workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
+                    var tasks = workOrderTaskEntities.Where(i => i.WorkOrderId == workOrderModel.Id).ToList();
+                    var location = locationEntities.FirstOrDefault(i => i.Id == workOrderModel.LocationId);
+                    var product = productEntities.FirstOrDefault(i => i.Id == workOrderModel.ProductId);
+                    var purchase = purchaseEntities.FirstOrDefault(i => i.Id == workOrderModel.PurchaseId);
+                    var parts = workOrderPartEntities.Where(i => i.WorkOrderId == workOrderModel.Id).ToList();
 
-                    var workOrderTaskMonitorModels = new List<WorkOrderTaskMonitorModel>();
-                    int i = 1; // Monitor Number starts at 1
-                    foreach (var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
-                    {
-                        workOrderTaskMonitorModel.MonitorNumber = i;
-                        workOrderTaskMonitorModel.WorkOrderTask = null; // avoid loops
-                        workOrderTaskMonitorModels.Add(workOrderTaskMonitorModel);
-                        i += 1;
-                    }
-                    workOrderTaskModel.WorkOrderTaskMonitors = workOrderTaskMonitorModels;
-                    if (workOrderTaskModel.ReferenceFiles.Any())
-                    {
-                        workOrderTaskModel.ReferenceFiles = _fileService.ListFiles(nameof(WorkOrderTask), workOrderTaskModel.Id).ToList();
-                    }
+                    workOrderModel.Status = TranslateWOStatusToViewModel(tasks);
 
+                    workOrderModel.WorkOrderTasks = tasks.Any() ? tasks.Select(i => _mapper.Map<WorkOrderTaskModel>(i)).ToList() : new List<WorkOrderTaskModel>();
+                    workOrderModel.Location = location == null ? new LocationModel() : _mapper.Map<LocationModel>(location);
+                    workOrderModel.Product = product == null ? new ProductModel() : _mapper.Map<ProductModel>(product);
+                    workOrderModel.Purchase = purchase == null ? new PurchaseModel() : _mapper.Map<PurchaseModel>(purchase);
+                    workOrderModel.WorkOrderParts = parts.Any() ? parts.Select(i => _mapper.Map<WorkOrderPartModel>(i)).ToList() : new List<WorkOrderPartModel>();
+
+                    foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
+                    {
+                        var fileMaps = referenceFiles.Where(i => i.EntityId == workOrderTaskModel.Id).ToList();
+                        var workOrderTaskMonitors = workOrderTaskMonitorEntities.Where(i => i.WorkOrderTaskId == workOrderTaskModel.Id).ToList();
+                        var status = statusEntities.FirstOrDefault(i => i.Id == workOrderTaskModel.StatusId);
+                        // enforce sane data by limiting the status IDs returned by the API
+                        workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
+                        workOrderTaskModel.Status = status == null ? new StatusModel() : _mapper.Map<StatusModel>(status);
+
+                        var workOrderTaskMonitorModels = workOrderTaskMonitors.Any() ? workOrderTaskMonitors.Select(i => _mapper.Map<WorkOrderTaskMonitorModel>(i)).ToList() : new List<WorkOrderTaskMonitorModel>();
+
+                        workOrderTaskModel.WorkOrderTaskMonitors = new List<WorkOrderTaskMonitorModel>();
+                        int i = 1; // Monitor Number starts at 1
+                        foreach (var workOrderTaskMonitorModel in workOrderTaskMonitorModels.OrderBy(x => x.Id))
+                        {
+                            workOrderTaskMonitorModel.MonitorNumber = i;
+                            workOrderTaskMonitorModel.WorkOrderTask = null; // avoid loops
+                            workOrderTaskMonitorModels.Add(workOrderTaskMonitorModel);
+                            i += 1;
+                        }
+                        workOrderTaskModel.WorkOrderTaskMonitors = workOrderTaskMonitorModels;
+                        if (fileMaps.Any())
+                        {
+                            workOrderTaskModel.ReferenceFiles = _fileService.ListFiles(nameof(WorkOrderTask), workOrderTaskModel.Id).ToList();
+                        }
+
+                    }
+                    counter++;
                 }
-                workOrderModels.Add(DetachBackPointers(workOrderModel));
-            };
+            }
+            catch(Exception ex)
+            {
+                var data = ex.Message;
+            }
 
             if (command.completedOnly.HasValue && command.completedOnly.Value)
             {

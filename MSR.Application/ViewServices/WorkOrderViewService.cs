@@ -10,16 +10,19 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Application.ViewServices
 {
     public class WorkOrderViewService : IWorkOrderViewService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWorkOrderService _workOrderService;
 
-        public WorkOrderViewService(IUnitOfWork unitOfWork)
+        public WorkOrderViewService(IUnitOfWork unitOfWork, IWorkOrderService workOrderService)
         {
             _unitOfWork = unitOfWork;
+            _workOrderService = workOrderService;
         }
 
         public async Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersAsync()
@@ -31,6 +34,10 @@ namespace MSR.Application.ViewServices
 
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistoryAsync() => await _unitOfWork.Query<WorkOrder>().GetWorkOrderHistory(WorkOrderProjections.WorkOrderGridSummaryView);
 
-        public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync() => await _unitOfWork.Query<WorkOrder>().GetWorkOrderStatus(WorkOrderProjections.WorkOrderStatusView);
+        public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync()
+        {
+            return await _workOrderService.GetWorkOrderStatusAsync(new Domain.Commands.GetWorkOrderStatus());
+            //return await _unitOfWork.Query<WorkOrder>().GetWorkOrderStatus(WorkOrderProjections.WorkOrderStatusView);
+        }
     }
 }

@@ -13,9 +13,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             WorkOrderTasks = new HashSet<WorkOrderTask>();
         }
 
-        public int PurchaseId { get; set; }
-
-        public int ProductId { get; set; }
 
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
@@ -36,8 +33,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual Location Location { get; set; }
 
+        public int ProductId { get; set; }
+
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
+
+        public int PurchaseId { get; set; }
 
         [ForeignKey("PurchaseId")]
         public virtual Purchase Purchase { get; set; }
