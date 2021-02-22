@@ -91,7 +91,6 @@ export class Sidebar {
 
   sidebarBehavior(event) {
     this.setSidebarHeight(event);
-    //this.renderer.setStyle(document.querySelector('.content'), 'margin-top', this.sidebarHeight + 'px');
   }
 
   toggleSupportTicketModal() {

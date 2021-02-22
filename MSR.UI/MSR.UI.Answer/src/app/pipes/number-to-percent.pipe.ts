@@ -7,7 +7,7 @@ export class NumberToPercentrPipe implements PipeTransform {
 
   transform(value: number): number {
     if (value !== undefined && value !== null) {
-      const numberToMultiply = value.toString().replace(/,/g, "");
+      const numberToMultiply = value.toString().replace(/,/g, '');
       return Number(numberToMultiply) * 100;
     } else {
       return 0;
