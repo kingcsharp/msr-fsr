@@ -675,22 +675,5 @@ export class ProductDefinitionComponent implements OnInit {
       }
     }
   }
-
-  print() {
-    const elem = document.getElementById("quote-preview-dialog");
-    const domClone = elem.cloneNode(true);
-
-    let $printSection = document.getElementById("printSection");
-
-    if (!$printSection) {
-      $printSection = document.createElement("div");
-      $printSection.id = "printSection";
-      document.body.appendChild($printSection);
-    }
-
-    $printSection.innerHTML = "";
-    $printSection.appendChild(domClone);
-    window.print();
-  }
 }
 
