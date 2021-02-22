@@ -104,8 +104,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             var domainUser = _mapper.Map<Domain.Models.UserModel>(efUser);
             SetRolesToUser(efUser, domainUser);
-            domainUser.SupervisorName = efUser.Supervisor.GetFullName();
-            domainUser.LocationName = efUser.Location.Name;
+            domainUser.SupervisorName = efUser.Supervisor?.GetFullName();
+            domainUser.LocationName = efUser.Location?.Name;
             return domainUser;
         }
 
