@@ -1,0 +1,43 @@
+version: 0.2
+
+env:
+  git-credential-helper: yes
+  variables:
+    ENVIRONMENT: "Production"
+    ECS_CLUSTER: "answer"
+    ECS_CONFIG: "answer-config"
+    ECS_PROFILE: "answer-profile"
+    REGION: "us-west-2"
+    TARGET_ARN: "arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-message-prod/234f938c0ca82cb1"
+    PROJECT: "prod-answer-message"
+    DOCKERFILE: "MSR.Answer.MessageHub/Dockerfile"
+    COMPOSE: "MSR.Answer.MessageHub/scripts/docker-compose-message.yml"
+    COMPOSE_SCRIPT: "scripts/update_image_api.sh"
+    ECS_PARAMS: "MSR.Answer.MessageHub/scripts/ecs-params-message.yml"
+    ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
+    ECR_REPO: "msr-message"
+    ECR_REPO_RP: "msr-mp"
+    TAG: 'latest'
+    CONTAINER_NAME: "messageproxy"
+    PORT: 80
+    TIMEOUT: 15
+  parameter-store:
+    AWS_ACCESS_KEY_ID_PARAM: /JENKINS/AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY_PARAM: /JENKINS/AWS_SECRET_ACCESS_KEY
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
+  build:
+    commands:
+      - echo Git commit hash $TAG
+  post_build:
+    commands:
+      - echo Updating $COMPOSE
+      - sh $COMPOSE_SCRIPT $ENVIRONMENT $TAG $COMPOSE
+      - cat $COMPOSE
+      - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
+      - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
+      - ecs-cli compose --file $COMPOSE --ecs-params $ECS_PARAMS --project-name $PROJECT service up --create-log-groups --cluster-config $ECS_CONFIG --ecs-profile $ECS_PROFILE --target-group-arn $TARGET_ARN --container-name $CONTAINER_NAME --container-port $PORT --timeout $TIMEOUT
