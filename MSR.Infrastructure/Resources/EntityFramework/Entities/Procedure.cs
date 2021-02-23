@@ -27,6 +27,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(20)]
         public string DurationType { get; set; }
 
+        public string Comments { get; set; }
+
         public virtual ICollection<ProcedureApproval> ProcedureApprovals { get; set; }
 
         public virtual ProcedureType ProcedureType { get; set; }

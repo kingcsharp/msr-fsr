@@ -32,7 +32,7 @@ export class ProcedureCreateComponent implements OnInit {
       this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
     }));
 
-    this.procedure.comment = '';
+    this.procedure.comments = '';
     this.procedure.referenceFiles = [];
   }
 
@@ -49,7 +49,7 @@ export class ProcedureCreateComponent implements OnInit {
     });
 
     let createProcedureRequest = new CreateProcedureRequest();
-    createProcedureRequest.comments = this.procedure.comment;
+    createProcedureRequest.comments = this.procedure.comments;
     createProcedureRequest.duration = this.procedure.duration;
     createProcedureRequest.durationType = this.procedure.durationType;
     createProcedureRequest.name = this.procedure.name;

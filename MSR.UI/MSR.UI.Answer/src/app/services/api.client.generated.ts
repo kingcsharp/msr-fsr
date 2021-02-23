@@ -12910,7 +12910,7 @@ export class Procedure extends TrackableModel implements IProcedure {
     creatorCompany?: string | undefined;
     createdByDepartmentName?: string | undefined;
     revision?: number;
-    comment?: string | undefined;
+    comments?: string | undefined;
     duration?: number;
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
@@ -12930,7 +12930,7 @@ export class Procedure extends TrackableModel implements IProcedure {
             this.creatorCompany = _data["creatorCompany"];
             this.createdByDepartmentName = _data["createdByDepartmentName"];
             this.revision = _data["revision"];
-            this.comment = _data["comment"];
+            this.comments = _data["comments"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
             this.procedureType = _data["procedureType"] ? ProcedureType.fromJS(_data["procedureType"]) : <any>undefined;
@@ -12958,7 +12958,7 @@ export class Procedure extends TrackableModel implements IProcedure {
         data["creatorCompany"] = this.creatorCompany;
         data["createdByDepartmentName"] = this.createdByDepartmentName;
         data["revision"] = this.revision;
-        data["comment"] = this.comment;
+        data["comments"] = this.comments;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
         data["procedureType"] = this.procedureType ? this.procedureType.toJSON() : <any>undefined;
@@ -12980,7 +12980,7 @@ export interface IProcedure extends ITrackableModel {
     creatorCompany?: string | undefined;
     createdByDepartmentName?: string | undefined;
     revision?: number;
-    comment?: string | undefined;
+    comments?: string | undefined;
     duration?: number;
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
