@@ -156,6 +156,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ThenInclude(y => y.ReferenceFiles)
                 .Include(x => x.ProcedureSteps)
                     .ThenInclude(y => y.ProcedureStepRoles)
+                .Include(x => x.ProcedureSteps)
+                    .ThenInclude(y => y.ProcedureStepMonitors)
                 .Include(x => x.ReferenceFiles)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
@@ -188,6 +190,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 foreach (var newFile in newStep.ReferenceFiles)
                 {
                     newFile.Id = 0;
+                    newFile.EntityId = 0;
+                }
+                foreach (var newMonitor in newStep.ProcedureStepMonitors)
+                {
+                    newMonitor.Id = 0;
+                    newMonitor.ProcedureStepId = 0;
                 }
 
                 List<DocumentEntityMap> documentMaps = await _unitOfWork.DocumentEntityMap
