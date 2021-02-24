@@ -17,12 +17,10 @@ namespace MSR.Application.ViewServices
     public class WorkOrderViewService : IWorkOrderViewService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IWorkOrderService _workOrderService;
 
-        public WorkOrderViewService(IUnitOfWork unitOfWork, IWorkOrderService workOrderService)
+        public WorkOrderViewService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _workOrderService = workOrderService;
         }
 
         public async Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersAsync()
@@ -36,8 +34,7 @@ namespace MSR.Application.ViewServices
 
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync()
         {
-            return await _workOrderService.GetWorkOrderStatusAsync(new Domain.Commands.GetWorkOrderStatus());
-            //return await _unitOfWork.Query<WorkOrder>().GetWorkOrderStatus(WorkOrderProjections.WorkOrderStatusView);
+             return await _unitOfWork.Query<WorkOrderStatusSummary>().GetWorkOrderStatus(WorkOrderProjections.WorkOrderStatusView);       
         }
     }
 }

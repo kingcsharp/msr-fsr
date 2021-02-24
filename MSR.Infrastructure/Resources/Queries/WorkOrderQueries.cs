@@ -65,44 +65,11 @@ namespace MSR.Infrastructure.Resources.Queries
             return workOrderGridSummaryViews.ToList();
         }
 
-        public static async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatus(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection)
+        public static async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatus(this DbSet<WorkOrderStatusSummary> dbSet, Expression<Func<WorkOrderStatusSummary, dynamic>> projection)
         {
-            var workOrderStatusDTOs = (await QueryHelper.GetViewDataFor<WorkOrder, ICollection<WorkOrderStatusViewDTO>>(dbSet, projection)).Where(i => !i.ActualEndDate.HasValue).ToList();
-            var workOrderStatusViews = new ConcurrentBag<WorkOrderStatus>();
-            var workOrderHistoryBag = new ConcurrentBag<WorkOrderStatusViewDTO>(workOrderStatusDTOs);
+            var workOrderStatusViews = (await QueryHelper.GetViewDataFor<WorkOrderStatusSummary, ICollection<WorkOrderStatus>>(dbSet, projection)).ToList();
 
-            Parallel.ForEach(workOrderStatusDTOs, workOrderStatusDTO =>
-            {
-                var status = EnumUtils.GetDescription(GetWorkOrderStatusFromTasks(workOrderStatusDTO.WorkOrderTasks));
-                var firstTask = workOrderStatusDTO.WorkOrderTasks.FirstOrDefault(i => i.StatusId == 3 || i.StatusId == 6 || i.StatusId == 8);
-
-                var assignedToUser = firstTask == null ? workOrderStatusDTO.WorkOrderTasks.Any() ? workOrderStatusDTO.WorkOrderTasks.First().AssignedToUser : string.Empty : firstTask.AssignedToUser;
-                var assignedToId = firstTask == null ? workOrderStatusDTO.WorkOrderTasks.Any() ? workOrderStatusDTO.WorkOrderTasks.First().AssignedTo : null : firstTask.AssignedTo;
-
-                var workOrderStatusView = new WorkOrderStatus()
-                {
-                    ProductName = workOrderStatusDTO.ProductName,
-                    LocationName = workOrderStatusDTO.LocationName,
-                    PartNumber = workOrderStatusDTO.WorkOrderPart?.PartNumber,
-                    ProcedureName = workOrderStatusDTO.WorkOrderTasks.Any() ? workOrderStatusDTO.WorkOrderTasks.First().ProcedureName : "",
-                    WorkOrderSummary = new WorkOrderSummary()
-                    {
-                        AssignedTo = assignedToId,
-                        WorkOrderAssignedTo = assignedToUser,
-                        PurchaseOrderLineNumber = workOrderStatusDTO.PurchaseOrderLineNumber,
-                        WorkOrderHasNcr = workOrderStatusDTO.WorkOrderHasNcr,
-                        WorkOrderId = workOrderStatusDTO.WorkOrderId,
-                        WorkOrderItemNumber = workOrderStatusDTO.WorkOrderItemNumber,
-                        WorkOrderPartSerialNumber = workOrderStatusDTO.WorkOrderPart?.SerialNumber,
-                        WorkOrderScheduledEndDate = workOrderStatusDTO.WorkOrderScheduledEndDate,
-                        WorkOrderStatus = status
-                    }
-                };
-
-                workOrderStatusViews.Add(workOrderStatusView);
-            });
-
-            return workOrderStatusViews.ToList();
+            return workOrderStatusViews;
         }
 
         private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,

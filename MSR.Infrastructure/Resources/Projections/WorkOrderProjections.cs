@@ -63,29 +63,24 @@ namespace MSR.Infrastructure.Resources.Projections
             WorkOrderMessages = i.WorkOrderMessages
         };
 
-        public static Expression<Func<WorkOrder, dynamic>> WorkOrderStatusView => i => new
+        public static Expression<Func<WorkOrderStatusSummary, dynamic>> WorkOrderStatusView => i => new
         {
-            ProductName = i.Product.Name,
-            WorkOrderPart = i.WorkOrderParts.Select(j => new
+            ProductName = i.ProductName,
+            PartNumber = i.WorkOrderPartSerialNumber,
+            ProcedureName = i.ProcedureName,
+            LocationName = i.LocationName,
+            WorkOrderSummary = new
             {
-                SerialNumber = j.SerialNumber,
-                Qty = j.Qty,
-                PartNumber = j.Part.PartNumber
-            }).FirstOrDefault(),
-            WorkOrderTasks = i.WorkOrderTasks.Select(j => new
-            {
-                ProcedureName = j.ProcedureStep.Procedure.Name,
-                AssignedToUser = $"{j.AssignedToUser.FirstName} {j.AssignedToUser.LastName}",
-                AssignedTo = j.AssignedTo.Value,
-                StatusId = j.StatusId,
-            }),
-            LocationName = i.Location.Name,
-            WorkOrderId = i.Id,
-            WorkOrderItemNumber = $"{i.Purchase.PurchaseOrder.Customer.Name}-{i.Id}",
-            PurchaseOrderLineNumber = i.Purchase.CustomerLineNumber,
-            WorkOrderHasNcr = i.HasNCR,
-            WorkOrderScheduledEndDate = i.ScheduledEndDate,
-            ActualEndDate = i.ActualEndDate
+                WorkOrderId = i.WorkOrderId,
+                WorkOrderItemNumber = i.WorkOrderItem,
+                PurchaseOrderLineNumber = i.PurchaseOrderLineNumber,
+                WorkOrderPartSerialNumber = i.WorkOrderPartSerialNumber,
+                WorkOrderStatus = i.WorkOrderStatus,
+                WorkOrderAssignedTo = i.WorkOrderAssignedTo,
+                AssignedTo = i.AssignedTo,
+                WorkOrderHasNcr = i.WorkOrderHasNCR,
+                WorkOrderScheduledEndDate = i.ScheduledEndDate
+            }
         };
 
         private static EnumStatusSteps GetWorkOrderStatusFromTasks(ICollection<WorkOrderTask> tasks)

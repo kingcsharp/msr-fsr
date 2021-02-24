@@ -79,15 +79,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<EquipmentMaintenance> EquipmentMaintenance { get; set; }
         public DbSet<WorkOrderMessage> WorkOrderMessage { get; set; }
         public DbSet<WorkOrderHistoryView> WorkOrderHistoryView { get; set; }
-
-        public AnswerContext() : base()
+        public DbSet<WorkOrderStatusSummary> WorkOrderStatusSummary { get; set; }
+        
+        public AnswerContext(DbContextOptions<AnswerContext> options)
+        : base(options)
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
-
-        public AnswerContext(DbContextOptions<AnswerContext> options)
-        : base(options)
-        { }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
