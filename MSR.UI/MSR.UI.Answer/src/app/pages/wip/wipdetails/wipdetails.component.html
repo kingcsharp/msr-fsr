@@ -70,7 +70,7 @@
               (click)="selectTaskForViewing(workOrderTask)" [ngClass]="{ 'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
                   'bg-light': workOrderTask.status?.name === 'In Progress',
                   'text-dark': workOrderTask.status?.name === 'In Progress',
-                  'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed' 
+                  'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'
                   || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled',
                   'step-viewed': workOrderTaskToView?.id === workOrderTask.id}">
               <div class="h-100 d-flex">
@@ -83,7 +83,7 @@
         <div class="d-flex col-4 justify-content-start pl-0">
           <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks"
             [hasAccessToTaskBeingViewed]="hasAccessToTaskBeingViewed" [workOrderIsComplete]="workOrderIsComplete"
-            [(workOrderTaskInProgress)]="workOrderTaskInProgress"
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress" (setStartDate)="setStartDate($event)"
             *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id" [areMonitorsValid]="areMonitorsValid"
             (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)" (areMonitorsValidCheck)="areMonitorsValidCheck($event.areValid)"
             [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
@@ -93,7 +93,7 @@
           <div class="alert alert-dismissable alert-warning"
             *ngIf="workOrderTaskInProgress !== undefined && !hasAccessToTaskBeingViewed">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <i class="fas fa-exclamation-triangle"></i> You do not have the proper role to access 
+            <i class="fas fa-exclamation-triangle"></i> You do not have the proper role to access
             <span class="font-weight-bold">{{nameOfTaskThatIsRestricted}}</span><br>
             <span *ngIf="rolesRequiredMessage !== undefined">The <strong>{{rolesRequiredMessage}}</strong> role is Required</span>
             <span *ngIf="rolesRequiredMessage === undefined">No roles have been assigned to this Step</span>
@@ -145,7 +145,7 @@
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="workOrderTaskToView !== undefined && parentPart?.serialNumber !== 'N/A' 
+            <div class="row" *ngIf="workOrderTaskToView !== undefined && parentPart?.serialNumber !== 'N/A'
             && (workOrderTaskToView.procedureStep?.procedureStepType?.trim().toLocaleUpperCase() === 'SERIALIZATION'
             || workOrderTaskToView.procedureStepType?.name?.trim().toLocaleUpperCase() === 'SERIALIZATION')">
               <div class="container-fluid product-container m-2">

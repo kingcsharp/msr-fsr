@@ -24,7 +24,7 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
   ngOnInit(): void {
 
      this.workOrderService.workOrder(null, null, null, null,
-      this.globals.getCurrentUser().id, env.apiVersion).subscribe(responseHandler(response => {
+      this.globals.getCurrentUser().id, true, env.apiVersion).subscribe(responseHandler(response => {
 
       let workOrders = <Array<WorkOrderModel>>response.object;
       this.workOrdersAvailable = new Array<WorkOrderItem>();

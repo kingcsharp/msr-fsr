@@ -1,4 +1,5 @@
-﻿*.swp
+﻿.idea/
+*.swp
 *.*~
 project.lock.json
 .DS_Store

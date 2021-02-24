@@ -1,4 +1,4 @@
-<div *ngIf="getProductDataFlag" class="container-fluid">
+<div *ngIf="getProductDataFlag" class="container-fluid d-print-none">
   <div class="row mb-lg">
     <div class="col-md-6">
       <h1 class="page-title">
@@ -535,9 +535,12 @@
   </widget>
 </div>
 
-<p-dialog header="Quote Preview" *ngIf="quoteJson" [(visible)]="showQuoteViewModal" [baseZIndex]="100001" [modal]='true'
-  [style]="{width: '70vw'}" data-cy="user-header">
-  <div class="container">
+<p-dialog *ngIf="quoteJson" [(visible)]="showQuoteViewModal" [baseZIndex]="100001" [modal]='true'
+  [style]="{width: '70vw'}" data-cy="user-header" styleClass="quote-report">
+  <p-header>
+    Quote Preview
+</p-header>
+  <div class="container" id="quote-preview-dialog">
     <div class="row mr-0 ml-0">
       <table class="table no-border quote-header" width="100%">
         <tbody>
@@ -561,6 +564,14 @@
       </table>
       <table class="table quote-header" width="100%">
         <tbody>
+          <tr>
+            <th class="text-right">Date : </th>
+            <td>{{quoteData.submittedDate | userTimezone}}</td>
+          </tr>
+          <tr>
+            <th class="text-right">Quote ID : </th>
+            <td>{{quoteData.id}}</td>
+          </tr>
           <tr>
             <th class="text-right">Customer:</th>
             <td>
@@ -629,6 +640,14 @@
             <td>
               {{quoteItem.extension | currency}}
             </td>
+          </tr>
+          <tr *ngIf="!quoteJson.quoteItems || quoteJson.quoteItems.length === 0">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
@@ -727,7 +746,7 @@
       </table>
     </div>
   </div>
-  <p-footer>
+  <p-footer class="d-print-none">
     <div class="pull-right">
       <button type="button" (click)="closeQuoteViewModal()" class="btn btn-outline-inverse width-100 mb-xs"
         role="button" data-cy="closequoteview-button">

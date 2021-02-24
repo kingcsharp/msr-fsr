@@ -118,12 +118,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<ICollection<ProductModel>> GetProductAsync(GetProduct command)
         {
-            IQueryable<Product> productQuery = _unitOfWork.Products
-                        .Query()
-                        .Include(x => x.Customer)
-                        .Include(x => x.Part)
-                        .Include(x => x.Procedure)
-                        .Include(x => x.ProductSteps);
+            IQueryable<Product> productQuery = _unitOfWork.Products.Query();
 
             if (command.Id.HasValue)
             {
@@ -135,17 +130,26 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 productQuery = productQuery.Where(x => x.CustomerId == command.CustomerId.Value);
             }
 
-            var products = await productQuery
-                        .Select(x => _mapper.Map<ProductModel>(x))
-                        .ToListAsync();
+            var productEntities = await productQuery.ToListAsync();
+            var productIds = productEntities.Select(s => s.Id).ToList();
+            var partIds = productEntities.Select(s => s.PartId).ToList();
+            var procedureIds = productEntities.Select(s => s.ProcedureId).ToList();
+            var customerIds = productEntities.Select(s => s.CustomerId).ToList();
+            _ = await _unitOfWork.Parts.Query().Where(s => partIds.Contains(s.Id)).ToListAsync();
+            _ = await _unitOfWork.Procedures.Query().Where(s => procedureIds.Contains(s.Id)).ToListAsync();
+            _ = await _unitOfWork.ProductSteps.Query().Where(s => productIds.Contains(s.ProductId)).ToListAsync();
+            _ = await _unitOfWork.Customers.Query().Where(s => customerIds.Contains(s.Id)).ToListAsync();
+
+
+            var productModels = _mapper.Map<ICollection<ProductModel>>(productEntities);
 
             // removing child product from the Model to avoid loop
-            products.ForEach(p => p.ProductSteps?.ToList().ForEach(ps => ps.Product = null));
+            productModels.ToList().ForEach(p => p.ProductSteps?.ToList().ForEach(ps => ps.Product = null));
 
             // if ID is specified and ProductStep missing, we fall back to ProcedureStep
             if (command.Id.HasValue)
             {
-                foreach (var product in products)
+                foreach (var product in productModels)
                 {
                     if (!product.ProductSteps.Any())
                     {
@@ -172,7 +176,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 }
             }
 
-            return products;
+            return productModels;
         }
 
 

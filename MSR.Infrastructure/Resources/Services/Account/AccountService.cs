@@ -231,6 +231,10 @@ namespace MSR.Infrastructure.Resources.Services.Account
                     {
                         exists = true;
                     }
+                    else
+                    {
+                        _knownUsers.Remove(accountId);
+                    }
                 }
 
                 if (!exists)

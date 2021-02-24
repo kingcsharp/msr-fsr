@@ -37,116 +37,111 @@ pipeline {
         stage('Build & Deploy') {
             parallel {
                 stage('Build & Deploy UI to QA') {
-                    agent { label 'master'}
+                    agent { label 'jnlp'}
                     steps {
                         script {
-                            try {
-                                dir('MSR.UI/MSR.UI.Answer') {
-                                    sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui ."
-                                    sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
-                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                    sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-ui',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-ui-qa.zip',
+                                            buildSpecFile: 'MSR.UI/MSR.UI.Answer/scripts/buildspec-answer-ui-qa.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
                                 }
-                            } catch(e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
-                                currentBuild.result = 'FAILURE'
-                                sh "exit 1"
                             }
-
-                            try {
-                                sh "sh update_image.sh QA ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                                sh "cat ${UI_COMPOSE}"
-
-                                if(env.BRANCH_NAME == 'Develop') {
-                                    echo "Deploying Develop"
-                                    deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
-                                }
-
-
-                                office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
-
-                            } catch (e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                            catch (e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image for QA. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
                         }
                     }
                 }
+
                 stage('Build and Deploy API to QA') {
-                    agent { label 'master'}
+                    agent { label 'jnlp' }
                     steps {
                         script {
+
                             try {
-                                dir('reverseproxy') {
-                                    echo "Building api proxy container...."
-                                    sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
-                                    sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
-
-                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                    sh "docker push ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
-                                }
-
-                                dir('reverseproxy') {
-                                    echo "Building message proxy container...."
-
-                                    sh "docker build --build-arg NGINX_CONF=devmsg -t msr-mp ."
-                                    sh "docker tag msr-mp ${ACCOUNT_URL}/msr-mp:${env.GIT_COMMIT}"
-
-                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                    sh "docker push ${ACCOUNT_URL}/msr-mp:${env.GIT_COMMIT}"
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                awsCodeBuild credentialsType: 'keys',
+                                        awsAccessKey: "${KEY}",
+                                        awsSecretKey: "${PASS}",
+                                        projectName: 'answer-api-qa',
+                                        region: "us-west-2",
+                                        sourceControlType: 'jenkins',
+                                        sourceTypeOverride: 'S3',
+                                        sourceLocationOverride: 'answer-codebuild-input/answer-api.zip',
+                                        buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-qa.yml',
+                                        envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
                                 }
                             } catch(e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the NGINX image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the API for QA. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
+                        }
+                    }
+                }
+
+                stage('Build and Deploy Processor') {
+                    agent { label 'jnlp'}
+                    steps {
+                        script {
+                            echo "Building Processor container...."
 
                             try {
-                                echo "Building API container...."
-                                sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
-                                sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
-
-                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                sh "docker push ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
-
-                                echo "Building Processor container...."
-                                sh "docker build -f MSR.Answer.Processor/Dockerfile -t msr-processor ."
-                                sh "docker tag msr-processor ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
-
-                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                sh "docker push ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
-
-                                echo "Building Message container...."
-                                sh "docker build -f MSR.Answer.MessageHub/Dockerfile -t msr-message ."
-                                sh "docker tag msr-message ${ACCOUNT_URL}/msr-message:${env.GIT_COMMIT}"
-
-                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                sh "docker push ${ACCOUNT_URL}/msr-message:${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-processor-qa',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-processor.zip',
+                                            buildSpecFile: 'MSR.Answer.Processor/scripts/buildspec-answer-processor-qa.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
                             } catch(e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the API image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the Processor for QA. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
+                        }
+                    }
+                }
+
+                stage('Build and Deploy MessageHub') {
+                    agent { label 'jnlp'}
+                    steps {
+                        script {
 
                             try {
-                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE}"
-                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
-                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
-                                sh "cat ${API_COMPOSE}"
-                                sh "cat ${API_COMPOSE_PROCESSOR}"
-                                sh "cat ${API_COMPOSE_MESSAGE}"
-
-                                echo "Deploying to QA"
-                                deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
-                                deploy_processor("${API_COMPOSE_PROCESSOR}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "processor")
-                                deploy("${API_COMPOSE_MESSAGE}", "${QA_PROJECT_MESSAGE}", "${QA_MESSAGE_TARGET_ARN}", "messageproxy")
-
-                                office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
-
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-message-qa',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-message.zip',
+                                            buildSpecFile: 'MSR.Answer.MessageHub/scripts/buildspec-answer-message-qa.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
                             } catch(e) {
-                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the API. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building and deploying the Message for QA. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
@@ -155,6 +150,7 @@ pipeline {
                 }
             }
         }
+
 
         stage("Deploy Rollbar QA") {
             agent { label 'master' }
@@ -183,41 +179,114 @@ pipeline {
         stage('Promoting to UAT') {
             parallel {
                 stage("Promoting API to UAT") {
-                    agent { label 'master' }
+                    agent { label 'jnlp' }
                     steps {
                         script {
-                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
-                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
-                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
-                            sh "cat ${API_COMPOSE}"
-                            sh "cat ${API_COMPOSE_PROCESSOR}"
-                            sh "cat ${API_COMPOSE_MESSAGE}"
 
-                            echo "Deploying to UAT"
-                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
-                            deploy("${API_COMPOSE_MESSAGE}", "${UAT_PROJECT_MESSAGE}", "${STAGE_MESSAGE_TARGET_ARN}", "messageproxy")
-                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "processor")
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-api-uat',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-api-uat.zip',
+                                            buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-uat.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting API container to UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+                        }
+                    }
+                }
+
+                stage("Promoting MessageHub to UAT") {
+                    agent { label 'jnlp' }
+                    steps {
+                        script {
+
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-message-uat',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-message-uat.zip',
+                                            buildSpecFile: 'MSR.Answer.MessageHub/scripts/buildspec-answer-message-uat.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting MessageHub container to UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+                        }
+                    }
+                }
+
+                stage("Promoting Processor to UAT") {
+                    agent { label 'jnlp' }
+                    steps {
+                        script {
+
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-processor-uat',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-processor-uat.zip',
+                                            buildSpecFile: 'MSR.Answer.Processor/scripts/buildspec-answer-processor-uat.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting Processor container to UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
                         }
                     }
                 }
 
                 stage("Promote UI to UAT") {
-                    agent { label 'master' }
+                    agent { label 'jnlp' }
                     steps {
                         script {
-                            dir('MSR.UI/MSR.UI.Answer') {
-                                sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
-                                sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
-                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-ui-uat',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-ui-uat.zip',
+                                            buildSpecFile: 'MSR.UI/MSR.UI.Answer/scripts/buildspec-answer-ui-uat.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
                             }
-
-                            sh "sh update_image.sh Stage ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                            sh "cat ${UI_COMPOSE}"
-
-                            deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
-                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+                            catch (e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image for UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
                         }
                     }
                 }
@@ -251,43 +320,112 @@ pipeline {
         stage('Promoting to Production') {
             parallel {
                 stage("Promote API to PROD") {
-                    agent { label 'master' }
+                    agent { label 'jnlp' }
                     steps {
                         script {
-                            sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
-                            sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE_PROCESSOR}"
-                            sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE_MESSAGE}"
-
-
-                            sh "cat ${API_COMPOSE}"
-                            sh "cat ${API_COMPOSE_PROCESSOR}"
-                            sh "cat ${API_COMPOSE_MESSAGE}"
-
-                            //deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
-                            sh "ecs-cli compose --file docker-compose-api.yml --ecs-params ecs-params-api.yml --project-name prod-answer-api service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${PROD_API_TARGET_ARN} --container-name reverseproxy --container-port 80 --timeout 15"
-                            deploy("${API_COMPOSE_MESSAGE}", "${PROD_PROJECT_MESSAGE}", "${PROD_MESSAGE_TARGET_ARN}", "messageproxy")
-                            deploy_processor("${API_COMPOSE_PROCESSOR}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "processor")
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-production',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-api-prod.zip',
+                                            buildSpecFile: 'MSR.Answer.API/scripts/buildspec-answer-api-prod.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting API container to Production. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
                         }
                     }
                 }
 
-                stage("Promote UI to PROD") {
+                stage("Promoting MessageHub to Production") {
+                    agent { label 'jnlp' }
+                    steps {
+                        script {
+
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-production',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-message-prod.zip',
+                                            buildSpecFile: 'MSR.Answer.MessageHub/scripts/buildspec-answer-message-prod.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting MessageHub container to Production. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+                        }
+                    }
+                }
+
+                stage("Promoting Processor to Production") {
+                    agent { label 'jnlp' }
+                    steps {
+                        script {
+
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-production',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-processor-prod.zip',
+                                            buildSpecFile: 'MSR.Answer.Processor/scripts/buildspec-answer-processor-prod.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED promoting Processor container to Production. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+                        }
+                    }
+                }
+
+                stage("Promote UI to Production") {
                     agent { label 'master' }
                     steps {
                         script {
-                            dir('MSR.UI/MSR.UI.Answer') {
-                                sh "docker build --build-arg ENV=buildprod -t msr-ui ."
-                                sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
-
-                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                                sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                            try {
+                                echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
+                                withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+                                    awsCodeBuild credentialsType: 'keys',
+                                            awsAccessKey: "${KEY}",
+                                            awsSecretKey: "${PASS}",
+                                            projectName: 'answer-production',
+                                            region: "us-west-2",
+                                            sourceControlType: 'jenkins',
+                                            sourceTypeOverride: 'S3',
+                                            sourceLocationOverride: 'answer-codebuild-input/answer-ui-prod.zip',
+                                            buildSpecFile: 'MSR.UI/MSR.UI.Answer/scripts/buildspec-answer-ui-prod.yml',
+                                            envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
+                                }
                             }
-
-                            sh "sh update_image.sh Production ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                            sh "cat ${UI_COMPOSE}"
-
-                            deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
-                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+                            catch (e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image for UAT. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
                         }
                     }
                 }

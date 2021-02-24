@@ -1,5 +1,6 @@
-<a href='https://jenkins.cmhworks.com/job/MSR-FSR/job/Answer3/job/Develop/'><img src='https://jenkins.cmhworks.com/buildStatus/icon?job=MSR-FSR%2FAnswer3%2FDevelop'></a><br/>
-![Assertible status](https://assertible.com/apis/7c13748e-0e5d-43e5-9d74-6f4e7f09bb0a/status?api_token=gtgNgcGA8j38t2TH)
+**Jenkins:** [![Build Status](https://jenkins.cmhworks.com/buildStatus/icon?job=MSR-FSR%2FAnswer3%2FDevelop)](https://jenkins.cmhworks.com/job/MSR-FSR/job/Answer3/job/Develop/)
+<br/>
+**Assertable:** ![Assertible status](https://assertible.com/apis/7c13748e-0e5d-43e5-9d74-6f4e7f09bb0a/status?api_token=gtgNgcGA8j38t2TH)
 <br/>
 (https://assertible.com/dashboard#/services/7c13748e-0e5d-43e5-9d74-6f4e7f09bb0a/results)
 # Running the app manually #

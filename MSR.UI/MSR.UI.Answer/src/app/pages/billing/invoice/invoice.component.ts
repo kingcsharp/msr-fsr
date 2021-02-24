@@ -88,7 +88,7 @@ export class InvoiceComponent implements OnInit {
       new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true }),
       new ColumnsSaved({ id: 'customerPurchaseNumber', label: 'Customer Puchase Number', visible: true }),
       new ColumnsSaved({ id: 'customerLineNumber', label: 'Customer Line', visible: true }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Work Order Item', visible: true }),
+      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true }),
       new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true }),
       new ColumnsSaved({ id: 'actualEndDate', label: 'Work Order Complete Date', visible: true }),

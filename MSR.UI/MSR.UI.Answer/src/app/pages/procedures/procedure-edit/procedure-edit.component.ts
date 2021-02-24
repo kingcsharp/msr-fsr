@@ -303,7 +303,7 @@ export class ProcedureEditComponent implements OnInit {
 
     let updateProcedureRequest = new UpdateProcedureRequest();
     updateProcedureRequest.id = procedure.id;
-    updateProcedureRequest.comments = procedure.comment;
+    updateProcedureRequest.comments = procedure.comments;
     updateProcedureRequest.duration = procedure.duration;
     updateProcedureRequest.durationType = procedure.durationType;
     updateProcedureRequest.name = procedure.name;
