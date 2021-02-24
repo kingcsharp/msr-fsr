@@ -157,37 +157,25 @@ export class ProductDefinitionComponent implements OnInit {
         }
         if (this.quoteData.customerRequirementJson) {
           this.customerRequirementJson = JSON.parse(this.quoteData.customerRequirementJson);
-          if (!this.quoteData.quoteJson) {
+          if (!this.quoteData.quoteJson && !isCreateMode) {
             this.quoteJson = {
               customerId: this.quoteData.customerId,
               contact: this.customerRequirementJson.CommercialName,
               title: this.customerRequirementJson.CommercialTitle,
               phone: this.customerRequirementJson.CommercialPhone,
+              email: this.customerRequirementJson.CommercialEmail,
               representative: this.quoteData.submittedBy.fullName,
               representativeTitle: this.quoteData.submittedBy.title,
               representativeAddress: this.customerRequirementJson.StreetAddress,
             };
 
-            if (this.customerRequirementJson.Parts) {
-              this.quoteJson.quoteItems = [];
-              this.customerRequirementJson.Parts.forEach(part => {
-                this.quoteJson.quoteItems.push({
-                  qty: 1,
-                  description: part.PartDescription,
-                  leadTime: this.customerRequirementJson.ExpectedCycleTime,
-                });
-              });
-            }
-
-            if (this.customerRequirementJson.Process) {
-              this.quoteJson.process = [];
-              this.customerRequirementJson.Process.forEach(process => {
-                this.quoteJson.process.push({
-                  processName: process.ExistingProcess,
-                  description: process.Contaminents,
-                });
-              });
-            }
+            this.quoteJson.quoteItems = [{
+              qty: 1,
+              unit: 'Unit',
+              description: this.productData.procedure?.name,
+              price: this.productData.totalSalePrice,
+              extension: this.productData.totalSalePrice,
+            }];
           }
         }
 
