@@ -80,12 +80,14 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<WorkOrderMessage> WorkOrderMessage { get; set; }
         public DbSet<WorkOrderHistoryView> WorkOrderHistoryView { get; set; }
         public DbSet<WorkOrderStatusSummary> WorkOrderStatusSummary { get; set; }
-        
-        public AnswerContext(DbContextOptions<AnswerContext> options)
-        : base(options)
+        public AnswerContext() : base()
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
+
+        public AnswerContext(DbContextOptions<AnswerContext> options)
+        : base(options)
+        { }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
