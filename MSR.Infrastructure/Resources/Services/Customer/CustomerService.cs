@@ -33,9 +33,9 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             _messageHub = messageHub;
         }
 
-        public async Task<Domain.Models.Customer> CreateCustomerAsync(CreateCustomer command, bool import = false)
+        public async Task<Domain.Models.CustomerModel> CreateCustomerAsync(CreateCustomer command, bool import = false)
         {
-            Domain.Models.Customer retCustomer;
+            Domain.Models.CustomerModel retCustomer;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.CustomerApproval) || import)
             {
@@ -58,7 +58,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 await _unitOfWork.Customers.AddAsync(customer);
                 await _unitOfWork.LogApprovalTransaction(customer, customer.Id);
                 
-                retCustomer = _mapper.Map<Domain.Models.Customer>(customer);
+                retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customer);
             }
             else
             {
@@ -75,21 +75,21 @@ namespace MSR.Infrastructure.Resources.Services.Customers
 
                 await _unitOfWork.CustomerApprovals.AddAsync(customerApproval);
                 await _unitOfWork.SaveChangesAsync();
-                retCustomer = _mapper.Map<Domain.Models.Customer>(customerApproval);
+                retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customerApproval);
                 _messageHub.SendApprovalNotification(EnumApprovalTables.CustomerApproval);
             }
             return retCustomer;
         }
 
-        public async Task<Domain.Models.Customer> UpdateCustomerAsync(UpdateCustomer command, bool import = false)
+        public async Task<Domain.Models.CustomerModel> UpdateCustomerAsync(UpdateCustomer command, bool import = false)
         {
-            Domain.Models.Customer retCustomer = null;
+            Domain.Models.CustomerModel retCustomer = null;
 
             var curCustomer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == command.CustomerId);
 
             if (curCustomer is null)
             {
-                throw new DomainException($"{nameof(Domain.Models.Customer)} not found with ID: {command.CustomerId}");
+                throw new DomainException($"{nameof(Domain.Models.CustomerModel)} not found with ID: {command.CustomerId}");
             }
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.CustomerApproval) || import)
@@ -101,7 +101,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 _unitOfWork.Customers.Update(curCustomer);
                 await _unitOfWork.LogApprovalTransaction(curCustomer, curCustomer.Id);
 
-                retCustomer = _mapper.Map<Domain.Models.Customer>(curCustomer);
+                retCustomer = _mapper.Map<Domain.Models.CustomerModel>(curCustomer);
             }
             else
             {
@@ -116,7 +116,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 var ret = await _unitOfWork.CustomerApprovals.AddAsync(customerApproval);
                 await _unitOfWork.SaveChangesAsync();
 
-                retCustomer = _mapper.Map<Domain.Models.Customer>(customerApproval);
+                retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customerApproval);
                 _messageHub.SendApprovalNotification(EnumApprovalTables.CustomerApproval);
             }
 
@@ -124,16 +124,16 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return retCustomer;
         }
 
-        public async Task<Domain.Models.Customer> DeleteCustomerAsync(int Id)
+        public async Task<Domain.Models.CustomerModel> DeleteCustomerAsync(int Id)
         {
             var customer = _unitOfWork.Customers.FirstOrDefault(false, i => i.Id == Id);
 
             if (customer is null)
             {
-                throw new DomainException($"{nameof(Domain.Models.Customer)} not found with ID: {Id}");
+                throw new DomainException($"{nameof(Domain.Models.CustomerModel)} not found with ID: {Id}");
             }
 
-            Domain.Models.Customer retCustomer = null;
+            Domain.Models.CustomerModel retCustomer = null;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.CustomerApproval))
             {
@@ -149,7 +149,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
 
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.LogApprovalTransaction(customer, customer.Id);
-                retCustomer = _mapper.Map<Domain.Models.Customer>(customer);
+                retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customer);
             }
             else
             {
@@ -162,24 +162,24 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 await _unitOfWork.CustomerApprovals.AddAsync(customerApproval);
                 await _unitOfWork.SaveChangesAsync();
 
-                retCustomer = _mapper.Map<Domain.Models.Customer>(customerApproval);
+                retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customerApproval);
                 _messageHub.SendApprovalNotification(EnumApprovalTables.CustomerApproval);
             }
             return retCustomer;
         }
 
-        public async Task<Domain.Models.Customer> GetCustomerAsync(int id)
+        public async Task<Domain.Models.CustomerModel> GetCustomerAsync(int id)
         {
             var customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == id);
 
             if (customer is null)
             {
-                throw new DomainException($"{nameof(Domain.Models.Customer)} does not exist with {nameof(id)}: {id}");
+                throw new DomainException($"{nameof(Domain.Models.CustomerModel)} does not exist with {nameof(id)}: {id}");
             }
 
             var customerApproval = await _unitOfWork.CustomerApprovals.FirstOrDefaultAsync(false, i => i.CustomerId == id);
 
-            var retCustomer = _mapper.Map<Domain.Models.Customer>(customer);
+            var retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customer);
             if (customerApproval != null)
             {
                 _mapper.Map(customerApproval, retCustomer);
@@ -188,9 +188,9 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return retCustomer;
         }
 
-        public async Task<IEnumerable<Domain.Models.Customer>> GetCustomersAsync(GetMultipleCustomers command)
+        public async Task<IEnumerable<Domain.Models.CustomerModel>> GetCustomersAsync(GetMultipleCustomers command)
         {
-            var customerList = new List<Domain.Models.Customer>();
+            var customerList = new List<Domain.Models.CustomerModel>();
             var customers = _unitOfWork.Customers.Query();
             
             customers = customers.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser);
@@ -232,7 +232,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             {
                 var customerApproval = await _unitOfWork.CustomerApprovals.Query().Include(i => i.Status).FirstOrDefaultAsync(i => i.CustomerId == customer.Id);
 
-                var retCustomer = _mapper.Map<Domain.Models.Customer>(customer);
+                var retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customer);
                 if (customerApproval != null && customerApproval.Status != null)
                 {
                     _mapper.Map(customerApproval, retCustomer);
@@ -244,10 +244,10 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return customerList.AsEnumerable();
         }
 
-        public async Task<IEnumerable<Domain.Models.Customer>> ImportCustomers(string csvData)
+        public async Task<IEnumerable<Domain.Models.CustomerModel>> ImportCustomers(string csvData)
         {
             var records = CSVHelper.ParseRecords<CustomerImportItem>(csvData);
-            var customerModels = new List<Domain.Models.Customer>();
+            var customerModels = new List<Domain.Models.CustomerModel>();
             var customerIds = await _unitOfWork.Customers.Query().Select(i => i.Id).ToListAsync();
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.CustomersDepartments, EnumPrivilege.CanApprove))

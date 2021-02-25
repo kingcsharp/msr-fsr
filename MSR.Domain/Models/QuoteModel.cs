@@ -8,7 +8,7 @@ namespace MSR.Domain.Models
         public int Id { get; set; }
         public DateTime SubmittedDate { get; set; }
         public int CustomerId { get; set; }
-        public virtual Customer Customer { get; set; }
+        public virtual CustomerModel Customer { get; set; }
         public int SubmittedById { get; set; }
         public virtual UserModel SubmittedBy { get; set; }
         public string Contact { get; set; }

@@ -28,22 +28,22 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<Customer>>))]
+        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<CustomerModel>>))]
         public async Task<IActionResult> GetCustomers([FromQuery] GetMultipleCustomersRequest filters)
         {
             var getCustomers = filters.ToGetMultipleCustomersCommand();
             var ret = await _dispatcher.DispatchAsync(getCustomers);
-            return ret.ToOkObjectResponse<IEnumerable<Customer>>();
+            return ret.ToOkObjectResponse<IEnumerable<CustomerModel>>();
         }
 
         [HttpPost, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<Customer>))]
+        [SwaggerResponse(typeof(AuditActionResult<CustomerModel>))]
         public async Task<IActionResult> CreateCustomer([FromBody, Required] CreateCustomerRequest request)
         {
             var createCustomer = request.ToCreateCustomerCommand();
 
             var ret = await _dispatcher.DispatchAsync(createCustomer);
-            return ret.ToOkObjectResponse<Customer>(DetermineResponseMessage(ret, "Creation"));
+            return ret.ToOkObjectResponse<CustomerModel>(DetermineResponseMessage(ret, "Creation"));
         }
 
         [HttpPatch, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanEdit)]
@@ -68,7 +68,7 @@ namespace MSR.Answer.API.V1.Controllers
         //TODO: Refactor to Generic
         private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
-            var customer = commandResponse.ToEntity<Customer>();
+            var customer = commandResponse.ToEntity<CustomerModel>();
             var response = $"Customer {action} Successful";
 
             if (!string.IsNullOrWhiteSpace(customer.Status))
