@@ -20,5 +20,13 @@ namespace MSR.Domain.Helpers
                 source.Expression, Expression.Quote(selector));
             return source.Provider.CreateQuery<T>(mce);
         }
+
+        public static (ICollection<T> data, int totalRows) Paginate<T>(this IQueryable<T> sortedIQueryable, int skip, int take)
+        {
+            var totalRows = sortedIQueryable.Count();
+            var data = totalRows > 0 ? sortedIQueryable.Skip(skip).Take(take).ToList() : new List<T>();
+
+            return (data, totalRows);
+        }
     }
 }

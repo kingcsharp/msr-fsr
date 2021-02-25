@@ -24,12 +24,12 @@ namespace MSR.Application.ViewServices
             _mapper = mapper;
         }
 
-        public async Task<ApiPagingModel<CustomerModel>> GetCustomers(ApiPagingModel<CustomerModel> paging, int? Id, string name, string address, string phone, int? primaryContactUserId, int? secondaryContactUserId, int? locationId, bool? isActive)
+        public async Task<(ICollection<CustomerModel> data, int totalRows)> GetCustomers(int skip, int take, int? Id, string name, string address, string phone, int? primaryContactUserId, int? secondaryContactUserId, int? locationId, bool? isActive)
         {
             var customerList = new List<CustomerModel>();
-            var customers = _unitOfWork.Query<Customer>().GetCustomersView(paging, Id, name, address, phone, primaryContactUserId, secondaryContactUserId, locationId, isActive);
+            var customers = _unitOfWork.Query<Customer>().GetCustomersView(skip, take, Id, name, address, phone, primaryContactUserId, secondaryContactUserId, locationId, isActive);
 
-            foreach (var customer in customers.Results)
+            foreach (var customer in customers.data)
             {
                 var customerApproval = await _unitOfWork.CustomerApprovals.Query().Include(i => i.Status).FirstOrDefaultAsync(i => i.CustomerId == customer.Id);
 
@@ -41,8 +41,8 @@ namespace MSR.Application.ViewServices
                 }
                 customerList.Add(retCustomer);
             }
-            customers.Results = customerList;
-            return customers;
+
+            return (customerList, customers.totalRows);
         }
     }
 }

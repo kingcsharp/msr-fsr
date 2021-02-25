@@ -34,6 +34,7 @@ namespace MSR.Answer.API.V1.Models
         }
 
         public T Object { get; set; }
+
     }
 
     /// <summary>
@@ -54,7 +55,21 @@ namespace MSR.Answer.API.V1.Models
         /// Gets or Sets Id
         /// </summary>
         public int Id { get; set; }
+        public string Term { get; set; }
+        public int PageNumber { get; set; }
+        public long TotalNumberOfRecords { get; set; }
+        public int PageSize { get; set; }
 
+        public int Skip
+        {
+            get { return PageNumber * PageSize; }
+        }
+
+        public int Take
+        {
+            get { return PageSize; }
+        }
+        public bool SortAscending { get; set; }
         /// <summary>
         /// Default Constructor for AuditActionResult
         /// </summary>

@@ -13,15 +13,15 @@ namespace MSR.Infrastructure.Resources.Queries
 {
     public static class CustomerQueries
     {
-        public static ApiPagingModel<CustomerModel> GetCustomersView(this DbSet<Customer> dbSet, ApiPagingModel<CustomerModel> paging, int? Id, string name, string address, string phone, int? primaryContactUserId, int? secondaryContactUserId, int? locationId, bool? isActive)
+        public static (ICollection<CustomerModel> data, int totalRows) GetCustomersView(this DbSet<Customer> dbSet, int skip, int take, int? id, string name, string address, string phone, int? primaryContactUserId, int? secondaryContactUserId, int? locationId, bool? isActive)
         {
             var customerList = new List<CustomerModel>();
 
             var customers = dbSet.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).AsQueryable();
 
-            if (Id != null)
+            if (id != null)
             {
-                customers = customers.Where(i => i.Id == Id);
+                customers = customers.Where(i => i.Id == id);
             }
             if (!string.IsNullOrWhiteSpace(name))
             {
@@ -52,10 +52,10 @@ namespace MSR.Infrastructure.Resources.Queries
                 customers = customers.Where(i => i.IsActive == isActive.Value);
             }
 
-            var pagedData = (paging as PagingModel).SortPaginate(customers);
-            paging.Results = pagedData.Select(i => AutoMapperHelper.Mapper.Map<CustomerModel>(i)).ToList();
+            var pagedData = customers.Paginate(skip, take);
+            var customerModels = pagedData.data.Select(i => AutoMapperHelper.Mapper.Map<CustomerModel>(i));
 
-            return paging;
+            return (customerModels.ToList(), pagedData.totalRows);
         }
     }
 }

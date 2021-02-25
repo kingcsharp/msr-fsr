@@ -32,14 +32,13 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<ApiPagingModel<CustomerModel>>))]
-        public async Task<IActionResult> GetCustomers()
-        //public async Task<IActionResult> GetCustomers([FromQuery] GetMultipleCustomersRequest filters, [FromQuery] ApiPagingModel<CustomerModel> paging)
-        //public async Task<IActionResult> GetCustomers(int? id, string name, string address, string phone, int? primaryContactUserId, int? secondaryContactUserId, int? locationId, bool? isActive, [FromQuery] ApiPagingModel<CustomerModel> paging)
+        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<CustomerModel>>))]
+        public async Task<IActionResult> GetCustomers([FromQuery] GetMultipleCustomersRequest filters)
         {
-            return Ok();
-            //var customers = await _customerViewService.GetCustomers(paging, id, name, address, phone, primaryContactUserId, secondaryContactUserId, locationId, isActive);
-            //return GenerateOkViewResponse<ApiPagingModel<CustomerModel>>(customers);
+            //return Ok();
+            var customers = await _customerViewService.GetCustomers(filters.Skip, filters.Take,filters.Id,filters.Name,filters.Address, filters.Phone, filters.PrimaryContactUserId, filters.SecondaryContactUserId, filters.LocationId, filters.IsActive);
+            return GenerateOkViewResponse<ICollection<CustomerModel>>(customers.data, customers.totalRows);
+            
         }
 
         [HttpPost, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanCreate)]

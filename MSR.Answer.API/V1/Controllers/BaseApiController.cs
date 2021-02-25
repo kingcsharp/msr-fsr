@@ -13,10 +13,11 @@ namespace MSR.Answer.API.V1.Controllers
 
         public string Controller => this.ControllerContext.RouteData.Values["controller"].ToString();
 
-        protected IActionResult GenerateOkViewResponse<T>(T responseData)
+        protected IActionResult GenerateOkViewResponse<T>(T responseData, int totalRows = 0)
         {
             return Ok(new AuditActionResult<T>()
             {
+                TotalNumberOfRecords = totalRows,
                 Object = responseData
             });
         }
