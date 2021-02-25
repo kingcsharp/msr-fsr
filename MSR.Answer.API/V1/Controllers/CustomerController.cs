@@ -13,6 +13,8 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 using MSR.Domain.Models;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Models.Paging;
+using MSR.Application.Abstractions;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -21,19 +23,23 @@ namespace MSR.Answer.API.V1.Controllers
     public class CustomerController : BaseApiController
     {
         private readonly ICommandDispatcher _dispatcher;
+        private readonly ICustomerViewService _customerViewService;
 
-        public CustomerController(ICommandDispatcher dispatcher)
+        public CustomerController(ICommandDispatcher dispatcher, ICustomerViewService viewService)
         {
             _dispatcher = dispatcher;
+            _customerViewService = viewService;
         }
 
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<CustomerModel>>))]
-        public async Task<IActionResult> GetCustomers([FromQuery] GetMultipleCustomersRequest filters)
+        [SwaggerResponse(typeof(AuditActionResult<ApiPagingModel<CustomerModel>>))]
+        public async Task<IActionResult> GetCustomers()
+        //public async Task<IActionResult> GetCustomers([FromQuery] GetMultipleCustomersRequest filters, [FromQuery] ApiPagingModel<CustomerModel> paging)
+        //public async Task<IActionResult> GetCustomers(int? id, string name, string address, string phone, int? primaryContactUserId, int? secondaryContactUserId, int? locationId, bool? isActive, [FromQuery] ApiPagingModel<CustomerModel> paging)
         {
-            var getCustomers = filters.ToGetMultipleCustomersCommand();
-            var ret = await _dispatcher.DispatchAsync(getCustomers);
-            return ret.ToOkObjectResponse<IEnumerable<CustomerModel>>();
+            return Ok();
+            //var customers = await _customerViewService.GetCustomers(paging, id, name, address, phone, primaryContactUserId, secondaryContactUserId, locationId, isActive);
+            //return GenerateOkViewResponse<ApiPagingModel<CustomerModel>>(customers);
         }
 
         [HttpPost, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanCreate)]
