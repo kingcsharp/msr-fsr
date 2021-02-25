@@ -571,8 +571,8 @@
             <th class="text-right">Date: </th>
             <td>{{quoteData.submittedDate | userTimezone}}</td>
             <th class="text-right">Customer Name:</th>
-            <td>
-              {{getCustomerLabel(quoteData.customer)}}
+            <td *ngIf="quoteData.customer">
+              [MSR-FSR] {{quoteData.customer.name}} - [ID: {{quoteData.customer.id}}]
             </td>
           </tr>
           <tr>
