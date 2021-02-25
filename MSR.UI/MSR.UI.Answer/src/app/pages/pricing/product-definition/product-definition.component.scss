@@ -13,3 +13,56 @@ ol {
   list-style: decimal;
   margin-left: 40px;
 }
+
+@media print {
+  .quote-report.ui-dialog {
+    max-width: none;
+    width: 100% !important;
+    height:100% !important;
+
+    .ui-dialog-content {
+      height: 100% !important;
+      overflow: visible;
+      background-color: transparent;
+      border:none;
+
+      table {
+        border-bottom: none !important;
+        td {
+          border-top: none !important;
+        }
+      }
+
+      .table-bordered,
+      .table-bordered th,
+      .table-bordered td {
+        border: 1px solid rgba(0, 0, 0, 0.25) !important;
+      }
+    }
+
+    .ui-dialog-footer,
+    .ui-dialog-titlebar {
+      display: none !important;
+    }
+  }
+
+  .ui-dialog-mask{
+    position: absolute;
+  }
+
+  #sidebar {
+    display: none !important;
+  }
+
+  app-product-definition {
+    display: none !important;
+  }
+
+  body{
+    background: none;
+  }
+
+  footer.content-footer{
+    display: none !important;
+  }
+}
