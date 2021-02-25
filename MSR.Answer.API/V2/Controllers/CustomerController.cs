@@ -22,10 +22,9 @@ namespace MSR.Answer.API.V2.Controllers
         }
 
         [HttpGet]
-        [SwaggerResponse(typeof(ApiPagingModel<CustomerModel>))]
-        public async Task<IActionResult> GetCustomers([FromQuery] GetMultipleCustomersRequest filters, [FromQuery] ApiPagingModel<CustomerModel> paging)
+        public async Task<IActionResult> GetCustomers(int? id, string name, string address, string phone, int? primaryContactUserId, int? secondaryContactUserId, int? locationId, bool? isActive, [FromQuery] ApiPagingModel<CustomerModel> paging)
         {
-            var customers = await _customerViewService.GetCustomers(paging, filters.Id,filters.Name, filters.Address, filters.Phone, filters.PrimaryContactUserId, filters.SecondaryContactUserId, filters.LocationId, filters.IsActive);
+            var customers = await _customerViewService.GetCustomers(paging, id,name, address, phone, primaryContactUserId, secondaryContactUserId, locationId, isActive);
 
             return GenerateOkViewResponse<ApiPagingModel<CustomerModel>>(customers);
         }
