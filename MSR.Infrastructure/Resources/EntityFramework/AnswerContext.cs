@@ -80,6 +80,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<WorkOrderMessage> WorkOrderMessage { get; set; }
         public DbSet<WorkOrderHistoryView> WorkOrderHistoryView { get; set; }
         public DbSet<WorkOrderStatusSummary> WorkOrderStatusSummary { get; set; }
+        public DbSet<WorkOrderMenu> WorkOrderMenu { get; set; }
+
         public AnswerContext() : base()
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;

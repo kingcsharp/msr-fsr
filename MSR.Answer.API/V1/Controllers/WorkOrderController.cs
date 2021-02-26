@@ -53,10 +53,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
-        public async Task<IActionResult> WorkOrderGetMenu()
+        public async Task<IActionResult> WorkOrderGetMenu(int? take, int? skip)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderMenu());
-            return ret.ToOkObjectResponse<ICollection<WorkOrderGridSummary>>();
+            var workOrderMenuViews = await _workOrderViewService.GetWorkOrderMenuAsync(skip.GetValueOrDefault(0),take.GetValueOrDefault(0));
+            return GenerateOkViewResponse(workOrderMenuViews.data);
         }
 
         /// <summary>

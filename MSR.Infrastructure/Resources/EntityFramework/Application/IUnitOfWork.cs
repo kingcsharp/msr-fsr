@@ -91,6 +91,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ProductStep> ProductSteps { get; }
         IRepository<WorkOrderHistoryView> WorkOrderHistoryViews { get;}
         IRepository<WorkOrderStatusSummary> WorkOrderStatusSummaries { get;}
+        IRepository<WorkOrderMenu> WorkOrderMenus { get;}
 
         void SaveChanges();
         Task SaveChangesAsync();

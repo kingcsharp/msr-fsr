@@ -83,6 +83,36 @@ namespace MSR.Infrastructure.Resources.Projections
             }
         };
 
+        public static Expression<Func<WorkOrderMenu, dynamic>> WorkOrderMenuView => i => new
+        {
+            Id = i.Id,
+            PurchaseId = i.PurchaseId,
+            WorkOrderItemNumber = i.WorkOrderItemNumber,
+            CustomerName = i.Customer,
+            LocationName = i.Location,
+            SerialNumber = i.SerialNumber,
+            PurchaseOrderNumber = i.PurchaseOrderNumber,
+            ReferencePO = i.ReferencePO,
+            Quantity = i.Quantity,
+            ScheduledStartDate = i.ScheduledStartDate,
+            ScheduledEndDate = i.ScheduledEndDate,
+            ActualStartDate = i.ActualStartDate,
+            ActualEndDate = i.ActualEndDate,
+            ProductName = i.Product,
+            ProcedureName = i.Procedure,
+            Status = i.Status,
+            Disposition = i.Disposition,
+            CurrentActiveTaskName = i.CurrentActiveTaskName,
+            PercentageOfTasksCompleted = i.PercentageOfTasksCompleted,
+            PercentageOfTasksCompletedNumerator = i.PercentageOfTasksCompletedNumerator,
+            PercentageOfTasksCompletedDenominator = i.PercentageOfTasksCompletedDenominator,
+            PercentageOfExpectedDurationTimeLogged = i.PercentageOfExpectedDurationTimeLogged,
+            PercentageOfExpectedDurationTimeLoggedNumerator = i.PercentageOfExpectedDurationTimeLoggedNumerator,
+            PercentageOfExpectedDurationTimeLoggedDenominator = i.PercentageOfExpectedDurationTimeLoggedDenominator,
+            HasNcr = i.HasNcr,
+            SegregationType = i.SegregationType == null ? (EnumSegregationType?)null: EnumUtils.GetValueFromDescription<EnumSegregationType>(i.SegregationType)
+        };
+
         private static EnumStatusSteps GetWorkOrderStatusFromTasks(ICollection<WorkOrderTask> tasks)
         {
             int[] completed = { 3, 6, 8 };
@@ -103,5 +133,7 @@ namespace MSR.Infrastructure.Resources.Projections
 
             return EnumStatusSteps.WaitingtoStart;
         }
+
+
     }
 }

@@ -68,8 +68,13 @@ namespace MSR.Infrastructure.Resources.Queries
         public static async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatus(this DbSet<WorkOrderStatusSummary> dbSet, Expression<Func<WorkOrderStatusSummary, dynamic>> projection)
         {
             var workOrderStatusViews = (await QueryHelper.GetViewDataFor<WorkOrderStatusSummary, ICollection<WorkOrderStatus>>(dbSet, projection)).ToList();
-
             return workOrderStatusViews;
+        }
+
+        public static async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenu(this DbSet<WorkOrderMenu> dbSet, Expression<Func<WorkOrderMenu,dynamic>> projection, int skip = 0, int take = 0)
+        {
+            var workOrderMenuTuple = (await QueryHelper.GetPagedViewDataFor<WorkOrderMenu, ICollection<WorkOrderGridSummary>>(dbSet, projection,skip,take));
+            return workOrderMenuTuple;
         }
 
         private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,
