@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   PartService,
   PartModel,
@@ -32,6 +32,7 @@ const HOURS_MINUTES = 60;
   selector: 'app-product-definition',
   templateUrl: './product-definition.component.html',
   styleUrls: ['./product-definition.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   providers: [
     CustomerService,
     ProcedureService,
@@ -684,6 +685,10 @@ export class ProductDefinitionComponent implements OnInit {
           }));
       }
     }
+  }
+
+  print() {
+    window.print();
   }
 }
 
