@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService, EnumMenuItem,
-  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest, InvoiceableWorkOrderView
+  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, CustomerModel, LocationModel, WorkOrderService, AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest, InvoiceableWorkOrderView
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -49,7 +49,7 @@ export class InvoiceComponent implements OnInit {
   uploadedFinished: boolean = false;
   showApproveButtons: boolean = true;
   userPrivileges: AllowedActions;
-  customers: Array<Customer>;
+  customers: Array<CustomerModel>;
   locations: Array<LocationModel>;
   invoiceItemOptions: any;
   combineSelected: boolean = true;
@@ -163,7 +163,7 @@ export class InvoiceComponent implements OnInit {
 
   getCustomers() {
     this.globals.showLoader(true);
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
+    this.customerService.customerGet(null, null, null, null, null, null, null, null,null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customers = response.object;
       }));

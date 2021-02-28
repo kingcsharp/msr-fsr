@@ -14,6 +14,10 @@ using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
+using MSR.Domain.Commanding;
+using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace MSR.Infrastructure.Resources.Services.Customers
 {
@@ -41,15 +45,15 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             {
                 var customer = _mapper.Map<EntityFramework.Entities.Customer>(command);
                 //Because automapper is stupid.
-                if(customer.LocationId == 0)
+                if (customer.LocationId == 0)
                 {
                     customer.LocationId = null;
                 }
-                if(customer.PrimaryContactUserId == 0)
+                if (customer.PrimaryContactUserId == 0)
                 {
                     customer.PrimaryContactUserId = null;
                 }
-                if(customer.SecondaryContactUserId == 0)
+                if (customer.SecondaryContactUserId == 0)
                 {
                     customer.SecondaryContactUserId = null;
                 }
@@ -57,7 +61,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 customer.IsActive = true;
                 await _unitOfWork.Customers.AddAsync(customer);
                 await _unitOfWork.LogApprovalTransaction(customer, customer.Id);
-                
+
                 retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customer);
             }
             else
@@ -188,44 +192,40 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return retCustomer;
         }
 
-        public async Task<IEnumerable<Domain.Models.CustomerModel>> GetCustomersAsync(GetMultipleCustomers command)
+        private IQueryable<Customer> FilterQuery(IQueryable<Customer> customer, string propertyToFilter, string value)
+        {
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(string), propertyToFilter);
+            ConstantExpression constantExpression = Expression.Constant(value, typeof(string));
+            BinaryExpression binaryExpression = Expression.Equal(parameterExpression, constantExpression);
+            Expression<Func<Customer, bool>> lambda = Expression.Lambda<Func<Customer, bool>>(binaryExpression, parameterExpression);
+            return customer.Where(lambda);
+        }
+
+        public async Task<(IEnumerable<CustomerModel> data, int totalRows)> GetCustomersAsync(GetMultipleCustomers command)
         {
             var customerList = new List<Domain.Models.CustomerModel>();
             var customers = _unitOfWork.Customers.Query();
-            
+
             customers = customers.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser);
 
-            if (command.Id != null)
+            PropertyInfo[] commandPropertyInfos = command.GetType().GetProperties();
+
+            commandPropertyInfos.ToList().ForEach(commandPropertyInfo =>
             {
-                customers = customers.Where(i => i.Id == command.Id);
-            }
-            if (!string.IsNullOrWhiteSpace(command.Name))
+                if (commandPropertyInfo.DeclaringType.Name != typeof(PagingCommand).Name)
+                {
+                    var value = (string)command.GetType().GetProperty(commandPropertyInfo.Name).GetValue(command, null);
+                    if (!string.IsNullOrEmpty(value)) {
+
+                       
+                        customers = FilterQuery(customers, commandPropertyInfo.Name, value);
+                    }      
+                }
+            });
+
+            if (command.Skip.HasValue && command.Take.HasValue)
             {
-                customers = customers.Where(i => i.Name == command.Name);
-            }
-            if (!string.IsNullOrWhiteSpace(command.Address))
-            {
-                customers = customers.Where(i => i.Address == command.Address);
-            }
-            if (!string.IsNullOrWhiteSpace(command.Phone))
-            {
-                customers = customers.Where(i => i.Phone == command.Phone);
-            }
-            if (command.PrimaryContactUserId.HasValue)
-            {
-                customers = customers.Where(i => i.PrimaryContactUserId == command.PrimaryContactUserId.Value);
-            }
-            if (command.SecondaryContactUserId.HasValue)
-            {
-                customers = customers.Where(i => i.SecondaryContactUserId == command.SecondaryContactUserId.Value);
-            }
-            if (command.LocationId.HasValue)
-            {
-                customers = customers.Where(i => i.LocationId == command.LocationId.Value);
-            }
-            if (command.IsActive.HasValue)
-            {
-                customers = customers.Where(i => i.IsActive == command.IsActive.Value);
+                customers = customers.Skip(command.Skip.Value).Take(command.Take.Value);
             }
 
             foreach (var customer in customers.ToList())
@@ -241,7 +241,9 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 customerList.Add(retCustomer);
             }
 
-            return customerList.AsEnumerable();
+            var totalRows = _unitOfWork.Customers.Query().Count();
+
+            return (customerList.AsEnumerable(), totalRows);
         }
 
         public async Task<IEnumerable<Domain.Models.CustomerModel>> ImportCustomers(string csvData)
@@ -266,7 +268,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                     }
                     else
                     {
-                        var customerModel = await CreateCustomerAsync(_mapper.Map<CreateCustomer>(record),true);
+                        var customerModel = await CreateCustomerAsync(_mapper.Map<CreateCustomer>(record), true);
                         customerModels.Add(customerModel);
                     }
                 }

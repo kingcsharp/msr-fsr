@@ -5,7 +5,7 @@ import {
   ProcedureService, Procedure,
   ProcedureStepTemplateService,
   ProductService, CreateProductRequest, UpdateProductRequest,
-  CustomerService, Customer,
+  CustomerService, CustomerModel,
   QuoteService, QuoteModel,
   ProcedureStepModel,
   AdminCostSettingsService, AdminCostSettingsModel,
@@ -218,7 +218,7 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.getCustomersFlag) {
       return this.customersData;
     }
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
       response.object.map((x) => {
         this.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
       });
@@ -226,7 +226,7 @@ export class ProductDefinitionComponent implements OnInit {
     }));
   }
 
-  getCustomerLabel(customer: Customer): string {
+  getCustomerLabel(customer: CustomerModel): string {
     return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`;
   }
 

@@ -10,4 +10,5 @@
     {
         TResult Data { get; }
     }
+
 }

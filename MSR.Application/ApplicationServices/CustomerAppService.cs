@@ -33,7 +33,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetMultipleCustomers command, CancellationToken cancellationToken = default)
         {
             var ret = await _customerService.GetCustomersAsync(command);
-            return new CommandResponse<IEnumerable<CustomerModel>>(ret);
+            return new PagingCommandResponse<IEnumerable<CustomerModel>>(ret.data, ret.totalRows, command.Term, command.PageNumber, command.PageSize, command.FilterProperty, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateCustomer command, CancellationToken cancellationToken = default)

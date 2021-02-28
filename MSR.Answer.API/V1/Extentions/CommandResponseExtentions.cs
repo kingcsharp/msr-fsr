@@ -28,16 +28,51 @@ namespace MSR.Answer.API.V1.Extentions
             }
             var dataObject = ((ICommandResponse<TResult>)commandResponse).Data;
             int id = 0;
+
             if (dataObject is EntityModel)
             {
                 id = (dataObject as EntityModel).Id;
             }
-            return new OkObjectResult(new AuditActionResult<TResult>()
+
+            if (commandResponse is IPagingCommandResponse<TResult>) 
             {
-                Object = dataObject,
-                SuccessMessage = message,
-                Id = id
-            });
+
+                var pagedCommandResponse = commandResponse as IPagingCommandResponse<TResult>;
+
+                int? totalNumberOfRecords = pagedCommandResponse.TotalRows;
+                int? pageNumber = pagedCommandResponse.PageNumber;
+                int? pageSize = pagedCommandResponse.PageSize;
+                bool? sortAscending = pagedCommandResponse.SortAscending;
+                string term = pagedCommandResponse.Term;
+
+                return new OkObjectResult(new AuditActionResult<TResult>()
+                {
+                    Object = dataObject,
+                    SuccessMessage = message,
+                    Id = id,
+                    TotalNumberOfRecords = totalNumberOfRecords,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    SortAscending = sortAscending,
+                    Term = term
+                });
+
+            } 
+            else 
+            {
+
+                return new OkObjectResult(new AuditActionResult<TResult>()
+                {
+                    Object = dataObject,
+                    SuccessMessage = message,
+                    Id = id
+                });
+
+            }
+
+            
+            
+            
         }
 
         public static IActionResult ToOkObjectResponse(this ICommandResponse commandResponse, string message = null)

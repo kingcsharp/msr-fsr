@@ -6,7 +6,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ConfirmationService } from 'primeng/api';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest, CreatePurchaseOrderRequest, PurchaseOrderView, Customer, ProductModel } from '../../../services/api.client.generated';
+import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest, CreatePurchaseOrderRequest, PurchaseOrderView, CustomerModel, ProductModel } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -183,7 +183,7 @@ export class PurchaseOrdersComponent implements OnInit {
       return ctrl.customersData;
     }
     this.customerService.customerGet(null, null, null, null, null, null, null
-      , true, env.apiVersion).pipe(take(1))
+      , true, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.customersData = response.object;
         ctrl.getCustomersFlag = true;
@@ -290,7 +290,7 @@ export class PurchaseOrdersComponent implements OnInit {
 }
 
 class PurcahseOrderEditModel extends PurchaseOrderView {
-  customer?: Customer | undefined;
+  customer?: CustomerModel | undefined;
   selectedProducts!: ProductModel[];
 }
 

@@ -23,22 +23,20 @@ namespace MSR.Answer.API.V1.Controllers
     public class CustomerController : BaseApiController
     {
         private readonly ICommandDispatcher _dispatcher;
-        private readonly ICustomerViewService _customerViewService;
 
-        public CustomerController(ICommandDispatcher dispatcher, ICustomerViewService viewService)
+        public CustomerController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-            _customerViewService = viewService;
         }
 
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<IEnumerable<CustomerModel>>))]
         public async Task<IActionResult> GetCustomers([FromQuery] GetMultipleCustomersRequest filters)
         {
-            //return Ok();
-            var customers = await _customerViewService.GetCustomers(filters.Skip, filters.Take,filters.Id,filters.Name,filters.Address, filters.Phone, filters.PrimaryContactUserId, filters.SecondaryContactUserId, filters.LocationId, filters.IsActive);
-            return GenerateOkViewResponse<ICollection<CustomerModel>>(customers.data, customers.totalRows);
-            
+            var getCustomers = filters.ToGetMultipleCustomersCommand();
+            var ret = await _dispatcher.DispatchAsync(getCustomers);
+            return ret.ToOkObjectResponse<IEnumerable<CustomerModel>>();
+
         }
 
         [HttpPost, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanCreate)]

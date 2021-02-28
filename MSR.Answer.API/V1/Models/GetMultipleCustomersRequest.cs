@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace MSR.Answer.API.V1.Models
 {
     public class GetMultipleCustomersRequest: BaseApiModel
@@ -11,5 +13,13 @@ namespace MSR.Answer.API.V1.Models
         public int? SecondaryContactUserId { get; set; }
         public int? LocationId { get; set; }
         public bool? IsActive { get; set; }
+        public string PrimaryContactUserName { get;set;}
+        public string SecondartContactUserName { get;set;}
+        public string LocationName { get;set;}
+        public string CustomerNumber { get;set;}
+        public string CreatedById { get;set;}
+        public DateTime? CreatedOn { get;set;}
+
+
     }
 }

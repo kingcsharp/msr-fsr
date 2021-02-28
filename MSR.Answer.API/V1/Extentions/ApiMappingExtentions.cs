@@ -383,17 +383,7 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static GetMultipleCustomers ToGetMultipleCustomersCommand(this GetMultipleCustomersRequest request)
         {
-            return new GetMultipleCustomers()
-            {
-                Id = request.Id,
-                Address = request.Address,
-                IsActive = request.IsActive,
-                LocationId = request.LocationId,
-                Name = request.Name,
-                Phone = request.Phone,
-                PrimaryContactUserId = request.PrimaryContactUserId,
-                SecondaryContactUserId = request.SecondaryContactUserId
-            };
+            return AutoMapperHelper.Mapper.Map<GetMultipleCustomers>(request);
         }
 
         /// <summary>

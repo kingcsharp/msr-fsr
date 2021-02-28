@@ -432,62 +432,36 @@ export class CustomerService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, filters: string[] | null | undefined, results: CustomerModel[] | null | undefined, term: string | null | undefined, pageNumber: number | undefined, totalNumberOfRecords: number | undefined, pageSize: number | undefined, filterProperty: string | null | undefined, isDeleted: boolean | undefined, skip: number | undefined, take: number | undefined, sortAscending: boolean | undefined, version: string): Observable<AuditActionResultOfApiPagingModelOfCustomerModel> {
+    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, filterProperty: string | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
         let url_ = this.baseUrl + "/v{version}/Customer?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (name !== undefined && name !== null)
-            url_ += "name=" + encodeURIComponent("" + name) + "&";
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
         if (address !== undefined && address !== null)
-            url_ += "address=" + encodeURIComponent("" + address) + "&";
+            url_ += "Address=" + encodeURIComponent("" + address) + "&";
         if (phone !== undefined && phone !== null)
-            url_ += "phone=" + encodeURIComponent("" + phone) + "&";
+            url_ += "Phone=" + encodeURIComponent("" + phone) + "&";
         if (primaryContactUserId !== undefined && primaryContactUserId !== null)
-            url_ += "primaryContactUserId=" + encodeURIComponent("" + primaryContactUserId) + "&";
+            url_ += "PrimaryContactUserId=" + encodeURIComponent("" + primaryContactUserId) + "&";
         if (secondaryContactUserId !== undefined && secondaryContactUserId !== null)
-            url_ += "secondaryContactUserId=" + encodeURIComponent("" + secondaryContactUserId) + "&";
+            url_ += "SecondaryContactUserId=" + encodeURIComponent("" + secondaryContactUserId) + "&";
         if (locationId !== undefined && locationId !== null)
-            url_ += "locationId=" + encodeURIComponent("" + locationId) + "&";
+            url_ += "LocationId=" + encodeURIComponent("" + locationId) + "&";
         if (isActive !== undefined && isActive !== null)
-            url_ += "isActive=" + encodeURIComponent("" + isActive) + "&";
-        if (filters !== undefined && filters !== null)
-            filters && filters.forEach(item => { url_ += "Filters=" + encodeURIComponent("" + item) + "&"; });
-        if (results !== undefined && results !== null)
-            results && results.forEach(item => { url_ += "Results=" + encodeURIComponent("" + item) + "&"; });
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
         if (term !== undefined && term !== null)
             url_ += "Term=" + encodeURIComponent("" + term) + "&";
-        if (pageNumber === null)
-            throw new Error("The parameter 'pageNumber' cannot be null.");
-        else if (pageNumber !== undefined)
+        if (pageNumber !== undefined && pageNumber !== null)
             url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
-        if (totalNumberOfRecords === null)
-            throw new Error("The parameter 'totalNumberOfRecords' cannot be null.");
-        else if (totalNumberOfRecords !== undefined)
-            url_ += "TotalNumberOfRecords=" + encodeURIComponent("" + totalNumberOfRecords) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
+        if (pageSize !== undefined && pageSize !== null)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
         if (filterProperty !== undefined && filterProperty !== null)
             url_ += "FilterProperty=" + encodeURIComponent("" + filterProperty) + "&";
-        if (isDeleted === null)
-            throw new Error("The parameter 'isDeleted' cannot be null.");
-        else if (isDeleted !== undefined)
-            url_ += "IsDeleted=" + encodeURIComponent("" + isDeleted) + "&";
-        if (skip === null)
-            throw new Error("The parameter 'skip' cannot be null.");
-        else if (skip !== undefined)
-            url_ += "Skip=" + encodeURIComponent("" + skip) + "&";
-        if (take === null)
-            throw new Error("The parameter 'take' cannot be null.");
-        else if (take !== undefined)
-            url_ += "Take=" + encodeURIComponent("" + take) + "&";
-        if (sortAscending === null)
-            throw new Error("The parameter 'sortAscending' cannot be null.");
-        else if (sortAscending !== undefined)
+        if (sortAscending !== undefined && sortAscending !== null)
             url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -506,14 +480,14 @@ export class CustomerService {
                 try {
                     return this.processCustomerGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfApiPagingModelOfCustomerModel>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfIEnumerableOfCustomerModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfApiPagingModelOfCustomerModel>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfIEnumerableOfCustomerModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCustomerGet(response: HttpResponseBase): Observable<AuditActionResultOfApiPagingModelOfCustomerModel> {
+    protected processCustomerGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -524,7 +498,7 @@ export class CustomerService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfApiPagingModelOfCustomerModel.fromJS(resultData200);
+            result200 = AuditActionResultOfIEnumerableOfCustomerModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -532,7 +506,7 @@ export class CustomerService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfApiPagingModelOfCustomerModel>(<any>null);
+        return _observableOf<AuditActionResultOfIEnumerableOfCustomerModel>(<any>null);
     }
 
     customerPost(version: string, request: CreateCustomerRequest): Observable<AuditActionResultOfCustomerModel> {
@@ -8479,6 +8453,11 @@ export class AuditActionResult implements IAuditActionResult {
     errorMessages?: ErrorMessage[] | undefined;
     /** Gets or Sets Id */
     id?: number;
+    term?: string | undefined;
+    pageNumber?: number | undefined;
+    totalNumberOfRecords?: number | undefined;
+    pageSize?: number | undefined;
+    sortAscending?: boolean | undefined;
     /** True if any error messages exist */
     hasErrors?: boolean;
     /** True if any validation error messages exist */
@@ -8502,6 +8481,11 @@ export class AuditActionResult implements IAuditActionResult {
                     this.errorMessages!.push(ErrorMessage.fromJS(item));
             }
             this.id = _data["id"];
+            this.term = _data["term"];
+            this.pageNumber = _data["pageNumber"];
+            this.totalNumberOfRecords = _data["totalNumberOfRecords"];
+            this.pageSize = _data["pageSize"];
+            this.sortAscending = _data["sortAscending"];
             this.hasErrors = _data["hasErrors"];
             this.hasValidationErrors = _data["hasValidationErrors"];
         }
@@ -8523,6 +8507,11 @@ export class AuditActionResult implements IAuditActionResult {
                 data["errorMessages"].push(item.toJSON());
         }
         data["id"] = this.id;
+        data["term"] = this.term;
+        data["pageNumber"] = this.pageNumber;
+        data["totalNumberOfRecords"] = this.totalNumberOfRecords;
+        data["pageSize"] = this.pageSize;
+        data["sortAscending"] = this.sortAscending;
         data["hasErrors"] = this.hasErrors;
         data["hasValidationErrors"] = this.hasValidationErrors;
         return data; 
@@ -8537,6 +8526,11 @@ export interface IAuditActionResult {
     errorMessages?: ErrorMessage[] | undefined;
     /** Gets or Sets Id */
     id?: number;
+    term?: string | undefined;
+    pageNumber?: number | undefined;
+    totalNumberOfRecords?: number | undefined;
+    pageSize?: number | undefined;
+    sortAscending?: boolean | undefined;
     /** True if any error messages exist */
     hasErrors?: boolean;
     /** True if any validation error messages exist */
@@ -9010,159 +9004,46 @@ export interface IUpdateAdminCostSettingRequest {
 }
 
 /** Base class for an API call with a typed result */
-export class AuditActionResultOfApiPagingModelOfCustomerModel extends AuditActionResult implements IAuditActionResultOfApiPagingModelOfCustomerModel {
-    object?: ApiPagingModelOfCustomerModel | undefined;
+export class AuditActionResultOfIEnumerableOfCustomerModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfCustomerModel {
+    object?: CustomerModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfApiPagingModelOfCustomerModel) {
+    constructor(data?: IAuditActionResultOfIEnumerableOfCustomerModel) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"] ? ApiPagingModelOfCustomerModel.fromJS(_data["object"]) : <any>undefined;
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(CustomerModel.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfApiPagingModelOfCustomerModel {
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfCustomerModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfApiPagingModelOfCustomerModel();
+        let result = new AuditActionResultOfIEnumerableOfCustomerModel();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
 }
 
 /** Base class for an API call with a typed result */
-export interface IAuditActionResultOfApiPagingModelOfCustomerModel extends IAuditActionResult {
-    object?: ApiPagingModelOfCustomerModel | undefined;
-}
-
-export class PagingModel implements IPagingModel {
-    term?: string | undefined;
-    pageNumber?: number;
-    totalNumberOfRecords?: number;
-    pageSize?: number;
-    filterProperty?: string | undefined;
-    isDeleted?: boolean;
-    skip?: number;
-    take?: number;
-    sortAscending?: boolean;
-
-    constructor(data?: IPagingModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.term = _data["term"];
-            this.pageNumber = _data["pageNumber"];
-            this.totalNumberOfRecords = _data["totalNumberOfRecords"];
-            this.pageSize = _data["pageSize"];
-            this.filterProperty = _data["filterProperty"];
-            this.isDeleted = _data["isDeleted"];
-            this.skip = _data["skip"];
-            this.take = _data["take"];
-            this.sortAscending = _data["sortAscending"];
-        }
-    }
-
-    static fromJS(data: any): PagingModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new PagingModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["term"] = this.term;
-        data["pageNumber"] = this.pageNumber;
-        data["totalNumberOfRecords"] = this.totalNumberOfRecords;
-        data["pageSize"] = this.pageSize;
-        data["filterProperty"] = this.filterProperty;
-        data["isDeleted"] = this.isDeleted;
-        data["skip"] = this.skip;
-        data["take"] = this.take;
-        data["sortAscending"] = this.sortAscending;
-        return data; 
-    }
-}
-
-export interface IPagingModel {
-    term?: string | undefined;
-    pageNumber?: number;
-    totalNumberOfRecords?: number;
-    pageSize?: number;
-    filterProperty?: string | undefined;
-    isDeleted?: boolean;
-    skip?: number;
-    take?: number;
-    sortAscending?: boolean;
-}
-
-export class ApiPagingModelOfCustomerModel extends PagingModel implements IApiPagingModelOfCustomerModel {
-    filters?: string[] | undefined;
-    results?: CustomerModel[] | undefined;
-
-    constructor(data?: IApiPagingModelOfCustomerModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            if (Array.isArray(_data["filters"])) {
-                this.filters = [] as any;
-                for (let item of _data["filters"])
-                    this.filters!.push(item);
-            }
-            if (Array.isArray(_data["results"])) {
-                this.results = [] as any;
-                for (let item of _data["results"])
-                    this.results!.push(CustomerModel.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ApiPagingModelOfCustomerModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiPagingModelOfCustomerModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.filters)) {
-            data["filters"] = [];
-            for (let item of this.filters)
-                data["filters"].push(item);
-        }
-        if (Array.isArray(this.results)) {
-            data["results"] = [];
-            for (let item of this.results)
-                data["results"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IApiPagingModelOfCustomerModel extends IPagingModel {
-    filters?: string[] | undefined;
-    results?: CustomerModel[] | undefined;
+export interface IAuditActionResultOfIEnumerableOfCustomerModel extends IAuditActionResult {
+    object?: CustomerModel[] | undefined;
 }
 
 export abstract class EntityModel implements IEntityModel {
