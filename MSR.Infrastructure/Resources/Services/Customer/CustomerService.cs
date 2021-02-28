@@ -18,6 +18,7 @@ using System.Reflection;
 using MSR.Domain.Commanding;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Customers
 {
@@ -203,47 +204,26 @@ namespace MSR.Infrastructure.Resources.Services.Customers
 
         public async Task<(IEnumerable<CustomerModel> data, int totalRows)> GetCustomersAsync(GetMultipleCustomers command)
         {
-            var customerList = new List<Domain.Models.CustomerModel>();
-            var customers = _unitOfWork.Customers.Query();
+            var customerModels = new List<Domain.Models.CustomerModel>();
 
-            customers = customers.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser);
-
-            PropertyInfo[] commandPropertyInfos = command.GetType().GetProperties();
-
-            commandPropertyInfos.ToList().ForEach(commandPropertyInfo =>
-            {
-                if (commandPropertyInfo.DeclaringType.Name != typeof(PagingCommand).Name)
-                {
-                    var value = (string)command.GetType().GetProperty(commandPropertyInfo.Name).GetValue(command, null);
-                    if (!string.IsNullOrEmpty(value)) {
-
-                       
-                        customers = FilterQuery(customers, commandPropertyInfo.Name, value);
-                    }      
-                }
-            });
-
-            if (command.Skip.HasValue && command.Take.HasValue)
-            {
-                customers = customers.Skip(command.Skip.Value).Take(command.Take.Value);
-            }
-
-            foreach (var customer in customers.ToList())
-            {
-                var customerApproval = await _unitOfWork.CustomerApprovals.Query().Include(i => i.Status).FirstOrDefaultAsync(i => i.CustomerId == customer.Id);
-
-                var retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customer);
-                if (customerApproval != null && customerApproval.Status != null)
-                {
-                    _mapper.Map(customerApproval, retCustomer);
-                    retCustomer.Status = customerApproval.Status.Name;
-                }
-                customerList.Add(retCustomer);
-            }
+            var customers = _unitOfWork.Customers.Query().CreateCustomerQuery(command);
 
             var totalRows = _unitOfWork.Customers.Query().Count();
 
-            return (customerList.AsEnumerable(), totalRows);
+            foreach (var customer in customers.ToList())
+            {
+                var customerApprovalEntity = await _unitOfWork.CustomerApprovals.Query().Include(i => i.Status).FirstOrDefaultAsync(i => i.CustomerId == customer.Id);
+
+                var customerModel = _mapper.Map<Domain.Models.CustomerModel>(customer);
+                if (customerApprovalEntity != null && customerApprovalEntity.Status != null)
+                {
+                    _mapper.Map(customerApprovalEntity, customerModel);
+                    customerModel.Status = customerApprovalEntity.Status.Name;
+                }
+                customerModels.Add(customerModel);
+            }
+
+            return (customerModels.AsEnumerable(), totalRows);
         }
 
         public async Task<IEnumerable<Domain.Models.CustomerModel>> ImportCustomers(string csvData)

@@ -17,7 +17,7 @@ namespace MSR.Domain.Commands
         public string SecondartContactUserName { get; set; }
         public string LocationName { get; set; }
         public string CustomerNumber { get; set; }
-        public string CreatedById { get; set; }
+        public int? CreatedById { get; set; }
         public DateTime? CreatedOn { get; set; }
     }
 }

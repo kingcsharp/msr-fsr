@@ -68,7 +68,8 @@ export class CustomersComponent implements OnInit {
 
     this.globals.showLoader(true);
 
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, 1, 10, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, 
+      null, null, null, null, null, 1, 10, null, null,env.apiVersion).subscribe(responseHandler((response) => {
 
       this.data = response.object;
 

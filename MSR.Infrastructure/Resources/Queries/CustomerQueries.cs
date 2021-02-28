@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Paging;
@@ -13,49 +14,78 @@ namespace MSR.Infrastructure.Resources.Queries
 {
     public static class CustomerQueries
     {
-        public static (ICollection<CustomerModel> data, int totalRows) GetCustomersView(this DbSet<Customer> dbSet, int skip, int take, int? id, string name, string address, string phone, int? primaryContactUserId, int? secondaryContactUserId, int? locationId, bool? isActive)
+        public static ICollection<CustomerModel> CreateCustomerQuery(this IQueryable<Customer> query, GetMultipleCustomers command)
         {
             var customerList = new List<CustomerModel>();
 
-            var customers = dbSet.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).AsQueryable();
+            query = query.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).AsQueryable();
 
-            if (id != null)
+            if (command.Id.HasValue)
             {
-                customers = customers.Where(i => i.Id == id);
+                query = query.Where(i => i.Id == command.Id.Value);
             }
-            if (!string.IsNullOrWhiteSpace(name))
+            if (!string.IsNullOrWhiteSpace(command.Name))
             {
-                customers = customers.Where(i => i.Name == name);
+                query = query.Where(i => i.Name == command.Name);
             }
-            if (!string.IsNullOrWhiteSpace(address))
+            if (!string.IsNullOrWhiteSpace(command.Address))
             {
-                customers = customers.Where(i => i.Address ==address);
+                query = query.Where(i => i.Address == command.Address);
             }
-            if (!string.IsNullOrWhiteSpace(phone))
+            if (!string.IsNullOrWhiteSpace(command.Phone))
             {
-                customers = customers.Where(i => i.Phone == phone);
+                query = query.Where(i => i.Phone == command.Phone);
             }
-            if (primaryContactUserId.HasValue)
+            if (command.PrimaryContactUserId.HasValue)
             {
-                customers = customers.Where(i => i.PrimaryContactUserId == primaryContactUserId.Value);
+                query = query.Where(i => i.PrimaryContactUserId == command.PrimaryContactUserId.Value);
             }
-            if (secondaryContactUserId.HasValue)
+            if (command.SecondaryContactUserId.HasValue)
             {
-                customers = customers.Where(i => i.SecondaryContactUserId == secondaryContactUserId.Value);
+                query = query.Where(i => i.SecondaryContactUserId == command.SecondaryContactUserId.Value);
             }
-            if (locationId.HasValue)
+            if (command.LocationId.HasValue)
             {
-                customers = customers.Where(i => i.LocationId == locationId.Value);
+                query = query.Where(i => i.LocationId == command.LocationId.Value);
             }
-            if (isActive.HasValue)
+            if (command.IsActive.HasValue)
             {
-                customers = customers.Where(i => i.IsActive == isActive.Value);
+                query = query.Where(i => i.IsActive == command.IsActive.Value);
             }
 
-            var pagedData = customers.Paginate(skip, take);
-            var customerModels = pagedData.data.Select(i => AutoMapperHelper.Mapper.Map<CustomerModel>(i));
+            if (!string.IsNullOrEmpty(command.PrimaryContactUserName))
+            {
+                query = query.Where(i => i.PrimaryContactUser.GetFullName() == command.PrimaryContactUserName);
+            }
 
-            return (customerModels.ToList(), pagedData.totalRows);
+            if (!string.IsNullOrEmpty(command.SecondartContactUserName))
+            {
+                query = query.Where(i => i.PrimaryContactUser.GetFullName() == command.SecondartContactUserName);
+            }
+
+            if (!string.IsNullOrEmpty(command.LocationName))
+            {
+                query = query.Where(i => i.Location.Name == command.LocationName);
+            }
+
+            if (!string.IsNullOrEmpty(command.CustomerNumber))
+            {
+                query = query.Where(i => i.CustomerNumber == command.CustomerNumber);
+            }
+
+            if (command.CreatedById.HasValue)
+            {
+                query = query.Where(i => i.CreatedBy == command.CreatedById.Value);
+            }
+
+            if (command.CreatedOn.HasValue)
+            {
+                query = query.Where(i => i.CreatedOn == command.CreatedOn.Value);
+            }
+
+            var customerModels = query.Select(i => AutoMapperHelper.Mapper.Map<CustomerModel>(i));
+            
+            return customerModels.ToList();
         }
     }
 }

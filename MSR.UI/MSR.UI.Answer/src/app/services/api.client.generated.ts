@@ -432,7 +432,7 @@ export class CustomerService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, filterProperty: string | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
+    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserName: string | null | undefined, secondartContactUserName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdById: number | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, filterProperty: string | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
         let url_ = this.baseUrl + "/v{version}/Customer?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -453,6 +453,18 @@ export class CustomerService {
             url_ += "LocationId=" + encodeURIComponent("" + locationId) + "&";
         if (isActive !== undefined && isActive !== null)
             url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (primaryContactUserName !== undefined && primaryContactUserName !== null)
+            url_ += "PrimaryContactUserName=" + encodeURIComponent("" + primaryContactUserName) + "&";
+        if (secondartContactUserName !== undefined && secondartContactUserName !== null)
+            url_ += "SecondartContactUserName=" + encodeURIComponent("" + secondartContactUserName) + "&";
+        if (locationName !== undefined && locationName !== null)
+            url_ += "LocationName=" + encodeURIComponent("" + locationName) + "&";
+        if (customerNumber !== undefined && customerNumber !== null)
+            url_ += "CustomerNumber=" + encodeURIComponent("" + customerNumber) + "&";
+        if (createdById !== undefined && createdById !== null)
+            url_ += "CreatedById=" + encodeURIComponent("" + createdById) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
         if (term !== undefined && term !== null)
             url_ += "Term=" + encodeURIComponent("" + term) + "&";
         if (pageNumber !== undefined && pageNumber !== null)

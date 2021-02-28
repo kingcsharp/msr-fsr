@@ -96,7 +96,7 @@ export class UserComponent implements OnInit {
   }
 
   getCustomers() {
-    this.customerService.customerGet(null, null, null, null, null, null, null, true, null, null, null, null, null, env.apiVersion).pipe(take(1))
+    this.customerService.customerGet(null, null, null, null, null, null, null, true, null, null, null, null, null,null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customers = response.object;
       }));

@@ -218,7 +218,7 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.getCustomersFlag) {
       return this.customersData;
     }
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
       response.object.map((x) => {
         this.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
       });
