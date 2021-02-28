@@ -14,9 +14,8 @@ namespace MSR.Infrastructure.Resources.Queries
 {
     public static class CustomerQueries
     {
-        public static ICollection<CustomerModel> CreateCustomerQuery(this IQueryable<Customer> query, GetMultipleCustomers command)
+        public static IQueryable<Customer> CreateCustomerQuery(this IQueryable<Customer> query, GetMultipleCustomers command)
         {
-            var customerList = new List<CustomerModel>();
 
             query = query.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).AsQueryable();
 
@@ -83,9 +82,12 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.Where(i => i.CreatedOn == command.CreatedOn.Value);
             }
 
-            var customerModels = query.Select(i => AutoMapperHelper.Mapper.Map<CustomerModel>(i));
+            if (command.Skip.HasValue && command.Take.HasValue)
+            {
+                query = query.Skip(command.Skip.Value).Take(command.Take.Value);
+            }
             
-            return customerModels.ToList();
+            return query;
         }
     }
 }

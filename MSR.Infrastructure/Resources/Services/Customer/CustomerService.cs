@@ -206,15 +206,15 @@ namespace MSR.Infrastructure.Resources.Services.Customers
         {
             var customerModels = new List<Domain.Models.CustomerModel>();
 
-            var customers = _unitOfWork.Customers.Query().CreateCustomerQuery(command);
+            var customerEntities = _unitOfWork.Customers.Query().CreateCustomerQuery(command).ToList();
 
             var totalRows = _unitOfWork.Customers.Query().Count();
 
-            foreach (var customer in customers.ToList())
+            foreach (var customerEntity in customerEntities.ToList())
             {
-                var customerApprovalEntity = await _unitOfWork.CustomerApprovals.Query().Include(i => i.Status).FirstOrDefaultAsync(i => i.CustomerId == customer.Id);
+                var customerApprovalEntity = await _unitOfWork.CustomerApprovals.Query().Include(i => i.Status).FirstOrDefaultAsync(i => i.CustomerId == customerEntity.Id);
 
-                var customerModel = _mapper.Map<Domain.Models.CustomerModel>(customer);
+                var customerModel = _mapper.Map<Domain.Models.CustomerModel>(customerEntity);
                 if (customerApprovalEntity != null && customerApprovalEntity.Status != null)
                 {
                     _mapper.Map(customerApprovalEntity, customerModel);
