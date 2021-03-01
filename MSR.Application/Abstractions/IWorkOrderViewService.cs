@@ -13,5 +13,6 @@ namespace MSR.Application.Abstractions
         Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistoryAsync();
         Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync();
         Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenuAsync(int skip = 0, int take = 0);
+        Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenuAsync(int customerId, string partName, int? partId, DateTime fromDate, DateTime toDate, int skip = 0, int take = 0);
     }
 }

@@ -48,8 +48,8 @@ export class WipComponent implements OnInit {
     ];
 
 
-
-    this.workOrderService.menu(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+//TODO: This part will need to be updated to remove the hard coded skip/take and add in the values from the grid
+    this.workOrderService.menu(0,100,env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.data = response.object;
 

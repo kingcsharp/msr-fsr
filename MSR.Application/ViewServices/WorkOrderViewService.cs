@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using MSR.Domain.Abstractions.Services;
+using System;
 
 namespace MSR.Application.ViewServices
 {
@@ -40,6 +41,11 @@ namespace MSR.Application.ViewServices
         public async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenuAsync(int skip = 0, int take = 0)
         {
             return await _unitOfWork.Query<WorkOrderMenu>().GetWorkOrderMenu(WorkOrderProjections.WorkOrderMenuView,skip,take);
+        }
+
+        public async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenuAsync(int customerId, string partName, int? partId, DateTime fromDate, DateTime toDate, int skip = 0, int take = 0)
+        {
+            return await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, customerId, partName, partId, fromDate, toDate, skip, take);
         }
     }
 }

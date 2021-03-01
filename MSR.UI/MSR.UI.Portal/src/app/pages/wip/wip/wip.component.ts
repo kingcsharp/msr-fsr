@@ -370,8 +370,8 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   setSubPartsProperties(subpart: any) {
-    subpart.partNumber = subpart.part?.partNumber || 'N/A';
-    subpart.name = subpart.part?.name || 'N/A';
+    subpart.partNumber = subpart.partNumber || 'N/A';
+    subpart.name = subpart.name || 'N/A';
   }
 
   setSubpartspropertiesToWoSubparts(workOrder: PortalWorkOrderPartsView) {
@@ -381,7 +381,9 @@ export class WipComponent implements OnInit, AfterViewInit {
   getGridData() {
     this.globals.showLoader(true);
     this.showReport = false;
-    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate,
+
+//TODO: This part will need to be updated to remove the hard coded skip/take and add in the values from the grid
+    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate,0,100,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object.map((x: any) => {

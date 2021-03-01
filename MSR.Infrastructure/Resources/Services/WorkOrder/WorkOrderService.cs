@@ -222,6 +222,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var created = await _unitOfWork.WorkOrders.AddAsync(workOrderEntity);
+            await _unitOfWork.SaveChangesAsync();
 
             // link work order IDs for all parts
             Stack<WorkOrderPart> parts = new Stack<WorkOrderPart>();
@@ -249,7 +250,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 await SetCycleCount(parentPart);
             }
 
+            await _unitOfWork.WorkOrderStats.AddAsync(new WorkOrderStats()
+            {
+                WorkOrderId = workOrderEntity.Id,
+                TotalTasks = workOrderEntity.WorkOrderTasks != null ? workOrderEntity.WorkOrderTasks.Count() : 0
+            });
+
             await _unitOfWork.LogApprovalTransaction(workOrderEntity, workOrderEntity.Id);
+
 
             // load required navigation fields
             created.Context.Entry(workOrderEntity)
@@ -1009,7 +1017,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     portalView.PercentageOfExpectedDurationTimeLogged = percentExpectedDuration;
                     portalView.PercentageOfExpectedDurationTimeLoggedDenominator = expectedDurationDenominator;
                     portalView.PercentageOfExpectedDurationTimeLoggedNumerator = expectedDurationNumerator;
-                    portalView.SubParts = associatedWorkOrder.WorkOrderParts.Where(i => i.ParentId != null).ToList();
+                    portalView.SubParts = new List<PortalSubPartView>();//associatedWorkOrder.WorkOrderParts.Where(i => i.ParentId != null).ToList();
                     portalView.PartId = parentPart.PartId;
                     portalView.PartName = parentPart.Part != null ? parentPart.Part.Name : string.Empty;
                     portalView.CustomerId = associatedWorkOrder.Purchase?.PurchaseOrder?.CustomerId;

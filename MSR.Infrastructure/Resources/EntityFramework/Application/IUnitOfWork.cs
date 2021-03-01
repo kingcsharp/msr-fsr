@@ -92,7 +92,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<WorkOrderHistoryView> WorkOrderHistoryViews { get;}
         IRepository<WorkOrderStatusSummary> WorkOrderStatusSummaries { get;}
         IRepository<WorkOrderMenu> WorkOrderMenus { get;}
-
+        IRepository<PortalWorkOrderMenu> PortalWorkOrderMenus { get;}
+        IRepository<WorkOrderStats> WorkOrderStats { get; }
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;

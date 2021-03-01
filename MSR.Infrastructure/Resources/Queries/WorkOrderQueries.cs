@@ -13,6 +13,7 @@ using MSR.Domain.Helpers;
 using MSR.Domain.DTOs;
 using System.Collections.Concurrent;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -73,13 +74,94 @@ namespace MSR.Infrastructure.Resources.Queries
 
         public static async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenu(this DbSet<WorkOrderMenu> dbSet, Expression<Func<WorkOrderMenu,dynamic>> projection, int skip = 0, int take = 0)
         {
-            var workOrderMenuTuple = (await QueryHelper.GetPagedViewDataFor<WorkOrderMenu, ICollection<WorkOrderGridSummary>>(dbSet, projection,skip,take));
+            var workOrderMenuTuple = await QueryHelper.GetPagedViewDataFor<WorkOrderMenu, ICollection<WorkOrderGridSummary>>(dbSet, projection,skip:skip,take:take);
             return workOrderMenuTuple;
         }
 
-        private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,
-                       decimal PercentageOfExpectedDurationTimeLoggedNumerator, decimal PercentageOfExpectedDurationTimeLoggedDenominator,
-                       decimal PercentageOfExpectedDurationTimeLogged) CalculateWorkOrderProgress(WorkOrderHistoryViewDTO workOrderEntity)
+        public static async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, 
+            int customerId, string partName, int? partId, DateTime fromDate, DateTime toDate, int skip = 0, int take = 0)
+        {
+            var filteredDataSet = dbSet.Where(i => i.CustomerId == customerId && i.CreatedOn >= fromDate && i.CreatedOn <= toDate);
+
+            if (!string.IsNullOrWhiteSpace(partName))
+            {
+                filteredDataSet = filteredDataSet.Where(i => i.PartName == partName);
+            }
+
+            if(partId.HasValue && partId > 0)
+            {
+                filteredDataSet = filteredDataSet.Where(i => i.PartId == partId);
+            }
+
+            var portalWorkOrderMenuDTOTuple = await QueryHelper.GetPagedViewDataFor<PortalWorkOrderMenu, ICollection<PortalWorkOrderMenuDTO>>(filteredDataSet, projection, skip, take);
+            
+            var portalWorkOrderViews = new List<PortalWorkOrderView>();
+
+            foreach (var view in portalWorkOrderMenuDTOTuple.data)
+            {
+                var portalWorkOrderView = new PortalWorkOrderView()
+                {
+                    Id = view.WorkOrderId,
+                    WorkOrderId = view.WorkOrderId,
+                    SubParts = new List<PortalSubPartView>(),
+                    CompanyPartNumber = view.CompanyPartNumber,
+                    CustomerId = view.CustomerId,
+                    CycleCount = view.CycleCount,
+                    Disposition = view.Disposition,
+                    DueDate = view.DueDate,
+                    HasFiles = view.HasFiles,
+                    HasMonitors = view.HasMonitors,
+                    HasNCRs = view.HasNCRs,
+                    HasPhotos = view.HasPhotos,
+                    InvoiceAmount = view.InvoiceAmount,
+                    InvoiceDate = view.InvoiceDate,
+                    InvoiceName = view.InvoiceName,
+                    Messages = new List<WorkOrderMessageModel>(),
+                    PartId = view.PartId,
+                    PartName = view.PartName,
+                    PercentageOfExpectedDurationTimeLogged = view.PercentageOfExpectedDurationTimeLogged,
+                    PercentageOfExpectedDurationTimeLoggedDenominator = view.PercentageOfExpectedDurationTimeLoggedDenominator,
+                    PercentageOfExpectedDurationTimeLoggedNumerator = view.PercentageOfExpectedDurationTimeLoggedNumerator,
+                    PercentageOfTasksCompleted = view.PercentageOfTasksCompleted,
+                    PercentageOfTasksCompletedDenominator = view.PercentageOfTasksCompletedDenominator,
+                    PercentageOfTasksCompletedNumerator = view.PercentageOfTasksCompletedNumerator,
+                    Price = view.Price,
+                    ProcedureName = view.ProcedureName,
+                    ProductName = view.ProductName,
+                    PurchaseOrderNumber = view.PurchaseOrderNumber,
+                    Qty = view.Qty,
+                    SerialNumber = view.SerialNumber,
+                    StartDate = view.StartDate,
+                    Status = view.Status
+                };
+
+                if (!string.IsNullOrWhiteSpace(view.Disposition))
+                {
+                    var messages = (from messageItem in view.Disposition.Split(';', StringSplitOptions.RemoveEmptyEntries)
+                                    let eachMessage = messageItem.Split(',')
+                                    select new WorkOrderMessageModel()
+                                    {
+                                        Date = DateTime.Parse(eachMessage[1]),
+                                        Name = eachMessage[0],
+                                        Message = eachMessage[2]
+                                    }).ToList();
+
+                    portalWorkOrderView.Messages = messages;
+                }
+                var subParts = portalWorkOrderMenuDTOTuple.data.First(i => i.WorkOrderId == view.WorkOrderId).SubParts;
+                if (!string.IsNullOrWhiteSpace(subParts))
+                {
+                    var subPartModels = JsonConvert.DeserializeObject<List<PortalSubPartView>>(subParts);
+                    portalWorkOrderView.SubParts = subPartModels;
+                }
+                portalWorkOrderViews.Add(portalWorkOrderView);
+            }
+
+            return (portalWorkOrderViews.ToList(), portalWorkOrderMenuDTOTuple.totalRows);
+        }
+
+        private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,decimal PercentageOfExpectedDurationTimeLoggedNumerator, 
+                        decimal PercentageOfExpectedDurationTimeLoggedDenominator, decimal PercentageOfExpectedDurationTimeLogged) CalculateWorkOrderProgress(WorkOrderHistoryViewDTO workOrderEntity)
         {
             int[] pctCompletedIds = { 3, 4, 6, 8 };
             int completedDenominator = workOrderEntity.WorkOrderTasks.Count();

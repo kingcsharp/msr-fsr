@@ -113,6 +113,42 @@ namespace MSR.Infrastructure.Resources.Projections
             SegregationType = i.SegregationType == null ? (EnumSegregationType?)null: EnumUtils.GetValueFromDescription<EnumSegregationType>(i.SegregationType)
         };
 
+        public static Expression<Func<PortalWorkOrderMenu, dynamic>> PortalWorkOrderMenuView => i => new
+        {
+            CompanyPartNumber = i.CompanyPartNumber,
+            CustomerId = i.CustomerId,
+            CycleCount = i.CycleCount,
+            Disposition = i.Disposition,
+            DueDate = i.DueDate,
+            HasFiles = i.HasFiles,
+            HasMonitors = i.HasMonitors,
+            HasNCRs = i.HasNCRs,
+            HasPhotos = i.HasPhotos,
+            Id = i.Id,
+            InvoiceAmount = i.InvoiceAmount,
+            InvoiceDate = i.InvoiceDate,
+            InvoiceName = i.InvoiceName,
+            PartName = i.PartName,
+            PartId = i.PartId,
+            PercentageOfExpectedDurationTimeLogged = i.PercentageOfExpectedDurationTimeLogged,
+            PercentageOfExpectedDurationTimeLoggedDenominator = i.PercentageOfExpectedDurationTimeLoggedDenominator,
+            PercentageOfExpectedDurationTimeLoggedNumerator = i.PercentageOfExpectedDurationTimeLoggedNumerator,
+            PercentageOfTasksCompleted = i.PercentageOfTasksCompleted,
+            PercentageOfTasksCompletedDenominator = i.PercentageOfTasksCompletedDenominator,
+            PercentageOfTasksCompletedNumerator = i.PercentageOfTasksCompletedNumerator,
+            Price = i.Price,
+            ProcedureName = i.ProcedureName,
+            ProductName = i.ProductName,
+            PurchaseOrderNumber = i.PurchaseOrderNumber,
+            Qty = i.Qty,
+            SerialNumber = i.SerialNumber,
+            StartDate = i.StartDate,
+            Status = i.Status,
+            SubParts = i.SubParts,
+            WorkOrderId = i.WorkOrderId,
+            CreatedOn = i.CreatedOn
+        };
+
         private static EnumStatusSteps GetWorkOrderStatusFromTasks(ICollection<WorkOrderTask> tasks)
         {
             int[] completed = { 3, 6, 8 };

@@ -53,7 +53,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
-        public async Task<IActionResult> WorkOrderGetMenu(int? take, int? skip)
+        public async Task<IActionResult> WorkOrderGetMenu(int? skip,int? take)
         {
             var workOrderMenuViews = await _workOrderViewService.GetWorkOrderMenuAsync(skip.GetValueOrDefault(0),take.GetValueOrDefault(0));
             return GenerateOkViewResponse(workOrderMenuViews.data);
@@ -99,11 +99,10 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet("Portal")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PortalWorkOrderView>>))]
-        public async Task<IActionResult> GetPortalWorkOrder([FromQuery] GetPortalWorkOrderRequest request)
+        public async Task<IActionResult> GetPortalWorkOrder([FromQuery] GetPortalWorkOrderRequest request, int? skip, int? take)
         {
-            var command = request.ToGetPortalWorkOrderCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<PortalWorkOrderView>>();
+            var portalWorkOrderMenuViews = await _workOrderViewService.GetPortalWorkOrderMenuAsync(request.CustomerId,request.PartName,request.PartId,request.FromDate,request.ToDate,skip.GetValueOrDefault(0), take.GetValueOrDefault(0));
+            return GenerateOkViewResponse(portalWorkOrderMenuViews.data);
         }
 
         [HttpPatch("Message")]

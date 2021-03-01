@@ -9,12 +9,14 @@ namespace MSR.Answer.API.V1.Models
     public class GetPortalWorkOrderRequest
     {
         [Required]
-        public int? CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public string PartName { get; set; }
         public int? PartId { get; set; }
+
         [Required]
-        public DateTime? FromDate { get; set; }
+        public DateTime FromDate { get; set; }
+
         [Required]
-        public DateTime? ToDate { get; set; }
+        public DateTime ToDate { get; set; }
     }
 }

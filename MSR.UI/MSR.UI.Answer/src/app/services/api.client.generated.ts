@@ -6979,12 +6979,18 @@ export class WorkOrderService {
 
     /**
      * Returns a summary of WorkOrders IN PROGRESS or WAITING
+     * @param skip (optional) 
+     * @param take (optional) 
      */
-    menu(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu";
+    menu(skip: number | null | undefined, take: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        if (take !== undefined && take !== null)
+            url_ += "take=" + encodeURIComponent("" + take) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -7212,21 +7218,31 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfInvoiceableWorkOrderView>(<any>null);
     }
 
-    portal(customerId: number | null | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | null | undefined, toDate: Date | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
+    portal(customerId: number | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | undefined, toDate: Date | undefined, skip: number | null | undefined, take: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Portal?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (customerId !== undefined && customerId !== null)
+        if (customerId === null)
+            throw new Error("The parameter 'customerId' cannot be null.");
+        else if (customerId !== undefined)
             url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
         if (partName !== undefined && partName !== null)
             url_ += "PartName=" + encodeURIComponent("" + partName) + "&";
         if (partId !== undefined && partId !== null)
             url_ += "PartId=" + encodeURIComponent("" + partId) + "&";
-        if (fromDate !== undefined && fromDate !== null)
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
             url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toJSON() : "") + "&";
-        if (toDate !== undefined && toDate !== null)
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
             url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toJSON() : "") + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        if (take !== undefined && take !== null)
+            url_ += "take=" + encodeURIComponent("" + take) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -15788,7 +15804,6 @@ export interface IQuoteItemModel {
 export class WorkOrderModel implements IWorkOrderModel {
     id?: number | undefined;
     customerName?: string | undefined;
-    productId?: number | undefined;
     price?: number | undefined;
     scheduledStartDate?: Date | undefined;
     scheduledEndDate?: Date | undefined;
@@ -15796,13 +15811,15 @@ export class WorkOrderModel implements IWorkOrderModel {
     actualEndDate?: Date | undefined;
     hasNCR?: boolean | undefined;
     locationId?: number | undefined;
+    status?: string | undefined;
     location?: LocationModel | undefined;
+    productId?: number | undefined;
     product?: ProductModel | undefined;
+    purchaseId?: number | undefined;
     purchase?: PurchaseModel | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
-    status?: string | undefined;
 
     constructor(data?: IWorkOrderModel) {
         if (data) {
@@ -15817,7 +15834,6 @@ export class WorkOrderModel implements IWorkOrderModel {
         if (_data) {
             this.id = _data["id"];
             this.customerName = _data["customerName"];
-            this.productId = _data["productId"];
             this.price = _data["price"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
             this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
@@ -15825,8 +15841,11 @@ export class WorkOrderModel implements IWorkOrderModel {
             this.actualEndDate = _data["actualEndDate"] ? new Date(_data["actualEndDate"].toString()) : <any>undefined;
             this.hasNCR = _data["hasNCR"];
             this.locationId = _data["locationId"];
+            this.status = _data["status"];
             this.location = _data["location"] ? LocationModel.fromJS(_data["location"]) : <any>undefined;
+            this.productId = _data["productId"];
             this.product = _data["product"] ? ProductModel.fromJS(_data["product"]) : <any>undefined;
+            this.purchaseId = _data["purchaseId"];
             this.purchase = _data["purchase"] ? PurchaseModel.fromJS(_data["purchase"]) : <any>undefined;
             if (Array.isArray(_data["workOrderParts"])) {
                 this.workOrderParts = [] as any;
@@ -15843,7 +15862,6 @@ export class WorkOrderModel implements IWorkOrderModel {
                 for (let item of _data["workOrderMessages"])
                     this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
             }
-            this.status = _data["status"];
         }
     }
 
@@ -15858,7 +15876,6 @@ export class WorkOrderModel implements IWorkOrderModel {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["customerName"] = this.customerName;
-        data["productId"] = this.productId;
         data["price"] = this.price;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
         data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
@@ -15866,8 +15883,11 @@ export class WorkOrderModel implements IWorkOrderModel {
         data["actualEndDate"] = this.actualEndDate ? this.actualEndDate.toISOString() : <any>undefined;
         data["hasNCR"] = this.hasNCR;
         data["locationId"] = this.locationId;
+        data["status"] = this.status;
         data["location"] = this.location ? this.location.toJSON() : <any>undefined;
+        data["productId"] = this.productId;
         data["product"] = this.product ? this.product.toJSON() : <any>undefined;
+        data["purchaseId"] = this.purchaseId;
         data["purchase"] = this.purchase ? this.purchase.toJSON() : <any>undefined;
         if (Array.isArray(this.workOrderParts)) {
             data["workOrderParts"] = [];
@@ -15884,7 +15904,6 @@ export class WorkOrderModel implements IWorkOrderModel {
             for (let item of this.workOrderMessages)
                 data["workOrderMessages"].push(item.toJSON());
         }
-        data["status"] = this.status;
         return data; 
     }
 }
@@ -15892,7 +15911,6 @@ export class WorkOrderModel implements IWorkOrderModel {
 export interface IWorkOrderModel {
     id?: number | undefined;
     customerName?: string | undefined;
-    productId?: number | undefined;
     price?: number | undefined;
     scheduledStartDate?: Date | undefined;
     scheduledEndDate?: Date | undefined;
@@ -15900,13 +15918,15 @@ export interface IWorkOrderModel {
     actualEndDate?: Date | undefined;
     hasNCR?: boolean | undefined;
     locationId?: number | undefined;
+    status?: string | undefined;
     location?: LocationModel | undefined;
+    productId?: number | undefined;
     product?: ProductModel | undefined;
+    purchaseId?: number | undefined;
     purchase?: PurchaseModel | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
-    status?: string | undefined;
 }
 
 export class PurchaseModel extends CreatableModel implements IPurchaseModel {
@@ -20243,7 +20263,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
-    subParts?: WorkOrderPartModel[] | undefined;
+    subParts?: PortalSubPartView[] | undefined;
     stepText?: string | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
@@ -20298,7 +20318,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             if (Array.isArray(_data["subParts"])) {
                 this.subParts = [] as any;
                 for (let item of _data["subParts"])
-                    this.subParts!.push(WorkOrderPartModel.fromJS(item));
+                    this.subParts!.push(PortalSubPartView.fromJS(item));
             }
             this.stepText = _data["stepText"];
         }
@@ -20396,8 +20416,64 @@ export interface IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
-    subParts?: WorkOrderPartModel[] | undefined;
+    subParts?: PortalSubPartView[] | undefined;
     stepText?: string | undefined;
+}
+
+export class PortalSubPartView implements IPortalSubPartView {
+    id?: number;
+    serialNumber?: string | undefined;
+    partNumber?: string | undefined;
+    cycleCount?: number;
+    qty?: number;
+    name?: string | undefined;
+
+    constructor(data?: IPortalSubPartView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.serialNumber = _data["serialNumber"];
+            this.partNumber = _data["partNumber"];
+            this.cycleCount = _data["cycleCount"];
+            this.qty = _data["qty"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): PortalSubPartView {
+        data = typeof data === 'object' ? data : {};
+        let result = new PortalSubPartView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["serialNumber"] = this.serialNumber;
+        data["partNumber"] = this.partNumber;
+        data["cycleCount"] = this.cycleCount;
+        data["qty"] = this.qty;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IPortalSubPartView {
+    id?: number;
+    serialNumber?: string | undefined;
+    partNumber?: string | undefined;
+    cycleCount?: number;
+    qty?: number;
+    name?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
