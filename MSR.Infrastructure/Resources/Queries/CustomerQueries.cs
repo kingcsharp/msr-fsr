@@ -20,195 +20,36 @@ namespace MSR.Infrastructure.Resources.Queries
 
             query = query.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).AsQueryable();
 
-            if (command.Id.HasValue)
+            query = query.Where<Customer>(command.Id, s => s.Id == command.Id);
+            query = query.Where<Customer>(command.Name, s => s.Name.Contains(command.Name));
+            query = query.Where<Customer>(command.Address, s => s.Name.Contains(command.Address));
+            query = query.Where<Customer>(command.Phone, s => s.Phone.Contains(command.Phone));
+            query = query.Where<Customer>(command.PrimaryContactUserId, s => s.PrimaryContactUser.Id == command.PrimaryContactUserId);
+            query = query.Where<Customer>(command.SecondaryContactUserId, s => s.SecondaryContactUser.Id == command.SecondaryContactUserId);
+            query = query.Where<Customer>(command.LocationId, s=> s.LocationId == command.LocationId);
+            query = query.Where<Customer>(command.IsActive, s => s.IsActive == command.IsActive);
+            query = query.Where<Customer>(command.PrimaryContactUserName, s => s.PrimaryContactUser.FirstName.Contains(command.PrimaryContactUserName));
+            query = query.Where<Customer>(command.SecondartContactUserName, s => s.SecondaryContactUser.FirstName.Contains(command.SecondartContactUserName));
+            query = query.Where<Customer>(command.LocationName, s => s.Location.Name.Contains(command.LocationName));
+            query = query.Where<Customer>(command.CustomerNumber, s=> s.CustomerNumber.Contains(command.CustomerNumber));
+            query = query.Where<Customer>(command.CreatedByFullName, s=> s.Created.FirstName.Contains(command.CreatedByFullName));
+            query = query.Where<Customer>(command.CreatedOn, s=> s.CreatedOn == command.CreatedOn);
+
+            if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
-                query = query.Where(i => i.Id == command.Id.Value);
-            }
-            if (!string.IsNullOrWhiteSpace(command.Name))
-            {
-                query = query.Where(i => i.Name == command.Name);
-            }
-            if (!string.IsNullOrWhiteSpace(command.Address))
-            {
-                query = query.Where(i => i.Address == command.Address);
-            }
-            if (!string.IsNullOrWhiteSpace(command.Phone))
-            {
-                query = query.Where(i => i.Phone == command.Phone);
-            }
-            if (command.PrimaryContactUserId.HasValue)
-            {
-                query = query.Where(i => i.PrimaryContactUserId == command.PrimaryContactUserId.Value);
-            }
-            if (command.SecondaryContactUserId.HasValue)
-            {
-                query = query.Where(i => i.SecondaryContactUserId == command.SecondaryContactUserId.Value);
-            }
-            if (command.LocationId.HasValue)
-            {
-                query = query.Where(i => i.LocationId == command.LocationId.Value);
-            }
-            if (command.IsActive.HasValue)
-            {
-                query = query.Where(i => i.IsActive == command.IsActive.Value);
-            }
-
-            if (!string.IsNullOrEmpty(command.PrimaryContactUserName))
-            {
-                query = query.Where(i => i.PrimaryContactUser.FirstName == command.PrimaryContactUserName);
-            }
-
-            if (!string.IsNullOrEmpty(command.SecondartContactUserName))
-            {
-                query = query.Where(i => i.PrimaryContactUser.FirstName == command.SecondartContactUserName);
-            }
-
-            if (!string.IsNullOrEmpty(command.LocationName))
-            {
-                query = query.Where(i => i.Location.Name == command.LocationName);
-            }
-
-            if (!string.IsNullOrEmpty(command.CustomerNumber))
-            {
-                query = query.Where(i => i.CustomerNumber == command.CustomerNumber);
-            }
-
-            if (!string.IsNullOrEmpty(command.CreatedByFullName))
-            {
-                query = query.Where(i => i.Created.FirstName == command.CreatedByFullName);
-            }
-
-            if (command.CreatedOn.HasValue)
-            {
-                query = query.Where(i => i.CreatedOn == command.CreatedOn.Value);
-            }
-
-            if(command.SortAscending.HasValue && command.SortAscending.Value && !string.IsNullOrEmpty(command.Term)) { 
-            
-                if(command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Id)) { 
-                    
-                    query = query.OrderBy(s => s.Id);
-                    
-                } else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Address)) {
-
-                    query = query.OrderBy(s => s.Address);
-
-                } else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Phone))
-                {
-
-                    query = query.OrderBy(s => s.Phone);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.IsActive))
-                {
-
-                    query = query.OrderBy(s => s.IsActive);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.PrimaryContactUserName))
-                {
-
-                    query = query.OrderBy(s => s.PrimaryContactUser.FirstName);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.SecondartContactUserName))
-                {
-
-                    query = query.OrderBy(s => s.SecondaryContactUser.FirstName);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.LocationName))
-                {
-
-                    query = query.OrderBy(s => s.Location.Name);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CustomerNumber))
-                {
-
-                    query = query.OrderBy(s => s.CustomerNumber);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CreatedOn))
-                {
-
-                    query = query.OrderBy(s => s.CreatedOn);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CreatedByFullName))
-                {
-
-                    query = query.OrderBy(s => s.Created.FirstName);
-
-                }
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.Id), s => s.Id);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.Address), s => s.Address);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.Phone), s => s.Phone);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.IsActive), s => s.IsActive);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.PrimaryContactUserName), s => s.PrimaryContactUser.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.SecondartContactUserName), s => s.SecondaryContactUser.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.LocationName), s => s.Location.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.CustomerNumber), s => s.CustomerNumber);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.CreatedOn), s => s.CreatedOn);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.CreatedByFullName), s => s.Created.FirstName);
 
             }
 
-            if (command.SortAscending.HasValue && !command.SortAscending.Value && !string.IsNullOrEmpty(command.Term))
-            {
-
-                if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Id))
-                {
-
-                    query = query.OrderByDescending(s => s.Id);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Address))
-                {
-
-                    query = query.OrderByDescending(s => s.Address);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Phone))
-                {
-
-                    query = query.OrderByDescending(s => s.Phone);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.IsActive))
-                {
-
-                    query = query.OrderByDescending(s => s.IsActive);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.PrimaryContactUserName))
-                {
-
-                    query = query.OrderByDescending(s => s.PrimaryContactUser.FirstName);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.SecondartContactUserName))
-                {
-
-                    query = query.OrderByDescending(s => s.SecondaryContactUser.FirstName);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.LocationName))
-                {
-
-                    query = query.OrderByDescending(s => s.Location.Name);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CustomerNumber))
-                {
-
-                    query = query.OrderByDescending(s => s.CustomerNumber);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CreatedOn))
-                {
-
-                    query = query.OrderByDescending(s => s.CreatedOn);
-
-                }
-                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CreatedByFullName))
-                {
-
-                    query = query.OrderByDescending(s => s.Created.FirstName);
-
-                }
-
-            }
 
             if (command.Skip.HasValue && command.Take.HasValue && !forRowCount)
             {

@@ -26,12 +26,13 @@ export class ProceduretypesComponent implements OnInit {
   statusOptions: any[];
   showConfirmDeleteDialog: boolean = false;
   procedureTypeToDelete: ProcedureType;
+  gridVersion: string;
   constructor(private procedureTypeService: ProcedureTypeService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
-
+    this.gridVersion = '1.0.1';
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),

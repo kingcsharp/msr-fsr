@@ -32,18 +32,18 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where<Part>(command.PartNumber, s => s.PartNumber == command.PartNumber);
 
             if(command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term)) {
-                query = query.OrderBy<int,Part> (command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.Id), s => s.Id);
-                query = query.OrderBy<string, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.CreatedByName), s => s.Created.FirstName);
-                query = query.OrderBy<DateTime, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.CreatedOn), s => s.CreatedOn);
-                query = query.OrderBy<string, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.EnumSegregationType), s => s.SegregationType);
-                query = query.OrderBy<bool, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.IsActive), s => s.IsActive);
-                query = query.OrderBy<bool, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.IsKit), s => s.IsKit);
-                query = query.OrderBy<string, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.LastUpdatedByName), s => s.LastUpdated.FirstName);
-                query = query.OrderBy<DateTime?, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.LastUpdateOn), s => s.LastUpdatedOn);
-                query = query.OrderBy<int?, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.MaximumCycles), s => s.MaximumCycles);
-                query = query.OrderBy<string, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.Name), s => s.Name);
-                query = query.OrderBy<string, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.OEMPartNumber), s => s.OEMPartNumber);
-                query = query.OrderBy<string, Part>(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.PartNumber), s => s.PartNumber);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.Id), s => s.Id);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.CreatedByName), s => s.Created.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.CreatedOn), s => s.CreatedOn);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.EnumSegregationType), s => s.SegregationType);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.IsActive), s => s.IsActive);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.IsKit), s => s.IsKit);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.LastUpdatedByName), s => s.LastUpdated.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.LastUpdateOn), s => s.LastUpdatedOn);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.MaximumCycles), s => s.MaximumCycles);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.Name), s => s.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.OEMPartNumber), s => s.OEMPartNumber);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.PartNumber), s => s.PartNumber);
             }
             
 
