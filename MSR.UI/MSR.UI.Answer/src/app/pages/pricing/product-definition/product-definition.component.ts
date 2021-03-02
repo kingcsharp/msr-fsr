@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   PartService,
   PartModel,
@@ -32,6 +32,7 @@ const HOURS_MINUTES = 60;
   selector: 'app-product-definition',
   templateUrl: './product-definition.component.html',
   styleUrls: ['./product-definition.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   providers: [
     CustomerService,
     ProcedureService,
@@ -157,15 +158,25 @@ export class ProductDefinitionComponent implements OnInit {
         }
         if (this.quoteData.customerRequirementJson) {
           this.customerRequirementJson = JSON.parse(this.quoteData.customerRequirementJson);
-          if (!this.quoteData.quoteJson) {
+          if (!this.quoteData.quoteJson && !isCreateMode) {
             this.quoteJson = {
               customerId: this.quoteData.customerId,
               contact: this.customerRequirementJson.CommercialName,
               title: this.customerRequirementJson.CommercialTitle,
               phone: this.customerRequirementJson.CommercialPhone,
+              email: this.customerRequirementJson.CommercialEmail,
               representative: this.quoteData.submittedBy.fullName,
               representativeTitle: this.quoteData.submittedBy.title,
+              representativeAddress: this.customerRequirementJson.StreetAddress,
             };
+
+            this.quoteJson.quoteItems = [{
+              qty: 1,
+              unit: 'Unit',
+              description: this.productData.procedure?.name,
+              price: this.productData.totalSalePrice,
+              extension: this.productData.totalSalePrice,
+            }];
           }
         }
 
@@ -674,6 +685,10 @@ export class ProductDefinitionComponent implements OnInit {
           }));
       }
     }
+  }
+
+  print() {
+    window.print();
   }
 }
 
