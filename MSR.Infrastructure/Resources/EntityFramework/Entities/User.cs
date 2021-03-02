@@ -35,10 +35,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("TimeZoneId")]
         public TimeZone TimeZone { get; set; }
         public virtual ICollection<UserRole> Roles { get; set; }
-
         public string GetFullName()
         {
             return $"{FirstName} {LastName}";
+        }
+        public string FullName { 
+            get { return $"{FirstName} {LastName}";}    
         }
     }
 }

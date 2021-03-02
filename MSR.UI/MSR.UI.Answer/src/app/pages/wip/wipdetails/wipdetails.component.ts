@@ -164,7 +164,7 @@ export class WipdetailsComponent implements OnInit {
 
   getCustomerContacts(customerId: number) {
 
-    this.customerService.customerGet(customerId, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.customerService.customerGet(customerId, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       if (response.object.length > 0) {
         this.workOrderModel.purchase.purchaseOrder.customer = response.object[0];

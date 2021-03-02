@@ -1,4 +1,5 @@
 ﻿using MSR.Domain.Commanding;
+using MSR.Domain.Commanding.Enums;
 using System;
 
 namespace MSR.Domain.Commands
@@ -17,7 +18,7 @@ namespace MSR.Domain.Commands
         public string SecondartContactUserName { get; set; }
         public string LocationName { get; set; }
         public string CustomerNumber { get; set; }
-        public int? CreatedById { get; set; }
+        public string CreatedByFullName { get; set; }
         public DateTime? CreatedOn { get; set; }
     }
 }

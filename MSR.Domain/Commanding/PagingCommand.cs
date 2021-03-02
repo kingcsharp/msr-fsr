@@ -6,11 +6,8 @@ namespace MSR.Domain.Commanding
 {
     public abstract class PagingCommand: Command
     {
-        public string? Term { get; set; }
         public int? PageNumber { get; set; }
         public int? PageSize { get; set; }
-        public string? FilterProperty { get; set; }
-
         public int? Skip
         {
             get { 
@@ -21,7 +18,6 @@ namespace MSR.Domain.Commanding
                     return (int)(PageNumber * PageSize); 
                 }
         }
-
         public int? Take
         {
             get { 
@@ -32,7 +28,7 @@ namespace MSR.Domain.Commanding
                     return (int)PageSize; 
                 }
         }
-
+        public string? Term { get; set; }
         public bool? SortAscending { get; set; }
     }
 }

@@ -193,22 +193,11 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return retCustomer;
         }
 
-        private IQueryable<Customer> FilterQuery(IQueryable<Customer> customer, string propertyToFilter, string value)
-        {
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(string), propertyToFilter);
-            ConstantExpression constantExpression = Expression.Constant(value, typeof(string));
-            BinaryExpression binaryExpression = Expression.Equal(parameterExpression, constantExpression);
-            Expression<Func<Customer, bool>> lambda = Expression.Lambda<Func<Customer, bool>>(binaryExpression, parameterExpression);
-            return customer.Where(lambda);
-        }
-
-        public async Task<(IEnumerable<CustomerModel> data, int totalRows)> GetCustomersAsync(GetMultipleCustomers command)
+        public async Task<IEnumerable<CustomerModel>> GetCustomersAsync(GetMultipleCustomers command)
         {
             var customerModels = new List<Domain.Models.CustomerModel>();
 
             var customerEntities = await _unitOfWork.Customers.Query().CreateCustomerQuery(command).ToListAsync();
-
-            var totalRows = _unitOfWork.Customers.Query().Count();
 
             var customerEntityIds = customerEntities.Select(s => s.Id).ToList();
 
@@ -218,7 +207,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             {
                 var customerApprovalEntity = customerApprovalEntities.FirstOrDefault(i => i.CustomerId == customerEntity.Id);
 
-                var customerModel = _mapper.Map<Domain.Models.CustomerModel>(customerEntity);
+                var customerModel = _mapper.Map<CustomerModel>(customerEntity);
                 if (customerApprovalEntity != null && customerApprovalEntity.Status != null)
                 {
                     _mapper.Map(customerApprovalEntity, customerModel);
@@ -227,7 +216,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 customerModels.Add(customerModel);
             }
 
-            return (customerModels.AsEnumerable(), totalRows);
+            return customerModels.AsEnumerable();
         }
 
         public async Task<IEnumerable<Domain.Models.CustomerModel>> ImportCustomers(string csvData)
@@ -266,5 +255,12 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return customerModels;
         }
 
+        public async Task<int> GetTotalCustomerRows(GetMultipleCustomers command) {
+
+            var totalRows = await _unitOfWork.Customers.Query().CreateCustomerQuery(command).CountAsync();
+
+            return totalRows;
+
+        }
     }
 }

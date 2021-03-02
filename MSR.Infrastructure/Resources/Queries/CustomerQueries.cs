@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
@@ -54,12 +55,12 @@ namespace MSR.Infrastructure.Resources.Queries
 
             if (!string.IsNullOrEmpty(command.PrimaryContactUserName))
             {
-                query = query.Where(i => i.PrimaryContactUser.GetFullName() == command.PrimaryContactUserName);
+                query = query.Where(i => i.PrimaryContactUser.FirstName == command.PrimaryContactUserName);
             }
 
             if (!string.IsNullOrEmpty(command.SecondartContactUserName))
             {
-                query = query.Where(i => i.PrimaryContactUser.GetFullName() == command.SecondartContactUserName);
+                query = query.Where(i => i.PrimaryContactUser.FirstName == command.SecondartContactUserName);
             }
 
             if (!string.IsNullOrEmpty(command.LocationName))
@@ -72,14 +73,141 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.Where(i => i.CustomerNumber == command.CustomerNumber);
             }
 
-            if (command.CreatedById.HasValue)
+            if (!string.IsNullOrEmpty(command.CreatedByFullName))
             {
-                query = query.Where(i => i.CreatedBy == command.CreatedById.Value);
+                query = query.Where(i => i.Created.FirstName == command.CreatedByFullName);
             }
 
             if (command.CreatedOn.HasValue)
             {
                 query = query.Where(i => i.CreatedOn == command.CreatedOn.Value);
+            }
+
+            if(command.SortAscending.HasValue && command.SortAscending.Value && !string.IsNullOrEmpty(command.Term)) { 
+            
+                if(command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Id)) { 
+                    
+                    query = query.OrderBy(s => s.Id);
+                    
+                } else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Address)) {
+
+                    query = query.OrderBy(s => s.Address);
+
+                } else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Phone))
+                {
+
+                    query = query.OrderBy(s => s.Phone);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.IsActive))
+                {
+
+                    query = query.OrderBy(s => s.IsActive);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.PrimaryContactUserName))
+                {
+
+                    query = query.OrderBy(s => s.PrimaryContactUser.FirstName);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.SecondartContactUserName))
+                {
+
+                    query = query.OrderBy(s => s.SecondaryContactUser.FirstName);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.LocationName))
+                {
+
+                    query = query.OrderBy(s => s.Location.Name);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CustomerNumber))
+                {
+
+                    query = query.OrderBy(s => s.CustomerNumber);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CreatedOn))
+                {
+
+                    query = query.OrderBy(s => s.CreatedOn);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CreatedByFullName))
+                {
+
+                    query = query.OrderBy(s => s.Created.FirstName);
+
+                }
+
+            }
+
+            if (command.SortAscending.HasValue && !command.SortAscending.Value && !string.IsNullOrEmpty(command.Term))
+            {
+
+                if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Id))
+                {
+
+                    query = query.OrderByDescending(s => s.Id);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Address))
+                {
+
+                    query = query.OrderByDescending(s => s.Address);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.Phone))
+                {
+
+                    query = query.OrderByDescending(s => s.Phone);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.IsActive))
+                {
+
+                    query = query.OrderByDescending(s => s.IsActive);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.PrimaryContactUserName))
+                {
+
+                    query = query.OrderByDescending(s => s.PrimaryContactUser.FirstName);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.SecondartContactUserName))
+                {
+
+                    query = query.OrderByDescending(s => s.SecondaryContactUser.FirstName);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.LocationName))
+                {
+
+                    query = query.OrderByDescending(s => s.Location.Name);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CustomerNumber))
+                {
+
+                    query = query.OrderByDescending(s => s.CustomerNumber);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CreatedOn))
+                {
+
+                    query = query.OrderByDescending(s => s.CreatedOn);
+
+                }
+                else if (command.Term == EnumUtils.GetDescription<EnumCustomerSortFields>(EnumCustomerSortFields.CreatedByFullName))
+                {
+
+                    query = query.OrderByDescending(s => s.Created.FirstName);
+
+                }
+
             }
 
             if (command.Skip.HasValue && command.Take.HasValue)

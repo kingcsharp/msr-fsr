@@ -12,17 +12,15 @@ namespace MSR.Domain.Commanding
         public string? Term { get; set; }
         public int? PageNumber { get; set; }
         public int? PageSize { get; set; }
-        public string? FilterProperty { get; set; }
         public bool? SortAscending { get; set; }
 
         public PagingCommandResponse(T data, int totalRows, string? term, int? pageNumber, int? pageSize,
-            string filterProperty, bool? sortAscending) : base(data)
+            bool? sortAscending) : base(data)
         {
             TotalRows = totalRows;
             Term = term;
             PageNumber = pageNumber;
             PageSize = pageSize;
-            FilterProperty = filterProperty;
             SortAscending = sortAscending;
         }
 

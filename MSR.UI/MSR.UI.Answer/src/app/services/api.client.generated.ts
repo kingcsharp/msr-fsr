@@ -432,7 +432,7 @@ export class CustomerService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserName: string | null | undefined, secondartContactUserName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdById: number | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, filterProperty: string | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
+    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserName: string | null | undefined, secondartContactUserName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdByFullName: string | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
         let url_ = this.baseUrl + "/v{version}/Customer?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -461,8 +461,8 @@ export class CustomerService {
             url_ += "LocationName=" + encodeURIComponent("" + locationName) + "&";
         if (customerNumber !== undefined && customerNumber !== null)
             url_ += "CustomerNumber=" + encodeURIComponent("" + customerNumber) + "&";
-        if (createdById !== undefined && createdById !== null)
-            url_ += "CreatedById=" + encodeURIComponent("" + createdById) + "&";
+        if (createdByFullName !== undefined && createdByFullName !== null)
+            url_ += "CreatedByFullName=" + encodeURIComponent("" + createdByFullName) + "&";
         if (createdOn !== undefined && createdOn !== null)
             url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
         if (term !== undefined && term !== null)
@@ -471,8 +471,6 @@ export class CustomerService {
             url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
         if (pageSize !== undefined && pageSize !== null)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (filterProperty !== undefined && filterProperty !== null)
-            url_ += "FilterProperty=" + encodeURIComponent("" + filterProperty) + "&";
         if (sortAscending !== undefined && sortAscending !== null)
             url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");

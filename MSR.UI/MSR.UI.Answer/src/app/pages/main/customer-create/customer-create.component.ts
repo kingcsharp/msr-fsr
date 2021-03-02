@@ -53,7 +53,7 @@ export class CustomerCreateComponent implements OnInit {
       if (this.customerToEditId !== 0) {
 
         this.globals.showLoader(true);
-        this.customerService.customerGet(this.customerToEditId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,env.apiVersion).subscribe(responseHandler((response) => {
+        this.customerService.customerGet(this.customerToEditId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,env.apiVersion).subscribe(responseHandler((response) => {
 
           this.customer = response.object[0];
           if (this.customer.location !== undefined && this.customer.location.id !== 0) {
