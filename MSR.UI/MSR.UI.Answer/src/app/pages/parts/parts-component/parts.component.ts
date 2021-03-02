@@ -88,7 +88,8 @@ export class PartsComponent implements OnInit {
 
   getParts() {
     this.globals.showLoader(true);
-    this.partsService.partGet(null, env.apiVersion).pipe(take(1))
+    this.partsService.partGet(null,null, null,null, null,null,null,null,null,"Robert Lara"
+      ,null,null,null,null,null,null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.data = response.object.map((elem) => {

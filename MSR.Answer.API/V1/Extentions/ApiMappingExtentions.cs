@@ -1017,5 +1017,9 @@ namespace MSR.Answer.API.V1.Extentions
             var command = AutoMapperHelper.Mapper.Map<CreateWorkOrderMessage>(request);
             return command;
         }
+
+        public static GetParts ToGetPartsCommand(this GetPartRequest request) { 
+            return AutoMapperHelper.Mapper.Map<GetParts>(request);    
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace MSR.Infrastructure.Resources.Queries
 {
     public static class CustomerQueries
     {
-        public static IQueryable<Customer> CreateCustomerQuery(this IQueryable<Customer> query, GetMultipleCustomers command)
+        public static IQueryable<Customer> CreateCustomerQuery(this IQueryable<Customer> query, GetMultipleCustomers command, bool forRowCount = false)
         {
 
             query = query.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).AsQueryable();
@@ -210,7 +210,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
             }
 
-            if (command.Skip.HasValue && command.Take.HasValue)
+            if (command.Skip.HasValue && command.Take.HasValue && !forRowCount)
             {
                 query = query.Skip(command.Skip.Value).Take(command.Take.Value);
             }

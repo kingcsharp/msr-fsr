@@ -257,7 +257,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
 
         public async Task<int> GetTotalCustomerRows(GetMultipleCustomers command) {
 
-            var totalRows = await _unitOfWork.Customers.Query().CreateCustomerQuery(command).CountAsync();
+            var totalRows = await _unitOfWork.Customers.Query().CreateCustomerQuery(command, true).CountAsync();
 
             return totalRows;
 

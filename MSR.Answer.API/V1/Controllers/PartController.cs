@@ -32,16 +32,14 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         /// Get part by Id
         /// </summary>
-        /// <param name="req"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
-        public async Task<IActionResult> GetPart([FromQuery] GetPartRequest req)
+        public async Task<IActionResult> GetPart([FromQuery] GetPartRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetParts()
-            {
-                partID = req.Id,
-            });
+            var command = request.ToGetPartsCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<PartModel>>();
         }
 

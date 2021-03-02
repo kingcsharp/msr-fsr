@@ -137,6 +137,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetPortalWorkOrderRequest, GetPortalWorkOrder>();
 
             CreateMap<GetArchiveDocumentRequest, GetArchiveDocument>();
+            CreateMap<GetPartRequest, GetParts>();
 
         }
     }
