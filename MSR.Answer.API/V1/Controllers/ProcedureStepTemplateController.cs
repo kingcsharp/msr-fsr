@@ -35,15 +35,14 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         /// Get procedure step template by Id
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepTemplateModel>>))]
-        public async Task<IActionResult> GetProcedureStepTemplate(int? id)
+        public async Task<IActionResult> GetProcedureStepTemplate([FromQuery] GetProcedureStepTemplateRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedureStepTemplate() {
-                Id = id
-            });
+            var command = request.ToGetProcedureStepTemplateCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<ProcedureStepTemplateModel>>();
         }
 

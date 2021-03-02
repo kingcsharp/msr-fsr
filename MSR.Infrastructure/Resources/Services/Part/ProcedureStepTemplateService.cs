@@ -15,6 +15,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -36,35 +37,20 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _fileDownloader = fileHanderFactory.CreateDownloader(FileProvider.S3);
         }
 
-        public async Task<ICollection<Domain.Models.ProcedureStepTemplateModel>> GetProcedureStepTemplateAsync(GetProcedureStepTemplate command)
+        public async Task<ICollection<ProcedureStepTemplateModel>> GetProcedureStepTemplateAsync(GetProcedureStepTemplate command)
         {
-            List<EntityFramework.Entities.ProcedureStepTemplate> procedures;
-            List<Domain.Models.ProcedureStepTemplateModel> result;
+            List<ProcedureStepTemplate> procedureStepTemplateEntities = await _unitOfWork.ProcedureStepTemplates.Query().CreateProcedureStepTemplateQuery(command).ToListAsync();
 
-            if (command.Id.HasValue) {
-                procedures = await _unitOfWork.ProcedureStepTemplates
-                    .Query()
-                    .Where(x => x.Id == command.Id.Value)
-                    .Include(x => x.ReferenceFiles)
-                    .ThenInclude(x => x.FileObject)
-                    .ToListAsync();
-                if (procedures.Count == 0) {
-                    throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
-                }
-            } else {
-                procedures = await _unitOfWork.ProcedureStepTemplates
-                    .Query()
-                    .Include(x => x.ReferenceFiles)
-                    .ThenInclude(y => y.FileObject)
-                    .ToListAsync();
+            if (procedureStepTemplateEntities.Count == 0)
+            {
+                throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
             }
 
-            // map and attach the right files for this object, if any
-            result = procedures.Select(x => {
+            List<ProcedureStepTemplateModel> procedureStepTemplateModels = procedureStepTemplateEntities.Select(x => {
                 var model = _mapper.Map<Domain.Models.ProcedureStepTemplateModel>(x);
                 model.ReferenceFiles = new List<FileModel>();
                 foreach (FileEntityMap map in x.ReferenceFiles) {
-                    if (map.EntityTableName != nameof(EntityFramework.Entities.ProcedureStepTemplate)) {
+                    if (map.EntityTableName != nameof(ProcedureStepTemplate)) {
                         continue;
                     }
                     model.ReferenceFiles.Add(
@@ -72,9 +58,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     );
                 }
                 return model;
-            }).OrderBy(x => x.Id).ToList();
+            }).ToList();
 
-            return result;
+            return procedureStepTemplateModels;
         }
 
         public async Task<Domain.Models.ProcedureStepTemplateModel> CreateProcedureStepTemplateAsync(CreateProcedureStepTemplate command)
@@ -209,6 +195,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<int> GetTotalProcedureStepTemplateRows(GetProcedureStepTemplate command)
+        {
+            var totalRows = await _unitOfWork.ProcedureStepTemplates.Query().CreateProcedureStepTemplateQuery(command, true).CountAsync();
+
+            return totalRows;
         }
     }
 }

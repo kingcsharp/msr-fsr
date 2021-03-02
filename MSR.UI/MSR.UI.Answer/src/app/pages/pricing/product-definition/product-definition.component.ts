@@ -334,7 +334,7 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.getProcedureStepTemplatesFlag) {
       return this.procedureStepTemplatesData;
     }
-    this.procedureStepTemplateService.procedureStepTemplateGet(null, env.apiVersion)
+    this.procedureStepTemplateService.procedureStepTemplateGet(null,null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.procedureStepTemplatesData = response.object;

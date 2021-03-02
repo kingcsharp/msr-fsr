@@ -1021,5 +1021,10 @@ namespace MSR.Answer.API.V1.Extentions
         public static GetParts ToGetPartsCommand(this GetPartRequest request) { 
             return AutoMapperHelper.Mapper.Map<GetParts>(request);    
         }
+
+        public static GetProcedureStepTemplate ToGetProcedureStepTemplateCommand(this GetProcedureStepTemplateRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetProcedureStepTemplate>(request);
+        }
     }
 }
