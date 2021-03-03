@@ -27,8 +27,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetRoles command, CancellationToken cancellationToken = default)
         {
             var ret = await _roleService.GetRolesMapAsync(command);
-            var totalRows = await _roleService.GetRolesTotalRows(command);
-            return new PagingCommandResponse<ICollection<Role>>(ret, 0, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
+            var totalRows = await _roleService.GetTotalRoleRows(command);
+            return new PagingCommandResponse<ICollection<Role>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(GetRolesUsers command, CancellationToken cancellationToken = default)

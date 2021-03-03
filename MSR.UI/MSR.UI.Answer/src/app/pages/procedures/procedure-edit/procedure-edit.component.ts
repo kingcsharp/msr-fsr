@@ -57,7 +57,7 @@ export class ProcedureEditComponent implements OnInit {
       this.availableProcedureStepTemplates = procedureTemplateGetResponse.object.map(s => ({ label: s.title, value: s.id }));
 
       this.globals.showLoader(true);
-      this.roleService.roleGet(env.apiVersion).pipe(take(1)).subscribe(responseHandler((roleResponse) => {
+      this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler((roleResponse) => {
 
         this.availableRoles = roleResponse.object.sort((a, b) => (a.name > b.name) ? 1 : -1);
 

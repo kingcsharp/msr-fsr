@@ -86,7 +86,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   getAvailableRoles() {
-    this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((response) => {
+    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
       this.availableRoles = response.object;
       this.getAvailableRolesFlag = true;
     }));

@@ -33,7 +33,7 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.UserName), s => s.UserName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.Email), s => s.Email);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.CreatedOn), s => s.CreatedOn);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.Roles), s => s.Roles.First().Role.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.Roles), s => s.Roles.FirstOrDefault().Role.Name);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.LocationName), s => s.Location.Name);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.SupervisorName), s => s.Supervisor.FirstName);
 
