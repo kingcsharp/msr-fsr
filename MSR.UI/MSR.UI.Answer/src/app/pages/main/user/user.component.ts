@@ -96,7 +96,8 @@ export class UserComponent implements OnInit {
   }
 
   getCustomers() {
-    this.customerService.customerGet(null, null, null, null, null, null, null, true, null, null, null, null, null,null, null, null, null, null, env.apiVersion).pipe(take(1))
+    this.customerService.customerGet(null, null, null, null, null, null, null, true, null, null, null, null, null,
+      null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customers = response.object;
       }));
@@ -127,7 +128,8 @@ export class UserComponent implements OnInit {
 
   async getUsers() {
     this.globals.showLoader(true);
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion)
+    this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, 
+      null, null, null,null, null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object;

@@ -149,7 +149,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   }
 
   getUsers() {
-    this.userService.userGet(null, null, null, null, null, null, null, null, [21], env.apiVersion)
+    this.userService.userGet(null, null, null, null, null, null, null, null, [21], null, null, null, null, null, null, null, null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.users = [];

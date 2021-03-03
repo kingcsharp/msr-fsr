@@ -114,7 +114,7 @@ export class RoleComponent implements OnInit {
   }
 
   getAllUsers() {
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion)
+    this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler((response: AuditActionResultOfICollectionOfUserModel) => {
         this.users = response.object;

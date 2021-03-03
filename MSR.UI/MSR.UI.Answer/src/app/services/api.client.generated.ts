@@ -6234,12 +6234,20 @@ export class UserService {
      * @param lastName (optional) 
      * @param userName (optional) 
      * @param title (optional) 
-     * @param supervisor (optional) 
+     * @param supervisorName (optional) 
      * @param primaryPhone (optional) 
      * @param email (optional) 
      * @param hasRoleIDs (optional) 
+     * @param isActive (optional) 
+     * @param isAnswerUser (optional) 
+     * @param createdOn (optional) 
+     * @param locationName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, hasRoleIDs: number[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
+    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisorName: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, hasRoleIDs: number[] | null | undefined, isActive: boolean | null | undefined, isAnswerUser: boolean | null | undefined, createdOn: Date | null | undefined, locationName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6254,14 +6262,30 @@ export class UserService {
             url_ += "UserName=" + encodeURIComponent("" + userName) + "&";
         if (title !== undefined && title !== null)
             url_ += "Title=" + encodeURIComponent("" + title) + "&";
-        if (supervisor !== undefined && supervisor !== null)
-            url_ += "Supervisor=" + encodeURIComponent("" + supervisor) + "&";
+        if (supervisorName !== undefined && supervisorName !== null)
+            url_ += "SupervisorName=" + encodeURIComponent("" + supervisorName) + "&";
         if (primaryPhone !== undefined && primaryPhone !== null)
             url_ += "PrimaryPhone=" + encodeURIComponent("" + primaryPhone) + "&";
         if (email !== undefined && email !== null)
             url_ += "Email=" + encodeURIComponent("" + email) + "&";
         if (hasRoleIDs !== undefined && hasRoleIDs !== null)
             hasRoleIDs && hasRoleIDs.forEach(item => { url_ += "HasRoleIDs=" + encodeURIComponent("" + item) + "&"; });
+        if (isActive !== undefined && isActive !== null)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (isAnswerUser !== undefined && isAnswerUser !== null)
+            url_ += "IsAnswerUser=" + encodeURIComponent("" + isAnswerUser) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (locationName !== undefined && locationName !== null)
+            url_ += "LocationName=" + encodeURIComponent("" + locationName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

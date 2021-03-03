@@ -44,7 +44,7 @@ namespace MSR.Application.ApplicationServices
                 }
             }
 
-            return new CommandResponse<ICollection<UserModel>>(ret);
+            return new PagingCommandResponse<ICollection<UserModel>>(ret, 0,command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateUser command, CancellationToken cancellationToken = default)
