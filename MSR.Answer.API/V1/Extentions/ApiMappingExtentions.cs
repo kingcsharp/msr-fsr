@@ -1026,5 +1026,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetProcedureStepTemplate>(request);
         }
+
+        public static GetRoles ToGetRolesCommand(this GetRolesRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetRoles>(request);
+        }
     }
 }

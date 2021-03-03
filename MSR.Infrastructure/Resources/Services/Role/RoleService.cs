@@ -12,6 +12,7 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Models;
 using System.Collections.Concurrent;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Role
 {
@@ -256,6 +257,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
             await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<Domain.Models.Role>(role);
+        }
+
+        public async Task<int> GetTotalRoleRows(GetRoles command)
+        {
+            var totalRows = await _unitOfWork.Roles.Query().CreateRoleQuery(command, true).CountAsync();
+
+            return totalRows;
         }
     }
 }

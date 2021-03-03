@@ -139,6 +139,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetArchiveDocumentRequest, GetArchiveDocument>();
             CreateMap<GetPartRequest, GetParts>();
             CreateMap<GetProcedureStepTemplateRequest, GetProcedureStepTemplate>();
+            CreateMap<GetRolesRequest, GetRoles>();
 
         }
     }

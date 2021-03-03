@@ -11,5 +11,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<Role> UpdateRoleAsync(UpdateRole command);
         Task DeleteRoleAsync(DeleteRole command);
         Task<ICollection<RolesUsersView>> GetRolesAssignedUsers(GetRolesUsers command);
+        Task<int> GetTotalRoleRows(GetRoles command);
     }
 }

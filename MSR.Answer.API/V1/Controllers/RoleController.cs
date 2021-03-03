@@ -27,9 +27,10 @@ namespace MSR.Answer.API.V1.Controllers
 
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<Role>>))]
-        public async Task<IActionResult> GetRoles()
+        public async Task<IActionResult> GetRoles([FromQuery] GetRolesRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetRoles());
+            var command = request.ToGetRolesCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<Role>>();
         }
 
