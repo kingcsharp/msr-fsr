@@ -78,7 +78,8 @@ namespace MSR.Answer.API.V1.Controllers
             var command = newpart.ToUpdatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             var message = "Part update was successfully submitted to workflow for approval.";
-            if (!(ret as ICommandResponse<PartModel>).Data.IsPending)
+            PartModel data = (ret as ICommandResponse<PartModel>).Data;
+            if (data == null || !data.IsPending)
             {
                 message = "Part was successfully updated.";
             }
