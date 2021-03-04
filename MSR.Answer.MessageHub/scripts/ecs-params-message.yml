@@ -10,8 +10,8 @@ task_definition:
     - name: app
   Ulimits:
     - Name: 'memlock'
-      SoftLimit: -1
-      HardLimit: -1
+      SoftLimit: 10000
+      HardLimit: 30000
 
 run_params:
   network_configuration:
