@@ -11,5 +11,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<EquipmentMaintenanceModel> CreateEquipmentMaintenanceAsync(CreateEquipmentMaintenance command);
         Task<EquipmentMaintenanceModel> UpdateEquipmentMaintenanceAsync(UpdateEquipmentMaintenance command);
         Task<EquipmentMaintenanceModel> DeleteEquipmentMaintenanceAsync(DeleteEquipmentMaintenance command);
+        Task<int> GetEquipmentMaintenanceTotalRows(GetEquipmentMaintenance command);
     }
 }

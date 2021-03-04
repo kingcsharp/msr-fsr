@@ -999,14 +999,56 @@ export class EquipmentMaintenanceService {
     /**
      * Gets EM/PM items. Filter the item using Id.
      * @param id (optional) 
+     * @param locationName (optional) 
+     * @param createdOn (optional) 
+     * @param createdFullName (optional) 
+     * @param assignedToFullName (optional) 
+     * @param troubleState (optional) 
+     * @param maintenanceTask (optional) 
+     * @param pemLastCompletedDate (optional) 
+     * @param frequencyField (optional) 
+     * @param comments (optional) 
+     * @param statusName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    equipmentMaintenanceGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
+    equipmentMaintenanceGet(id: number | null | undefined, locationName: string | null | undefined, createdOn: Date | null | undefined, createdFullName: string | null | undefined, assignedToFullName: string | null | undefined, troubleState: boolean | null | undefined, maintenanceTask: string | null | undefined, pemLastCompletedDate: Date | null | undefined, frequencyField: number | null | undefined, comments: string | null | undefined, statusName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
         let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (locationName !== undefined && locationName !== null)
+            url_ += "LocationName=" + encodeURIComponent("" + locationName) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (createdFullName !== undefined && createdFullName !== null)
+            url_ += "CreatedFullName=" + encodeURIComponent("" + createdFullName) + "&";
+        if (assignedToFullName !== undefined && assignedToFullName !== null)
+            url_ += "AssignedToFullName=" + encodeURIComponent("" + assignedToFullName) + "&";
+        if (troubleState !== undefined && troubleState !== null)
+            url_ += "TroubleState=" + encodeURIComponent("" + troubleState) + "&";
+        if (maintenanceTask !== undefined && maintenanceTask !== null)
+            url_ += "MaintenanceTask=" + encodeURIComponent("" + maintenanceTask) + "&";
+        if (pemLastCompletedDate !== undefined && pemLastCompletedDate !== null)
+            url_ += "PemLastCompletedDate=" + encodeURIComponent(pemLastCompletedDate ? "" + pemLastCompletedDate.toJSON() : "") + "&";
+        if (frequencyField !== undefined && frequencyField !== null)
+            url_ += "FrequencyField=" + encodeURIComponent("" + frequencyField) + "&";
+        if (comments !== undefined && comments !== null)
+            url_ += "Comments=" + encodeURIComponent("" + comments) + "&";
+        if (statusName !== undefined && statusName !== null)
+            url_ += "StatusName=" + encodeURIComponent("" + statusName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
