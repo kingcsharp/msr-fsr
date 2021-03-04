@@ -24,8 +24,7 @@ namespace MSR.Infrastructure.Helpers
             try
             {
                 var dynamicDataQuery = dataSet.Select(projection);
-                var dynamicData = await dynamicDataQuery.ToListAsync();
-                var data = JsonConvert.DeserializeObject<TResult>(JsonConvert.SerializeObject(dynamicData));
+                var data = await GetDataFromQuery<TResult>(dynamicDataQuery);
                 return data;
             }
             catch (Exception ex)
@@ -39,7 +38,7 @@ namespace MSR.Infrastructure.Helpers
             return await GetPagedViewDataFor<T, TResult>(dbSet.AsQueryable(), projection, skip, take);
         }
 
-        public static async Task<(TResult data, int totalRows)> GetPagedViewDataFor<T, TResult>(IQueryable<T> dataSet, Expression<Func<T, dynamic>> projection, int skip = 0, int take = 0)
+        public static async Task<(TResult data, int totalRows)> GetPagedViewDataFor<T, TResult>(IQueryable<T> dataSet, Expression<Func<T, dynamic>> projection, int skip = 0, int take = 0) where T : Entity
         {
             try
             {
@@ -52,8 +51,7 @@ namespace MSR.Infrastructure.Helpers
                     dynamicDataQuery = dynamicDataQuery.Skip(skip).Take(take);
                 }
 
-                var dynamicData = await dynamicDataQuery.ToListAsync();
-                var data = JsonConvert.DeserializeObject<TResult>(JsonConvert.SerializeObject(dynamicData));
+                var data = await GetDataFromQuery<TResult>(dynamicDataQuery);
                 return (data, totalRows);
             }
             catch (Exception ex)
@@ -61,5 +59,13 @@ namespace MSR.Infrastructure.Helpers
                 throw new DomainException($"{ex}", DomainError.InternalServerError);
             }
         }
+
+        public static async Task<TResult> GetDataFromQuery<TResult>(IQueryable<dynamic> query)
+        {
+            var dynamicData = await query.ToListAsync();
+            var data = JsonConvert.DeserializeObject<TResult>(JsonConvert.SerializeObject(dynamicData));
+            return data;
+        }
     }
+
 }

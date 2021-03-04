@@ -9,15 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Projections\**" />
+    <Compile Remove="Queries\**" />
     <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Projections\**" />
+    <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Services\**" />
+    <None Remove="Projections\**" />
+    <None Remove="Queries\**" />
     <None Remove="Services\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Commands\Abstractions\" />
-    <Folder Include="Projections\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
   <ItemGroup>

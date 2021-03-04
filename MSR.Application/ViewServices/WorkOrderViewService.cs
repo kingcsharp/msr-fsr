@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using MSR.Domain.Abstractions.Services;
 using System;
+using MSR.Domain.Models.Query;
 
 namespace MSR.Application.ViewServices
 {
@@ -43,9 +44,9 @@ namespace MSR.Application.ViewServices
             return await _unitOfWork.Query<WorkOrderMenu>().GetWorkOrderMenu(WorkOrderProjections.WorkOrderMenuView,skip,take);
         }
 
-        public async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenuAsync(int customerId, string partName, int? partId, DateTime fromDate, DateTime toDate, int skip = 0, int take = 0)
+        public async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenuAsync(GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
         {
-            return await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, customerId, partName, partId, fromDate, toDate, skip, take);
+            return await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, portalWorkOrderQueryModel);
         }
     }
 }

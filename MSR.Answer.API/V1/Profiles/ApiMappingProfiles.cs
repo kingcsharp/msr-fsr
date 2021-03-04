@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MSR.Answer.API.V1.Models;
+using MSR.Answer.API.V1.Models.Paging;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Models.Query;
 using System;
 using System.Linq;
 
@@ -140,7 +142,9 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetPartRequest, GetParts>();
             CreateMap<GetProcedureStepTemplateRequest, GetProcedureStepTemplate>();
             CreateMap<GetRolesRequest, GetRoles>();
-
+            CreateMap<GetPortalWorkOrderRequest, GetPortalWorkOrderQueryModel>();
+            CreateMap<Sort, QuerySort>();
+            CreateMap<Filter, QueryFilter>();
         }
     }
 }

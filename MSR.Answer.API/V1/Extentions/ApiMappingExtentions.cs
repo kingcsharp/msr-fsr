@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MSR.Domain.Models;
+using MSR.Domain.Models.Query;
 
 namespace MSR.Answer.API.V1.Extentions
 {
@@ -1031,5 +1032,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetRoles>(request);
         }
+
+        public static GetPortalWorkOrderQueryModel ToGetPortalWorkOrderQueryModel(this GetPortalWorkOrderRequest request) => AutoMapperHelper.Mapper.Map<GetPortalWorkOrderQueryModel>(request);
     }
 }

@@ -34,7 +34,6 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where<Customer>(command.CustomerNumber, s=> s.CustomerNumber.Contains(command.CustomerNumber));
             query = query.Where<Customer>(command.CreatedByFullName, s=> s.Created.FirstName.Contains(command.CreatedByFullName));
             query = query.Where<Customer>(command.CreatedOn, s=> s.CreatedOn == command.CreatedOn);
-
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.Id), s => s.Id);

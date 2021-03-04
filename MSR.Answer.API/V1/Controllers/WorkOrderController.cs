@@ -56,7 +56,7 @@ namespace MSR.Answer.API.V1.Controllers
         public async Task<IActionResult> WorkOrderGetMenu(int? skip,int? take)
         {
             var workOrderMenuViews = await _workOrderViewService.GetWorkOrderMenuAsync(skip.GetValueOrDefault(0),take.GetValueOrDefault(0));
-            return GenerateOkViewResponse(workOrderMenuViews.data);
+            return GenerateOkViewResponse(workOrderMenuViews.data, workOrderMenuViews.totalRows);
         }
 
         /// <summary>
@@ -99,9 +99,10 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet("Portal")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PortalWorkOrderView>>))]
-        public async Task<IActionResult> GetPortalWorkOrder([FromQuery] GetPortalWorkOrderRequest request, int? skip, int? take)
+        public async Task<IActionResult> GetPortalWorkOrder([FromQuery] GetPortalWorkOrderRequest request)
         {
-            var portalWorkOrderMenuViews = await _workOrderViewService.GetPortalWorkOrderMenuAsync(request.CustomerId,request.PartName,request.PartId,request.FromDate,request.ToDate,skip.GetValueOrDefault(0), take.GetValueOrDefault(0));
+            var queryModel = request.ToGetPortalWorkOrderQueryModel();
+            var portalWorkOrderMenuViews = await _workOrderViewService.GetPortalWorkOrderMenuAsync(queryModel);
             return GenerateOkViewResponse(portalWorkOrderMenuViews.data);
         }
 

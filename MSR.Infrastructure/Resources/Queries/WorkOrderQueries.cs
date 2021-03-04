@@ -14,6 +14,7 @@ using MSR.Domain.DTOs;
 using System.Collections.Concurrent;
 using System.Text;
 using Newtonsoft.Json;
+using MSR.Domain.Models.Query;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -78,26 +79,14 @@ namespace MSR.Infrastructure.Resources.Queries
             return workOrderMenuTuple;
         }
 
-        public static async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, 
-            int customerId, string partName, int? partId, DateTime fromDate, DateTime toDate, int skip = 0, int take = 0)
+        public static async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
         {
-            var filteredDataSet = dbSet.Where(i => i.CustomerId == customerId && i.CreatedOn >= fromDate && i.CreatedOn <= toDate);
-
-            if (!string.IsNullOrWhiteSpace(partName))
-            {
-                filteredDataSet = filteredDataSet.Where(i => i.PartName == partName);
-            }
-
-            if(partId.HasValue && partId > 0)
-            {
-                filteredDataSet = filteredDataSet.Where(i => i.PartId == partId);
-            }
-
-            var portalWorkOrderMenuDTOTuple = await QueryHelper.GetPagedViewDataFor<PortalWorkOrderMenu, ICollection<PortalWorkOrderMenuDTO>>(filteredDataSet, projection, skip, take);
-            
+            var filteredDataSet = dbSet.Where(i => i.CustomerId == portalWorkOrderQueryModel.CustomerId && i.CreatedOn >= portalWorkOrderQueryModel.FromDate && i.CreatedOn <= portalWorkOrderQueryModel.ToDate);
             var portalWorkOrderViews = new List<PortalWorkOrderView>();
 
-            foreach (var view in portalWorkOrderMenuDTOTuple.data)
+
+            var pagedData = filteredDataSet.ToFilterView(portalWorkOrderQueryModel);
+            foreach (var view in pagedData.data)
             {
                 var portalWorkOrderView = new PortalWorkOrderView()
                 {
@@ -148,7 +137,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
                     portalWorkOrderView.Messages = messages;
                 }
-                var subParts = portalWorkOrderMenuDTOTuple.data.First(i => i.WorkOrderId == view.WorkOrderId).SubParts;
+                var subParts = pagedData.data.First(i => i.WorkOrderId == view.WorkOrderId).SubParts;
                 if (!string.IsNullOrWhiteSpace(subParts))
                 {
                     var subPartModels = JsonConvert.DeserializeObject<List<PortalSubPartView>>(subParts);
@@ -157,7 +146,7 @@ namespace MSR.Infrastructure.Resources.Queries
                 portalWorkOrderViews.Add(portalWorkOrderView);
             }
 
-            return (portalWorkOrderViews.ToList(), portalWorkOrderMenuDTOTuple.totalRows);
+            return (portalWorkOrderViews.ToList(), pagedData.totalRows);
         }
 
         private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,decimal PercentageOfExpectedDurationTimeLoggedNumerator, 
