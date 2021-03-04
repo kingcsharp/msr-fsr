@@ -20,7 +20,7 @@ import { ReportCubeService } from '../../pages/reports/reportcube.service';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { CSVConverterService } from '../../services/csvconverter.service';
-import * as $ from 'jquery';
+// import * as $ from 'jquery';
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',
@@ -65,18 +65,6 @@ export class GridComponent implements OnInit {
       this.saveToLocalStorage = true;
     }
     this.getReport(this.data, this.reportInfo);
-
-    $('thead th>div>input').each(function (idx) {
-      var curEl = $(this);
-      curEl.off('keydown');
-      curEl.keydown(function (event) {
-        var e = (window.event) ? window.event : event;
-        if (event.keyCode == 13) {
-          event.preventDefault();
-          eval(curEl.attr('onenter'));
-        }
-      })
-    });
   }
 
   expandRow(expanded, row) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
 import { CustomerService, CustomerModel, UserService, UserModel, EnumMenuItem, EnumApprovalTables, UpdateCustomerRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -15,7 +15,7 @@ import { callFunctionWithFilters } from '../../../models/lib/Utils';
   styleUrls: ['./customers.component.scss'],
   providers: [CustomerService]
 })
-export class CustomersComponent implements OnInit {
+export class CustomersComponent implements OnInit, AfterViewInit {
   users: Array<UserModel>;
   data: Array<CustomerModel>;
   privileges = EnumPrivilege;
@@ -34,6 +34,8 @@ export class CustomersComponent implements OnInit {
   totalRecords: number = 0;
 
   constructor(private customerService: CustomerService, private userService: UserService, public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit(): void {
     this.gridVersion = '1.0.0';
@@ -58,6 +60,8 @@ export class CustomersComponent implements OnInit {
     this.canDeleteCustomer = this.hasPrivilege(this.privileges.CanDelete);
     this.canEditCustomer = this.hasPrivilege(this.privileges.CanEdit);
     this.canActivateCustomer = this.hasPrivilege(this.privileges.CanActivate);
+
+
   }
 
   hasPrivilege(privName) {

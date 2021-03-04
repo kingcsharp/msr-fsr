@@ -8,6 +8,28 @@ export function emptyArray(array) {
     }
 }
 
+export function removeDotAndCamelCaseFromObj(elem: any) {
+    let objToReturn = {};
+    Object.keys(elem).forEach((key) => {
+        const keysplitted = key.split('.');
+        //capitalizeFirstLetter(string: any)
+        const keysCapitalized = keysplitted.map((x: string, index: number) => index < 1 ? lowerCaseFirstLetter(x) : capitalizeFirstLetter(x)).join('');
+        // const keyVal = keysplitted.length > 1 ? 1 : 0;
+        objToReturn[keysCapitalized] = elem[key];
+    });
+    return objToReturn;
+}
+
+export function removeDotAndCamelCaseFromStr(elem: string) {
+    if (elem === undefined) {
+        return null;
+    }
+    const keysplitted = elem.split('.');
+    const keysCapitalized = keysplitted.map((x: string, index: number) => index < 1 ? lowerCaseFirstLetter(x) : capitalizeFirstLetter(x)).join('');
+
+    return keysCapitalized;
+}
+
 export function replaceArrayItems(arrayToBeReplaced, newArray) {
     emptyArray(arrayToBeReplaced);
     arrayToBeReplaced.push(...newArray);
@@ -47,6 +69,13 @@ export function capitalizeFirstLetter(string: any) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+export function lowerCaseFirstLetter(string: any) {
+    if (string === undefined || string === null) {
+        return null;
+    }
+    return string.charAt(0).toLowerCase() + string.slice(1);
+}
+
 export function getArguments(func) {
     const ARROW = true;
     const FUNC_ARGS = ARROW ? /^(function)?\s*[^\(]*\(\s*([^\)]*)\)/m : /^(function)\s*[^\(]*\(\s*([^\)]*)\)/m;
@@ -66,7 +95,7 @@ export function getArguments(func) {
 
 export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
     let filterEvObj: any = {
-        term: capitalizeFirstLetter(event.sortField),
+        term: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField)),
         pageNumber: event.first / event.rows,
         pageSize: event.rows,
         sortAscending: event.sortOrder === 1
@@ -75,7 +104,8 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
 
     const args = getArguments(func);
     const argsToCallFn = [];
-    args.forEach(arg => {
+    filterEvObj.filters = removeDotAndCamelCaseFromObj(filterEvObj.filters);
+    args.forEach((arg: string) => {
         const filterObj = filterEvObj.filters[arg];
         if (filterObj !== undefined) {
             argsToCallFn.push(filterObj.value);

@@ -15,7 +15,7 @@ namespace MSR.Domain.Commands
         public int? LocationId { get; set; }
         public bool? IsActive { get; set; }
         public string PrimaryContactUserFullName { get; set; }
-        public string SecondartContactUserFullName { get; set; }
+        public string SecondaryContactUserFullName { get; set; }
         public string LocationName { get; set; }
         public string CustomerNumber { get; set; }
         public string CreatedFullName { get; set; }

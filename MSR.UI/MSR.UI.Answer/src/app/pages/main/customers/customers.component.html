@@ -11,8 +11,7 @@
     <widget>
       <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
         [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-        [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" [filterDelay]="0"
-
+        [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" [filterDelay]="1300"
         [lazy]="true" (onLazyLoad)="getCustomers($event)" [totalRecords]="totalRecords"
         stateStorage="local" stateKey="{{gridStorageId}}">
         <ng-template pTemplate="caption">
@@ -38,7 +37,7 @@
           <tr>
             <th [hidden]="!commonGrid.isVisibleCol('id',gridSettings)">
               <div class="position-relative">
-                <input id="id" pInputText type="text" tooltip="Search by Id"
+                <input id="id" ng-model-options="{debounce: 500}" pInputText type="text" tooltip="Search by Id"
                   (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
                   [value]="dt.filters['id']?.value">
                 <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer"
@@ -112,10 +111,13 @@
               </div>
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
-              <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
-                                    [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
-                                    [datatable]="dt">
-                                </multiselect-wrapper>
+              <div class="position-relative">
+                <input id="status" pInputText type="text" tooltip="Search by Status"
+                  (input)="dt.filter($event.target.value, 'status', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['status']?.value">
+                <i *ngIf="dt.filters['status']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'status')"></i>
+              </div>
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
             </th>
