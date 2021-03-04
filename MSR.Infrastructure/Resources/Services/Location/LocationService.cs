@@ -13,6 +13,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Helpers;
 using System;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Location
 {
@@ -31,7 +32,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
         public async Task<ICollection<LocationModel>> GetLocationsAsync(GetLocations command)
         {
-            var locationListAll = await _unitOfWork.Locations.Query().ToListAsync();
+            var locationListAll = await _unitOfWork.Locations.Query().CreateLocationQuery(command).ToListAsync();
 
             var locationQuery = _unitOfWork.Locations.Query();
             bool includeChildren;
@@ -329,6 +330,13 @@ namespace MSR.Infrastructure.Resources.Services.Location
             _unitOfWork.Sensors.Update(sensor);
             await _unitOfWork.SaveChangesAsync();
 
+        }
+
+        public async Task<int> GetTotalLocationRows(GetLocations command)
+        {
+            var totalRows = await _unitOfWork.Locations.Query().CreateLocationQuery(command).CountAsync();
+
+            return totalRows;
         }
     }
 }

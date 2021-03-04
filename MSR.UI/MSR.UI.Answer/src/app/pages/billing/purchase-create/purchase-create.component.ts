@@ -116,7 +116,7 @@ export class PurchaseCreateComponent implements OnInit {
   }
 
   getLocationsData() {
-    this.locationService.locationGet(null, null, null, env.apiVersion).pipe(take(1))
+    this.locationService.locationGet(null, null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           if (x.parentId === null) {

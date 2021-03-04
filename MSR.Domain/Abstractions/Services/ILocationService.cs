@@ -17,6 +17,6 @@ namespace MSR.Domain.Abstractions.Services
 
         Task AddSensorToLocation(CreateLocationSensorMap command);
         Task RemoveSensorFromLocation(DeleteLocationSensorMap command);
-
+        Task<int> GetTotalLocationRows(GetLocations command);
     }
 }

@@ -2154,7 +2154,7 @@ export class LocationService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
+    locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, name: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, address1: string | null | undefined, city: string | null | undefined, state: string | null | undefined, postalcode: string | null | undefined, country: string | null | undefined, phone: string | null | undefined, parentName: string | null | undefined, timezoneDescription: string | null | undefined, address2: string | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2165,6 +2165,40 @@ export class LocationService {
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (internalAddress !== undefined && internalAddress !== null)
             url_ += "InternalAddress=" + encodeURIComponent("" + internalAddress) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (createdFullName !== undefined && createdFullName !== null)
+            url_ += "CreatedFullName=" + encodeURIComponent("" + createdFullName) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (address1 !== undefined && address1 !== null)
+            url_ += "Address1=" + encodeURIComponent("" + address1) + "&";
+        if (city !== undefined && city !== null)
+            url_ += "City=" + encodeURIComponent("" + city) + "&";
+        if (state !== undefined && state !== null)
+            url_ += "State=" + encodeURIComponent("" + state) + "&";
+        if (postalcode !== undefined && postalcode !== null)
+            url_ += "Postalcode=" + encodeURIComponent("" + postalcode) + "&";
+        if (country !== undefined && country !== null)
+            url_ += "Country=" + encodeURIComponent("" + country) + "&";
+        if (phone !== undefined && phone !== null)
+            url_ += "Phone=" + encodeURIComponent("" + phone) + "&";
+        if (parentName !== undefined && parentName !== null)
+            url_ += "ParentName=" + encodeURIComponent("" + parentName) + "&";
+        if (timezoneDescription !== undefined && timezoneDescription !== null)
+            url_ += "TimezoneDescription=" + encodeURIComponent("" + timezoneDescription) + "&";
+        if (address2 !== undefined && address2 !== null)
+            url_ += "Address2=" + encodeURIComponent("" + address2) + "&";
+        if (status !== undefined && status !== null)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

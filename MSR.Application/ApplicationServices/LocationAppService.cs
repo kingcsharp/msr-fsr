@@ -28,7 +28,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetLocations command, CancellationToken cancellationToken = default)
         {
             var ret = await _locationService.GetLocationsAsync(command);
-            return new CommandResponse<ICollection<LocationModel>>(ret);
+            var totalRows = await _locationService.GetTotalLocationRows(command);
+            return new PagingCommandResponse<ICollection<LocationModel>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeactivateLocation command, CancellationToken cancellationToken = default)

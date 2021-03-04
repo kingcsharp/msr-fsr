@@ -114,7 +114,7 @@ export class UserComponent implements OnInit {
     if (this.getLocationsFlag) {
       return this.locations;
     }
-    this.locationService.locationGet(null, null, null, env.apiVersion)
+    this.locationService.locationGet(null, null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
