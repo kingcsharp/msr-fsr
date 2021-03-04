@@ -595,7 +595,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 userRoles = userRoles.Where(i => i.UserId == command.Id.Value);
             }
 
-            return await Task.FromResult(userRoles
+            return await userRoles
                 .Include(i => i.User)
                 .Include(i => i.Role)
                 .Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value)
@@ -607,8 +607,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                         Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active"),
                         CertificationName = i.Role.Name
                     }
-                ).AsEnumerable()
-            );
+                ).ToListAsync();
         }
     }
 }
