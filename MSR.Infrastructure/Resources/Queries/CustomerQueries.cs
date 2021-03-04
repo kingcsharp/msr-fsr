@@ -26,14 +26,14 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where<Customer>(command.Phone, s => s.Phone.Contains(command.Phone));
             query = query.Where<Customer>(command.PrimaryContactUserId, s => s.PrimaryContactUser.Id == command.PrimaryContactUserId);
             query = query.Where<Customer>(command.SecondaryContactUserId, s => s.SecondaryContactUser.Id == command.SecondaryContactUserId);
-            query = query.Where<Customer>(command.LocationId, s=> s.LocationId == command.LocationId);
+            query = query.Where<Customer>(command.LocationId, s => s.LocationId == command.LocationId);
             query = query.Where<Customer>(command.IsActive, s => s.IsActive == command.IsActive);
-            query = query.Where<Customer>(command.PrimaryContactUserName, s => s.PrimaryContactUser.FirstName.Contains(command.PrimaryContactUserName));
-            query = query.Where<Customer>(command.SecondartContactUserName, s => s.SecondaryContactUser.FirstName.Contains(command.SecondartContactUserName));
+            query = query.Where<Customer>(command.PrimaryContactUserFullName, s => s.PrimaryContactUser.FirstName.Contains(command.PrimaryContactUserFullName));
+            query = query.Where<Customer>(command.SecondartContactUserFullName, s => s.SecondaryContactUser.FirstName.Contains(command.SecondartContactUserFullName));
             query = query.Where<Customer>(command.LocationName, s => s.Location.Name.Contains(command.LocationName));
-            query = query.Where<Customer>(command.CustomerNumber, s=> s.CustomerNumber.Contains(command.CustomerNumber));
-            query = query.Where<Customer>(command.CreatedByFullName, s=> s.Created.FirstName.Contains(command.CreatedByFullName));
-            query = query.Where<Customer>(command.CreatedOn, s=> s.CreatedOn == command.CreatedOn);
+            query = query.Where<Customer>(command.CustomerNumber, s => s.CustomerNumber.Contains(command.CustomerNumber));
+            query = query.Where<Customer>(command.CreatedFullName, s => s.Created.FirstName.Contains(command.CreatedFullName));
+            query = query.Where<Customer>(command.CreatedOn, s => s.CreatedOn == command.CreatedOn);
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
@@ -55,7 +55,7 @@ namespace MSR.Infrastructure.Resources.Queries
             {
                 query = query.Skip(command.Skip.Value).Take(command.Take.Value);
             }
-            
+
             return query;
         }
     }

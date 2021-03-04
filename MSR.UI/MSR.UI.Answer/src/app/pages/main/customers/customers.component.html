@@ -12,6 +12,8 @@
       <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
         [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
         [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" [filterDelay]="0"
+
+        [lazy]="true" (onLazyLoad)="getCustomers($event)" [totalRecords]="totalRecords"
         stateStorage="local" stateKey="{{gridStorageId}}">
         <ng-template pTemplate="caption">
           <div class="text-right">

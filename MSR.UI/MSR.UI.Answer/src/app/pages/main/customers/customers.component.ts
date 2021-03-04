@@ -6,6 +6,8 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
+import { LazyLoadEvent } from 'primeng/api';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
 
 @Component({
   selector: 'app-customers',
@@ -29,6 +31,7 @@ export class CustomersComponent implements OnInit {
   approvalTables = EnumApprovalTables;
   menuItems = EnumMenuItem;
   statusOptions: any[];
+  totalRecords: number = 0;
 
   constructor(private customerService: CustomerService, private userService: UserService, public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -55,36 +58,30 @@ export class CustomersComponent implements OnInit {
     this.canDeleteCustomer = this.hasPrivilege(this.privileges.CanDelete);
     this.canEditCustomer = this.hasPrivilege(this.privileges.CanEdit);
     this.canActivateCustomer = this.hasPrivilege(this.privileges.CanActivate);
-    this.getCustomers();
-
-
   }
 
   hasPrivilege(privName) {
     return this.globals.hasPrivilege(EnumMenuItem.CustomersDepartments, privName);
   }
 
-  getCustomers() {
-
+  getCustomers(event: LazyLoadEvent) {
     this.globals.showLoader(true);
+    setTimeout(() => {
+      callFunctionWithFilters(this.customerService, this.customerService.customerGet, event).subscribe(responseHandler((response) => {
+        this.totalRecords = response.totalNumberOfRecords;
 
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, 
-      null, null, null, null, null, null, null, null, null,env.apiVersion).subscribe(responseHandler((response) => {
+        this.data = response.object;
+        this.data.forEach(elem => {
+          if (elem.status === null) {
+            elem.status = 'Approved';
+          }
+        });
 
-      this.data = response.object;
-
-      this.data.map((elem) => {
-        if (elem.status === null) {
-          elem.status = 'Approved';
-        }
-
-      });
-
-      this.statusOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-      ).map(x => ({ label: x.status, value: x.status }));
-    }));
-
+        this.statusOptions = this.data.filter(
+          (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+        ).map(x => ({ label: x.status, value: x.status }));
+      }));
+    }, 10);
   }
 
   openConfirmDeleteDialog(customer: CustomerModel) {
@@ -105,7 +102,8 @@ export class CustomersComponent implements OnInit {
     this.customerService.customerDelete(this.customerToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
       this.data.length = 0;
-      this.getCustomers();
+      //TODO FIX THIS SHIT
+      // this.getCustomers();
 
     }));
 

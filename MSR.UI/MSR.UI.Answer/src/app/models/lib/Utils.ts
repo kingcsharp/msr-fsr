@@ -1,3 +1,6 @@
+import { LazyLoadEvent } from "primeng/api";
+import { environment as env } from '../../../environments/environment';
+
 export function emptyArray(array) {
     let length = array.length;
     while (length--) {
@@ -35,6 +38,55 @@ export function formatBytes(bytes, decimals = 2) {
     }
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+export function capitalizeFirstLetter(string: any) {
+    if (string === undefined || string === null) {
+        return null;
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function getArguments(func) {
+    const ARROW = true;
+    const FUNC_ARGS = ARROW ? /^(function)?\s*[^\(]*\(\s*([^\)]*)\)/m : /^(function)\s*[^\(]*\(\s*([^\)]*)\)/m;
+    const FUNC_ARG_SPLIT = /,/;
+    const FUNC_ARG = /^\s*(_?)(.+?)\1\s*$/;
+    const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+
+    return ((func || '').toString().replace(STRIP_COMMENTS, '').match(FUNC_ARGS) || ['', '', ''])[2]
+        .split(FUNC_ARG_SPLIT)
+        .map(function (arg) {
+            return arg.replace(FUNC_ARG, function (all, underscore, name) {
+                return name.split('=')[0].trim();
+            });
+        })
+        .filter(String);
+}
+
+export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
+    let filterEvObj: any = {
+        term: capitalizeFirstLetter(event.sortField),
+        pageNumber: event.first / event.rows,
+        pageSize: event.rows,
+        sortAscending: event.sortOrder === 1
+    }
+    Object.assign(filterEvObj, event);
+
+    const args = getArguments(func);
+    const argsToCallFn = [];
+    args.forEach(arg => {
+        const filterObj = filterEvObj.filters[arg];
+        if (filterObj !== undefined) {
+            argsToCallFn.push(filterObj.value);
+        } else if (filterEvObj[arg] !== undefined) {
+            argsToCallFn.push(filterEvObj[arg]);
+        } else {
+            argsToCallFn.push(null);
+        }
+    });
+    argsToCallFn[argsToCallFn.length - 1] = env.apiVersion;
+    return func.apply(service, argsToCallFn);
 }
 
 
