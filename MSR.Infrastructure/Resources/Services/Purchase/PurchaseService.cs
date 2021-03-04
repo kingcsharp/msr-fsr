@@ -11,6 +11,7 @@ using MSR.Domain.SQSEventing.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using MSR.Infrastructure.Resources.Queries;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,30 +39,14 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
         public async Task<ICollection<Domain.Models.PurchaseModel>> GetPurchasesAsync(GetPurchases command)
         {
-            List<Purchase> purchases = null;
-            if (command.Id.HasValue) {
-                purchases = await _unitOfWork.Purchases.Query()
-                    .Where(x => x.Id == command.Id.Value)
-                    .Include(x => x.Status)
-                    .Include(x => x.WorkOrders)
-                    .Include(x => x.Location)
-                    .Include(x => x.PurchaseOrder)
-                    .Include(x => x.PurchaseOrderProduct)
-                    .ThenInclude(s => s.Product)
-                    .ToListAsync();
-                if (purchases.Count == 0) {
-                    throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
-                }
-            } else {
-                purchases = await _unitOfWork.Purchases.Query()
-                    .Include(x => x.Status)
-                    .Include(x => x.Location)
-                    .Include(x => x.PurchaseOrder)
-                    .Include(x => x.PurchaseOrderProduct)
-                    .ThenInclude(s => s.Product)
-                    .ToListAsync();
+            List<Purchase> purchaseEntities = await _unitOfWork.Purchases.Query().CreatePurchaseQuery(command).ToListAsync();
+
+            if (purchaseEntities.Count == 0)
+            {
+                throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
             }
-            var result = purchases.Select(x => _mapper.Map<Domain.Models.PurchaseModel>(x)).ToList();
+
+            var result = purchaseEntities.Select(x => _mapper.Map<Domain.Models.PurchaseModel>(x)).ToList();
             return result;
         }
 
@@ -120,6 +105,12 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             }
 
             return ret;
+        }
+
+        public async Task<int> GetPurchaseTotalRows(GetPurchases command)
+        {
+            var totalRows = await _unitOfWork.Purchases.Query().CreatePurchaseQuery(command).CountAsync();
+            return totalRows;
         }
     }
 }

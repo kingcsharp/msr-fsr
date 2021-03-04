@@ -23,7 +23,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetPurchases command, CancellationToken cancellationToken = default)
         {
             var ret = await _purchaseService.GetPurchasesAsync(command);
-            return new CommandResponse<ICollection<PurchaseModel>>(ret);
+            int totalRows = await _purchaseService.GetPurchaseTotalRows(command);
+            return new PagingCommandResponse<ICollection<PurchaseModel>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
         public async Task<ICommandResponse> HandleAsync(CreatePurchase command, CancellationToken cancellationToken = default)
         {

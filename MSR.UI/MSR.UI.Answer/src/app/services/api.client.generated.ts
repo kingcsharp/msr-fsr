@@ -4968,14 +4968,38 @@ export class PurchaseService {
     /**
      * Get Purchase by id
      * @param id (optional) 
+     * @param mttn (optional) 
+     * @param purchaseOrderProductName (optional) 
+     * @param statusId (optional) 
+     * @param createdOn (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    purchaseGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
+    purchaseGet(id: number | null | undefined, mttn: string | null | undefined, purchaseOrderProductName: string | null | undefined, statusId: number | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
         let url_ = this.baseUrl + "/v{version}/Purchase?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (mttn !== undefined && mttn !== null)
+            url_ += "Mttn=" + encodeURIComponent("" + mttn) + "&";
+        if (purchaseOrderProductName !== undefined && purchaseOrderProductName !== null)
+            url_ += "PurchaseOrderProductName=" + encodeURIComponent("" + purchaseOrderProductName) + "&";
+        if (statusId !== undefined && statusId !== null)
+            url_ += "StatusId=" + encodeURIComponent("" + statusId) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
