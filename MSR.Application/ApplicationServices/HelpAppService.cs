@@ -57,7 +57,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetHelpPage command, CancellationToken cancellationToken = default)
         {
             var ret = await _helpService.GetHelpPages(command);
-            return new CommandResponse<IEnumerable<HelpPage>>(ret);
+            int totalRows = await _helpService.GetHelpPagesTotalRows(command);
+            return new PagingCommandResponse<IEnumerable<HelpPage>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
     }
 }
