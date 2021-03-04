@@ -32,6 +32,8 @@ export class CustomersComponent implements OnInit, AfterViewInit {
   menuItems = EnumMenuItem;
   statusOptions: any[];
   totalRecords: number = 0;
+  isActive: any[];
+
 
   constructor(private customerService: CustomerService, private userService: UserService, public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
   ngAfterViewInit(): void {
@@ -60,7 +62,10 @@ export class CustomersComponent implements OnInit, AfterViewInit {
     this.canDeleteCustomer = this.hasPrivilege(this.privileges.CanDelete);
     this.canEditCustomer = this.hasPrivilege(this.privileges.CanEdit);
     this.canActivateCustomer = this.hasPrivilege(this.privileges.CanActivate);
-
+    this.isActive = [
+      { label: 'Active', value: true },
+      { label: 'InActive', value: false },
+    ];
 
   }
 

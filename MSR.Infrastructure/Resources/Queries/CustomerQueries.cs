@@ -33,7 +33,7 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where<Customer>(command.LocationName, s => s.Location.Name.Contains(command.LocationName));
             query = query.Where<Customer>(command.CustomerNumber, s => s.CustomerNumber.Contains(command.CustomerNumber));
             query = query.Where<Customer>(command.CreatedFullName, s => s.Created.FirstName.Contains(command.CreatedFullName));
-            query = query.Where<Customer>(command.CreatedOn, s => s.CreatedOn == command.CreatedOn);
+            query = query.Where<Customer>(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
