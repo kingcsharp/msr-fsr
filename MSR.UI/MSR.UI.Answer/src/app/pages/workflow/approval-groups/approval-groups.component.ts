@@ -74,7 +74,7 @@ export class ApprovalGroupsComponent implements OnInit {
 
   getUsers() {
     const ctrl = this;
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
+    this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((elem) => {
           ctrl.users.push({ name: elem.firstName + ' ' + elem.lastName, userId: elem.id });
@@ -127,7 +127,7 @@ export class ApprovalGroupsComponent implements OnInit {
 
   getRoles() {
     const ctrl = this;
-    this.roleService.roleGet(env.apiVersion).pipe(take(1))
+    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           ctrl.allRoles.push({ name: x.name, roleId: x.id });

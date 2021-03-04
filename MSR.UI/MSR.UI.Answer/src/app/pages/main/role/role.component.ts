@@ -99,7 +99,7 @@ export class RoleComponent implements OnInit {
 
   getRoles() {
     this.globals.showLoader(true);
-    this.roleService.roleGet(env.apiVersion).pipe(take(1))
+    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.setAssignedUsers(response.object);
         this.showGrid = true;
@@ -114,7 +114,7 @@ export class RoleComponent implements OnInit {
   }
 
   getAllUsers() {
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion)
+    this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler((response: AuditActionResultOfICollectionOfUserModel) => {
         this.users = response.object;

@@ -31,7 +31,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<LocationModel>>))]
-        public async Task<IActionResult> Get([FromQuery, Required] GetLocationRequest request)
+        public async Task<IActionResult> Get([FromQuery] GetLocationRequest request)
         {
             var command = request.ToGetLocationCommand();
             var ret = await _dispatcher.DispatchAsync(command);

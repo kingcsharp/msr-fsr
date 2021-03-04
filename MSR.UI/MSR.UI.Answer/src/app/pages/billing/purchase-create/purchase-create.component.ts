@@ -10,7 +10,7 @@ import {
   ProductModel,
   LocationService,
   CustomerService,
-  Customer,
+  CustomerModel,
   PurchaseService,
   CreatePurchaseRequest
 } from '../../../services/api.client.generated';
@@ -34,7 +34,7 @@ export class PurchaseCreateComponent implements OnInit {
   poId: number;
   purchaseOrderData: PurchaseOrderView;
   getPurchaseOrderFlag: boolean = false;
-  customerData: Customer;
+  customerData: CustomerModel;
   getCustomerFlag: boolean = false;
   locationsData: any[] = [];
   getLocationsFlag: boolean = false;
@@ -103,7 +103,7 @@ export class PurchaseCreateComponent implements OnInit {
   }
 
   getCustomerData(id: number) {
-    this.customerService.customerGet(id, null, null, null, null, null, null, true, env.apiVersion)
+    this.customerService.customerGet(id, null, null, null, null, null, null, true, null, null, null, null, null,null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customerData = response.object[0] ? response.object[0] : {};
@@ -111,12 +111,12 @@ export class PurchaseCreateComponent implements OnInit {
       }));
   }
 
-  getCustomerLabel(customer: Customer): string {
+  getCustomerLabel(customer: CustomerModel): string {
     return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`;
   }
 
   getLocationsData() {
-    this.locationService.locationGet(null, null, null, env.apiVersion).pipe(take(1))
+    this.locationService.locationGet(null, null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           if (x.parentId === null) {

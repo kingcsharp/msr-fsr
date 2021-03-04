@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { CustomerService, Customer, UserService, UserModel, EnumMenuItem, EnumApprovalTables, UpdateCustomerRequest } from '../../../services/api.client.generated';
+import { CustomerService, CustomerModel, UserService, UserModel, EnumMenuItem, EnumApprovalTables, UpdateCustomerRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
@@ -15,7 +15,7 @@ import { Globals } from '../../../models/lib/globals';
 })
 export class CustomersComponent implements OnInit {
   users: Array<UserModel>;
-  data: Array<Customer>;
+  data: Array<CustomerModel>;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   gridVersion: string;
@@ -24,7 +24,7 @@ export class CustomersComponent implements OnInit {
   canEditCustomer: boolean = false;
   canDeleteCustomer: boolean = false;
   canActivateCustomer: boolean = false;
-  customerToDelete: Customer;
+  customerToDelete: CustomerModel;
   showConfirmDeleteDialog: boolean = false;
   approvalTables = EnumApprovalTables;
   menuItems = EnumMenuItem;
@@ -68,7 +68,8 @@ export class CustomersComponent implements OnInit {
 
     this.globals.showLoader(true);
 
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, 
+      null, null, null, null, null, null, null, null, null,env.apiVersion).subscribe(responseHandler((response) => {
 
       this.data = response.object;
 
@@ -86,7 +87,7 @@ export class CustomersComponent implements OnInit {
 
   }
 
-  openConfirmDeleteDialog(customer: Customer) {
+  openConfirmDeleteDialog(customer: CustomerModel) {
 
     this.customerToDelete = customer;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
@@ -110,7 +111,7 @@ export class CustomersComponent implements OnInit {
 
   }
 
-  changeCustomerStatus(customer: Customer) {
+  changeCustomerStatus(customer: CustomerModel) {
 
     let updateCustomerRequest = new UpdateCustomerRequest();
     updateCustomerRequest.customerId = customer.id;

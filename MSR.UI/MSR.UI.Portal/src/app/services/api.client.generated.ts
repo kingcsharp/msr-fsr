@@ -432,7 +432,7 @@ export class CustomerService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomer> {
+    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserName: string | null | undefined, secondartContactUserName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdById: number | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, filterProperty: string | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
         let url_ = this.baseUrl + "/v{version}/Customer?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -453,6 +453,28 @@ export class CustomerService {
             url_ += "LocationId=" + encodeURIComponent("" + locationId) + "&";
         if (isActive !== undefined && isActive !== null)
             url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (primaryContactUserName !== undefined && primaryContactUserName !== null)
+            url_ += "PrimaryContactUserName=" + encodeURIComponent("" + primaryContactUserName) + "&";
+        if (secondartContactUserName !== undefined && secondartContactUserName !== null)
+            url_ += "SecondartContactUserName=" + encodeURIComponent("" + secondartContactUserName) + "&";
+        if (locationName !== undefined && locationName !== null)
+            url_ += "LocationName=" + encodeURIComponent("" + locationName) + "&";
+        if (customerNumber !== undefined && customerNumber !== null)
+            url_ += "CustomerNumber=" + encodeURIComponent("" + customerNumber) + "&";
+        if (createdById !== undefined && createdById !== null)
+            url_ += "CreatedById=" + encodeURIComponent("" + createdById) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (filterProperty !== undefined && filterProperty !== null)
+            url_ += "FilterProperty=" + encodeURIComponent("" + filterProperty) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -470,14 +492,14 @@ export class CustomerService {
                 try {
                     return this.processCustomerGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfIEnumerableOfCustomer>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfIEnumerableOfCustomerModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfIEnumerableOfCustomer>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfIEnumerableOfCustomerModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCustomerGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfCustomer> {
+    protected processCustomerGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -488,7 +510,7 @@ export class CustomerService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfIEnumerableOfCustomer.fromJS(resultData200);
+            result200 = AuditActionResultOfIEnumerableOfCustomerModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -496,10 +518,10 @@ export class CustomerService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfIEnumerableOfCustomer>(<any>null);
+        return _observableOf<AuditActionResultOfIEnumerableOfCustomerModel>(<any>null);
     }
 
-    customerPost(version: string, request: CreateCustomerRequest): Observable<AuditActionResultOfCustomer> {
+    customerPost(version: string, request: CreateCustomerRequest): Observable<AuditActionResultOfCustomerModel> {
         let url_ = this.baseUrl + "/v{version}/Customer";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -525,14 +547,14 @@ export class CustomerService {
                 try {
                     return this.processCustomerPost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfCustomer>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfCustomerModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfCustomer>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfCustomerModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCustomerPost(response: HttpResponseBase): Observable<AuditActionResultOfCustomer> {
+    protected processCustomerPost(response: HttpResponseBase): Observable<AuditActionResultOfCustomerModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -543,7 +565,7 @@ export class CustomerService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfCustomer.fromJS(resultData200);
+            result200 = AuditActionResultOfCustomerModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -551,7 +573,7 @@ export class CustomerService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfCustomer>(<any>null);
+        return _observableOf<AuditActionResultOfCustomerModel>(<any>null);
     }
 
     customerPatch(version: string, request: UpdateCustomerRequest): Observable<AuditActionResult> {
@@ -8459,6 +8481,11 @@ export class AuditActionResult implements IAuditActionResult {
     errorMessages?: ErrorMessage[] | undefined;
     /** Gets or Sets Id */
     id?: number;
+    term?: string | undefined;
+    pageNumber?: number | undefined;
+    totalNumberOfRecords?: number | undefined;
+    pageSize?: number | undefined;
+    sortAscending?: boolean | undefined;
     /** True if any error messages exist */
     hasErrors?: boolean;
     /** True if any validation error messages exist */
@@ -8482,6 +8509,11 @@ export class AuditActionResult implements IAuditActionResult {
                     this.errorMessages!.push(ErrorMessage.fromJS(item));
             }
             this.id = _data["id"];
+            this.term = _data["term"];
+            this.pageNumber = _data["pageNumber"];
+            this.totalNumberOfRecords = _data["totalNumberOfRecords"];
+            this.pageSize = _data["pageSize"];
+            this.sortAscending = _data["sortAscending"];
             this.hasErrors = _data["hasErrors"];
             this.hasValidationErrors = _data["hasValidationErrors"];
         }
@@ -8503,6 +8535,11 @@ export class AuditActionResult implements IAuditActionResult {
                 data["errorMessages"].push(item.toJSON());
         }
         data["id"] = this.id;
+        data["term"] = this.term;
+        data["pageNumber"] = this.pageNumber;
+        data["totalNumberOfRecords"] = this.totalNumberOfRecords;
+        data["pageSize"] = this.pageSize;
+        data["sortAscending"] = this.sortAscending;
         data["hasErrors"] = this.hasErrors;
         data["hasValidationErrors"] = this.hasValidationErrors;
         return data; 
@@ -8517,6 +8554,11 @@ export interface IAuditActionResult {
     errorMessages?: ErrorMessage[] | undefined;
     /** Gets or Sets Id */
     id?: number;
+    term?: string | undefined;
+    pageNumber?: number | undefined;
+    totalNumberOfRecords?: number | undefined;
+    pageSize?: number | undefined;
+    sortAscending?: boolean | undefined;
     /** True if any error messages exist */
     hasErrors?: boolean;
     /** True if any validation error messages exist */
@@ -8990,10 +9032,10 @@ export interface IUpdateAdminCostSettingRequest {
 }
 
 /** Base class for an API call with a typed result */
-export class AuditActionResultOfIEnumerableOfCustomer extends AuditActionResult implements IAuditActionResultOfIEnumerableOfCustomer {
-    object?: Customer[] | undefined;
+export class AuditActionResultOfIEnumerableOfCustomerModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfCustomerModel {
+    object?: CustomerModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfIEnumerableOfCustomer) {
+    constructor(data?: IAuditActionResultOfIEnumerableOfCustomerModel) {
         super(data);
     }
 
@@ -9003,14 +9045,14 @@ export class AuditActionResultOfIEnumerableOfCustomer extends AuditActionResult 
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(Customer.fromJS(item));
+                    this.object!.push(CustomerModel.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfIEnumerableOfCustomer {
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfCustomerModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfIEnumerableOfCustomer();
+        let result = new AuditActionResultOfIEnumerableOfCustomerModel();
         result.init(data);
         return result;
     }
@@ -9028,8 +9070,8 @@ export class AuditActionResultOfIEnumerableOfCustomer extends AuditActionResult 
 }
 
 /** Base class for an API call with a typed result */
-export interface IAuditActionResultOfIEnumerableOfCustomer extends IAuditActionResult {
-    object?: Customer[] | undefined;
+export interface IAuditActionResultOfIEnumerableOfCustomerModel extends IAuditActionResult {
+    object?: CustomerModel[] | undefined;
 }
 
 export abstract class EntityModel implements IEntityModel {
@@ -9146,7 +9188,7 @@ export interface ITrackableModel extends ICreatableModel {
     lastUpdated?: UserModel | undefined;
 }
 
-export class Customer extends TrackableModel implements ICustomer {
+export class CustomerModel extends TrackableModel implements ICustomerModel {
     oldId?: number;
     name?: string | undefined;
     address?: string | undefined;
@@ -9158,7 +9200,7 @@ export class Customer extends TrackableModel implements ICustomer {
     isActive?: boolean;
     customerNumber?: string | undefined;
 
-    constructor(data?: ICustomer) {
+    constructor(data?: ICustomerModel) {
         super(data);
     }
 
@@ -9178,9 +9220,9 @@ export class Customer extends TrackableModel implements ICustomer {
         }
     }
 
-    static fromJS(data: any): Customer {
+    static fromJS(data: any): CustomerModel {
         data = typeof data === 'object' ? data : {};
-        let result = new Customer();
+        let result = new CustomerModel();
         result.init(data);
         return result;
     }
@@ -9202,7 +9244,7 @@ export class Customer extends TrackableModel implements ICustomer {
     }
 }
 
-export interface ICustomer extends ITrackableModel {
+export interface ICustomerModel extends ITrackableModel {
     oldId?: number;
     name?: string | undefined;
     address?: string | undefined;
@@ -9911,23 +9953,23 @@ export interface ILocationModel extends IDeletableModel {
 }
 
 /** Base class for an API call with a typed result */
-export class AuditActionResultOfCustomer extends AuditActionResult implements IAuditActionResultOfCustomer {
-    object?: Customer | undefined;
+export class AuditActionResultOfCustomerModel extends AuditActionResult implements IAuditActionResultOfCustomerModel {
+    object?: CustomerModel | undefined;
 
-    constructor(data?: IAuditActionResultOfCustomer) {
+    constructor(data?: IAuditActionResultOfCustomerModel) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"] ? Customer.fromJS(_data["object"]) : <any>undefined;
+            this.object = _data["object"] ? CustomerModel.fromJS(_data["object"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfCustomer {
+    static fromJS(data: any): AuditActionResultOfCustomerModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfCustomer();
+        let result = new AuditActionResultOfCustomerModel();
         result.init(data);
         return result;
     }
@@ -9941,8 +9983,8 @@ export class AuditActionResultOfCustomer extends AuditActionResult implements IA
 }
 
 /** Base class for an API call with a typed result */
-export interface IAuditActionResultOfCustomer extends IAuditActionResult {
-    object?: Customer | undefined;
+export interface IAuditActionResultOfCustomerModel extends IAuditActionResult {
+    object?: CustomerModel | undefined;
 }
 
 export class CreateCustomerRequest implements ICreateCustomerRequest {
@@ -15469,7 +15511,7 @@ export class ProductModel extends TrackableModel implements IProductModel {
     name?: string | undefined;
     revision?: number;
     customerId?: number;
-    customer?: Customer | undefined;
+    customer?: CustomerModel | undefined;
     customerRequirementId?: number;
     procedureId?: number;
     procedure?: Procedure | undefined;
@@ -15499,7 +15541,7 @@ export class ProductModel extends TrackableModel implements IProductModel {
             this.name = _data["name"];
             this.revision = _data["revision"];
             this.customerId = _data["customerId"];
-            this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : <any>undefined;
+            this.customer = _data["customer"] ? CustomerModel.fromJS(_data["customer"]) : <any>undefined;
             this.customerRequirementId = _data["customerRequirementId"];
             this.procedureId = _data["procedureId"];
             this.procedure = _data["procedure"] ? Procedure.fromJS(_data["procedure"]) : <any>undefined;
@@ -15577,7 +15619,7 @@ export interface IProductModel extends ITrackableModel {
     name?: string | undefined;
     revision?: number;
     customerId?: number;
-    customer?: Customer | undefined;
+    customer?: CustomerModel | undefined;
     customerRequirementId?: number;
     procedureId?: number;
     procedure?: Procedure | undefined;
@@ -15601,7 +15643,7 @@ export class QuoteModel implements IQuoteModel {
     id?: number;
     submittedDate?: Date;
     customerId?: number;
-    customer?: Customer | undefined;
+    customer?: CustomerModel | undefined;
     submittedById?: number;
     submittedBy?: UserModel | undefined;
     contact?: string | undefined;
@@ -15635,7 +15677,7 @@ export class QuoteModel implements IQuoteModel {
             this.id = _data["id"];
             this.submittedDate = _data["submittedDate"] ? new Date(_data["submittedDate"].toString()) : <any>undefined;
             this.customerId = _data["customerId"];
-            this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : <any>undefined;
+            this.customer = _data["customer"] ? CustomerModel.fromJS(_data["customer"]) : <any>undefined;
             this.submittedById = _data["submittedById"];
             this.submittedBy = _data["submittedBy"] ? UserModel.fromJS(_data["submittedBy"]) : <any>undefined;
             this.contact = _data["contact"];
@@ -15712,7 +15754,7 @@ export interface IQuoteModel {
     id?: number;
     submittedDate?: Date;
     customerId?: number;
-    customer?: Customer | undefined;
+    customer?: CustomerModel | undefined;
     submittedById?: number;
     submittedBy?: UserModel | undefined;
     contact?: string | undefined;
@@ -16035,7 +16077,7 @@ export interface IPurchaseModel extends ICreatableModel {
 }
 
 export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrderModel {
-    customer?: Customer | undefined;
+    customer?: CustomerModel | undefined;
     customerId?: number;
     name?: string | undefined;
     referencePO?: string | undefined;
@@ -16054,7 +16096,7 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : <any>undefined;
+            this.customer = _data["customer"] ? CustomerModel.fromJS(_data["customer"]) : <any>undefined;
             this.customerId = _data["customerId"];
             this.name = _data["name"];
             this.referencePO = _data["referencePO"];
@@ -16094,7 +16136,7 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
 }
 
 export interface IPurchaseOrderModel extends ICreatableModel {
-    customer?: Customer | undefined;
+    customer?: CustomerModel | undefined;
     customerId?: number;
     name?: string | undefined;
     referencePO?: string | undefined;

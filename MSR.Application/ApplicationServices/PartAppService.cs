@@ -28,16 +28,18 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetParts command, CancellationToken cancellationToken = default)
         {
-            ICollection<PartModel> ret = await _partService.GetPartsAsync(command);
+            ICollection<PartModel> partModels = await _partService.GetPartsAsync(command);
 
-            var files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
+            var files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, partModels.Select(x => x.Id).ToList());
 
-            foreach (var part in ret)
+            foreach (var part in partModels)
             {
                 part.Files = files.Where(x => x.EntityId == part.Id).ToList();
             }
 
-            return new CommandResponse<ICollection<PartModel>>(ret);
+            var totalRows = await _partService.GetTotalPartRows(command);
+
+            return new PagingCommandResponse<ICollection<PartModel>>(partModels, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
         public async Task<ICommandResponse> HandleAsync(CreatePart command, CancellationToken cancellationToken = default)
         {

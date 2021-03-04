@@ -383,17 +383,7 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static GetMultipleCustomers ToGetMultipleCustomersCommand(this GetMultipleCustomersRequest request)
         {
-            return new GetMultipleCustomers()
-            {
-                Id = request.Id,
-                Address = request.Address,
-                IsActive = request.IsActive,
-                LocationId = request.LocationId,
-                Name = request.Name,
-                Phone = request.Phone,
-                PrimaryContactUserId = request.PrimaryContactUserId,
-                SecondaryContactUserId = request.SecondaryContactUserId
-            };
+            return AutoMapperHelper.Mapper.Map<GetMultipleCustomers>(request);
         }
 
         /// <summary>
@@ -1026,6 +1016,20 @@ namespace MSR.Answer.API.V1.Extentions
         {
             var command = AutoMapperHelper.Mapper.Map<CreateWorkOrderMessage>(request);
             return command;
+        }
+
+        public static GetParts ToGetPartsCommand(this GetPartRequest request) { 
+            return AutoMapperHelper.Mapper.Map<GetParts>(request);    
+        }
+
+        public static GetProcedureStepTemplate ToGetProcedureStepTemplateCommand(this GetProcedureStepTemplateRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetProcedureStepTemplate>(request);
+        }
+
+        public static GetRoles ToGetRolesCommand(this GetRolesRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetRoles>(request);
         }
     }
 }

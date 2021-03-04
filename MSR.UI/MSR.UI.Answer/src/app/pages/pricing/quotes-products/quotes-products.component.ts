@@ -13,7 +13,7 @@ import {
   QuotesProductsView,
   EnumMenuItem,
   CustomerService,
-  Customer,
+  CustomerModel,
   CreateQuoteRequest,
   EnumSegregationType,
 } from '../../../services/api.client.generated';
@@ -60,9 +60,9 @@ export class QuotesProductsComponent implements OnInit {
       label: 'Freight',
     }
   ];
-  customersData: Customer[] = [];
+  customersData: CustomerModel[] = [];
   getCustomersFlag: boolean = false;
-  CSRCustomer: Customer;
+  CSRCustomer: CustomerModel;
   CSRFormValidErrors: string[] = [];
 
   tabMenus = EnumCRFTabs;
@@ -130,7 +130,7 @@ export class QuotesProductsComponent implements OnInit {
     if (this.getCustomersFlag) {
       return this.customersData;
     }
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
       this.customersData = response.object;
       this.getCustomersFlag = true;
     }));

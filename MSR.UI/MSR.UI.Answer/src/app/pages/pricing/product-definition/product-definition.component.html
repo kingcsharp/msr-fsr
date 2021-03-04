@@ -535,12 +535,12 @@
   </widget>
 </div>
 
-<p-dialog *ngIf="quoteJson" [(visible)]="showQuoteViewModal" [baseZIndex]="100001" [modal]='true'
+<p-dialog *ngIf="quoteJson" appendTo="body" [(visible)]="showQuoteViewModal" [baseZIndex]="100001" [modal]='true'
   [style]="{width: '70vw'}" data-cy="user-header" styleClass="quote-report">
   <p-header>
     Quote Preview
 </p-header>
-  <div class="container" id="quote-preview-dialog">
+  <div class="container">
     <div class="row mr-0 ml-0">
       <table class="table no-border quote-header" width="100%">
         <tbody>
@@ -550,7 +550,10 @@
             </td>
           </tr>
           <tr>
-            <td colspan="2"></td>
+            <th>Part / Kit No.:</th>
+            <td colspan="2">
+              {{ this.quoteData.partKitNo }}
+            </td>
           </tr>
           <tr>
             <td colspan="3" class="text-center">
@@ -565,46 +568,46 @@
       <table class="table quote-header" width="100%">
         <tbody>
           <tr>
-            <th class="text-right">Date : </th>
+            <th class="text-right">Date: </th>
             <td>{{quoteData.submittedDate | userTimezone}}</td>
-          </tr>
-          <tr>
-            <th class="text-right">Quote ID : </th>
-            <td>{{quoteData.id}}</td>
-          </tr>
-          <tr>
-            <th class="text-right">Customer:</th>
-            <td>
-              {{getCustomerLabel(quoteData.customer)}}
+            <th class="text-right">Customer Name:</th>
+            <td *ngIf="quoteData.customer">
+              [MSR-FSR] {{quoteData.customer.name}} - [ID: {{quoteData.customer.id}}]
             </td>
-            <th class="text-right">Contact:</th>
+          </tr>
+          <tr>
+            <th class="text-right">Supplier Name: </th>
+            <td>MSR-FSR</td>
+            <th class="text-right">Commercial Contact:</th>
             <td>
               {{quoteData.contact || quoteJson.contact}}
             </td>
-            <th class="text-right">Delivery</th>
-            <td>
-              {{quoteData.delivery}}
-            </td>
           </tr>
           <tr>
-            <th class="text-right"></th>
-            <td></td>
+            <th class="text-right">Quote ID: </th>
+            <td>{{quoteData.id}}</td>
             <th class="text-right">Title:</th>
             <td>
               {{quoteData.title || quoteJson.title}}
             </td>
-            <th class="text-right"></th>
-            <td></td>
           </tr>
           <tr>
-            <th class="text-right"></th>
-            <td></td>
+            <th class="text-right">Delivery:</th>
+            <td>
+              {{quoteData.delivery}}
+            </td>
             <th class="text-right">Phone:</th>
             <td>
               {{quoteData.phone || quoteJson.phone}}
             </td>
-            <th class="text-right"></th>
-            <td></td>
+          </tr>
+          <tr>
+            <th class="text-right">Cycle Time:</th>
+            <td>{{productData.cycleTime}}</td>
+            <th class="text-right">Email:</th>
+            <td>
+              {{quoteJson.email}}
+            </td>
           </tr>
           <tr>
             <td colspan="6"></td>
@@ -616,8 +619,8 @@
           <tr>
             <th width="10%">Item No.</th>
             <th width="10%">Quantity</th>
+            <th width="10%">Unit</th>
             <th width="30%" style="text-align: left !important">Description</th>
-            <th>Lead Time</th>
             <th>Price</th>
             <th>Extension</th>
           </tr>
@@ -629,10 +632,10 @@
               {{quoteItem.qty}}
             </td>
             <td>
-              {{quoteItem.description}}
+              {{quoteItem.unit || 'Unit'}}
             </td>
             <td>
-              {{quoteItem.leadTime}}
+              {{quoteItem.description}}
             </td>
             <td>
               {{quoteItem.price | currency}}
@@ -641,31 +644,19 @@
               {{quoteItem.extension | currency}}
             </td>
           </tr>
-          <tr *ngIf="!quoteJson.quoteItems || quoteJson.quoteItems.length === 0">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
         </tbody>
       </table>
 
-      <table class="table table-bordered table-striped items-table" width="100%">
+      <table class="table table-bordered table-striped items-table mt-3" width="100%">
         <thead>
           <tr>
-            <th width="20%">Existing Process Spec. # or New</th>
-            <th width="80%">Process Description</th>
+            <th>Existing Process Spec. # or New</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              {{quoteData.processName}}
-            </td>
-            <td>
-              {{quoteData.description}}
+              {{quoteData.processName || productData.procedure?.name}}
             </td>
           </tr>
         </tbody>
@@ -746,8 +737,12 @@
       </table>
     </div>
   </div>
-  <p-footer class="d-print-none">
+  <p-footer>
     <div class="pull-right">
+      <button type="button" (click)="print()" class="btn btn-outline-inverse width-100 mb-xs mr-2"
+        role="button" data-cy="print-quoteview-button">
+        Print
+      </button>
       <button type="button" (click)="closeQuoteViewModal()" class="btn btn-outline-inverse width-100 mb-xs"
         role="button" data-cy="closequoteview-button">
         Close

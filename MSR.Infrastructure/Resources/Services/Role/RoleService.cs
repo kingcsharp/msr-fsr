@@ -12,6 +12,7 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Models;
 using System.Collections.Concurrent;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Role
 {
@@ -96,9 +97,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
         public async Task<ICollection<Domain.Models.Role>> GetRolesMapAsync(GetRoles command)
         {
-            var result = new List<Domain.Models.Role>();
             
-            var roles = await _unitOfWork.Roles.Query().ToListAsync();
+            var roles = await _unitOfWork.Roles.Query().CreateRoleQuery(command).ToListAsync();
 
             _ = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuItem).ThenInclude(i => i.MenuGroup)
                                                        .ToListAsync();
@@ -113,7 +113,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var allParentRoles = await _unitOfWork.RoleChildRoleMaps.Query().Include(x => x.ParentRole).Where(x => rolesIds.Contains(x.ChildRoleId.Value)).ToListAsync();
             
             var userRoleEntities = await _unitOfWork.UserRoles.Query().Where(s => rolesIds.Contains(s.RoleId)).ToListAsync();
-            
+
+            var result = new List<Domain.Models.Role>();
+
             foreach (var role in roles)
             {
                 var domRole = _mapper.Map<Domain.Models.Role>(role);
@@ -256,6 +258,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
             await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<Domain.Models.Role>(role);
+        }
+
+        public async Task<int> GetTotalRoleRows(GetRoles command)
+        {
+            var totalRows = await _unitOfWork.Roles.Query().CreateRoleQuery(command, true).CountAsync();
+
+            return totalRows;
         }
     }
 }

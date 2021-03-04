@@ -33,7 +33,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetProcedureStepTemplate command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.GetProcedureStepTemplateAsync(command);
-            return new CommandResponse<ICollection<ProcedureStepTemplateModel>>(ret);
+            var totalRows = await _procedureService.GetTotalProcedureStepTemplateRows(command);
+            return new PagingCommandResponse<ICollection<ProcedureStepTemplateModel>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
         public async Task<ICommandResponse> HandleAsync(CreateProcedureStepTemplate command, CancellationToken cancellationToken = default)
         {

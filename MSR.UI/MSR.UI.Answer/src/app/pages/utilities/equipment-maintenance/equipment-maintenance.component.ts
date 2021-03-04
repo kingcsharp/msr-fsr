@@ -149,7 +149,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   }
 
   getUsers() {
-    this.userService.userGet(null, null, null, null, null, null, null, null, [21], env.apiVersion)
+    this.userService.userGet(null, null, null, null, null, null, null, null, [21], null, null, null, null, null, null, null, null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.users = [];
@@ -171,7 +171,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   getLocations(internalAddress: string) {
     this.globals.showLoader(true);
     this.getLocationsFlag = false;
-    this.locationService.locationGet(null, null, internalAddress, env.apiVersion).pipe(take(1))
+    this.locationService.locationGet(null, null, internalAddress, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
     .subscribe(responseHandler(response => {
       this.locations = [];
       response.object.map((x) => {

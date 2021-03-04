@@ -44,7 +44,7 @@ export class RoleassignmentsComponent implements OnInit {
 
       let menuItems = response.object;
       this.globals.showLoader(true);
-      this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((roleResponse) => {
+      this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((roleResponse) => {
 
         let roles = roleResponse.object;
 

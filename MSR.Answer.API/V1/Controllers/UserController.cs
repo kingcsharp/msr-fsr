@@ -47,7 +47,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<UserModel>>))]
-        public async Task<IActionResult> GetUsers([FromQuery, Required] GetUsersRequest request)
+        public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequest request)
         {
             var command = request.ToGetUsersCommand();
 

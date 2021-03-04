@@ -3,7 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import {
   UserService, UserModel, IAuditActionResultOfUserModel, LocationService
-  , UpdateUserRequest, RoleService, Role, EnumMenuItem, CustomerService, Customer
+  , UpdateUserRequest, RoleService, Role, EnumMenuItem, CustomerService, CustomerModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -51,7 +51,7 @@ export class UserComponent implements OnInit {
   gridOptionsRotate: boolean = false;
   locations: any[] = [];
   getLocationsFlag: boolean = false;
-  customers: Array<Customer>;
+  customers: Array<CustomerModel>;
 
   constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService, private customerService: CustomerService,
     public globals: Globals, private elem: ElementRef, public locationService: LocationService, public roleService: RoleService) {
@@ -96,14 +96,15 @@ export class UserComponent implements OnInit {
   }
 
   getCustomers() {
-    this.customerService.customerGet(null, null, null, null, null, null, null, true, env.apiVersion).pipe(take(1))
+    this.customerService.customerGet(null, null, null, null, null, null, null, true, null, null, null, null, null,
+      null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customers = response.object;
       }));
   }
 
   getRoles() {
-    this.roleService.roleGet(env.apiVersion).pipe(take(1))
+    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.allRoles = response.object;
       }));
@@ -113,7 +114,7 @@ export class UserComponent implements OnInit {
     if (this.getLocationsFlag) {
       return this.locations;
     }
-    this.locationService.locationGet(null, null, null, env.apiVersion)
+    this.locationService.locationGet(null, null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
@@ -127,7 +128,8 @@ export class UserComponent implements OnInit {
 
   async getUsers() {
     this.globals.showLoader(true);
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion)
+    this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, 
+      null, null, null,null, null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object;

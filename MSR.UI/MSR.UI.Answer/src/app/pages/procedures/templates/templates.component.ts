@@ -53,7 +53,7 @@ export class TemplatesComponent implements OnInit {
 
   getProcedureTemplates() {
     this.globals.showLoader(true);
-    this.procedureStepTemplateService.procedureStepTemplateGet(null, env.apiVersion).subscribe(responseHandler( (response) => {
+    this.procedureStepTemplateService.procedureStepTemplateGet(null, null, null, null, null, null, null,env.apiVersion).subscribe(responseHandler( (response) => {
         this.data = response.object;
         this.data.map((elem) => {
           if (elem.status === null) {
