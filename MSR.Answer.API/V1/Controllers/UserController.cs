@@ -78,7 +78,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("TrainingCertification"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<TrainingCertificationView>>))]
         public async Task<IActionResult> GetTrainingCertificationData([FromQuery] GetTrainingCertificationRequest request)
         {
-            var command = new GetTrainingCertification { Id = request.UserId };
+            var command = request.ToGetRolesCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<IEnumerable<TrainingCertificationView>>();
 

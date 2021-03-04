@@ -541,31 +541,31 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command)
         {
-            var userRoles = _unitOfWork.UserRoles.Query();
+            var userRoleEntities = await _unitOfWork.UserRoles.Query().CreateTrainingCertificationQuery(command).ToListAsync();
 
-            if (command.Id.HasValue)
-            {
-                userRoles = userRoles.Where(i => i.UserId == command.Id.Value);
-            }
-
-            return await userRoles
-                .Include(i => i.User)
-                .Include(i => i.Role)
-                .Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value)
+            return userRoleEntities
                 .Select(i => new TrainingCertificationView()
                     {
+                        Id = i.Id,
                         CertificationFromDate = i.CertificationFromDate,
                         CertificationToDate = i.CertificationToDate,
                         EmployeeName = i.User.GetFullName(),
                         Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active"),
                         CertificationName = i.Role.Name
                     }
-                ).ToListAsync();
+                ).ToList();
         }
 
         public async Task<int> GetUsersTotalRowsAsync(GetUsers command)
         {
             var totalRows = await _unitOfWork.Users.Query().CreateUserQuery(command, true).CountAsync();
+
+            return totalRows;
+        }
+
+        public async Task<int> GetTrainingCertificationTotalRows(GetTrainingCertification command)
+        {
+            var totalRows = await _unitOfWork.UserRoles.Query().CreateTrainingCertificationQuery(command, true).CountAsync();
 
             return totalRows;
         }

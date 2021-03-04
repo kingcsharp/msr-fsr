@@ -1031,5 +1031,9 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetRoles>(request);
         }
+        public static GetTrainingCertification ToGetRolesCommand(this GetTrainingCertificationRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetTrainingCertification>(request);
+        }
     }
 }

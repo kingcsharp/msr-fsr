@@ -6667,14 +6667,41 @@ export class UserService {
     /**
      * Get training certificates
      * @param userId (optional) 
+     * @param employeeName (optional) 
+     * @param certificationName (optional) 
+     * @param certificationFromDate (optional) 
+     * @param certificationToDate (optional) 
+     * @param status (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    trainingCertification(userId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
+    trainingCertification(userId: number | null | undefined, employeeName: string | null | undefined, certificationName: string | null | undefined, certificationFromDate: Date | null | undefined, certificationToDate: Date | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
         let url_ = this.baseUrl + "/v{version}/User/TrainingCertification?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (userId !== undefined && userId !== null)
             url_ += "UserId=" + encodeURIComponent("" + userId) + "&";
+        if (employeeName !== undefined && employeeName !== null)
+            url_ += "EmployeeName=" + encodeURIComponent("" + employeeName) + "&";
+        if (certificationName !== undefined && certificationName !== null)
+            url_ += "CertificationName=" + encodeURIComponent("" + certificationName) + "&";
+        if (certificationFromDate !== undefined && certificationFromDate !== null)
+            url_ += "CertificationFromDate=" + encodeURIComponent(certificationFromDate ? "" + certificationFromDate.toJSON() : "") + "&";
+        if (certificationToDate !== undefined && certificationToDate !== null)
+            url_ += "CertificationToDate=" + encodeURIComponent(certificationToDate ? "" + certificationToDate.toJSON() : "") + "&";
+        if (status !== undefined && status !== null)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -19160,6 +19187,7 @@ export interface IAuditActionResultOfIEnumerableOfTrainingCertificationView exte
 }
 
 export class TrainingCertificationView implements ITrainingCertificationView {
+    id?: number;
     employeeName?: string | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
@@ -19177,6 +19205,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.employeeName = _data["employeeName"];
             this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
             this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
@@ -19194,6 +19223,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["employeeName"] = this.employeeName;
         data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
@@ -19204,6 +19234,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
 }
 
 export interface ITrainingCertificationView {
+    id?: number;
     employeeName?: string | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;

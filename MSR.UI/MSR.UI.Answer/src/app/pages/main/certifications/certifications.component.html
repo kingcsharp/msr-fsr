@@ -15,10 +15,6 @@
                 stateStorage="local"  stateKey="{{gridStorageId}}">
                 <ng-template pTemplate="caption">
                     <div class="text-right">
-                        <button *ngIf="canAddHelpPage" class="btn btn-success width-100 mb-xs sm-mrg"  role="button"
-                             data-cy="add-button">
-                            + Add
-                        </button>
                         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
                             [gridVersion]="gridVersion"  data-cy="usergrid-options"  [hidden]="false">
                         </grid-options>
@@ -64,6 +60,9 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-certification>
                     <tr class="ui-selectable-row">
+                        <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
+                            {{certification.id}}
+                        </td>
                         <td [hidden]="!commonGrid.isVisibleCol('employeeName', gridSettings)">
                             {{certification.employeeName}}
                         </td>

@@ -22,12 +22,12 @@ export class CertificationsComponent implements OnInit {
   canEditLocation: boolean = false;
   canDeleteLocation: boolean = false;
   statusOptions: any[];
-
+  gridVersion: string;
   constructor(private userService: UserService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
-
+    this.gridVersion = '1.0.0';
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: false }),
       new ColumnsSaved({ id: 'employeeName', label: 'Employee Name', visible: true}),
@@ -42,7 +42,7 @@ export class CertificationsComponent implements OnInit {
     this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
 
     this.globals.showLoader(true);
-    this.userService.trainingCertification(null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.userService.trainingCertification(null, null,null,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
       this.statusOptions = this.data.filter(
         (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
