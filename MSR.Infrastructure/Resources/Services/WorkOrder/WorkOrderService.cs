@@ -1196,7 +1196,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = statusValues.expectedDurationNumerator;
 
 
-                var parentPart = workOrderModel.Product.Part;
+                PartModel parentPart = workOrderModel.Product?.Part;
                 workOrderGridSummary.SegregationType = parentPart == null ? EnumSegregationType.NONCU : parentPart.SegregationType;
 
                 workOrderGridSummaries.Add(workOrderGridSummary);
