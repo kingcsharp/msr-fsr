@@ -72,7 +72,7 @@ export class ProcedureEditComponent implements OnInit {
             this.procedureStepTypeOptions = procedureStepTypeResponse.object.map(s => ({ label: s.name, value: s.id }));
 
             this.globals.showLoader(true);
-            this.documentService.documentGet(null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(documentServiceResponse => {
+            this.documentService.documentGet(null, null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler(documentServiceResponse => {
 
               this.documentsAvailable = documentServiceResponse.object.map(s => ({ label: s.name, value: s.id }));
               this.getProcedure();

@@ -78,7 +78,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   getDocuments() {
-    this.documentService.documentGet(null, env.apiVersion).pipe(take(1))
+    this.documentService.documentGet(null,null,null,null,null,null,null,null,null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object;
         this.getDataFlag = true;

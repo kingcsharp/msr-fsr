@@ -23,6 +23,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Web;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Document
 {
@@ -44,31 +45,19 @@ namespace MSR.Infrastructure.Resources.Services.Document
             _fileDownloader = fileHanderFactory.CreateDownloader(FileProvider.S3);
         }
 
-        public async Task<ICollection<DocumentView>> GetDocuments(int? id)
+        public async Task<ICollection<DocumentView>> GetDocuments(GetDocument command)
         {
-            var documentsQuery = _unitOfWork.Documents.Query()
-                .Include(d => d.DocumentEntityMaps)
-                .Include(d => d.Roles)
-                .ThenInclude(r => r.Role)
-                .AsQueryable();
+            var documentEntities = await _unitOfWork.Documents.Query().CreateDocumentQuery(command).ToListAsync();
 
-            if (id.HasValue && id > 0)
+            var documentViews = _mapper.Map<ICollection<DocumentView>>(documentEntities);
+
+            foreach (var documentView in documentViews)
             {
-                documentsQuery = documentsQuery.Where(d => d.Id == id);
+                documentView.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Document), documentView.Id);
+                documentView.RoleIds = documentEntities.Where(d => d.Id == documentView.Id).FirstOrDefault().Roles.Select(r => r.RoleId).Cast<int>().ToList();
             }
 
-            var documents = await documentsQuery.ToListAsync();
-
-            var retDocumentViews = _mapper.Map<ICollection<DocumentView>>(documents);
-
-            foreach (var dv in retDocumentViews)
-            {
-                dv.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Document), dv.Id);
-
-                dv.RoleIds = documents.Where(d => d.Id == dv.Id).FirstOrDefault().Roles.Select(r => r.RoleId).Cast<int>().ToList();
-            }
-
-            return retDocumentViews;
+            return documentViews;
         }
 
         public async Task<DocumentView> CreateDocumentAsync(CreateDocument command)
@@ -291,6 +280,12 @@ namespace MSR.Infrastructure.Resources.Services.Document
             var ret = await _fileService.GetArchivedDocuments(EnumUtils.GetDescription(command.Folder));
 
             return ret;
+        }
+
+        public async Task<int> GetDocumentTotalRows(GetDocument command)
+        {
+            var totalRows = await _unitOfWork.Documents.Query().CreateDocumentQuery(command).CountAsync();
+            return totalRows;
         }
     }
 }
