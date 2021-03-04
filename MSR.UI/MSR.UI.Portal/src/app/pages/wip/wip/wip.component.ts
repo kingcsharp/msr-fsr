@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { SelectItem } from 'primeng/api';
@@ -18,15 +18,16 @@ import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { EnumMonitorInputType } from '../../../models/enums/EnumMonitorInputType';
 import { EnumMonitorShouldBe } from '../../../models/enums/EnumMonitorShouldBe';
-import { EnumMonitorType} from '../../../models/enums/EnumMonitorType';
+import { EnumMonitorType } from '../../../models/enums/EnumMonitorType';
 import { EnumMonitorPassFailStatus } from '../../../models/enums/EnumMonitorPassFailStatus';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-wip',
   templateUrl: './wip.component.html',
   styleUrls: ['./wip.component.scss'],
   providers: [WorkOrderService]
 })
-export class WipComponent implements OnInit, AfterViewInit {
+export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   menuItems = EnumMenuItem;
   enumReportTypes = EnumReport;
   // gridColumns: Array<ColumnsSaved> = new Array<ColumnsSaved>();
@@ -69,6 +70,7 @@ export class WipComponent implements OnInit, AfterViewInit {
     clear: 'Clear',
     dateFormat: 'yyy-mm-dd'
   };
+  subscriptions: Subscription[] = [];
 
   responsiveOptions: any[] = [
     {
@@ -120,9 +122,13 @@ export class WipComponent implements OnInit, AfterViewInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
   showPhotos(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,null,
+    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(true);
@@ -227,19 +233,22 @@ export class WipComponent implements OnInit, AfterViewInit {
       this.getGridData();
     }
 
-    this.globals.isBuyerObservable.subscribe(response => {
+    let isBuyerObservableSubscription = this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.selectedCustomer !== undefined) {
         this.setCustomerName();
         this.getGridData();
       }
     });
+    this.subscriptions.push(isBuyerObservableSubscription);
 
-    this.globals.selectCustomerObservable.subscribe(response => {
+    let selectCustomerObservableSubscription = this.globals.selectCustomerObservable.subscribe(response => {
       if (response !== null && response !== undefined) {
         this.setCustomerName();
         this.getGridData();
       }
     });
+    this.subscriptions.push(selectCustomerObservableSubscription);
+
   }
 
   expandRow(data: PortalWorkOrderPartsView) {
@@ -267,13 +276,13 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.selectedReport = reportType;
     if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId) {
       this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id,
-        null, null, null,null, env.apiVersion).pipe(take(1))
+        null, null, null, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           response.object[0].workOrderTasks.forEach(workOrderTask => {
             workOrderTask.workOrderTaskMonitors.forEach((workOrderTaskMonitor: any) => {
 
               workOrderTaskMonitor.pass = this.isMonitorPassing(workOrderTaskMonitor);
-              
+
 
             });
           });
@@ -286,77 +295,77 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   isMonitorPassing(workOrderTaskMonitor: WorkOrderTaskMonitorModel) {
 
-    const monitorType =  workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null 
-    ? workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId : workOrderTaskMonitor?.monitorTypeId;
+    const monitorType = workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null
+      ? workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId : workOrderTaskMonitor?.monitorTypeId;
 
     switch (monitorType) {
-        case EnumMonitorType.Equipment:
-            return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
-        case EnumMonitorType.Number:
+      case EnumMonitorType.Equipment:
+        return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
+      case EnumMonitorType.Number:
 
-            if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor || workOrderTaskMonitor?.inputTypeId === EnumMonitorInputType.Sensor) {
-                return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null
-                    && workOrderTaskMonitor.textVal !== '' && workOrderTaskMonitor.textVal !== 'No Sensor Value Available');
+        if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor || workOrderTaskMonitor?.inputTypeId === EnumMonitorInputType.Sensor) {
+          return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null
+            && workOrderTaskMonitor.textVal !== '' && workOrderTaskMonitor.textVal !== 'No Sensor Value Available');
+        }
+
+        if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Manual) {
+
+          if (workOrderTaskMonitor.numVal === null ||
+            workOrderTaskMonitor.numVal === undefined) {
+            return false;
+          }
+
+          let targetValue;
+          if (workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null) {
+            targetValue = Number(workOrderTaskMonitor.procedureStepMonitor?.targetValue);
+          } else {
+            targetValue = Number(workOrderTaskMonitor.targetValue);
+          }
+
+
+          switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
+            case EnumMonitorShouldBe.EQUAL: {
+              return (targetValue === workOrderTaskMonitor.numVal);
             }
+            case EnumMonitorShouldBe.ABOVE: {
+              return (targetValue <= workOrderTaskMonitor.numVal);
+            }
+            case EnumMonitorShouldBe.BELOW: {
+              return (workOrderTaskMonitor.numVal <= targetValue);
+            }
+            case EnumMonitorShouldBe.BETWEEN: {
 
-            if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Manual) {
+              if (workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null) {
+                return (workOrderTaskMonitor.procedureStepMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
+                  workOrderTaskMonitor.procedureStepMonitor.highTarget >= workOrderTaskMonitor.numVal);
+              } else {
+                return (workOrderTaskMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
+                  workOrderTaskMonitor.highTarget >= workOrderTaskMonitor.numVal);
 
-                if (workOrderTaskMonitor.numVal === null ||
-                    workOrderTaskMonitor.numVal === undefined) {
-                    return false;
-                }
-
-                let targetValue;
-                if(workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null){
-                    targetValue = Number(workOrderTaskMonitor.procedureStepMonitor?.targetValue);
-                }else{
-                    targetValue = Number(workOrderTaskMonitor.targetValue);
-                }
-                
-
-                switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
-                    case EnumMonitorShouldBe.EQUAL: {
-                        return (targetValue === workOrderTaskMonitor.numVal);
-                    }
-                    case EnumMonitorShouldBe.ABOVE: {
-                        return (targetValue <= workOrderTaskMonitor.numVal);
-                    }
-                    case EnumMonitorShouldBe.BELOW: {
-                        return (workOrderTaskMonitor.numVal <= targetValue);
-                    }
-                    case EnumMonitorShouldBe.BETWEEN: {
-
-                        if(workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null){
-                            return (workOrderTaskMonitor.procedureStepMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
-                                workOrderTaskMonitor.procedureStepMonitor.highTarget >= workOrderTaskMonitor.numVal);
-                        }else{
-                            return (workOrderTaskMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
-                                workOrderTaskMonitor.highTarget >= workOrderTaskMonitor.numVal);
-                            
-                        }
-                        
-                    }
-                    default:
-                        return false;
-                }
+              }
 
             }
+            default:
+              return false;
+          }
 
-            return workOrderTaskMonitor.numVal;
-        case EnumMonitorType.YesOrNo:
-            return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;
-        case EnumMonitorType.Text:
-            return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
-        case EnumMonitorType.Select:
-            return (workOrderTaskMonitor.multiVal !== undefined && workOrderTaskMonitor.multiVal !== null);
-        case EnumMonitorType.PassOrFail:
-            return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;
-        default:
-            break;
+        }
+
+        return workOrderTaskMonitor.numVal;
+      case EnumMonitorType.YesOrNo:
+        return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;
+      case EnumMonitorType.Text:
+        return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
+      case EnumMonitorType.Select:
+        return (workOrderTaskMonitor.multiVal !== undefined && workOrderTaskMonitor.multiVal !== null);
+      case EnumMonitorType.PassOrFail:
+        return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;
+      default:
+        break;
     }
 
     return false;
-}
+  }
 
   print() {
     window.print();
