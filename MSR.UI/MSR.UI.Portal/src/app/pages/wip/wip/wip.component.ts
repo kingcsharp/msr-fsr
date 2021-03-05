@@ -72,6 +72,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     dateFormat: 'yyy-mm-dd'
   };
   subscriptions: Subscription[] = [];
+  currentEvent: LazyLoadEvent;
 
   responsiveOptions: any[] = [
     {
@@ -404,12 +405,15 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getGridData(event: LazyLoadEvent) {
+    if (event != undefined) {
+      this.currentEvent = event;
+    }
     debugger;
     this.globals.showLoader(true);
     setTimeout(() => {
       var a = this.globals.selectedCustomer;
       const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate };
-      callFunctionWithFilters(this.workOrderService, this.workOrderService.portal, pageFilters, this.gridSaved.columnsSaved, event)
+      callFunctionWithFilters(this.workOrderService, this.workOrderService.portal, pageFilters, this.gridSaved.columnsSaved, this.currentEvent)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           const retData = response.object.map((x: any) => {
