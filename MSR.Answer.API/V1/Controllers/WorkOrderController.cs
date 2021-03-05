@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Answer.API.V1.Models.Paging;
 using MSR.Application.Abstractions;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
@@ -54,9 +55,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
-        public async Task<IActionResult> WorkOrderGetMenu(int? skip,int? take)
+        public async Task<IActionResult> WorkOrderGetMenu([FromQuery] QueryRequestBase filters)
         {
-            var workOrderMenuViews = await _workOrderViewService.GetWorkOrderMenuAsync(skip.GetValueOrDefault(0),take.GetValueOrDefault(0));
+            var queryBase = filters.ToQueryBase();
+            var workOrderMenuViews = await _workOrderViewService.GetWorkOrderMenuAsync(queryBase);
             return GenerateOkViewResponse(workOrderMenuViews.data, workOrderMenuViews.totalRows);
         }
 

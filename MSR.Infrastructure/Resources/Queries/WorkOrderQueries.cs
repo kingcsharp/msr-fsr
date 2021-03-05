@@ -73,10 +73,12 @@ namespace MSR.Infrastructure.Resources.Queries
             return workOrderStatusViews;
         }
 
-        public static async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenu(this DbSet<WorkOrderMenu> dbSet, Expression<Func<WorkOrderMenu,dynamic>> projection, int skip = 0, int take = 0)
+        public static async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenu(this DbSet<WorkOrderMenu> dbSet, Expression<Func<WorkOrderMenu,dynamic>> projection, QueryBase filters)
         {
-            var workOrderMenuTuple = await QueryHelper.GetPagedViewDataFor<WorkOrderMenu, ICollection<WorkOrderGridSummary>>(dbSet, projection,skip:skip,take:take);
-            return workOrderMenuTuple;
+            var pagedData = dbSet.AsQueryable().ToFilterView(filters);
+            var pagedList = await pagedData.data.ToListAsync();
+            
+            return (pagedList.Select(i => AutoMapperHelper.Mapper.Map<WorkOrderGridSummary>(i)).ToList(), pagedData.totalRows);
         }
 
         public static async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
