@@ -80,6 +80,38 @@ namespace MSR.Infrastructure.Resources.Queries
             return query;
         }
 
+        public static IQueryable<WorkflowGroup> CreateWorkflowGroupQuery(this IQueryable<WorkflowGroup> query, GetWorkflowGroupsModel command, bool forRowCount = false)
+        {
+            query = query.Include(x => x.GroupRoles).Include(x => x.GroupUsers).AsQueryable();
+
+            query = query.Where(command.Id, s => s.Id == command.Id);
+            query = query.Where(command.IsActive, s => s.IsActive == command.IsActive);
+            query = query.Where(command.Name, s => s.Name.Contains(command.Name));
+            query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
+            query = query.Where(command.CreatedByName, s => s.Created.FullName.Contains(command.CreatedByName));
+            query = query.Where(command.LastUpdatedOn, s => DateTime.Compare(s.LastUpdatedOn.Value.Date, command.LastUpdatedOn.Value.Date) == 0);
+            query = query.Where(command.LastUpdatedByName, s => s.LastUpdated.FullName.Contains(command.LastUpdatedByName));
+
+            if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
+            {
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.Id), s => s.Id);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.IsActive), s => s.IsActive);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.Name), s => s.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.CreatedOn), s => s.Created.FullName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.CreatedByName), s => s.Created.FullName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.LastUpdatedOn), s => s.LastUpdatedOn);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.LastUpdatedByName), s => s.LastUpdated.FullName);
+            }
+
+
+            if (command.Skip.HasValue && command.Take.HasValue && !forRowCount)
+            {
+                query = query.Skip(command.Skip.Value).Take(command.Take.Value);
+            }
+
+            return query;
+        }
+
     }
 
 }

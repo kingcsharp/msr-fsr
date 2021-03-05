@@ -11,5 +11,6 @@ namespace MSR.Domain.Abstractions.Services.Workflow
         Task<WorkflowGroupModel> CreateWorkFlowGroupAsync(CreateWorkflowGroupModel command);
         Task<WorkflowGroupModel> UpdateWorkFlowGroupAsync(UpdateWorkflowGroupModel command);
         Task DeactivateWorkFlowGroupAsync(DeactivateWorkflowGroup command);
+        Task<int> GetWorkflowGroupTotalRows(GetWorkflowGroupsModel command);
     }
 }

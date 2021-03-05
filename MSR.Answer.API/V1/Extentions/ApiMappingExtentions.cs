@@ -226,19 +226,6 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static GetWorkflowGroupsModel ToGetWorkflowGroupCommand(this GetWorkflowGroupRequest request)
-        {
-            return new GetWorkflowGroupsModel()
-            {
-                Id = request.Id
-            };
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public static CreateWorkflowGroupModel ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
         {
             return new CreateWorkflowGroupModel()
@@ -1041,6 +1028,11 @@ namespace MSR.Answer.API.V1.Extentions
         public static GetQuotesProducts ToGetQuotesProductsRequest(this GetQuotesProductsRequest request) { 
             
             return AutoMapperHelper.Mapper.Map<GetQuotesProducts>(request);
+        }
+
+        public static GetWorkflowGroupsModel ToGetWorkflowGroupCommand(this GetWorkflowGroupRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetWorkflowGroupsModel>(request);
         }
     }
 }

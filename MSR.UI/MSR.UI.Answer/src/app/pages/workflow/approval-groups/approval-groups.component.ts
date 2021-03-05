@@ -84,7 +84,8 @@ export class ApprovalGroupsComponent implements OnInit {
 
   getWorkflowGroups() {
     this.globals.showLoader(true);
-    this.workflowGroupService.workflowGroupGet(null, env.apiVersion).pipe(take(1))
+    this.workflowGroupService.workflowGroupGet(null,null,null,null,null,null,null,null,null,
+      null,null,null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.data = response.object;

@@ -7,6 +7,7 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.Queries;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,15 +27,9 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task<ICollection<WorkflowGroupModel>> GetWorkFlowGroupsAsync(GetWorkflowGroupsModel command)
         {
-            var workflowGroups = _unitOfWork.WorkflowGroups.Query();
+            var workflowGroups = await _unitOfWork.WorkflowGroups.Query().CreateWorkflowGroupQuery(command).ToListAsync();
 
-            if (command.Id.HasValue)
-            {
-                workflowGroups = workflowGroups.Where(i => i.Id == command.Id.Value);
-            }
-
-            var result = await workflowGroups.Include(x=>x.GroupRoles).Include(x=>x.GroupUsers).ToListAsync();
-            var ret = result.Select(workflowGrou => _mapper.Map<WorkflowGroupModel>(workflowGrou)).ToList();
+            var ret = workflowGroups.Select(workflowGroup => _mapper.Map<WorkflowGroupModel>(workflowGroup)).ToList();
             return ret;
         }
 
@@ -123,6 +118,12 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             }
             _unitOfWork.WorkflowGroups.Delete(false, workFlow, true);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<int> GetWorkflowGroupTotalRows(GetWorkflowGroupsModel command)
+        {
+            var totalRows = await _unitOfWork.WorkflowGroups.Query().CreateWorkflowGroupQuery(command).CountAsync();
+            return totalRows;
         }
     }
 }
