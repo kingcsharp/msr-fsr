@@ -15,6 +15,7 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, forkJoin, of } from 'rxjs';
 import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 declare let jQuery: any;
 
 @Component({
@@ -108,7 +109,8 @@ export class ApprovalWorkflowComponent implements OnInit {
   getWorkflows() {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowService.workflowGet(null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.workflowService.workflowGet(null,null,null,null,null,null,null,null,null,
+      null,null,null,null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
       this.globals.showLoader(false);
       ctrl.data = response.object;
     }));
