@@ -564,6 +564,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<PortalWorkOrderMenuDTO, PortalWorkOrderView>()
                 .ForMember(dest => dest.SubParts, opts => opts.Ignore());
+            CreateMap<WorkOrderMenu, WorkOrderGridSummary>();
         }
 
         private static bool ignoreNullOrZero(object srcMember)

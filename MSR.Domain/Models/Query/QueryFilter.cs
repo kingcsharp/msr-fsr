@@ -8,8 +8,7 @@ namespace MSR.Domain.Models.Query
     {
         public string Field { get; set; }
         public string Operator { get; set; }
-        public object Value { get; set; }
+        public string Value { get; set; }
         public string Logic { get; set; }
-        public IEnumerable<QueryFilter> Filters { get; set; }
     }
 }

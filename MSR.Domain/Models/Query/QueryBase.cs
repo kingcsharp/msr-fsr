@@ -9,6 +9,6 @@ namespace MSR.Domain.Models.Query
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public IEnumerable<QuerySort> Sort { get; set; }
-        public QueryFilter Filter { get; set; }
+        public IEnumerable<QueryFilter> Filters { get; set; }
     }
 }
