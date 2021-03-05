@@ -96,7 +96,7 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   getWorkflowStageDropdown() {
     const ctrl = this;
-    return this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
+    return this.workflowStageService.workflowStageGet(null, null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.allStages = response.object.map((x) => {
           x.workflowStageId = x.id;

@@ -274,10 +274,7 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static GetWorkflowStageModel ToGetWorkflowStageCommand(this GetWorkflowStageRequest request)
         {
-            return new GetWorkflowStageModel()
-            {
-                Id = request.Id
-            };
+            return AutoMapperHelper.Mapper.Map<GetWorkflowStageModel>(request);
         }
 
         /// <summary>

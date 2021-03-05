@@ -143,6 +143,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetTrainingCertificationRequest, GetTrainingCertification>();
             CreateMap<GetWorkOrderHistoryRequest, GetWorkOrderHistory>();
             CreateMap<GetQuotesProductsRequest, GetQuotesProducts>();
+            CreateMap<GetWorkflowStageRequest, GetWorkflowStageModel>();
 
         }
     }

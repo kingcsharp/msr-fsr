@@ -72,7 +72,8 @@ export class ApprovalStagesComponent implements OnInit {
   getWorkflowStages() {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
+    this.workflowStageService.workflowStageGet(null,null,null,null,null,null,null,null,null
+      ,null,null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         ctrl.data = response.object;
