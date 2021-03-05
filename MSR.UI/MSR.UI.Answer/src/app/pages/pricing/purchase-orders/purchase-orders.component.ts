@@ -90,7 +90,8 @@ export class PurchaseOrdersComponent implements OnInit {
 
   getPurchaseOrders() {
     this.globals.showLoader(true);
-    this.purchaseOrderService.purchaseOrderGet(null, env.apiVersion).pipe(take(1))
+    this.purchaseOrderService.purchaseOrderGet(null, null,null,null,null,null,null,null,null,null,null,
+      null,null,null,0,10,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.data = response.object;

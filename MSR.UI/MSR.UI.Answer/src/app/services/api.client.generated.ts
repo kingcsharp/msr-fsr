@@ -5202,13 +5202,45 @@ export class PurchaseOrderService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    purchaseOrderGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
+    purchaseOrderGet(id: number | null | undefined, name: string | null | undefined, customerReferencePO: string | null | undefined, invoicedBalance: number | null | undefined, uninvoicedBalance: number | null | undefined, balance: number | null | undefined, customerName: string | null | undefined, openDate: Date | null | undefined, closeDate: Date | null | undefined, totalPurchaseLimit: number | null | undefined, unusedAmount: number | null | undefined, revision: number | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
         let url_ = this.baseUrl + "/v{version}/PurchaseOrder?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (customerReferencePO !== undefined && customerReferencePO !== null)
+            url_ += "CustomerReferencePO=" + encodeURIComponent("" + customerReferencePO) + "&";
+        if (invoicedBalance !== undefined && invoicedBalance !== null)
+            url_ += "InvoicedBalance=" + encodeURIComponent("" + invoicedBalance) + "&";
+        if (uninvoicedBalance !== undefined && uninvoicedBalance !== null)
+            url_ += "UninvoicedBalance=" + encodeURIComponent("" + uninvoicedBalance) + "&";
+        if (balance !== undefined && balance !== null)
+            url_ += "Balance=" + encodeURIComponent("" + balance) + "&";
+        if (customerName !== undefined && customerName !== null)
+            url_ += "CustomerName=" + encodeURIComponent("" + customerName) + "&";
+        if (openDate !== undefined && openDate !== null)
+            url_ += "OpenDate=" + encodeURIComponent(openDate ? "" + openDate.toJSON() : "") + "&";
+        if (closeDate !== undefined && closeDate !== null)
+            url_ += "CloseDate=" + encodeURIComponent(closeDate ? "" + closeDate.toJSON() : "") + "&";
+        if (totalPurchaseLimit !== undefined && totalPurchaseLimit !== null)
+            url_ += "TotalPurchaseLimit=" + encodeURIComponent("" + totalPurchaseLimit) + "&";
+        if (unusedAmount !== undefined && unusedAmount !== null)
+            url_ += "UnusedAmount=" + encodeURIComponent("" + unusedAmount) + "&";
+        if (revision !== undefined && revision !== null)
+            url_ += "Revision=" + encodeURIComponent("" + revision) + "&";
+        if (status !== undefined && status !== null)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

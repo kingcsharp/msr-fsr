@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 {
@@ -336,5 +337,6 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
             return result;
         }
+
     }
 }
