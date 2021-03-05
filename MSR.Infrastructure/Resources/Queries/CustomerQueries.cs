@@ -20,20 +20,20 @@ namespace MSR.Infrastructure.Resources.Queries
 
             query = query.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).AsQueryable();
 
-            query = query.Where<Customer>(command.Id, s => s.Id == command.Id);
-            query = query.Where<Customer>(command.Name, s => s.Name.Contains(command.Name));
-            query = query.Where<Customer>(command.Address, s => s.Name.Contains(command.Address));
-            query = query.Where<Customer>(command.Phone, s => s.Phone.Contains(command.Phone));
-            query = query.Where<Customer>(command.PrimaryContactUserId, s => s.PrimaryContactUser.Id == command.PrimaryContactUserId);
-            query = query.Where<Customer>(command.SecondaryContactUserId, s => s.SecondaryContactUser.Id == command.SecondaryContactUserId);
-            query = query.Where<Customer>(command.LocationId, s=> s.LocationId == command.LocationId);
-            query = query.Where<Customer>(command.IsActive, s => s.IsActive == command.IsActive);
-            query = query.Where<Customer>(command.PrimaryContactUserName, s => s.PrimaryContactUser.FirstName.Contains(command.PrimaryContactUserName));
-            query = query.Where<Customer>(command.SecondartContactUserName, s => s.SecondaryContactUser.FirstName.Contains(command.SecondartContactUserName));
-            query = query.Where<Customer>(command.LocationName, s => s.Location.Name.Contains(command.LocationName));
-            query = query.Where<Customer>(command.CustomerNumber, s=> s.CustomerNumber.Contains(command.CustomerNumber));
-            query = query.Where<Customer>(command.CreatedByFullName, s=> s.Created.FirstName.Contains(command.CreatedByFullName));
-            query = query.Where<Customer>(command.CreatedOn, s=> s.CreatedOn == command.CreatedOn);
+            query = query.Where(command.Id, s => s.Id == command.Id);
+            query = query.Where(command.Name, s => s.Name.Contains(command.Name));
+            query = query.Where(command.Address, s => s.Name.Contains(command.Address));
+            query = query.Where(command.Phone, s => s.Phone.Contains(command.Phone));
+            query = query.Where(command.PrimaryContactUserId, s => s.PrimaryContactUser.Id == command.PrimaryContactUserId);
+            query = query.Where(command.SecondaryContactUserId, s => s.SecondaryContactUser.Id == command.SecondaryContactUserId);
+            query = query.Where(command.LocationId, s=> s.LocationId == command.LocationId);
+            query = query.Where(command.IsActive, s => s.IsActive == command.IsActive);
+            query = query.Where(command.PrimaryContactUserName, s => s.PrimaryContactUser.FirstName.Contains(command.PrimaryContactUserName));
+            query = query.Where(command.SecondartContactUserName, s => s.SecondaryContactUser.FirstName.Contains(command.SecondartContactUserName));
+            query = query.Where(command.LocationName, s => s.Location.Name.Contains(command.LocationName));
+            query = query.Where(command.CustomerNumber, s=> s.CustomerNumber.Contains(command.CustomerNumber));
+            query = query.Where(command.CreatedByFullName, s=> s.Created.FirstName.Contains(command.CreatedByFullName));
+            query = query.Where(command.CreatedOn, s=> s.CreatedOn == command.CreatedOn);
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {

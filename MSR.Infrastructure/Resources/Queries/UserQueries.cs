@@ -13,15 +13,15 @@ namespace MSR.Infrastructure.Resources.Queries
         {
             query = query.Include(x => x.TimeZone).Include(x => x.Location).Include(x => x.Supervisor).Include(x => x.Roles).ThenInclude(x => x.Role).AsQueryable();
 
-            query = query.Where<User>(command.Id, s => s.Id == command.Id);
-            query = query.Where<User>(command.FirstName, s => s.FirstName == command.FirstName);
-            query = query.Where<User>(command.LastName, s => s.LastName == command.LastName);
-            query = query.Where<User>(command.LastName, s => s.UserName == command.UserName);
-            query = query.Where<User>(command.Title, s => s.Title == command.Title);
-            query = query.Where<User>(command.Supervisor, s => s.SupervisorId == command.Supervisor);
-            query = query.Where<User>(command.PrimaryPhone, s => s.Phone == command.PrimaryPhone);
-            query = query.Where<User>(command.Email, s => s.Email == command.Email);
-            query = query.Where<User>(command.HasRoleIDs, s => s.Roles.Any(m => command.HasRoleIDs.Contains(m.RoleId)));
+            query = query.Where(command.Id, s => s.Id == command.Id);
+            query = query.Where(command.FirstName, s => s.FirstName == command.FirstName);
+            query = query.Where(command.LastName, s => s.LastName == command.LastName);
+            query = query.Where(command.LastName, s => s.UserName == command.UserName);
+            query = query.Where(command.Title, s => s.Title == command.Title);
+            query = query.Where(command.Supervisor, s => s.SupervisorId == command.Supervisor);
+            query = query.Where(command.PrimaryPhone, s => s.Phone == command.PrimaryPhone);
+            query = query.Where(command.Email, s => s.Email == command.Email);
+            query = query.Where(command.HasRoleIDs, s => s.Roles.Any(m => command.HasRoleIDs.Contains(m.RoleId)));
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
