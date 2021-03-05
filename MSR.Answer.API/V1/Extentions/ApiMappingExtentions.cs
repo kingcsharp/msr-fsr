@@ -1040,5 +1040,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetWorkOrderHistory>(request);
         }
+
+        public static GetQuotesProducts ToGetQuotesProductsRequest(this GetQuotesProductsRequest request) { 
+            
+            return AutoMapperHelper.Mapper.Map<GetQuotesProducts>(request);
+        }
     }
 }

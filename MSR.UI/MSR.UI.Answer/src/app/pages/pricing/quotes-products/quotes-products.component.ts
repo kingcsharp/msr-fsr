@@ -119,7 +119,8 @@ export class QuotesProductsComponent implements OnInit {
 
   getQuotesProducts() {
     this.globals.showLoader(true);
-    this.quoteService.product(env.apiVersion)
+    this.quoteService.product(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null
+      ,null,null,null,0,10,null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object;
