@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
 import { CustomerService, CustomerModel, UserService, UserModel, EnumMenuItem, EnumApprovalTables, UpdateCustomerRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -6,6 +6,8 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
+import { LazyLoadEvent } from 'primeng/api';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
 
 @Component({
   selector: 'app-customers',
@@ -13,7 +15,7 @@ import { Globals } from '../../../models/lib/globals';
   styleUrls: ['./customers.component.scss'],
   providers: [CustomerService]
 })
-export class CustomersComponent implements OnInit {
+export class CustomersComponent implements OnInit, AfterViewInit {
   users: Array<UserModel>;
   data: Array<CustomerModel>;
   privileges = EnumPrivilege;
@@ -29,8 +31,13 @@ export class CustomersComponent implements OnInit {
   approvalTables = EnumApprovalTables;
   menuItems = EnumMenuItem;
   statusOptions: any[];
+  totalRecords: number = 0;
+  isActive: any[];
+
 
   constructor(private customerService: CustomerService, private userService: UserService, public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit(): void {
     this.gridVersion = '1.0.0';
@@ -55,8 +62,10 @@ export class CustomersComponent implements OnInit {
     this.canDeleteCustomer = this.hasPrivilege(this.privileges.CanDelete);
     this.canEditCustomer = this.hasPrivilege(this.privileges.CanEdit);
     this.canActivateCustomer = this.hasPrivilege(this.privileges.CanActivate);
-    this.getCustomers();
-
+    this.isActive = [
+      { label: 'Active', value: true },
+      { label: 'InActive', value: false },
+    ];
 
   }
 
@@ -64,27 +73,24 @@ export class CustomersComponent implements OnInit {
     return this.globals.hasPrivilege(EnumMenuItem.CustomersDepartments, privName);
   }
 
-  getCustomers() {
-
+  getCustomers(event: LazyLoadEvent) {
     this.globals.showLoader(true);
+    setTimeout(() => {
+      callFunctionWithFilters(this.customerService, this.customerService.customerGet, event).subscribe(responseHandler((response) => {
+        this.totalRecords = response.totalNumberOfRecords;
 
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, 
-      null, null, null, null, null, null, null, null, null,env.apiVersion).subscribe(responseHandler((response) => {
+        this.data = response.object;
+        this.data.forEach(elem => {
+          if (elem.status === null) {
+            elem.status = 'Approved';
+          }
+        });
 
-      this.data = response.object;
-
-      this.data.map((elem) => {
-        if (elem.status === null) {
-          elem.status = 'Approved';
-        }
-
-      });
-
-      this.statusOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-      ).map(x => ({ label: x.status, value: x.status }));
-    }));
-
+        this.statusOptions = this.data.filter(
+          (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+        ).map(x => ({ label: x.status, value: x.status }));
+      }));
+    }, 10);
   }
 
   openConfirmDeleteDialog(customer: CustomerModel) {
@@ -105,7 +111,8 @@ export class CustomersComponent implements OnInit {
     this.customerService.customerDelete(this.customerToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
       this.data.length = 0;
-      this.getCustomers();
+      //TODO FIX THIS SHIT
+      // this.getCustomers();
 
     }));
 
