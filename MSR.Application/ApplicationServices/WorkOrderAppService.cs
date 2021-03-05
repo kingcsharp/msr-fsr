@@ -131,8 +131,9 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetWorkOrderHistory command, CancellationToken cancellationToken = default)
         {
-            var ret = await _workOrderService.GetWorkOrderHistoryView();
-            return new CommandResponse<ICollection<Domain.Views.WorkOrderHistoryView>>(ret);
+            var ret = await _workOrderService.GetWorkOrderHistoryView(command);
+            int totalRows = await _workOrderService.GetTotalWorkOrderHistoryViewRows(command);
+            return new PagingCommandResponse<ICollection<Domain.Views.WorkOrderHistoryView>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
     }
 }

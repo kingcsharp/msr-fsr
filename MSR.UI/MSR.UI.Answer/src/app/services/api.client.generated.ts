@@ -7221,12 +7221,69 @@ export class WorkOrderService {
 
     /**
      * Returns a summary of COMPLETED or CANCELLED WorkOrders
+     * @param purchaseId (optional) 
+     * @param workOrderItemNumber (optional) 
+     * @param customer (optional) 
+     * @param location (optional) 
+     * @param serialNumber (optional) 
+     * @param purchaseOrderNumber (optional) 
+     * @param qty (optional) 
+     * @param scheduledStartDate (optional) 
+     * @param scheduledEndDate (optional) 
+     * @param actualStartDate (optional) 
+     * @param actualEndDate (optional) 
+     * @param product (optional) 
+     * @param procedure (optional) 
+     * @param status (optional) 
+     * @param dispostion (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    history(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/History";
+    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string | null | undefined, dispostion: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/History?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (purchaseId !== undefined && purchaseId !== null)
+            url_ += "PurchaseId=" + encodeURIComponent("" + purchaseId) + "&";
+        if (workOrderItemNumber !== undefined && workOrderItemNumber !== null)
+            url_ += "WorkOrderItemNumber=" + encodeURIComponent("" + workOrderItemNumber) + "&";
+        if (customer !== undefined && customer !== null)
+            url_ += "Customer=" + encodeURIComponent("" + customer) + "&";
+        if (location !== undefined && location !== null)
+            url_ += "Location=" + encodeURIComponent("" + location) + "&";
+        if (serialNumber !== undefined && serialNumber !== null)
+            url_ += "SerialNumber=" + encodeURIComponent("" + serialNumber) + "&";
+        if (purchaseOrderNumber !== undefined && purchaseOrderNumber !== null)
+            url_ += "PurchaseOrderNumber=" + encodeURIComponent("" + purchaseOrderNumber) + "&";
+        if (qty !== undefined && qty !== null)
+            url_ += "Qty=" + encodeURIComponent("" + qty) + "&";
+        if (scheduledStartDate !== undefined && scheduledStartDate !== null)
+            url_ += "ScheduledStartDate=" + encodeURIComponent(scheduledStartDate ? "" + scheduledStartDate.toJSON() : "") + "&";
+        if (scheduledEndDate !== undefined && scheduledEndDate !== null)
+            url_ += "ScheduledEndDate=" + encodeURIComponent(scheduledEndDate ? "" + scheduledEndDate.toJSON() : "") + "&";
+        if (actualStartDate !== undefined && actualStartDate !== null)
+            url_ += "ActualStartDate=" + encodeURIComponent(actualStartDate ? "" + actualStartDate.toJSON() : "") + "&";
+        if (actualEndDate !== undefined && actualEndDate !== null)
+            url_ += "ActualEndDate=" + encodeURIComponent(actualEndDate ? "" + actualEndDate.toJSON() : "") + "&";
+        if (product !== undefined && product !== null)
+            url_ += "Product=" + encodeURIComponent("" + product) + "&";
+        if (procedure !== undefined && procedure !== null)
+            url_ += "Procedure=" + encodeURIComponent("" + procedure) + "&";
+        if (status !== undefined && status !== null)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (dispostion !== undefined && dispostion !== null)
+            url_ += "Dispostion=" + encodeURIComponent("" + dispostion) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

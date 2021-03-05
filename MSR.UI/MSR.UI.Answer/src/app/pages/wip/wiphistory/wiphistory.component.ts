@@ -58,7 +58,8 @@ export class WiphistoryComponent implements OnInit {
       this.router.navigate(['app/wip/wipstatus']);
     }
 
-    this.workOrderService.history(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.workOrderService.history(null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+      null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
       this.data = response.object;
       this.statusOptions = this.data.filter(
         (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i

@@ -141,6 +141,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetProcedureStepTemplateRequest, GetProcedureStepTemplate>();
             CreateMap<GetRolesRequest, GetRoles>();
             CreateMap<GetTrainingCertificationRequest, GetTrainingCertification>();
+            CreateMap<GetWorkOrderHistoryRequest, GetWorkOrderHistory>();
 
         }
     }

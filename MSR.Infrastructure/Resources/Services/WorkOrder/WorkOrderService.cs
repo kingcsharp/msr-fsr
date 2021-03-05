@@ -19,6 +19,7 @@ using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -1389,14 +1390,21 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return dispositionMessage.Trim().Trim('|').Trim();
         }
 
-        public async Task<ICollection<MSR.Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView() {
+        public async Task<ICollection<MSR.Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView(GetWorkOrderHistory command) {
 
-            var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().ToListAsync();
+            var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().CreateWorkOrderHistoryViewQuery(command).ToListAsync();
 
             var workOrderHistoryViewModels = _mapper.Map<ICollection<MSR.Domain.Views.WorkOrderHistoryView>>(workOrderHistoryViewEntities);
 
             return workOrderHistoryViewModels;
 
+        }
+
+        public async Task<int> GetTotalWorkOrderHistoryViewRows(GetWorkOrderHistory command)
+        {
+            var totalRows = await _unitOfWork.WorkOrderHistoryViews.Query().CreateWorkOrderHistoryViewQuery(command).CountAsync();
+
+            return totalRows;
         }
     }
 }
