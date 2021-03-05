@@ -203,7 +203,7 @@ export class WipdetailsComponent implements OnInit {
 
       documentIds.forEach(documentId => {
 
-        documentRequests.push(this.documentService.documentGet(documentId, env.apiVersion));
+        documentRequests.push(this.documentService.documentGet(documentId, null,null,null,null,null,null,null,null,env.apiVersion));
 
       });
 

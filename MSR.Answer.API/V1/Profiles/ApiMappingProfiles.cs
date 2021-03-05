@@ -145,6 +145,9 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetPortalWorkOrderRequest, GetPortalWorkOrderQueryModel>();
             CreateMap<Sort, QuerySort>();
             CreateMap<Filter, QueryFilter>();
+            CreateMap<GetTrainingCertificationRequest, GetTrainingCertification>();
+            CreateMap<GetWorkOrderHistoryRequest, GetWorkOrderHistory>();
+
         }
     }
 }

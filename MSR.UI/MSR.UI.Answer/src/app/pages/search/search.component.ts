@@ -85,7 +85,7 @@ export class SearchComponent implements OnInit {
           }));
         break;
       case 'Document':
-        this.documentService.documentGet(rowData.itemId, env.apiVersion).pipe(take(1))
+        this.documentService.documentGet(rowData.itemId, null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.setGridData(response, rowData);
           }));

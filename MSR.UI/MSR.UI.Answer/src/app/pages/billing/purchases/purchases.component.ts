@@ -59,7 +59,7 @@ export class PurchasesComponent implements OnInit {
 
   getPurchases() {
     this.globals.showLoader(true);
-    this.purchaseService.purchaseGet(null, env.apiVersion)
+    this.purchaseService.purchaseGet(null, null,null,null,null,null,null,null,null,env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object;

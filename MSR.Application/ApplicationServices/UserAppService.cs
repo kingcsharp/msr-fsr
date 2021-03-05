@@ -115,7 +115,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetTrainingCertification command, CancellationToken cancellationToken = default)
         {
             var ret = await _userService.GetTrainingCertificationAsync(command);
-            return new CommandResponse<IEnumerable<TrainingCertificationView>>(ret);
+            int totalRows = await _userService.GetTrainingCertificationTotalRows(command);
+            return new PagingCommandResponse<IEnumerable<TrainingCertificationView>>(ret, totalRows, command.Term, command.PageNumber, command.PageNumber, command.SortAscending);
         }
     }
 }

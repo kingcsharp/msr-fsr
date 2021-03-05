@@ -75,10 +75,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpGetAttribute("TrainingCertification"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<TrainingCertificationView>>))]
+        [HttpGet("TrainingCertification"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<TrainingCertificationView>>))]
         public async Task<IActionResult> GetTrainingCertificationData([FromQuery] GetTrainingCertificationRequest request)
         {
-            var command = new GetTrainingCertification { Id = request.UserId };
+            var command = request.ToGetRolesCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<IEnumerable<TrainingCertificationView>>();
 

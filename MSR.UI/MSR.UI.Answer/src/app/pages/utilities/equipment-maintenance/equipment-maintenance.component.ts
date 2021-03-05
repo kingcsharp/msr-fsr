@@ -138,7 +138,8 @@ export class EquipmentMaintenanceComponent implements OnInit {
   }
 
   getEMData() {
-    this.equipmentMaintenanceService.equipmentMaintenanceGet(null, env.apiVersion).pipe(take(1))
+    this.equipmentMaintenanceService.equipmentMaintenanceGet(null,null,null,null,null,null,null,null,null,null,null,null,
+      null,null,null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object;
         this.emStatus = this.data.filter(

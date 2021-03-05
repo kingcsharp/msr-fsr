@@ -8,6 +8,7 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.Queries;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -125,34 +126,29 @@ namespace MSR.Infrastructure.Resources.Services.Help
 
         public async Task<IEnumerable<Domain.Models.HelpPage>> GetHelpPages(GetHelpPage command)
         {
-            var helpPages = _unitOfWork.HelpPages.Query();
+            var helpPageEntities = await  _unitOfWork.HelpPages.Query().CreateHelpQuery(command).ToListAsync();
 
-            if (command.Id.HasValue)
-            {
-                helpPages = helpPages.Where(i => i.Id == command.Id.Value);
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.FriendlyURL))
-            {
-                helpPages = helpPages.Where(i => i.FriendlyUrl == command.FriendlyURL);
-            }
-
-            var pageList = new List<Domain.Models.HelpPage>();
-
-            var helpPageList = await helpPages.Include(s => s.Roles).ToListAsync();
-            
             _ = await _unitOfWork.Roles.Query().ToListAsync();
 
-            foreach (var helpPage in helpPageList ?? new List<HelpPage>())
+            var helpPageModels = new List<Domain.Models.HelpPage>();
+
+            foreach (var helpPage in helpPageEntities)
             {
                 var page = _mapper.Map<Domain.Models.HelpPage>(helpPage);
 
                 page.Roles = helpPage.Roles.Select(i => _mapper.Map<Domain.Models.Role>(i.Role)).ToList();
 
-                pageList.Add(page);
+                helpPageModels.Add(page);
             }
 
-            return pageList;
+            return helpPageModels;
+        }
+
+        public async Task<int> GetHelpPagesTotalRows(GetHelpPage command)
+        {
+            var totalRows = await _unitOfWork.HelpPages.Query().CreateHelpQuery(command).CountAsync();
+
+            return totalRows;
         }
 
         public async Task UpdateHelpPage(UpdateHelpPage command)

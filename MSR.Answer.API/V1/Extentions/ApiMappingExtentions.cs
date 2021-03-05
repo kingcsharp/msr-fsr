@@ -1032,6 +1032,15 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetRoles>(request);
         }
+        public static GetTrainingCertification ToGetRolesCommand(this GetTrainingCertificationRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetTrainingCertification>(request);
+        }
+
+        public static GetWorkOrderHistory ToGetWorkOrderHistory(this GetWorkOrderHistoryRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetWorkOrderHistory>(request);
+        }
 
         public static GetPortalWorkOrderQueryModel ToGetPortalWorkOrderQueryModel(this GetPortalWorkOrderRequest request) => AutoMapperHelper.Mapper.Map<GetPortalWorkOrderQueryModel>(request);
     }

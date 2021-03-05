@@ -41,9 +41,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("History")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderHistoryView>>))]
-        public async Task<IActionResult> WorkOrderGetHistory()
+        public async Task<IActionResult> WorkOrderGetHistory([FromQuery] GetWorkOrderHistoryRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderHistory());
+            var command = request.ToGetWorkOrderHistory();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<WorkOrderHistoryView>>();
         }
 

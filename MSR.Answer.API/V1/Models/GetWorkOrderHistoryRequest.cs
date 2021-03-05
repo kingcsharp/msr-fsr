@@ -1,14 +1,14 @@
-﻿using MSR.Domain.Commanding;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace MSR.Domain.Commands
+namespace MSR.Answer.API.V1.Models
 {
-    public class GetWorkOrderHistory : PagingCommand
+    public class GetWorkOrderHistoryRequest : BaseApiModel
     {
         public int? PurchaseId { get; set; }
-        public string WorkOrderItemNumber { get; set; }
+        public string WorkOrderItemNumber { get;set;}
         public string Customer { get; set; }
         public string Location { get; set; }
         public string SerialNumber { get; set; }
@@ -22,5 +22,6 @@ namespace MSR.Domain.Commands
         public string Procedure { get; set; }
         public string Status { get; set; }
         public string Dispostion { get; set; }
+        
     }
 }

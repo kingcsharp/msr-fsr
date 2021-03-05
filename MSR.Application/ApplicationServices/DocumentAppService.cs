@@ -33,8 +33,9 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetDocument command, CancellationToken cancellationToken = default)
         {
-            var docs = await _documentService.GetDocuments(command.Id);
-            return new CommandResponse<ICollection<DocumentView>>(docs);
+            var docs = await _documentService.GetDocuments(command);
+            int totalRows = await _documentService.GetDocumentTotalRows(command);
+            return new PagingCommandResponse<ICollection<DocumentView>>(docs, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateDocument command, CancellationToken cancellationToken = default)
