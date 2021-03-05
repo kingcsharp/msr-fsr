@@ -75,7 +75,6 @@ namespace MSR.Infrastructure.Resources.Queries
         public static (IQueryable<T> data, int totalRows) ToFilterView<T>(
             this IQueryable<T> query, QueryBase filter)
         {
-            // filter
             query = Filter(query, filter.Filters);
             var totalRows = query.Count();
             //sort
@@ -85,8 +84,9 @@ namespace MSR.Infrastructure.Resources.Queries
                 // EF does not apply skip and take without order
                 query = Limit(query, filter.PageSize, filter.PageNumber);
             }
-            // return the final query
-            return (query,totalRows);
+
+            return (query, totalRows);
+
         }
 
         private static IQueryable<T> Filter<T>(
@@ -99,10 +99,10 @@ namespace MSR.Infrastructure.Resources.Queries
 
                 var where = "1=1";
                 var i = 0;
-                foreach(var filter in filters) 
+                foreach (var filter in filters)
                 {
                     values[i] = filter.Value;
-                    where += $" {filter.Logic} ({Transform(filter,i)})";
+                    where += $" {filter.Logic} ({Transform(filter, i)})";
                     i++;
                 }
 

@@ -83,11 +83,10 @@ namespace MSR.Infrastructure.Resources.Queries
 
         public static async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
         {
-            var filteredDataSet = dbSet.Where(i => i.CustomerId == portalWorkOrderQueryModel.CustomerId && i.CreatedOn >= portalWorkOrderQueryModel.FromDate && i.CreatedOn <= portalWorkOrderQueryModel.ToDate);
             var portalWorkOrderViews = new List<PortalWorkOrderView>();
+            var pagedData = dbSet.AsQueryable().Where(i => i.CustomerId == portalWorkOrderQueryModel.CustomerId && i.CreatedOn >= portalWorkOrderQueryModel.FromDate && i.CreatedOn <= portalWorkOrderQueryModel.ToDate)
+                .ToFilterView(portalWorkOrderQueryModel);
 
-
-            var pagedData = dbSet.AsQueryable().ToFilterView(portalWorkOrderQueryModel);
             var pagedList = await pagedData.data.ToListAsync();
             foreach (var view in pagedList)
             {

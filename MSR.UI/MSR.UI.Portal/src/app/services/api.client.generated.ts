@@ -7332,18 +7332,38 @@ export class WorkOrderService {
 
     /**
      * Returns a summary of WorkOrders IN PROGRESS or WAITING
-     * @param skip (optional) 
-     * @param take (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sort (optional) 
+     * @param filters (optional) 
      */
-    menu(skip: number | null | undefined, take: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
+    menu(pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (skip !== undefined && skip !== null)
-            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
-        if (take !== undefined && take !== null)
-            url_ += "take=" + encodeURIComponent("" + take) + "&";
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sort !== undefined && sort !== null)
+            sort && sort.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
+        if (filters !== undefined && filters !== null)
+            filters && filters.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -7571,7 +7591,7 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfInvoiceableWorkOrderView>(<any>null);
     }
 
-    portal(customerId: number | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | undefined, toDate: Date | undefined, pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filter_Field: string | null | undefined, filter_Operator: string | null | undefined, filter_Value: any | null | undefined, filter_Logic: string | null | undefined, filter_Filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
+    portal(customerId: number | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | undefined, toDate: Date | undefined, pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Portal?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7607,19 +7627,11 @@ export class WorkOrderService {
         				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
         			}
             });
-        if (filter_Field !== undefined && filter_Field !== null)
-            url_ += "Filter.Field=" + encodeURIComponent("" + filter_Field) + "&";
-        if (filter_Operator !== undefined && filter_Operator !== null)
-            url_ += "Filter.Operator=" + encodeURIComponent("" + filter_Operator) + "&";
-        if (filter_Value !== undefined && filter_Value !== null)
-            url_ += "Filter.Value=" + encodeURIComponent("" + filter_Value) + "&";
-        if (filter_Logic !== undefined && filter_Logic !== null)
-            url_ += "Filter.Logic=" + encodeURIComponent("" + filter_Logic) + "&";
-        if (filter_Filters !== undefined && filter_Filters !== null)
-            filter_Filters && filter_Filters.forEach((item, index) => {
+        if (filters !== undefined && filters !== null)
+            filters && filters.forEach((item, index) => {
                 for (let attr in item)
         			if (item.hasOwnProperty(attr)) {
-        				url_ += "Filter.Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
         			}
             });
         url_ = url_.replace(/[?&]$/, "");
@@ -20233,6 +20245,94 @@ export interface IWorkOrderGridSummary {
     segregationType?: EnumSegregationType | undefined;
 }
 
+export class Sort implements ISort {
+    field?: string | undefined;
+    dir?: string | undefined;
+
+    constructor(data?: ISort) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.field = _data["field"];
+            this.dir = _data["dir"];
+        }
+    }
+
+    static fromJS(data: any): Sort {
+        data = typeof data === 'object' ? data : {};
+        let result = new Sort();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["field"] = this.field;
+        data["dir"] = this.dir;
+        return data; 
+    }
+}
+
+export interface ISort {
+    field?: string | undefined;
+    dir?: string | undefined;
+}
+
+export class Filter implements IFilter {
+    field?: string | undefined;
+    operator?: string | undefined;
+    value?: string | undefined;
+    logic?: string | undefined;
+
+    constructor(data?: IFilter) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.field = _data["field"];
+            this.operator = _data["operator"];
+            this.value = _data["value"];
+            this.logic = _data["logic"];
+        }
+    }
+
+    static fromJS(data: any): Filter {
+        data = typeof data === 'object' ? data : {};
+        let result = new Filter();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["field"] = this.field;
+        data["operator"] = this.operator;
+        data["value"] = this.value;
+        data["logic"] = this.logic;
+        return data; 
+    }
+}
+
+export interface IFilter {
+    field?: string | undefined;
+    operator?: string | undefined;
+    value?: string | undefined;
+    logic?: string | undefined;
+}
+
 /** Base class for an API call with a typed result */
 export class AuditActionResultOfICollectionOfWorkOrderStatus extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderStatus {
     object?: WorkOrderStatus[] | undefined;
@@ -20877,106 +20977,6 @@ export interface IPortalSubPartView {
     cycleCount?: number;
     qty?: number;
     name?: string | undefined;
-}
-
-export class Sort implements ISort {
-    field?: string | undefined;
-    dir?: string | undefined;
-
-    constructor(data?: ISort) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.field = _data["field"];
-            this.dir = _data["dir"];
-        }
-    }
-
-    static fromJS(data: any): Sort {
-        data = typeof data === 'object' ? data : {};
-        let result = new Sort();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["field"] = this.field;
-        data["dir"] = this.dir;
-        return data; 
-    }
-}
-
-export interface ISort {
-    field?: string | undefined;
-    dir?: string | undefined;
-}
-
-export class Filter implements IFilter {
-    field?: string | undefined;
-    operator?: string | undefined;
-    value?: any | undefined;
-    logic?: string | undefined;
-    filters?: Filter[] | undefined;
-
-    constructor(data?: IFilter) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.field = _data["field"];
-            this.operator = _data["operator"];
-            this.value = _data["value"];
-            this.logic = _data["logic"];
-            if (Array.isArray(_data["filters"])) {
-                this.filters = [] as any;
-                for (let item of _data["filters"])
-                    this.filters!.push(Filter.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Filter {
-        data = typeof data === 'object' ? data : {};
-        let result = new Filter();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["field"] = this.field;
-        data["operator"] = this.operator;
-        data["value"] = this.value;
-        data["logic"] = this.logic;
-        if (Array.isArray(this.filters)) {
-            data["filters"] = [];
-            for (let item of this.filters)
-                data["filters"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IFilter {
-    field?: string | undefined;
-    operator?: string | undefined;
-    value?: any | undefined;
-    logic?: string | undefined;
-    filters?: Filter[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

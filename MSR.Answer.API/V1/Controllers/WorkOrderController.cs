@@ -106,12 +106,12 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var queryModel = request.ToGetPortalWorkOrderQueryModel();
             var portalWorkOrderMenuViews = await _workOrderViewService.GetPortalWorkOrderMenuAsync(queryModel);
-            return GenerateOkViewResponse(portalWorkOrderMenuViews.data);
+            return GenerateOkViewResponse(portalWorkOrderMenuViews.data, portalWorkOrderMenuViews.totalRows);
         }
 
         [HttpPatch("Message")]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderMessageModel>))]
-        public async Task<IActionResult> AddMessage([FromBody, Required]CreateWorkOrderMessageRequest request)
+        public async Task<IActionResult> AddMessage([FromBody, Required] CreateWorkOrderMessageRequest request)
         {
             var command = request.ToCreateWorkOrderMessageCommand();
             var ret = await _dispatcher.DispatchAsync(command);

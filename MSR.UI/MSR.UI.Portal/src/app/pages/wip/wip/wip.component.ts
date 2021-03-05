@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
 import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
-import { pushIfNotExists, callFunctionWithFilters } from '../../../models/lib/Utils';
+import { pushIfNotExists, callFunctionWithFilters, emptyArray } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -59,6 +59,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   showFilesDialog: boolean = false;
   fromDate: Date = moment().subtract(6, 'weeks').toDate();
   toDate: Date = moment().toDate();
+  totalRecords: number = 0;
   en = {
     firstDayOfWeek: 0,
     dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -402,31 +403,13 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     workOrder.subParts.map(x => this.setSubPartsProperties(x));
   }
 
-  // getGridData() {
-  //   this.globals.showLoader(true);
-  //   this.showReport = false;
-
-  //   //TODO: This part will need to be updated to remove the hard coded skip/take and add in the values from the grid
-  //   this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate, 0, 100,
-  //     env.apiVersion).pipe(take(1))
-  //     .subscribe(responseHandler(response => {
-  //       this.data = response.object.map((x: any) => {
-  //         x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
-  //         let ret = new PortalWorkOrderPartsView(x);
-  //         this.setSubpartspropertiesToWoSubparts(ret);
-  //         return ret;
-  //       });
-
-
-  //       this.showReport = true;
-  //     }));
-  // }
-
   getGridData(event: LazyLoadEvent) {
     debugger;
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.workOrderService, this.workOrderService.portal, event)
+      var a = this.globals.selectedCustomer;
+      const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate };
+      callFunctionWithFilters(this.workOrderService, this.workOrderService.portal, pageFilters, this.gridSaved.columnsSaved, event)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           const retData = response.object.map((x: any) => {
@@ -435,7 +418,9 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
             this.setSubpartspropertiesToWoSubparts(ret);
             return ret;
           });
-          this.data = retData;
+          emptyArray(this.data);
+          this.data.push(...retData);
+          this.totalRecords = response.totalNumberOfRecords;
         }));
     }, 10);
   }

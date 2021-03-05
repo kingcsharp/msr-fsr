@@ -29,9 +29,8 @@ import { LazyLoadEvent } from 'primeng/api';
 })
 export class GridComponent implements OnInit {
 
-  // [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getCustomers($event)" [totalRecords]="totalRecords"
-
   @Input() gridSaved: GridSaved;
+  @Input() totalRecords: number;
   @Input() showReport: boolean;
   @Input() showExportGrid: boolean;
   @Input() saveToLocalStorage: boolean;
@@ -76,7 +75,6 @@ export class GridComponent implements OnInit {
     if (this.reportInfo === undefined || this.reportInfo.apiEndPointURL === undefined) {
       this.getData.emit(event);
       this.gridData = this.data;
-      this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
       this.reportCubeService.getReport(this.reportInfo).then((resp: any) => {
@@ -89,7 +87,6 @@ export class GridComponent implements OnInit {
         } else {
           this.gridData = resp;
         }
-        this.filteredData = this.gridData;
         this.globals.showLoader(false);
       });
     }
@@ -115,32 +112,8 @@ export class GridComponent implements OnInit {
   //   }, 300);
   // }
 
-  // getReport() {
-
-
-  //   if (this.reportInfo === undefined || this.reportInfo.apiEndPointURL === undefined) {
-  //     this.gridData = this.data;
-  //     this.filteredData = this.gridData;
-  //   } else {
-  //     this.globals.showLoader(true);
-  //     this.reportCubeService.getReport(this.reportInfo).then((resp:any) => {
-  //       if (resp.chartOptions !== undefined) {
-  //         this.hasChart = true;
-  //         this.gridData = resp.resultData;
-  //         this.chartOptions = resp.chartOptions;
-  //         this.chartInfo = resp.chartInfo;
-  //         this.showCharts = true;
-  //       } else {
-  //         this.gridData = resp;
-  //       }
-  //       this.filteredData = this.gridData;
-  //       this.globals.showLoader(false);
-  //     });
-  //   }
-  // }
-
   printCsvReport() {
-    this.cSVConverterService.downloadFile(this.filteredData, this.gridSaved.columnsSaved, this.reportInfo.name);
+    this.cSVConverterService.downloadFile(this.gridData, this.gridSaved.columnsSaved, this.reportInfo.name);
   }
 
 }

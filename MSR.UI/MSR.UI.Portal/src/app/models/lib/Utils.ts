@@ -1,5 +1,7 @@
 import { LazyLoadEvent } from "primeng/api";
+import { Filter, Sort } from "../../../app/services/api.client.generated";
 import { environment as env } from '../../../environments/environment';
+import { ColumnsSaved } from "./ColumnsSaved";
 
 export function emptyArray(array) {
     let length = array.length;
@@ -93,30 +95,40 @@ export function getArguments(func) {
         .filter(String);
 }
 
-export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
+export function callFunctionWithFilters(service, func, extraParams: any, columnsSaved: ColumnsSaved[], event: LazyLoadEvent) {
     let filterEvObj: any = {
-        term: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField)),
         pageNumber: event.first / event.rows,
         pageSize: event.rows,
-        sortAscending: event.sortOrder === 1
+        sort: new Array<Sort>()
     }
+
+    filterEvObj.sort.push(
+        new Sort({
+            dir: event.sortOrder === 1 ? 'asc' : 'desc',
+            field: event.sortField ? capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField)) : columnsSaved[0].id
+        })
+    );
+
     Object.assign(filterEvObj, event);
+    filterEvObj.filters = new Array<Filter>();
+
+    const uiFilters = removeDotAndCamelCaseFromObj(event.filters);
+    Object.keys(uiFilters).forEach((filter: any) => {
+        const filterObj = uiFilters[filter];
+        filterEvObj.filters.push(new Filter({
+            field: filter,
+            value: filterObj.value,
+            operator: filterObj.matchMode,
+            logic: 'and'
+        }))
+    });
+
+    Object.assign(filterEvObj, extraParams);
 
     const args = getArguments(func);
     const argsToCallFn = [];
-    filterEvObj.filters = removeDotAndCamelCaseFromObj(filterEvObj.filters);
     args.forEach((arg: string) => {
-        const filterObj = filterEvObj.filters[arg];
-        if (filterObj !== undefined) {
-            if (Array.isArray(filterObj.value)) {
-                if (typeof (filterObj.value[0]) === "boolean") {
-                    argsToCallFn.push(filterObj.value[0]);
-                }
-            } else {
-                argsToCallFn.push(filterObj.value);
-            }
-
-        } else if (filterEvObj[arg] !== undefined) {
+        if (filterEvObj[arg] !== undefined) {
             argsToCallFn.push(filterEvObj[arg]);
         } else {
             argsToCallFn.push(null);
