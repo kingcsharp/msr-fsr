@@ -1911,7 +1911,7 @@ export class InvoiceService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    invoiceGet(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceView> {
+    invoiceGet(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceView> {
         let url_ = this.baseUrl + "/v{version}/Invoice?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1938,6 +1938,14 @@ export class InvoiceService {
             url_ += "Amount=" + encodeURIComponent("" + amount) + "&";
         if (statusId !== undefined && statusId !== null)
             url_ += "StatusId=" + encodeURIComponent("" + statusId) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

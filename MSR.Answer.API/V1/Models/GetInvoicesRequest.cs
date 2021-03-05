@@ -3,7 +3,7 @@ using System;
 
 namespace MSR.Answer.API.V1.Models
 {
-    public class GetInvoicesRequest
+    public class GetInvoicesRequest:BaseApiModel
     {
         public int? Id { get; set; }
         public string CustomerName { get; set; }

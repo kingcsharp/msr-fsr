@@ -16,5 +16,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<IEnumerable<InvoiceView>> CreateInvoicesAsync(CreateIndividualInvoices command);
 
         Task<InvoiceView> UpdateInvoiceAsync(UpdateInvoice command);
+        Task<int> GetInvoicesTotalRows(GetInvoicesGridView command);
     }
 }
