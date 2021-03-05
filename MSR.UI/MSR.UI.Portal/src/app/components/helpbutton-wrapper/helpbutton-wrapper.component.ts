@@ -43,15 +43,16 @@ export class HelpbuttonWrapperComponent implements OnInit, OnDestroy {
       this.helpMenuUrl = '/wip/details/:id';
     }
     this.globals.showLoader(true);
-    this.helpService.helpGet(null, this.helpMenuUrl, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        if (response.object.length !== 0) {
-          this.helpContent = response.object[0].content;
-          this.modalTitle = response.object[0].title;
-          this.canViewHelpPage = true;
-        } else {
-          this.canViewHelpPage = false;
-        }
-      }));
+    //TODO: Alec
+    // this.helpService.helpGet(null, this.helpMenuUrl, env.apiVersion).pipe(take(1))
+    //   .subscribe(responseHandler(response => {
+    //     if (response.object.length !== 0) {
+    //       this.helpContent = response.object[0].content;
+    //       this.modalTitle = response.object[0].title;
+    //       this.canViewHelpPage = true;
+    //     } else {
+    //       this.canViewHelpPage = false;
+    //     }
+    //   }));
   }
 }

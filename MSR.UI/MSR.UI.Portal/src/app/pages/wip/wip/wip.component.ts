@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { SelectItem } from 'primeng/api';
+import { LazyLoadEvent, SelectItem } from 'primeng/api';
 import {
   EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary,
   ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel, WorkOrderMessageModel, WorkOrderTaskMonitorModel
@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
 import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
-import { pushIfNotExists } from '../../../models/lib/Utils';
+import { pushIfNotExists, callFunctionWithFilters } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -102,6 +102,19 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.setCustomerName();
+    this.gridSaved = new GridSaved({
+      columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
+      storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: '1.0.0',
+      expandRows: true,
+      expandRowProperty: 'subParts',
+      expandRowsTemplate: this.expandedRowTemplate
+    });
+
+    this.reportModel = new ReportModel({
+      name: ''
+    });
+
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
@@ -229,26 +242,28 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (this.globals.selectedCustomer !== undefined) {
-      this.setCustomerName();
-      this.getGridData();
+      this.setCustomerNameAndShowGrid();
     }
 
     let isBuyerObservableSubscription = this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.selectedCustomer !== undefined) {
-        this.setCustomerName();
-        this.getGridData();
+        this.setCustomerNameAndShowGrid();
       }
     });
     this.subscriptions.push(isBuyerObservableSubscription);
 
     let selectCustomerObservableSubscription = this.globals.selectCustomerObservable.subscribe(response => {
       if (response !== null && response !== undefined) {
-        this.setCustomerName();
-        this.getGridData();
+        this.setCustomerNameAndShowGrid();
       }
     });
     this.subscriptions.push(selectCustomerObservableSubscription);
 
+  }
+
+  setCustomerNameAndShowGrid() {
+    this.setCustomerName();
+    this.showReport = true;
   }
 
   expandRow(data: PortalWorkOrderPartsView) {
@@ -387,35 +402,42 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     workOrder.subParts.map(x => this.setSubPartsProperties(x));
   }
 
-  getGridData() {
+  // getGridData() {
+  //   this.globals.showLoader(true);
+  //   this.showReport = false;
+
+  //   //TODO: This part will need to be updated to remove the hard coded skip/take and add in the values from the grid
+  //   this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate, 0, 100,
+  //     env.apiVersion).pipe(take(1))
+  //     .subscribe(responseHandler(response => {
+  //       this.data = response.object.map((x: any) => {
+  //         x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
+  //         let ret = new PortalWorkOrderPartsView(x);
+  //         this.setSubpartspropertiesToWoSubparts(ret);
+  //         return ret;
+  //       });
+
+
+  //       this.showReport = true;
+  //     }));
+  // }
+
+  getGridData(event: LazyLoadEvent) {
+    debugger;
     this.globals.showLoader(true);
-    this.showReport = false;
-
-//TODO: This part will need to be updated to remove the hard coded skip/take and add in the values from the grid
-    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate,0,100,
-      env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.data = response.object.map((x: any) => {
-          x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
-          let ret = new PortalWorkOrderPartsView(x);
-          this.setSubpartspropertiesToWoSubparts(ret);
-          return ret;
-        });
-        this.gridSaved = new GridSaved({
-          columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
-          storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
-          version: '1.0.0',
-          expandRows: true,
-          expandRowProperty: 'subParts',
-          expandRowsTemplate: this.expandedRowTemplate
-        });
-
-        this.reportModel = new ReportModel({
-          name: ''
-        });
-
-        this.showReport = true;
-      }));
+    setTimeout(() => {
+      callFunctionWithFilters(this.workOrderService, this.workOrderService.portal, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          const retData = response.object.map((x: any) => {
+            x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
+            let ret = new PortalWorkOrderPartsView(x);
+            this.setSubpartspropertiesToWoSubparts(ret);
+            return ret;
+          });
+          this.data = retData;
+        }));
+    }, 10);
   }
 
   getEngineerColumns() {

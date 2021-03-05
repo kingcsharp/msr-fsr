@@ -8,6 +8,7 @@ import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 import { LazyLoadEvent } from 'primeng/api';
 import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-customers',
@@ -76,7 +77,7 @@ export class CustomersComponent implements OnInit, AfterViewInit {
   getCustomers(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.customerService, this.customerService.customerGet, event).subscribe(responseHandler((response) => {
+      callFunctionWithFilters(this.customerService, this.customerService.customerGet, event).pipe(take(1)).subscribe(responseHandler((response) => {
         this.totalRecords = response.totalNumberOfRecords;
 
         this.data = response.object;
