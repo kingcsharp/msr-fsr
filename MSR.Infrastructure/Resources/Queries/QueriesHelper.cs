@@ -76,7 +76,7 @@ namespace MSR.Infrastructure.Resources.Queries
             this IQueryable<T> query, QueryBase filter)
         {
             // filter
-            query = Filter(query, filter.Filter);
+            query = Filter(query, filter.Filters);
             var totalRows = query.Count();
             //sort
             if (filter.Sort != null)
@@ -90,13 +90,22 @@ namespace MSR.Infrastructure.Resources.Queries
         }
 
         private static IQueryable<T> Filter<T>(
-            IQueryable<T> queryable, QueryFilter filter)
+            IQueryable<T> queryable, IEnumerable<QueryFilter> filterList)
         {
-            if ((filter != null) && (filter.Logic != null))
+            if ((filterList != null) && (filterList.Any()))
             {
-                var filters = GetAllFilters(filter);
-                var values = filters.Select(f => f.Value).ToArray();
-                var where = Transform(filter, filters);
+                var filters = filterList.Where(i => i.Logic != null).ToList();
+                var values = new string[filters.Count];
+
+                var where = "1=1";
+                var i = 0;
+                foreach(var filter in filters) 
+                {
+                    values[i] = filter.Value;
+                    where += $" {filter.Logic} ({Transform(filter,i)})";
+                    i++;
+                }
+
                 queryable = queryable.Where(where, values);
             }
             return queryable;
@@ -133,36 +142,30 @@ namespace MSR.Infrastructure.Resources.Queries
             {"doesnotcontain", "Contains"},
         };
 
-        public static IList<QueryFilter> GetAllFilters(QueryFilter filter)
-        {
-            var filters = new List<QueryFilter>();
-            GetFilters(filter, filters);
-            return filters;
-        }
+        //public static IList<QueryFilter> GetAllFilters(QueryFilter filter)
+        //{
+        //    var filters = new List<QueryFilter>();
+        //    GetFilters(filter, filters);
+        //    return filters;
+        //}
 
-        private static void GetFilters(QueryFilter filter, IList<QueryFilter> filters)
-        {
-            if (filter.Filters != null && filter.Filters.Any())
-            {
-                foreach (var item in filter.Filters)
-                {
-                    GetFilters(item, filters);
-                }
-            }
-            else
-            {
-                filters.Add(filter);
-            }
-        }
+        //private static void GetFilters(QueryFilter filter, IList<QueryFilter> filters)
+        //{
+        //    if (filter.Filters != null && filter.Filters.Any())
+        //    {
+        //        foreach (var item in filter.Filters)
+        //        {
+        //            GetFilters(item, filters);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        filters.Add(filter);
+        //    }
+        //}
 
-        public static string Transform(QueryFilter filter, IList<QueryFilter> filters)
+        public static string Transform(QueryFilter filter, int index)
         {
-            if (filter.Filters != null && filter.Filters.Any())
-            {
-                return "(" + String.Join(" " + filter.Logic + " ",
-                    filter.Filters.Select(f => Transform(f, filters)).ToArray()) + ")";
-            }
-            int index = filters.IndexOf(filter);
             var comparison = Operators[filter.Operator];
             if (filter.Operator == "doesnotcontain")
             {

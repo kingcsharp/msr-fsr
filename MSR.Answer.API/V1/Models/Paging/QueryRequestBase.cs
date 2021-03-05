@@ -10,6 +10,6 @@ namespace MSR.Answer.API.V1.Models.Paging
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public IEnumerable<Sort> Sort { get; set; }
-        public Filter Filter { get; set; }
+        public IEnumerable<Filter> Filters { get; set; }
     }
 }

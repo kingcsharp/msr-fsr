@@ -85,8 +85,9 @@ namespace MSR.Infrastructure.Resources.Queries
             var portalWorkOrderViews = new List<PortalWorkOrderView>();
 
 
-            var pagedData = filteredDataSet.ToFilterView(portalWorkOrderQueryModel);
-            foreach (var view in pagedData.data)
+            var pagedData = dbSet.AsQueryable().ToFilterView(portalWorkOrderQueryModel);
+            var pagedList = await pagedData.data.ToListAsync();
+            foreach (var view in pagedList)
             {
                 var portalWorkOrderView = new PortalWorkOrderView()
                 {
@@ -137,7 +138,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
                     portalWorkOrderView.Messages = messages;
                 }
-                var subParts = pagedData.data.First(i => i.WorkOrderId == view.WorkOrderId).SubParts;
+                var subParts = pagedList.First(i => i.WorkOrderId == view.WorkOrderId).SubParts;
                 if (!string.IsNullOrWhiteSpace(subParts))
                 {
                     var subPartModels = JsonConvert.DeserializeObject<List<PortalSubPartView>>(subParts);
