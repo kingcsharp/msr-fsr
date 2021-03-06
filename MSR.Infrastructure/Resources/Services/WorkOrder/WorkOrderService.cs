@@ -712,7 +712,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     workOrderTaskEntity.ReferenceFiles.Add(fem);
                 }
             }
-            var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
+            var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == command.WorkOrderId);
 
             if (isTaskStarted)
             {

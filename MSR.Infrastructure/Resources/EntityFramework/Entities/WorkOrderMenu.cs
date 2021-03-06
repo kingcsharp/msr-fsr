@@ -10,8 +10,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     {
         public int PurchaseId { get; set; }
         public string WorkOrderItemNumber { get; set; }
-        public string Customer { get; set; }
-        public string Location { get; set; }
+        public string CustomerName { get; set; }
+        public string LocationName { get; set; }
         public string SerialNumber { get; set; }
         public int? PurchaseOrderNumber { get; set; }
         public string ReferencePO { get; set; }
@@ -20,8 +20,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public DateTime? ActualStartDate { get; set; }
         public DateTime ScheduledEndDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
-        public string Product { get; set; }
-        public string Procedure { get; set; }
+        public string ProductName { get; set; }
+        public string ProcedureName { get; set; }
         public string Status { get; set; }
         public string Disposition { get; set; }
         public string CurrentActiveTaskName { get; set; }
