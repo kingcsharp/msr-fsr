@@ -137,19 +137,6 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static GetPendingApprovalModel ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
-        {
-            return new GetPendingApprovalModel()
-            {
-                Table = request.Table
-            };
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public static GetPendingApprovalDetailsModel ToGetPendingApprovalDetailsCommand(this GetPendingApprovalDetailRequest request)
         {
             return new GetPendingApprovalDetailsModel()
@@ -1033,6 +1020,11 @@ namespace MSR.Answer.API.V1.Extentions
         public static GetWorkflowGroupsModel ToGetWorkflowGroupCommand(this GetWorkflowGroupRequest request)
         {
             return AutoMapperHelper.Mapper.Map<GetWorkflowGroupsModel>(request);
+        }
+
+        public static GetPendingApprovalModel ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetPendingApprovalModel>(request);
         }
     }
 }

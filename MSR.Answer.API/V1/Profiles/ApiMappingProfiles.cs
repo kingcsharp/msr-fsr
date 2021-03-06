@@ -145,6 +145,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetQuotesProductsRequest, GetQuotesProducts>();
             CreateMap<GetWorkflowStageRequest, GetWorkflowStageModel>();
             CreateMap<GetWorkflowGroupRequest, GetWorkflowGroupsModel>();
+            CreateMap<GetPendingApprovalRequest, GetPendingApprovalModel>();
         }
     }
 }

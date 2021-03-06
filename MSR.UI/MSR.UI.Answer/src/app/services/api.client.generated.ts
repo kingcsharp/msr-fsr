@@ -7059,7 +7059,7 @@ export class WorkflowPendingApprovalService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    workflowPendingApprovalGet(table: EnumApprovalTables | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
+    workflowPendingApprovalGet(table: EnumApprovalTables | undefined, id: number | null | undefined, activityType: string | null | undefined, name: string | null | undefined, requestedChanges: string | null | undefined, workflowName: string | null | undefined, workflowGroupName: string | null | undefined, workflowCreatedByName: string | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7068,6 +7068,32 @@ export class WorkflowPendingApprovalService {
             throw new Error("The parameter 'table' cannot be null.");
         else if (table !== undefined)
             url_ += "Table=" + encodeURIComponent("" + table) + "&";
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (activityType !== undefined && activityType !== null)
+            url_ += "ActivityType=" + encodeURIComponent("" + activityType) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (requestedChanges !== undefined && requestedChanges !== null)
+            url_ += "RequestedChanges=" + encodeURIComponent("" + requestedChanges) + "&";
+        if (workflowName !== undefined && workflowName !== null)
+            url_ += "WorkflowName=" + encodeURIComponent("" + workflowName) + "&";
+        if (workflowGroupName !== undefined && workflowGroupName !== null)
+            url_ += "WorkflowGroupName=" + encodeURIComponent("" + workflowGroupName) + "&";
+        if (workflowCreatedByName !== undefined && workflowCreatedByName !== null)
+            url_ += "WorkflowCreatedByName=" + encodeURIComponent("" + workflowCreatedByName) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (createdByName !== undefined && createdByName !== null)
+            url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

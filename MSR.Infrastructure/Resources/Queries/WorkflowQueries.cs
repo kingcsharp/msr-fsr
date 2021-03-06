@@ -112,6 +112,41 @@ namespace MSR.Infrastructure.Resources.Queries
             return query;
         }
 
+        public static IQueryable<PendingApprovalModel> CreateWorkflowPendingQuery(this IQueryable<PendingApprovalModel> query, GetPendingApprovalModel command, bool forRowCount = false)
+        {
+            
+            query = query.Where(command.Id, s => s.Id == command.Id);
+            query = query.Where(command.ActivityType, s => s.ActivityType.Contains(command.ActivityType));
+            query = query.Where(command.Name, s => s.Name.Contains(command.Name));
+            query = query.Where(command.RequestedChanges, s => s.Comments.Contains(command.RequestedChanges));
+            query = query.Where(command.WorkflowName, s => s.WorkflowName.Contains(command.WorkflowName));
+            query = query.Where(command.WorkflowGroupName, s => s.WorkflowGroupName.Contains(command.WorkflowGroupName));
+            query = query.Where(command.WorkflowCreatedByName, s => s.WorkflowCreatedByName.Contains(command.WorkflowCreatedByName));
+            query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
+            query = query.Where(command.CreatedByName, s => s.CreatedByName.Contains(command.CreatedByName));
+
+            if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
+            {
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowPendingSortFields.Id), s => s.Id);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowPendingSortFields.ActivityType), s => s.ActivityType);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowPendingSortFields.Name), s => s.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowPendingSortFields.RequestedChanges), s => s.Comments);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowPendingSortFields.WorkflowName), s => s.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowPendingSortFields.WorkflowGroupName), s => s.WorkflowGroupName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowPendingSortFields.WorkflowCreatedByName), s => s.WorkflowCreatedByName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowPendingSortFields.CreatedOn), s => s.CreatedOn);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowPendingSortFields.CreatedByName), s => s.CreatedByName);
+            }
+
+            
+            if (command.Skip.HasValue && command.Take.HasValue && !forRowCount)
+            {
+                query = query.Skip(command.Skip.Value).Take(command.Take.Value);
+            }
+
+            return query;
+        }
+
     }
 
 }
