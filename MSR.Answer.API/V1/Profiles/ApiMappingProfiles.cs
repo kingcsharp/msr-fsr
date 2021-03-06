@@ -155,6 +155,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetPendingApprovalRequest, GetPendingApprovalModel>();
             CreateMap<GetProcedureTypeRequest, GetProcedureType>();
             CreateMap<GetProcedureRequest, GetProcedure>();
+            CreateMap<GetWorkOrderMenuRequest, GetWorkOrderMenuQueryModel>();
         }
     }
 }
