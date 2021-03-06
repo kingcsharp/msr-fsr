@@ -254,7 +254,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             await _unitOfWork.WorkOrderStats.AddAsync(new WorkOrderStats()
             {
                 WorkOrderId = workOrderEntity.Id,
-                TotalTasks = workOrderEntity.WorkOrderTasks != null ? workOrderEntity.WorkOrderTasks.Count() : 0
+                TotalTasks = workOrderEntity.WorkOrderTasks != null ? workOrderEntity.WorkOrderTasks.Count() : 0,
+                CompletedTasks = 0,
+                TotalTimeLogged = 0,
+                TotalTaskTime = workOrderEntity.WorkOrderTasks != null ? (decimal?)workOrderEntity.WorkOrderTasks.Where(i => i.ProcedureStep != null).Select(j => j.ProcedureStep.LaborTime).Sum() : (decimal?)0.0,
+                ActiveTitle = null
             });
 
             await _unitOfWork.LogApprovalTransaction(workOrderEntity, workOrderEntity.Id);
@@ -641,6 +645,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
+            int[] completed = { 3, 4, 6, 8 };
+            var isTaskStarted = false;
+            var isTaskCompleted = false;
             var current = await _unitOfWork.WorkOrderTasks.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
             if (current is null)
@@ -648,7 +655,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 throw new DomainException($"{nameof(WorkOrderTask)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            if (!String.IsNullOrEmpty(command.Status))
+            if (!string.IsNullOrEmpty(command.Status))
             {
                 var statusEntity = await _unitOfWork
                     .Status
@@ -659,6 +666,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 {
                     throw new DomainException($"{nameof(Status)} not found with Name: {command.Status}", DomainError.NotFound);
                 }
+                //Figure out if this is a Completed workOrder Or Started one
+                isTaskStarted = statusEntity.Id == (int)EnumStatusSteps.InProgress;
+                isTaskCompleted = completed.Contains(statusEntity.Id);
                 current.StatusId = statusEntity.Id;
             }
 
@@ -696,6 +706,17 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     };
                     workOrderTaskEntity.ReferenceFiles.Add(fem);
                 }
+            }
+            var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
+
+            if (isTaskStarted)
+            {
+                statEntity.ActiveTitle = workOrderTaskEntity.Title;
+            }
+            else if (isTaskCompleted)
+            {
+                statEntity.CompletedTasks += 1;
+                statEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
             }
 
             // This will call SaveChangesAsync
@@ -740,7 +761,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             // 8   Closed
             // 3   Complete
             // 6   Rejected
-            int[] completed = { 3, 4, 6, 8 };
             if (workOrderTaskEntity.Status.Name.ToUpper().Equals("IN PROGRESS"))
             {
                 if (!workOrderTaskEntity.WorkOrder.ActualStartDate.HasValue)

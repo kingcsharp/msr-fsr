@@ -101,7 +101,7 @@ namespace MSR.Infrastructure.Resources.Queries
                 var i = 0;
                 foreach (var filter in filters)
                 {
-                    values[i] = filter.Value;
+                    values[i] = filter.Value.ToString();
                     where += $" {filter.Logic} ({Transform(filter, i)})";
                     i++;
                 }
@@ -124,7 +124,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
         private static IQueryable<T> Limit<T>(IQueryable<T> queryable, int limit, int offset)
         {
-            return queryable.Skip(offset).Take(limit);
+            return queryable.Skip(offset*limit).Take(limit);
         }
 
         private static readonly IDictionary<string, string>
@@ -140,6 +140,7 @@ namespace MSR.Infrastructure.Resources.Queries
             {"endswith", "EndsWith"},
             {"contains", "Contains"},
             {"doesnotcontain", "Contains"},
+            {"like","Contains"}
         };
 
         //public static IList<QueryFilter> GetAllFilters(QueryFilter filter)
@@ -169,16 +170,25 @@ namespace MSR.Infrastructure.Resources.Queries
             var comparison = Operators[filter.Operator];
             if (filter.Operator == "doesnotcontain")
             {
-                return String.Format("({0} != null && !{0}.ToString().{1}(@{2}))",
+                return String.Format("({0} != null && !{0}.{1}(@{2}))",
                     filter.Field, comparison, index);
             }
-            if (comparison == "StartsWith" ||
+            //For any value other then String, we have to a comparison with .ToString so it can properly do a contains. 
+            if(filter.Operator == "like" && (comparison == "StartsWith" ||
                 comparison == "EndsWith" ||
-                comparison == "Contains")
+                comparison == "Contains"))
             {
                 return String.Format("({0} != null && {0}.ToString().{1}(@{2}))",
                 filter.Field, comparison, index);
             }
+            else if (comparison == "StartsWith" ||
+                comparison == "EndsWith" ||
+                comparison == "Contains")
+            {
+                return String.Format("({0} != null && {0}.{1}(@{2}))",
+                filter.Field, comparison, index);
+            }
+
             return String.Format("{0} {1} @{2}", filter.Field, comparison, index);
         }
     }

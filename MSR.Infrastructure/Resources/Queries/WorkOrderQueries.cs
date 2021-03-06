@@ -85,7 +85,7 @@ namespace MSR.Infrastructure.Resources.Queries
         {
             var portalWorkOrderViews = new List<PortalWorkOrderView>();
             var pagedData = dbSet.AsQueryable().Where(i => i.CustomerId == portalWorkOrderQueryModel.CustomerId && i.CreatedOn >= portalWorkOrderQueryModel.FromDate && i.CreatedOn <= portalWorkOrderQueryModel.ToDate)
-                .ToFilterView(portalWorkOrderQueryModel);
+                                                .ToFilterView(portalWorkOrderQueryModel);
 
             var pagedList = await pagedData.data.ToListAsync();
             foreach (var view in pagedList)

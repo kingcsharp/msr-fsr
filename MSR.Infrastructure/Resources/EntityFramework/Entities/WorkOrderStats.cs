@@ -13,6 +13,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? CompletedTasks { get; set; }
         public int TotalTasks { get; set; }
         public decimal? TotalTimeLogged { get; set; }
-        public decimal? TotalTAskTime { get; set; }
+        public decimal? TotalTaskTime { get; set; }
     }
 }
