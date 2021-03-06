@@ -14,11 +14,12 @@ namespace MSR.Answer.API.V1.Models
         public int? SecondaryContactUserId { get; set; }
         public int? LocationId { get; set; }
         public bool? IsActive { get; set; }
-        public string PrimaryContactUserFullName { get;set;}
-        public string SecondaryContactUserFullName { get;set;}
+        public string PrimaryContactUserFullName { get; set; }
+        public string SecondaryContactUserFullName { get; set; }
         public string LocationName { get;set;}
         public string CustomerNumber { get;set;}
         public string CreatedFullName { get;set;}
         public DateTime? CreatedOn { get;set;}
+        public string[]? Status { get; set; }
     }
 }

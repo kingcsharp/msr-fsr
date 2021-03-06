@@ -14,8 +14,8 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, forkJoin, of } from 'rxjs';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
-import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj, callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 declare let jQuery: any;
 
 @Component({
@@ -45,6 +45,7 @@ export class ApprovalWorkflowComponent implements OnInit {
   getGroupsDr: boolean = false;
   allActivities: any[] = [];
   getAllActivities: boolean = false;
+  totalRecords: number = 0;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private workflowService: WorkflowService,
@@ -77,7 +78,6 @@ export class ApprovalWorkflowComponent implements OnInit {
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
 
-    this.getWorkflows();
     this.getWorkflowStageDropdown();
     this.getWorkflowActivityDropdown();
   }
@@ -96,7 +96,7 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   getWorkflowStageDropdown() {
     const ctrl = this;
-    return this.workflowStageService.workflowStageGet(null, null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
+    return this.workflowStageService.workflowStageGet(null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.allStages = response.object.map((x) => {
           x.workflowStageId = x.id;
@@ -106,14 +106,18 @@ export class ApprovalWorkflowComponent implements OnInit {
       }));
   }
 
-  getWorkflows() {
+  getWorkflows(event: LazyLoadEvent) {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowService.workflowGet(null,null,null,null,null,null,null,null,null,
-      null,null,null,null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
-      this.globals.showLoader(false);
-      ctrl.data = response.object;
-    }));
+
+    setTimeout(() => {
+      callFunctionWithFilters(this.workflowService, this.workflowService.workflowGet, event)
+        .pipe(take(1)).subscribe(responseHandler(response => {
+          this.globals.showLoader(false);
+          this.totalRecords = response.totalNumberOfRecords;
+          ctrl.data = response.object;
+        }));
+    }, 10);
   }
 
   updateActivitiesSavedForItem(elem: any) {

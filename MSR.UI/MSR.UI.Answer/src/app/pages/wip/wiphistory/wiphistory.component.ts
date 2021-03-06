@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-wiphistory',
@@ -27,11 +29,12 @@ export class WiphistoryComponent implements OnInit {
   locationOptions: Array<SelectItem>;
   gridVersion: string;
   EnumSegregationType = EnumSegregationType;
+  totalRecords: number = 0;
   constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private router: Router, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
 
-    this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
+    this.gridStorageId = 'wiphistory' + this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
       new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false }),
@@ -51,24 +54,24 @@ export class WiphistoryComponent implements OnInit {
       new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true })
     ];
 
-
+    this.locationOptions = this.globals.getTopLevelLocations();
+    this.statusOptions = this.globals.getTopLevelStatus();
     this.canRead = this.globals.hasPrivilege(EnumMenuItem.WIPHistory, this.privileges.CanRead);
 
     if (this.canRead === false) {
       this.router.navigate(['app/wip/wipstatus']);
     }
+  }
 
-    this.workOrderService.history(null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-      null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
-      this.data = response.object;
-      this.statusOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-      ).map(x => ({ label: x.status, value: x.status }));
-      this.locationOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.location === thing.location) === i
-      ).map(x => ({ label: x.location, value: x.location }));
-    }));
-
+  getWorkOrdersHistory(event: LazyLoadEvent) {
+    this.globals.showLoader(true);
+    setTimeout(() => {
+      callFunctionWithFilters(this.workOrderService, this.workOrderService.history, event)
+        .pipe(take(1)).subscribe(responseHandler(response => {
+          this.totalRecords = response.totalNumberOfRecords;
+          this.data = response.object;
+        }));
+    }, 10);
   }
 
 }

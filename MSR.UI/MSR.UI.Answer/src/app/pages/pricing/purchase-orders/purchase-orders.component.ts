@@ -10,7 +10,8 @@ import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, Up
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { copyObj,callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 
@@ -39,6 +40,7 @@ export class PurchaseOrdersComponent implements OnInit {
   productsData: any[] = [];
   getProductsFlag: boolean = false;
   showProductsSelect: boolean = true;
+  totalRecords: number = 0;
   purchaseOrderStatus: any[] = [
     {
       label: 'Open',
@@ -84,18 +86,20 @@ export class PurchaseOrdersComponent implements OnInit {
     this.purchasePrivileges = this.globals.getEnumPrivileges(this.menuItems.Purchases);
     this.purchaseOrderPrivileges = this.globals.getEnumPrivileges(this.menuItems.PurchaseOrders);
     this.data = [];
-    this.getPurchaseOrders();
     this.getCustomers();
   }
 
-  getPurchaseOrders() {
+  getPurchaseOrders(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.purchaseOrderService.purchaseOrderGet(null, null,null,null,null,null,null,null,null,null,null,
-      null,null,null,0,10,null,env.apiVersion).pipe(take(1))
+    setTimeout(() => {
+      callFunctionWithFilters(this.purchaseOrderService, this.purchaseOrderService.purchaseOrderGet, event)
+      .pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.totalRecords = response.totalNumberOfRecords;
         this.globals.showLoader(false);
         this.data = response.object;
       }));
+    }, 10);
   }
 
   showPurchaseOrderModal(purchaseOrder: PurchaseOrderView) {

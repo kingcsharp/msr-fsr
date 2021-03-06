@@ -23,6 +23,8 @@ import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 
@@ -49,9 +51,10 @@ export class RoleComponent implements OnInit {
   showGrid: boolean = false;
   users: UserModel[];
   userOptions: RolesUsersView[] = [];
-
+  totalRecords: number = 0;
   roleUsersPopupGrid: GridSaved;
   roleUsersPopupModel: ReportModel;
+  canGetRoles: boolean = false;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private roleService: RoleService, private userService: UserService) {
@@ -61,15 +64,16 @@ export class RoleComponent implements OnInit {
     this.currentRole = this.getCurrentRole(undefined);
 
     this.gridStorageId = 'rolesGrid' + this.elem.nativeElement.tagName.toLowerCase();
-    this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
-    new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
-    new ColumnsSaved({ id: 'isCertificationRole', label: 'Is Certification Role', visible: true }),
-    new ColumnsSaved({ id: 'parentRoles', label: 'Parent Roles', visible: true }),
-    new ColumnsSaved({ id: 'assignedUsers', label: 'Assigned Users', visible: true }),
-    new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
-    new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
-    new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
-    new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
+    this.gridSettings = [
+      new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
+      new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
+      new ColumnsSaved({ id: 'isCertificationRole', label: 'Is Certification Role', visible: true }),
+      new ColumnsSaved({ id: 'parentRoles', label: 'Parent Roles', visible: true }),
+      new ColumnsSaved({ id: 'assignedUsers', label: 'Assigned Users', visible: true }),
+      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
+      new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
+      new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
+      new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
     ];
 
     this.isCertificationRole = [{ label: 'Yes', value: true }, { label: 'No', value: false }];
@@ -97,24 +101,36 @@ export class RoleComponent implements OnInit {
     this.data = [];
   }
 
-  getRoles() {
+  getRoles(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.setAssignedUsers(response.object);
-        this.showGrid = true;
-      }));
+    setTimeout(() => {
+      this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+      callFunctionWithFilters(this.roleService, this.roleService.roleGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.setAssignedUsers(response.object);
+          this.showGrid = true;
+          this.totalRecords = response.totalNumberOfRecords;
+        }));
+    }, 100);
   }
 
   setAssignedUsers(data) {
-    this.data = data.map(x => {
-      x.assignedUsers = this.getRoleUsersByRoleId(x.id);
-      return x;
-    });
+    if (this.canGetRoles) {
+      this.data = data.map(x => {
+        x.assignedUsers = this.getRoleUsersByRoleId(x.id);
+        return x;
+      });
+    } else {
+      setTimeout(() => {
+        this.setAssignedUsers(data);
+      }, 100);
+    }
+
   }
 
   getAllUsers() {
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,env.apiVersion)
+    this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler((response: AuditActionResultOfICollectionOfUserModel) => {
         this.users = response.object;
@@ -154,7 +170,7 @@ export class RoleComponent implements OnInit {
     this.roleService.rolesUsers(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.rolesUsers = this.setFullNameToParentObjAndSortIt(response.object);
-        this.getRoles();
+        this.canGetRoles = true;
       }));
   }
 

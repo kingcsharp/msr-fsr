@@ -11,9 +11,11 @@
     <widget>
       <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
         [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-        [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" [filterDelay]="1300" [lazy]="true"
-        (onLazyLoad)="getCustomers($event)" [totalRecords]="totalRecords" stateStorage="local"
-        stateKey="{{gridStorageId}}">
+        [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" 
+
+        [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getCustomers($event)" [totalRecords]="totalRecords"
+
+         stateStorage="local" stateKey="{{gridStorageId}}">
         <ng-template pTemplate="caption">
           <div class="text-right">
             <button *ngIf="canAddCustomer" [routerLink]="['../customer-create']"
@@ -93,18 +95,9 @@
               [gridSettings]="gridSettings">
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('isActive',gridSettings)">
-              <!-- <div class="position-relative">
-                <input id="isActive" pInputText type="text" tooltip="Search by IsActive"
-                  (input)="dt.filter($event.target.value, 'isActive', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['isActive']?.value">
-                <i *ngIf="dt.filters['isActive']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'isActive')"></i>
-              </div> -->
-
               <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isActive" filterId="isActive"
-                defaultText="Select Status" defaultTextTooltip="" [datatable]="dt">
+                defaultText="Select Is Active" defaultTextTooltip="" [datatable]="dt">
               </multiselect-wrapper>
-
             </th>
             <th grid-input-filter [dt]="dt" searchField="created.fullName"
               [hidden]="!commonGrid.isVisibleCol('created.fullName',gridSettings)" [gridSettings]="gridSettings">
@@ -116,8 +109,8 @@
               </div>
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
-              <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions" [filterId]="'status'"
-                [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
+              <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuss" filterId="status"
+              defaultText="Select Status" [defaultTextTooltip]="''" [datatable]="dt">
               </multiselect-wrapper>
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
