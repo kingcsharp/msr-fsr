@@ -5,14 +5,14 @@ import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
 import {
-  EnumMenuItem,
-  PurchaseService,
-  PurchaseModel,
+  EnumMenuItem, PurchaseService, PurchaseModel,
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { take } from 'rxjs/operators';
 import { responseHandler } from '../../../utils/responseHandler';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-purchases',
@@ -31,8 +31,9 @@ export class PurchasesComponent implements OnInit {
   currentPurchase: PurchaseModel;
   purchasePrivileges: AllowedActions;
   purchaseOrderPrivileges: AllowedActions;
-  display: boolean =  false;
+  display: boolean = false;
   purchaseOrderStatus: any[];
+  totalRecords: number = 0;
 
   constructor(
     public globals: Globals,
@@ -53,21 +54,20 @@ export class PurchasesComponent implements OnInit {
     ];
     this.purchasePrivileges = this.globals.getEnumPrivileges(this.menuItems.Purchases);
     this.purchaseOrderPrivileges = this.globals.getEnumPrivileges(this.menuItems.PurchaseOrders);
-    this.getPurchases();
     this.currentPurchase = null;
+    this.purchaseOrderStatus = this.globals.getTopLevelStatus();
   }
 
-  getPurchases() {
+  getPurchases(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.purchaseService.purchaseGet(null, null,null,null,null,null,null,null,null,env.apiVersion)
-      .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.data = response.object;
-
-        this.purchaseOrderStatus = this.data.filter(
-          (thing, i, arr) => arr.findIndex(t => t.statusId === thing.statusId) === i
-        ).map(x => ({ label: x.status.name, value: x.statusId }));
-      }));
+    setTimeout(() => {
+      callFunctionWithFilters(this.purchaseService, this.purchaseService.purchaseGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.data = response.object;
+          this.totalRecords = response.totalNumberOfRecords;
+        }));
+    }, 10);
   }
 
   onClickViewPurchase(purchase: PurchaseModel) {
