@@ -35,7 +35,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetMultipleCustomers command, CancellationToken cancellationToken = default)
         {
             var customerModels = await _customerService.GetCustomersAsync(command);
-            var totalRows = customerModels.AsQueryable().CreateCustomerQuery(command, true).Count();
+            var totalRows = customerModels.AsQueryable().CreateCustomerQuery(command, true).ToList<CustomerModel>().Count();
             customerModels = customerModels.AsQueryable().CreateCustomerQuery(command).ToList();
             return new PagingCommandResponse<IEnumerable<CustomerModel>>(customerModels, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }

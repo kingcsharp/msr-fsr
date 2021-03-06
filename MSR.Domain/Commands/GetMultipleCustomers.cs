@@ -20,6 +20,6 @@ namespace MSR.Domain.Commands
         public string CustomerNumber { get; set; }
         public string CreatedFullName { get; set; }
         public DateTime? CreatedOn { get; set; }
-        public string[]? Status { get;set;}
+        public string[]? Status { get; set; }
     }
 }

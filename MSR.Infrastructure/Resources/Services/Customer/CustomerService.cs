@@ -193,11 +193,11 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return retCustomer;
         }
 
-        public async Task<IEnumerable<CustomerModel>> GetCustomersAsync(GetMultipleCustomers command)
+        public async Task<List<CustomerModel>> GetCustomersAsync(GetMultipleCustomers command)
         {
             var customerModels = new List<Domain.Models.CustomerModel>();
 
-            
+
             var customerEntities = await _unitOfWork.Customers.Query().Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).ToListAsync();
             var customerEntityIds = customerEntities.Select(s => s.Id).ToList();
 
@@ -213,10 +213,14 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                     _mapper.Map(customerApprovalEntity, customerModel);
                     customerModel.Status = customerApprovalEntity.Status.Name;
                 }
+                else
+                {
+                    customerModel.Status = "Approved";
+                }
                 customerModels.Add(customerModel);
             }
 
-            return customerModels.AsEnumerable();
+            return customerModels;
         }
 
         public async Task<IEnumerable<Domain.Models.CustomerModel>> ImportCustomers(string csvData)
