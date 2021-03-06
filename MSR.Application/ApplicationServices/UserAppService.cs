@@ -35,6 +35,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetUsers command, CancellationToken cancellationToken = default)
         {
             var ret = await _userService.GetUsersAsync(command);
+            var totalRows = await _userService.GetUsersTotalRowsAsync(command);
             if (command.Id.HasValue && ret.Count == 1)
             {
                 var file = _fileService.ListFiles(new User().GetType().Name, command.Id).FirstOrDefault();
@@ -44,7 +45,7 @@ namespace MSR.Application.ApplicationServices
                 }
             }
 
-            return new PagingCommandResponse<ICollection<UserModel>>(ret, 0,command.Term, command.PageNumber, command.PageSize, command.SortAscending);
+            return new PagingCommandResponse<ICollection<UserModel>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateUser command, CancellationToken cancellationToken = default)

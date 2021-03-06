@@ -21,7 +21,9 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.Supervisor, s => s.SupervisorId == command.Supervisor);
             query = query.Where(command.PrimaryPhone, s => s.Phone.Contains( command.PrimaryPhone));
             query = query.Where(command.Email, s => s.Email.Contains(command.Email));
-            query = query.Where(command.HasRoleIDs, s => s.Roles.Any(m => command.HasRoleIDs.Contains(m.RoleId)));
+            query = query.Where(command.Roles, s => s.Roles.Any(m => command.Roles.Contains(m.RoleId)));
+            query = query.Where(command.IsActive, s => s.IsActive == command.IsActive);
+            query = query.Where(command.IsAnswerUser, s => s.IsAnswerUser == command.IsAnswerUser);
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {

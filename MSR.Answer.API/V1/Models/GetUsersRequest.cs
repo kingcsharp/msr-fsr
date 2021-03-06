@@ -13,7 +13,7 @@ namespace MSR.Answer.API.V1.Models
         public int? SupervisorName { get; set; }
         public string PrimaryPhone { get; set; }
         public string Email { get; set; }
-        public List<int>? HasRoleIDs { get; set; }
+        public List<int>? Roles { get; set; }
         public bool? IsActive { get;set;}
         public bool? IsAnswerUser { get;set;}
         public DateTime? CreatedOn { get;set;}

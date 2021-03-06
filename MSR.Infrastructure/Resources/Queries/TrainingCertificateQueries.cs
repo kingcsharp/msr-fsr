@@ -21,11 +21,17 @@ namespace MSR.Infrastructure.Resources.Queries
 
             
             query = query.Where(command.UserId, s => s.UserId == command.UserId);
-            query = query.Where(command.CertificationFromDate, s => DateTime.Compare(s.LastUpdatedOn.Value.Date, command.CertificationFromDate.Value.Date) > 0);
+            query = query.Where(command.CertificationFromDate,s => s.CertificationFromDate.HasValue && DateTime.Compare(s.CertificationFromDate.Value.Date, command.CertificationFromDate.Value.Date) == 0);
             query = query.Where(command.CertificationName, s => s.Role.Name.Contains(command.CertificationName));
-            query = query.Where(command.CertificationToDate, s => DateTime.Compare(s.LastUpdatedOn.Value.Date, command.CertificationFromDate.Value.Date) < 0);
+            query = query.Where(command.CertificationToDate, s => s.CertificationToDate.HasValue && DateTime.Compare(s.CertificationToDate.Value.Date, command.CertificationToDate.Value.Date) == 0);
             query = query.Where(command.EmployeeName, s => s.User.FullName.Contains(command.EmployeeName));
-            query = query.Where(command.Status, s => (s.CertificationToDate.HasValue ? DateTime.Compare(s.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active").Contains(command.Status));
+
+            if(command.Status.HasValue && command.Status.Value) {
+                query = query.Where(command.Status, s => DateTime.Compare(s.CertificationToDate.Value, DateTime.UtcNow) >= 0);
+            } else {
+                query = query.Where(command.Status, s => DateTime.Compare(s.CertificationToDate.Value, DateTime.UtcNow) <= 0);
+            }
+            
 
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
