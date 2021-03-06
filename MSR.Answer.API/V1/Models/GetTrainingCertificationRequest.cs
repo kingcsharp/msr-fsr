@@ -9,6 +9,6 @@ namespace MSR.Answer.API.V1.Models
         public string CertificationName { get;set;}
         public DateTime? CertificationFromDate { get;set;}
         public DateTime? CertificationToDate { get;set;}
-        public string Status { get;set;}
+        public bool? Status { get;set;}
     }
 }
