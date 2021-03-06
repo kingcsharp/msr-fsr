@@ -18,6 +18,8 @@ import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 
@@ -25,7 +27,7 @@ declare let jQuery: any;
   selector: 'app-documents',
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.scss'],
-  providers: [ DocumentService ],
+  providers: [DocumentService],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true
 })
@@ -50,6 +52,7 @@ export class DocumentsComponent implements OnInit {
   availableRoles: Array<Role>;
   getAvailableRolesFlag: boolean = false;
   selectedRoles: Array<Role>;
+  totalRecords: number = 0;
 
   constructor(
     public globals: Globals,
@@ -72,21 +75,24 @@ export class DocumentsComponent implements OnInit {
     ];
     this.documentsPrivileges = this.globals.getEnumPrivileges(this.menuItems.Documents);
     this.data = [];
-    this.globals.showLoader(true);
-    this.getDocuments();
     this.getAvailableRoles();
   }
 
-  getDocuments() {
-    this.documentService.documentGet(null,null,null,null,null,null,null,null,null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.data = response.object;
-        this.getDataFlag = true;
-      }));
+  getDocuments(event: LazyLoadEvent) {
+    setTimeout(() => {
+      this.globals.showLoader(true);
+      callFunctionWithFilters(this.documentService, this.documentService.documentGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.data = response.object;
+          this.totalRecords = response.totalNumberOfRecords;
+          this.getDataFlag = true;
+        }));
+    }, 10);
   }
 
   getAvailableRoles() {
-    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
+    this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
       this.availableRoles = response.object;
       this.getAvailableRolesFlag = true;
     }));
