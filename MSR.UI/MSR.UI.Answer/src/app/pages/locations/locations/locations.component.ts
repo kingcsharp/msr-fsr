@@ -6,6 +6,9 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { take } from 'rxjs/operators';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-locations',
@@ -28,6 +31,8 @@ export class LocationsComponent implements OnInit {
   canApproveLocation: boolean = false;
   menuItems = EnumMenuItem;
   statusOptions: any[];
+  totalRecords: number = 0;
+  currentEvent: LazyLoadEvent;
 
   constructor(private locationService: LocationService, public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -57,9 +62,8 @@ export class LocationsComponent implements OnInit {
     this.canDeleteLocation = this.hasPrivilege(this.privileges.CanDelete);
     this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
     this.canApproveLocation = this.hasPrivilege(this.privileges.CanApprove);
-    this.getLocations();
 
-
+    this.statusOptions = this.globals.getTopLevelStatus();
 
   }
 
@@ -67,36 +71,32 @@ export class LocationsComponent implements OnInit {
     return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
   }
 
-  getLocations() {
+  getLocations(event: LazyLoadEvent) {
+    this.currentEvent = event;
     this.globals.showLoader(true);
-    this.locationService.locationGet(null, null, null, null,null,null,null,null,null,null,null,
-      null,null,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
-      this.data = response.object;
-      this.data.map((elem) => {
-        elem.show = elem.status !== null;
-      });
+    setTimeout(() => {
+        callFunctionWithFilters(this.locationService, this.locationService.locationGet, event).pipe(take(1)).subscribe(responseHandler((response) => {
+          this.totalRecords = response.totalNumberOfRecords;
+          this.data = response.object;
+          this.data.map((elem) => {
+            elem.show = elem.status !== null;
+          });
 
-      this.data.map((elem) => {
-        if (elem.status === null ) {
-          elem.status = 'Approved' ;
-        }
+          this.data.map((elem) => {
+            if (elem.status === null) {
+              elem.status = 'Approved';
+            }
+          });
 
-      });
-
-      this.statusOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-      ).map(x => ({ label: x.status, value: x.status }));
-    }));
+        }));
+    }, 10);
   }
 
   getParentName(parentId): string {
-
     return this.data.filter(s => s.id === parentId)[0].name;
-
   }
 
   openConfirmDeleteDialog(location: LocationModel) {
-
     this.locationToDelete = location;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
@@ -107,20 +107,10 @@ export class LocationsComponent implements OnInit {
   }
 
   deleteLocation() {
-
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     this.globals.showLoader(true);
     this.locationService.locationDelete(this.locationToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
-
-      this.locationService.locationGet(null, null, null,null,null,null,null,null,null,null,null,
-        null,null,null,null,null,null,null,null,null, env.apiVersion).subscribe(responseHandler((locationGetResponse) => {
-        this.data.length = 0;
-        this.data = locationGetResponse.object;
-        this.data.map((elem) => {
-          elem.show = elem.status !== null;
-        });
-      }));
-
+      this.getLocations(this.currentEvent);
     }));
 
   }
