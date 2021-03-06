@@ -5,23 +5,16 @@
   </h1>
 
   <widget class="mt-4">
-    <p-table
-      #dt
-      [value]="data"
-      dataKey="id"
-      styleClass="ui-table-customers"
-      [rowHover]="true"
-      [rows]="10"
-      [showCurrentPageReport]="true"
-      [rowsPerPageOptions]="[10,25,50,100]"
-      [paginator]="true"
-      currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
-      stateKey="{{gridStorageId}}"
-    >
+    <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
+      currentPageReportTemplate="Showing {first}-{last} of {{totalRecords}}" [filterDelay]="0" stateStorage="local"
+      [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getEMData($event)" [totalRecords]="totalRecords"
+
+      stateKey="{{gridStorageId}}">
       <ng-template pTemplate="caption">
         <div class="text-right">
-          <button *ngIf="emPrivileges.canCreate" (click)="showEMModal()"
-            class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+          <button *ngIf="emPrivileges.canCreate" (click)="showEMModal()" class="btn btn-success width-100 mb-xs sm-mrg"
+            role="button" data-cy="add-button">
             + Add
           </button>
           <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
@@ -40,14 +33,9 @@
         <tr>
           <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
             <div class="position-relative">
-              <input
-                pInputText type="text"
-                tooltip="Search by Id"
-                (input)="dt.filter($event.target.value, 'id', 'contains')"
-                data-cy="searchbyid-grid"
-                class="ui-column-filter"
-                [value]="dt.filters['id']?.value"
-              >
+              <input pInputText type="text" tooltip="Search by Id"
+                (input)="dt.filter($event.target.value, 'id', 'contains')" data-cy="searchbyid-grid"
+                class="ui-column-filter" [value]="dt.filters['id']?.value">
               <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
             </div>
           </th>
@@ -56,7 +44,8 @@
               <input pInputText type="text" tooltip="Search by Room/Equipment" data-cy="searchbyroom-grid"
                 (input)="dt.filter($event.target.value, 'location.name', 'contains')" class="ui-column-filter"
                 [value]="dt.filters['location.name']?.value">
-              <i *ngIf="dt.filters['location.name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'location.name')"></i>
+              <i *ngIf="dt.filters['location.name']?.value" class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'location.name')"></i>
             </div>
           </th>
           <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
@@ -67,26 +56,18 @@
           </th>
           <th [hidden]="!cg.isVisibleCol('created.fullName',gridSettings)">
             <div class="position-relative">
-              <input
-                pInputText type="text"
-                tooltip="Search by Request User"
-                data-cy="searchbyrequest-grid"
+              <input pInputText type="text" tooltip="Search by Request User" data-cy="searchbyrequest-grid"
                 (input)="dt.filter($event.target.value, 'created.fullName', 'contains')" class="ui-column-filter"
-                [value]="dt.filters['created.fullName']?.value"
-              >
+                [value]="dt.filters['created.fullName']?.value">
               <i *ngIf="dt.filters['created.fullName']?.value" class="fclear pi pi-times pointer"
                 (click)="cg.filter(dt,'created.fullName')"></i>
             </div>
           </th>
           <th [hidden]="!cg.isVisibleCol('assignedTo.fullName',gridSettings)">
             <div class="position-relative">
-              <input
-                pInputText type="text"
-                tooltip="Search by Assigned To User"
-                data-cy="searchbyassigned-grid"
+              <input pInputText type="text" tooltip="Search by Assigned To User" data-cy="searchbyassigned-grid"
                 (input)="dt.filter($event.target.value, 'assignedTo.fullName', 'contains')" class="ui-column-filter"
-                [value]="dt.filters['assignedTo.fullName']?.value"
-              >
+                [value]="dt.filters['assignedTo.fullName']?.value">
               <i *ngIf="dt.filters['assignedTo.fullNamee']?.value" class="fclear pi pi-times pointer"
                 (click)="cg.filter(dt,'assignedTo.fullName')"></i>
             </div>
@@ -98,28 +79,18 @@
           </th>
           <th [hidden]="!cg.isVisibleCol('maintenanceTask',gridSettings)">
             <div class="position-relative">
-              <input
-                pInputText
-                type="text"
-                tooltip="Search by Maintenance Task"
-                data-cy="searchbymaintenancetask-grid"
+              <input pInputText type="text" tooltip="Search by Maintenance Task" data-cy="searchbymaintenancetask-grid"
                 (input)="dt.filter($event.target.value, 'maintenanceTask', 'contains')" class="ui-column-filter"
-                [value]="dt.filters['maintenanceTask']?.value"
-              >
+                [value]="dt.filters['maintenanceTask']?.value">
               <i *ngIf="dt.filters['maintenanceTask']?.value" class="fclear pi pi-times pointer"
                 (click)="cg.filter(dt,'maintenanceTask')"></i>
             </div>
           </th>
           <th [hidden]="!cg.isVisibleCol('comments',gridSettings)">
             <div class="position-relative">
-              <input
-                pInputText
-                type="text"
-                tooltip="Search by Comments"
-                data-cy="searchbycomments-grid"
+              <input pInputText type="text" tooltip="Search by Comments" data-cy="searchbycomments-grid"
                 (input)="dt.filter($event.target.value, 'comments', 'contains')" class="ui-column-filter"
-                [value]="dt.filters['comments']?.value"
-              >
+                [value]="dt.filters['comments']?.value">
               <i *ngIf="dt.filters['comments']?.value" class="fclear pi pi-times pointer"
                 (click)="cg.filter(dt,'comments')"></i>
             </div>
@@ -132,13 +103,9 @@
           </th>
           <th [hidden]="!cg.isVisibleCol('frequencyField',gridSettings)">
             <div class="position-relative">
-              <input
-                pInputText type="text"
-                tooltip="Search by Frequency"
-                data-cy="searchbyfrequency-grid"
+              <input pInputText type="text" tooltip="Search by Frequency" data-cy="searchbyfrequency-grid"
                 (input)="dt.filter($event.target.value, 'frequencyField', 'contains')" class="ui-column-filter"
-                [value]="dt.filters['frequencyField']?.value"
-              >
+                [value]="dt.filters['frequencyField']?.value">
               <i *ngIf="dt.filters['frequencyField']?.value" class="fclear pi pi-times pointer"
                 (click)="cg.filter(dt,'frequencyField')"></i>
             </div>
@@ -188,14 +155,12 @@
             {{emmodel.status?.name}}
           </td>
           <td>
-            <i *ngIf="emPrivileges.canEdit"
-              class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
+            <i *ngIf="emPrivileges.canEdit" class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
               (click)="showEMModal(emmodel)">
             </i>
-            <i *ngIf="emPrivileges.canDelete"
-            class="far fa-trash-alt pointer" tooltip="Delete" data-cy="deleteRow"
-            (click)="openConfirmModal(emmodel)">
-          </i>
+            <i *ngIf="emPrivileges.canDelete" class="far fa-trash-alt pointer" tooltip="Delete" data-cy="deleteRow"
+              (click)="openConfirmModal(emmodel)">
+            </i>
           </td>
         </tr>
       </ng-template>
@@ -208,15 +173,8 @@
   </widget>
 </div>
 
-<p-dialog
-  *ngIf="selectedEquipmentMaintenance"
-  header="Confirm Dialog"
-  [(visible)]="displayConfirmModal"
-  appendTo="body"
-  [modal]='true'
-  [style]="{width: '50vw'}"
-  data-cy="user-header"
->
+<p-dialog *ngIf="selectedEquipmentMaintenance" header="Confirm Dialog" [(visible)]="displayConfirmModal" appendTo="body"
+  [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
   <div class="container">
     <div class="row">
       Are you sure you want to Delete this record?
@@ -224,33 +182,21 @@
   </div>
   <p-footer>
     <div class="pull-right">
-      <button type="button" (click)="deleteEquipmentMaintenance()" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="confirmdelete-button">
+      <button type="button" (click)="deleteEquipmentMaintenance()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button" data-cy="confirmdelete-button">
         Delete
       </button>
-      <button type="button" (click)="closeConfirmModal()" class="btn btn-outline-inverse width-100 mb-xs"
-        role="button">
+      <button type="button" (click)="closeConfirmModal()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
         Cancel
       </button>
     </div>
   </p-footer>
 </p-dialog>
 
-<p-dialog
-  header="Create/Edit Equipment Maintenance"
-  [(visible)]="displayEMDialog"
-  appendTo="body"
-  [modal]='true'
-  [style]="{width: '70vw'}"
-  data-cy="user-header"
->
-  <form
-    *ngIf="selectedEquipmentMaintenance"
-    data-parsley-validate
-    class="form-horizontal form-label-left parsleyjs"
-    method="post"
-    data-parsley-priority-enabled="false"
-    novalidate="novalidate"
-  >
+<p-dialog header="Create/Edit Equipment Maintenance" [(visible)]="displayEMDialog" appendTo="body" [modal]='true'
+  [style]="{width: '70vw'}" data-cy="user-header">
+  <form *ngIf="selectedEquipmentMaintenance" data-parsley-validate class="form-horizontal form-label-left parsleyjs"
+    method="post" data-parsley-priority-enabled="false" novalidate="novalidate">
     <section class="widget m-4 p-4" widget>
       <div class="widget-body">
         <fieldset>
@@ -259,19 +205,9 @@
               Scan/Enter Barcode
             </label>
             <div class="input-group input-group-transparent col-md-9 col-12">
-              <input
-                pInputText
-                type="text"
-                class="form-control input-transparent"
-                name="internalAddress"
-                [(ngModel)]="internalAddress"
-                data-cy="em-input-address"
-              >
-              <button
-                type="button"
-                class="input-group-addon bg-primary btn"
-                (click)="searchLocations()"
-              >Lookup</button>
+              <input pInputText type="text" class="form-control input-transparent" name="internalAddress"
+                [(ngModel)]="internalAddress" data-cy="em-input-address">
+              <button type="button" class="input-group-addon bg-primary btn" (click)="searchLocations()">Lookup</button>
             </div>
           </div>
 
@@ -281,32 +217,14 @@
                 Room/Equipment
               </label>
               <div *ngIf="getLocationsFlag" class="col-md-9 col-12">
-                <p-dropdown
-                  class="w-100"
-                  placeholder="Select Room/Equipment"
-                  name="locationId"
-                  [(ngModel)]="selectedEquipmentMaintenance.locationId"
-                  [options]="locations"
-                  appendTo="body"
-                  [baseZIndex]="100002"
-                  [virtualScroll]="true"
-                  itemSize="30"
-                  [filter]="true"
-                  filterBy="label"
-                  data-cy="em-select-locationid"
-                >
+                <p-dropdown class="w-100" placeholder="Select Room/Equipment" name="locationId"
+                  [(ngModel)]="selectedEquipmentMaintenance.locationId" [options]="locations" appendTo="body"
+                  [baseZIndex]="100002" [virtualScroll]="true" itemSize="30" [filter]="true" filterBy="label"
+                  data-cy="em-select-locationid">
                 </p-dropdown>
-                <input
-                  hidden
-                  class="form-control input-transparent w-100"
-                  name="hdnLocationId"
-                  [value]="selectedEquipmentMaintenance.locationId"
-                  data-cy="em-hdn-locationid"
-                  readonly
-                  data-validate="parsley"
-                  data-parsley-trigger="change"
-                  data-parsley-required="true"
-                >
+                <input hidden class="form-control input-transparent w-100" name="hdnLocationId"
+                  [value]="selectedEquipmentMaintenance.locationId" data-cy="em-hdn-locationid" readonly
+                  data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true">
               </div>
             </div>
 
@@ -315,11 +233,9 @@
                 Trouble State
               </label>
               <div class="col-md-9 col-12">
-                <bootstrap-switch
-                  name="troubleState"
-                  (onChange)="onTroubleStateToggle($event)"
-                  [isOn]="selectedEquipmentMaintenance.troubleState" data-cy="em-toogle-troublestate"
-                ></bootstrap-switch>
+                <bootstrap-switch name="troubleState" (onChange)="onTroubleStateToggle($event)"
+                  [isOn]="selectedEquipmentMaintenance.troubleState" data-cy="em-toogle-troublestate">
+                </bootstrap-switch>
               </div>
             </div>
 
@@ -328,92 +244,43 @@
                 Maintenance Task
               </label>
               <div class="col-md-3 col-12">
-                <p-dropdown
-                  class="w-100"
-                  placeholder="Select Maintenance Task"
-                  name="maintenanceTask"
-                  [(ngModel)]="selectedEquipmentMaintenance.maintenanceTask"
-                  [options]="maintenanceTasks"
-                  appendTo="body"
-                  [baseZIndex]="100003"
-                  [filter]="true"
-                  filterBy="label"
-                  data-cy="em-select-maintenanceTask"
-                >
+                <p-dropdown class="w-100" placeholder="Select Maintenance Task" name="maintenanceTask"
+                  [(ngModel)]="selectedEquipmentMaintenance.maintenanceTask" [options]="maintenanceTasks"
+                  appendTo="body" [baseZIndex]="100003" [filter]="true" filterBy="label"
+                  data-cy="em-select-maintenanceTask">
                 </p-dropdown>
-                <input
-                  hidden
-                  class="form-control input-transparent w-100"
-                  name="hdnMaintenanceTask"
-                  [value]="selectedEquipmentMaintenance.maintenanceTask"
-                  data-cy="em-hdn-maintenanceTask"
-                  readonly
-                  data-validate="parsley"
-                  data-parsley-trigger="change"
-                  data-parsley-required="true"
-                >
+                <input hidden class="form-control input-transparent w-100" name="hdnMaintenanceTask"
+                  [value]="selectedEquipmentMaintenance.maintenanceTask" data-cy="em-hdn-maintenanceTask" readonly
+                  data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true">
               </div>
 
               <label for="status" class="col-md-3 col-12 col-form-label text-md-right">
                 Status
               </label>
               <div *ngIf="selectedEquipmentMaintenance.statusId" class="col-md-3 col-12">
-                <p-dropdown
-                  class="w-100"
-                  placeholder="Select Status"
-                  name="status"
-                  [(ngModel)]="selectedEquipmentMaintenance.statusId"
-                  [options]="allStatus"
-                  appendTo="body"
-                  [baseZIndex]="100003"
-                  [filter]="true"
-                  filterBy="label"
-                  data-cy="em-select-status"
-                >
+                <p-dropdown class="w-100" placeholder="Select Status" name="status"
+                  [(ngModel)]="selectedEquipmentMaintenance.statusId" [options]="allStatus" appendTo="body"
+                  [baseZIndex]="100003" [filter]="true" filterBy="label" data-cy="em-select-status">
                 </p-dropdown>
-                <input
-                  hidden
-                  class="form-control input-transparent w-100"
-                  name="hdnStatus"
-                  [value]="selectedEquipmentMaintenance.statusId"
-                  data-cy="em-hdn-status"
-                  readonly
-                  data-validate="parsley"
-                  data-parsley-trigger="change"
-                  data-parsley-required="true"
-                >
+                <input hidden class="form-control input-transparent w-100" name="hdnStatus"
+                  [value]="selectedEquipmentMaintenance.statusId" data-cy="em-hdn-status" readonly
+                  data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true">
               </div>
             </div>
 
-            <div class="form-group row" *ngIf="!selectedEquipmentMaintenance.troubleState && selectedEquipmentMaintenance.statusId === enumEMStatus.Assigned">
+            <div class="form-group row"
+              *ngIf="!selectedEquipmentMaintenance.troubleState && selectedEquipmentMaintenance.statusId === enumEMStatus.Assigned">
               <label for="assignedTo" class="col-md-3 col-12 col-form-label text-md-right">
                 Assigned To
               </label>
               <div class="col-md-9 col-12">
-                <p-dropdown
-                  class="w-100"
-                  placeholder="Select Assigned To User"
-                  name="assignedTo"
-                  [(ngModel)]="selectedEquipmentMaintenance.assignedToId"
-                  [options]="users"
-                  appendTo="body"
-                  [baseZIndex]="100004"
-                  [filter]="true"
-                  filterBy="label"
-                  data-cy="em-select-assignedto"
-                >
+                <p-dropdown class="w-100" placeholder="Select Assigned To User" name="assignedTo"
+                  [(ngModel)]="selectedEquipmentMaintenance.assignedToId" [options]="users" appendTo="body"
+                  [baseZIndex]="100004" [filter]="true" filterBy="label" data-cy="em-select-assignedto">
                 </p-dropdown>
-                <input
-                  hidden
-                  class="form-control input-transparent w-100"
-                  name="hdnAssignedTo"
-                  [value]="selectedEquipmentMaintenance.assignedToId"
-                  data-cy="em-hdn-assignedto"
-                  readonly
-                  data-validate="parsley"
-                  data-parsley-trigger="change"
-                  data-parsley-required="true"
-                >
+                <input hidden class="form-control input-transparent w-100" name="hdnAssignedTo"
+                  [value]="selectedEquipmentMaintenance.assignedToId" data-cy="em-hdn-assignedto" readonly
+                  data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true">
               </div>
             </div>
 
@@ -422,47 +289,23 @@
                 Maintenance Last Completed
               </label>
               <div class="col-md-3 col-12">
-                <p-calendar
-                  [(ngModel)]="selectedEquipmentMaintenance.pemLastCompletedDate"
-                  placeholder="Select Last Completed Date"
-                  class="w-100"
-                  name="lastCompleted"
-                  showIcon="true"
-                  styleClass="input-group input-group-transparent"
-                  inputStyleClass="form-control input-transparent"
-                  tooltip="Open Date"
-                  data-cy="em-input-lastcompleted"
-                >
+                <p-calendar [(ngModel)]="selectedEquipmentMaintenance.pemLastCompletedDate"
+                  placeholder="Select Last Completed Date" class="w-100" name="lastCompleted" showIcon="true"
+                  styleClass="input-group input-group-transparent" inputStyleClass="form-control input-transparent"
+                  tooltip="Open Date" data-cy="em-input-lastcompleted">
                 </p-calendar>
-                <input
-                  hidden
-                  class="form-control input-transparent w-100"
-                  name="hdnLastCompleted"
-                  [value]="selectedEquipmentMaintenance.pemLastCompletedDate"
-                  data-cy="em-hdn-lastCompleted"
-                  readonly
-                  data-validate="parsley"
-                  data-parsley-trigger="change"
-                  data-parsley-required="true"
-                >
+                <input hidden class="form-control input-transparent w-100" name="hdnLastCompleted"
+                  [value]="selectedEquipmentMaintenance.pemLastCompletedDate" data-cy="em-hdn-lastCompleted" readonly
+                  data-validate="parsley" data-parsley-trigger="change" data-parsley-required="true">
               </div>
               <label class="form-control-label col-md-3 col-12 text-md-right" for="frequencyField">
                 Maintenance Frequency
               </label>
               <div class="input-group input-group-transparent col-md-3 col-12">
-                <input
-                  id="frequencyField"
-                  pInputText
-                  type="text"
-                  class="form-control input-transparent"
-                  name="frequencyField"
-                  [(ngModel)]="selectedEquipmentMaintenance.frequencyField"
-                  (change)="onChangeFrequencyField($event)"
-                  data-cy="em-input-frequencyfield"
-                  data-validate="parsley"
-                  data-parsley-trigger="change"
-                  data-parsley-type="integer"
-                >
+                <input id="frequencyField" pInputText type="text" class="form-control input-transparent"
+                  name="frequencyField" [(ngModel)]="selectedEquipmentMaintenance.frequencyField"
+                  (change)="onChangeFrequencyField($event)" data-cy="em-input-frequencyfield" data-validate="parsley"
+                  data-parsley-trigger="change" data-parsley-type="integer">
                 <span class="input-group-addon bg-secondary">
                   Days
                 </span>
@@ -474,19 +317,10 @@
                 Comments
               </label>
               <div class="col-md-9 ">
-                <textarea
-                  pTextArea
-                  rows="8"
-                  type="text"
-                  name="comments"
-                  [(ngModel)]="selectedEquipmentMaintenance.comments"
-                  data-validate="parsley"
-                  data-parsley-trigger="change"
-                  class="form-control input-transparent"
-                  placeholder="Comments"
-                  data-cy="em-input-comments"
-                  style="resize:none;"
-                ></textarea>
+                <textarea pTextArea rows="8" type="text" name="comments"
+                  [(ngModel)]="selectedEquipmentMaintenance.comments" data-validate="parsley"
+                  data-parsley-trigger="change" class="form-control input-transparent" placeholder="Comments"
+                  data-cy="em-input-comments" style="resize:none;"></textarea>
               </div>
             </div>
           </ng-container>
@@ -496,21 +330,11 @@
 
     <p-footer>
       <div class="row mx-4 px-4 pb-2 justify-content-end">
-        <button
-          type="button"
-          class="btn btn-outline-inverse width-100 mb-xs mr-xs"
-          (click)="onEMFormSubmit()"
-          role="button"
-          data-cy="btn-submit"
-        >
+        <button type="button" class="btn btn-outline-inverse width-100 mb-xs mr-xs" (click)="onEMFormSubmit()"
+          role="button" data-cy="btn-submit">
           Submit
         </button>
-        <button
-          type="button"
-          (click)="closeEMModal()"
-          class="btn btn-outline-inverse width-100 mb-xs"
-          role="button"
-        >
+        <button type="button" (click)="closeEMModal()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
           Cancel
         </button>
       </div>
