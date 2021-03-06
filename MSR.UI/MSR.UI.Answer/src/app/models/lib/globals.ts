@@ -250,4 +250,30 @@ export class Globals {
 
         return requestIsNotOnList;
     }
+
+    getTopLevelLocations(){
+        return [
+            { label: 'Chandler', value: 'Chandler' },
+            { label: 'Hillsboro', value: 'Hillsboro' },
+            { label: 'Kiryat Gat', value: 'Kiryat Gat' },
+            { label: 'Naas', value: 'Naas' },
+        ]
+    }
+
+    getTopLevelStatus(){
+        return [
+            { label: 'Approved', value: 'Approved' },
+            { label: 'In Progress', value: 'In Progress' },
+            { label: 'Complete', value: 'Complete' },
+            { label: 'Cancelled', value: 'Cancelled' },
+            { label: 'Pending', value: 'Pending' },
+            { label: 'Rejected', value: 'Rejected' },
+            { label: 'Open', value: 'Open' },
+            { label: 'Closed', value: 'Closed' },
+            { label: 'Requested', value: 'Requested' },
+            { label: 'Assigned', value: 'Assigned' },
+            { label: 'Waiting to Start', value: 'Waiting to Start' },
+            { label: 'Scheduled', value: 'Scheduled' }
+        ]
+    }
 }

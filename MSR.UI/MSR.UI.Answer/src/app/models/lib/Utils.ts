@@ -111,6 +111,8 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
             if (Array.isArray(filterObj.value)) {
                 if (typeof (filterObj.value[0]) === "boolean") {
                     argsToCallFn.push(filterObj.value[0]);
+                }else{
+                    argsToCallFn.push(filterObj.value);
                 }
             } else {
                 argsToCallFn.push(filterObj.value);

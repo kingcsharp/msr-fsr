@@ -33,7 +33,8 @@ export class CustomersComponent implements OnInit, AfterViewInit {
   menuItems = EnumMenuItem;
   statusOptions: any[];
   totalRecords: number = 0;
-  isActive: any[];
+  statuss: any[];
+  isActive:any[];
 
 
   constructor(private customerService: CustomerService, private userService: UserService, public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
@@ -67,7 +68,7 @@ export class CustomersComponent implements OnInit, AfterViewInit {
       { label: 'Active', value: true },
       { label: 'InActive', value: false },
     ];
-
+    this.statuss = this.globals.getTopLevelStatus();
   }
 
   hasPrivilege(privName) {
