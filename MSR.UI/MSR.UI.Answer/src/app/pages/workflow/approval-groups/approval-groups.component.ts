@@ -13,7 +13,10 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj, callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
+
+
 declare let jQuery: any;
 
 @Component({
@@ -39,6 +42,7 @@ export class ApprovalGroupsComponent implements OnInit {
   statuses: any[];
   users: any[] = [];
   getBackendRoles: boolean = false;
+  totalRecords: number = 0;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService, private userService: UserService,
     private elem: ElementRef, private roleService: RoleService, private workflowGroupService: WorkflowGroupService) {
@@ -67,14 +71,13 @@ export class ApprovalGroupsComponent implements OnInit {
     this.canAddGroups = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateGroups = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditGroups = this.hasPrivilege(this.privileges.CanEdit);
-    this.getWorkflowGroups();
     this.getUsers();
     this.getRoles();
   }
 
   getUsers() {
     const ctrl = this;
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,env.apiVersion).pipe(take(1))
+    this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((elem) => {
           ctrl.users.push({ name: elem.firstName + ' ' + elem.lastName, userId: elem.id });
@@ -82,15 +85,20 @@ export class ApprovalGroupsComponent implements OnInit {
       }));
   }
 
-  getWorkflowGroups() {
+  getWorkflowGroups(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.workflowGroupService.workflowGroupGet(null,null,null,null,null,null,null,null,null,
-      null,null,null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.globals.showLoader(false);
-        this.data = response.object;
-        this.mapData();
-      }));
+
+    setTimeout(() => {
+      callFunctionWithFilters(this.workflowGroupService, this.workflowGroupService.workflowGroupGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.globals.showLoader(false);
+          this.totalRecords = response.totalNumberOfRecords;
+          this.data = response.object;
+          this.mapData();
+        }));
+    }, 10);
+
   }
 
   mapData() {
@@ -128,7 +136,7 @@ export class ApprovalGroupsComponent implements OnInit {
 
   getRoles() {
     const ctrl = this;
-    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
+    this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           ctrl.allRoles.push({ name: x.name, roleId: x.id });
