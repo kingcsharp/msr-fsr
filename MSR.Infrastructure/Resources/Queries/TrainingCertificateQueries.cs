@@ -35,7 +35,7 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumTrainingCertificationsSortFields.CertificationName), s => s.Role.Name);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumTrainingCertificationsSortFields.CertificationToDate), s => s.CertificationToDate);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumTrainingCertificationsSortFields.EmployeeName), s => s.User.FullName);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumTrainingCertificationsSortFields.Status), s => DateTime.Compare(s.CertificationToDate.Value, DateTime.UtcNow));
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumTrainingCertificationsSortFields.Status), s => s.CertificationToDate.Value);
 
             }
             

@@ -14,13 +14,13 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Include(x => x.TimeZone).Include(x => x.Location).Include(x => x.Supervisor).Include(x => x.Roles).ThenInclude(x => x.Role).AsQueryable();
 
             query = query.Where(command.Id, s => s.Id == command.Id);
-            query = query.Where(command.FirstName, s => s.FirstName == command.FirstName);
-            query = query.Where(command.LastName, s => s.LastName == command.LastName);
-            query = query.Where(command.LastName, s => s.UserName == command.UserName);
-            query = query.Where(command.Title, s => s.Title == command.Title);
+            query = query.Where(command.FirstName, s => s.FirstName.Contains(command.FirstName));
+            query = query.Where(command.LastName, s => s.LastName.Contains(command.LastName));
+            query = query.Where(command.LastName, s => s.UserName.Contains(command.UserName));
+            query = query.Where(command.Title, s => s.Title.Contains(command.Title));
             query = query.Where(command.Supervisor, s => s.SupervisorId == command.Supervisor);
-            query = query.Where(command.PrimaryPhone, s => s.Phone == command.PrimaryPhone);
-            query = query.Where(command.Email, s => s.Email == command.Email);
+            query = query.Where(command.PrimaryPhone, s => s.Phone.Contains( command.PrimaryPhone));
+            query = query.Where(command.Email, s => s.Email.Contains(command.Email));
             query = query.Where(command.HasRoleIDs, s => s.Roles.Any(m => command.HasRoleIDs.Contains(m.RoleId)));
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
@@ -35,7 +35,7 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.CreatedOn), s => s.CreatedOn);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.Roles), s => s.Roles.FirstOrDefault().Role.Name);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.LocationName), s => s.Location.Name);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.SupervisorName), s => s.Supervisor.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.SupervisorName), s => s.Supervisor.FullName);
 
             }
 

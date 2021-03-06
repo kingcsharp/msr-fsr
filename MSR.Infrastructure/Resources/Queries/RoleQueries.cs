@@ -19,10 +19,10 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.IsCertificationRole, s => s.IsCertificationRole == command.IsCertificationRole);
             query = query.Where(command.ParentRoles, s => s.ParentRoles.Any(m => command.ParentRoles.Contains(m.Id)));
             query = query.Where(command.AssignedUsers, s => s.Users.Any(m => command.AssignedUsers.Contains(m.Id)));
-            query = query.Where(command.CreatedOn, s => s.CreatedOn == command.CreatedOn);
-            query = query.Where(command.CreatedByName, s => s.Created.FirstName.Contains(command.CreatedByName));
-            query = query.Where(command.LastUpdatedOn, s => s.LastUpdatedOn == command.LastUpdatedOn);
-            query = query.Where(command.LastUpdatedByName, s => s.LastUpdated.FirstName.Contains(command.LastUpdatedByName));
+            query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date,command.CreatedOn.Value.Date) == 0);
+            query = query.Where(command.CreatedByName, s => s.Created.FullName.Contains(command.CreatedByName));
+            query = query.Where(command.LastUpdatedOn, s => DateTime.Compare(s.LastUpdatedOn.Value.Date, command.LastUpdatedOn.Value.Date) == 0);
+            query = query.Where(command.LastUpdatedByName, s => s.LastUpdated.FullName.Contains(command.LastUpdatedByName));
 
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
@@ -31,11 +31,11 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.Name), s => s.Name);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.IsCertificationRole), s => s.IsCertificationRole);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.ParentRoles), s => s.ParentRoles);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.AssignedUsers), s => s.Users.FirstOrDefault().User.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.AssignedUsers), s => s.Users.FirstOrDefault().User.FullName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.CreatedOn), s => s.CreatedOn);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.CreatedByName), s => s.Created.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.CreatedByName), s => s.Created.FullName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.LastUpdatedOn), s => s.LastUpdatedOn);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.LastUpdatedByName), s => s.LastUpdated.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumRoleSortFields.LastUpdatedByName), s => s.LastUpdated.FullName);
 
             }
 

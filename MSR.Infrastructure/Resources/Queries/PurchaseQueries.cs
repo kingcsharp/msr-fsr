@@ -36,7 +36,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
 
 
-            query = query.Where<Purchase>(command.CreatedOn, s => s.CreatedOn == command.CreatedOn);
+            query = query.Where<Purchase>(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date,command.CreatedOn.Value.Date) == 0);
             query = query.Where<Purchase>(command.Id, s => s.Id == command.Id);
             query = query.Where<Purchase>(command.Mttn, s => s.MTTN.Contains(command.Mttn));
             query = query.Where<Purchase>(command.PurchaseOrderProductName, s => s.PurchaseOrderProduct.Product.Name.Contains(command.PurchaseOrderProductName));
