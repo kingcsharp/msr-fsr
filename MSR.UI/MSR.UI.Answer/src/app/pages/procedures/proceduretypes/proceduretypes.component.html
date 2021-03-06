@@ -11,8 +11,9 @@
         <widget>
             <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
                 [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-                [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"  [filterDelay]="0"
-                stateStorage="local"  stateKey="{{gridStorageId}}">
+                [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getProcedureTypes($event)" [totalRecords]="totalRecords"
+                [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"  [filterDelay]="0" stateStorage="local"
+                 stateKey="{{gridStorageId}}">
                 <ng-template pTemplate="caption">
                     <div class="text-right">
                         <button *ngIf="canAdd" [routerLink]="['../proceduretype-create']"
@@ -27,7 +28,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
-                        data-cy="grid-header">
+                            data-cy="grid-header">
                             {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label !== 'Actions'"></p-sortIcon>
                         </th>
                     </tr>
@@ -68,22 +69,22 @@
     </div>
 </div>
 <p-dialog header="Confirm Delete Procedure Type" [(visible)]="showConfirmDeleteDialog" appendTo="body"
-  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
-  <div class="container">
-    <div class="row">
-      Are you sure you want to Delete this Procedure Type?
+    [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <div class="container">
+        <div class="row">
+            Are you sure you want to Delete this Procedure Type?
+        </div>
     </div>
-  </div>
-  <p-footer>
-    <div class="pull-right">
-      <button type="submit" (click)="delete()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
-        data-cy="confirmdelete-button">
-        Delete
-      </button>
-      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs"
-        role="button">
-        Cancel
-      </button>
-    </div>
-  </p-footer>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="delete()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                Delete
+            </button>
+            <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button">
+                Cancel
+            </button>
+        </div>
+    </p-footer>
 </p-dialog>
