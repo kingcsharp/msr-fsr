@@ -11,12 +11,12 @@ namespace MSR.Domain.Commanding.Enums
         Id,
         [Description("Name")]
         Name,
-        [Description("EnumSegregationType")]
-        EnumSegregationType,
+        [Description("SegregationType")]
+        SegregationType,
         [Description("PartNumber")]
         PartNumber,
-        [Description("OEMPartNumber")]
-        OEMPartNumber,
+        [Description("OemPartNumber")]
+        OemPartNumber,
         [Description("IsKit")]
         IsKit,
         [Description("IsActive")]
@@ -27,7 +27,7 @@ namespace MSR.Domain.Commanding.Enums
         CreatedOn,
         [Description("CreatedByName")]
         CreatedByName,
-        [Description("LastUpdateOn")]
+        [Description("LastUpdatedOn")]
         LastUpdateOn,
         [Description("LastUpdatedByName")]
         LastUpdatedByName
