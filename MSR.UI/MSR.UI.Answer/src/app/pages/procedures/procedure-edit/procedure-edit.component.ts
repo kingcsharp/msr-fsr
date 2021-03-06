@@ -100,7 +100,8 @@ export class ProcedureEditComponent implements OnInit {
       if (this.procedure.id !== 0) {
 
         this.globals.showLoader(true);
-        this.procedureService.procedureGet(this.procedure.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedrueGetResponse) => {
+        this.procedureService.procedureGet(this.procedure.id, null,null,null,null,null,null,null,
+          null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedrueGetResponse) => {
 
           this.procedure = procedrueGetResponse.object[0];
 

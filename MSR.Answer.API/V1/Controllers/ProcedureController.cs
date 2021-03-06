@@ -126,12 +126,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<Procedure>>))]
-        public async Task<IActionResult> ProcedureGetProcedure(int? id)
+        public async Task<IActionResult> ProcedureGetProcedure([FromQuery] GetProcedureRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedure()
-            {
-                procedureID = id
-            });
+            var command = request.ToGetProcedureCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<Procedure>>();
         }
 

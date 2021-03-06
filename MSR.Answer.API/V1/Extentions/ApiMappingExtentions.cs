@@ -1031,5 +1031,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetProcedureType>(request);
         }
+
+        public static GetProcedure ToGetProcedureCommand(this GetProcedureRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetProcedure>(request);
+        }
     }
 }

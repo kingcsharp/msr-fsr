@@ -3324,14 +3324,53 @@ export class ProcedureService {
     /**
      * Get one of all Procedures
      * @param id (optional) 
+     * @param name (optional) 
+     * @param procedureTypeName (optional) 
+     * @param duration (optional) 
+     * @param durationType (optional) 
+     * @param revision (optional) 
+     * @param createdFullName (optional) 
+     * @param createdOn (optional) 
+     * @param lastUpdatedOnFullName (optional) 
+     * @param lastUpdatedOn (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    procedureGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedure> {
+    procedureGet(id: number | null | undefined, name: string | null | undefined, procedureTypeName: string | null | undefined, duration: number | null | undefined, durationType: string | null | undefined, revision: number | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, lastUpdatedOnFullName: string | null | undefined, lastUpdatedOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedure> {
         let url_ = this.baseUrl + "/v{version}/Procedure?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (procedureTypeName !== undefined && procedureTypeName !== null)
+            url_ += "ProcedureTypeName=" + encodeURIComponent("" + procedureTypeName) + "&";
+        if (duration !== undefined && duration !== null)
+            url_ += "Duration=" + encodeURIComponent("" + duration) + "&";
+        if (durationType !== undefined && durationType !== null)
+            url_ += "DurationType=" + encodeURIComponent("" + durationType) + "&";
+        if (revision !== undefined && revision !== null)
+            url_ += "Revision=" + encodeURIComponent("" + revision) + "&";
+        if (createdFullName !== undefined && createdFullName !== null)
+            url_ += "CreatedFullName=" + encodeURIComponent("" + createdFullName) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (lastUpdatedOnFullName !== undefined && lastUpdatedOnFullName !== null)
+            url_ += "LastUpdatedOnFullName=" + encodeURIComponent("" + lastUpdatedOnFullName) + "&";
+        if (lastUpdatedOn !== undefined && lastUpdatedOn !== null)
+            url_ += "LastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

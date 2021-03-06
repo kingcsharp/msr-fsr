@@ -52,5 +52,41 @@ namespace MSR.Infrastructure.Resources.Queries
 
             return query;
         }
+
+        public static IQueryable<MSR.Domain.Models.Procedure> CreateProcedureQuery(this IQueryable<MSR.Domain.Models.Procedure> query, GetProcedure command, bool forRowCount = false)
+        {
+
+            query = query.Where(command.Id, s => s.Id == command.Id);
+            query = query.Where(command.Name, s => s.Name.Contains(command.Name));
+            query = query.Where(command.ProcedureTypeName, s => s.ProcedureType.Name.Contains(command.ProcedureTypeName));
+            query = query.Where(command.Duration, s => s.Duration == command.Duration);
+            query = query.Where(command.DurationType, s => s.DurationType.Contains(command.DurationType));
+            query = query.Where(command.Revision, s => s.Revision == command.Revision);
+            query = query.Where(command.CreatedFullName, s => s.Created.FullName.Contains(command.CreatedFullName));
+            query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
+            query = query.Where(command.LastUpdatedFullName, s => s.LastUpdated.FullName.Contains(command.LastUpdatedFullName));
+            query = query.Where(command.LastUpdatedOn, s => DateTime.Compare(s.LastUpdatedOn.Value.Date, command.LastUpdatedOn.Value.Date) == 0);
+
+            if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
+            {
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.Id), s => s.Id);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.Name), s => s.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.ProcedureTypeName), s => s.ProcedureType.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.Duration), s => s.Duration);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.DurationType), s => s.DurationType);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.Revision), s => s.Revision);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.CreatedFullName), s => s.Created.FullName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.CreatedOn), s => s.CreatedOn);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.LastUpdatedFullName), s => s.LastUpdated.FullName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.LastUpdatedOn), s => s.LastUpdatedOn);
+            }
+
+            if (command.Skip.HasValue && command.Take.HasValue && !forRowCount)
+            {
+                query = query.Skip(command.Skip.Value).Take(command.Take.Value);
+            }
+
+            return query;
+        }
     }
 }
