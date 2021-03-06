@@ -197,8 +197,8 @@ namespace MSR.Infrastructure.Resources.Services.Customers
         {
             var customerModels = new List<Domain.Models.CustomerModel>();
 
-            var customerEntities = await _unitOfWork.Customers.Query().CreateCustomerQuery(command).ToListAsync();
-
+            
+            var customerEntities = await _unitOfWork.Customers.Query().Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).ToListAsync();
             var customerEntityIds = customerEntities.Select(s => s.Id).ToList();
 
             var customerApprovalEntities = await _unitOfWork.CustomerApprovals.Query().Include(i => i.Status).Where(i => customerEntityIds.Contains(i.CustomerId.Value)).ToListAsync();
@@ -255,12 +255,5 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return customerModels;
         }
 
-        public async Task<int> GetTotalCustomerRows(GetMultipleCustomers command) {
-
-            var totalRows = await _unitOfWork.Customers.Query().CreateCustomerQuery(command, true).CountAsync();
-
-            return totalRows;
-
-        }
     }
 }
