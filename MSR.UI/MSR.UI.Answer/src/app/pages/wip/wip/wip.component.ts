@@ -9,6 +9,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
 import { LazyLoadEvent } from 'primeng/api';
 import { callFunctionWithFiltersViews } from '../../../models/lib/Utils';
+import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 
 @Component({
   selector: 'app-wip',
@@ -34,20 +35,20 @@ export class WipComponent implements OnInit {
     this.gridStorageId = 'wogrid' + this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
-      new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false }),
-      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', visible: true }),
-      new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true }),
-      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true }),
-      new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true }),
-      new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true }),
-      new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true }),
-      new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true }),
-      new ColumnsSaved({ id: 'actualStartDate', label: 'Actual Start Date', visible: true }),
-      new ColumnsSaved({ id: 'productName', label: 'Product', visible: true }),
-      new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
-      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true })
+      new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true, type: EnumColumnType.Date }),
+      new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true, type: EnumColumnType.Date }),
+      new ColumnsSaved({ id: 'actualStartDate', label: 'Actual Start Date', visible: true, type: EnumColumnType.Date }),
+      new ColumnsSaved({ id: 'productName', label: 'Product', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.StringArray }),
+      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String })
     ];
 
     this.statusOptions = this.globals.getTopLevelStatus();
@@ -61,7 +62,6 @@ export class WipComponent implements OnInit {
       callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.menu, {}, this.gridSettings, event)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
-          debugger;
           this.totalRecords = response.totalNumberOfRecords;
           this.data = response.object;
           this.data.map((elem) => this.setElementStyle(elem));

@@ -114,7 +114,7 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
             if (Array.isArray(filterObj.value)) {
                 if (typeof (filterObj.value[0]) === "boolean") {
                     argsToCallFn.push(filterObj.value[0]);
-                }else{
+                } else {
                     argsToCallFn.push(filterObj.value);
                 }
             } else {
@@ -143,8 +143,8 @@ export function callFunctionWithFiltersViews(service, func, extraParams: any, co
             dir: event.sortOrder === 1 ? 'asc' : 'desc',
             field: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField ? event.sortField : columnsSaved[0].id))
         })
-    ); 
-    
+    );
+
     Object.assign(filterEvObj, event);
     filterEvObj.filters = new Array<Filter>();
 
@@ -153,7 +153,7 @@ export function callFunctionWithFiltersViews(service, func, extraParams: any, co
         const filterObj = uiFilters[filter];
         filterEvObj.filters.push(new Filter({
             field: filter,
-            value: filterObj.value,
+            value: getValueByType(filterObj.value, columnsSaved.find(x => x.id === filter)),
             operator: getOperatorByColumn(filter, columnsSaved),
             logic: 'and'
         }))
@@ -173,7 +173,17 @@ export function callFunctionWithFiltersViews(service, func, extraParams: any, co
     argsToCallFn[argsToCallFn.length - 1] = env.apiVersion;
     return func.apply(service, argsToCallFn);
 }
-	
+
+export function getValueByType(filterValue: any, columnsSaved: ColumnsSaved) {
+    switch (columnsSaved.type) {
+        case EnumColumnType.StringArray:
+            return JSON.stringify(filterValue).toString();
+
+        default:
+            return filterValue;
+    }
+}
+
 export function getOperatorByColumn(filtername: any, columnsSaved: ColumnsSaved[]) {
     /*possible operators":
        // Date: eq, lte, gte
