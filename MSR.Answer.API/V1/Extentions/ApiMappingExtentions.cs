@@ -1042,5 +1042,6 @@ namespace MSR.Answer.API.V1.Extentions
         public static GetPortalWorkOrderQueryModel ToGetPortalWorkOrderQueryModel(this GetPortalWorkOrderRequest request) => AutoMapperHelper.Mapper.Map<GetPortalWorkOrderQueryModel>(request);
 
         public static QueryBase ToQueryBase(this QueryRequestBase request) => AutoMapperHelper.Mapper.Map<QueryBase>(request);
+        public static GetWorkOrderMenuQueryModel ToGetWorkOrderQueryModel(this GetWorkOrderMenuRequest request) => AutoMapperHelper.Mapper.Map<GetWorkOrderMenuQueryModel>(request);
     }
 }
