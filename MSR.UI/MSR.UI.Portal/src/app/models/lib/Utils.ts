@@ -1,6 +1,8 @@
+import { filter } from "lodash";
 import { LazyLoadEvent } from "primeng/api";
-import { Filter, Sort } from "../../../app/services/api.client.generated";
+import { Exception, Filter, Sort } from "../../../app/services/api.client.generated";
 import { environment as env } from '../../../environments/environment';
+import { EnumColumnType } from "../enums/EnumColumnType";
 import { ColumnsSaved } from "./ColumnsSaved";
 
 export function emptyArray(array) {
@@ -95,6 +97,34 @@ export function getArguments(func) {
         .filter(String);
 }
 
+export function getOperatorByColumn(filtername: any, columnsSaved: ColumnsSaved[]) {
+    /*possible operators":
+       // Date: eq, lte, gte
+       // Number: like
+       // String: contains, StartsWith, EndsWith
+       // Money: eq, lte, gte
+       // Boolean: eq
+       // stringArray: contains
+       */
+    const col = columnsSaved.find(x => x.id === filtername);
+    switch (col.type) {
+        case EnumColumnType.Boolean:
+            return 'eq';
+        case EnumColumnType.Date:
+            return 'gte';
+        case EnumColumnType.Number:
+            return 'like';
+        case EnumColumnType.String:
+            return 'contains';
+        case EnumColumnType.Money:
+            return 'eq';
+        case EnumColumnType.StringArray:
+            return 'contains';
+        default:
+            throw new Exception({ message: 'invalid col type' });
+    }
+}
+
 export function callFunctionWithFilters(service, func, extraParams: any, columnsSaved: ColumnsSaved[], event: LazyLoadEvent) {
     let filterEvObj: any = {
         pageNumber: event.first / event.rows,
@@ -105,10 +135,10 @@ export function callFunctionWithFilters(service, func, extraParams: any, columns
     filterEvObj.sort.push(
         new Sort({
             dir: event.sortOrder === 1 ? 'asc' : 'desc',
-            field: event.sortField ? capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField)) : columnsSaved[0].id
+            field: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField ? event.sortField : columnsSaved[0].id))
         })
-    );
-
+    ); 
+    
     Object.assign(filterEvObj, event);
     filterEvObj.filters = new Array<Filter>();
 
@@ -118,7 +148,7 @@ export function callFunctionWithFilters(service, func, extraParams: any, columns
         filterEvObj.filters.push(new Filter({
             field: filter,
             value: filterObj.value,
-            operator: filterObj.matchMode,
+            operator: getOperatorByColumn(filter, columnsSaved),
             logic: 'and'
         }))
     });
