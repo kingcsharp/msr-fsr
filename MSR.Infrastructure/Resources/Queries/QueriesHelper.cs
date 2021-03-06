@@ -101,11 +101,18 @@ namespace MSR.Infrastructure.Resources.Queries
                 var i = 0;
                 foreach (var filter in filters)
                 {
-                    values[i] = filter.Value.ToString();
+                    if(filter.Operator == "list")
+                    {
+                        values[i] = filter.Value.Replace("[", "{").Replace("]", "}");
+                    }
+                    else
+                    {
+                        values[i] = filter.Value;
+                    }
                     where += $" {filter.Logic} ({Transform(filter, i)})";
                     i++;
                 }
-
+                
                 queryable = queryable.Where(where, values);
             }
             return queryable;
@@ -140,56 +147,36 @@ namespace MSR.Infrastructure.Resources.Queries
             {"endswith", "EndsWith"},
             {"contains", "Contains"},
             {"doesnotcontain", "Contains"},
-            {"like","Contains"}
+            {"like","Contains"},
+            {"list","Contains" }
         };
-
-        //public static IList<QueryFilter> GetAllFilters(QueryFilter filter)
-        //{
-        //    var filters = new List<QueryFilter>();
-        //    GetFilters(filter, filters);
-        //    return filters;
-        //}
-
-        //private static void GetFilters(QueryFilter filter, IList<QueryFilter> filters)
-        //{
-        //    if (filter.Filters != null && filter.Filters.Any())
-        //    {
-        //        foreach (var item in filter.Filters)
-        //        {
-        //            GetFilters(item, filters);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        filters.Add(filter);
-        //    }
-        //}
-
+        
         public static string Transform(QueryFilter filter, int index)
         {
             var comparison = Operators[filter.Operator];
             if (filter.Operator == "doesnotcontain")
             {
-                return String.Format("({0} != null && !{0}.{1}(@{2}))",
-                    filter.Field, comparison, index);
+                return $"({filter.Field} != null && !{filter.Field}.{comparison}(@{index}))";
             }
-            //For any value other then String, we have to a comparison with .ToString so it can properly do a contains. 
-            if(filter.Operator == "like" && (comparison == "StartsWith" ||
-                comparison == "EndsWith" ||
-                comparison == "Contains"))
+            else if (filter.Operator == "list")
             {
-                return String.Format("({0} != null && {0}.ToString().{1}(@{2}))",
-                filter.Field, comparison, index);
+                //new string[] { "Chandler", "Hillsboro", "Kiryat Gat" }.Contains(i.LocationName)
+                return $"{filter.Field} != null && new string[] {filter.Value.Replace("[", "{").Replace("]", "}")}.{comparison} ({filter.Field})";
+                
+            }
+            else if(filter.Operator == "like")
+            {
+                //For any value other then String, we have to a comparison with .ToString so it can properly do a contains. 
+                return $"({filter.Field} != null && {filter.Field}.ToString().{comparison}(@{index}))";
             }
             else if (comparison == "StartsWith" ||
                 comparison == "EndsWith" ||
                 comparison == "Contains")
             {
-                return String.Format("({0} != null && {0}.{1}(@{2}))",
-                filter.Field, comparison, index);
+                return $"({filter.Field} != null && {filter.Field}.{comparison}(@{index}))";
             }
 
-            return String.Format("{0} {1} @{2}", filter.Field, comparison, index);
+            return $"{filter.Field} {comparison} @{index}";
         }
     }
 }

@@ -668,7 +668,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
                 //Figure out if this is a Completed workOrder Or Started one
                 isTaskStarted = statusEntity.Id == (int)EnumStatusSteps.InProgress;
-                isTaskCompleted = completed.Contains(statusEntity.Id);
+                isTaskCompleted = new int[] { 1, 2, 3 }.Contains(statusEntity.Id);
                 current.StatusId = statusEntity.Id;
             }
 
