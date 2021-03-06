@@ -8,10 +8,6 @@ task_definition:
   container_definitions:
     - name: application
     - name: app
-  ulimits:
-    - name: 'memlock'
-      SoftLimit: 10000
-      HardLimit: 30000
 
 run_params:
   network_configuration:
