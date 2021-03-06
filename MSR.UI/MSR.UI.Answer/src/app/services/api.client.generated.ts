@@ -2982,22 +2982,22 @@ export class PartService {
      * Get part by Id
      * @param id (optional) 
      * @param name (optional) 
-     * @param enumSegregationType (optional) 
+     * @param segregationType (optional) 
      * @param partNumber (optional) 
-     * @param oEMPartNumber (optional) 
+     * @param oemPartNumber (optional) 
      * @param isKit (optional) 
      * @param isActive (optional) 
      * @param maximumCycles (optional) 
      * @param createdOn (optional) 
      * @param createdByName (optional) 
-     * @param lastUpdateOn (optional) 
+     * @param lastUpdatedOn (optional) 
      * @param lastUpdatedByName (optional) 
      * @param term (optional) 
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    partGet(id: number | null | undefined, name: string | null | undefined, enumSegregationType: EnumSegregationType | null | undefined, partNumber: string | null | undefined, oEMPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
+    partGet(id: number | null | undefined, name: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, partNumber: string | null | undefined, oemPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3006,12 +3006,12 @@ export class PartService {
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (name !== undefined && name !== null)
             url_ += "Name=" + encodeURIComponent("" + name) + "&";
-        if (enumSegregationType !== undefined && enumSegregationType !== null)
-            url_ += "EnumSegregationType=" + encodeURIComponent("" + enumSegregationType) + "&";
+        if (segregationType !== undefined && segregationType !== null)
+            segregationType && segregationType.forEach(item => { url_ += "SegregationType=" + encodeURIComponent("" + item) + "&"; });
         if (partNumber !== undefined && partNumber !== null)
             url_ += "PartNumber=" + encodeURIComponent("" + partNumber) + "&";
-        if (oEMPartNumber !== undefined && oEMPartNumber !== null)
-            url_ += "OEMPartNumber=" + encodeURIComponent("" + oEMPartNumber) + "&";
+        if (oemPartNumber !== undefined && oemPartNumber !== null)
+            url_ += "OemPartNumber=" + encodeURIComponent("" + oemPartNumber) + "&";
         if (isKit !== undefined && isKit !== null)
             url_ += "IsKit=" + encodeURIComponent("" + isKit) + "&";
         if (isActive !== undefined && isActive !== null)
@@ -3022,8 +3022,8 @@ export class PartService {
             url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
         if (createdByName !== undefined && createdByName !== null)
             url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
-        if (lastUpdateOn !== undefined && lastUpdateOn !== null)
-            url_ += "LastUpdateOn=" + encodeURIComponent(lastUpdateOn ? "" + lastUpdateOn.toJSON() : "") + "&";
+        if (lastUpdatedOn !== undefined && lastUpdatedOn !== null)
+            url_ += "lastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
         if (lastUpdatedByName !== undefined && lastUpdatedByName !== null)
             url_ += "LastUpdatedByName=" + encodeURIComponent("" + lastUpdatedByName) + "&";
         if (term !== undefined && term !== null)
