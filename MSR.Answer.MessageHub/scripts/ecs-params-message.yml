@@ -3,13 +3,13 @@ task_definition:
   task_execution_role: ecsTaskExecutionRole
   ecs_network_mode: awsvpc
   task_size:
-    mem_limit: 16GB
-    cpu_limit: 4096
+    mem_limit: 2GB
+    cpu_limit: 1024
   container_definitions:
     - name: application
     - name: app
-  Ulimits:
-    - Name: 'memlock'
+  ulimits:
+    - name: 'memlock'
       SoftLimit: 10000
       HardLimit: 30000
 
