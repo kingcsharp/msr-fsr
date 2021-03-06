@@ -19,8 +19,8 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.Address2, s => s.Address2.Contains(command.Address2));
             query = query.Where(command.City, s => s.City.Contains(command.City));
             query = query.Where(command.Country, s => s.Country.Contains(command.Country));
-            query = query.Where(command.CreatedFullName, s => s.Created.FirstName.Contains(command.CreatedFullName));
-            query = query.Where(command.CreatedOn, s => s.CreatedOn == command.CreatedOn);
+            query = query.Where(command.CreatedFullName, s => s.Created.FullName.Contains(command.CreatedFullName));
+            query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date,command.CreatedOn.Value.Date) == 0);
             query = query.Where(command.Id, s => s.Id == command.Id);
             query = query.Where(command.InternalAddress, s => s.InternalAddress.Contains(command.InternalAddress));
             query = query.Where(command.Name, s => s.Name.Contains(command.Name));

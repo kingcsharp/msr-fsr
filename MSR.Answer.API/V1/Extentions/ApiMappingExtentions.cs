@@ -139,19 +139,6 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static GetPendingApprovalModel ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
-        {
-            return new GetPendingApprovalModel()
-            {
-                Table = request.Table
-            };
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public static GetPendingApprovalDetailsModel ToGetPendingApprovalDetailsCommand(this GetPendingApprovalDetailRequest request)
         {
             return new GetPendingApprovalDetailsModel()
@@ -228,19 +215,6 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static GetWorkflowGroupsModel ToGetWorkflowGroupCommand(this GetWorkflowGroupRequest request)
-        {
-            return new GetWorkflowGroupsModel()
-            {
-                Id = request.Id
-            };
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public static CreateWorkflowGroupModel ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
         {
             return new CreateWorkflowGroupModel()
@@ -276,10 +250,7 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static GetWorkflowStageModel ToGetWorkflowStageCommand(this GetWorkflowStageRequest request)
         {
-            return new GetWorkflowStageModel()
-            {
-                Id = request.Id
-            };
+            return AutoMapperHelper.Mapper.Map<GetWorkflowStageModel>(request);
         }
 
         /// <summary>
@@ -1041,6 +1012,31 @@ namespace MSR.Answer.API.V1.Extentions
         public static GetWorkOrderHistory ToGetWorkOrderHistory(this GetWorkOrderHistoryRequest request)
         {
             return AutoMapperHelper.Mapper.Map<GetWorkOrderHistory>(request);
+        }
+
+        public static GetQuotesProducts ToGetQuotesProductsRequest(this GetQuotesProductsRequest request) { 
+            
+            return AutoMapperHelper.Mapper.Map<GetQuotesProducts>(request);
+        }
+
+        public static GetWorkflowGroupsModel ToGetWorkflowGroupCommand(this GetWorkflowGroupRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetWorkflowGroupsModel>(request);
+        }
+
+        public static GetPendingApprovalModel ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetPendingApprovalModel>(request);
+        }
+
+        public static GetProcedureType ToGetProceduteTypeCommand(this GetProcedureTypeRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetProcedureType>(request);
+        }
+
+        public static GetProcedure ToGetProcedureCommand(this GetProcedureRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetProcedure>(request);
         }
 
         public static GetPortalWorkOrderQueryModel ToGetPortalWorkOrderQueryModel(this GetPortalWorkOrderRequest request) => AutoMapperHelper.Mapper.Map<GetPortalWorkOrderQueryModel>(request);

@@ -82,7 +82,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             var createdByUser = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == command.CurrentUser);
             efUser.Created = createdByUser;
             efUser.CreatedOn = DateTime.UtcNow;
-
+            efUser.FullName = $"{efUser.FirstName} {efUser.LastName}";
             _unitOfWork.Users.Add(efUser);
 
             foreach (var role in getRolesFromDb)
@@ -171,7 +171,9 @@ namespace MSR.Infrastructure.Resources.Services.Users
             {
                 efUser.TimeZoneId = timezone;
             }
-            
+
+            efUser.FullName = $"{efUser.FirstName} {efUser.LastName}";
+
             await _unitOfWork.Users.UpdateAndSaveChangesAsync(efUser);
 
             var domainUser = _mapper.Map<Domain.Models.UserModel>(efUser);

@@ -298,7 +298,7 @@ export class InvoiceComponent implements OnInit {
 
   getInvoices() {
     this.globals.showLoader(true);
-    this.invoiceService.invoiceGet(null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+    this.invoiceService.invoiceGet(null, null, null, null, null, null, null, null, null, null, null,null,null,null,null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object;

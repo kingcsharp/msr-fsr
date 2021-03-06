@@ -15,17 +15,17 @@ namespace MSR.Domain.Commanding.Enums
         Phone,
         [Description("IsActive")]
         IsActive,
-        [Description("PrimaryContactUserFullName")]
-        PrimaryContactUserFullName,
-        [Description("SecondaryContactUserFullName")]
-        SecondaryContactUserFullName,
+        [Description("PrimaryContactUserName")]
+        PrimaryContactUserName,
+        [Description("SecondartContactUserName")]
+        SecondartContactUserName,
         [Description("LocationName")]
         LocationName,
         [Description("CustomerNumber")]
         CustomerNumber,
         [Description("CreatedOn")]
         CreatedOn,
-        [Description("CreatedFullName")]
-        CreatedFullName
+        [Description("CreatedByFullName")]
+        CreatedByFullName
     }
 }

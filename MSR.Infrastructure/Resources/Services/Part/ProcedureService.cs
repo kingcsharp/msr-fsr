@@ -79,7 +79,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
         {
-            if (command.procedureID.HasValue) {
+            if (command.Id.HasValue) {
                 return await GetSingleProcedureAsync(command);
             } else {
                 return await GetAllProceduresAsync();
@@ -1077,7 +1077,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         private async Task<ICollection<Domain.Models.Procedure>> GetSingleProcedureAsync(GetProcedure command)
         {
-            if (!command.procedureID.HasValue)
+            if (!command.Id.HasValue)
             {
                 throw new DomainException("ID must have value", DomainError.BadRequest);
             }
@@ -1085,12 +1085,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
             List<EntityFramework.Entities.Procedure> procedures;
             procedures = await _unitOfWork.Procedures
                 .Query()
-                .Where(x => x.Id == command.procedureID.Value)
+                .Where(x => x.Id == command.Id.Value)
                 .Include(x => x.ProcedureType)
                 .ToListAsync();
             if (procedures.Count == 0)
             {
-                throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
+                throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
             }
 
             // map and attach the right files for this object, if any

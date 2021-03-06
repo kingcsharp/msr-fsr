@@ -20,20 +20,20 @@ namespace MSR.Infrastructure.Resources.Queries
 
             query = query.Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).AsQueryable();
 
-            query = query.Where<Customer>(command.Id, s => s.Id == command.Id);
-            query = query.Where<Customer>(command.Name, s => s.Name.Contains(command.Name));
-            query = query.Where<Customer>(command.Address, s => s.Name.Contains(command.Address));
-            query = query.Where<Customer>(command.Phone, s => s.Phone.Contains(command.Phone));
-            query = query.Where<Customer>(command.PrimaryContactUserId, s => s.PrimaryContactUser.Id == command.PrimaryContactUserId);
-            query = query.Where<Customer>(command.SecondaryContactUserId, s => s.SecondaryContactUser.Id == command.SecondaryContactUserId);
-            query = query.Where<Customer>(command.LocationId, s => s.LocationId == command.LocationId);
-            query = query.Where<Customer>(command.IsActive, s => s.IsActive == command.IsActive);
-            query = query.Where<Customer>(command.PrimaryContactUserFullName, s => s.PrimaryContactUser.FirstName.Contains(command.PrimaryContactUserFullName));
-            query = query.Where<Customer>(command.SecondaryContactUserFullName, s => s.SecondaryContactUser.FirstName.Contains(command.SecondaryContactUserFullName));
-            query = query.Where<Customer>(command.LocationName, s => s.Location.Name.Contains(command.LocationName));
-            query = query.Where<Customer>(command.CustomerNumber, s => s.CustomerNumber.Contains(command.CustomerNumber));
-            query = query.Where<Customer>(command.CreatedFullName, s => s.Created.FirstName.Contains(command.CreatedFullName));
-            query = query.Where<Customer>(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
+            query = query.Where(command.Id, s => s.Id == command.Id);
+            query = query.Where(command.Name, s => s.Name.Contains(command.Name));
+            query = query.Where(command.Address, s => s.Name.Contains(command.Address));
+            query = query.Where(command.Phone, s => s.Phone.Contains(command.Phone));
+            query = query.Where(command.PrimaryContactUserId, s => s.PrimaryContactUser.Id == command.PrimaryContactUserId);
+            query = query.Where(command.SecondaryContactUserId, s => s.SecondaryContactUser.Id == command.SecondaryContactUserId);
+            query = query.Where(command.LocationId, s=> s.LocationId == command.LocationId);
+            query = query.Where(command.IsActive, s => s.IsActive == command.IsActive);
+            query = query.Where(command.PrimaryContactUserName, s => s.PrimaryContactUser.FullName.Contains(command.PrimaryContactUserName));
+            query = query.Where(command.SecondartContactUserName, s => s.SecondaryContactUser.FullName.Contains(command.SecondartContactUserName));
+            query = query.Where(command.LocationName, s => s.Location.Name.Contains(command.LocationName));
+            query = query.Where(command.CustomerNumber, s=> s.CustomerNumber.Contains(command.CustomerNumber));
+            query = query.Where(command.CreatedByFullName, s=> s.Created.FullName.Contains(command.CreatedByFullName));
+            query = query.Where(command.CreatedOn, s=> DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
@@ -41,12 +41,12 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.Address), s => s.Address);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.Phone), s => s.Phone);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.IsActive), s => s.IsActive);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.PrimaryContactUserFullName), s => s.PrimaryContactUser.FirstName);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.SecondaryContactUserFullName), s => s.SecondaryContactUser.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.PrimaryContactUserName), s => s.PrimaryContactUser.FullName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.SecondartContactUserName), s => s.SecondaryContactUser.FullName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.LocationName), s => s.Location.Name);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.CustomerNumber), s => s.CustomerNumber);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.CreatedOn), s => s.CreatedOn);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.CreatedFullName), s => s.Created.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumCustomerSortFields.CreatedByFullName), s => s.Created.FullName);
 
             }
 

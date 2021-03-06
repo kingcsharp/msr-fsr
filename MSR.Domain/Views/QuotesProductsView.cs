@@ -26,5 +26,7 @@ namespace MSR.Domain.Views
         public int CycleTime { get; set; }
         public string DivisionFab { get; set; }
         public EnumSegregationType? SegregationType { get; set; }
+        public DateTime? LastUpdateOn { get;set;}
+        public string LastUpdateBy { get;set;}
     }
 }

@@ -35,7 +35,8 @@ export class AddNcrButtonWrapperComponent implements OnInit {
   addNcr() {
 
     this.globals.showLoader(true);
-    this.procedureService.procedureGet(null, env.apiVersion).subscribe(responseHandler(response => {
+    this.procedureService.procedureGet(null,null,null,null,null,null,null,null,
+      null,null,null,null,null,null, env.apiVersion).subscribe(responseHandler(response => {
 
       this.ncrProceduresAvailable = response.object.filter(s => s.procedureType.name === 'Non-Conformation Operation');
       this.showAddNcrDialog = !this.showAddNcrDialog;

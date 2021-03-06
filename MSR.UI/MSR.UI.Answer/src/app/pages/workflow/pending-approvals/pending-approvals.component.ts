@@ -119,7 +119,8 @@ export class PendingApprovalsComponent implements OnInit {
     const dataArr = data;
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowPendingApprovalService.workflowPendingApprovalGet(table, env.apiVersion).pipe(take(1))
+    this.workflowPendingApprovalService.workflowPendingApprovalGet(table,null,null,null,null,null,null,null,null,null,
+      null,null,null,null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.emptyArr(dataArr);
         dataArr.push(...response.object);

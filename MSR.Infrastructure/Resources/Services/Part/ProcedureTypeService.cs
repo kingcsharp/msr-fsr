@@ -8,6 +8,7 @@ using MSR.Domain.Helpers;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using MSR.Infrastructure.Resources.Queries;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,17 +28,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<Domain.Models.ProcedureType>> GetProcedureTypeAsync(GetProcedureType command)
         {
-            List<EntityFramework.Entities.ProcedureType> procedures;
-            if (command.Id.HasValue) {
-                procedures = await _unitOfWork.ProcedureTypes.Query().Where(x => x.Id == command.Id.Value).ToListAsync();
-                if (procedures.Count == 0) {
-                    throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
-                }
-            } else {
-                procedures = await _unitOfWork.ProcedureTypes.Query().ToListAsync();
+            var procedureTypeEntities = await _unitOfWork.ProcedureTypes.Query().CreateProcedureTypeQuery(command).ToListAsync();
+
+            if (procedureTypeEntities.Count == 0)
+            {
+                throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
             }
-            var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureType>(x)).OrderBy(x => x.Id).ToList();
-            return result;
+
+            var procedureTypeModels = procedureTypeEntities.Select(x => _mapper.Map<Domain.Models.ProcedureType>(x)).ToList();
+            return procedureTypeModels;
         }
         public async Task<Domain.Models.ProcedureType> CreateProcedureTypeAsync(CreateProcedureType command)
         {
@@ -110,6 +109,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             return true;
+        }
+
+        public async Task<int> GetProcedureTypeTotalRows(GetProcedureType command)
+        {
+            var totalRows = await _unitOfWork.ProcedureTypes.Query().CreateProcedureTypeQuery(command).CountAsync();
+
+            return totalRows;
+
         }
     }
 }
