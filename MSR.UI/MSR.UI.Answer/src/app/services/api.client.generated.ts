@@ -6537,7 +6537,7 @@ export class UserService {
      * @param supervisorName (optional) 
      * @param primaryPhone (optional) 
      * @param email (optional) 
-     * @param hasRoleIDs (optional) 
+     * @param roles (optional) 
      * @param isActive (optional) 
      * @param isAnswerUser (optional) 
      * @param createdOn (optional) 
@@ -6547,7 +6547,7 @@ export class UserService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisorName: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, hasRoleIDs: number[] | null | undefined, isActive: boolean | null | undefined, isAnswerUser: boolean | null | undefined, createdOn: Date | null | undefined, locationName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
+    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisorName: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, roles: number[] | null | undefined, isActive: boolean | null | undefined, isAnswerUser: boolean | null | undefined, createdOn: Date | null | undefined, locationName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6568,8 +6568,8 @@ export class UserService {
             url_ += "PrimaryPhone=" + encodeURIComponent("" + primaryPhone) + "&";
         if (email !== undefined && email !== null)
             url_ += "Email=" + encodeURIComponent("" + email) + "&";
-        if (hasRoleIDs !== undefined && hasRoleIDs !== null)
-            hasRoleIDs && hasRoleIDs.forEach(item => { url_ += "HasRoleIDs=" + encodeURIComponent("" + item) + "&"; });
+        if (roles !== undefined && roles !== null)
+            roles && roles.forEach(item => { url_ += "Roles=" + encodeURIComponent("" + item) + "&"; });
         if (isActive !== undefined && isActive !== null)
             url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
         if (isAnswerUser !== undefined && isAnswerUser !== null)
