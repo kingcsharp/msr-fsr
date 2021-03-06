@@ -60,6 +60,7 @@ namespace MSR.Answer.API.V1.Controllers
             var queryBase = filters.ToQueryBase();
             var workOrderMenuViews = await _workOrderViewService.GetWorkOrderMenuAsync(queryBase);
             return GenerateOkViewResponse(workOrderMenuViews.data, workOrderMenuViews.totalRows);
+
         }
 
         /// <summary>

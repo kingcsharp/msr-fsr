@@ -7,6 +7,8 @@ import { WorkOrderService, EnumSegregationType } from '../../../services/api.cli
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
+import { LazyLoadEvent } from 'primeng/api';
+import { callFunctionWithFiltersViews } from '../../../models/lib/Utils';
 
 @Component({
   selector: 'app-wip',
@@ -23,12 +25,13 @@ export class WipComponent implements OnInit {
   locationOptions: Array<SelectItem>;
   gridVersion: string;
   EnumSegregationType = EnumSegregationType;
+  totalRecords: number = 0;
 
   constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
 
-    this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
+    this.gridStorageId = 'wogrid' + this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
       new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false }),
@@ -47,49 +50,46 @@ export class WipComponent implements OnInit {
       new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true })
     ];
 
+    this.statusOptions = this.globals.getTopLevelStatus();
+    this.locationOptions = this.globals.getTopLevelLocations();
+  }
 
-    //TODO: This part will need to be updated to remove the hard coded skip/take and add in the values from the grid
-    this.workOrderService.menu(0, 100, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+  getWorkOrders(event: LazyLoadEvent) {
+    this.globals.showLoader(true);
+    setTimeout(() => {
+      // this.workOrderService.menu(0, 100, null, null, env.apiVersion)
+      callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.menu, {}, this.gridSettings, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          debugger;
+          this.totalRecords = response.totalNumberOfRecords;
+          this.data = response.object;
+          this.data.map((elem) => this.setElementStyle(elem));
+        }));
+    }, 10);
+  }
 
-      this.data = response.object;
-
-      this.statusOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-      ).map(x => ({ label: x.status, value: x.status }));
-      this.data.map((elem) => {
-
-        elem.timeLoggedType = 'danger';
-
-        if (elem.percentageOfExpectedDurationTimeLogged > .25) {
-          elem.timeLoggedType = 'warning';
-        }
-        if (elem.percentageOfExpectedDurationTimeLogged > .50) {
-          elem.timeLoggedType = 'info';
-        }
-        if (elem.percentageOfExpectedDurationTimeLogged > .75) {
-          elem.timeLoggedType = 'success';
-        }
-
-        elem.tasksCompletedType = 'danger';
-
-        if (elem.percentageOfTasksCompleted > .25) {
-          elem.tasksCompletedType = 'warning';
-        }
-        if (elem.percentageOfTasksCompleted > .50) {
-          elem.tasksCompletedType = 'info';
-        }
-        if (elem.percentageOfTasksCompleted > .75) {
-          elem.tasksCompletedType = 'success';
-        }
-
-      });
-      this.locationOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
-      ).map(x => ({ label: x.locationName, value: x.locationName }));
-
-    }));
-
-
+  setElementStyle(elem) {
+    elem.timeLoggedType = 'danger';
+    if (elem.percentageOfExpectedDurationTimeLogged > .25) {
+      elem.timeLoggedType = 'warning';
+    }
+    if (elem.percentageOfExpectedDurationTimeLogged > .50) {
+      elem.timeLoggedType = 'info';
+    }
+    if (elem.percentageOfExpectedDurationTimeLogged > .75) {
+      elem.timeLoggedType = 'success';
+    }
+    elem.tasksCompletedType = 'danger';
+    if (elem.percentageOfTasksCompleted > .25) {
+      elem.tasksCompletedType = 'warning';
+    }
+    if (elem.percentageOfTasksCompleted > .50) {
+      elem.tasksCompletedType = 'info';
+    }
+    if (elem.percentageOfTasksCompleted > .75) {
+      elem.tasksCompletedType = 'success';
+    }
   }
 
 }

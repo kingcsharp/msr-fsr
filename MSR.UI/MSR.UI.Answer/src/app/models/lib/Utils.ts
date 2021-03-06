@@ -1,5 +1,8 @@
 import { LazyLoadEvent } from "primeng/api";
+import { Exception, Filter, Sort } from "../../../app/services/api.client.generated";
 import { environment as env } from '../../../environments/environment';
+import { EnumColumnType } from "../enums/EnumColumnType";
+import { ColumnsSaved } from "./ColumnsSaved";
 
 export function emptyArray(array) {
     let length = array.length;
@@ -126,6 +129,77 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
     });
     argsToCallFn[argsToCallFn.length - 1] = env.apiVersion;
     return func.apply(service, argsToCallFn);
+}
+
+export function callFunctionWithFiltersViews(service, func, extraParams: any, columnsSaved: ColumnsSaved[], event: LazyLoadEvent) {
+    let filterEvObj: any = {
+        pageNumber: event.first / event.rows,
+        pageSize: event.rows,
+        sort: new Array<Sort>()
+    }
+
+    filterEvObj.sort.push(
+        new Sort({
+            dir: event.sortOrder === 1 ? 'asc' : 'desc',
+            field: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField ? event.sortField : columnsSaved[0].id))
+        })
+    ); 
+    
+    Object.assign(filterEvObj, event);
+    filterEvObj.filters = new Array<Filter>();
+
+    const uiFilters = removeDotAndCamelCaseFromObj(event.filters);
+    Object.keys(uiFilters).forEach((filter: any) => {
+        const filterObj = uiFilters[filter];
+        filterEvObj.filters.push(new Filter({
+            field: filter,
+            value: filterObj.value,
+            operator: getOperatorByColumn(filter, columnsSaved),
+            logic: 'and'
+        }))
+    });
+
+    Object.assign(filterEvObj, extraParams);
+
+    const args = getArguments(func);
+    const argsToCallFn = [];
+    args.forEach((arg: string) => {
+        if (filterEvObj[arg] !== undefined) {
+            argsToCallFn.push(filterEvObj[arg]);
+        } else {
+            argsToCallFn.push(null);
+        }
+    });
+    argsToCallFn[argsToCallFn.length - 1] = env.apiVersion;
+    return func.apply(service, argsToCallFn);
+}
+	
+export function getOperatorByColumn(filtername: any, columnsSaved: ColumnsSaved[]) {
+    /*possible operators":
+       // Date: eq, lte, gte
+       // Number: like
+       // String: contains, StartsWith, EndsWith
+       // Money: eq, lte, gte
+       // Boolean: eq
+       // stringArray: contains
+       */
+    const col = columnsSaved.find(x => x.id === filtername);
+    switch (col.type) {
+        case EnumColumnType.Boolean:
+            return 'eq';
+        case EnumColumnType.Date:
+            return 'gte';
+        case EnumColumnType.Number:
+            return 'like';
+        case EnumColumnType.String:
+            return 'contains';
+        case EnumColumnType.Money:
+            return 'eq';
+        case EnumColumnType.StringArray:
+            return 'contains';
+        default:
+            throw new Exception({ message: 'invalid col type' });
+    }
 }
 
 

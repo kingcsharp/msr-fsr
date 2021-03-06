@@ -34,6 +34,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateHelpPageRequest, UpdateHelpPage>();
             CreateMap<GetHelpPageRequest, GetHelpPage>();
 
+            CreateMap<QueryRequestBase, QueryBase>();
+
             CreateMap<CreatePartRequest, CreatePart>()
             .ForMember(dest => dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
             CreateMap<UpdatePartRequest, UpdatePart>()
