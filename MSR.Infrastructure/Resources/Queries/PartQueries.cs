@@ -33,7 +33,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
             if(command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term)) {
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.Id), s => s.Id);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.CreatedByName), s => s.Created.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.CreatedByName), s => s.Created.FullName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.CreatedOn), s => s.CreatedOn);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.EnumSegregationType), s => s.SegregationType);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPartSortFields.IsActive), s => s.IsActive);

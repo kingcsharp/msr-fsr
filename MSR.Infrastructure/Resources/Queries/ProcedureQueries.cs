@@ -71,13 +71,13 @@ namespace MSR.Infrastructure.Resources.Queries
             {
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.Id), s => s.Id);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.Name), s => s.Name);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.ProcedureTypeName), s => s.ProcedureType.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.ProcedureTypeName),s => s.ProcedureType == null ? "" : s.ProcedureType.Name);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.Duration), s => s.Duration);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.DurationType), s => s.DurationType);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.Revision), s => s.Revision);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.CreatedFullName), s => s.Created.FullName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.CreatedFullName), s => s.Created == null ? "" : s.Created.FullName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.CreatedOn), s => s.CreatedOn);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.LastUpdatedFullName), s => s.LastUpdated.FullName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.LastUpdatedFullName), s => s.LastUpdated == null ? "" : s.LastUpdated.FullName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumProcedureSortFields.LastUpdatedOn), s => s.LastUpdatedOn);
             }
 

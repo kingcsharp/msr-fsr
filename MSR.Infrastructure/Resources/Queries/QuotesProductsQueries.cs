@@ -47,7 +47,7 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.Revision), s => s.Revision);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.SalesTax), s => s.SalesTax);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.SegregationType), s => s.SegregationType);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.SubmittedByFullName), s => s.SubmittedBy.FullName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.SubmittedByFullName), s => s.SubmittedBy == null ? "" : s.SubmittedBy.FullName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.SubmittedDate), s => s.SubmittedDate);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.TotalPrice), s => s.TotalPrice);
 
