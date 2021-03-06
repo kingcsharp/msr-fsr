@@ -164,7 +164,7 @@ export class Globals {
     getSingularMenuName(menuItem) {
         let name = EnumMenuItem[menuItem];
         if (menuItem === EnumMenuItem.Templates) {
-          name = 'ProcedureStepTemplate';
+            name = 'ProcedureStepTemplate';
         }
         return name.replace(/s$/, '');
     }
@@ -191,8 +191,8 @@ export class Globals {
     getOffset() {
         if (this.user.timeZone === undefined) {
             return {
-              DST: '',
-              STD: ''
+                DST: '',
+                STD: ''
             };
         }
         const offset = this.user.timeZone.offset;
@@ -208,8 +208,8 @@ export class Globals {
         // return 'GMT' + intPart + fractionPart;
 
         return {
-          DST: 'GMT' + intPart.toString() + fractionPart,
-          STD: 'GMT' + (intPart - this.user.timeZone.useDalightSavings).toString() + fractionPart
+            DST: 'GMT' + intPart.toString() + fractionPart,
+            STD: 'GMT' + (intPart - this.user.timeZone.useDalightSavings).toString() + fractionPart
         };
     }
 
@@ -218,14 +218,14 @@ export class Globals {
     }
 
     hasRole(roleName) {
-      if (this.user.roles.length > 0) {
-        const index = this.user.roles.findIndex((role) => role.name === roleName);
-        if (index > -1) {
-          return true;
+        if (this.user.roles.length > 0) {
+            const index = this.user.roles.findIndex((role) => role.name === roleName);
+            if (index > -1) {
+                return true;
+            }
         }
-      }
 
-      return false;
+        return false;
     }
 
     addRequestToIgnore(requestToIgnore: string): void {
@@ -251,7 +251,7 @@ export class Globals {
         return requestIsNotOnList;
     }
 
-    getTopLevelLocations(){
+    getTopLevelLocations() {
         return [
             { label: 'Chandler', value: 'Chandler' },
             { label: 'Hillsboro', value: 'Hillsboro' },
@@ -260,7 +260,7 @@ export class Globals {
         ]
     }
 
-    getTopLevelStatus(){
+    getTopLevelStatus() {
         return [
             { label: 'Approved', value: 'Approved' },
             { label: 'In Progress', value: 'In Progress' },
@@ -275,5 +275,12 @@ export class Globals {
             { label: 'Waiting to Start', value: 'Waiting to Start' },
             { label: 'Scheduled', value: 'Scheduled' }
         ]
+    }
+
+    getYesNoArray() {
+        return [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+        ];
     }
 }

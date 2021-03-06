@@ -9,6 +9,9 @@ import { environment as env } from '../../../../environments/environment'
 import { responseHandler } from '../../../utils/responseHandler';
 import { SelectItem } from 'primeng/api';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-templates',
@@ -30,6 +33,7 @@ export class TemplatesComponent implements OnInit {
   showConfirmDeleteDialog: boolean = false;
   procedureTemplateToDelete: ProcedureStepTemplateModel;
   templatesPrivileges: AllowedActions;
+  totalRecords: number = 0;
 
   constructor(
     public commonGrid: CommonGrid,
@@ -48,12 +52,13 @@ export class TemplatesComponent implements OnInit {
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
       ];
     this.templatesPrivileges = this.globals.getEnumPrivileges(this.menuItems.Templates);
-    this.getProcedureTemplates();
   }
 
-  getProcedureTemplates() {
+  getProcedureTemplates(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.procedureStepTemplateService.procedureStepTemplateGet(null, null, null, null, null, null, null,env.apiVersion).subscribe(responseHandler( (response) => {
+    setTimeout(() => {
+    callFunctionWithFilters(this.procedureStepTemplateService, this.procedureStepTemplateService.procedureStepTemplateGet, event).pipe(take(1)).subscribe(responseHandler( (response) => {
+      this.totalRecords = response.totalNumberOfRecords;
         this.data = response.object;
         this.data.map((elem) => {
           if (elem.status === null) {
@@ -66,7 +71,7 @@ export class TemplatesComponent implements OnInit {
         ).map(x => ({ label: x.status, value: x.status }));
         this.loading = false;
     }));
-
+  }, 10);
   }
 
   openConfirmDeleteDialog(procedureTemplate) {
