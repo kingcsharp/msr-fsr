@@ -48,7 +48,7 @@ export class ProceduretypesComponent implements OnInit {
 
   getProcedureTypes() {
 
-    this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe(responseHandler( (response) => {
+    this.procedureTypeService.procedureTypeGet(null, null,null,null,null,null,env.apiVersion).subscribe(responseHandler( (response) => {
 
       this.data = response.object;
       this.statusOptions = this.data.filter(

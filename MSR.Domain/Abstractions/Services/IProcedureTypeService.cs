@@ -11,5 +11,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ProcedureType> CreateProcedureTypeAsync(CreateProcedureType command);
         Task<ProcedureType> UpdateProcedureTypeAsync(UpdateProcedureType command);
         Task<bool> DeleteProcedureTypeAsync(DeleteProcedureType command);
+        Task<int> GetProcedureTypeTotalRows(GetProcedureType command);
     }
 }

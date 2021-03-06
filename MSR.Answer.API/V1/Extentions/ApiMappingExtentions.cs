@@ -1026,5 +1026,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetPendingApprovalModel>(request);
         }
+
+        public static GetProcedureType ToGetProceduteTypeCommand(this GetProcedureTypeRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetProcedureType>(request);
+        }
     }
 }

@@ -2,8 +2,9 @@
 
 namespace MSR.Domain.Commands
 {
-    public class GetProcedureType : Command
+    public class GetProcedureType : PagingCommand
     {
         public int? Id { get; set; }
+        public string Name { get; set; }
     }
 }

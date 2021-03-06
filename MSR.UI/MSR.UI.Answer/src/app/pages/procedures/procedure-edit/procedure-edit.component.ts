@@ -62,7 +62,7 @@ export class ProcedureEditComponent implements OnInit {
         this.availableRoles = roleResponse.object.sort((a, b) => (a.name > b.name) ? 1 : -1);
 
         this.globals.showLoader(true);
-        this.procedureTypeService.procedureTypeGet(null, env.apiVersion).pipe(take(1)).subscribe((procedureTypeGetResponse) => {
+        this.procedureTypeService.procedureTypeGet(null, null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe((procedureTypeGetResponse) => {
 
           this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
 

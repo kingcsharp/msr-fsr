@@ -64,15 +64,14 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         /// Get one or all procedure types
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="request"></param>
         /// <response code="200"></response>
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureType>>))]
-        public async Task<IActionResult> GetProcedureType(int? id)
+        public async Task<IActionResult> GetProcedureType([FromQuery] GetProcedureTypeRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedureType() {
-                Id = id
-            });
+            var command = request.ToGetProceduteTypeCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<ProcedureType>>();
         }
 
