@@ -27,7 +27,7 @@ export class ProceduretypeComponent implements OnInit {
 
         if (this.procedureType.id !== 0) {
 
-          this.procedureTypeService.procedureTypeGet(this.procedureType.id, env.apiVersion).subscribe(responseHandler((response) => {
+          this.procedureTypeService.procedureTypeGet(this.procedureType.id, null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
 
             this.procedureType = response.object[0];
 

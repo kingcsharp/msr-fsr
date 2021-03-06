@@ -19,8 +19,8 @@ namespace MSR.Infrastructure.Resources.Queries
 
             query = query.Where(command.AssignedToFullName, s => s.AssignedTo.FirstName.Contains(command.AssignedToFullName));
             query = query.Where(command.Comments, s => s.Comments.Contains(command.Comments));
-            query = query.Where(command.CreatedFullName, s => s.Created.FirstName.Contains(command.CreatedFullName));
-            query = query.Where(command.CreatedOn, s => s.CreatedOn == command.CreatedOn);
+            query = query.Where(command.CreatedFullName, s => s.Created.FullName.Contains(command.CreatedFullName));
+            query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date,command.CreatedOn.Value.Date) == 0);
             query = query.Where(command.FrequencyField, s => s.FrequencyField == command.FrequencyField);
             query = query.Where(command.Id, s => s.Id == command.Id);
             query = query.Where(command.LocationName, s => s.Location.Name.Contains(command.LocationName));

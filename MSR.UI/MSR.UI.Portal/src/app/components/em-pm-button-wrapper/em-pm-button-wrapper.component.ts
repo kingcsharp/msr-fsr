@@ -80,24 +80,23 @@ export class EmPmButtonWrapperComponent implements OnInit {
 
   addEmPm() {
 
-    // this.globals.showLoader(true);
-    // //TODO: Alec
-    // this.locationService.locationGet(null, null, null, env.apiVersion).subscribe(responseHandler(locationGetResponse => {
+    this.globals.showLoader(true);
+    this.locationService.locationGet(null, null, null,null,null,null,null,null,null,null,null,null,null,
+      null,null,null,null,null,null,null, env.apiVersion).subscribe(responseHandler(locationGetResponse => {
 
-    //   this.locationOptions = locationGetResponse.object.map(s => ({ label: s.name , value: s.id}));
-    //   this.troubleState = true;
+      this.locationOptions = locationGetResponse.object.map(s => ({ label: s.name , value: s.id}));
+      this.troubleState = true;
 
-    //   this.globals.showLoader(true);
-    //   //TODO: Alec
-    //   this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+      this.globals.showLoader(true);
+      this.userService.userGet(null, null, null, null, null, null, null, null, null,null,null,null,null,null,null,null,null, env.apiVersion).subscribe(responseHandler(response => {
 
-    //     this.userOptions = response.object.map(s => ({ label: s.fullName, value: s.id}));
+        this.userOptions = response.object.map(s => ({ label: s.fullName, value: s.id}));
 
-    //   }));
+      }));
 
-    //   this.showEmPmDialog = !this.showEmPmDialog;
+      this.showEmPmDialog = !this.showEmPmDialog;
 
-    // }));
+    }));
 
 
   }
@@ -125,12 +124,12 @@ export class EmPmButtonWrapperComponent implements OnInit {
   lookUp() {
 
     this.globals.showLoader(true);
-    //TODO: Alec
-    // this.locationService.locationGet(null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+    this.locationService.locationGet(null, null, null,null,null,null,null,null,null,null,null,null,null,null,
+      null,null,null,null,null,null, env.apiVersion).subscribe(responseHandler(response => {
 
-    //   this.equipmentMaintenanceModel.locationId = response.object.find(s => s.internalAddress === this.internalAddress).id;
+      this.equipmentMaintenanceModel.locationId = response.object.find(s => s.internalAddress === this.internalAddress).id;
 
-    // }));
+    }));
 
   }
 

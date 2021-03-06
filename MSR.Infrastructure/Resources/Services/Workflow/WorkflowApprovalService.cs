@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Views;
 using System.Reflection;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services
 {
@@ -411,10 +412,10 @@ namespace MSR.Infrastructure.Resources.Services
 
         public async Task<ICollection<PendingApprovalModel>> GetPendingApprovalAsync(GetPendingApprovalModel command)
         {
-            var ret = new List<PendingApprovalModel>();
+            var pendingApprovalModels = new List<PendingApprovalModel>();
             if (!CurrentUser.HasPrivilege(EnumMenuItem.ApprovalWorkflows, EnumPrivilege.CanRead))
             {
-                return ret;
+                return pendingApprovalModels;
             }
 
             if (command.Table == EnumApprovalTables.All)
@@ -423,16 +424,16 @@ namespace MSR.Infrastructure.Resources.Services
                 {
                     if (enumVal != (int)EnumApprovalTables.All)
                     {
-                        ret.AddRange(await GetPendingApprovalByTable((EnumApprovalTables)enumVal));
+                        pendingApprovalModels.AddRange(await GetPendingApprovalByTable((EnumApprovalTables)enumVal));
                     }
                 }
             }
             else if (CurrentUser.CanReadActivity(command.Table))
             {
-                ret.AddRange(await GetPendingApprovalByTable(command.Table));
+                pendingApprovalModels.AddRange(await GetPendingApprovalByTable(command.Table));
             }
 
-            return ret;
+            return pendingApprovalModels;
         }
 
         private async Task<List<PendingApprovalModel>> GetPendingApprovalByTable(EnumApprovalTables table)
@@ -852,6 +853,7 @@ namespace MSR.Infrastructure.Resources.Services
 
             return procedureApproval;
         }
+
     }
 
 }

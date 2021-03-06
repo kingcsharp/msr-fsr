@@ -37,11 +37,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ICollection<UserRole> Roles { get; set; }
         public string GetFullName()
         {
-            return $"{FirstName} {LastName}";
+            return FullName;
         }
-        public string FullName { 
-            get { return $"{FirstName} {LastName}";}    
-        }
+        public string FullName { get;set;}
     }
 }
 

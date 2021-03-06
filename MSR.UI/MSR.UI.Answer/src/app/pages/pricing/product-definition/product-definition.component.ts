@@ -290,7 +290,8 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.getProceduresFlag && !isRefresh) {
       return this.proceduresData;
     }
-    this.procedureService.procedureGet(null, env.apiVersion).pipe(take(1))
+    this.procedureService.procedureGet(null, null,null,null,null,null,null,null
+      ,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           this.proceduresData.push({ label: `${x.name} [ID: ${x.id}]`, value: x.id });

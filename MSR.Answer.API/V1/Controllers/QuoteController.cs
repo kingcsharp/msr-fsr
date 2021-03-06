@@ -30,10 +30,10 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet("Product")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<QuotesProductsView>>))]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] GetQuotesProductsRequest request)
         {
-            var getQuotesProducts = new GetQuotesProducts();
-            var ret = await _dispatcher.DispatchAsync(getQuotesProducts);
+            var command = request.ToGetQuotesProductsRequest();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<IEnumerable<QuotesProductsView>>();
         }
 

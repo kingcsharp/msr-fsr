@@ -66,7 +66,8 @@ export class SearchComponent implements OnInit {
   viewFunction(rowData) {
     switch (rowData.itemType) {
       case 'Procedure':
-        this.procedureService.procedureGet(rowData.itemId, env.apiVersion).pipe(take(1))
+        this.procedureService.procedureGet(rowData.itemId,null,null,null,null,null,null,
+          null,null,null,null,null,null,null, env.apiVersion).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.setGridData(response, rowData);
           }));

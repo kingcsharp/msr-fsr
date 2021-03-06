@@ -59,7 +59,8 @@ export class ProceduresComponent implements OnInit {
 
   getProcedures() {
     this.globals.showLoader(true);
-    this.procedureService.procedureGet(null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.procedureService.procedureGet(null, null,null,null,null,null,null,
+      null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
       this.data  = response.object;
     }));
   }

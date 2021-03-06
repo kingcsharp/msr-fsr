@@ -72,7 +72,8 @@ export class ApprovalStagesComponent implements OnInit {
   getWorkflowStages() {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
+    this.workflowStageService.workflowStageGet(null,null,null,null,null,null,null,null,null
+      ,null,null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         ctrl.data = response.object;
@@ -101,7 +102,8 @@ export class ApprovalStagesComponent implements OnInit {
 
   getWorkflowGroups() {
     const ctrl = this;
-    this.workflowGroupService.workflowGroupGet(null, env.apiVersion).pipe(take(1))
+    this.workflowGroupService.workflowGroupGet(null, null,null,null,null,null,null,null,null,
+      null,null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.forEach(element => {
           ctrl.workflowGroups.push({ name: element.name, workflowGroupId: element.id });
