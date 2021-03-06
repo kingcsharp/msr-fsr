@@ -432,7 +432,7 @@ export class CustomerService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserName: string | null | undefined, secondartContactUserName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdById: number | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, filterProperty: string | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
+    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserName: string | null | undefined, secondartContactUserName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdByFullName: string | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
         let url_ = this.baseUrl + "/v{version}/Customer?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -461,8 +461,8 @@ export class CustomerService {
             url_ += "LocationName=" + encodeURIComponent("" + locationName) + "&";
         if (customerNumber !== undefined && customerNumber !== null)
             url_ += "CustomerNumber=" + encodeURIComponent("" + customerNumber) + "&";
-        if (createdById !== undefined && createdById !== null)
-            url_ += "CreatedById=" + encodeURIComponent("" + createdById) + "&";
+        if (createdByFullName !== undefined && createdByFullName !== null)
+            url_ += "CreatedByFullName=" + encodeURIComponent("" + createdByFullName) + "&";
         if (createdOn !== undefined && createdOn !== null)
             url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
         if (term !== undefined && term !== null)
@@ -471,8 +471,6 @@ export class CustomerService {
             url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
         if (pageSize !== undefined && pageSize !== null)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (filterProperty !== undefined && filterProperty !== null)
-            url_ += "FilterProperty=" + encodeURIComponent("" + filterProperty) + "&";
         if (sortAscending !== undefined && sortAscending !== null)
             url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
@@ -700,14 +698,38 @@ export class DocumentService {
     /**
      * Gets a list of Documents or a single Document matching the Id.
      * @param id (optional) 
+     * @param name (optional) 
+     * @param revision (optional) 
+     * @param lastUpdatedOn (optional) 
+     * @param lastUpdatedFullName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    documentGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfDocumentView> {
+    documentGet(id: number | null | undefined, name: string | null | undefined, revision: number | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedFullName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfDocumentView> {
         let url_ = this.baseUrl + "/v{version}/Document?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (revision !== undefined && revision !== null)
+            url_ += "Revision=" + encodeURIComponent("" + revision) + "&";
+        if (lastUpdatedOn !== undefined && lastUpdatedOn !== null)
+            url_ += "LastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
+        if (lastUpdatedFullName !== undefined && lastUpdatedFullName !== null)
+            url_ += "LastUpdatedFullName=" + encodeURIComponent("" + lastUpdatedFullName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1001,14 +1023,56 @@ export class EquipmentMaintenanceService {
     /**
      * Gets EM/PM items. Filter the item using Id.
      * @param id (optional) 
+     * @param locationName (optional) 
+     * @param createdOn (optional) 
+     * @param createdFullName (optional) 
+     * @param assignedToFullName (optional) 
+     * @param troubleState (optional) 
+     * @param maintenanceTask (optional) 
+     * @param pemLastCompletedDate (optional) 
+     * @param frequencyField (optional) 
+     * @param comments (optional) 
+     * @param statusName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    equipmentMaintenanceGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
+    equipmentMaintenanceGet(id: number | null | undefined, locationName: string | null | undefined, createdOn: Date | null | undefined, createdFullName: string | null | undefined, assignedToFullName: string | null | undefined, troubleState: boolean | null | undefined, maintenanceTask: string | null | undefined, pemLastCompletedDate: Date | null | undefined, frequencyField: number | null | undefined, comments: string | null | undefined, statusName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
         let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (locationName !== undefined && locationName !== null)
+            url_ += "LocationName=" + encodeURIComponent("" + locationName) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (createdFullName !== undefined && createdFullName !== null)
+            url_ += "CreatedFullName=" + encodeURIComponent("" + createdFullName) + "&";
+        if (assignedToFullName !== undefined && assignedToFullName !== null)
+            url_ += "AssignedToFullName=" + encodeURIComponent("" + assignedToFullName) + "&";
+        if (troubleState !== undefined && troubleState !== null)
+            url_ += "TroubleState=" + encodeURIComponent("" + troubleState) + "&";
+        if (maintenanceTask !== undefined && maintenanceTask !== null)
+            url_ += "MaintenanceTask=" + encodeURIComponent("" + maintenanceTask) + "&";
+        if (pemLastCompletedDate !== undefined && pemLastCompletedDate !== null)
+            url_ += "PemLastCompletedDate=" + encodeURIComponent(pemLastCompletedDate ? "" + pemLastCompletedDate.toJSON() : "") + "&";
+        if (frequencyField !== undefined && frequencyField !== null)
+            url_ += "FrequencyField=" + encodeURIComponent("" + frequencyField) + "&";
+        if (comments !== undefined && comments !== null)
+            url_ += "Comments=" + encodeURIComponent("" + comments) + "&";
+        if (statusName !== undefined && statusName !== null)
+            url_ += "StatusName=" + encodeURIComponent("" + statusName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1490,7 +1554,7 @@ export class HelpService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
+    helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, title: string | null | undefined, roles: number[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
         let url_ = this.baseUrl + "/v{version}/Help?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1499,6 +1563,18 @@ export class HelpService {
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (friendlyURL !== undefined && friendlyURL !== null)
             url_ += "FriendlyURL=" + encodeURIComponent("" + friendlyURL) + "&";
+        if (title !== undefined && title !== null)
+            url_ += "Title=" + encodeURIComponent("" + title) + "&";
+        if (roles !== undefined && roles !== null)
+            roles && roles.forEach(item => { url_ += "Roles=" + encodeURIComponent("" + item) + "&"; });
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1835,7 +1911,7 @@ export class InvoiceService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    invoiceGet(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceView> {
+    invoiceGet(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceView> {
         let url_ = this.baseUrl + "/v{version}/Invoice?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1862,6 +1938,14 @@ export class InvoiceService {
             url_ += "Amount=" + encodeURIComponent("" + amount) + "&";
         if (statusId !== undefined && statusId !== null)
             url_ += "StatusId=" + encodeURIComponent("" + statusId) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2156,7 +2240,7 @@ export class LocationService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
+    locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, name: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, address1: string | null | undefined, city: string | null | undefined, state: string | null | undefined, postalcode: string | null | undefined, country: string | null | undefined, phone: string | null | undefined, parentName: string | null | undefined, timezoneDescription: string | null | undefined, address2: string | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2167,6 +2251,40 @@ export class LocationService {
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (internalAddress !== undefined && internalAddress !== null)
             url_ += "InternalAddress=" + encodeURIComponent("" + internalAddress) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (createdFullName !== undefined && createdFullName !== null)
+            url_ += "CreatedFullName=" + encodeURIComponent("" + createdFullName) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (address1 !== undefined && address1 !== null)
+            url_ += "Address1=" + encodeURIComponent("" + address1) + "&";
+        if (city !== undefined && city !== null)
+            url_ += "City=" + encodeURIComponent("" + city) + "&";
+        if (state !== undefined && state !== null)
+            url_ += "State=" + encodeURIComponent("" + state) + "&";
+        if (postalcode !== undefined && postalcode !== null)
+            url_ += "Postalcode=" + encodeURIComponent("" + postalcode) + "&";
+        if (country !== undefined && country !== null)
+            url_ += "Country=" + encodeURIComponent("" + country) + "&";
+        if (phone !== undefined && phone !== null)
+            url_ += "Phone=" + encodeURIComponent("" + phone) + "&";
+        if (parentName !== undefined && parentName !== null)
+            url_ += "ParentName=" + encodeURIComponent("" + parentName) + "&";
+        if (timezoneDescription !== undefined && timezoneDescription !== null)
+            url_ += "TimezoneDescription=" + encodeURIComponent("" + timezoneDescription) + "&";
+        if (address2 !== undefined && address2 !== null)
+            url_ += "Address2=" + encodeURIComponent("" + address2) + "&";
+        if (status !== undefined && status !== null)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2861,14 +2979,59 @@ export class PartService {
     /**
      * Get part by Id
      * @param id (optional) 
+     * @param name (optional) 
+     * @param enumSegregationType (optional) 
+     * @param partNumber (optional) 
+     * @param oEMPartNumber (optional) 
+     * @param isKit (optional) 
+     * @param isActive (optional) 
+     * @param maximumCycles (optional) 
+     * @param createdOn (optional) 
+     * @param createdByName (optional) 
+     * @param lastUpdateOn (optional) 
+     * @param lastUpdatedByName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    partGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
+    partGet(id: number | null | undefined, name: string | null | undefined, enumSegregationType: EnumSegregationType | null | undefined, partNumber: string | null | undefined, oEMPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (enumSegregationType !== undefined && enumSegregationType !== null)
+            url_ += "EnumSegregationType=" + encodeURIComponent("" + enumSegregationType) + "&";
+        if (partNumber !== undefined && partNumber !== null)
+            url_ += "PartNumber=" + encodeURIComponent("" + partNumber) + "&";
+        if (oEMPartNumber !== undefined && oEMPartNumber !== null)
+            url_ += "OEMPartNumber=" + encodeURIComponent("" + oEMPartNumber) + "&";
+        if (isKit !== undefined && isKit !== null)
+            url_ += "IsKit=" + encodeURIComponent("" + isKit) + "&";
+        if (isActive !== undefined && isActive !== null)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (maximumCycles !== undefined && maximumCycles !== null)
+            url_ += "MaximumCycles=" + encodeURIComponent("" + maximumCycles) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (createdByName !== undefined && createdByName !== null)
+            url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
+        if (lastUpdateOn !== undefined && lastUpdateOn !== null)
+            url_ += "LastUpdateOn=" + encodeURIComponent(lastUpdateOn ? "" + lastUpdateOn.toJSON() : "") + "&";
+        if (lastUpdatedByName !== undefined && lastUpdatedByName !== null)
+            url_ += "LastUpdatedByName=" + encodeURIComponent("" + lastUpdatedByName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3889,14 +4052,32 @@ export class ProcedureStepTemplateService {
     /**
      * Get procedure step template by Id
      * @param id (optional) 
+     * @param title (optional) 
+     * @param text (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    procedureStepTemplateGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel> {
+    procedureStepTemplateGet(id: number | null | undefined, title: string | null | undefined, text: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (title !== undefined && title !== null)
+            url_ += "Title=" + encodeURIComponent("" + title) + "&";
+        if (text !== undefined && text !== null)
+            url_ += "Text=" + encodeURIComponent("" + text) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -4873,14 +5054,38 @@ export class PurchaseService {
     /**
      * Get Purchase by id
      * @param id (optional) 
+     * @param mttn (optional) 
+     * @param purchaseOrderProductName (optional) 
+     * @param statusId (optional) 
+     * @param createdOn (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    purchaseGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
+    purchaseGet(id: number | null | undefined, mttn: string | null | undefined, purchaseOrderProductName: string | null | undefined, statusId: number | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
         let url_ = this.baseUrl + "/v{version}/Purchase?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (mttn !== undefined && mttn !== null)
+            url_ += "Mttn=" + encodeURIComponent("" + mttn) + "&";
+        if (purchaseOrderProductName !== undefined && purchaseOrderProductName !== null)
+            url_ += "PurchaseOrderProductName=" + encodeURIComponent("" + purchaseOrderProductName) + "&";
+        if (statusId !== undefined && statusId !== null)
+            url_ += "StatusId=" + encodeURIComponent("" + statusId) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -4997,13 +5202,45 @@ export class PurchaseOrderService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    purchaseOrderGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
+    purchaseOrderGet(id: number | null | undefined, name: string | null | undefined, customerReferencePO: string | null | undefined, invoicedBalance: number | null | undefined, uninvoicedBalance: number | null | undefined, balance: number | null | undefined, customerName: string | null | undefined, openDate: Date | null | undefined, closeDate: Date | null | undefined, totalPurchaseLimit: number | null | undefined, unusedAmount: number | null | undefined, revision: number | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
         let url_ = this.baseUrl + "/v{version}/PurchaseOrder?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (customerReferencePO !== undefined && customerReferencePO !== null)
+            url_ += "CustomerReferencePO=" + encodeURIComponent("" + customerReferencePO) + "&";
+        if (invoicedBalance !== undefined && invoicedBalance !== null)
+            url_ += "InvoicedBalance=" + encodeURIComponent("" + invoicedBalance) + "&";
+        if (uninvoicedBalance !== undefined && uninvoicedBalance !== null)
+            url_ += "UninvoicedBalance=" + encodeURIComponent("" + uninvoicedBalance) + "&";
+        if (balance !== undefined && balance !== null)
+            url_ += "Balance=" + encodeURIComponent("" + balance) + "&";
+        if (customerName !== undefined && customerName !== null)
+            url_ += "CustomerName=" + encodeURIComponent("" + customerName) + "&";
+        if (openDate !== undefined && openDate !== null)
+            url_ += "OpenDate=" + encodeURIComponent(openDate ? "" + openDate.toJSON() : "") + "&";
+        if (closeDate !== undefined && closeDate !== null)
+            url_ += "CloseDate=" + encodeURIComponent(closeDate ? "" + closeDate.toJSON() : "") + "&";
+        if (totalPurchaseLimit !== undefined && totalPurchaseLimit !== null)
+            url_ += "TotalPurchaseLimit=" + encodeURIComponent("" + totalPurchaseLimit) + "&";
+        if (unusedAmount !== undefined && unusedAmount !== null)
+            url_ += "UnusedAmount=" + encodeURIComponent("" + unusedAmount) + "&";
+        if (revision !== undefined && revision !== null)
+            url_ += "Revision=" + encodeURIComponent("" + revision) + "&";
+        if (status !== undefined && status !== null)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5232,11 +5469,53 @@ export class QuoteService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    product(version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
-        let url_ = this.baseUrl + "/v{version}/Quote/Product";
+    product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: string | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
+        let url_ = this.baseUrl + "/v{version}/Quote/Product?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (submittedDate !== undefined && submittedDate !== null)
+            url_ += "SubmittedDate=" + encodeURIComponent(submittedDate ? "" + submittedDate.toJSON() : "") + "&";
+        if (company !== undefined && company !== null)
+            url_ += "Company=" + encodeURIComponent("" + company) + "&";
+        if (submittedByFullName !== undefined && submittedByFullName !== null)
+            url_ += "SubmittedByFullName=" + encodeURIComponent("" + submittedByFullName) + "&";
+        if (divisionFab !== undefined && divisionFab !== null)
+            url_ += "DivisionFab=" + encodeURIComponent("" + divisionFab) + "&";
+        if (partKitNo !== undefined && partKitNo !== null)
+            url_ += "PartKitNo=" + encodeURIComponent("" + partKitNo) + "&";
+        if (segregationType !== undefined && segregationType !== null)
+            url_ += "SegregationType=" + encodeURIComponent("" + segregationType) + "&";
+        if (procedureName !== undefined && procedureName !== null)
+            url_ += "ProcedureName=" + encodeURIComponent("" + procedureName) + "&";
+        if (productName !== undefined && productName !== null)
+            url_ += "ProductName=" + encodeURIComponent("" + productName) + "&";
+        if (representative !== undefined && representative !== null)
+            url_ += "Representative=" + encodeURIComponent("" + representative) + "&";
+        if (revision !== undefined && revision !== null)
+            url_ += "Revision=" + encodeURIComponent("" + revision) + "&";
+        if (equipmentCost !== undefined && equipmentCost !== null)
+            url_ += "EquipmentCost=" + encodeURIComponent("" + equipmentCost) + "&";
+        if (materialCost !== undefined && materialCost !== null)
+            url_ += "MaterialCost=" + encodeURIComponent("" + materialCost) + "&";
+        if (salesTax !== undefined && salesTax !== null)
+            url_ += "SalesTax=" + encodeURIComponent("" + salesTax) + "&";
+        if (totalPrice !== undefined && totalPrice !== null)
+            url_ += "TotalPrice=" + encodeURIComponent("" + totalPrice) + "&";
+        if (cycleTime !== undefined && cycleTime !== null)
+            url_ += "CycleTime=" + encodeURIComponent("" + cycleTime) + "&";
+        if (lastUpdateOn !== undefined && lastUpdateOn !== null)
+            url_ += "LastUpdateOn=" + encodeURIComponent(lastUpdateOn ? "" + lastUpdateOn.toJSON() : "") + "&";
+        if (lastUpdatedBy !== undefined && lastUpdatedBy !== null)
+            url_ += "LastUpdatedBy=" + encodeURIComponent("" + lastUpdatedBy) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5585,11 +5864,37 @@ export class RoleService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    roleGet(version: string): Observable<AuditActionResultOfICollectionOfRole> {
-        let url_ = this.baseUrl + "/v{version}/Role";
+    roleGet(id: number | null | undefined, name: string | null | undefined, isCertificationRole: boolean | null | undefined, parentRoles: number[] | null | undefined, assignedUsers: number[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfRole> {
+        let url_ = this.baseUrl + "/v{version}/Role?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (isCertificationRole !== undefined && isCertificationRole !== null)
+            url_ += "IsCertificationRole=" + encodeURIComponent("" + isCertificationRole) + "&";
+        if (parentRoles !== undefined && parentRoles !== null)
+            parentRoles && parentRoles.forEach(item => { url_ += "ParentRoles=" + encodeURIComponent("" + item) + "&"; });
+        if (assignedUsers !== undefined && assignedUsers !== null)
+            assignedUsers && assignedUsers.forEach(item => { url_ += "AssignedUsers=" + encodeURIComponent("" + item) + "&"; });
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (createdByName !== undefined && createdByName !== null)
+            url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
+        if (lastUpdatedOn !== undefined && lastUpdatedOn !== null)
+            url_ += "LastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
+        if (lastUpdatedByName !== undefined && lastUpdatedByName !== null)
+            url_ += "LastUpdatedByName=" + encodeURIComponent("" + lastUpdatedByName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -6173,12 +6478,20 @@ export class UserService {
      * @param lastName (optional) 
      * @param userName (optional) 
      * @param title (optional) 
-     * @param supervisor (optional) 
+     * @param supervisorName (optional) 
      * @param primaryPhone (optional) 
      * @param email (optional) 
      * @param hasRoleIDs (optional) 
+     * @param isActive (optional) 
+     * @param isAnswerUser (optional) 
+     * @param createdOn (optional) 
+     * @param locationName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, hasRoleIDs: number[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
+    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisorName: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, hasRoleIDs: number[] | null | undefined, isActive: boolean | null | undefined, isAnswerUser: boolean | null | undefined, createdOn: Date | null | undefined, locationName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6193,14 +6506,30 @@ export class UserService {
             url_ += "UserName=" + encodeURIComponent("" + userName) + "&";
         if (title !== undefined && title !== null)
             url_ += "Title=" + encodeURIComponent("" + title) + "&";
-        if (supervisor !== undefined && supervisor !== null)
-            url_ += "Supervisor=" + encodeURIComponent("" + supervisor) + "&";
+        if (supervisorName !== undefined && supervisorName !== null)
+            url_ += "SupervisorName=" + encodeURIComponent("" + supervisorName) + "&";
         if (primaryPhone !== undefined && primaryPhone !== null)
             url_ += "PrimaryPhone=" + encodeURIComponent("" + primaryPhone) + "&";
         if (email !== undefined && email !== null)
             url_ += "Email=" + encodeURIComponent("" + email) + "&";
         if (hasRoleIDs !== undefined && hasRoleIDs !== null)
             hasRoleIDs && hasRoleIDs.forEach(item => { url_ += "HasRoleIDs=" + encodeURIComponent("" + item) + "&"; });
+        if (isActive !== undefined && isActive !== null)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (isAnswerUser !== undefined && isAnswerUser !== null)
+            url_ += "IsAnswerUser=" + encodeURIComponent("" + isAnswerUser) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (locationName !== undefined && locationName !== null)
+            url_ += "LocationName=" + encodeURIComponent("" + locationName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -6420,14 +6749,41 @@ export class UserService {
     /**
      * Get training certificates
      * @param userId (optional) 
+     * @param employeeName (optional) 
+     * @param certificationName (optional) 
+     * @param certificationFromDate (optional) 
+     * @param certificationToDate (optional) 
+     * @param status (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    trainingCertification(userId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
+    trainingCertification(userId: number | null | undefined, employeeName: string | null | undefined, certificationName: string | null | undefined, certificationFromDate: Date | null | undefined, certificationToDate: Date | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
         let url_ = this.baseUrl + "/v{version}/User/TrainingCertification?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (userId !== undefined && userId !== null)
             url_ += "UserId=" + encodeURIComponent("" + userId) + "&";
+        if (employeeName !== undefined && employeeName !== null)
+            url_ += "EmployeeName=" + encodeURIComponent("" + employeeName) + "&";
+        if (certificationName !== undefined && certificationName !== null)
+            url_ += "CertificationName=" + encodeURIComponent("" + certificationName) + "&";
+        if (certificationFromDate !== undefined && certificationFromDate !== null)
+            url_ += "CertificationFromDate=" + encodeURIComponent(certificationFromDate ? "" + certificationFromDate.toJSON() : "") + "&";
+        if (certificationToDate !== undefined && certificationToDate !== null)
+            url_ += "CertificationToDate=" + encodeURIComponent(certificationToDate ? "" + certificationToDate.toJSON() : "") + "&";
+        if (status !== undefined && status !== null)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -6703,7 +7059,7 @@ export class WorkflowPendingApprovalService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    workflowPendingApprovalGet(table: EnumApprovalTables | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
+    workflowPendingApprovalGet(table: EnumApprovalTables | undefined, id: number | null | undefined, activityType: string | null | undefined, name: string | null | undefined, requestedChanges: string | null | undefined, workflowName: string | null | undefined, workflowGroupName: string | null | undefined, workflowCreatedByName: string | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6712,6 +7068,32 @@ export class WorkflowPendingApprovalService {
             throw new Error("The parameter 'table' cannot be null.");
         else if (table !== undefined)
             url_ += "Table=" + encodeURIComponent("" + table) + "&";
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (activityType !== undefined && activityType !== null)
+            url_ += "ActivityType=" + encodeURIComponent("" + activityType) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (requestedChanges !== undefined && requestedChanges !== null)
+            url_ += "RequestedChanges=" + encodeURIComponent("" + requestedChanges) + "&";
+        if (workflowName !== undefined && workflowName !== null)
+            url_ += "WorkflowName=" + encodeURIComponent("" + workflowName) + "&";
+        if (workflowGroupName !== undefined && workflowGroupName !== null)
+            url_ += "WorkflowGroupName=" + encodeURIComponent("" + workflowGroupName) + "&";
+        if (workflowCreatedByName !== undefined && workflowCreatedByName !== null)
+            url_ += "WorkflowCreatedByName=" + encodeURIComponent("" + workflowCreatedByName) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (createdByName !== undefined && createdByName !== null)
+            url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -6947,12 +7329,69 @@ export class WorkOrderService {
 
     /**
      * Returns a summary of COMPLETED or CANCELLED WorkOrders
+     * @param purchaseId (optional) 
+     * @param workOrderItemNumber (optional) 
+     * @param customer (optional) 
+     * @param location (optional) 
+     * @param serialNumber (optional) 
+     * @param purchaseOrderNumber (optional) 
+     * @param qty (optional) 
+     * @param scheduledStartDate (optional) 
+     * @param scheduledEndDate (optional) 
+     * @param actualStartDate (optional) 
+     * @param actualEndDate (optional) 
+     * @param product (optional) 
+     * @param procedure (optional) 
+     * @param status (optional) 
+     * @param dispostion (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
-    history(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/History";
+    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string | null | undefined, dispostion: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/History?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (purchaseId !== undefined && purchaseId !== null)
+            url_ += "PurchaseId=" + encodeURIComponent("" + purchaseId) + "&";
+        if (workOrderItemNumber !== undefined && workOrderItemNumber !== null)
+            url_ += "WorkOrderItemNumber=" + encodeURIComponent("" + workOrderItemNumber) + "&";
+        if (customer !== undefined && customer !== null)
+            url_ += "Customer=" + encodeURIComponent("" + customer) + "&";
+        if (location !== undefined && location !== null)
+            url_ += "Location=" + encodeURIComponent("" + location) + "&";
+        if (serialNumber !== undefined && serialNumber !== null)
+            url_ += "SerialNumber=" + encodeURIComponent("" + serialNumber) + "&";
+        if (purchaseOrderNumber !== undefined && purchaseOrderNumber !== null)
+            url_ += "PurchaseOrderNumber=" + encodeURIComponent("" + purchaseOrderNumber) + "&";
+        if (qty !== undefined && qty !== null)
+            url_ += "Qty=" + encodeURIComponent("" + qty) + "&";
+        if (scheduledStartDate !== undefined && scheduledStartDate !== null)
+            url_ += "ScheduledStartDate=" + encodeURIComponent(scheduledStartDate ? "" + scheduledStartDate.toJSON() : "") + "&";
+        if (scheduledEndDate !== undefined && scheduledEndDate !== null)
+            url_ += "ScheduledEndDate=" + encodeURIComponent(scheduledEndDate ? "" + scheduledEndDate.toJSON() : "") + "&";
+        if (actualStartDate !== undefined && actualStartDate !== null)
+            url_ += "ActualStartDate=" + encodeURIComponent(actualStartDate ? "" + actualStartDate.toJSON() : "") + "&";
+        if (actualEndDate !== undefined && actualEndDate !== null)
+            url_ += "ActualEndDate=" + encodeURIComponent(actualEndDate ? "" + actualEndDate.toJSON() : "") + "&";
+        if (product !== undefined && product !== null)
+            url_ += "Product=" + encodeURIComponent("" + product) + "&";
+        if (procedure !== undefined && procedure !== null)
+            url_ += "Procedure=" + encodeURIComponent("" + procedure) + "&";
+        if (status !== undefined && status !== null)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (dispostion !== undefined && dispostion !== null)
+            url_ += "Dispostion=" + encodeURIComponent("" + dispostion) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -7781,13 +8220,37 @@ export class WorkflowService {
         return _observableOf<AuditActionResultOfICollectionOfWorkflowActivityModel>(<any>null);
     }
 
-    workflowGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowModel> {
+    workflowGet(id: number | null | undefined, name: string | null | undefined, memberStages: number[] | null | undefined, activityMaps: number[] | null | undefined, isActive: boolean | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowModel> {
         let url_ = this.baseUrl + "/v{version}/Workflow?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (memberStages !== undefined && memberStages !== null)
+            memberStages && memberStages.forEach(item => { url_ += "MemberStages=" + encodeURIComponent("" + item) + "&"; });
+        if (activityMaps !== undefined && activityMaps !== null)
+            activityMaps && activityMaps.forEach(item => { url_ += "ActivityMaps=" + encodeURIComponent("" + item) + "&"; });
+        if (isActive !== undefined && isActive !== null)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (createdByName !== undefined && createdByName !== null)
+            url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
+        if (lastUpdatedOn !== undefined && lastUpdatedOn !== null)
+            url_ += "LastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
+        if (lastUpdatedByName !== undefined && lastUpdatedByName !== null)
+            url_ += "LastUpdatedByName=" + encodeURIComponent("" + lastUpdatedByName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -8010,13 +8473,35 @@ export class WorkflowGroupService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    workflowGroupGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
+    workflowGroupGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, groupRoles: number[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowGroup?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (isActive !== undefined && isActive !== null)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (groupRoles !== undefined && groupRoles !== null)
+            groupRoles && groupRoles.forEach(item => { url_ += "GroupRoles=" + encodeURIComponent("" + item) + "&"; });
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (createdByName !== undefined && createdByName !== null)
+            url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
+        if (lastUpdatedOn !== undefined && lastUpdatedOn !== null)
+            url_ += "LastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
+        if (lastUpdatedByName !== undefined && lastUpdatedByName !== null)
+            url_ += "LastUpdatedByName=" + encodeURIComponent("" + lastUpdatedByName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -8239,13 +8724,33 @@ export class WorkflowStageService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    workflowStageGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowStageModel> {
+    workflowStageGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowStageModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowStage?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (isActive !== undefined && isActive !== null)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (createdByName !== undefined && createdByName !== null)
+            url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
+        if (lastUpdatedOn !== undefined && lastUpdatedOn !== null)
+            url_ += "LastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
+        if (lastUpdatedByName !== undefined && lastUpdatedByName !== null)
+            url_ += "LastUpdatedByName=" + encodeURIComponent("" + lastUpdatedByName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -17589,6 +18094,8 @@ export class QuotesProductsView implements IQuotesProductsView {
     cycleTime?: number;
     divisionFab?: string | undefined;
     segregationType?: EnumSegregationType | undefined;
+    lastUpdateOn?: Date | undefined;
+    lastUpdateBy?: string | undefined;
 
     constructor(data?: IQuotesProductsView) {
         if (data) {
@@ -17620,6 +18127,8 @@ export class QuotesProductsView implements IQuotesProductsView {
             this.cycleTime = _data["cycleTime"];
             this.divisionFab = _data["divisionFab"];
             this.segregationType = _data["segregationType"];
+            this.lastUpdateOn = _data["lastUpdateOn"] ? new Date(_data["lastUpdateOn"].toString()) : <any>undefined;
+            this.lastUpdateBy = _data["lastUpdateBy"];
         }
     }
 
@@ -17651,6 +18160,8 @@ export class QuotesProductsView implements IQuotesProductsView {
         data["cycleTime"] = this.cycleTime;
         data["divisionFab"] = this.divisionFab;
         data["segregationType"] = this.segregationType;
+        data["lastUpdateOn"] = this.lastUpdateOn ? this.lastUpdateOn.toISOString() : <any>undefined;
+        data["lastUpdateBy"] = this.lastUpdateBy;
         return data; 
     }
 }
@@ -17675,6 +18186,8 @@ export interface IQuotesProductsView {
     cycleTime?: number;
     divisionFab?: string | undefined;
     segregationType?: EnumSegregationType | undefined;
+    lastUpdateOn?: Date | undefined;
+    lastUpdateBy?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -18913,6 +19426,7 @@ export interface IAuditActionResultOfIEnumerableOfTrainingCertificationView exte
 }
 
 export class TrainingCertificationView implements ITrainingCertificationView {
+    id?: number;
     employeeName?: string | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
@@ -18930,6 +19444,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.employeeName = _data["employeeName"];
             this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
             this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
@@ -18947,6 +19462,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["employeeName"] = this.employeeName;
         data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
@@ -18957,6 +19473,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
 }
 
 export interface ITrainingCertificationView {
+    id?: number;
     employeeName?: string | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
