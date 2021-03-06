@@ -14,8 +14,9 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj, callFunctionWithFilters } from '../../../models/lib/Utils';
 import { Observable } from 'rxjs';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 
@@ -55,10 +56,11 @@ export class InvoiceComponent implements OnInit {
   combineSelected: boolean = true;
   showWorkOrders: boolean = false;
   showInvoiceItems: boolean = true;
-  allWorkorders: Array<InvoiceableWorkOrderView> = new Array <InvoiceableWorkOrderView>();
+  allWorkorders: Array<InvoiceableWorkOrderView> = new Array<InvoiceableWorkOrderView>();
   workorders: Array<InvoiceableWorkOrderView> = new Array<InvoiceableWorkOrderView>();
   calendarEn: any;
   isSelectAllWorkOrders: boolean = false;
+  totalRecords: number = 0;
 
   constructor(public globals: Globals, private invoiceService: InvoiceService, public cg: CommonGrid,
     private elem: ElementRef, private toastr: ToastrService, private customerService: CustomerService,
@@ -95,13 +97,11 @@ export class InvoiceComponent implements OnInit {
       new ColumnsSaved({ id: 'totalSalePrice', label: 'Total', visible: true })
     ];
 
-    this.isKitStatus = [{ label: 'Yes', value: true },
-    { label: 'No', value: false }];
-    this.isActive = [{ label: 'Yes', value: true },
-    { label: 'No', value: false }];
+    this.isKitStatus = this.globals.getYesNoArray();
+    this.isActive = this.globals.getYesNoArray();
 
     this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.Invoices);
-    this.getInvoices();
+
     this.getLocations();
     this.getCustomers();
     this.data = [];
@@ -163,7 +163,7 @@ export class InvoiceComponent implements OnInit {
 
   getCustomers() {
     this.globals.showLoader(true);
-    this.customerService.customerGet(null, null, null, null, null, null, null,null, null, null, null, null,null, null, null, null, null, null, env.apiVersion).pipe(take(1))
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customers = response.object;
       }));
@@ -211,8 +211,8 @@ export class InvoiceComponent implements OnInit {
 
   getLocations() {
     this.globals.showLoader(true);
-    this.locationService.locationGet(10, null, null, null,null,null,null,null,null,null,null,null,null,
-      null,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
+    this.locationService.locationGet(10, null, null, null, null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.locations = response.object.filter(x => x.parentId === null);
       }));
@@ -255,7 +255,7 @@ export class InvoiceComponent implements OnInit {
     this.isSelectAllWorkOrders = true;
     this.workorders.forEach((workorder, index) => {
       const isChecked = this.currentInvoice.invoiceItems.some(i => i.workOrderId === workorder.id);
-      this.workorders[index]['checked']  = isChecked;
+      this.workorders[index]['checked'] = isChecked;
       if (!isChecked) {
         this.isSelectAllWorkOrders = false;
       }
@@ -296,13 +296,16 @@ export class InvoiceComponent implements OnInit {
     jQuery('.parsleyjs').parsley().reset();
   }
 
-  getInvoices() {
-    this.globals.showLoader(true);
-    this.invoiceService.invoiceGet(null, null, null, null, null, null, null, null, null, null, null,null,null,null,null, env.apiVersion)
-      .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.data = response.object;
-      }));
+  getInvoices(event: LazyLoadEvent) {
+    setTimeout(() => {
+      this.globals.showLoader(true);
+      callFunctionWithFilters(this.invoiceService, this.invoiceService.invoiceGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.totalRecords = response.totalNumberOfRecords;
+          this.data = response.object;
+        }));
+    }, 10);
   }
 
   onInvoiceSubmit() {
