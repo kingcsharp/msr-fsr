@@ -8,6 +8,7 @@ import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
 import { take } from 'rxjs/operators';
 import { responseHandler } from '../../../utils/responseHandler';
 import { environment as env } from '../../../../environments/environment';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
 import {
   QuoteService,
   QuotesProductsView,
@@ -19,6 +20,7 @@ import {
 } from '../../../services/api.client.generated';
 import { CSRJsonModel, ProcessModel, PartModel } from '../../../models/csr-json-model';
 import { EnumCRFTabs } from '../../../models/enums/EnumCRFTabs';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -64,10 +66,11 @@ export class QuotesProductsComponent implements OnInit {
   getCustomersFlag: boolean = false;
   CSRCustomer: CustomerModel;
   CSRFormValidErrors: string[] = [];
-
+  currentEvent: LazyLoadEvent;
   tabMenus = EnumCRFTabs;
   activeTab: string;
   segregationTypes: any[] = [];
+  totalRecords: number = 0;
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
@@ -107,7 +110,7 @@ export class QuotesProductsComponent implements OnInit {
       { label: 'Deseg', value: EnumSegregationType.DESEG }
     ];
 
-    this.getQuotesProducts();
+    
     this.getCustomers();
     let ctrl = this;
     Parsley.on('field:error', function() {
@@ -117,12 +120,13 @@ export class QuotesProductsComponent implements OnInit {
     });
   }
 
-  getQuotesProducts() {
+  getQuotesProducts(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.quoteService.product(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null
-      ,null,null,null,0,10,null,env.apiVersion)
+      callFunctionWithFilters(this.quoteService, this.quoteService.product, event)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.currentEvent = event;
+        this.totalRecords = response.totalNumberOfRecords;
         this.data = response.object;
       }));
   }
@@ -153,7 +157,7 @@ export class QuotesProductsComponent implements OnInit {
     this.quoteService.quoteDelete(this.quoteToDelete.id, env.apiVersion)
       .subscribe(responseHandler((response) => {
         this.quoteToDelete = null;
-        this.getQuotesProducts();
+        this.getQuotesProducts(this.currentEvent);
       }));
   }
 
@@ -221,7 +225,7 @@ export class QuotesProductsComponent implements OnInit {
         .pipe(take(1))
         .subscribe(responseHandler((resp) => {
           this.closeCSRDialog();
-          this.getQuotesProducts();
+          this.getQuotesProducts(this.currentEvent);
       }));
     }
   }
