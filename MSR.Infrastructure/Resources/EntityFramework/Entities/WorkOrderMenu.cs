@@ -30,7 +30,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? PercentageOfTasksCompletedDenominator { get; set; }
         public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
         public decimal? PercentageOfExpectedDurationTimeLoggedNumerator { get; set; }
-        public double? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
+        public decimal? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
         public bool HasNcr { get; set; }
         public string SegregationType { get; set; }
     }
