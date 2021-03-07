@@ -107,7 +107,10 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent, glo
     Object.assign(filterEvObj, event);
     Object.assign(filterEvObj, extraParams);
 
+    //to generate dic.
     // const args = getArguments(func);
+    // globalDic[func.toString().split('(')[0]] = args;
+
     const args = globalDic[func.toString().split('(')[0]];
 
     const argsToCallFn = [];
