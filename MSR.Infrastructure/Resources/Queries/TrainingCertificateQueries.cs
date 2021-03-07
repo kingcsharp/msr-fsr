@@ -27,9 +27,9 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.EmployeeName, s => s.User.FullName.Contains(command.EmployeeName));
 
             if(command.Status.HasValue && command.Status.Value) {
-                query = query.Where(command.Status, s => DateTime.Compare(s.CertificationToDate.Value, DateTime.UtcNow) >= 0);
+                query = query.Where(command.Status, s => !s.CertificationToDate.HasValue || DateTime.Compare(s.CertificationToDate.Value, DateTime.UtcNow) >= 0);
             } else {
-                query = query.Where(command.Status, s => DateTime.Compare(s.CertificationToDate.Value, DateTime.UtcNow) <= 0);
+                query = query.Where(command.Status, s => s.CertificationToDate.HasValue && DateTime.Compare(s.CertificationToDate.Value, DateTime.UtcNow) <= 0);
             }
             
 
