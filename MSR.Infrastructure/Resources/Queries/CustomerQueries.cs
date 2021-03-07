@@ -20,18 +20,18 @@ namespace MSR.Infrastructure.Resources.Queries
         {
 
             query = query.Where(command.Id, s => s.Id == command.Id);
-            query = query.Where(command.Name, s => !string.IsNullOrEmpty(s.Name) && s.Name.Contains(command.Name));
-            query = query.Where(command.Address,s => !string.IsNullOrEmpty(s.Address) && s.Address.Contains(command.Address));
-            query = query.Where(command.Phone, s => !string.IsNullOrEmpty(s.Phone) && s.Phone.Contains(command.Phone));
+            query = query.Where(command.Name, s => !string.IsNullOrEmpty(s.Name) && s.Name.ToLower().Contains(command.Name.ToLower()));
+            query = query.Where(command.Address,s => !string.IsNullOrEmpty(s.Address) && s.Address.ToLower().Contains(command.Address.ToLower()));
+            query = query.Where(command.Phone, s => !string.IsNullOrEmpty(s.Phone) && s.Phone.ToLower().Contains(command.Phone.ToLower()));
             query = query.Where(command.PrimaryContactUserId, s => s.PrimaryContactUser.Id == command.PrimaryContactUserId);
             query = query.Where(command.SecondaryContactUserId, s => s.SecondaryContactUser.Id == command.SecondaryContactUserId);
             query = query.Where(command.LocationId, s=> s.Location.Id == command.LocationId);
             query = query.Where(command.IsActive, s => s.IsActive == command.IsActive);
-            query = query.Where(command.PrimaryContactUserFullName, s => s.PrimaryContactUser != null && !string.IsNullOrEmpty(s.PrimaryContactUser.FullName) && s.PrimaryContactUser.FullName.Contains(command.PrimaryContactUserFullName));
-            query = query.Where(command.SecondaryContactUserFullName, s => s.SecondaryContactUser != null && !string.IsNullOrEmpty(s.SecondaryContactUser.FullName) && s.SecondaryContactUser.FullName.Contains(command.SecondaryContactUserFullName));
-            query = query.Where(command.LocationName, s => s.Location != null && !string.IsNullOrEmpty(s.Location.Name) && s.Location.Name.Contains(command.LocationName));
-            query = query.Where(command.CustomerNumber, s=> !string.IsNullOrEmpty(s.CustomerNumber) && s.CustomerNumber.Contains(command.CustomerNumber));
-            query = query.Where(command.CreatedFullName, s=> !string.IsNullOrEmpty(s.Created.FullName) && s.Created.FullName.Contains(command.CreatedFullName));
+            query = query.Where(command.PrimaryContactUserFullName, s => s.PrimaryContactUser != null && !string.IsNullOrEmpty(s.PrimaryContactUser.FullName) && s.PrimaryContactUser.FullName.ToLower().Contains(command.PrimaryContactUserFullName.ToLower()));
+            query = query.Where(command.SecondaryContactUserFullName, s => s.SecondaryContactUser != null && !string.IsNullOrEmpty(s.SecondaryContactUser.FullName) && s.SecondaryContactUser.FullName.ToLower().Contains(command.SecondaryContactUserFullName.ToLower()));
+            query = query.Where(command.LocationName, s => s.Location != null && !string.IsNullOrEmpty(s.Location.Name) && s.Location.Name.ToLower().Contains(command.LocationName.ToLower()));
+            query = query.Where(command.CustomerNumber, s=> !string.IsNullOrEmpty(s.CustomerNumber) && s.CustomerNumber.ToLower().Contains(command.CustomerNumber.ToLower()));
+            query = query.Where(command.CreatedFullName, s=> !string.IsNullOrEmpty(s.Created.FullName) && s.Created.FullName.ToLower().Contains(command.CreatedFullName.ToLower()));
             query = query.Where(command.CreatedOn, s=> DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
 
             if(command.Status == null) {

@@ -15,21 +15,21 @@ namespace MSR.Infrastructure.Resources.Queries
     {
         public static IQueryable<LocationModel> CreateLocationQuery(this IQueryable<LocationModel> query, GetLocations command, bool forRowCount = false)
         {
-            query = query.Where(command.Address1, s =>  !string.IsNullOrEmpty(s.Address1) && s.Address1.Contains(command.Address1));
-            query = query.Where(command.Address2, s => !string.IsNullOrEmpty(s.Address2) && s.Address2.Contains(command.Address2));
-            query = query.Where(command.City, s => !string.IsNullOrEmpty(s.City) && s.City.Contains(command.City));
-            query = query.Where(command.Country, s => !string.IsNullOrEmpty(s.Country) && s.Country.Contains(command.Country));
-            query = query.Where(command.CreatedFullName, s => s.Created != null && s.Created.FullName.Contains(command.CreatedFullName));
+            query = query.Where(command.Address1, s =>  !string.IsNullOrEmpty(s.Address1) && s.Address1.ToLower().Contains(command.Address1.ToLower()));
+            query = query.Where(command.Address2, s => !string.IsNullOrEmpty(s.Address2) && s.Address2.ToLower().Contains(command.Address2.ToLower()));
+            query = query.Where(command.City, s => !string.IsNullOrEmpty(s.City) && s.City.ToLower().Contains(command.City.ToLower()));
+            query = query.Where(command.Country, s => !string.IsNullOrEmpty(s.Country) && s.Country.ToLower().Contains(command.Country.ToLower()));
+            query = query.Where(command.CreatedFullName, s => s.Created != null && s.Created.FullName.ToLower().Contains(command.CreatedFullName.ToLower()));
             query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date,command.CreatedOn.Value.Date) == 0);
             query = query.Where(command.Id, s => s.Id == command.Id);
-            query = query.Where(command.InternalAddress, s => !string.IsNullOrEmpty(s.InternalAddress) && s.InternalAddress.Contains(command.InternalAddress));
-            query = query.Where(command.Name, s => !string.IsNullOrEmpty(s.Name) && s.Name.Contains(command.Name));
+            query = query.Where(command.InternalAddress, s => !string.IsNullOrEmpty(s.InternalAddress) && s.InternalAddress.ToLower().Contains(command.InternalAddress.ToLower()));
+            query = query.Where(command.Name, s => !string.IsNullOrEmpty(s.Name) && s.Name.ToLower().Contains(command.Name.ToLower()));
             query = query.Where(command.ParentId, s => s.ParentId == command.ParentId);
-            query = query.Where(command.ParentName, s => s.Parent != null && s.Parent.Name.Contains(command.ParentName));
-            query = query.Where(command.Phone, s => !string.IsNullOrEmpty(s.Phone) && s.Phone.Contains(command.Phone));
-            query = query.Where(command.Postalcode, s => !string.IsNullOrEmpty(s.PostalCode) && s.PostalCode.Contains(command.Postalcode));
-            query = query.Where(command.State, s => !string.IsNullOrEmpty(s.State) && s.State.Contains(command.State));
-            query = query.Where(command.TimezoneDescription, s => s.TimeZone != null && !string.IsNullOrEmpty(s.TimeZone.Description) && s.TimeZone.Description.Contains(command.TimezoneDescription));
+            query = query.Where(command.ParentName, s => s.Parent != null && s.Parent.Name.ToLower().Contains(command.ParentName.ToLower()));
+            query = query.Where(command.Phone, s => !string.IsNullOrEmpty(s.Phone) && s.Phone.ToLower().Contains(command.Phone.ToLower()));
+            query = query.Where(command.Postalcode, s => !string.IsNullOrEmpty(s.PostalCode) && s.PostalCode.ToLower().Contains(command.Postalcode.ToLower()));
+            query = query.Where(command.State, s => !string.IsNullOrEmpty(s.State) && s.State.ToLower().Contains(command.State.ToLower()));
+            query = query.Where(command.TimezoneDescription, s => s.TimeZone != null && !string.IsNullOrEmpty(s.TimeZone.Description) && s.TimeZone.Description.ToLower().Contains(command.TimezoneDescription.ToLower()));
             query = query.Where(command.Status, s =>  command.Status.Contains(s.Status));
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
