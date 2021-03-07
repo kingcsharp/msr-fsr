@@ -80,7 +80,8 @@ namespace MSR.Infrastructure.Resources.Queries
             return query;
         }
 
-        public static IQueryable<WorkflowGroup> CreateWorkflowGroupQuery(this IQueryable<WorkflowGroup> query, GetWorkflowGroupsModel command, bool forRowCount = false)
+        public static IQueryable<WorkflowGroup> CreateWorkflowGroupQuery(this IQueryable<WorkflowGroup> query, GetWorkflowGroupsModel command, bool forRowCount = false,
+            List<EntityFramework.Entities.Role> roleEntities = null)
         {
             query = query.Include(x => x.GroupRoles).Include(x => x.GroupUsers).AsQueryable();
 
@@ -91,6 +92,13 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.CreatedByName, s => s.Created.FullName.Contains(command.CreatedByName));
             query = query.Where(command.LastUpdatedOn, s => DateTime.Compare(s.LastUpdatedOn.Value.Date, command.LastUpdatedOn.Value.Date) == 0);
             query = query.Where(command.LastUpdatedByName, s => s.LastUpdated.FullName.Contains(command.LastUpdatedByName));
+
+            if (command.GroupRoles != null && roleEntities != null)
+            {
+                var roleIds = roleEntities.Where(s => command.GroupRoles.Contains(s.Name)).Select(m => m.Id).ToList();
+                query = query.Where(command.GroupRoles, s => s.GroupRoles.Any(m => roleIds.Contains(m.RoleId)));
+            }
+
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
