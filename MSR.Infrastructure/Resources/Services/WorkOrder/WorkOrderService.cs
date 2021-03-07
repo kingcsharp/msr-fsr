@@ -1435,7 +1435,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         public async Task<int> GetTotalWorkOrderHistoryViewRows(GetWorkOrderHistory command)
         {
-            var totalRows = await _unitOfWork.WorkOrderHistoryViews.Query().CreateWorkOrderHistoryViewQuery(command).CountAsync();
+            var totalRows = await _unitOfWork.WorkOrderHistoryViews.Query().CreateWorkOrderHistoryViewQuery(command, true).CountAsync();
 
             return totalRows;
         }

@@ -12,8 +12,8 @@
             <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
                 [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
                 [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"  [filterDelay]="0" stateStorage="local"
-                [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getWorkOrdersHistory($event)" [totalRecords]="totalRecords"
-                 stateKey="{{gridStorageId}}">
+                [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getWorkOrdersHistory($event)"
+                [totalRecords]="totalRecords"  stateKey="{{gridStorageId}}">
                 <ng-template pTemplate="caption">
                     <div class="text-right">
                         <button *ngIf="false" [routerLink]="['../proceduretype-create']"
@@ -62,12 +62,14 @@
                             [hidden]="!commonGrid.isVisibleCol('qty',gridSettings)" [gridSettings]="gridSettings">
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('scheduledStartDate',gridSettings)">
-                            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'scheduledStartDate'"
-                                [datatable]="dt">
-                            </pcalendar-wrapper>
+                            <div class="position-relative" tooltip="Search by Scheduled Start Date">
+                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="scheduledStartDate"
+                                    [datatable]="dt">
+                                </pcalendar-wrapper>
+                            </div>
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('scheduledEndDate',gridSettings)">
-                            <div class="position-relative" tooltip="Search by Created On">
+                            <div class="position-relative" tooltip="SSearch by Scheduled End Date">
                                 <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="scheduledEndDate"
                                     [datatable]="dt">
                                 </pcalendar-wrapper>
