@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using MSR.Domain.Abstractions.Services;
+using System;
+using MSR.Domain.Models.Query;
 
 namespace MSR.Application.ViewServices
 {
@@ -31,6 +34,19 @@ namespace MSR.Application.ViewServices
 
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistoryAsync() => await _unitOfWork.Query<WorkOrder>().GetWorkOrderHistory(WorkOrderProjections.WorkOrderGridSummaryView);
 
-        public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync() => await _unitOfWork.Query<WorkOrder>().GetWorkOrderStatus(WorkOrderProjections.WorkOrderStatusView);
+        public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync()
+        {
+             return await _unitOfWork.Query<WorkOrderStatusSummary>().GetWorkOrderStatus(WorkOrderProjections.WorkOrderStatusView);       
+        }
+
+        public async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenuAsync(GetWorkOrderMenuQueryModel filters)
+        {
+            return await _unitOfWork.Query<WorkOrderMenu>().GetWorkOrderMenu(WorkOrderProjections.WorkOrderMenuView,filters);
+        }
+
+        public async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenuAsync(GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
+        {
+            return await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, portalWorkOrderQueryModel);
+        }
     }
 }

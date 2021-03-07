@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Answer.API.V1.Models.Paging;
 using MSR.Application.Abstractions;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
@@ -41,9 +42,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("History")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderHistoryView>>))]
-        public async Task<IActionResult> WorkOrderGetHistory()
+        public async Task<IActionResult> WorkOrderGetHistory([FromQuery] GetWorkOrderHistoryRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderHistory());
+            var command = request.ToGetWorkOrderHistory();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<WorkOrderHistoryView>>();
         }
 
@@ -53,10 +55,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
-        public async Task<IActionResult> WorkOrderGetMenu()
+        public async Task<IActionResult> WorkOrderGetMenu([FromQuery]GetWorkOrderMenuRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderMenu());
-            return ret.ToOkObjectResponse<ICollection<WorkOrderGridSummary>>();
+            var queryModel = request.ToGetWorkOrderQueryModel();
+            var workOrderMenuViews = await _workOrderViewService.GetWorkOrderMenuAsync(queryModel);
+            return GenerateOkViewResponse(workOrderMenuViews.data, workOrderMenuViews.totalRows);
         }
 
         /// <summary>
@@ -101,14 +104,14 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PortalWorkOrderView>>))]
         public async Task<IActionResult> GetPortalWorkOrder([FromQuery] GetPortalWorkOrderRequest request)
         {
-            var command = request.ToGetPortalWorkOrderCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<PortalWorkOrderView>>();
+            var queryModel = request.ToGetPortalWorkOrderQueryModel();
+            var portalWorkOrderMenuViews = await _workOrderViewService.GetPortalWorkOrderMenuAsync(queryModel);
+            return GenerateOkViewResponse(portalWorkOrderMenuViews.data, portalWorkOrderMenuViews.totalRows);
         }
 
         [HttpPatch("Message")]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderMessageModel>))]
-        public async Task<IActionResult> AddMessage([FromBody, Required]CreateWorkOrderMessageRequest request)
+        public async Task<IActionResult> AddMessage([FromBody, Required] CreateWorkOrderMessageRequest request)
         {
             var command = request.ToCreateWorkOrderMessageCommand();
             var ret = await _dispatcher.DispatchAsync(command);

@@ -5,7 +5,10 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
-import { UserService, TrainingCertificationView, EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
+import { UserService } from '../../../services/api.client.generated';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { take } from 'rxjs/operators';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-certifications',
@@ -22,16 +25,18 @@ export class CertificationsComponent implements OnInit {
   canEditLocation: boolean = false;
   canDeleteLocation: boolean = false;
   statusOptions: any[];
+  gridVersion: string;
+  totalRecords: number = 0;
 
   constructor(private userService: UserService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
-
+    this.gridVersion = '1.0.0';
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: false }),
-      new ColumnsSaved({ id: 'employeeName', label: 'Employee Name', visible: true}),
-      new ColumnsSaved({ id: 'certificationName', label: 'Certification', visible: true}),
+      new ColumnsSaved({ id: 'employeeName', label: 'Employee Name', visible: true }),
+      new ColumnsSaved({ id: 'certificationName', label: 'Certification', visible: true }),
       new ColumnsSaved({ id: 'certificationFromDate', label: 'From Date', visible: true }),
       new ColumnsSaved({ id: 'certificationToDate', label: 'To Date', visible: true }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true })
@@ -40,15 +45,19 @@ export class CertificationsComponent implements OnInit {
     this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);
     this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
+    this.statusOptions = [
+      { label: 'Active', value: true },
+      { label: 'InActive', value: false }]
+  }
 
+  getTrainingCertification(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.userService.trainingCertification(null, env.apiVersion).subscribe(responseHandler((response) => {
-      this.data = response.object;
-      this.statusOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-      ).map(x => ({ label: x.status, value: x.status }));
-
-    }));
+    setTimeout(() => {
+      callFunctionWithFilters(this.userService, this.userService.trainingCertification, event).pipe(take(1)).subscribe(responseHandler((response) => {
+        this.totalRecords = response.totalNumberOfRecords;
+        this.data = response.object;
+      }));
+    }, 10);
   }
 
   hasPrivilege(privilegeName) {

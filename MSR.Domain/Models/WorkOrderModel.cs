@@ -13,108 +13,25 @@ using System.Runtime.Serialization;
 
 namespace MSR.Domain.Models
 {
-    /// <summary>
-    /// WorkOrderModel
-    /// </summary>
-    [DataContract]
     public class WorkOrderModel
     {
-        /// <summary>
-        /// Gets or Sets Id
-        /// </summary>
-        [DataMember(Name="id")]
         public int? Id { get; set; }
-
-        [DataMember(Name = "customerName")]
-        public string? CustomerName { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ProductId
-        /// </summary>
-        [DataMember(Name="productId")]
-        public int? ProductId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Price
-        /// </summary>
-        [DataMember(Name="price")]
+        public string CustomerName { get; set; }
         public decimal? Price { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ScheduledStartDate
-        /// </summary>
-        [DataMember(Name="scheduledStartDate")]
         public DateTime? ScheduledStartDate { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ScheduledEndDate
-        /// </summary>
-        [DataMember(Name="scheduledEndDate")]
         public DateTime? ScheduledEndDate { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ActualStartDate
-        /// </summary>
-        [DataMember(Name="actualStartDate")]
         public DateTime? ActualStartDate { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ActualEndDate
-        /// </summary>
-        [DataMember(Name="actualEndDate")]
         public DateTime? ActualEndDate { get; set; }
-
-        /// <summary>
-        /// Gets or Sets HasNCR
-        /// </summary>
-        [DataMember(Name="hasNCR")]
         public bool? HasNCR { get; set; }
-
-        /// <summary>
-        /// Gets or Sets LocationId
-        /// </summary>
-        [DataMember(Name="locationId")]
         public int? LocationId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Location
-        /// </summary>
-        [DataMember(Name="location")]
-        public LocationModel Location { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Product
-        /// </summary>
-        [DataMember(Name="product")]
-        public ProductModel Product { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Purchase
-        /// </summary>
-        [DataMember(Name="purchase")]
-        public PurchaseModel Purchase { get; set; }
-
-        /// <summary>
-        /// Gets or Sets WorkOrderParts
-        /// </summary>
-        [DataMember(Name="workOrderParts")]
-        public ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
-
-        /// <summary>
-        /// Gets or Sets WorkOrderTasks
-        /// </summary>
-        [DataMember(Name="workOrderTasks")]
-        public ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
-
-        /// <summary>
-        /// Instructions added to work order from Portal
-        /// </summary>
-        public ICollection<WorkOrderMessageModel> WorkOrderMessages { get; set; }
-
-        /// <summary>
-        /// Status of string, calculated based on state of WO tasks
-        /// </summary>
-        [DataMember(Name="status")]
         public string Status { get; set; }
+        public LocationModel Location { get; set; }
+        public int? ProductId { get; set; }
+        public ProductModel Product { get; set; }
+        public int? PurchaseId { get; set; }
+        public PurchaseModel Purchase { get; set; }
+        public ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
+        public ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
+        public ICollection<WorkOrderMessageModel> WorkOrderMessages { get; set; }
     }
 }

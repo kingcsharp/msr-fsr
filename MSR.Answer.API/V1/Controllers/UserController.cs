@@ -47,7 +47,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<UserModel>>))]
-        public async Task<IActionResult> GetUsers([FromQuery, Required] GetUsersRequest request)
+        public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequest request)
         {
             var command = request.ToGetUsersCommand();
 
@@ -78,7 +78,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("TrainingCertification"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<TrainingCertificationView>>))]
         public async Task<IActionResult> GetTrainingCertificationData([FromQuery] GetTrainingCertificationRequest request)
         {
-            var command = new GetTrainingCertification { Id = request.UserId };
+            var command = request.ToGetRolesCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<IEnumerable<TrainingCertificationView>>();
 

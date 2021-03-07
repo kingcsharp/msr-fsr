@@ -15,6 +15,7 @@ using MSR.Infrastructure.Helpers.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using MSR.Domain.Views;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -81,7 +82,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             var createdByUser = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == command.CurrentUser);
             efUser.Created = createdByUser;
             efUser.CreatedOn = DateTime.UtcNow;
-
+            efUser.FullName = $"{efUser.FirstName} {efUser.LastName}";
             _unitOfWork.Users.Add(efUser);
 
             foreach (var role in getRolesFromDb)
@@ -170,7 +171,9 @@ namespace MSR.Infrastructure.Resources.Services.Users
             {
                 efUser.TimeZoneId = timezone;
             }
-            
+
+            efUser.FullName = $"{efUser.FirstName} {efUser.LastName}";
+
             await _unitOfWork.Users.UpdateAndSaveChangesAsync(efUser);
 
             var domainUser = _mapper.Map<Domain.Models.UserModel>(efUser);
@@ -181,68 +184,20 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<ICollection<Domain.Models.UserModel>> GetUsersAsync(GetUsers command)
         {
-            //This needs to be refactored to remove the dependency on EntityFramework Directly.
-            var users = _unitOfWork.Users.Query();
+            
+            var userEntities = await _unitOfWork.Users.Query().CreateUserQuery(command).ToListAsync();
 
-            if (command.Id.HasValue)
+            var userModels = new List<Domain.Models.UserModel>();
+
+            foreach (var userEntity in userEntities)
             {
-                users = users.Where(i => i.Id == command.Id.Value);
+                var userToAdd = _mapper.Map<Domain.Models.UserModel>(userEntity);
+                userToAdd.SupervisorName = userEntity?.Supervisor?.GetFullName();
+                SetRolesToUser(userEntity, userToAdd);
+                userModels.Add(userToAdd);
             }
 
-            if (!string.IsNullOrWhiteSpace(command.FirstName))
-            {
-                users = users.Where(i => i.FirstName == command.FirstName);
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.LastName))
-            {
-                users = users.Where(i => i.LastName == command.LastName);
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.UserName))
-            {
-                users = users.Where(i => i.UserName == command.UserName);
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.Title))
-            {
-                users = users.Where(i => i.Title == command.Title);
-            }
-
-            if (command.Supervisor.HasValue)
-            {
-                users = users.Where(i => i.SupervisorId != null && i.SupervisorId == command.Supervisor);
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.PrimaryPhone))
-            {
-                users = users.Where(i => i.Phone == command.PrimaryPhone);
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.Email))
-            {
-                users = users.Where(i => i.Email == command.Email);
-            }
-
-            if (command.HasRoleIDs != null && command.HasRoleIDs.Any())
-            {
-                users = users.Where(i => i.Roles.Any(r => command.HasRoleIDs.Contains(r.RoleId)));
-            }
-
-            var userList = new List<Domain.Models.UserModel>();
-
-            var usersTo = await users.Include(x => x.TimeZone).Include(x => x.Location).Include(x => x.Supervisor)
-                .Include(x => x.Roles).ThenInclude(x => x.Role).ToListAsync();
-
-            foreach (var user in usersTo)
-            {
-                var userToAdd = _mapper.Map<Domain.Models.UserModel>(user);
-                userToAdd.SupervisorName = user?.Supervisor?.GetFullName();
-                SetRolesToUser(user, userToAdd);
-                userList.Add(userToAdd);
-            }
-
-            return userList;
+            return userModels;
         }
 
         private static void SetRolesToUser(User user, Domain.Models.UserModel userToAdd)
@@ -588,26 +543,33 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command)
         {
-            var userRoles = _unitOfWork.UserRoles.Query();
+            var userRoleEntities = await _unitOfWork.UserRoles.Query().CreateTrainingCertificationQuery(command).ToListAsync();
 
-            if (command.Id.HasValue)
-            {
-                userRoles = userRoles.Where(i => i.UserId == command.Id.Value);
-            }
-
-            return await userRoles
-                .Include(i => i.User)
-                .Include(i => i.Role)
-                .Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value)
+            return userRoleEntities
                 .Select(i => new TrainingCertificationView()
                     {
+                        Id = i.Id,
                         CertificationFromDate = i.CertificationFromDate,
                         CertificationToDate = i.CertificationToDate,
                         EmployeeName = i.User.GetFullName(),
                         Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active"),
                         CertificationName = i.Role.Name
                     }
-                ).ToListAsync();
+                ).ToList();
+        }
+
+        public async Task<int> GetUsersTotalRowsAsync(GetUsers command)
+        {
+            var totalRows = await _unitOfWork.Users.Query().CreateUserQuery(command, true).CountAsync();
+
+            return totalRows;
+        }
+
+        public async Task<int> GetTrainingCertificationTotalRows(GetTrainingCertification command)
+        {
+            var totalRows = await _unitOfWork.UserRoles.Query().CreateTrainingCertificationQuery(command, true).CountAsync();
+
+            return totalRows;
         }
     }
 }

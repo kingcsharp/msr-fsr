@@ -57,12 +57,12 @@ export class ProcedureEditComponent implements OnInit {
       this.availableProcedureStepTemplates = procedureTemplateGetResponse.object.map(s => ({ label: s.title, value: s.id }));
 
       this.globals.showLoader(true);
-      this.roleService.roleGet(env.apiVersion).pipe(take(1)).subscribe(responseHandler((roleResponse) => {
+      this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler((roleResponse) => {
 
         this.availableRoles = roleResponse.object.sort((a, b) => (a.name > b.name) ? 1 : -1);
 
         this.globals.showLoader(true);
-        this.procedureTypeService.procedureTypeGet(null, env.apiVersion).pipe(take(1)).subscribe((procedureTypeGetResponse) => {
+        this.procedureTypeService.procedureTypeGet(null, null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe((procedureTypeGetResponse) => {
 
           this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
 
@@ -72,7 +72,7 @@ export class ProcedureEditComponent implements OnInit {
             this.procedureStepTypeOptions = procedureStepTypeResponse.object.map(s => ({ label: s.name, value: s.id }));
 
             this.globals.showLoader(true);
-            this.documentService.documentGet(null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(documentServiceResponse => {
+            this.documentService.documentGet(null, null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler(documentServiceResponse => {
 
               this.documentsAvailable = documentServiceResponse.object.map(s => ({ label: s.name, value: s.id }));
               this.getProcedure();
@@ -100,7 +100,8 @@ export class ProcedureEditComponent implements OnInit {
       if (this.procedure.id !== 0) {
 
         this.globals.showLoader(true);
-        this.procedureService.procedureGet(this.procedure.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedrueGetResponse) => {
+        this.procedureService.procedureGet(this.procedure.id, null,null,null,null,null,null,null,
+          null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedrueGetResponse) => {
 
           this.procedure = procedrueGetResponse.object[0];
 

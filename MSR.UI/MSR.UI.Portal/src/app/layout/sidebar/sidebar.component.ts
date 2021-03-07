@@ -6,7 +6,7 @@ import {
   QuotesProductsView,
   EnumMenuItem,
   CustomerService,
-  Customer,
+  CustomerModel,
   CreateQuoteRequest,
 } from '../../services/api.client.generated';
 import { CSRJsonModel, ProcessModel, PartModel } from '../../models/csr-json-model';

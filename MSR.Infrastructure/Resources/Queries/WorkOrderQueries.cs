@@ -13,6 +13,9 @@ using MSR.Domain.Helpers;
 using MSR.Domain.DTOs;
 using System.Collections.Concurrent;
 using System.Text;
+using Newtonsoft.Json;
+using MSR.Domain.Models.Query;
+using System.Diagnostics;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -65,49 +68,110 @@ namespace MSR.Infrastructure.Resources.Queries
             return workOrderGridSummaryViews.ToList();
         }
 
-        public static async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatus(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection)
+        public static async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatus(this DbSet<WorkOrderStatusSummary> dbSet, Expression<Func<WorkOrderStatusSummary, dynamic>> projection)
         {
-            var workOrderStatusDTOs = (await QueryHelper.GetViewDataFor<WorkOrder, ICollection<WorkOrderStatusViewDTO>>(dbSet, projection)).Where(i => !i.ActualEndDate.HasValue).ToList();
-            var workOrderStatusViews = new ConcurrentBag<WorkOrderStatus>();
-            var workOrderHistoryBag = new ConcurrentBag<WorkOrderStatusViewDTO>(workOrderStatusDTOs);
-
-            Parallel.ForEach(workOrderStatusDTOs, workOrderStatusDTO =>
-            {
-                var status = EnumUtils.GetDescription(GetWorkOrderStatusFromTasks(workOrderStatusDTO.WorkOrderTasks));
-                var firstTask = workOrderStatusDTO.WorkOrderTasks.FirstOrDefault(i => i.StatusId == 3 || i.StatusId == 6 || i.StatusId == 8);
-
-                var assignedToUser = firstTask == null ? workOrderStatusDTO.WorkOrderTasks.Any() ? workOrderStatusDTO.WorkOrderTasks.First().AssignedToUser : string.Empty : firstTask.AssignedToUser;
-                var assignedToId = firstTask == null ? workOrderStatusDTO.WorkOrderTasks.Any() ? workOrderStatusDTO.WorkOrderTasks.First().AssignedTo : null : firstTask.AssignedTo;
-
-                var workOrderStatusView = new WorkOrderStatus()
-                {
-                    ProductName = workOrderStatusDTO.ProductName,
-                    LocationName = workOrderStatusDTO.LocationName,
-                    PartNumber = workOrderStatusDTO.WorkOrderPart?.PartNumber,
-                    ProcedureName = workOrderStatusDTO.WorkOrderTasks.Any() ? workOrderStatusDTO.WorkOrderTasks.First().ProcedureName : "",
-                    WorkOrderSummary = new WorkOrderSummary()
-                    {
-                        AssignedTo = assignedToId,
-                        WorkOrderAssignedTo = assignedToUser,
-                        PurchaseOrderLineNumber = workOrderStatusDTO.PurchaseOrderLineNumber,
-                        WorkOrderHasNcr = workOrderStatusDTO.WorkOrderHasNcr,
-                        WorkOrderId = workOrderStatusDTO.WorkOrderId,
-                        WorkOrderItemNumber = workOrderStatusDTO.WorkOrderItemNumber,
-                        WorkOrderPartSerialNumber = workOrderStatusDTO.WorkOrderPart?.SerialNumber,
-                        WorkOrderScheduledEndDate = workOrderStatusDTO.WorkOrderScheduledEndDate,
-                        WorkOrderStatus = status
-                    }
-                };
-
-                workOrderStatusViews.Add(workOrderStatusView);
-            });
-
-            return workOrderStatusViews.ToList();
+            var workOrderStatusViews = (await QueryHelper.GetViewDataFor<WorkOrderStatusSummary, ICollection<WorkOrderStatus>>(dbSet, projection)).ToList();
+            return workOrderStatusViews;
         }
 
-        private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,
-                       decimal PercentageOfExpectedDurationTimeLoggedNumerator, decimal PercentageOfExpectedDurationTimeLoggedDenominator,
-                       decimal PercentageOfExpectedDurationTimeLogged) CalculateWorkOrderProgress(WorkOrderHistoryViewDTO workOrderEntity)
+        public static async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenu(this DbSet<WorkOrderMenu> dbSet, Expression<Func<WorkOrderMenu,dynamic>> projection, GetWorkOrderMenuQueryModel filters)
+        {
+
+            var apagedData = dbSet.AsQueryable().ToFilterView(filters);
+            var apagedList = await apagedData.data.ToListAsync();
+            return (apagedList.Select(i => AutoMapperHelper.Mapper.Map<WorkOrderGridSummary>(i)).ToList(), apagedData.totalRows);
+
+        }
+
+        public static async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
+        {
+            var startDateFilter = portalWorkOrderQueryModel.Filters?.FirstOrDefault(i => i.Field.ToLower() == "startdate");
+            var dueDateFilter = portalWorkOrderQueryModel.Filters?.FirstOrDefault(i => i.Field.ToLower() == "duedate");
+            var supportInfoSort = portalWorkOrderQueryModel.Sort?.FirstOrDefault(i => i.Field.ToLower() == "supportinginfo");
+
+            if(supportInfoSort != null)
+            {
+                supportInfoSort.Field = "Disposition";
+            }
+            if(startDateFilter != null)
+            {
+                startDateFilter.IsNullable = true;
+            }
+            if(dueDateFilter != null)
+            {
+                dueDateFilter.IsNullable = true;
+            }
+
+            var portalWorkOrderViews = new List<PortalWorkOrderView>();
+            var pagedData = dbSet.AsQueryable().Where(i => i.CustomerId == portalWorkOrderQueryModel.CustomerId && i.CreatedOn >= portalWorkOrderQueryModel.FromDate && i.CreatedOn <= portalWorkOrderQueryModel.ToDate)
+                                                .ToFilterView(portalWorkOrderQueryModel);
+
+            var pagedList = await pagedData.data.ToListAsync();
+            foreach (var view in pagedList)
+            {
+                var portalWorkOrderView = new PortalWorkOrderView()
+                {
+                    Id = view.WorkOrderId,
+                    WorkOrderId = view.WorkOrderId,
+                    SubParts = new List<PortalSubPartView>(),
+                    CompanyPartNumber = view.CompanyPartNumber,
+                    CustomerId = view.CustomerId,
+                    CycleCount = view.CycleCount,
+                    Disposition = view.Disposition,
+                    DueDate = view.DueDate,
+                    HasFiles = view.HasFiles,
+                    HasMonitors = view.HasMonitors,
+                    HasNCRs = view.HasNCRs,
+                    HasPhotos = view.HasPhotos,
+                    InvoiceAmount = view.InvoiceAmount,
+                    InvoiceDate = view.InvoiceDate,
+                    InvoiceName = view.InvoiceName,
+                    Messages = new List<WorkOrderMessageModel>(),
+                    PartId = view.PartId,
+                    PartName = view.PartName,
+                    PercentageOfExpectedDurationTimeLogged = view.PercentageOfExpectedDurationTimeLogged,
+                    PercentageOfExpectedDurationTimeLoggedDenominator = view.PercentageOfExpectedDurationTimeLoggedDenominator,
+                    PercentageOfExpectedDurationTimeLoggedNumerator = view.PercentageOfExpectedDurationTimeLoggedNumerator,
+                    PercentageOfTasksCompleted = view.PercentageOfTasksCompleted,
+                    PercentageOfTasksCompletedDenominator = view.PercentageOfTasksCompletedDenominator,
+                    PercentageOfTasksCompletedNumerator = view.PercentageOfTasksCompletedNumerator,
+                    Price = view.Price,
+                    ProcedureName = view.ProcedureName,
+                    ProductName = view.ProductName,
+                    PurchaseOrderNumber = view.PurchaseOrderNumber,
+                    Qty = view.Qty,
+                    SerialNumber = view.SerialNumber,
+                    StartDate = view.StartDate,
+                    Status = view.Status
+                };
+
+                if (!string.IsNullOrWhiteSpace(view.Disposition))
+                {
+                    var messages = (from messageItem in view.Disposition.Split(';', StringSplitOptions.RemoveEmptyEntries)
+                                    let eachMessage = messageItem.Split(',')
+                                    select new WorkOrderMessageModel()
+                                    {
+                                        Date = DateTime.Parse(eachMessage[1]),
+                                        Name = eachMessage[0],
+                                        Message = eachMessage[2]
+                                    }).ToList();
+
+                    portalWorkOrderView.Messages = messages;
+                }
+                var subParts = pagedList.First(i => i.WorkOrderId == view.WorkOrderId).SubParts;
+                if (!string.IsNullOrWhiteSpace(subParts))
+                {
+                    var subPartModels = JsonConvert.DeserializeObject<List<PortalSubPartView>>(subParts);
+                    portalWorkOrderView.SubParts = subPartModels;
+                }
+                portalWorkOrderViews.Add(portalWorkOrderView);
+            }
+
+            return (portalWorkOrderViews.ToList(), pagedData.totalRows);
+        }
+
+        private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,decimal PercentageOfExpectedDurationTimeLoggedNumerator, 
+                        decimal PercentageOfExpectedDurationTimeLoggedDenominator, decimal PercentageOfExpectedDurationTimeLogged) CalculateWorkOrderProgress(WorkOrderHistoryViewDTO workOrderEntity)
         {
             int[] pctCompletedIds = { 3, 4, 6, 8 };
             int completedDenominator = workOrderEntity.WorkOrderTasks.Count();

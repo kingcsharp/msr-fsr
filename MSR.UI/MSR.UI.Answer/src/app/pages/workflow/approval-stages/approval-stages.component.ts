@@ -13,8 +13,11 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj, callFunctionWithFilters } from '../../../models/lib/Utils';
 import { AllowedActions } from '../../../../app/models/lib/AllowedActions';
+import { LazyLoadEvent } from 'primeng/api';
+import { createUrlResolverWithoutPackagePrefix } from '@angular/compiler';
+
 declare let jQuery: any;
 
 @Component({
@@ -39,6 +42,7 @@ export class ApprovalStagesComponent implements OnInit {
   workflowGroups: any[] = [];
   getWorkflowGroupsDone: boolean = false;
   userPrivileges: AllowedActions;
+  totalRecords: number = 0;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private workflowStageService: WorkflowStageService, private workflowGroupService: WorkflowGroupService) {
@@ -64,20 +68,22 @@ export class ApprovalStagesComponent implements OnInit {
     this.roles = [];
 
     this.userPrivileges = this.globals.getEnumPrivileges(EnumMenuItem.ApprovalStages);
-
-    this.getWorkflowStages();
     this.getWorkflowGroups();
   }
 
-  getWorkflowStages() {
+  getWorkflowStages(event: LazyLoadEvent) {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.globals.showLoader(false);
-        ctrl.data = response.object;
-        this.setGroupsSaved();
-      }));
+    setTimeout(() => {
+      callFunctionWithFilters(this.workflowStageService, this.workflowStageService.workflowStageGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.globals.showLoader(false);
+          ctrl.data = response.object;
+          ctrl.totalRecords = response.totalNumberOfRecords;
+          this.setGroupsSaved();
+        }));
+    }, 10);
   }
 
   setGroupsSaved() {
@@ -101,7 +107,8 @@ export class ApprovalStagesComponent implements OnInit {
 
   getWorkflowGroups() {
     const ctrl = this;
-    this.workflowGroupService.workflowGroupGet(null, env.apiVersion).pipe(take(1))
+    this.workflowGroupService.workflowGroupGet(null, null, null, null, null, null, null, null, null,
+      null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.forEach(element => {
           ctrl.workflowGroups.push({ name: element.name, workflowGroupId: element.id });

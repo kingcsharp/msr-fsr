@@ -18,5 +18,6 @@ namespace MSR.Domain.Abstractions.Services
         Task DeleteHelpPageRole(DeleteHelpPageRole command);
 
         Task<IEnumerable<HelpPage>> GetHelpPages(GetHelpPage command);
+        Task<int> GetHelpPagesTotalRows(GetHelpPage command);
     }
 }

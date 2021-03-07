@@ -7,6 +7,9 @@ import { WorkOrderService, EnumSegregationType } from '../../../services/api.cli
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
+import { LazyLoadEvent } from 'primeng/api';
+import { callFunctionWithFiltersViews } from '../../../models/lib/Utils';
+import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 
 @Component({
   selector: 'app-wip',
@@ -23,73 +26,73 @@ export class WipComponent implements OnInit {
   locationOptions: Array<SelectItem>;
   gridVersion: string;
   EnumSegregationType = EnumSegregationType;
+  totalRecords: number = 0;
 
   constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
 
-    this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
+    this.gridStorageId = 'wogrid' + this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
-      new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false }),
-      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', visible: true }),
-      new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true }),
-      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true }),
-      new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true }),
-      new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true }),
-      new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true }),
-      new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true }),
-      new ColumnsSaved({ id: 'actualStartDate', label: 'Actual Start Date', visible: true }),
-      new ColumnsSaved({ id: 'productName', label: 'Product', visible: true }),
-      new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
-      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true })
+      new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true, type: EnumColumnType.Date }),
+      new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true, type: EnumColumnType.Date }),
+      new ColumnsSaved({ id: 'actualStartDate', label: 'Actual Start Date', visible: true, type: EnumColumnType.Date }),
+      new ColumnsSaved({ id: 'productName', label: 'Product', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.StringArray }),
+      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String })
     ];
 
+    this.statusOptions = [
+      { label: 'In Progress', value: 'In Progress' },
+      { label: 'Waiting to Start', value: 'Waiting to Start' }
+  ];
+    this.locationOptions = this.globals.getTopLevelLocations();
+  }
 
+  getWorkOrders(event: LazyLoadEvent) {
+    this.globals.showLoader(true);
+    setTimeout(() => {
+      // this.workOrderService.menu(0, 100, null, null, env.apiVersion)
+      callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.menu, {}, this.gridSettings, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.totalRecords = response.totalNumberOfRecords;
+          this.data = response.object;
+          this.data.map((elem) => this.setElementStyle(elem));
+        }));
+    }, 10);
+  }
 
-    this.workOrderService.menu(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
-
-      this.data = response.object;
-
-      this.statusOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-      ).map(x => ({ label: x.status, value: x.status }));
-      this.data.map((elem) => {
-
-        elem.timeLoggedType = 'danger';
-
-        if (elem.percentageOfExpectedDurationTimeLogged > .25) {
-          elem.timeLoggedType = 'warning';
-        }
-        if (elem.percentageOfExpectedDurationTimeLogged > .50) {
-          elem.timeLoggedType = 'info';
-        }
-        if (elem.percentageOfExpectedDurationTimeLogged > .75) {
-          elem.timeLoggedType = 'success';
-        }
-
-        elem.tasksCompletedType = 'danger';
-
-        if (elem.percentageOfTasksCompleted > .25) {
-          elem.tasksCompletedType = 'warning';
-        }
-        if (elem.percentageOfTasksCompleted > .50) {
-          elem.tasksCompletedType = 'info';
-        }
-        if (elem.percentageOfTasksCompleted > .75) {
-          elem.tasksCompletedType = 'success';
-        }
-
-      });
-      this.locationOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
-      ).map(x => ({ label: x.locationName, value: x.locationName }));
-
-    }));
-
-
+  setElementStyle(elem) {
+    elem.timeLoggedType = 'danger';
+    if (elem.percentageOfExpectedDurationTimeLogged > .25) {
+      elem.timeLoggedType = 'warning';
+    }
+    if (elem.percentageOfExpectedDurationTimeLogged > .50) {
+      elem.timeLoggedType = 'info';
+    }
+    if (elem.percentageOfExpectedDurationTimeLogged > .75) {
+      elem.timeLoggedType = 'success';
+    }
+    elem.tasksCompletedType = 'danger';
+    if (elem.percentageOfTasksCompleted > .25) {
+      elem.tasksCompletedType = 'warning';
+    }
+    if (elem.percentageOfTasksCompleted > .50) {
+      elem.tasksCompletedType = 'info';
+    }
+    if (elem.percentageOfTasksCompleted > .75) {
+      elem.tasksCompletedType = 'success';
+    }
   }
 
 }

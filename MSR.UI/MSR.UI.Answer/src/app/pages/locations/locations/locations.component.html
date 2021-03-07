@@ -12,6 +12,7 @@
       <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
         [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
         [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" [filterDelay]="0"
+        [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getLocations($event)" [totalRecords]="totalRecords"
         stateStorage="local" stateKey="{{gridStorageId}}">
         <ng-template pTemplate="caption">
           <div class="text-right">
@@ -178,7 +179,7 @@
               {{location.state}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('postalcode', gridSettings)">
-              {{location.postalcode}}
+              {{location.postalCode}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('country', gridSettings)">
               {{location.country}}
@@ -190,7 +191,7 @@
               {{ location.parent?.name }}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('timezone.description', gridSettings)">
-              {{location.timezone?.description}}
+              {{location.timeZone?.description}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('address2', gridSettings)">
               {{location.address2}}

@@ -25,7 +25,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetProcedureType command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.GetProcedureTypeAsync(command);
-            return new CommandResponse<ICollection<ProcedureType>>(ret);
+            int totalRows = await _procedureService.GetProcedureTypeTotalRows(command);
+            return new PagingCommandResponse<ICollection<ProcedureType>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
         public async Task<ICommandResponse> HandleAsync(CreateProcedureType command, CancellationToken cancellationToken = default)
         {

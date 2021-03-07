@@ -3,7 +3,7 @@ using System;
 
 namespace MSR.Domain.Commands
 {
-    public class GetInvoices : Command
+    public class GetInvoices : PagingCommand
     {
         public int? Id { get; set; }
         public string CustomerName { get; set; }

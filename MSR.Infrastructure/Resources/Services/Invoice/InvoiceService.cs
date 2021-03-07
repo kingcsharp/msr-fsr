@@ -11,6 +11,7 @@ using MSR.Domain.Models;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Invoices
 {
@@ -133,21 +134,23 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<IEnumerable<InvoiceView>> GetInvoicesAsync(GetInvoicesGridView command)
         {
-            var invoiceList = new List<InvoiceView>();
+            
 
-            var invoices = GetFilteredInvoices(command);
+            var invoiceEntities = _unitOfWork.Invoices.Query().CreateLocationQuery(command).ToListAsync();
 
-            foreach (var invoice in await invoices.ToListAsync())
+            var invoiceViews = new List<InvoiceView>();
+
+            foreach (var invoiceEntity in await invoiceEntities)
             {
-                var isValid = ClientCheckFiltering(command, invoice);
+                var isValid = ClientCheckFiltering(command, invoiceEntity);
 
                 if (isValid)
                 {
-                    invoiceList.Add(_mapper.Map<InvoiceView>(invoice));
+                    invoiceViews.Add(_mapper.Map<InvoiceView>(invoiceEntity));
                 }
             }
 
-            return invoiceList.AsEnumerable();
+            return invoiceViews.AsEnumerable();
         }
 
         private bool ClientCheckFiltering(GetInvoices command, Invoice invoice)
@@ -308,6 +311,12 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }).ToList();
 
             invoice.TaxPercentage = command.TaxPercentage ?? invoice.TaxPercentage;
+        }
+
+        public Task<int> GetInvoicesTotalRows(GetInvoicesGridView command)
+        {
+            var totalRows = _unitOfWork.Invoices.Query().CreateLocationQuery(command, true).CountAsync();
+            return totalRows;
         }
     }
 }

@@ -48,7 +48,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetInvoicesGridView command, CancellationToken cancellationToken = default)
         {
             var ret = await _invoiceService.GetInvoicesAsync(command);
-            return new CommandResponse<IEnumerable<InvoiceView>>(ret);
+            int totalRows = await _invoiceService.GetInvoicesTotalRows(command);
+            return new PagingCommandResponse<IEnumerable<InvoiceView>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateOneInvoice command, CancellationToken cancellationToken = default)

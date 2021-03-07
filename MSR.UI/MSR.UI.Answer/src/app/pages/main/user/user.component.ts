@@ -3,7 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import {
   UserService, UserModel, IAuditActionResultOfUserModel, LocationService
-  , UpdateUserRequest, RoleService, Role, EnumMenuItem, CustomerService, Customer
+  , UpdateUserRequest, RoleService, Role, EnumMenuItem, CustomerService, CustomerModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -14,6 +14,8 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { copyObj } from '../../../models/lib/Utils';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 
@@ -51,7 +53,8 @@ export class UserComponent implements OnInit {
   gridOptionsRotate: boolean = false;
   locations: any[] = [];
   getLocationsFlag: boolean = false;
-  customers: Array<Customer>;
+  customers: Array<CustomerModel>;
+  totalRecords: number = 0;
 
   constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService, private customerService: CustomerService,
     public globals: Globals, private elem: ElementRef, public locationService: LocationService, public roleService: RoleService) {
@@ -89,21 +92,21 @@ export class UserComponent implements OnInit {
     ];
 
     this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.Users);
-    this.getUsers();
     this.getLocations();
     this.getRoles();
     this.getCustomers();
   }
 
   getCustomers() {
-    this.customerService.customerGet(null, null, null, null, null, null, null, true, env.apiVersion).pipe(take(1))
+    this.customerService.customerGet(null, null, null, null, null, null, null, true, null, null, null, null, null,
+      null, null, null, null, null,null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customers = response.object;
       }));
   }
 
   getRoles() {
-    this.roleService.roleGet(env.apiVersion).pipe(take(1))
+    this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.allRoles = response.object;
       }));
@@ -113,7 +116,7 @@ export class UserComponent implements OnInit {
     if (this.getLocationsFlag) {
       return this.locations;
     }
-    this.locationService.locationGet(null, null, null, env.apiVersion)
+    this.locationService.locationGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
@@ -125,14 +128,17 @@ export class UserComponent implements OnInit {
       }));
   }
 
-  async getUsers() {
+  async getUsers(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion)
-      .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.data = response.object;
-        this.updateUsersData(this.data);
-      }));
+    setTimeout(() => {
+      callFunctionWithFilters(this.userService, this.userService.userGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.totalRecords = response.totalNumberOfRecords;
+          this.data = response.object;
+          this.updateUsersData(this.data);
+        }));
+    }, 10);
   }
 
   updateUsersData(usersData) {

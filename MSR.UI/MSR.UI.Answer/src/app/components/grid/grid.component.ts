@@ -20,7 +20,7 @@ import { ReportCubeService } from '../../pages/reports/reportcube.service';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { CSVConverterService } from '../../services/csvconverter.service';
-
+// import * as $ from 'jquery';
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',

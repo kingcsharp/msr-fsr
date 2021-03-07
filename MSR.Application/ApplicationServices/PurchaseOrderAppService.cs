@@ -6,6 +6,8 @@ using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -25,7 +27,10 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetPurchaseOrder command, CancellationToken cancellationToken = default)
         {
             var ret = await _purchaseOrderService.GetPurchaseOrderAsync(command);
-            return new CommandResponse<IEnumerable<PurchaseOrderView>>(ret);
+            var totalRows = ret.AsQueryable().CreatePurchaseOrderViewQuery(command, true).Count();
+            ret = ret.AsQueryable().CreatePurchaseOrderViewQuery(command).ToList();
+            
+            return new PagingCommandResponse<IEnumerable<PurchaseOrderView>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreatePurchaseOrder command, CancellationToken cancellationToken = default)

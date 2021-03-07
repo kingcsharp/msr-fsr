@@ -5,19 +5,12 @@
   </h1>
 
   <widget class="mt-4">
-    <p-table
-      #dt
-      [value]="data"
-      dataKey="id"
-      styleClass="ui-table-customers"
-      [rowHover]="true"
-      [rows]="10"
-      [showCurrentPageReport]="true"
-      [rowsPerPageOptions]="[10,25,50,100]"
-      [paginator]="true"
-      currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
-      stateKey="{{gridStorageId}}"
-    >
+    <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
+      currentPageReportTemplate="Showing {first}-{last} of {{totalRecords}}" [filterDelay]="0" stateStorage="local"
+      [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getDocuments($event)" [totalRecords]="totalRecords"
+      
+      stateKey="{{gridStorageId}}">
       <ng-template pTemplate="caption">
         <div class="text-right">
           <button *ngIf="documentsPrivileges.canCreate" (click)="openDocumentDialog()"
@@ -40,14 +33,9 @@
         <tr>
           <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
             <div class="position-relative">
-              <input
-                pInputText type="text"
-                tooltip="Search by Id"
-                (input)="dt.filter($event.target.value, 'id', 'contains')"
-                data-cy="searchbyid-grid"
-                class="ui-column-filter"
-                [value]="dt.filters['id']?.value"
-              >
+              <input pInputText type="text" tooltip="Search by Id"
+                (input)="dt.filter($event.target.value, 'id', 'contains')" data-cy="searchbyid-grid"
+                class="ui-column-filter" [value]="dt.filters['id']?.value">
               <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
             </div>
           </th>
@@ -56,7 +44,8 @@
               <input pInputText type="text" tooltip="Search by Name" data-cy="searchbyname-grid"
                 (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
                 [value]="dt.filters['name']?.value">
-              <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
+              <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'name')"></i>
             </div>
           </th>
           <th [hidden]="!cg.isVisibleCol('revision',gridSettings)">
@@ -64,7 +53,8 @@
               <input pInputText type="text" tooltip="Search by Revision" data-cy="searchbyrevision-grid"
                 (input)="dt.filter($event.target.value, 'revision', 'contains')" class="ui-column-filter"
                 [value]="dt.filters['revision']?.value">
-              <i *ngIf="dt.filters['revision']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'revision')"></i>
+              <i *ngIf="dt.filters['revision']?.value" class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'revision')"></i>
             </div>
           </th>
           <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
@@ -75,13 +65,9 @@
           </th>
           <th [hidden]="!cg.isVisibleCol('lastUpdated.fullName',gridSettings)">
             <div class="position-relative">
-              <input
-                pInputText type="text"
-                tooltip="Search by Updated By User"
-                data-cy="searchbyupdated-grid"
+              <input pInputText type="text" tooltip="Search by Updated By User" data-cy="searchbyupdated-grid"
                 (input)="dt.filter($event.target.value, 'lastUpdated.fullName', 'contains')" class="ui-column-filter"
-                [value]="dt.filters['lastUpdated.fullName']?.value"
-              >
+                [value]="dt.filters['lastUpdated.fullName']?.value">
               <i *ngIf="dt.filters['lastUpdated.fullName']?.value" class="fclear pi pi-times pointer"
                 (click)="cg.filter(dt,'lastUpdated.fullName')"></i>
             </div>
@@ -108,16 +94,16 @@
             {{documentmodel.lastUpdated ? documentmodel.lastUpdated.fullName : ''}}
           </td>
           <td [hidden]="!cg.isVisibleCol('referenceFiles',gridSettings)">
-            <grid-file-viewer [menuItem]="menuItems.Documents" [files]="documentmodel.referenceFiles"></grid-file-viewer>
+            <grid-file-viewer [menuItem]="menuItems.Documents" [files]="documentmodel.referenceFiles">
+            </grid-file-viewer>
           </td>
           <td>
-            <i *ngIf="documentsPrivileges.canEdit"
-            class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
-            (click)="openDocumentDialog(documentmodel)">
-          </i>
+            <i *ngIf="documentsPrivileges.canEdit" class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
+              (click)="openDocumentDialog(documentmodel)">
+            </i>
             <i *ngIf="documentsPrivileges.canDelete" class="far fa-trash-alt pointer" tooltip="Delete Document"
-            data-cy="deleteRow" (click)="openConfirmDeleteDialog(documentmodel)">
-          </i>
+              data-cy="deleteRow" (click)="openConfirmDeleteDialog(documentmodel)">
+            </i>
           </td>
         </tr>
       </ng-template>
@@ -130,8 +116,8 @@
   </widget>
 </div>
 
-<p-dialog header="Confirm Delete Document" [(visible)]="showConfirmDeleteDialog" appendTo="body"
-  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+<p-dialog header="Confirm Delete Document" [(visible)]="showConfirmDeleteDialog" appendTo="body" [baseZIndex]="100001"
+  [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
   <div class="container">
     <div class="row">
       Are you sure you want to Delete this Document?
@@ -150,14 +136,10 @@
     </div>
   </p-footer>
 </p-dialog>
-<p-dialog *ngIf="document" header="{{ document.id === undefined ? 'Add Document':'Edit Document'}}" [(visible)]="showDocumentDialog"
-  [style]="{width: '70vw'}" data-cy="user-header" [modal]='true'>
-  <form
-    data-parsley-validate
-    class="form-horizontal form-label-left parsleyjs"
-    method="post"
-    data-parsley-priority-enabled="false"
-    novalidate="novalidate">
+<p-dialog *ngIf="document" header="{{ document.id === undefined ? 'Add Document':'Edit Document'}}"
+  [(visible)]="showDocumentDialog" [style]="{width: '70vw'}" data-cy="user-header" [modal]='true'>
+  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
       <header>
         <h5>
@@ -173,33 +155,16 @@
             <label for="title" class="col-form-label text-left">
               Document Name
             </label>
-            <input
-              type="text"
-              name="name"
-              [(ngModel)]="document.name"
-              data-validate="parsley"
-              data-parsley-trigger="change"
-              data-parsley-minlength="3"
-              data-parsley-required="true"
-              class="form-control input-transparent"
-              tooltip="Name of Document"
-              data-cy="document-input-name"
-            >
+            <input type="text" name="name" [(ngModel)]="document.name" data-validate="parsley"
+              data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+              class="form-control input-transparent" tooltip="Name of Document" data-cy="document-input-name">
           </div>
           <div class="form-group">
             <label for="referencefiles" class="col-form-label text-left">
               Reference Files
             </label>
-            <cmh-file-uploader
-              name="referencefiles"
-              class="col-12"
-              [menuItem]="menuItems.Documents"
-              multiple="multiple"
-              [(files)]="document.referenceFiles"
-              showSelectButton="true"
-              chooseLabel="Browse..."
-              selectLabel="Select"
-            >
+            <cmh-file-uploader name="referencefiles" class="col-12" [menuItem]="menuItems.Documents" multiple="multiple"
+              [(files)]="document.referenceFiles" showSelectButton="true" chooseLabel="Browse..." selectLabel="Select">
             </cmh-file-uploader>
           </div>
 
@@ -207,23 +172,17 @@
             <label for="comment" class="col-form-label text-left">
               Header Comments (notes,warning, etc.):
             </label>
-            <ckeditor-wrapper
-              [editorcontent]="document.comments"
-              (editorContentChange)="document.comments = $event"
-            ></ckeditor-wrapper>
+            <ckeditor-wrapper [editorcontent]="document.comments" (editorContentChange)="document.comments = $event">
+            </ckeditor-wrapper>
           </div>
 
-          <div class="form-group" *ngIf="availableRoles !== undefined && selectedRoles !== undefined && showDocumentDialog">
+          <div class="form-group"
+            *ngIf="availableRoles !== undefined && selectedRoles !== undefined && showDocumentDialog">
             <label for="roles" class="col-form-label text-left">
               Additional Roles Allowed Access:
             </label>
-            <multiselect-wrapper-form
-              [options]="availableRoles"
-              [limit]="10"
-              [(model)]="selectedRoles"
-              defaultLabelProperty="name"
-              defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect"
-            >
+            <multiselect-wrapper-form [options]="availableRoles" [limit]="10" [(model)]="selectedRoles"
+              defaultLabelProperty="name" defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect">
             </multiselect-wrapper-form>
           </div>
         </fieldset>

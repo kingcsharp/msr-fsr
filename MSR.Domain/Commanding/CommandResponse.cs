@@ -3,6 +3,7 @@ using System;
 
 namespace MSR.Domain.Commanding
 {
+
     public class CommandResponse<T> : CommandResponse, ICommandResponse<T>
     {
         public T Data { get; }

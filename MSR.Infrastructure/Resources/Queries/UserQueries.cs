@@ -1,0 +1,52 @@
+﻿using Microsoft.EntityFrameworkCore;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Commands;
+using MSR.Domain.Helpers;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using System.Linq;
+
+namespace MSR.Infrastructure.Resources.Queries
+{
+    public static class UserQueries
+    {
+        public static IQueryable<User> CreateUserQuery(this IQueryable<User> query, GetUsers command, bool forRowCount = false)
+        {
+            query = query.Include(x => x.TimeZone).Include(x => x.Location).Include(x => x.Supervisor).Include(x => x.Roles).ThenInclude(x => x.Role).AsQueryable();
+
+            query = query.Where(command.Id, s => s.Id == command.Id);
+            query = query.Where(command.FirstName, s => s.FirstName.Contains(command.FirstName));
+            query = query.Where(command.LastName, s => s.LastName.Contains(command.LastName));
+            query = query.Where(command.LastName, s => s.UserName.Contains(command.UserName));
+            query = query.Where(command.Title, s => s.Title.Contains(command.Title));
+            query = query.Where(command.Supervisor, s => s.SupervisorId == command.Supervisor);
+            query = query.Where(command.PrimaryPhone, s => s.Phone.Contains( command.PrimaryPhone));
+            query = query.Where(command.Email, s => s.Email.Contains(command.Email));
+            query = query.Where(command.Roles, s => s.Roles.Any(m => command.Roles.Contains(m.RoleId)));
+            query = query.Where(command.IsActive, s => s.IsActive == command.IsActive);
+            query = query.Where(command.IsAnswerUser, s => s.IsAnswerUser == command.IsAnswerUser);
+
+            if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
+            {
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.Id), s => s.Id);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.IsActive), s => s.IsActive);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.isAnswerUser), s => s.IsAnswerUser);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.FirstName), s => s.FirstName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.LastName), s => s.LastName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.UserName), s => s.UserName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.Email), s => s.Email);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.CreatedOn), s => s.CreatedOn);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.Roles), s => s.Roles.FirstOrDefault().Role.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.LocationName), s => s.Location.Name);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumUserSortFields.SupervisorName), s => s.Supervisor.FullName);
+
+            }
+
+            if (command.Skip.HasValue && command.Take.HasValue && !forRowCount)
+            {
+                query = query.Skip(command.Skip.Value).Take(command.Take.Value);
+            }
+
+            return query;
+        }
+    }
+}

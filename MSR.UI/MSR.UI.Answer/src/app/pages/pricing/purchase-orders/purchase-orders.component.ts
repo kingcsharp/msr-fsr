@@ -6,11 +6,12 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ConfirmationService } from 'primeng/api';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest, CreatePurchaseOrderRequest, PurchaseOrderView, Customer, ProductModel } from '../../../services/api.client.generated';
+import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest, CreatePurchaseOrderRequest, PurchaseOrderView, CustomerModel, ProductModel } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { copyObj,callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 
@@ -39,6 +40,7 @@ export class PurchaseOrdersComponent implements OnInit {
   productsData: any[] = [];
   getProductsFlag: boolean = false;
   showProductsSelect: boolean = true;
+  totalRecords: number = 0;
   purchaseOrderStatus: any[] = [
     {
       label: 'Open',
@@ -47,6 +49,10 @@ export class PurchaseOrdersComponent implements OnInit {
     {
       label: 'Closed',
       value: 'Closed'
+    },
+    {
+      label: 'Pending',
+      value: 'Pending'
     }
   ];
   showConfirmDeleteDialog: boolean = false;
@@ -84,17 +90,20 @@ export class PurchaseOrdersComponent implements OnInit {
     this.purchasePrivileges = this.globals.getEnumPrivileges(this.menuItems.Purchases);
     this.purchaseOrderPrivileges = this.globals.getEnumPrivileges(this.menuItems.PurchaseOrders);
     this.data = [];
-    this.getPurchaseOrders();
     this.getCustomers();
   }
 
-  getPurchaseOrders() {
+  getPurchaseOrders(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.purchaseOrderService.purchaseOrderGet(null, env.apiVersion).pipe(take(1))
+    setTimeout(() => {
+      callFunctionWithFilters(this.purchaseOrderService, this.purchaseOrderService.purchaseOrderGet, event)
+      .pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.totalRecords = response.totalNumberOfRecords;
         this.globals.showLoader(false);
         this.data = response.object;
       }));
+    }, 10);
   }
 
   showPurchaseOrderModal(purchaseOrder: PurchaseOrderView) {
@@ -183,7 +192,7 @@ export class PurchaseOrdersComponent implements OnInit {
       return ctrl.customersData;
     }
     this.customerService.customerGet(null, null, null, null, null, null, null
-      , true, env.apiVersion).pipe(take(1))
+      , true, null, null, null, null, null, null, null, null, null, null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.customersData = response.object;
         ctrl.getCustomersFlag = true;
@@ -290,7 +299,7 @@ export class PurchaseOrdersComponent implements OnInit {
 }
 
 class PurcahseOrderEditModel extends PurchaseOrderView {
-  customer?: Customer | undefined;
+  customer?: CustomerModel | undefined;
   selectedProducts!: ProductModel[];
 }
 

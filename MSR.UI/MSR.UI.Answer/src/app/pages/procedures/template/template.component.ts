@@ -43,7 +43,7 @@ export class TemplateComponent implements OnInit {
     this.procedureStepTemplate.referenceFiles = new Array<any>();
 
     this.globals.showLoader(true);
-    this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((response) => {
+    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
       this.availableRoles = response.object;
       this.setProcedureTemplateForEditOrCreate();
     }));
@@ -55,7 +55,7 @@ export class TemplateComponent implements OnInit {
 
       if (this.procedureStepTemplate.id !== 0) {
         this.globals.showLoader(true);
-        this.procedureStepTemplateService.procedureStepTemplateGet(this.procedureStepTemplate.id, env.apiVersion).subscribe(responseHandler((response) => {
+        this.procedureStepTemplateService.procedureStepTemplateGet(this.procedureStepTemplate.id, null, null, null, null, null, null,env.apiVersion).subscribe(responseHandler((response) => {
           this.procedureStepTemplate = response.object[0];
           this.selectedRoles = new Array<Role>();
           this.procedureStepTemplate?.roles?.forEach(id => {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized, RouteConfigLoadStart } from '@angular/router';
-import { MenuItem, EnumMenuItem, EnumApprovalTables, UserModel } from '../../services/api.client.generated';
+import { MenuItem, EnumMenuItem, EnumApprovalTables, UserModel, EnumSegregationType } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
@@ -164,7 +164,7 @@ export class Globals {
     getSingularMenuName(menuItem) {
         let name = EnumMenuItem[menuItem];
         if (menuItem === EnumMenuItem.Templates) {
-          name = 'ProcedureStepTemplate';
+            name = 'ProcedureStepTemplate';
         }
         return name.replace(/s$/, '');
     }
@@ -191,8 +191,8 @@ export class Globals {
     getOffset() {
         if (this.user.timeZone === undefined) {
             return {
-              DST: '',
-              STD: ''
+                DST: '',
+                STD: ''
             };
         }
         const offset = this.user.timeZone.offset;
@@ -208,8 +208,8 @@ export class Globals {
         // return 'GMT' + intPart + fractionPart;
 
         return {
-          DST: 'GMT' + intPart.toString() + fractionPart,
-          STD: 'GMT' + (intPart - this.user.timeZone.useDalightSavings).toString() + fractionPart
+            DST: 'GMT' + intPart.toString() + fractionPart,
+            STD: 'GMT' + (intPart - this.user.timeZone.useDalightSavings).toString() + fractionPart
         };
     }
 
@@ -218,14 +218,14 @@ export class Globals {
     }
 
     hasRole(roleName) {
-      if (this.user.roles.length > 0) {
-        const index = this.user.roles.findIndex((role) => role.name === roleName);
-        if (index > -1) {
-          return true;
+        if (this.user.roles.length > 0) {
+            const index = this.user.roles.findIndex((role) => role.name === roleName);
+            if (index > -1) {
+                return true;
+            }
         }
-      }
 
-      return false;
+        return false;
     }
 
     addRequestToIgnore(requestToIgnore: string): void {
@@ -249,5 +249,46 @@ export class Globals {
         });
 
         return requestIsNotOnList;
+    }
+
+    getTopLevelLocations() {
+        return [
+            { label: 'Chandler', value: 'Chandler' },
+            { label: 'Hillsboro', value: 'Hillsboro' },
+            { label: 'Kiryat Gat', value: 'Kiryat Gat' },
+            { label: 'Naas', value: 'Naas' },
+        ]
+    }
+
+    getTopLevelStatus() {
+        return [
+            { label: 'Approved', value: 'Approved' },
+            { label: 'In Progress', value: 'In Progress' },
+            { label: 'Complete', value: 'Complete' },
+            { label: 'Cancelled', value: 'Cancelled' },
+            { label: 'Pending', value: 'Pending' },
+            { label: 'Rejected', value: 'Rejected' },
+            { label: 'Open', value: 'Open' },
+            { label: 'Closed', value: 'Closed' },
+            { label: 'Requested', value: 'Requested' },
+            { label: 'Assigned', value: 'Assigned' },
+            { label: 'Waiting to Start', value: 'Waiting to Start' },
+            { label: 'Scheduled', value: 'Scheduled' }
+        ]
+    }
+
+    getYesNoArray() {
+        return [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+        ];
+    }
+
+    getSegregationTypes() {
+        return [
+            { label: 'Cu', value: EnumSegregationType.CU },
+            { label: 'Non-Cu', value: EnumSegregationType.NONCU },
+            { label: 'Deseg', value: EnumSegregationType.DESEG }
+        ];
     }
 }

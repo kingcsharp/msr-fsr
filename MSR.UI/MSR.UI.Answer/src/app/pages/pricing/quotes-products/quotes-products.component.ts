@@ -8,17 +8,19 @@ import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
 import { take } from 'rxjs/operators';
 import { responseHandler } from '../../../utils/responseHandler';
 import { environment as env } from '../../../../environments/environment';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
 import {
   QuoteService,
   QuotesProductsView,
   EnumMenuItem,
   CustomerService,
-  Customer,
+  CustomerModel,
   CreateQuoteRequest,
   EnumSegregationType,
 } from '../../../services/api.client.generated';
 import { CSRJsonModel, ProcessModel, PartModel } from '../../../models/csr-json-model';
 import { EnumCRFTabs } from '../../../models/enums/EnumCRFTabs';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -60,14 +62,15 @@ export class QuotesProductsComponent implements OnInit {
       label: 'Freight',
     }
   ];
-  customersData: Customer[] = [];
+  customersData: CustomerModel[] = [];
   getCustomersFlag: boolean = false;
-  CSRCustomer: Customer;
+  CSRCustomer: CustomerModel;
   CSRFormValidErrors: string[] = [];
-
+  currentEvent: LazyLoadEvent;
   tabMenus = EnumCRFTabs;
   activeTab: string;
   segregationTypes: any[] = [];
+  totalRecords: number = 0;
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
@@ -101,13 +104,8 @@ export class QuotesProductsComponent implements OnInit {
     this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.QuotesProducts);
     this.showConfirmDeleteDialog = false;
     this.data = [];
-    this.segregationTypes = [
-      { label: 'Cu', value: EnumSegregationType.CU },
-      { label: 'Non-Cu', value: EnumSegregationType.NONCU },
-      { label: 'Deseg', value: EnumSegregationType.DESEG }
-    ];
-
-    this.getQuotesProducts();
+    this.segregationTypes = this.globals.getSegregationTypes();
+    
     this.getCustomers();
     let ctrl = this;
     Parsley.on('field:error', function() {
@@ -117,11 +115,13 @@ export class QuotesProductsComponent implements OnInit {
     });
   }
 
-  getQuotesProducts() {
+  getQuotesProducts(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.quoteService.product(env.apiVersion)
+      callFunctionWithFilters(this.quoteService, this.quoteService.product, event)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.currentEvent = event;
+        this.totalRecords = response.totalNumberOfRecords;
         this.data = response.object;
       }));
   }
@@ -130,7 +130,7 @@ export class QuotesProductsComponent implements OnInit {
     if (this.getCustomersFlag) {
       return this.customersData;
     }
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null, null,null, env.apiVersion).subscribe(responseHandler((response) => {
       this.customersData = response.object;
       this.getCustomersFlag = true;
     }));
@@ -152,7 +152,7 @@ export class QuotesProductsComponent implements OnInit {
     this.quoteService.quoteDelete(this.quoteToDelete.id, env.apiVersion)
       .subscribe(responseHandler((response) => {
         this.quoteToDelete = null;
-        this.getQuotesProducts();
+        this.getQuotesProducts(this.currentEvent);
       }));
   }
 
@@ -220,7 +220,7 @@ export class QuotesProductsComponent implements OnInit {
         .pipe(take(1))
         .subscribe(responseHandler((resp) => {
           this.closeCSRDialog();
-          this.getQuotesProducts();
+          this.getQuotesProducts(this.currentEvent);
       }));
     }
   }

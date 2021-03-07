@@ -8,6 +8,7 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.Queries;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -125,34 +126,31 @@ namespace MSR.Infrastructure.Resources.Services.Help
 
         public async Task<IEnumerable<Domain.Models.HelpPage>> GetHelpPages(GetHelpPage command)
         {
-            var helpPages = _unitOfWork.HelpPages.Query();
+            var roleEntities = await _unitOfWork.Roles.Query().ToListAsync();
 
-            if (command.Id.HasValue)
-            {
-                helpPages = helpPages.Where(i => i.Id == command.Id.Value);
-            }
+            var helpPageEntities = await  _unitOfWork.HelpPages.Query().CreateHelpQuery(command, false, roleEntities).ToListAsync();
 
-            if (!string.IsNullOrWhiteSpace(command.FriendlyURL))
-            {
-                helpPages = helpPages.Where(i => i.FriendlyUrl == command.FriendlyURL);
-            }
+            var helpPageModels = new List<Domain.Models.HelpPage>();
 
-            var pageList = new List<Domain.Models.HelpPage>();
-
-            var helpPageList = await helpPages.Include(s => s.Roles).ToListAsync();
-            
-            _ = await _unitOfWork.Roles.Query().ToListAsync();
-
-            foreach (var helpPage in helpPageList ?? new List<HelpPage>())
+            foreach (var helpPage in helpPageEntities)
             {
                 var page = _mapper.Map<Domain.Models.HelpPage>(helpPage);
 
                 page.Roles = helpPage.Roles.Select(i => _mapper.Map<Domain.Models.Role>(i.Role)).ToList();
 
-                pageList.Add(page);
+                helpPageModels.Add(page);
             }
 
-            return pageList;
+            return helpPageModels;
+        }
+
+        public async Task<int> GetHelpPagesTotalRows(GetHelpPage command)
+        {
+            var roleEntities = await _unitOfWork.Roles.Query().ToListAsync();
+
+            var totalRows = await _unitOfWork.HelpPages.Query().CreateHelpQuery(command, true, roleEntities).CountAsync();
+
+            return totalRows;
         }
 
         public async Task UpdateHelpPage(UpdateHelpPage command)

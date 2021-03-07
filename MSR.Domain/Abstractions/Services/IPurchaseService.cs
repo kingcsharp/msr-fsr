@@ -9,5 +9,6 @@ namespace MSR.Domain.Abstractions.Services
     {
         Task<ICollection<PurchaseModel>> GetPurchasesAsync(GetPurchases command);
         Task<PurchaseModel> CreatePurchaseAsync(CreatePurchase command);
+        Task<int> GetPurchaseTotalRows(GetPurchases command);
     }
 }

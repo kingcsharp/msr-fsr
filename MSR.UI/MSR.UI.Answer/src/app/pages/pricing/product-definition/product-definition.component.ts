@@ -5,7 +5,7 @@ import {
   ProcedureService, Procedure,
   ProcedureStepTemplateService,
   ProductService, CreateProductRequest, UpdateProductRequest,
-  CustomerService, Customer,
+  CustomerService, CustomerModel,
   QuoteService, QuoteModel,
   ProcedureStepModel,
   AdminCostSettingsService, AdminCostSettingsModel,
@@ -229,7 +229,7 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.getCustomersFlag) {
       return this.customersData;
     }
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null, null, null,null, env.apiVersion).subscribe(responseHandler((response) => {
       response.object.map((x) => {
         this.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
       });
@@ -237,7 +237,7 @@ export class ProductDefinitionComponent implements OnInit {
     }));
   }
 
-  getCustomerLabel(customer: Customer): string {
+  getCustomerLabel(customer: CustomerModel): string {
     return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`;
   }
 
@@ -252,7 +252,8 @@ export class ProductDefinitionComponent implements OnInit {
       return this.partsData;
     }
 
-    this.partsService.partGet(null, env.apiVersion).pipe(take(1))
+    this.partsService.partGet(null,null, null, null, null,null,null,null,null,null
+      ,null,null,null,null,null,null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           this.partsData.push({ label: `${x.name} [${x.partNumber}] [ID: ${x.id}]`, partNumber: x.partNumber, value: x.id });
@@ -289,7 +290,8 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.getProceduresFlag && !isRefresh) {
       return this.proceduresData;
     }
-    this.procedureService.procedureGet(null, env.apiVersion).pipe(take(1))
+    this.procedureService.procedureGet(null, null,null,null,null,null,null,null
+      ,null,null,null,null,null,null,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           this.proceduresData.push({ label: `${x.name} [ID: ${x.id}]`, value: x.id });
@@ -333,7 +335,7 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.getProcedureStepTemplatesFlag) {
       return this.procedureStepTemplatesData;
     }
-    this.procedureStepTemplateService.procedureStepTemplateGet(null, env.apiVersion)
+    this.procedureStepTemplateService.procedureStepTemplateGet(null,null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.procedureStepTemplatesData = response.object;

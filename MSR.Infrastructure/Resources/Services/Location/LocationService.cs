@@ -13,6 +13,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Helpers;
 using System;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Location
 {
@@ -90,6 +91,9 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 if (locationApproval != null)
                 {
                     domlocation.Status = locationApproval.Status.Name;
+                } else { 
+                    
+                    domlocation.Status = "Approved";    
                 }
                 if (domlocation.Parent != null)
                 {
@@ -330,5 +334,6 @@ namespace MSR.Infrastructure.Resources.Services.Location
             await _unitOfWork.SaveChangesAsync();
 
         }
+
     }
 }

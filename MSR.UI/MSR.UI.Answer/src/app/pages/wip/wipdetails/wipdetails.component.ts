@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, ChangeDetectorRef, Inj
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService, RoleService, CustomerService,
-  Customer, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService, DocumentService,
+  CustomerModel, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService, DocumentService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
@@ -39,7 +39,7 @@ export class WipdetailsComponent implements OnInit {
   workOrderModel: WorkOrderModel = new WorkOrderModel();
   parentPart: WorkOrderPartModel = new WorkOrderPartModel();
   procedure: Procedure = new Procedure();
-  customer: Customer = new Customer();
+  customer: CustomerModel = new CustomerModel();
   product: ProductModel = new ProductModel();
   purchase: PurchaseModel = new PurchaseModel();
   workOrderParts: Array<WorkOrderPartModel> = new Array<WorkOrderPartModel>();
@@ -100,7 +100,7 @@ export class WipdetailsComponent implements OnInit {
     ];
 
     this.globals.showLoader(true);
-    this.roleService.roleGet(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.roles = response.object;
 
@@ -164,7 +164,7 @@ export class WipdetailsComponent implements OnInit {
 
   getCustomerContacts(customerId: number) {
 
-    this.customerService.customerGet(customerId, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.customerService.customerGet(customerId, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null,null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       if (response.object.length > 0) {
         this.workOrderModel.purchase.purchaseOrder.customer = response.object[0];
@@ -203,7 +203,7 @@ export class WipdetailsComponent implements OnInit {
 
       documentIds.forEach(documentId => {
 
-        documentRequests.push(this.documentService.documentGet(documentId, env.apiVersion));
+        documentRequests.push(this.documentService.documentGet(documentId, null,null,null,null,null,null,null,null,env.apiVersion));
 
       });
 

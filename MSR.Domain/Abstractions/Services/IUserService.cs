@@ -19,5 +19,7 @@ namespace MSR.Domain.Abstractions.Services
         Task UpdateUserRoleAsync(UpdateUserRole command);
         Task DeleteUserRoleAsync(DeleteUserRole command);
         Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command);
+        Task<int> GetUsersTotalRowsAsync(GetUsers command);
+        Task<int> GetTrainingCertificationTotalRows(GetTrainingCertification command);
     }
 }

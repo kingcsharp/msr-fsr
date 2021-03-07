@@ -8,6 +8,6 @@ namespace MSR.Domain.Commanding
 
     public abstract class Command: ICommand
     {
-
+        
     }
 }

@@ -19,6 +19,7 @@ using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -49,7 +50,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
-
             IQueryable<EntityFramework.Entities.WorkOrder> query = _unitOfWork.WorkOrders.Query();
 
             if (command.Id.HasValue && command.Id > 0)
@@ -74,11 +74,13 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 query = query.Where(x => x.LocationId == command.LocationId);
             }
 
-            if (command.FromDate.HasValue) {
+            if (command.FromDate.HasValue)
+            {
                 query = query.Where(x => x.CreatedOn >= command.FromDate);
             }
 
-            if (command.ToDate.HasValue) {
+            if (command.ToDate.HasValue)
+            {
                 query = query.Where(x => x.CreatedOn <= command.ToDate);
             }
 
@@ -195,12 +197,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
             var procedureSteps = _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id));
             var procedureStepMonitors = _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId));
+            var totalLaborTime = (decimal)0.0;
 
             foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
             {
                 var procedureStep = await procedureSteps.FirstOrDefaultAsync(s => s.Id == workOrderTask.ProcedureStepId);
                 workOrderTask.Title = procedureStep.Title;
                 workOrderTask.Description = procedureStep.StepText;
+                totalLaborTime += (decimal)procedureStep.LaborTime.GetValueOrDefault(0.0);
 
                 foreach (var workOrderTaskMonitor in workOrderTask.WorkOrderTaskMonitors)
                 {
@@ -250,6 +254,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             await _unitOfWork.LogApprovalTransaction(workOrderEntity, workOrderEntity.Id);
 
+
             // load required navigation fields
             created.Context.Entry(workOrderEntity)
                 .Collection(x => x.WorkOrderParts).Load();
@@ -272,6 +277,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 _mapper.Map<WorkOrderModel>(workOrderEntity)
             );
 
+            var workOrderStatEntity = new WorkOrderStats()
+            {
+                WorkOrderId = workOrderEntity.Id,
+                TotalTasks = workOrderEntity.WorkOrderTasks != null ? workOrderEntity.WorkOrderTasks.Count() : 0,
+                CompletedTasks = 0,
+                TotalTimeLogged = 0,
+                TotalTaskTime = totalLaborTime,
+                ActiveTitle = null
+            };
+
+            await _unitOfWork.WorkOrderStats.AddAsync(workOrderStatEntity);
+            await _unitOfWork.SaveChangesAsync();
             // Build out minimal information so this can be
             // displayed on the WO status screen without a reload.
             _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
@@ -598,7 +615,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
             }
 
-
+            var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
+            workOrderStatEntity.TotalTasks += 1;
+            workOrderStatEntity.TotalTaskTime += procedureStepEntity?.LaborTime == null ? 0 : (decimal)procedureStepEntity?.LaborTime.Value;
+            _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
+            
             var created = await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
 
             // This will call SaveChangesAsync
@@ -631,6 +652,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
+            int[] completed = { 3, 4, 6, 8 };
+            var isTaskStarted = false;
+            var isTaskCompleted = false;
             var current = await _unitOfWork.WorkOrderTasks.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
             if (current is null)
@@ -638,7 +662,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 throw new DomainException($"{nameof(WorkOrderTask)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            if (!String.IsNullOrEmpty(command.Status))
+            if (!string.IsNullOrEmpty(command.Status))
             {
                 var statusEntity = await _unitOfWork
                     .Status
@@ -649,6 +673,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 {
                     throw new DomainException($"{nameof(Status)} not found with Name: {command.Status}", DomainError.NotFound);
                 }
+                //Figure out if this is a Completed workOrder Or Started one
+                isTaskStarted = statusEntity.Id == (int)EnumStatusSteps.InProgress;
+                isTaskCompleted = completed.Contains(statusEntity.Id);
                 current.StatusId = statusEntity.Id;
             }
 
@@ -686,6 +713,17 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     };
                     workOrderTaskEntity.ReferenceFiles.Add(fem);
                 }
+            }
+            var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
+
+            if (isTaskStarted)
+            {
+                statEntity.ActiveTitle = workOrderTaskEntity.Title;
+            }
+            else if (isTaskCompleted)
+            {
+                statEntity.CompletedTasks += 1;
+                statEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
             }
 
             // This will call SaveChangesAsync
@@ -730,7 +768,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             // 8   Closed
             // 3   Complete
             // 6   Rejected
-            int[] completed = { 3, 4, 6, 8 };
             if (workOrderTaskEntity.Status.Name.ToUpper().Equals("IN PROGRESS"))
             {
                 if (!workOrderTaskEntity.WorkOrder.ActualStartDate.HasValue)
@@ -1008,7 +1045,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     portalView.PercentageOfExpectedDurationTimeLogged = percentExpectedDuration;
                     portalView.PercentageOfExpectedDurationTimeLoggedDenominator = expectedDurationDenominator;
                     portalView.PercentageOfExpectedDurationTimeLoggedNumerator = expectedDurationNumerator;
-                    portalView.SubParts = associatedWorkOrder.WorkOrderParts.Where(i => i.ParentId != null).ToList();
+                    portalView.SubParts = new List<PortalSubPartView>();//associatedWorkOrder.WorkOrderParts.Where(i => i.ParentId != null).ToList();
                     portalView.PartId = parentPart.PartId;
                     portalView.PartName = parentPart.Part != null ? parentPart.Part.Name : string.Empty;
                     portalView.CustomerId = associatedWorkOrder.Purchase?.PurchaseOrder?.CustomerId;
@@ -1188,11 +1225,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderGridSummary.Disposition = getWorkOrderDisposition(workOrderModel, true);
 
                 var statusValues = GetStatusValues(workOrderModel);
-                workOrderGridSummary.PercentageOfTasksCompleted = statusValues.percentComplete;
+                //workOrderGridSummary.PercentageOfTasksCompleted = statusValues.percentComplete;
                 workOrderGridSummary.PercentageOfTasksCompletedDenominator = statusValues.completedDenominator;
                 workOrderGridSummary.PercentageOfTasksCompletedNumerator = statusValues.completedNumerator;
-                workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = statusValues.percentExpectedDuration;
-                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = (double)statusValues.expectedDurationDenominator;
+                //workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = statusValues.percentExpectedDuration;
+                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = statusValues.expectedDurationDenominator;
                 workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = statusValues.expectedDurationNumerator;
 
 
@@ -1389,14 +1426,21 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return dispositionMessage.Trim().Trim('|').Trim();
         }
 
-        public async Task<ICollection<MSR.Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView() {
+        public async Task<ICollection<MSR.Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView(GetWorkOrderHistory command) {
 
-            var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().ToListAsync();
+            var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().CreateWorkOrderHistoryViewQuery(command).ToListAsync();
 
             var workOrderHistoryViewModels = _mapper.Map<ICollection<MSR.Domain.Views.WorkOrderHistoryView>>(workOrderHistoryViewEntities);
 
             return workOrderHistoryViewModels;
 
+        }
+
+        public async Task<int> GetTotalWorkOrderHistoryViewRows(GetWorkOrderHistory command)
+        {
+            var totalRows = await _unitOfWork.WorkOrderHistoryViews.Query().CreateWorkOrderHistoryViewQuery(command, true).CountAsync();
+
+            return totalRows;
         }
     }
 }

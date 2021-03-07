@@ -9,6 +9,7 @@ using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using MSR.Infrastructure.Resources.Queries;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,20 +35,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<PartModel>> GetPartsAsync(GetParts command)
         {
-            List<EntityFramework.Entities.Part> parts;
-            if (command.partID.HasValue)
+            List<EntityFramework.Entities.Part> partEntities = await _unitOfWork.Parts.Query().CreatePartQuery(command).ToListAsync();
+
+            if (command.Id.HasValue && partEntities.Count == 0)
             {
-                parts = await _unitOfWork.Parts.Query().Where(x => x.Id == command.partID.Value).ToListAsync();
-                if (parts.Count == 0)
-                {
-                    throw new DomainException($"part ID {command.partID.Value} not found", DomainError.NotFound);
-                }
+                throw new DomainException($"part ID {command.Id.Value} not found", DomainError.NotFound);
             }
-            else
-            {
-                parts = await _unitOfWork.Parts.Query().Include(x => x.Subparts).ToListAsync();
-            }
-            var result = parts.Select(x => _mapper.Map<PartModel>(x)).OrderBy(x => x.Name).ToList();
+
+            var result = partEntities.Select(x => _mapper.Map<PartModel>(x)).ToList();
+
             return result;
         }
 
@@ -304,6 +300,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             return results;
+        }
+
+        public async Task<int> GetTotalPartRows(GetParts command)
+        {
+
+            var totalRows = await _unitOfWork.Parts.Query().CreatePartQuery(command, true).CountAsync();
+
+            return totalRows;
+
         }
     }
 }

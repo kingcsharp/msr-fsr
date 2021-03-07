@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CustomerService, Customer, CreateCustomerRequest, UpdateCustomerRequest, ICustomer, UserService, LocationService, LocationModel } from '../../../services/api.client.generated';
+import { CustomerService, CustomerModel, CreateCustomerRequest, UpdateCustomerRequest, ICustomerModel, UserService, LocationService, LocationModel } from '../../../services/api.client.generated';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -14,7 +14,7 @@ import { Globals } from '../../../models/lib/globals';
 })
 export class CustomerCreateComponent implements OnInit {
 
-  customer: Customer = new Customer;
+  customer: CustomerModel = new CustomerModel;
   customerToEditId: number = 0;
   allUsers: Array<SelectItem>;
   locationOptions: Array<LocationModel>;
@@ -28,12 +28,12 @@ export class CustomerCreateComponent implements OnInit {
   ngOnInit(): void {
 
     this.globals.showLoader(true);
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.userService.userGet(null, null, null, null, null, null, null, null, null,null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
       this.allUsers = response.object.map(s => ({ label: s.fullName, value: s.id }));
 
       this.globals.showLoader(true);
-      this.locationService.locationGet(null, null, null, env.apiVersion).subscribe(responseHandler((locationResponse) => {
+      this.locationService.locationGet(null, null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((locationResponse) => {
 
         this.locationOptions = locationResponse.object;
 
@@ -53,7 +53,7 @@ export class CustomerCreateComponent implements OnInit {
       if (this.customerToEditId !== 0) {
 
         this.globals.showLoader(true);
-        this.customerService.customerGet(this.customerToEditId, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+        this.customerService.customerGet(this.customerToEditId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null,env.apiVersion).subscribe(responseHandler((response) => {
 
           this.customer = response.object[0];
           if (this.customer.location !== undefined && this.customer.location.id !== 0) {
@@ -72,7 +72,7 @@ export class CustomerCreateComponent implements OnInit {
 
       } else {
 
-        this.customer = new Customer();
+        this.customer = new CustomerModel();
         this.customer.id = 0;
 
       }

@@ -12,6 +12,8 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 
@@ -46,6 +48,7 @@ export class PartsComponent implements OnInit {
   showApproveButtons: boolean = true;
   gridVersion: string;
   segregationTypes: any[] = [];
+  totalRecords: number = 0;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
@@ -69,33 +72,31 @@ export class PartsComponent implements OnInit {
     new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
     new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
     ];
-    this.isKitStatus = [{ label: 'Yes', value: true },
-    { label: 'No', value: false }];
-    this.isActive = [{ label: 'Yes', value: true },
-    { label: 'No', value: false }];
-    this.segregationTypes = [
-      { label: 'Cu', value: EnumSegregationType.CU },
-      { label: 'Non-Cu', value: EnumSegregationType.NONCU },
-      { label: 'Deseg', value: EnumSegregationType.DESEG }
-    ];
+    this.isKitStatus = this.globals.getYesNoArray();
+    this.isActive = this.globals.getYesNoArray();
+
+    this.segregationTypes = this.globals.getSegregationTypes();
 
     this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditStages = this.hasPrivilege(this.privileges.CanEdit);
-    this.getParts();
+
     this.data = [];
   }
 
-  getParts() {
+  getParts(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.partsService.partGet(null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.globals.showLoader(false);
-        this.data = response.object.map((elem) => {
-          elem.isActive = elem.isActive === null ? false : elem.isActive;
-          return elem;
-        });
-      }));
+    setTimeout(() => {
+      callFunctionWithFilters(this.partsService, this.partsService.partGet, event).pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.globals.showLoader(false);
+          this.data = response.object.map((elem) => {
+            elem.isActive = elem.isActive === null ? false : elem.isActive;
+            return elem;
+          });
+          this.totalRecords = response.totalNumberOfRecords;
+        }));
+    }, 10);
   }
 
   getPartsDropdown() {

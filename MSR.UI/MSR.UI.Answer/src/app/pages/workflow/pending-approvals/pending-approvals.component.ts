@@ -14,6 +14,9 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, forkJoin, of } from 'rxjs';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
+
 declare let jQuery: any;
 
 @Component({
@@ -56,6 +59,9 @@ export class PendingApprovalsComponent implements OnInit {
   globals: Globals;
   approvalInfo: any;
   loading2: boolean;
+  currentRouteApprovalData: any;
+  totalRecordsRoute: number = 0;
+  totalRecordsProductGrid: number = 0;
 
   constructor(private _globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private workflowService: WorkflowService, private route: ActivatedRoute,
@@ -94,10 +100,47 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true })
     ];
-    this.getApprovals(EnumApprovalTables.ProductApproval, this.productData);
     this.route.params.subscribe(routeParams => {
-      this.getApprovals(routeParams.table, this.data);
+      this.currentRouteApprovalData = { data: this.data, table: routeParams.table };
     });
+  }
+
+  getRouteApprovals(event: LazyLoadEvent) {
+    const dataArr = this.currentRouteApprovalData.data;
+    const ctrl = this;
+    this.globals.showLoader(true);
+    setTimeout(() => {
+      callFunctionWithFilters(this.workflowPendingApprovalService, this.workflowPendingApprovalService.workflowPendingApprovalGet, event
+        , { table: this.currentRouteApprovalData.table })
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          ctrl.emptyArr(dataArr);
+          dataArr.push(...response.object);
+          dataArr.map((elem) => {
+            ctrl.addToGridTableDropdown(elem);
+            return elem;
+          });
+        }));
+    }, 10);
+  }
+
+  getProductApprovals(event: LazyLoadEvent) {
+    const dataArr = this.productData;
+    const ctrl = this;
+    this.globals.showLoader(true);
+    setTimeout(() => {
+      callFunctionWithFilters(this.workflowPendingApprovalService, this.workflowPendingApprovalService.workflowPendingApprovalGet, event
+        , { table:EnumApprovalTables.ProductApproval })
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          ctrl.emptyArr(dataArr);
+          dataArr.push(...response.object);
+          dataArr.map((elem) => {
+            ctrl.addToGridTableDropdown(elem);
+            return elem;
+          });
+        }));
+    }, 10);
   }
 
   getApprovalInfo(table, id) {
@@ -115,20 +158,7 @@ export class PendingApprovalsComponent implements OnInit {
     this.approvalInfo = {};
   }
 
-  getApprovals(table, data) {
-    const dataArr = data;
-    const ctrl = this;
-    this.globals.showLoader(true);
-    this.workflowPendingApprovalService.workflowPendingApprovalGet(table, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        ctrl.emptyArr(dataArr);
-        dataArr.push(...response.object);
-        dataArr.map((elem) => {
-          ctrl.addToGridTableDropdown(elem);
-          return elem;
-        });
-      }));
-  }
+
 
   addToGridTableDropdown(elem: any) {
     const ctrl = this;

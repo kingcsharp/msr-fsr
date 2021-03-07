@@ -3,7 +3,9 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Infrastructure.Resources.Queries;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,7 +40,10 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetWorkflowModel command, CancellationToken cancellationToken = default)
         {
             var ret = await _workflowService.GetWorkFlowAsync(command);
-            return new CommandResponse<ICollection<WorkflowModel>>(ret);
+            ret = ret.AsQueryable().CreateWorkflowApprovalQuery(command).ToList();
+            var totalRows = ret.AsQueryable().CreateWorkflowApprovalQuery(command, true).Count();
+
+            return new PagingCommandResponse<ICollection<WorkflowModel>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateWorkflowModel command, CancellationToken cancellationToken = default)

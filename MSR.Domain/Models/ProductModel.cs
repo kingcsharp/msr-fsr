@@ -14,7 +14,7 @@ namespace MSR.Domain.Models
         public string Name { get; set; }
         public int Revision { get; set; }
         public int CustomerId { get; set; }
-        public virtual Customer Customer { get; set; }
+        public virtual CustomerModel Customer { get; set; }
         public int CustomerRequirementId { get; set; }
         public int ProcedureId { get; set; }
         public virtual Procedure Procedure { get; set; }

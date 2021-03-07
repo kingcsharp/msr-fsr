@@ -23,7 +23,8 @@ namespace MSR.Application.ApplicationServices.Workflow
         public async Task<ICommandResponse> HandleAsync(GetWorkflowGroupsModel command, CancellationToken cancellationToken = default)
         {
             var ret = await _workflowService.GetWorkFlowGroupsAsync(command);
-            return new CommandResponse<ICollection<WorkflowGroupModel>>(ret);
+            int totalRows = await _workflowService.GetWorkflowGroupTotalRows(command);
+            return new PagingCommandResponse<ICollection<WorkflowGroupModel>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateWorkflowGroupModel command, CancellationToken cancellationToken = default)

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -33,7 +34,7 @@ namespace MSR.Application.ApplicationServices
             var products = await _productService.GetProductsAsync();
 
             // Merged view of Quotes and Products
-            var retQuotesProductsViewsList = new List<QuotesProductsView>();
+            var quotesProductsViewModels= new List<QuotesProductsView>();
 
             foreach (var product in products)
             {
@@ -43,7 +44,9 @@ namespace MSR.Application.ApplicationServices
                 qpModel.Representative = product.Quote?.Representative;
                 qpModel.SubmittedDate = product.Quote == null ? product.CreatedOn : product.Quote.SubmittedDate;
                 qpModel.SegregationType = product.Part.SegregationType;
-                retQuotesProductsViewsList.Add(qpModel);
+                qpModel.LastUpdateBy = product.LastUpdated.FullName;
+                qpModel.LastUpdateOn = product.LastUpdatedOn;
+                quotesProductsViewModels.Add(qpModel);
             }
 
             var productList = new List<ProductModel>(products);
@@ -69,11 +72,16 @@ namespace MSR.Application.ApplicationServices
                             qpModel.PartKitNo = customerRequirementJson?.PartKitNo;
                         }
                     }
-                    retQuotesProductsViewsList.Add(qpModel);
+                    qpModel.LastUpdateBy = quote.SubmittedBy.FullName;
+                    qpModel.LastUpdateOn = quote.SubmittedDate;
+                    quotesProductsViewModels.Add(qpModel);
                 }               
             }
 
-            return new CommandResponse<IEnumerable<QuotesProductsView>>(retQuotesProductsViewsList);
+            var totalRows = quotesProductsViewModels.AsQueryable().CreateQuotesProductsQuery(command, true).Count();
+            quotesProductsViewModels = quotesProductsViewModels.AsQueryable().CreateQuotesProductsQuery(command).ToList();
+            
+            return new PagingCommandResponse<IEnumerable<QuotesProductsView>>(quotesProductsViewModels, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
     }

@@ -20,7 +20,7 @@ import { ReportCubeService } from '../../pages/reports/reportcube.service';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { CSVConverterService } from '../../services/csvconverter.service';
-
+import { LazyLoadEvent } from 'primeng/api';
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',
@@ -29,6 +29,8 @@ import { CSVConverterService } from '../../services/csvconverter.service';
 export class GridComponent implements OnInit {
   @Input() gridSaved: GridSaved;
   @Input() showReport: boolean;
+  @Input() totalRecords: number;
+  @Input() isLazyLoad: boolean;
   @Input() showExportGrid: boolean;
   @Input() saveToLocalStorage: boolean;
   @Input() data;
@@ -45,6 +47,9 @@ export class GridComponent implements OnInit {
   calendarEn;
   filteredData: any;
 
+  @Output() getData = new EventEmitter<any>();
+
+
   // expanded: boolean = false;
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
@@ -57,7 +62,9 @@ export class GridComponent implements OnInit {
     if (this.saveToLocalStorage === undefined) {
       this.saveToLocalStorage = true;
     }
-    this.getReport(this.data, this.reportInfo);
+    if (!this.isLazyLoad) {
+      this.getReport(this.data, this.reportInfo);
+    }
   }
 
   expandRow(expanded, row) {
@@ -67,6 +74,10 @@ export class GridComponent implements OnInit {
   }
 
   handleFilter(ev, filteredData) {
+    if(this.isLazyLoad){
+      return;
+    }
+
     this.filteredData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
     if (!this.hasChart) {
       return;
@@ -85,13 +96,19 @@ export class GridComponent implements OnInit {
     }, 300);
   }
 
+  getLazyLoadReport(event: LazyLoadEvent) {
+    this.gridData = this.data;
+    this.filteredData = this.data;
+    this.getData.emit(event);
+  }
+
   getReport(data: any, reportInfo?: ReportModel) {
     if (reportInfo === undefined || reportInfo.apiEndPointURL === undefined) {
       this.gridData = data;
       this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
-      this.reportCubeService.getReport(reportInfo).then((resp:any) => {
+      this.reportCubeService.getReport(reportInfo).then((resp) => {
         if (resp.chartOptions !== undefined) {
           this.hasChart = true;
           this.gridData = resp.resultData;

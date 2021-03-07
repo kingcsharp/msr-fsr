@@ -5,7 +5,7 @@ namespace MSR.Domain.Models
 {
     public class PurchaseOrderModel : CreatableModel
     {
-        public Customer Customer { get; set; }
+        public CustomerModel Customer { get; set; }
 
         public int CustomerId { get; set; }
 

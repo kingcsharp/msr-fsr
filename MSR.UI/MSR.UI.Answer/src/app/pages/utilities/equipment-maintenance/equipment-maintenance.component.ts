@@ -18,6 +18,8 @@ import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
 
@@ -50,6 +52,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   gridSettings: ColumnsSaved[];
   emPrivileges: AllowedActions;
   emStatus: any[];
+  totalRecords: number = 0;
   troubleStates: any[] = [
     {
       label: 'ON',
@@ -103,7 +106,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   users: any[] = [];
   getUsersFlag: boolean = false;
   internalAddress: string;
-  displayConfirmModal: boolean  = false;
+  displayConfirmModal: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -132,24 +135,31 @@ export class EquipmentMaintenanceComponent implements OnInit {
     ];
     this.emPrivileges = this.globals.getEnumPrivileges(this.menuItems.EquipmentMaintenance);
     this.data = [];
-    this.globals.showLoader(true);
-    this.getEMData();
+    this.emStatus = [
+      { label: 'Requested', value: 'Requested' },
+      { label: 'Assigned', value: 'Assigned' },
+      { label: 'Complete', value: 'Complete' },
+      { label: 'Scheduled', value: 'Scheduled' }]
+
     this.getUsers();
   }
 
-  getEMData() {
-    this.equipmentMaintenanceService.equipmentMaintenanceGet(null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.data = response.object;
-        this.emStatus = this.data.filter(
-          (thing, i, arr) => arr.findIndex(t => t.statusId === thing.statusId) === i
-        ).map(x => ({ label: x.status.name, value: x.statusId }));
-        this.getEMDataFlag = true;
-      }));
+  getEMData(event: LazyLoadEvent) {
+    setTimeout(() => {
+      this.globals.showLoader(true);
+      callFunctionWithFilters(this.equipmentMaintenanceService, this.equipmentMaintenanceService.equipmentMaintenanceGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.data = response.object;
+          this.totalRecords = response.totalNumberOfRecords;
+          this.getEMDataFlag = true;
+        }));
+    }, 10);
   }
 
   getUsers() {
-    this.userService.userGet(null, null, null, null, null, null, null, null, [21], env.apiVersion)
+    this.globals.showLoader(true);
+    this.userService.userGet(null, null, null, null, null, null, null, null, [21], null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.users = [];
@@ -171,17 +181,17 @@ export class EquipmentMaintenanceComponent implements OnInit {
   getLocations(internalAddress: string) {
     this.globals.showLoader(true);
     this.getLocationsFlag = false;
-    this.locationService.locationGet(null, null, internalAddress, env.apiVersion).pipe(take(1))
-    .subscribe(responseHandler(response => {
-      this.locations = [];
-      response.object.map((x) => {
-        this.locations.push({ label: x.name, value: x.id });
-      });
-      if (this.locations.length === 1) {
-        this.selectedEquipmentMaintenance.locationId = this.locations[0].value;
-      }
-      this.getLocationsFlag = true;
-    }));
+    this.locationService.locationGet(null, null, internalAddress, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.locations = [];
+        response.object.map((x) => {
+          this.locations.push({ label: x.name, value: x.id });
+        });
+        if (this.locations.length === 1) {
+          this.selectedEquipmentMaintenance.locationId = this.locations[0].value;
+        }
+        this.getLocationsFlag = true;
+      }));
   }
 
   showEMModal(equipmentMaintenance: EquipmentMaintenanceModel) {
@@ -242,8 +252,8 @@ export class EquipmentMaintenanceComponent implements OnInit {
         troubleState: this.selectedEquipmentMaintenance.troubleState,
         statusId: this.selectedEquipmentMaintenance.troubleState ? this.enumEMStatus.Requested : this.selectedEquipmentMaintenance.statusId,
         maintenanceTask: this.selectedEquipmentMaintenance.troubleState ? null : this.selectedEquipmentMaintenance.maintenanceTask,
-        pemLastCompletedDate:  this.selectedEquipmentMaintenance.troubleState ? null : this.selectedEquipmentMaintenance.pemLastCompletedDate,
-        frequencyField:  this.selectedEquipmentMaintenance.troubleState ? null : this.selectedEquipmentMaintenance.frequencyField,
+        pemLastCompletedDate: this.selectedEquipmentMaintenance.troubleState ? null : this.selectedEquipmentMaintenance.pemLastCompletedDate,
+        frequencyField: this.selectedEquipmentMaintenance.troubleState ? null : this.selectedEquipmentMaintenance.frequencyField,
         assignedToId: !this.selectedEquipmentMaintenance.troubleState && this.selectedEquipmentMaintenance.statusId === this.enumEMStatus.Assigned ? this.selectedEquipmentMaintenance.assignedToId : null,
         comments: this.selectedEquipmentMaintenance.comments,
       };
@@ -256,7 +266,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
             this.closeEMModal();
           }));
       } else {
-        this.equipmentMaintenanceService.equipmentMaintenancePatch(env.apiVersion, new UpdateEquipmentMaintenanceRequest({...requestData, id: this.selectedEquipmentMaintenance.id})).pipe(take(1))
+        this.equipmentMaintenanceService.equipmentMaintenancePatch(env.apiVersion, new UpdateEquipmentMaintenanceRequest({ ...requestData, id: this.selectedEquipmentMaintenance.id })).pipe(take(1))
           .subscribe(responseHandler(response => {
             const index = this.data.findIndex(x => x.id === this.selectedEquipmentMaintenance.id);
             this.data.splice(index, 1);
@@ -283,11 +293,11 @@ export class EquipmentMaintenanceComponent implements OnInit {
   deleteEquipmentMaintenance() {
     this.globals.showLoader(true);
     this.equipmentMaintenanceService.equipmentMaintenanceDelete(this.selectedEquipmentMaintenance.id, env.apiVersion).pipe(take(1))
-    .subscribe(responseHandler(response => {
-      const index = this.data.findIndex(x => x.id === this.selectedEquipmentMaintenance.id);
-      this.data.splice(index, 1);
-      this.data = this.data.slice(0);
-      this.closeConfirmModal();
-    }));
+      .subscribe(responseHandler(response => {
+        const index = this.data.findIndex(x => x.id === this.selectedEquipmentMaintenance.id);
+        this.data.splice(index, 1);
+        this.data = this.data.slice(0);
+        this.closeConfirmModal();
+      }));
   }
 }

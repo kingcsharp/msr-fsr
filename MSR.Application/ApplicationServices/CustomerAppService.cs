@@ -6,6 +6,8 @@ using MSR.Domain.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -27,31 +29,33 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetCustomer command, CancellationToken cancellationToken = default)
         {
             var ret = await _customerService.GetCustomerAsync(command.Id);
-            return new CommandResponse<Customer>(ret);
+            return new CommandResponse<CustomerModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(GetMultipleCustomers command, CancellationToken cancellationToken = default)
         {
-            var ret = await _customerService.GetCustomersAsync(command);
-            return new CommandResponse<IEnumerable<Customer>>(ret);
+            var customerModels = await _customerService.GetCustomersAsync(command);
+            var totalRows = customerModels.AsQueryable().CreateCustomerQuery(command, true).ToList<CustomerModel>().Count();
+            customerModels = customerModels.AsQueryable().CreateCustomerQuery(command).ToList();
+            return new PagingCommandResponse<IEnumerable<CustomerModel>>(customerModels, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateCustomer command, CancellationToken cancellationToken = default)
         {
             var ret = await _customerService.CreateCustomerAsync(command);
-            return new CommandResponse<Customer>(ret);
+            return new CommandResponse<CustomerModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeactivateCustomer command, CancellationToken cancellationToken = default)
         {
             var ret = await _customerService.DeleteCustomerAsync(command.CustomerId);
-            return new CommandResponse<Customer>(ret);
+            return new CommandResponse<CustomerModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateCustomer command, CancellationToken cancellationToken = default)
         {
             var ret = await _customerService.UpdateCustomerAsync(command);
-            return new CommandResponse<Customer>(ret);
+            return new CommandResponse<CustomerModel>(ret);
         }
     }
 }

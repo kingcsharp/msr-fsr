@@ -8,6 +8,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.EquipmentMaintenance
 {
@@ -25,24 +26,16 @@ namespace MSR.Infrastructure.Resources.Services.EquipmentMaintenance
 
         public async Task<IEnumerable<EquipmentMaintenanceModel>> GetEquipmentMaintenancesAsync(GetEquipmentMaintenance command)
         {
-            var emList = new List<EquipmentMaintenanceModel>();
-            var ems = _unitOfWork.EquipmentMaintenances.Query()
-                                                .Include(i => i.Location)
-                                                .Include(i => i.Status)
-                                                .Include(i => i.AssignedTo)
-                                                .AsQueryable();
+            
+            var equipmentMaintenanceEntities = _unitOfWork.EquipmentMaintenances.Query().CreateEquipmentMaintainanceQuery(command).ToListAsync();
 
-            if (command.Id.HasValue)
+            var equipmentMaintenanceModels = new List<EquipmentMaintenanceModel>();
+            foreach (var equipmentMaintenanceEntity in await equipmentMaintenanceEntities)
             {
-                ems = ems.Where(i => i.Id == command.Id);
+                equipmentMaintenanceModels.Add(_mapper.Map<EquipmentMaintenanceModel>(equipmentMaintenanceEntity));
             }
 
-            foreach (var ep in await ems.ToListAsync())
-            {
-                emList.Add(_mapper.Map<EquipmentMaintenanceModel>(ep));
-            }
-
-            return emList.AsEnumerable();
+            return equipmentMaintenanceModels.AsEnumerable();
         }
 
         public async Task<EquipmentMaintenanceModel> CreateEquipmentMaintenanceAsync(CreateEquipmentMaintenance command)
@@ -117,5 +110,10 @@ namespace MSR.Infrastructure.Resources.Services.EquipmentMaintenance
             return equipmentMaintenanceModel;
         }
 
+        public async Task<int> GetEquipmentMaintenanceTotalRows(GetEquipmentMaintenance command)
+        {
+            var totalRows = await _unitOfWork.EquipmentMaintenances.Query().CreateEquipmentMaintainanceQuery(command, true).CountAsync();
+            return totalRows;
+        }
     }
 }

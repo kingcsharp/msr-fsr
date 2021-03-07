@@ -29,7 +29,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetEquipmentMaintenance command, CancellationToken cancellationToken = default)
         {
             var ret = await _equipmentMaintenanceService.GetEquipmentMaintenancesAsync(command);
-            return new CommandResponse<IEnumerable<EquipmentMaintenanceModel>>(ret);
+            int totalRowNumbers = await _equipmentMaintenanceService.GetEquipmentMaintenanceTotalRows(command);
+            return new PagingCommandResponse<IEnumerable<EquipmentMaintenanceModel>>(ret, totalRowNumbers, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateEquipmentMaintenance command, CancellationToken cancellationToken = default)

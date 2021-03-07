@@ -38,7 +38,8 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ICollection<PurchaseModel>>))]
+        [HttpGet]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<PurchaseModel>>))]
         public async Task<IActionResult> GetPurchases([FromQuery] GetPurchasesRequest filters)
         {
             var getPurchases = filters.ToGetPurchasesCommand();

@@ -2,7 +2,7 @@
 
 namespace MSR.Domain.Models
 {
-    public class Customer: TrackableModel
+    public class CustomerModel: TrackableModel
     {
         public int OldId { get; set; }
         public string Name { get; set; }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
-    public class GetUsers: Command<ICollection<UserModel>>
+    public class GetUsers: PagingCommand
     {
         public int? Id { get; set; }
         public string FirstName { get; set; }
@@ -14,6 +14,8 @@ namespace MSR.Domain.Commands
         public int? Supervisor { get; set; }
         public string PrimaryPhone { get; set; }
         public string Email { get; set; }
-        public List<int>? HasRoleIDs { get; set; }
+        public List<int>? Roles { get; set; }
+        public bool? IsActive { get; set; }
+        public bool? IsAnswerUser { get; set; }
     }
 }

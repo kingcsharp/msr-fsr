@@ -1,10 +1,10 @@
 import { Component, OnInit, ElementRef, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { SelectItem } from 'primeng/api';
+import { LazyLoadEvent, SelectItem } from 'primeng/api';
 import {
-  EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary,
-  ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel, WorkOrderMessageModel, WorkOrderTaskMonitorModel
+  EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, Sort,
+  ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel, WorkOrderMessageModel, WorkOrderTaskMonitorModel, WorkOrderPartModel, WorkOrderModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
 import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
-import { pushIfNotExists } from '../../../models/lib/Utils';
+import { pushIfNotExists, callFunctionWithFilters, callFunctionWithFiltersViews, emptyArray } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -21,6 +21,8 @@ import { EnumMonitorShouldBe } from '../../../models/enums/EnumMonitorShouldBe';
 import { EnumMonitorType } from '../../../models/enums/EnumMonitorType';
 import { EnumMonitorPassFailStatus } from '../../../models/enums/EnumMonitorPassFailStatus';
 import { Subscription } from 'rxjs';
+import { cloneDeep } from 'lodash';
+
 @Component({
   selector: 'app-wip',
   templateUrl: './wip.component.html',
@@ -86,6 +88,8 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
       numVisible: 1
     }
   ];
+  currentEvent: any;
+  totalRecords: number = 0;
 
 
   @ViewChild('fileItem') fileItem: ElementRef;
@@ -116,6 +120,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
       storageId: 'wip_engineering_parts' + this.elementReference.nativeElement.tagName.toLowerCase(),
       version: '1.0.0'
     });
+    this.setGridColumnsSaved();
 
     this.reportPartsModel = new ReportModel({
       name: ''
@@ -230,21 +235,32 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (this.globals.selectedCustomer !== undefined) {
       this.setCustomerName();
-      this.getGridData();
+      this.setGridColumnsSaved();
+      if (this.showReport) {
+        this.getGridData(undefined);
+      } else {
+        this.showReport = true;
+      }
     }
 
     let isBuyerObservableSubscription = this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.selectedCustomer !== undefined) {
-        this.setCustomerName();
-        this.getGridData();
+          this.setCustomerName();
       }
     });
     this.subscriptions.push(isBuyerObservableSubscription);
 
     let selectCustomerObservableSubscription = this.globals.selectCustomerObservable.subscribe(response => {
       if (response !== null && response !== undefined) {
-        this.setCustomerName();
-        this.getGridData();
+        setTimeout(() => {
+          this.setCustomerName();
+          this.setGridColumnsSaved();
+          if (this.showReport) {
+            this.getGridData(undefined);
+          } else {
+            this.showReport = true;
+          }
+        }, 10);
       }
     });
     this.subscriptions.push(selectCustomerObservableSubscription);
@@ -387,45 +403,61 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     workOrder.subParts.map(x => this.setSubPartsProperties(x));
   }
 
-  getGridData() {
+  setGridColumnsSaved() {
+    const columnsSaved = this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns();
+    this.gridSaved = new GridSaved({
+      columnsSaved: columnsSaved,
+      storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: '1.0.0',
+      expandRows: true,
+      expandRowProperty: 'subParts',
+      expandRowsTemplate: this.expandedRowTemplate,
+      paginator: true
+    });
+
+    this.reportModel = new ReportModel({
+      name: ''
+    });
+  }
+
+  getGridData(event: LazyLoadEvent) {
+    const columnsSaved = this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns();
     this.globals.showLoader(true);
-    this.showReport = false;
-    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate,
-      env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.data = response.object.map((x: any) => {
-          x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
-          let ret = new PortalWorkOrderPartsView(x);
-          this.setSubpartspropertiesToWoSubparts(ret);
-          return ret;
-        });
-        this.gridSaved = new GridSaved({
-          columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
-          storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
-          version: '1.0.0',
-          expandRows: true,
-          expandRowProperty: 'subParts',
-          expandRowsTemplate: this.expandedRowTemplate
-        });
+    if (event !== undefined) {
+      this.currentEvent = event;
+    }
 
-        this.reportModel = new ReportModel({
-          name: ''
-        });
+    const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate };
+    setTimeout(() => {
+      callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.portal, pageFilters, columnsSaved, this.currentEvent)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          const responseData = response.object.map((x: any) => {
+            x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
+            let ret = new PortalWorkOrderPartsView(x);
+            this.setSubpartspropertiesToWoSubparts(ret);
+            return ret;
+          });
 
-        this.showReport = true;
-      }));
+          this.totalRecords = response.totalNumberOfRecords;
+          emptyArray(this.data);
+          setTimeout(() => {
+            this.data.push(...responseData);
+          }, 100);
+        }));
+    }, 10);
   }
 
   getEngineerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.Number, visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
       new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
-      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY', isRanged: true }),
-      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY', isRanged: true }),
+      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
+      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
       new ColumnsSaved({ id: 'partName', label: 'Part Name', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true, type: EnumColumnType.String }),
@@ -437,18 +469,18 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getBuyerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.Number, visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', type: EnumColumnType.Number, visible: true }),
       new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
-      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY', isRanged: true }),
-      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY', isRanged: true }),
+      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
+      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'supportingInfo', label: 'Supporting Info', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem }),
       new ColumnsSaved({ id: 'invoiceName', label: 'Invoice #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'price', label: 'Price', visible: true, type: EnumColumnType.Money }),
       new ColumnsSaved({ id: 'invoiceAmount', label: 'Amount', visible: true, type: EnumColumnType.Money }),
-      new ColumnsSaved({ id: 'invoiceDate', label: 'Invoice Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY', isRanged: true }),
+      new ColumnsSaved({ id: 'invoiceDate', label: 'Invoice Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.Template, templateName: this.statusCol }),
     ];
   }

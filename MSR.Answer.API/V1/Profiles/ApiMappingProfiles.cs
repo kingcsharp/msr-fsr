@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MSR.Answer.API.V1.Models;
+using MSR.Answer.API.V1.Models.Paging;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Models.Query;
 using System;
 using System.Linq;
 
@@ -31,6 +33,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateHelpPageRoleRequest, CreateHelpPageRole>();
             CreateMap<UpdateHelpPageRequest, UpdateHelpPage>();
             CreateMap<GetHelpPageRequest, GetHelpPage>();
+
+            CreateMap<QueryRequestBase, QueryBase>();
 
             CreateMap<CreatePartRequest, CreatePart>()
             .ForMember(dest => dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
@@ -69,6 +73,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<WorkOrderTaskRequest, WorkOrderTaskModel>().ReverseMap();
             CreateMap<DeleteMenuRoleMapRequest, RemoveMenuRoleMap>();
             CreateMap<FileRequest, FileModel>().ReverseMap();
+            CreateMap<GetMultipleCustomersRequest, GetMultipleCustomers>();
             CreateMap<CreateCustomerRequest, CreateCustomer>();
             CreateMap<UpdateCustomerRequest, UpdateCustomer>();
             CreateMap<CreateFileRequest, CreateFile>();
@@ -136,7 +141,22 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetPortalWorkOrderRequest, GetPortalWorkOrder>();
 
             CreateMap<GetArchiveDocumentRequest, GetArchiveDocument>();
-
+            CreateMap<GetPartRequest, GetParts>();
+            CreateMap<GetProcedureStepTemplateRequest, GetProcedureStepTemplate>();
+            CreateMap<GetRolesRequest, GetRoles>();
+            CreateMap<GetPortalWorkOrderRequest, GetPortalWorkOrderQueryModel>();
+            CreateMap<Sort, QuerySort>();
+            CreateMap<Filter, QueryFilter>();
+            CreateMap<GetTrainingCertificationRequest, GetTrainingCertification>();
+            CreateMap<GetWorkOrderHistoryRequest, GetWorkOrderHistory>();
+            CreateMap<GetQuotesProductsRequest, GetQuotesProducts>();
+            CreateMap<GetWorkflowStageRequest, GetWorkflowStageModel>();
+            CreateMap<GetWorkflowGroupRequest, GetWorkflowGroupsModel>();
+            CreateMap<GetPendingApprovalRequest, GetPendingApprovalModel>();
+            CreateMap<GetProcedureTypeRequest, GetProcedureType>();
+            CreateMap<GetProcedureRequest, GetProcedure>();
+            CreateMap<GetWorkOrderMenuRequest, GetWorkOrderMenuQueryModel>();
+            CreateMap<GetWorkflowRequest, GetWorkflowModel>();
         }
     }
 }

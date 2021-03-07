@@ -92,6 +92,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<CycleCountHistory> _cycleCountHistory;
         private IRepository<PortalWorkOrder> _portalWorkOrderView;
         private IRepository<WorkOrderHistoryView> _workOrderHistoryView;
+        private IRepository<WorkOrderStatusSummary> _workOrderStatusSummary;
+        private IRepository<WorkOrderMenu> _workOrderMenu;
+        private IRepository<PortalWorkOrderMenu> _portalWorkOrderMenu;
+        private IRepository<WorkOrderStats> _workOrderStats;
 
         public IRepository<CycleCountHistory> CycleCountHistory { get { return _cycleCountHistory ?? (_cycleCountHistory = new EFRepository<CycleCountHistory>(Context)); } }
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
@@ -172,8 +176,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ReportDashboardMap> ReportDashboardMaps { get { return _reportDashboardMap ??= new EFRepository<ReportDashboardMap>(Context); } }
         public IRepository<WorkOrderMessage> WorkOrderMessages { get { return _workOrderMessage ??= new EFRepository<WorkOrderMessage>(Context); } }
         public IRepository<PortalWorkOrder> PortalWorkOrderViews { get { return _portalWorkOrderView ??= new EFRepository<PortalWorkOrder>(Context); } }
-
         public IRepository<WorkOrderHistoryView> WorkOrderHistoryViews { get { return _workOrderHistoryView ??= new EFRepository<WorkOrderHistoryView>(Context); } }
+        public IRepository<WorkOrderStatusSummary> WorkOrderStatusSummaries { get { return _workOrderStatusSummary ??= new EFRepository<WorkOrderStatusSummary>(Context); } }
+        public IRepository<WorkOrderMenu> WorkOrderMenus { get { return _workOrderMenu ??= new EFRepository<WorkOrderMenu>(Context); } }
+        public IRepository<PortalWorkOrderMenu> PortalWorkOrderMenus { get { return _portalWorkOrderMenu ??= new EFRepository<PortalWorkOrderMenu>(Context); } }
+        public IRepository<WorkOrderStats> WorkOrderStats { get { return _workOrderStats ??= new EFRepository<WorkOrderStats>(Context); } }
 
         #endregion Repositories
 

@@ -6,7 +6,9 @@
 <widget class="mt-4">
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
-    currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
+    currentPageReportTemplate="Showing {first}-{last} of {{totalRecords}}" [filterDelay]="0" stateStorage="local"
+    [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getQuotesProducts($event)" [totalRecords]="totalRecords"
+
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
@@ -235,7 +237,7 @@
           {{quoteproductmodel.lastUpdateOn | userTimezone}}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedBy', gridSettings)">
-          {{quoteproductmodel.lastUpdated ? quoteproductmodel.lastUpdated.userName : ''}}
+          {{quoteproductmodel.lastUpdateBy}}
         </td>
         <td>
           <i *ngIf="!quoteproductmodel.isProduct && userPrivileges.canCreate" class="far fa-play pointer"

@@ -9,6 +9,8 @@ import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-help',
@@ -31,6 +33,8 @@ export class HelpComponent implements OnInit {
   helpContent: string;
   modalTitle: string;
   showPreviewDialog: boolean = false;
+  totalRecords: number = 0;
+  currentEvent: LazyLoadEvent;
 
   constructor(private helpService: HelpService, private roleService: RoleService,
     public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
@@ -46,23 +50,25 @@ export class HelpComponent implements OnInit {
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
     ];
     this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.HelpPages);
-    this.getHelpPages();
   }
 
-  getHelpPages() {
-
+  getHelpPages(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-    this.helpService.helpGet(null, null, env.apiVersion).subscribe(responseHandler(response => {
-      this.data = new Array<HelpPage>();
-
-      response.object.forEach(helpPage => {
-        this.data.push(helpPage);
-      });
-      this.allRoles = new Array<SelectItem>();
-      let distinctRolesFromReturnedResults = response.object.map(s => s.roles).flat().map(role => ({ label: role.name, value: role.name })).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
-      this.allRoles = this.allRoles.concat(distinctRolesFromReturnedResults);
-    }));
-
+    setTimeout(() => {
+      callFunctionWithFilters(this.helpService, this.helpService.helpGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.currentEvent = event;
+          this.data = new Array<HelpPage>();
+          this.totalRecords = response.totalNumberOfRecords;
+          response.object.forEach(helpPage => {
+            this.data.push(helpPage);
+          });
+          this.allRoles = new Array<SelectItem>();
+          let distinctRolesFromReturnedResults = response.object.map(s => s.roles).flat().map(role => ({ label: role.name, value: role.name })).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
+          this.allRoles = this.allRoles.concat(distinctRolesFromReturnedResults);
+        }));
+    }, 10);
   }
 
   openHelpPage(helpage: HelpPage) {
@@ -72,7 +78,6 @@ export class HelpComponent implements OnInit {
   }
 
   openConfirmDeleteDialog(helpPage: HelpPage) {
-
     this.helpPageToDelete = helpPage;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
@@ -86,10 +91,7 @@ export class HelpComponent implements OnInit {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     this.globals.showLoader(true);
     this.helpService.helpDelete(this.helpPageToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
-
-      const index: number = this.data.map(function (e) { return e.id; }).indexOf(this.helpPageToDelete.id);
-      this.data.splice(index, 1);
-      this.data = this.data.slice(0);
+      this.getHelpPages(this.currentEvent);
     }));
   }
 }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MSR.Domain.Commanding.Enums;
+using MSR.Infrastructure.Resources.Queries;
 
 namespace MSR.Infrastructure.Resources.Services.Workflow
 {
@@ -26,15 +27,9 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task<ICollection<WorkflowStageModel>> GetWorkFlowStageAsync(GetWorkflowStageModel command)
         {
-            var workflowStage = _unitOfWork.WorkflowStages.Query();
+            var workflowStageEntities = await _unitOfWork.WorkflowStages.Query().CreateWorkflowStagesQuery(command).ToListAsync();
 
-            if (command.Id.HasValue)
-            {
-                workflowStage = workflowStage.Where(i => i.Id == command.Id.Value);
-            }
-
-            var result = await workflowStage.Include(x => x.Group).ToListAsync();
-            var ret = result.Select(workflowGrou => _mapper.Map<WorkflowStageModel>(workflowGrou)).ToList();
+            var ret = workflowStageEntities.Select(workflowGrou => _mapper.Map<WorkflowStageModel>(workflowGrou)).ToList();
             return ret;
         }
 
@@ -105,6 +100,12 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             _unitOfWork.WorkflowStages.Delete(false, workFlowStage, true);
 
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<int> GetWorkFlowStageTotalRows(GetWorkflowStageModel command)
+        {
+            var totalRows = await _unitOfWork.WorkflowStages.Query().CreateWorkflowStagesQuery(command, true).CountAsync();
+            return totalRows;
         }
     }
 }

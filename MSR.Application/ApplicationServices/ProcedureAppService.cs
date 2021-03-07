@@ -6,6 +6,8 @@ using MSR.Domain.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MSR.Infrastructure.Resources.Queries;
+using System.Linq;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -30,8 +32,11 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetProcedure command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.GetProcedureAsync(command);
-            return new CommandResponse<ICollection<Procedure>>(ret);
+            var procedures = await _procedureService.GetProcedureAsync(command);
+            var totalRows = procedures.AsQueryable().CreateProcedureQuery(command,true).Count();
+            var ret = procedures.AsQueryable().CreateProcedureQuery(command).ToList();
+            
+            return new PagingCommandResponse<ICollection<Procedure>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
         public async Task<ICommandResponse> HandleAsync(CreateProcedure command, CancellationToken cancellationToken = default)
         {
