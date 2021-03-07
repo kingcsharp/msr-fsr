@@ -209,7 +209,7 @@ export function getOperatorByColumn(filtername: any, columnsSaved: ColumnsSaved[
         case EnumColumnType.Money:
             return 'eq';
         case EnumColumnType.StringArray:
-            return 'contains';
+            return 'list';
         default:
             throw new Exception({ message: 'invalid col type' });
     }
