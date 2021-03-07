@@ -32,7 +32,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
         public async Task<ICollection<LocationModel>> GetLocationsAsync(GetLocations command)
         {
-            var locationListAll = await _unitOfWork.Locations.Query().CreateLocationQuery(command).ToListAsync();
+            var locationListAll = await _unitOfWork.Locations.Query().ToListAsync();
 
             var locationQuery = _unitOfWork.Locations.Query();
             bool includeChildren;
@@ -91,6 +91,9 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 if (locationApproval != null)
                 {
                     domlocation.Status = locationApproval.Status.Name;
+                } else { 
+                    
+                    domlocation.Status = "Approved";    
                 }
                 if (domlocation.Parent != null)
                 {
@@ -332,11 +335,5 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
         }
 
-        public async Task<int> GetTotalLocationRows(GetLocations command)
-        {
-            var totalRows = await _unitOfWork.Locations.Query().CreateLocationQuery(command).CountAsync();
-
-            return totalRows;
-        }
     }
 }

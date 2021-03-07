@@ -179,7 +179,7 @@
               {{location.state}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('postalcode', gridSettings)">
-              {{location.postalcode}}
+              {{location.postalCode}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('country', gridSettings)">
               {{location.country}}
@@ -191,7 +191,7 @@
               {{ location.parent?.name }}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('timezone.description', gridSettings)">
-              {{location.timezone?.description}}
+              {{location.timeZone?.description}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('address2', gridSettings)">
               {{location.address2}}
