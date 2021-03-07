@@ -13,21 +13,21 @@ namespace MSR.Infrastructure.Resources.Queries
     {
         public static IQueryable<QuotesProductsView> CreateQuotesProductsQuery(this IQueryable<QuotesProductsView> query, GetQuotesProducts command, bool forRowCount = false)
         {
-            query = query.Where(command.Company, s => s.Company.Contains(command.Company));
+            query = query.Where(command.Company, s => !string.IsNullOrEmpty(s.Company) && s.Company.Contains(command.Company));
             query = query.Where(command.CycleTime, s => s.CycleTime == command.CycleTime);
-            query = query.Where(command.DivisionFab, s => s.DivisionFab.Contains(command.DivisionFab));
+            query = query.Where(command.DivisionFab, s => !string.IsNullOrEmpty(s.DivisionFab) && s.DivisionFab.Contains(command.DivisionFab));
             query = query.Where(command.EquipmentCost, s => s.EquipmentCost == command.EquipmentCost);
-            query = query.Where(command.LastUpdatedBy, s => s.LastUpdateBy.Contains(command.LastUpdatedBy));
+            query = query.Where(command.LastUpdatedBy, s => !string.IsNullOrEmpty(s.LastUpdateBy) && s.LastUpdateBy.Contains(command.LastUpdatedBy));
             query = query.Where(command.LastUpdateOn, s => DateTime.Compare(s.LastUpdateOn.Value.Date,command.LastUpdateOn.Value.Date) == 0);
             query = query.Where(command.MaterialCost, s => s.MaterialCost == command.MaterialCost);
-            query = query.Where(command.PartKitNo, s => s.PartKitNo.Contains(command.PartKitNo));
-            query = query.Where(command.ProcedureName, s => s.ProcedureName.Contains(command.ProcedureName));
-            query = query.Where(command.ProductName, s => s.ProductName.Contains(command.ProductName));
-            query = query.Where(command.Representative, s => s.Representative.Contains(command.Representative));
+            query = query.Where(command.PartKitNo, s => !string.IsNullOrEmpty(s.PartKitNo) && s.PartKitNo.Contains(command.PartKitNo));
+            query = query.Where(command.ProcedureName, s => !string.IsNullOrEmpty(s.ProcedureName) && s.ProcedureName.Contains(command.ProcedureName));
+            query = query.Where(command.ProductName, s => !string.IsNullOrEmpty(s.ProductName) && s.ProductName.Contains(command.ProductName));
+            query = query.Where(command.Representative, s => !string.IsNullOrEmpty(s.Representative) && s.Representative.Contains(command.Representative));
             query = query.Where(command.Revision, s => s.Revision == command.Revision);
             query = query.Where(command.SalesTax, s => s.SalesTax == command.SalesTax);
-            query = query.Where(command.SegregationType, s => EnumUtils.GetDescription(s.SegregationType).Contains(command.SegregationType));
-            query = query.Where(command.SubmittedByFullName, s => s.SubmittedBy.FullName.Contains(command.SubmittedByFullName));
+            query = query.Where(command.SegregationType, s => s.SegregationType.HasValue && command.SegregationType.ToList().Contains(s.SegregationType.Value));
+            query = query.Where(command.SubmittedByFullName, s => s.SubmittedBy != null && s.SubmittedBy.FullName.Contains(command.SubmittedByFullName));
             query = query.Where(command.TotalPrice, s => s.TotalPrice == command.TotalPrice);
             query = query.Where(command.SubmittedDate, s => DateTime.Compare(s.SubmittedDate.Date, command.SubmittedDate.Value.Date) == 0);
 

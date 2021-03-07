@@ -237,7 +237,7 @@
           {{quoteproductmodel.lastUpdateOn | userTimezone}}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedBy', gridSettings)">
-          {{quoteproductmodel.lastUpdated ? quoteproductmodel.lastUpdated.userName : ''}}
+          {{quoteproductmodel.lastUpdateBy}}
         </td>
         <td>
           <i *ngIf="!quoteproductmodel.isProduct && userPrivileges.canCreate" class="far fa-play pointer"
