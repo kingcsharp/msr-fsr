@@ -45,7 +45,9 @@ export class CertificationsComponent implements OnInit {
     this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);
     this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
-    this.statusOptions = this.globals.getTopLevelStatus();
+    this.statusOptions = [
+      { label: 'Active', value: true },
+      { label: 'InActive', value: false }]
   }
 
   getTrainingCertification(event: LazyLoadEvent) {
