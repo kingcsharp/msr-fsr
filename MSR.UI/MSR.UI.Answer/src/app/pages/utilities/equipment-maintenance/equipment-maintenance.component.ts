@@ -135,7 +135,12 @@ export class EquipmentMaintenanceComponent implements OnInit {
     ];
     this.emPrivileges = this.globals.getEnumPrivileges(this.menuItems.EquipmentMaintenance);
     this.data = [];
-    this.emStatus = this.globals.getTopLevelStatus();
+    this.emStatus = [
+      { label: 'Requested', value: 'Requested' },
+      { label: 'Assigned', value: 'Assigned' },
+      { label: 'Complete', value: 'Complete' },
+      { label: 'Scheduled', value: 'Scheduled' }]
+
     this.getUsers();
   }
 
