@@ -112,7 +112,7 @@ namespace MSR.Infrastructure.Resources.Services.EquipmentMaintenance
 
         public async Task<int> GetEquipmentMaintenanceTotalRows(GetEquipmentMaintenance command)
         {
-            var totalRows = await _unitOfWork.EquipmentMaintenances.Query().CreateEquipmentMaintainanceQuery(command).CountAsync();
+            var totalRows = await _unitOfWork.EquipmentMaintenances.Query().CreateEquipmentMaintainanceQuery(command, true).CountAsync();
             return totalRows;
         }
     }
