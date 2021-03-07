@@ -197,12 +197,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
             var procedureSteps = _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id));
             var procedureStepMonitors = _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId));
+            var totalLaborTime = (decimal)0.0;
 
             foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
             {
                 var procedureStep = await procedureSteps.FirstOrDefaultAsync(s => s.Id == workOrderTask.ProcedureStepId);
                 workOrderTask.Title = procedureStep.Title;
                 workOrderTask.Description = procedureStep.StepText;
+                totalLaborTime += (decimal)procedureStep.LaborTime.GetValueOrDefault(0.0);
 
                 foreach (var workOrderTaskMonitor in workOrderTask.WorkOrderTaskMonitors)
                 {
@@ -281,9 +283,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 TotalTasks = workOrderEntity.WorkOrderTasks != null ? workOrderEntity.WorkOrderTasks.Count() : 0,
                 CompletedTasks = 0,
                 TotalTimeLogged = 0,
-                TotalTaskTime = workOrderEntity.WorkOrderTasks != null ? (decimal?)workOrderEntity.WorkOrderTasks.Where(i => i.ProcedureStep != null && i.ProcedureStep.LaborTime.HasValue).Select(j => j.ProcedureStep.LaborTime.Value).Sum() : (decimal?)0.0,
+                TotalTaskTime = totalLaborTime,
                 ActiveTitle = null
             };
+
             await _unitOfWork.WorkOrderStats.AddAsync(workOrderStatEntity);
             await _unitOfWork.SaveChangesAsync();
             // Build out minimal information so this can be
@@ -614,7 +617,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
             workOrderStatEntity.TotalTasks += 1;
-            workOrderStatEntity.TotalTaskTime += workOrderTaskEntity.ProcedureStep?.LaborTime == null ? 0 : (decimal)workOrderTaskEntity.ProcedureStep?.LaborTime.Value;
+            workOrderStatEntity.TotalTaskTime += procedureStepEntity?.LaborTime == null ? 0 : (decimal)procedureStepEntity?.LaborTime.Value;
             _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
             
             var created = await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
