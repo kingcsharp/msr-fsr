@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSR.Domain.Commanding.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace MSR.Answer.API.V1.Models
         public string SubmittedByFullName { get;set;}
         public string DivisionFab { get;set;}
         public string PartKitNo { get;set;}
-        public string SegregationType { get;set;}
+        public EnumSegregationType[]? SegregationType { get; set; }
         public string ProcedureName { get;set;}
         public string ProductName { get;set;}
         public string Representative { get;set;}

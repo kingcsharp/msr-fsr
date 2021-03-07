@@ -78,10 +78,10 @@ namespace MSR.Application.ApplicationServices
                 }               
             }
 
+            var totalRows = quotesProductsViewModels.AsQueryable().CreateQuotesProductsQuery(command, true).Count();
             quotesProductsViewModels = quotesProductsViewModels.AsQueryable().CreateQuotesProductsQuery(command).ToList();
-            var totalRows = quotesProductsViewModels.AsQueryable().CreateQuotesProductsQuery(command,true).Count();
-
-            return new PagingCommandResponse<IEnumerable<QuotesProductsView>>(quotesProductsViewModels, 0, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
+            
+            return new PagingCommandResponse<IEnumerable<QuotesProductsView>>(quotesProductsViewModels, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
     }

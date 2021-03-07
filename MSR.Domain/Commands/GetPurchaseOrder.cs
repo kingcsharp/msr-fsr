@@ -1,5 +1,6 @@
 ﻿using MSR.Domain.Commanding;
 using System;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
@@ -17,6 +18,6 @@ namespace MSR.Domain.Commands
         public decimal? TotalPurchaseLimit { get; set; }
         public decimal? UnusedAmount { get; set; }
         public int? Revision { get; set; }
-        public string Status { get; set; }
+        public string[]? Status { get; set; }
     }
 }

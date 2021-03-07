@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MSR.Answer.API.V1.Models
 {
@@ -16,8 +17,7 @@ namespace MSR.Answer.API.V1.Models
         public decimal? TotalPurchaseLimit { get;set;}
         public decimal? UnusedAmount { get;set;}
         public int? Revision { get;set;}
-        public string Status { get;set;}
-
+        public string[]? Status { get; set; }
 
     } 
 }

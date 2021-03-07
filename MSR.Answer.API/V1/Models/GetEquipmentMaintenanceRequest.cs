@@ -17,6 +17,6 @@ namespace MSR.Answer.API.V1.Models
         public int? FrequencyField { get; set; }
         [StringLength(4000)]
         public string Comments { get; set; }
-        public string StatusName { get; set; }
+        public string[] StatusName { get; set; }
     }
 }

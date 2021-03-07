@@ -315,7 +315,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public Task<int> GetInvoicesTotalRows(GetInvoicesGridView command)
         {
-            var totalRows = _unitOfWork.Invoices.Query().CreateLocationQuery(command).CountAsync();
+            var totalRows = _unitOfWork.Invoices.Query().CreateLocationQuery(command, true).CountAsync();
             return totalRows;
         }
     }

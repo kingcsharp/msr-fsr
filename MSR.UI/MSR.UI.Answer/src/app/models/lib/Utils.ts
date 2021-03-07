@@ -113,14 +113,22 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
         if (filterObj !== undefined) {
             if (Array.isArray(filterObj.value)) {
                 if (typeof (filterObj.value[0]) === "boolean") {
-                    argsToCallFn.push(filterObj.value[0]);
+                    if (filterObj.value.length === 1) {
+                        argsToCallFn.push(filterObj.value[0]);
+                    } else {
+                        argsToCallFn.push(null);
+                    }
                 } else {
-                    argsToCallFn.push(filterObj.value);
+                    if (typeof (filterObj.value[0]) === "object") {
+                        const parentRoles = filterObj.value.map(x => x.id);
+                        argsToCallFn.push(parentRoles);
+                    } else {
+                        argsToCallFn.push(filterObj.value);
+                    }
                 }
             } else {
                 argsToCallFn.push(filterObj.value);
             }
-
         } else if (filterEvObj[arg] !== undefined) {
             argsToCallFn.push(filterEvObj[arg]);
         } else {
@@ -206,7 +214,7 @@ export function getOperatorByColumn(filtername: any, columnsSaved: ColumnsSaved[
         case EnumColumnType.Money:
             return 'eq';
         case EnumColumnType.StringArray:
-            return 'contains';
+            return 'list';
         default:
             throw new Exception({ message: 'invalid col type' });
     }

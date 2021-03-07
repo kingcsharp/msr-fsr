@@ -27,7 +27,9 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task<ICollection<WorkflowGroupModel>> GetWorkFlowGroupsAsync(GetWorkflowGroupsModel command)
         {
-            var workflowGroups = await _unitOfWork.WorkflowGroups.Query().CreateWorkflowGroupQuery(command).ToListAsync();
+            var roleEntities = await _unitOfWork.Roles.Query().ToListAsync();
+
+            var workflowGroups = await _unitOfWork.WorkflowGroups.Query().CreateWorkflowGroupQuery(command, false, roleEntities).ToListAsync();
 
             var ret = workflowGroups.Select(workflowGroup => _mapper.Map<WorkflowGroupModel>(workflowGroup)).ToList();
             return ret;
@@ -122,7 +124,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task<int> GetWorkflowGroupTotalRows(GetWorkflowGroupsModel command)
         {
-            var totalRows = await _unitOfWork.WorkflowGroups.Query().CreateWorkflowGroupQuery(command).CountAsync();
+            var totalRows = await _unitOfWork.WorkflowGroups.Query().CreateWorkflowGroupQuery(command, true).CountAsync();
             return totalRows;
         }
     }

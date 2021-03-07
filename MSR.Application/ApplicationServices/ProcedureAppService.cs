@@ -33,7 +33,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetProcedure command, CancellationToken cancellationToken = default)
         {
             var procedures = await _procedureService.GetProcedureAsync(command);
-            var totalRows = procedures.AsQueryable().CreateProcedureQuery(command).Count();
+            var totalRows = procedures.AsQueryable().CreateProcedureQuery(command,true).Count();
             var ret = procedures.AsQueryable().CreateProcedureQuery(command).ToList();
             
             return new PagingCommandResponse<ICollection<Procedure>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);

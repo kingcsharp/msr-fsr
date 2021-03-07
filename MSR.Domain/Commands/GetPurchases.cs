@@ -10,7 +10,7 @@ namespace MSR.Domain.Commands
         [StringLength(10)]
         public string Mttn { get; set; }
         public string PurchaseOrderProductName { get; set; }
-        public int? StatusId { get; set; }
+        public string[]? StatusId { get; set; }
         public DateTime? CreatedOn { get; set; }
     }
 }

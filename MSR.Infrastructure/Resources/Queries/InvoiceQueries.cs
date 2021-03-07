@@ -39,7 +39,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
             query = query.Where(command.Amount, s => s.Total == command.Amount);
             query = query.Where(command.CreatedByName, s => s.Created.Created.FullName.Contains(command.CreatedByName));
-            query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date,command.CreatedOn.Value.Date) == 0);
+            query = query.Where(command.CreatedOn,s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
             query = query.Where(command.CustomerName, s => s.Customer.Name.Contains(command.CustomerName));
             query = query.Where(command.Description, s => s.Description.Contains(command.Description));
             query = query.Where(command.DueDate, s => DateTime.Compare(s.InvoiceDate.Date, command.DueDate.Value.Date) == 0);

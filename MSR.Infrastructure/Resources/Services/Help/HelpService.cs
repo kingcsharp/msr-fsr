@@ -126,9 +126,9 @@ namespace MSR.Infrastructure.Resources.Services.Help
 
         public async Task<IEnumerable<Domain.Models.HelpPage>> GetHelpPages(GetHelpPage command)
         {
-            var helpPageEntities = await  _unitOfWork.HelpPages.Query().CreateHelpQuery(command).ToListAsync();
+            var roleEntities = await _unitOfWork.Roles.Query().ToListAsync();
 
-            _ = await _unitOfWork.Roles.Query().ToListAsync();
+            var helpPageEntities = await  _unitOfWork.HelpPages.Query().CreateHelpQuery(command, false, roleEntities).ToListAsync();
 
             var helpPageModels = new List<Domain.Models.HelpPage>();
 
@@ -146,7 +146,9 @@ namespace MSR.Infrastructure.Resources.Services.Help
 
         public async Task<int> GetHelpPagesTotalRows(GetHelpPage command)
         {
-            var totalRows = await _unitOfWork.HelpPages.Query().CreateHelpQuery(command).CountAsync();
+            var roleEntities = await _unitOfWork.Roles.Query().ToListAsync();
+
+            var totalRows = await _unitOfWork.HelpPages.Query().CreateHelpQuery(command, true, roleEntities).CountAsync();
 
             return totalRows;
         }

@@ -20,7 +20,7 @@ namespace MSR.Domain.Commands
         public DateTime? ActualEndDate { get; set; }
         public string Product { get; set; }
         public string Procedure { get; set; }
-        public string Status { get; set; }
+        public string[]? Status { get; set; }
         public string Dispostion { get; set; }
     }
 }
