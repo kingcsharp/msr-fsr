@@ -119,7 +119,12 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
                         argsToCallFn.push(null);
                     }
                 } else {
-                    argsToCallFn.push(filterObj.value);
+                    if (typeof (filterObj.value[0]) === "object") {
+                        const parentRoles = filterObj.value.map(x => x.id);
+                        argsToCallFn.push(parentRoles);
+                    } else {
+                        argsToCallFn.push(filterObj.value);
+                    }
                 }
             } else {
                 argsToCallFn.push(filterObj.value);
