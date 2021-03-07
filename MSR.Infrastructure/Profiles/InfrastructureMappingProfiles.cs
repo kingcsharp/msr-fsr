@@ -564,7 +564,8 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<PortalWorkOrderMenuDTO, PortalWorkOrderView>()
                 .ForMember(dest => dest.SubParts, opts => opts.Ignore());
-            CreateMap<WorkOrderMenu, WorkOrderGridSummary>();
+            CreateMap<WorkOrderMenu, WorkOrderGridSummary>()
+                .ForMember(dest => dest.SegregationType, opts => opts.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU));
         }
 
         private static bool ignoreNullOrZero(object srcMember)
