@@ -236,23 +236,31 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.globals.selectedCustomer !== undefined) {
       this.setCustomerName();
       this.setGridColumnsSaved();
-      this.showReport = true;
+      if (this.showReport) {
+        this.getGridData(undefined);
+      } else {
+        this.showReport = true;
+      }
     }
 
     let isBuyerObservableSubscription = this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.selectedCustomer !== undefined) {
-        this.setCustomerName();
-        this.setGridColumnsSaved();
-        this.showReport = true;
+          this.setCustomerName();
       }
     });
     this.subscriptions.push(isBuyerObservableSubscription);
 
     let selectCustomerObservableSubscription = this.globals.selectCustomerObservable.subscribe(response => {
       if (response !== null && response !== undefined) {
-        this.setCustomerName();
-        this.setGridColumnsSaved();
-        this.showReport = true;
+        setTimeout(() => {
+          this.setCustomerName();
+          this.setGridColumnsSaved();
+          if (this.showReport) {
+            this.getGridData(undefined);
+          } else {
+            this.showReport = true;
+          }
+        }, 10);
       }
     });
     this.subscriptions.push(selectCustomerObservableSubscription);
@@ -433,7 +441,9 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
           this.totalRecords = response.totalNumberOfRecords;
           emptyArray(this.data);
-          this.data.push(...responseData);
+          setTimeout(() => {
+            this.data.push(...responseData);
+          }, 100);
         }));
     }, 10);
   }
