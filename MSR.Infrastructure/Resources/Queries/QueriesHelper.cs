@@ -176,9 +176,20 @@ namespace MSR.Infrastructure.Resources.Queries
             }
             else if (DateTime.TryParse(filter.Value, out var date))
             {
-                   var whilepart = $"({filter.Field} != null && (({filter.Field}.Year {comparison} {date.Year}) " +
-                                                           $"|| ({filter.Field}.Year = {date.Year} && {filter.Field}.Month {comparison} {date.Month}) " +
-                                                           $"|| ({filter.Field}.Year = {date.Year} && {filter.Field}.Month = {date.Month} && {filter.Field}.Day {comparison} {date.Day})))";
+                var lessThanOperators = new string[] { "lt", "lte" };
+                var whilepart = string.Empty;
+                if (filter.IsNullable)
+                {
+                    whilepart = $"({filter.Field} != null && ((({filter.Field}).Value.Year {(lessThanOperators.Contains(filter.Operator) ? "<" : ">")} {date.Year}) " +
+                                                        $"|| (({filter.Field}).Value.Year = {date.Year} && ({filter.Field}).Value.Month {(lessThanOperators.Contains(filter.Operator) ? "<" : ">")} {date.Month}) " +
+                                                        $"|| (({filter.Field}).Value.Year = {date.Year} && ({filter.Field}).Value.Month = {date.Month} && ({filter.Field}).Value.Day {comparison} {date.Day})))";
+                }
+                else
+                {
+                    whilepart = $"({filter.Field} != null && ((({filter.Field}).Year {(lessThanOperators.Contains(filter.Operator) ? "<" : ">")} {date.Year}) " +
+                                                           $"|| (({filter.Field}).Year = {date.Year} && ({filter.Field}).Month {(lessThanOperators.Contains(filter.Operator) ? "<" : ">")} {date.Month}) " +
+                                                           $"|| (({filter.Field}).Year = {date.Year} && ({filter.Field}).Month = {date.Month} && ({filter.Field}).Day {comparison} {date.Day})))";
+                }
                    
                 return whilepart;
             }
