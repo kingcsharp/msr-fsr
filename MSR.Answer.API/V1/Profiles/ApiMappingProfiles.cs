@@ -156,6 +156,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetProcedureTypeRequest, GetProcedureType>();
             CreateMap<GetProcedureRequest, GetProcedure>();
             CreateMap<GetWorkOrderMenuRequest, GetWorkOrderMenuQueryModel>();
+            CreateMap<GetWorkflowRequest, GetWorkflowModel>();
         }
     }
 }
