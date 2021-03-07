@@ -1,3 +1,4 @@
+import * as moment from "moment";
 import { LazyLoadEvent } from "primeng/api";
 import { Exception, Filter, Sort } from "../../../app/services/api.client.generated";
 import { environment as env } from '../../../environments/environment';
@@ -185,6 +186,8 @@ export function callFunctionWithFiltersViews(service, func, extraParams: any, co
 
 export function getValueByType(filterValue: any, columnsSaved: ColumnsSaved) {
     switch (columnsSaved.type) {
+        case EnumColumnType.Date:
+            return moment(filterValue).format('yyyy-MM-DD');
         case EnumColumnType.StringArray:
             return JSON.stringify(filterValue).toString();
 
