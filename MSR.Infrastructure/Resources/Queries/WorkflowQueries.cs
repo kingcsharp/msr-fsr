@@ -17,14 +17,14 @@ namespace MSR.Infrastructure.Resources.Queries
         {
 
             query = query.Where(command.Id, s => s.Id == command.Id);
-            query = query.Where(command.Name, s => s.Name.Contains(command.Name));
+            query = query.Where(command.Name, s => s.Name.ToLower().Contains(command.Name.ToLower()));
             query = query.Where(command.MemberStages, s => s.MemberStages.Any(m => command.MemberStages.Contains(m.WorkflowStageId)));
             query = query.Where(command.ActivityMaps, s => s.ActivityMaps.Any(m => command.ActivityMaps.Contains(m.WorkflowActivityId)));
             query = query.Where(command.IsActive, s => s.IsActive == command.IsActive);
             query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
-            query = query.Where(command.CreatedByName, s => s.CreatedByName.Contains(command.CreatedByName));
+            query = query.Where(command.CreatedByName, s => s.CreatedByName.ToLower().Contains(command.CreatedByName.ToLower()));
             query = query.Where(command.LastUpdatedOn, s => DateTime.Compare(s.LastUpdatedOn.Value.Date, command.LastUpdatedOn.Value.Date) == 0);
-            query = query.Where(command.LastUpdatedByName, s => s.LastUpdatedByName.Contains(command.LastUpdatedByName));
+            query = query.Where(command.LastUpdatedByName, s => s.LastUpdatedByName.ToLower().Contains(command.LastUpdatedByName.ToLower()));
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
@@ -125,13 +125,13 @@ namespace MSR.Infrastructure.Resources.Queries
             
             query = query.Where(command.Id, s => s.Id == command.Id);
             query = query.Where(command.ActivityType, s => command.ActivityType.Contains(s.ActivityType));
-            query = query.Where(command.Name, s => s.Name.Contains(command.Name));
-            query = query.Where(command.RequestedChanges, s => s.Comments.Contains(command.RequestedChanges));
-            query = query.Where(command.WorkflowName, s => s.WorkflowName.Contains(command.WorkflowName));
-            query = query.Where(command.WorkflowGroupName, s => s.WorkflowGroupName.Contains(command.WorkflowGroupName));
-            query = query.Where(command.WorkflowCreatedByName, s => s.WorkflowCreatedByName.Contains(command.WorkflowCreatedByName));
+            query = query.Where(command.Name, s => s.Name.ToLower().Contains(command.Name.ToLower()));
+            query = query.Where(command.RequestedChanges, s => s.Comments.ToLower().Contains(command.RequestedChanges.ToLower()));
+            query = query.Where(command.WorkflowName, s => s.WorkflowName.ToLower().Contains(command.WorkflowName.ToLower()));
+            query = query.Where(command.WorkflowGroupName, s => s.WorkflowGroupName.ToLower().Contains(command.WorkflowGroupName.ToLower()));
+            query = query.Where(command.WorkflowCreatedByName, s => s.WorkflowCreatedByName.ToLower().Contains(command.WorkflowCreatedByName.ToLower()));
             query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
-            query = query.Where(command.CreatedByName, s => s.CreatedByName.Contains(command.CreatedByName));
+            query = query.Where(command.CreatedByName, s => s.CreatedByName.ToLower().Contains(command.CreatedByName.ToLower()));
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {

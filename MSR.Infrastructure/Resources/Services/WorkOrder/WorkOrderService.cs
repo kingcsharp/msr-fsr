@@ -1225,11 +1225,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderGridSummary.Disposition = getWorkOrderDisposition(workOrderModel, true);
 
                 var statusValues = GetStatusValues(workOrderModel);
-                workOrderGridSummary.PercentageOfTasksCompleted = statusValues.percentComplete;
+                //workOrderGridSummary.PercentageOfTasksCompleted = statusValues.percentComplete;
                 workOrderGridSummary.PercentageOfTasksCompletedDenominator = statusValues.completedDenominator;
                 workOrderGridSummary.PercentageOfTasksCompletedNumerator = statusValues.completedNumerator;
-                workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = statusValues.percentExpectedDuration;
-                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = (double)statusValues.expectedDurationDenominator;
+                //workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = statusValues.percentExpectedDuration;
+                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = statusValues.expectedDurationDenominator;
                 workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = statusValues.expectedDurationNumerator;
 
 

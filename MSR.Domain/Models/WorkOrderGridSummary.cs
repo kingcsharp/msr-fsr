@@ -104,10 +104,25 @@ namespace MSR.Domain.Models
         /// <value>Name of the current task that is active</value>
         public string CurrentActiveTaskName { get; set; }
 
+        private decimal _percentageOfTasksCompleted;
+
         /// <summary>
         /// (Tasks Completed / Total Tasks) * 100
         /// </summary>
-        public decimal? PercentageOfTasksCompleted { get; set; }
+        public decimal? PercentageOfTasksCompleted { 
+                get { 
+                    
+                    if(PercentageOfTasksCompletedDenominator == null || 
+                        PercentageOfTasksCompletedNumerator == null || PercentageOfTasksCompletedDenominator == 0) { 
+                        return 0;
+                    } else { 
+                    
+                        return (decimal)PercentageOfTasksCompletedNumerator / (decimal)PercentageOfTasksCompletedDenominator;
+                    }
+
+                    
+                }
+          }
 
         /// <summary>
         /// Count of tasks completed
@@ -122,7 +137,27 @@ namespace MSR.Domain.Models
         /// <summary>
         /// (Sum of time logged per a task / Sum of the expected duration time of all tasks) * 100
         /// </summary>
-        public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
+        public decimal? PercentageOfExpectedDurationTimeLogged {
+
+            get
+            {
+
+                if (PercentageOfExpectedDurationTimeLoggedDenominator == null ||
+                    PercentageOfExpectedDurationTimeLoggedNumerator == null || PercentageOfExpectedDurationTimeLoggedDenominator == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+
+                    return ((decimal)PercentageOfExpectedDurationTimeLoggedNumerator /(decimal)PercentageOfExpectedDurationTimeLoggedDenominator)/100;
+                }
+
+
+            }
+
+
+        }
 
         /// <summary>
         /// Sum of time logged
@@ -132,7 +167,7 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Sum of the expected time
         /// </summary>
-        public double? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
+        public decimal? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
 
         /// <summary>
         /// Has NCR

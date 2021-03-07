@@ -63,19 +63,21 @@
                             [hidden]="!commonGrid.isVisibleCol('quantity',gridSettings)" [gridSettings]="gridSettings">
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('scheduledStartDate',gridSettings)">
-                            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'scheduledStartDate'"
-                                [datatable]="dt">
-                            </pcalendar-wrapper>
+                            <div class="position-relative" tooltip="Search by Scheduled Start Date">
+                                <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'scheduledStartDate'"
+                                    [datatable]="dt">
+                                </pcalendar-wrapper>
+                            </div>
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('scheduledEndDate',gridSettings)">
-                            <div class="position-relative" tooltip="Search by Created On">
+                            <div class="position-relative" tooltip="Search by Scheduled End Date">
                                 <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="scheduledEndDate"
                                     [datatable]="dt">
                                 </pcalendar-wrapper>
                             </div>
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('actualStartDate',gridSettings)">
-                            <div class="position-relative" tooltip="Search by Created On">
+                            <div class="position-relative" tooltip="Search by Actual Start Date">
                                 <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="actualStartDate"
                                     [datatable]="dt">
                                 </pcalendar-wrapper>
@@ -166,7 +168,8 @@
                                     </ng-template>
                                 </div>
                                 <div class="progressbar-container">
-                                    <progressbar [value]="model.percentageOfExpectedDurationTimeLoggedW | numberToPercent"
+                                    <progressbar
+                                        [value]="model.percentageOfExpectedDurationTimeLogged | numberToPercent"
                                         [type]="model.timeLoggedType" [striped]="true" [animate]="true"></progressbar>
                                     <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
                                         {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}</div>
