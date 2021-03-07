@@ -110,7 +110,7 @@ export class PendingApprovalsComponent implements OnInit {
     const ctrl = this;
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.workflowPendingApprovalService, this.workflowPendingApprovalService.workflowPendingApprovalGet, event
+      callFunctionWithFilters(this.workflowPendingApprovalService, this.workflowPendingApprovalService.workflowPendingApprovalGet, event, this.globals.functionDic
         , { table: this.currentRouteApprovalData.table })
         .pipe(take(1))
         .subscribe(responseHandler(response => {
@@ -129,8 +129,8 @@ export class PendingApprovalsComponent implements OnInit {
     const ctrl = this;
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.workflowPendingApprovalService, this.workflowPendingApprovalService.workflowPendingApprovalGet, event
-        , { table:EnumApprovalTables.ProductApproval })
+      callFunctionWithFilters(this.workflowPendingApprovalService, this.workflowPendingApprovalService.workflowPendingApprovalGet, event, this.globals.functionDic
+        , { table: EnumApprovalTables.ProductApproval })
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           ctrl.emptyArr(dataArr);

@@ -60,7 +60,7 @@ export class TemplatesComponent implements OnInit {
   getProcedureTemplates(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.procedureStepTemplateService, this.procedureStepTemplateService.procedureStepTemplateGet, event).pipe(take(1)).subscribe(responseHandler((response) => {
+      callFunctionWithFilters(this.procedureStepTemplateService, this.procedureStepTemplateService.procedureStepTemplateGet, event, this.globals.functionDic).pipe(take(1)).subscribe(responseHandler((response) => {
         this.totalRecords = response.totalNumberOfRecords;
         this.currentEvent = event;
         this.data = response.object;

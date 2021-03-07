@@ -89,7 +89,7 @@ export class ApprovalGroupsComponent implements OnInit {
     this.globals.showLoader(true);
 
     setTimeout(() => {
-      callFunctionWithFilters(this.workflowGroupService, this.workflowGroupService.workflowGroupGet, event)
+      callFunctionWithFilters(this.workflowGroupService, this.workflowGroupService.workflowGroupGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.globals.showLoader(false);

@@ -61,7 +61,7 @@ export class PurchasesComponent implements OnInit {
   getPurchases(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.purchaseService, this.purchaseService.purchaseGet, event)
+      callFunctionWithFilters(this.purchaseService, this.purchaseService.purchaseGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.data = response.object;

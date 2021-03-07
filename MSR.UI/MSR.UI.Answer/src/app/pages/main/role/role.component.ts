@@ -105,7 +105,7 @@ export class RoleComponent implements OnInit {
     this.globals.showLoader(true);
     setTimeout(() => {
       this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
-      callFunctionWithFilters(this.roleService, this.roleService.roleGet, event)
+      callFunctionWithFilters(this.roleService, this.roleService.roleGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.setAssignedUsers(response.object);

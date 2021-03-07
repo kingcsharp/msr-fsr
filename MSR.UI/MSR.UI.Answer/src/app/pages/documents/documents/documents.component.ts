@@ -81,7 +81,7 @@ export class DocumentsComponent implements OnInit {
   getDocuments(event: LazyLoadEvent) {
     setTimeout(() => {
       this.globals.showLoader(true);
-      callFunctionWithFilters(this.documentService, this.documentService.documentGet, event)
+      callFunctionWithFilters(this.documentService, this.documentService.documentGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.data = response.object;

@@ -117,7 +117,7 @@ export class QuotesProductsComponent implements OnInit {
 
   getQuotesProducts(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-      callFunctionWithFilters(this.quoteService, this.quoteService.product, event)
+      callFunctionWithFilters(this.quoteService, this.quoteService.product, event, this.globals.functionDic)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.currentEvent = event;

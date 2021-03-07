@@ -52,7 +52,7 @@ export class ProceduretypesComponent implements OnInit {
   }
 
   getProcedureTypes(event: LazyLoadEvent) {
-    callFunctionWithFilters(this.procedureTypeService, this.procedureTypeService.procedureTypeGet, event)
+    callFunctionWithFilters(this.procedureTypeService, this.procedureTypeService.procedureTypeGet, event, this.globals.functionDic)
       .pipe(take(1))
       .subscribe(responseHandler((response) => {
         this.totalRecords = response.totalNumberOfRecords;
