@@ -1556,7 +1556,7 @@ export class HelpService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, title: string | null | undefined, roles: number[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
+    helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, title: string | null | undefined, roles: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
         let url_ = this.baseUrl + "/v{version}/Help?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");

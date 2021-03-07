@@ -12,13 +12,22 @@ namespace MSR.Infrastructure.Resources.Queries
 {
     public static class HelpQueries
     {
-        public static IQueryable<EntityFramework.Entities.HelpPage> CreateHelpQuery(this IQueryable<EntityFramework.Entities.HelpPage> query, GetHelpPage command, bool forRowCount = false)
+        public static IQueryable<EntityFramework.Entities.HelpPage> CreateHelpQuery(this IQueryable<EntityFramework.Entities.HelpPage> query, 
+            GetHelpPage command, bool forRowCount = false, List<EntityFramework.Entities.Role> roleEntities = null)
         {
+
+            if(command.Roles != null && roleEntities != null)
+            {
+                var roleIds = roleEntities.Where(s => command.Roles.Contains(s.Name)).Select(m => m.Id).ToList();
+                query = query.Where(command.Roles, s => s.Roles.Any(m => roleIds.Contains(m.RoleId)));
+            }
+            
+
             query = query.Include(s => s.Roles).AsQueryable();
 
             query = query.Where(command.Id, s => s.Id == command.Id);
             query = query.Where(command.FriendlyURL, s => s.FriendlyUrl.Contains(command.FriendlyURL));
-            query = query.Where(command.Roles, s => s.Roles.Any(m => command.Roles.Contains(m.Id)));
+            
             query = query.Where(command.Title, s => s.Title.Contains(command.Title));
 
 
