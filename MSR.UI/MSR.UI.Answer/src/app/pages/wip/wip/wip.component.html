@@ -166,7 +166,7 @@
                                     </ng-template>
                                 </div>
                                 <div class="progressbar-container">
-                                    <progressbar [value]="model.percentageOfExpectedDurationTimeLoggedW | numberToPercent"
+                                    <progressbar [value]="model.percentageOfExpectedDurationTimeLogged | numberToPercent"
                                         [type]="model.timeLoggedType" [striped]="true" [animate]="true"></progressbar>
                                     <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
                                         {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}</div>

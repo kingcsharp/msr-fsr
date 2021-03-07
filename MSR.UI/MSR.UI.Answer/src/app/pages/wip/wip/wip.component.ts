@@ -51,7 +51,10 @@ export class WipComponent implements OnInit {
       new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String })
     ];
 
-    this.statusOptions = this.globals.getTopLevelStatus();
+    this.statusOptions = [
+      { label: 'In Progress', value: 'In Progress' },
+      { label: 'Waiting to Start', value: 'Waiting to Start' }
+  ];
     this.locationOptions = this.globals.getTopLevelLocations();
   }
 

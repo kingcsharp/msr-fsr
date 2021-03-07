@@ -75,11 +75,13 @@ namespace MSR.Infrastructure.Resources.Queries
 
         public static async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenu(this DbSet<WorkOrderMenu> dbSet, Expression<Func<WorkOrderMenu,dynamic>> projection, GetWorkOrderMenuQueryModel filters)
         {
+            /*
             var nullableActual = filters.Filters.FirstOrDefault(i => i.Field.ToLower() == "actualstartdate");
             if(nullableActual != null)
             {
                 nullableActual.IsNullable = true;
             }
+            */
             var pagedData = dbSet.AsQueryable().ToFilterView(filters);
             var pagedList = await pagedData.data.ToListAsync();
             
