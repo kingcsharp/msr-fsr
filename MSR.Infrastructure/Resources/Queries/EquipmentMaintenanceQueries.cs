@@ -27,7 +27,7 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.MaintenanceTask, s => s.MaintenanceTask.Contains(command.MaintenanceTask));
             query = query.Where(command.PemLastCompletedDate, s => s.PemLastCompletedDate == command.PemLastCompletedDate);
             query = query.Where(command.TroubleState, s => s.TroubleState == command.TroubleState);
-            query = query.Where(command.StatusName, s => s.Status.Name == command.StatusName);
+            query = query.Where(command.StatusName, s => command.StatusName.Contains(s.Status.Name));
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {

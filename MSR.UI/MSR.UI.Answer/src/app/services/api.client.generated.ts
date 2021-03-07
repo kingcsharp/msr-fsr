@@ -1040,7 +1040,7 @@ export class EquipmentMaintenanceService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    equipmentMaintenanceGet(id: number | null | undefined, locationName: string | null | undefined, createdOn: Date | null | undefined, createdFullName: string | null | undefined, assignedToFullName: string | null | undefined, troubleState: boolean | null | undefined, maintenanceTask: string | null | undefined, pemLastCompletedDate: Date | null | undefined, frequencyField: number | null | undefined, comments: string | null | undefined, statusName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
+    equipmentMaintenanceGet(id: number | null | undefined, locationName: string | null | undefined, createdOn: Date | null | undefined, createdFullName: string | null | undefined, assignedToFullName: string | null | undefined, troubleState: boolean | null | undefined, maintenanceTask: string | null | undefined, pemLastCompletedDate: Date | null | undefined, frequencyField: number | null | undefined, comments: string | null | undefined, statusName: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
         let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1066,7 +1066,7 @@ export class EquipmentMaintenanceService {
         if (comments !== undefined && comments !== null)
             url_ += "Comments=" + encodeURIComponent("" + comments) + "&";
         if (statusName !== undefined && statusName !== null)
-            url_ += "StatusName=" + encodeURIComponent("" + statusName) + "&";
+            statusName && statusName.forEach(item => { url_ += "StatusName=" + encodeURIComponent("" + item) + "&"; });
         if (term !== undefined && term !== null)
             url_ += "Term=" + encodeURIComponent("" + term) + "&";
         if (pageNumber !== undefined && pageNumber !== null)
