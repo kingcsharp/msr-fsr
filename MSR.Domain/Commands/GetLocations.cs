@@ -20,6 +20,6 @@ namespace MSR.Domain.Commands
         public string ParentName { get; set; }
         public string TimezoneDescription { get; set; }
         public string Address2 { get; set; }
-        public string Status { get; set; }
+        public string[]? Status { get; set; }
     }
 }

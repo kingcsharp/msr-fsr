@@ -6,6 +6,9 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Abstractions.Services;
 using System.Collections.Generic;
 using MSR.Domain.Models;
+using System.Linq;
+using MSR.Infrastructure.Resources.Queries;
+using Microsoft.EntityFrameworkCore;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -27,8 +30,9 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetLocations command, CancellationToken cancellationToken = default)
         {
-            var ret = await _locationService.GetLocationsAsync(command);
-            var totalRows = await _locationService.GetTotalLocationRows(command);
+            var locationModels = await _locationService.GetLocationsAsync(command);
+            var totalRows = locationModels.AsQueryable().CreateLocationQuery(command, true).Count();
+            var ret = locationModels.AsQueryable().CreateLocationQuery(command).ToList();
             return new PagingCommandResponse<ICollection<LocationModel>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
