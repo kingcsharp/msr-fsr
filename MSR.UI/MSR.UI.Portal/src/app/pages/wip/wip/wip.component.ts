@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
 import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
-import { pushIfNotExists, callFunctionWithFilters, emptyArray } from '../../../models/lib/Utils';
+import { pushIfNotExists, callFunctionWithFilters, emptyArray, callFunctionWithFiltersViews } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -410,23 +410,25 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     debugger;
     this.globals.showLoader(true);
-    setTimeout(() => {
-      var a = this.globals.selectedCustomer;
-      const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate };
-      callFunctionWithFilters(this.workOrderService, this.workOrderService.portal, pageFilters, this.gridSaved.columnsSaved, this.currentEvent)
-        .pipe(take(1))
-        .subscribe(responseHandler(response => {
-          const retData = response.object.map((x: any) => {
-            x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
-            let ret = new PortalWorkOrderPartsView(x);
-            this.setSubpartspropertiesToWoSubparts(ret);
-            return ret;
-          });
+
+    var a = this.globals.selectedCustomer;
+    const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate };
+    callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.portal, pageFilters, this.gridSaved.columnsSaved, this.currentEvent)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        const retData = response.object.map((x: any) => {
+          x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
+          let ret = new PortalWorkOrderPartsView(x);
+          this.setSubpartspropertiesToWoSubparts(ret);
+          return ret;
+        });
+        setTimeout(() => {
           emptyArray(this.data);
           this.data.push(...retData);
           this.totalRecords = response.totalNumberOfRecords;
-        }));
-    }, 10);
+        }, 10);
+      }));
+
   }
 
   getEngineerColumns() {
