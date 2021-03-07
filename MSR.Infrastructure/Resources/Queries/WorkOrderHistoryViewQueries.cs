@@ -29,7 +29,7 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.ActualEndDate, s => DateTime.Compare(s.ActualEndDate.Value.Date, command.ActualEndDate.Value.Date) == 0);
             query = query.Where(command.Product, s => s.Product.Contains(command.Product));
             query = query.Where(command.Procedure, s => s.Procedure.Contains(command.Procedure));
-            query = query.Where(command.Status, s => s.Status.Contains(command.Status));
+            query = query.Where(command.Status, s => command.Status.Contains(s.Status));
             query = query.Where(command.Dispostion, s => s.Dispostion.Contains(command.Dispostion));
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
