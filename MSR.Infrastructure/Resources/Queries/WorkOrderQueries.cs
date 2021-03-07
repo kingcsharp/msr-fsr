@@ -15,6 +15,7 @@ using System.Collections.Concurrent;
 using System.Text;
 using Newtonsoft.Json;
 using MSR.Domain.Models.Query;
+using System.Diagnostics;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -75,17 +76,11 @@ namespace MSR.Infrastructure.Resources.Queries
 
         public static async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenu(this DbSet<WorkOrderMenu> dbSet, Expression<Func<WorkOrderMenu,dynamic>> projection, GetWorkOrderMenuQueryModel filters)
         {
-            /*
-            var nullableActual = filters.Filters.FirstOrDefault(i => i.Field.ToLower() == "actualstartdate");
-            if(nullableActual != null)
-            {
-                nullableActual.IsNullable = true;
-            }
-            */
-            var pagedData = dbSet.AsQueryable().ToFilterView(filters);
-            var pagedList = await pagedData.data.ToListAsync();
-            
-            return (pagedList.Select(i => AutoMapperHelper.Mapper.Map<WorkOrderGridSummary>(i)).ToList(), pagedData.totalRows);
+
+            var apagedData = dbSet.AsQueryable().ToFilterView(filters);
+            var apagedList = await apagedData.data.ToListAsync();
+            return (apagedList.Select(i => AutoMapperHelper.Mapper.Map<WorkOrderGridSummary>(i)).ToList(), apagedData.totalRows);
+
         }
 
         public static async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)

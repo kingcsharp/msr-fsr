@@ -178,7 +178,7 @@ namespace MSR.Infrastructure.Resources.Queries
             {
                 var lessThanOperators = new string[] { "lt", "lte" };
                 var whilepart = string.Empty;
-                if (filter.IsNullable)
+                if (filter.IsNullable || filter.Field == "actualStartDate")
                 {
                     whilepart = $"({filter.Field} != null && ((({filter.Field}).Value.Year {(lessThanOperators.Contains(filter.Operator) ? "<" : ">")} {date.Year}) " +
                                                         $"|| (({filter.Field}).Value.Year = {date.Year} && ({filter.Field}).Value.Month {(lessThanOperators.Contains(filter.Operator) ? "<" : ">")} {date.Month}) " +
