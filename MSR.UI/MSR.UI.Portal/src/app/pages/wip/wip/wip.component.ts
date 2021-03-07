@@ -1,9 +1,9 @@
 import { Component, OnInit, ElementRef, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { LazyLoadEvent, SelectItem } from 'primeng/api';
+import { SelectItem } from 'primeng/api';
 import {
-  EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary,
+  EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary,Sort,
   ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel, WorkOrderMessageModel, WorkOrderTaskMonitorModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
 import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
-import { pushIfNotExists, callFunctionWithFilters, emptyArray, callFunctionWithFiltersViews } from '../../../models/lib/Utils';
+import { pushIfNotExists } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -59,7 +59,6 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   showFilesDialog: boolean = false;
   fromDate: Date = moment().subtract(6, 'weeks').toDate();
   toDate: Date = moment().toDate();
-  totalRecords: number = 0;
   en = {
     firstDayOfWeek: 0,
     dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -72,7 +71,6 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     dateFormat: 'yyy-mm-dd'
   };
   subscriptions: Subscription[] = [];
-  currentEvent: LazyLoadEvent;
 
   responsiveOptions: any[] = [
     {
@@ -104,19 +102,6 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.setCustomerName();
-    this.gridSaved = new GridSaved({
-      columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
-      storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
-      version: '1.0.0',
-      expandRows: true,
-      expandRowProperty: 'subParts',
-      expandRowsTemplate: this.expandedRowTemplate
-    });
-
-    this.reportModel = new ReportModel({
-      name: ''
-    });
-
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
@@ -244,28 +229,26 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (this.globals.selectedCustomer !== undefined) {
-      this.setCustomerNameAndShowGrid();
+      this.setCustomerName();
+      this.getGridData();
     }
 
     let isBuyerObservableSubscription = this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.selectedCustomer !== undefined) {
-        this.setCustomerNameAndShowGrid();
+        this.setCustomerName();
+        this.getGridData();
       }
     });
     this.subscriptions.push(isBuyerObservableSubscription);
 
     let selectCustomerObservableSubscription = this.globals.selectCustomerObservable.subscribe(response => {
       if (response !== null && response !== undefined) {
-        this.setCustomerNameAndShowGrid();
+        this.setCustomerName();
+        this.getGridData();
       }
     });
     this.subscriptions.push(selectCustomerObservableSubscription);
 
-  }
-
-  setCustomerNameAndShowGrid() {
-    this.setCustomerName();
-    this.showReport = true;
   }
 
   expandRow(data: PortalWorkOrderPartsView) {
@@ -396,44 +379,49 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setSubPartsProperties(subpart: any) {
-    subpart.partNumber = subpart.partNumber || 'N/A';
-    subpart.name = subpart.name || 'N/A';
+    subpart.partNumber = subpart.part?.partNumber || 'N/A';
+    subpart.name = subpart.part?.name || 'N/A';
   }
 
   setSubpartspropertiesToWoSubparts(workOrder: PortalWorkOrderPartsView) {
     workOrder.subParts.map(x => this.setSubPartsProperties(x));
   }
 
-  getGridData(event: LazyLoadEvent) {
-    if (event != undefined) {
-      this.currentEvent = event;
-    }
-    debugger;
+  getGridData() {
     this.globals.showLoader(true);
-
-    var a = this.globals.selectedCustomer;
-    const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate };
-    callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.portal, pageFilters, this.gridSaved.columnsSaved, this.currentEvent)
+    this.showReport = false;
+    // this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate,
+    //   env.apiVersion)
+      this.workOrderService.portal(this.globals.selectedCustomer.id, null, null, this.fromDate, this.toDate
+        , 0, 10000, [new Sort({ dir: 'asc', field: 'WorkOrderId' })], null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
-        const retData = response.object.map((x: any) => {
+        this.data = response.object.map((x: any) => {
           x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
           let ret = new PortalWorkOrderPartsView(x);
           this.setSubpartspropertiesToWoSubparts(ret);
           return ret;
         });
-        setTimeout(() => {
-          emptyArray(this.data);
-          this.data.push(...retData);
-          this.totalRecords = response.totalNumberOfRecords;
-        }, 10);
-      }));
+        this.gridSaved = new GridSaved({
+          columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
+          storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
+          version: '1.0.0',
+          expandRows: true,
+          expandRowProperty: 'subParts',
+          expandRowsTemplate: this.expandedRowTemplate
+        });
 
+        this.reportModel = new ReportModel({
+          name: ''
+        });
+
+        this.showReport = true;
+      }));
   }
 
   getEngineerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.Number, visible: true }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
@@ -452,7 +440,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getBuyerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.Number, visible: true }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', type: EnumColumnType.Number, visible: true }),
       new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),

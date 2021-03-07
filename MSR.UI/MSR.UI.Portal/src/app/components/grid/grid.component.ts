@@ -20,7 +20,6 @@ import { ReportCubeService } from '../../pages/reports/reportcube.service';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { CSVConverterService } from '../../services/csvconverter.service';
-import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-grid',
@@ -28,16 +27,13 @@ import { LazyLoadEvent } from 'primeng/api';
   styleUrls: ['./grid.component.scss']
 })
 export class GridComponent implements OnInit {
-
   @Input() gridSaved: GridSaved;
-  @Input() totalRecords: number;
   @Input() showReport: boolean;
   @Input() showExportGrid: boolean;
   @Input() saveToLocalStorage: boolean;
   @Input() data;
   @Input() reportInfo: ReportModel;
   @Output() expandRowClick = new EventEmitter<any>();
-  @Output() getData = new EventEmitter<any>();
   showCharts: boolean = false;
   hasChart: boolean = false;
   Highcharts: typeof Highcharts = Highcharts;
@@ -61,7 +57,7 @@ export class GridComponent implements OnInit {
     if (this.saveToLocalStorage === undefined) {
       this.saveToLocalStorage = true;
     }
-    // this.getReport();
+    this.getReport(this.data, this.reportInfo);
   }
 
   expandRow(expanded, row) {
@@ -70,14 +66,32 @@ export class GridComponent implements OnInit {
     }
   }
 
-  getGridData(event: LazyLoadEvent) {
-    debugger;
-    if (this.reportInfo === undefined || this.reportInfo.apiEndPointURL === undefined) {
-      this.getData.emit(event);
-      this.gridData = this.data;
+  handleFilter(ev, filteredData) {
+    this.filteredData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
+    if (!this.hasChart) {
+      return;
+    }
+
+    this.globals.showLoader(true);
+    this.chartInfo.gridData = this.filteredData;
+
+    this.showCharts = false;
+    setTimeout(() => {
+      const resp = this.reportCubeService.generateChart(this.chartInfo);
+      this.chartOptions = resp.chartOptions;
+      this.chartInfo = resp.chartInfo;
+      this.showCharts = true;
+      this.globals.showLoader(false);
+    }, 300);
+  }
+
+  getReport(data: any, reportInfo?: ReportModel) {
+    if (reportInfo === undefined || reportInfo.apiEndPointURL === undefined) {
+      this.gridData = data;
+      this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
-      this.reportCubeService.getReport(this.reportInfo).then((resp: any) => {
+      this.reportCubeService.getReport(reportInfo).then((resp) => {
         if (resp.chartOptions !== undefined) {
           this.hasChart = true;
           this.gridData = resp.resultData;
@@ -87,33 +101,14 @@ export class GridComponent implements OnInit {
         } else {
           this.gridData = resp;
         }
+        this.filteredData = this.gridData;
         this.globals.showLoader(false);
       });
     }
-
   }
 
-  // handleFilter(ev, filteredData) {
-  //   this.filteredData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
-  //   if (!this.hasChart) {
-  //     return;
-  //   }
-
-  //   this.globals.showLoader(true);
-  //   this.chartInfo.gridData = this.filteredData;
-
-  //   this.showCharts = false;
-  //   setTimeout(() => {
-  //     const resp = this.reportCubeService.generateChart(this.chartInfo);
-  //     this.chartOptions = resp.chartOptions;
-  //     this.chartInfo = resp.chartInfo;
-  //     this.showCharts = true;
-  //     this.globals.showLoader(false);
-  //   }, 300);
-  // }
-
   printCsvReport() {
-    this.cSVConverterService.downloadFile(this.gridData, this.gridSaved.columnsSaved, this.reportInfo.name);
+    this.cSVConverterService.downloadFile(this.filteredData, this.gridSaved.columnsSaved, this.reportInfo.name);
   }
 
 }
