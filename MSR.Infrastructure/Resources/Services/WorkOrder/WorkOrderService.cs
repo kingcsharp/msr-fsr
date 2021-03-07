@@ -223,7 +223,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var created = await _unitOfWork.WorkOrders.AddAsync(workOrderEntity);
-            await _unitOfWork.SaveChangesAsync();
 
             // link work order IDs for all parts
             Stack<WorkOrderPart> parts = new Stack<WorkOrderPart>();
@@ -251,17 +250,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 await SetCycleCount(parentPart);
             }
 
-            var workOrderStatEntity = new WorkOrderStats()
-            {
-                WorkOrderId = workOrderEntity.Id,
-                TotalTasks = workOrderEntity.WorkOrderTasks != null ? workOrderEntity.WorkOrderTasks.Count() : 0,
-                CompletedTasks = 0,
-                TotalTimeLogged = 0,
-                TotalTaskTime = workOrderEntity.WorkOrderTasks != null ? (decimal?)workOrderEntity.WorkOrderTasks.Where(i => i.ProcedureStep != null).Select(j => j.ProcedureStep.LaborTime).Sum() : (decimal?)0.0,
-                ActiveTitle = null
-            };
-            await _unitOfWork.WorkOrderStats.AddAsync(workOrderStatEntity);
-
             await _unitOfWork.LogApprovalTransaction(workOrderEntity, workOrderEntity.Id);
 
 
@@ -287,6 +275,17 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 _mapper.Map<WorkOrderModel>(workOrderEntity)
             );
 
+            var workOrderStatEntity = new WorkOrderStats()
+            {
+                WorkOrderId = workOrderEntity.Id,
+                TotalTasks = workOrderEntity.WorkOrderTasks != null ? workOrderEntity.WorkOrderTasks.Count() : 0,
+                CompletedTasks = 0,
+                TotalTimeLogged = 0,
+                TotalTaskTime = workOrderEntity.WorkOrderTasks != null ? (decimal?)workOrderEntity.WorkOrderTasks.Where(i => i.ProcedureStep != null && i.ProcedureStep.LaborTime.HasValue).Select(j => j.ProcedureStep.LaborTime.Value).Sum() : (decimal?)0.0,
+                ActiveTitle = null
+            };
+            await _unitOfWork.WorkOrderStats.AddAsync(workOrderStatEntity);
+            await _unitOfWork.SaveChangesAsync();
             // Build out minimal information so this can be
             // displayed on the WO status screen without a reload.
             _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
@@ -613,9 +612,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
             }
 
-            var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == command.WorkOrderId);
+            var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
             workOrderStatEntity.TotalTasks += 1;
-            workOrderStatEntity.TotalTaskTime += workOrderTaskEntity.TotalTaskTime;
+            workOrderStatEntity.TotalTaskTime += workOrderTaskEntity.ProcedureStep?.LaborTime == null ? 0 : (decimal)workOrderTaskEntity.ProcedureStep?.LaborTime.Value;
             _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
             
             var created = await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
@@ -712,7 +711,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     workOrderTaskEntity.ReferenceFiles.Add(fem);
                 }
             }
-            var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == command.WorkOrderId);
+            var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
 
             if (isTaskStarted)
             {
