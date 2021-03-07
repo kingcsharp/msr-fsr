@@ -11,9 +11,9 @@
     <widget>
       <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
         [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-        [rowsPerPageOptions]="[10,25,50,100]"  [paginator]="true"  [filterDelay]="0"
-        [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getProcedures($event)" [totalRecords]="totalRecords"
-        stateStorage="local"  stateKey="{{gridStorageId}}">
+        [rowsPerPageOptions]="[10,25,50,100]"  [paginator]="true"  [filterDelay]="0" [filterDelay]="1300" [lazy]="true"
+        (onLazyLoad)="getProcedures($event)" [totalRecords]="totalRecords" stateStorage="local"
+         stateKey="{{gridStorageId}}">
         <ng-template pTemplate="caption">
           <div class="text-right">
             <button *ngIf="procedurePrivileges.canCreate" [routerLink]="['../procedure-create']"
@@ -21,8 +21,7 @@
               + Add
             </button>
             <csv-import [showButton]="procedurePrivileges.canCreate" [menuItem]="menuItems.RunnableProcedures"
-              title="Import Procedures" fileName="ProceduresSample.xlsx"
-              *ngIf="menuItems !== undefined">
+              title="Import Procedures" fileName="ProceduresSample.xlsx" *ngIf="menuItems !== undefined">
             </csv-import>
             <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
               [gridVersion]="gridVersion"  data-cy="usergrid-options"  [hidden]="false">
@@ -61,14 +60,20 @@
             <th grid-input-filter [dt]="dt" searchField="created.fullName"
               [hidden]="!commonGrid.isVisibleCol('created.fullName',gridSettings)" [gridSettings]="gridSettings">
             </th>
-            <th grid-input-filter [dt]="dt" searchField="createdOn"
-              [hidden]="!commonGrid.isVisibleCol('createdOn',gridSettings)" [gridSettings]="gridSettings">
+            <th [hidden]="!commonGrid.isVisibleCol('createdOn',gridSettings)">
+              <div class="position-relative" tooltip="Search by Created On">
+                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
+                </pcalendar-wrapper>
+              </div>
             </th>
             <th grid-input-filter [dt]="dt" searchField="lastUpdated.fullName"
               [hidden]="!commonGrid.isVisibleCol('lastUpdated.fullName',gridSettings)" [gridSettings]="gridSettings">
             </th>
-            <th grid-input-filter [dt]="dt" searchField="lastUpdatedOn"
-              [hidden]="!commonGrid.isVisibleCol('lastUpdatedOn',gridSettings)" [gridSettings]="gridSettings">
+            <th [hidden]="!commonGrid.isVisibleCol('lastUpdatedOn',gridSettings)">
+              <div class="position-relative" tooltip="Search by Last Updated On">
+                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="lastUpdatedOn" [datatable]="dt">
+                </pcalendar-wrapper>
+              </div>
             </th>
             <th></th>
           </tr>
@@ -111,12 +116,12 @@
             <td>
               <i *ngIf="procedurePrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Procedure"
                 data-cy="edit-button" [routerLink]="['../procedure-edit']" [queryParams]="{id: model.id}"></i>
-              <i *ngIf="procedurePrivileges.canDelete && !model.isRelatedToAProduct" class="fa fa-trash pointer" tooltip="Delete Procedure"
-                data-cy="delete-button" (click)="openConfirmDeleteDialog(model)"></i>
+              <i *ngIf="procedurePrivileges.canDelete && !model.isRelatedToAProduct" class="fa fa-trash pointer"
+                tooltip="Delete Procedure" data-cy="delete-button" (click)="openConfirmDeleteDialog(model)"></i>
               <i class="fal fa-eye pointer" tooltip="View Procedure Summary and Steps"
                 [routerLink]="['../procedure-view']" [queryParams]="{id: model.id}" data-cy="view-button"></i>
-              <i *ngIf="procedurePrivileges.canCreate && procedurePrivileges.canApprove" class="far fa-copy pointer" tooltip="Copy Procedure" (click)="copyProcedure(model)"
-                data-cy="copy-button"></i>
+              <i *ngIf="procedurePrivileges.canCreate && procedurePrivileges.canApprove" class="far fa-copy pointer"
+                tooltip="Copy Procedure" (click)="copyProcedure(model)" data-cy="copy-button"></i>
             </td>
           </tr>
         </ng-template>

@@ -75,11 +75,7 @@ export class PartsComponent implements OnInit {
     this.isKitStatus = this.globals.getYesNoArray();
     this.isActive = this.globals.getYesNoArray();
 
-    this.segregationTypes = [
-      { label: 'Cu', value: EnumSegregationType.CU },
-      { label: 'Non-Cu', value: EnumSegregationType.NONCU },
-      { label: 'Deseg', value: EnumSegregationType.DESEG }
-    ];
+    this.segregationTypes = this.globals.getSegregationTypes();
 
     this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
