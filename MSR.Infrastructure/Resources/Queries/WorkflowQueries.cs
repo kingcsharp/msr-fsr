@@ -124,7 +124,7 @@ namespace MSR.Infrastructure.Resources.Queries
         {
             
             query = query.Where(command.Id, s => s.Id == command.Id);
-            query = query.Where(command.ActivityType, s => s.ActivityType.Contains(command.ActivityType));
+            query = query.Where(command.ActivityType, s => command.ActivityType.Contains(s.ActivityType));
             query = query.Where(command.Name, s => s.Name.Contains(command.Name));
             query = query.Where(command.RequestedChanges, s => s.Comments.Contains(command.RequestedChanges));
             query = query.Where(command.WorkflowName, s => s.WorkflowName.Contains(command.WorkflowName));

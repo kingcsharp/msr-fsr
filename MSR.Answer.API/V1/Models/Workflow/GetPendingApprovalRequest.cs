@@ -7,7 +7,7 @@ namespace MSR.Answer.API.V1.Models
     {
         public EnumApprovalTables Table { get; set; }
         public int? Id { get;set;}
-        public string ActivityType { get; set; }
+        public string[]? ActivityType { get; set; }
         public string Name { get; set; }
         public string RequestedChanges { get;set;}
         public string WorkflowName { get; set; }

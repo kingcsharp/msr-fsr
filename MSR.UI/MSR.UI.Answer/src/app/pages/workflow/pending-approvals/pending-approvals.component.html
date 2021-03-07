@@ -79,12 +79,9 @@
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          <div class="position-relative">
-            <input id="createdOn" pInputText type="text" tooltip="Search by Created On"
-              (input)="dt.filter($event.target.value, 'createdOn', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['createdOn']?.value">
-            <i *ngIf="dt.filters['createdOn']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'createdOn')"></i>
+          <div class="position-relative" tooltip="Search by Created On Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+            </pcalendar-wrapper>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
@@ -241,12 +238,9 @@
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings2)">
-          <div class="position-relative">
-            <input id="createdOn2" pInputText type="text" tooltip="Search by Created On"
-              (input)="dt2.filter($event.target.value, 'createdOn', 'contains')" class="ui-column-filter"
-              [value]="dt2.filters['createdOn']?.value">
-            <i *ngIf="dt2.filters['createdOn']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt2,'createdOn')"></i>
+          <div class="position-relative" tooltip="Search by Created On Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+            </pcalendar-wrapper>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings2)">
