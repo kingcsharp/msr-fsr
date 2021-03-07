@@ -78,7 +78,7 @@ export class CustomersComponent implements OnInit, AfterViewInit {
   getCustomers(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.customerService, this.customerService.customerGet, event).pipe(take(1)).subscribe(responseHandler((response) => {
+      callFunctionWithFilters(this.customerService, this.customerService.customerGet, event, this.globals.functionDic).pipe(take(1)).subscribe(responseHandler((response) => {
         this.totalRecords = response.totalNumberOfRecords;
 
         this.data = response.object;

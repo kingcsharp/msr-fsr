@@ -68,7 +68,7 @@ export class WiphistoryComponent implements OnInit {
   getWorkOrdersHistory(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.workOrderService, this.workOrderService.history, event)
+      callFunctionWithFilters(this.workOrderService, this.workOrderService.history, event, this.globals.functionDic)
         .pipe(take(1)).subscribe(responseHandler(response => {
           this.totalRecords = response.totalNumberOfRecords;
           this.data = response.object;

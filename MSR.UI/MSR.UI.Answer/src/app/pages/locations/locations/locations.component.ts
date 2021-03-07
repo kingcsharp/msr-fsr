@@ -75,7 +75,7 @@ export class LocationsComponent implements OnInit {
     this.currentEvent = event;
     this.globals.showLoader(true);
     setTimeout(() => {
-        callFunctionWithFilters(this.locationService, this.locationService.locationGet, event).pipe(take(1)).subscribe(responseHandler((response) => {
+        callFunctionWithFilters(this.locationService, this.locationService.locationGet, event, this.globals.functionDic).pipe(take(1)).subscribe(responseHandler((response) => {
           this.totalRecords = response.totalNumberOfRecords;
           this.data = response.object;
           this.data.map((elem) => {

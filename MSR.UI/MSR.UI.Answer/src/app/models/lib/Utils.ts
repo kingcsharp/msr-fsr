@@ -97,7 +97,7 @@ export function getArguments(func) {
         .filter(String);
 }
 
-export function callFunctionWithFilters(service, func, event: LazyLoadEvent, extraParams?: any) {
+export function callFunctionWithFilters(service, func, event: LazyLoadEvent, globalDic, extraParams?: any) {
     let filterEvObj: any = {
         term: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField)),
         pageNumber: event.first / event.rows,
@@ -107,7 +107,9 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent, ext
     Object.assign(filterEvObj, event);
     Object.assign(filterEvObj, extraParams);
 
-    const args = getArguments(func);
+    // const args = getArguments(func);
+    const args = globalDic[func.toString().split('(')[0]];
+
     const argsToCallFn = [];
     filterEvObj.filters = removeDotAndCamelCaseFromObj(filterEvObj.filters);
     args.forEach((arg: string) => {
@@ -141,7 +143,7 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent, ext
     return func.apply(service, argsToCallFn);
 }
 
-export function callFunctionWithFiltersViews(service, func, extraParams: any, columnsSaved: ColumnsSaved[], event: LazyLoadEvent) {
+export function callFunctionWithFiltersViews(service, func, extraParams: any, columnsSaved: ColumnsSaved[], event: LazyLoadEvent, globalDic: any) {
     let filterEvObj: any = {
         pageNumber: event.first / event.rows,
         pageSize: event.rows,
@@ -154,6 +156,8 @@ export function callFunctionWithFiltersViews(service, func, extraParams: any, co
             field: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField ? event.sortField : columnsSaved[0].id))
         })
     );
+
+
 
     Object.assign(filterEvObj, event);
     filterEvObj.filters = new Array<Filter>();
@@ -171,7 +175,9 @@ export function callFunctionWithFiltersViews(service, func, extraParams: any, co
 
     Object.assign(filterEvObj, extraParams);
 
-    const args = getArguments(func);
+    // const args = getArguments(func);
+    const args = globalDic[func.toString().split('(')[0]];
+
     const argsToCallFn = [];
     args.forEach((arg: string) => {
         if (filterEvObj[arg] !== undefined) {

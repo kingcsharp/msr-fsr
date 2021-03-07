@@ -65,7 +65,7 @@ export class ProceduresComponent implements OnInit {
   getProcedures(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.procedureService, this.procedureService.procedureGet, event)
+      callFunctionWithFilters(this.procedureService, this.procedureService.procedureGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler((response) => {
           this.data = response.object;

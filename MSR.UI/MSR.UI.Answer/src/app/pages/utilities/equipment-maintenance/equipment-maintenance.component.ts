@@ -147,7 +147,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   getEMData(event: LazyLoadEvent) {
     setTimeout(() => {
       this.globals.showLoader(true);
-      callFunctionWithFilters(this.equipmentMaintenanceService, this.equipmentMaintenanceService.equipmentMaintenanceGet, event)
+      callFunctionWithFilters(this.equipmentMaintenanceService, this.equipmentMaintenanceService.equipmentMaintenanceGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.data = response.object;
