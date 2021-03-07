@@ -85,6 +85,23 @@ namespace MSR.Infrastructure.Resources.Queries
 
         public static async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
         {
+            var startDateFilter = portalWorkOrderQueryModel.Filters?.FirstOrDefault(i => i.Field.ToLower() == "startdate");
+            var dueDateFilter = portalWorkOrderQueryModel.Filters?.FirstOrDefault(i => i.Field.ToLower() == "duedate");
+            var supportInfoSort = portalWorkOrderQueryModel.Sort?.FirstOrDefault(i => i.Field.ToLower() == "supportinginfo");
+
+            if(supportInfoSort != null)
+            {
+                supportInfoSort.Field = "Disposition";
+            }
+            if(startDateFilter != null)
+            {
+                startDateFilter.IsNullable = true;
+            }
+            if(dueDateFilter != null)
+            {
+                dueDateFilter.IsNullable = true;
+            }
+
             var portalWorkOrderViews = new List<PortalWorkOrderView>();
             var pagedData = dbSet.AsQueryable().Where(i => i.CustomerId == portalWorkOrderQueryModel.CustomerId && i.CreatedOn >= portalWorkOrderQueryModel.FromDate && i.CreatedOn <= portalWorkOrderQueryModel.ToDate)
                                                 .ToFilterView(portalWorkOrderQueryModel);
