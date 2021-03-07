@@ -113,14 +113,17 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent) {
         if (filterObj !== undefined) {
             if (Array.isArray(filterObj.value)) {
                 if (typeof (filterObj.value[0]) === "boolean") {
-                    argsToCallFn.push(filterObj.value[0]);
+                    if (filterObj.value.length === 1) {
+                        argsToCallFn.push(filterObj.value[0]);
+                    } else {
+                        argsToCallFn.push(null);
+                    }
                 } else {
                     argsToCallFn.push(filterObj.value);
                 }
             } else {
                 argsToCallFn.push(filterObj.value);
             }
-
         } else if (filterEvObj[arg] !== undefined) {
             argsToCallFn.push(filterEvObj[arg]);
         } else {

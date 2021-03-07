@@ -6815,7 +6815,7 @@ export class UserService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    trainingCertification(userId: number | null | undefined, employeeName: string | null | undefined, certificationName: string | null | undefined, certificationFromDate: Date | null | undefined, certificationToDate: Date | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
+    trainingCertification(userId: number | null | undefined, employeeName: string | null | undefined, certificationName: string | null | undefined, certificationFromDate: Date | null | undefined, certificationToDate: Date | null | undefined, status: boolean | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
         let url_ = this.baseUrl + "/v{version}/User/TrainingCertification?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
