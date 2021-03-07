@@ -5119,7 +5119,7 @@ export class PurchaseService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    purchaseGet(id: number | null | undefined, mttn: string | null | undefined, purchaseOrderProductName: string | null | undefined, statusId: number | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
+    purchaseGet(id: number | null | undefined, mttn: string | null | undefined, purchaseOrderProductName: string | null | undefined, statusId: string[] | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
         let url_ = this.baseUrl + "/v{version}/Purchase?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5131,7 +5131,7 @@ export class PurchaseService {
         if (purchaseOrderProductName !== undefined && purchaseOrderProductName !== null)
             url_ += "PurchaseOrderProductName=" + encodeURIComponent("" + purchaseOrderProductName) + "&";
         if (statusId !== undefined && statusId !== null)
-            url_ += "StatusId=" + encodeURIComponent("" + statusId) + "&";
+            statusId && statusId.forEach(item => { url_ += "StatusId=" + encodeURIComponent("" + item) + "&"; });
         if (createdOn !== undefined && createdOn !== null)
             url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
         if (term !== undefined && term !== null)

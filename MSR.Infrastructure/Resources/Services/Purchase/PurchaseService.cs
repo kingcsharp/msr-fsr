@@ -41,7 +41,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
         {
             List<Purchase> purchaseEntities = await _unitOfWork.Purchases.Query().CreatePurchaseQuery(command).ToListAsync();
 
-            if (purchaseEntities.Count == 0)
+            if (purchaseEntities.Count == 0 && command.Id.HasValue)
             {
                 throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
             }
@@ -109,7 +109,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
         public async Task<int> GetPurchaseTotalRows(GetPurchases command)
         {
-            var totalRows = await _unitOfWork.Purchases.Query().CreatePurchaseQuery(command).CountAsync();
+            var totalRows = await _unitOfWork.Purchases.Query().CreatePurchaseQuery(command, true).CountAsync();
             return totalRows;
         }
     }
