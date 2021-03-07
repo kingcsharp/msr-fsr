@@ -49,6 +49,10 @@ export class PurchaseOrdersComponent implements OnInit {
     {
       label: 'Closed',
       value: 'Closed'
+    },
+    {
+      label: 'Pending',
+      value: 'Pending'
     }
   ];
   showConfirmDeleteDialog: boolean = false;

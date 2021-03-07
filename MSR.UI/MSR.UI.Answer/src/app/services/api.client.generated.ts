@@ -8583,7 +8583,7 @@ export class WorkflowGroupService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    workflowGroupGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, groupRoles: number[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
+    workflowGroupGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, groupRoles: string[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowGroup?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
