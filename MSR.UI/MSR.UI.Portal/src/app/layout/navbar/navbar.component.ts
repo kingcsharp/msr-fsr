@@ -63,7 +63,7 @@ export class Navbar implements OnInit {
     this.globals.showLoader(true);
     //TODO: Alec
     this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null,
-      null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
+      null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
       this.customers = response.object.map((x) => {
         return { name: x.name, id: x.id };
       });

@@ -432,7 +432,7 @@ export class CustomerService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserName: string | null | undefined, secondartContactUserName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdByFullName: string | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
+    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserFullName: string | null | undefined, secondaryContactUserFullName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
         let url_ = this.baseUrl + "/v{version}/Customer?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -453,18 +453,20 @@ export class CustomerService {
             url_ += "LocationId=" + encodeURIComponent("" + locationId) + "&";
         if (isActive !== undefined && isActive !== null)
             url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
-        if (primaryContactUserName !== undefined && primaryContactUserName !== null)
-            url_ += "PrimaryContactUserName=" + encodeURIComponent("" + primaryContactUserName) + "&";
-        if (secondartContactUserName !== undefined && secondartContactUserName !== null)
-            url_ += "SecondartContactUserName=" + encodeURIComponent("" + secondartContactUserName) + "&";
+        if (primaryContactUserFullName !== undefined && primaryContactUserFullName !== null)
+            url_ += "PrimaryContactUserFullName=" + encodeURIComponent("" + primaryContactUserFullName) + "&";
+        if (secondaryContactUserFullName !== undefined && secondaryContactUserFullName !== null)
+            url_ += "SecondaryContactUserFullName=" + encodeURIComponent("" + secondaryContactUserFullName) + "&";
         if (locationName !== undefined && locationName !== null)
             url_ += "LocationName=" + encodeURIComponent("" + locationName) + "&";
         if (customerNumber !== undefined && customerNumber !== null)
             url_ += "CustomerNumber=" + encodeURIComponent("" + customerNumber) + "&";
-        if (createdByFullName !== undefined && createdByFullName !== null)
-            url_ += "CreatedByFullName=" + encodeURIComponent("" + createdByFullName) + "&";
+        if (createdFullName !== undefined && createdFullName !== null)
+            url_ += "CreatedFullName=" + encodeURIComponent("" + createdFullName) + "&";
         if (createdOn !== undefined && createdOn !== null)
             url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (status !== undefined && status !== null)
+            status && status.forEach(item => { url_ += "Status=" + encodeURIComponent("" + item) + "&"; });
         if (term !== undefined && term !== null)
             url_ += "Term=" + encodeURIComponent("" + term) + "&";
         if (pageNumber !== undefined && pageNumber !== null)
@@ -1038,7 +1040,7 @@ export class EquipmentMaintenanceService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    equipmentMaintenanceGet(id: number | null | undefined, locationName: string | null | undefined, createdOn: Date | null | undefined, createdFullName: string | null | undefined, assignedToFullName: string | null | undefined, troubleState: boolean | null | undefined, maintenanceTask: string | null | undefined, pemLastCompletedDate: Date | null | undefined, frequencyField: number | null | undefined, comments: string | null | undefined, statusName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
+    equipmentMaintenanceGet(id: number | null | undefined, locationName: string | null | undefined, createdOn: Date | null | undefined, createdFullName: string | null | undefined, assignedToFullName: string | null | undefined, troubleState: boolean | null | undefined, maintenanceTask: string | null | undefined, pemLastCompletedDate: Date | null | undefined, frequencyField: number | null | undefined, comments: string | null | undefined, statusName: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
         let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1064,7 +1066,7 @@ export class EquipmentMaintenanceService {
         if (comments !== undefined && comments !== null)
             url_ += "Comments=" + encodeURIComponent("" + comments) + "&";
         if (statusName !== undefined && statusName !== null)
-            url_ += "StatusName=" + encodeURIComponent("" + statusName) + "&";
+            statusName && statusName.forEach(item => { url_ += "StatusName=" + encodeURIComponent("" + item) + "&"; });
         if (term !== undefined && term !== null)
             url_ += "Term=" + encodeURIComponent("" + term) + "&";
         if (pageNumber !== undefined && pageNumber !== null)
@@ -1554,7 +1556,7 @@ export class HelpService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, title: string | null | undefined, roles: number[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
+    helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, title: string | null | undefined, roles: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
         let url_ = this.baseUrl + "/v{version}/Help?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2240,7 +2242,7 @@ export class LocationService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, name: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, address1: string | null | undefined, city: string | null | undefined, state: string | null | undefined, postalcode: string | null | undefined, country: string | null | undefined, phone: string | null | undefined, parentName: string | null | undefined, timezoneDescription: string | null | undefined, address2: string | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
+    locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, name: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, address1: string | null | undefined, city: string | null | undefined, state: string | null | undefined, postalcode: string | null | undefined, country: string | null | undefined, phone: string | null | undefined, parentName: string | null | undefined, timezoneDescription: string | null | undefined, address2: string | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2276,7 +2278,7 @@ export class LocationService {
         if (address2 !== undefined && address2 !== null)
             url_ += "Address2=" + encodeURIComponent("" + address2) + "&";
         if (status !== undefined && status !== null)
-            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+            status && status.forEach(item => { url_ += "Status=" + encodeURIComponent("" + item) + "&"; });
         if (term !== undefined && term !== null)
             url_ += "Term=" + encodeURIComponent("" + term) + "&";
         if (pageNumber !== undefined && pageNumber !== null)
@@ -2980,22 +2982,22 @@ export class PartService {
      * Get part by Id
      * @param id (optional) 
      * @param name (optional) 
-     * @param enumSegregationType (optional) 
+     * @param segregationType (optional) 
      * @param partNumber (optional) 
-     * @param oEMPartNumber (optional) 
+     * @param oemPartNumber (optional) 
      * @param isKit (optional) 
      * @param isActive (optional) 
      * @param maximumCycles (optional) 
      * @param createdOn (optional) 
      * @param createdByName (optional) 
-     * @param lastUpdateOn (optional) 
+     * @param lastUpdatedOn (optional) 
      * @param lastUpdatedByName (optional) 
      * @param term (optional) 
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    partGet(id: number | null | undefined, name: string | null | undefined, enumSegregationType: EnumSegregationType | null | undefined, partNumber: string | null | undefined, oEMPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
+    partGet(id: number | null | undefined, name: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, partNumber: string | null | undefined, oemPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3004,12 +3006,12 @@ export class PartService {
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (name !== undefined && name !== null)
             url_ += "Name=" + encodeURIComponent("" + name) + "&";
-        if (enumSegregationType !== undefined && enumSegregationType !== null)
-            url_ += "EnumSegregationType=" + encodeURIComponent("" + enumSegregationType) + "&";
+        if (segregationType !== undefined && segregationType !== null)
+            segregationType && segregationType.forEach(item => { url_ += "SegregationType=" + encodeURIComponent("" + item) + "&"; });
         if (partNumber !== undefined && partNumber !== null)
             url_ += "PartNumber=" + encodeURIComponent("" + partNumber) + "&";
-        if (oEMPartNumber !== undefined && oEMPartNumber !== null)
-            url_ += "OEMPartNumber=" + encodeURIComponent("" + oEMPartNumber) + "&";
+        if (oemPartNumber !== undefined && oemPartNumber !== null)
+            url_ += "OemPartNumber=" + encodeURIComponent("" + oemPartNumber) + "&";
         if (isKit !== undefined && isKit !== null)
             url_ += "IsKit=" + encodeURIComponent("" + isKit) + "&";
         if (isActive !== undefined && isActive !== null)
@@ -3020,8 +3022,8 @@ export class PartService {
             url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
         if (createdByName !== undefined && createdByName !== null)
             url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
-        if (lastUpdateOn !== undefined && lastUpdateOn !== null)
-            url_ += "LastUpdateOn=" + encodeURIComponent(lastUpdateOn ? "" + lastUpdateOn.toJSON() : "") + "&";
+        if (lastUpdatedOn !== undefined && lastUpdatedOn !== null)
+            url_ += "lastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
         if (lastUpdatedByName !== undefined && lastUpdatedByName !== null)
             url_ += "LastUpdatedByName=" + encodeURIComponent("" + lastUpdatedByName) + "&";
         if (term !== undefined && term !== null)
@@ -5117,7 +5119,7 @@ export class PurchaseService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    purchaseGet(id: number | null | undefined, mttn: string | null | undefined, purchaseOrderProductName: string | null | undefined, statusId: number | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
+    purchaseGet(id: number | null | undefined, mttn: string | null | undefined, purchaseOrderProductName: string | null | undefined, statusId: string[] | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
         let url_ = this.baseUrl + "/v{version}/Purchase?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5129,7 +5131,7 @@ export class PurchaseService {
         if (purchaseOrderProductName !== undefined && purchaseOrderProductName !== null)
             url_ += "PurchaseOrderProductName=" + encodeURIComponent("" + purchaseOrderProductName) + "&";
         if (statusId !== undefined && statusId !== null)
-            url_ += "StatusId=" + encodeURIComponent("" + statusId) + "&";
+            statusId && statusId.forEach(item => { url_ += "StatusId=" + encodeURIComponent("" + item) + "&"; });
         if (createdOn !== undefined && createdOn !== null)
             url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
         if (term !== undefined && term !== null)
@@ -5256,7 +5258,7 @@ export class PurchaseOrderService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    purchaseOrderGet(id: number | null | undefined, name: string | null | undefined, customerReferencePO: string | null | undefined, invoicedBalance: number | null | undefined, uninvoicedBalance: number | null | undefined, balance: number | null | undefined, customerName: string | null | undefined, openDate: Date | null | undefined, closeDate: Date | null | undefined, totalPurchaseLimit: number | null | undefined, unusedAmount: number | null | undefined, revision: number | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
+    purchaseOrderGet(id: number | null | undefined, name: string | null | undefined, customerReferencePO: string | null | undefined, invoicedBalance: number | null | undefined, uninvoicedBalance: number | null | undefined, balance: number | null | undefined, customerName: string | null | undefined, openDate: Date | null | undefined, closeDate: Date | null | undefined, totalPurchaseLimit: number | null | undefined, unusedAmount: number | null | undefined, revision: number | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
         let url_ = this.baseUrl + "/v{version}/PurchaseOrder?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5286,7 +5288,7 @@ export class PurchaseOrderService {
         if (revision !== undefined && revision !== null)
             url_ += "Revision=" + encodeURIComponent("" + revision) + "&";
         if (status !== undefined && status !== null)
-            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+            status && status.forEach(item => { url_ += "Status=" + encodeURIComponent("" + item) + "&"; });
         if (term !== undefined && term !== null)
             url_ += "Term=" + encodeURIComponent("" + term) + "&";
         if (pageNumber !== undefined && pageNumber !== null)
@@ -5523,7 +5525,7 @@ export class QuoteService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: string | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
+    product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
         let url_ = this.baseUrl + "/v{version}/Quote/Product?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5539,7 +5541,7 @@ export class QuoteService {
         if (partKitNo !== undefined && partKitNo !== null)
             url_ += "PartKitNo=" + encodeURIComponent("" + partKitNo) + "&";
         if (segregationType !== undefined && segregationType !== null)
-            url_ += "SegregationType=" + encodeURIComponent("" + segregationType) + "&";
+            segregationType && segregationType.forEach(item => { url_ += "SegregationType=" + encodeURIComponent("" + item) + "&"; });
         if (procedureName !== undefined && procedureName !== null)
             url_ += "ProcedureName=" + encodeURIComponent("" + procedureName) + "&";
         if (productName !== undefined && productName !== null)
@@ -6535,7 +6537,7 @@ export class UserService {
      * @param supervisorName (optional) 
      * @param primaryPhone (optional) 
      * @param email (optional) 
-     * @param hasRoleIDs (optional) 
+     * @param roles (optional) 
      * @param isActive (optional) 
      * @param isAnswerUser (optional) 
      * @param createdOn (optional) 
@@ -6545,7 +6547,7 @@ export class UserService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisorName: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, hasRoleIDs: number[] | null | undefined, isActive: boolean | null | undefined, isAnswerUser: boolean | null | undefined, createdOn: Date | null | undefined, locationName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
+    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisorName: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, roles: number[] | null | undefined, isActive: boolean | null | undefined, isAnswerUser: boolean | null | undefined, createdOn: Date | null | undefined, locationName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6566,8 +6568,8 @@ export class UserService {
             url_ += "PrimaryPhone=" + encodeURIComponent("" + primaryPhone) + "&";
         if (email !== undefined && email !== null)
             url_ += "Email=" + encodeURIComponent("" + email) + "&";
-        if (hasRoleIDs !== undefined && hasRoleIDs !== null)
-            hasRoleIDs && hasRoleIDs.forEach(item => { url_ += "HasRoleIDs=" + encodeURIComponent("" + item) + "&"; });
+        if (roles !== undefined && roles !== null)
+            roles && roles.forEach(item => { url_ += "Roles=" + encodeURIComponent("" + item) + "&"; });
         if (isActive !== undefined && isActive !== null)
             url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
         if (isAnswerUser !== undefined && isAnswerUser !== null)
@@ -6813,7 +6815,7 @@ export class UserService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    trainingCertification(userId: number | null | undefined, employeeName: string | null | undefined, certificationName: string | null | undefined, certificationFromDate: Date | null | undefined, certificationToDate: Date | null | undefined, status: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
+    trainingCertification(userId: number | null | undefined, employeeName: string | null | undefined, certificationName: string | null | undefined, certificationFromDate: Date | null | undefined, certificationToDate: Date | null | undefined, status: boolean | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
         let url_ = this.baseUrl + "/v{version}/User/TrainingCertification?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7403,7 +7405,7 @@ export class WorkOrderService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string | null | undefined, dispostion: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
+    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string[] | null | undefined, dispostion: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7435,7 +7437,7 @@ export class WorkOrderService {
         if (procedure !== undefined && procedure !== null)
             url_ += "Procedure=" + encodeURIComponent("" + procedure) + "&";
         if (status !== undefined && status !== null)
-            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+            status && status.forEach(item => { url_ += "Status=" + encodeURIComponent("" + item) + "&"; });
         if (dispostion !== undefined && dispostion !== null)
             url_ += "Dispostion=" + encodeURIComponent("" + dispostion) + "&";
         if (term !== undefined && term !== null)
@@ -7494,12 +7496,38 @@ export class WorkOrderService {
 
     /**
      * Returns a summary of WorkOrders IN PROGRESS or WAITING
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sort (optional) 
+     * @param filters (optional) 
      */
-    menu(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu";
+    menu(pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sort !== undefined && sort !== null)
+            sort && sort.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
+        if (filters !== undefined && filters !== null)
+            filters && filters.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -7727,21 +7755,49 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfInvoiceableWorkOrderView>(<any>null);
     }
 
-    portal(customerId: number | null | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | null | undefined, toDate: Date | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
+    portal(customerId: number | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | undefined, toDate: Date | undefined, pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Portal?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (customerId !== undefined && customerId !== null)
+        if (customerId === null)
+            throw new Error("The parameter 'customerId' cannot be null.");
+        else if (customerId !== undefined)
             url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
         if (partName !== undefined && partName !== null)
             url_ += "PartName=" + encodeURIComponent("" + partName) + "&";
         if (partId !== undefined && partId !== null)
             url_ += "PartId=" + encodeURIComponent("" + partId) + "&";
-        if (fromDate !== undefined && fromDate !== null)
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
             url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toJSON() : "") + "&";
-        if (toDate !== undefined && toDate !== null)
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
             url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toJSON() : "") + "&";
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sort !== undefined && sort !== null)
+            sort && sort.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
+        if (filters !== undefined && filters !== null)
+            filters && filters.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -8527,7 +8583,7 @@ export class WorkflowGroupService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    workflowGroupGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, groupRoles: number[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
+    workflowGroupGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, groupRoles: string[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowGroup?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -16389,7 +16445,6 @@ export interface IQuoteItemModel {
 export class WorkOrderModel implements IWorkOrderModel {
     id?: number | undefined;
     customerName?: string | undefined;
-    productId?: number | undefined;
     price?: number | undefined;
     scheduledStartDate?: Date | undefined;
     scheduledEndDate?: Date | undefined;
@@ -16397,13 +16452,15 @@ export class WorkOrderModel implements IWorkOrderModel {
     actualEndDate?: Date | undefined;
     hasNCR?: boolean | undefined;
     locationId?: number | undefined;
+    status?: string | undefined;
     location?: LocationModel | undefined;
+    productId?: number | undefined;
     product?: ProductModel | undefined;
+    purchaseId?: number | undefined;
     purchase?: PurchaseModel | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
-    status?: string | undefined;
 
     constructor(data?: IWorkOrderModel) {
         if (data) {
@@ -16418,7 +16475,6 @@ export class WorkOrderModel implements IWorkOrderModel {
         if (_data) {
             this.id = _data["id"];
             this.customerName = _data["customerName"];
-            this.productId = _data["productId"];
             this.price = _data["price"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
             this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
@@ -16426,8 +16482,11 @@ export class WorkOrderModel implements IWorkOrderModel {
             this.actualEndDate = _data["actualEndDate"] ? new Date(_data["actualEndDate"].toString()) : <any>undefined;
             this.hasNCR = _data["hasNCR"];
             this.locationId = _data["locationId"];
+            this.status = _data["status"];
             this.location = _data["location"] ? LocationModel.fromJS(_data["location"]) : <any>undefined;
+            this.productId = _data["productId"];
             this.product = _data["product"] ? ProductModel.fromJS(_data["product"]) : <any>undefined;
+            this.purchaseId = _data["purchaseId"];
             this.purchase = _data["purchase"] ? PurchaseModel.fromJS(_data["purchase"]) : <any>undefined;
             if (Array.isArray(_data["workOrderParts"])) {
                 this.workOrderParts = [] as any;
@@ -16444,7 +16503,6 @@ export class WorkOrderModel implements IWorkOrderModel {
                 for (let item of _data["workOrderMessages"])
                     this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
             }
-            this.status = _data["status"];
         }
     }
 
@@ -16459,7 +16517,6 @@ export class WorkOrderModel implements IWorkOrderModel {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["customerName"] = this.customerName;
-        data["productId"] = this.productId;
         data["price"] = this.price;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
         data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
@@ -16467,8 +16524,11 @@ export class WorkOrderModel implements IWorkOrderModel {
         data["actualEndDate"] = this.actualEndDate ? this.actualEndDate.toISOString() : <any>undefined;
         data["hasNCR"] = this.hasNCR;
         data["locationId"] = this.locationId;
+        data["status"] = this.status;
         data["location"] = this.location ? this.location.toJSON() : <any>undefined;
+        data["productId"] = this.productId;
         data["product"] = this.product ? this.product.toJSON() : <any>undefined;
+        data["purchaseId"] = this.purchaseId;
         data["purchase"] = this.purchase ? this.purchase.toJSON() : <any>undefined;
         if (Array.isArray(this.workOrderParts)) {
             data["workOrderParts"] = [];
@@ -16485,7 +16545,6 @@ export class WorkOrderModel implements IWorkOrderModel {
             for (let item of this.workOrderMessages)
                 data["workOrderMessages"].push(item.toJSON());
         }
-        data["status"] = this.status;
         return data; 
     }
 }
@@ -16493,7 +16552,6 @@ export class WorkOrderModel implements IWorkOrderModel {
 export interface IWorkOrderModel {
     id?: number | undefined;
     customerName?: string | undefined;
-    productId?: number | undefined;
     price?: number | undefined;
     scheduledStartDate?: Date | undefined;
     scheduledEndDate?: Date | undefined;
@@ -16501,13 +16559,15 @@ export interface IWorkOrderModel {
     actualEndDate?: Date | undefined;
     hasNCR?: boolean | undefined;
     locationId?: number | undefined;
+    status?: string | undefined;
     location?: LocationModel | undefined;
+    productId?: number | undefined;
     product?: ProductModel | undefined;
+    purchaseId?: number | undefined;
     purchase?: PurchaseModel | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
-    status?: string | undefined;
 }
 
 export class PurchaseModel extends CreatableModel implements IPurchaseModel {
@@ -20423,6 +20483,94 @@ export interface IWorkOrderGridSummary {
     segregationType?: EnumSegregationType | undefined;
 }
 
+export class Sort implements ISort {
+    field?: string | undefined;
+    dir?: string | undefined;
+
+    constructor(data?: ISort) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.field = _data["field"];
+            this.dir = _data["dir"];
+        }
+    }
+
+    static fromJS(data: any): Sort {
+        data = typeof data === 'object' ? data : {};
+        let result = new Sort();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["field"] = this.field;
+        data["dir"] = this.dir;
+        return data; 
+    }
+}
+
+export interface ISort {
+    field?: string | undefined;
+    dir?: string | undefined;
+}
+
+export class Filter implements IFilter {
+    field?: string | undefined;
+    operator?: string | undefined;
+    value?: string | undefined;
+    logic?: string | undefined;
+
+    constructor(data?: IFilter) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.field = _data["field"];
+            this.operator = _data["operator"];
+            this.value = _data["value"];
+            this.logic = _data["logic"];
+        }
+    }
+
+    static fromJS(data: any): Filter {
+        data = typeof data === 'object' ? data : {};
+        let result = new Filter();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["field"] = this.field;
+        data["operator"] = this.operator;
+        data["value"] = this.value;
+        data["logic"] = this.logic;
+        return data; 
+    }
+}
+
+export interface IFilter {
+    field?: string | undefined;
+    operator?: string | undefined;
+    value?: string | undefined;
+    logic?: string | undefined;
+}
+
 /** Base class for an API call with a typed result */
 export class AuditActionResultOfICollectionOfWorkOrderStatus extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderStatus {
     object?: WorkOrderStatus[] | undefined;
@@ -20856,7 +21004,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
-    subParts?: WorkOrderPartModel[] | undefined;
+    subParts?: PortalSubPartView[] | undefined;
     stepText?: string | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
@@ -20911,7 +21059,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             if (Array.isArray(_data["subParts"])) {
                 this.subParts = [] as any;
                 for (let item of _data["subParts"])
-                    this.subParts!.push(WorkOrderPartModel.fromJS(item));
+                    this.subParts!.push(PortalSubPartView.fromJS(item));
             }
             this.stepText = _data["stepText"];
         }
@@ -21009,8 +21157,64 @@ export interface IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
-    subParts?: WorkOrderPartModel[] | undefined;
+    subParts?: PortalSubPartView[] | undefined;
     stepText?: string | undefined;
+}
+
+export class PortalSubPartView implements IPortalSubPartView {
+    id?: number;
+    serialNumber?: string | undefined;
+    partNumber?: string | undefined;
+    cycleCount?: number;
+    qty?: number;
+    name?: string | undefined;
+
+    constructor(data?: IPortalSubPartView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.serialNumber = _data["serialNumber"];
+            this.partNumber = _data["partNumber"];
+            this.cycleCount = _data["cycleCount"];
+            this.qty = _data["qty"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): PortalSubPartView {
+        data = typeof data === 'object' ? data : {};
+        let result = new PortalSubPartView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["serialNumber"] = this.serialNumber;
+        data["partNumber"] = this.partNumber;
+        data["cycleCount"] = this.cycleCount;
+        data["qty"] = this.qty;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IPortalSubPartView {
+    id?: number;
+    serialNumber?: string | undefined;
+    partNumber?: string | undefined;
+    cycleCount?: number;
+    qty?: number;
+    name?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

@@ -94,7 +94,7 @@ export class LoginService {
         if (!this.globals.user.isAnswerUser) {
           this.isFetching = true;
           this.customerService.customerGet(this.globals.user.customerId, null, null, null, null, null, null, true, null, null,
-            null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
+            null, null, null, null, null, null, null, null,null, env.apiVersion).pipe(take(1))
             .subscribe((customer) => {
               this.isFetching = false;
               this.globals.changeCustomer(customer.object[0]);
