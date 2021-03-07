@@ -3,8 +3,8 @@ import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { SelectItem } from 'primeng/api';
 import {
-  EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary,Sort,
-  ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel, WorkOrderMessageModel, WorkOrderTaskMonitorModel
+  EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, Sort,
+  ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel, WorkOrderMessageModel, WorkOrderTaskMonitorModel, WorkOrderPartModel, WorkOrderModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
 import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
-import { pushIfNotExists } from '../../../models/lib/Utils';
+import { pushIfNotExists, callFunctionWithFilters, callFunctionWithFiltersViews } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -21,6 +21,8 @@ import { EnumMonitorShouldBe } from '../../../models/enums/EnumMonitorShouldBe';
 import { EnumMonitorType } from '../../../models/enums/EnumMonitorType';
 import { EnumMonitorPassFailStatus } from '../../../models/enums/EnumMonitorPassFailStatus';
 import { Subscription } from 'rxjs';
+import { cloneDeep } from 'lodash';
+
 @Component({
   selector: 'app-wip',
   templateUrl: './wip.component.html',
@@ -86,6 +88,8 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
       numVisible: 1
     }
   ];
+  currentEvent: any;
+  totalRecords: number = 0;
 
 
   @ViewChild('fileItem') fileItem: ElementRef;
@@ -230,13 +234,13 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (this.globals.selectedCustomer !== undefined) {
       this.setCustomerName();
-      this.getGridData();
+      this.getGridData(this.currentEvent);
     }
 
     let isBuyerObservableSubscription = this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.selectedCustomer !== undefined) {
         this.setCustomerName();
-        this.getGridData();
+        this.getGridData(this.currentEvent);
       }
     });
     this.subscriptions.push(isBuyerObservableSubscription);
@@ -244,7 +248,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     let selectCustomerObservableSubscription = this.globals.selectCustomerObservable.subscribe(response => {
       if (response !== null && response !== undefined) {
         this.setCustomerName();
-        this.getGridData();
+        this.getGridData(this.currentEvent);
       }
     });
     this.subscriptions.push(selectCustomerObservableSubscription);
@@ -387,13 +391,28 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     workOrder.subParts.map(x => this.setSubPartsProperties(x));
   }
 
-  getGridData() {
+  getGridData(event) {
+    const columnsSaved = this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns();
     this.globals.showLoader(true);
     this.showReport = false;
     // this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate,
     //   env.apiVersion)
-      this.workOrderService.portal(this.globals.selectedCustomer.id, null, null, this.fromDate, this.toDate
-        , 0, 10000, [new Sort({ dir: 'asc', field: 'WorkOrderId' })], null, env.apiVersion)
+    if (event === undefined) {
+      event = {
+        sortField: 'WorkOrderId',
+        first: 0,
+        rows: 10,
+        sortOrder: 1,
+        filters: {}
+      };
+      this.currentEvent = event;
+    }
+    else {
+      this.currentEvent.filters = event.filters;
+    }
+
+    const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate };
+    callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.portal, pageFilters, columnsSaved, this.currentEvent)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object.map((x: any) => {
@@ -403,25 +422,40 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
           return ret;
         });
         this.gridSaved = new GridSaved({
-          columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
+          columnsSaved: columnsSaved,
           storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
           version: '1.0.0',
           expandRows: true,
           expandRowProperty: 'subParts',
-          expandRowsTemplate: this.expandedRowTemplate
+          expandRowsTemplate: this.expandedRowTemplate,
+          paginator: true
         });
 
         this.reportModel = new ReportModel({
           name: ''
         });
+        this.totalRecords = response.totalNumberOfRecords;
+        this.createObjs(10, this.data, this.totalRecords)
+
 
         this.showReport = true;
       }));
   }
 
+  createObjs(rows, data, total) {
+    total = total - rows;
+    while (total--) {
+      let clonedData = cloneDeep(data[0]);
+      clonedData.workOrderId = clonedData.workOrderId + 1;
+      // this.setSubpartspropertiesToWoSubparts(item);
+      data.push(clonedData);
+    }
+
+  }
+
   getEngineerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.Number, visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
@@ -440,7 +474,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getBuyerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.Number, visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', type: EnumColumnType.Number, visible: true }),
       new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),

@@ -14,7 +14,7 @@
                 class="form-control">
         </div>
         <div>
-            <button type="submit" (click)="getGridData()" class="btn btn-primary" role="button"
+            <button type="submit" (click)="getGridData(undefined)" class="btn btn-primary" role="button"
                 data-cy="confirmdelete-button">
                 <i class="fas fa-search"></i>Search
             </button>
@@ -47,7 +47,9 @@
                 {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}</div>
             <ng-template #percentageOfExpectedDurationTimeLogged>
                 {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}
-                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedNumerator/60 | number:'1.1-1'}}/{{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedDenominator/60 | number:'1.1-1'}}
+                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedNumerator/60 |
+                number:'1.1-1'}}/{{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedDenominator/60 |
+                number:'1.1-1'}}
                 hours completed
             </ng-template>
         </div>
@@ -55,7 +57,8 @@
 </ng-template>
 
 <widget *ngIf="globals.selectedCustomer !== undefined">
-    <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [reportInfo]="reportModel"
+        <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [reportInfo]="reportModel"
+        (getData)="getGridData($event)" [totalRecordsLazy]="totalRecords"
         (expandRowClick)="expandRow($event)" [data]="data">
     </app-grid>
 </widget>
@@ -91,10 +94,9 @@
         Images
     </p-header>
     <div class="report-viewport m-4 d-print-flex">
-        <p-galleria [value]="images" [(visible)]="displayBasic2"
-            [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '850px'}" [numVisible]="7"
-            [circular]="true" [fullScreen]="false" [showItemNavigators]="true" [showThumbnails]="false"
-            [baseZIndex]="100000">
+        <p-galleria [value]="images" [(visible)]="displayBasic2" [responsiveOptions]="responsiveOptions"
+            [containerStyle]="{'max-width': '850px'}" [numVisible]="7" [circular]="true" [fullScreen]="false"
+            [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000">
             <ng-template pTemplate="item" let-item>
                 <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
             </ng-template>

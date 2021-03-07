@@ -20,7 +20,7 @@ import { ReportCubeService } from '../../pages/reports/reportcube.service';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { CSVConverterService } from '../../services/csvconverter.service';
-
+import { LazyLoadEvent } from 'primeng/api';
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',
@@ -29,6 +29,7 @@ import { CSVConverterService } from '../../services/csvconverter.service';
 export class GridComponent implements OnInit {
   @Input() gridSaved: GridSaved;
   @Input() showReport: boolean;
+  @Input() totalRecordsLazy: number;
   @Input() showExportGrid: boolean;
   @Input() saveToLocalStorage: boolean;
   @Input() data;
@@ -45,11 +46,37 @@ export class GridComponent implements OnInit {
   calendarEn;
   filteredData: any;
 
+  first = 0;
+  rows = 10;
+
+  @Output() getData = new EventEmitter<any>();
+
+
   // expanded: boolean = false;
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
     private reportCubeService: ReportCubeService, private cSVConverterService: CSVConverterService) {
 
+  }
+
+  next() {
+    this.first = this.first + this.rows;
+  }
+
+  prev() {
+    this.first = this.first - this.rows;
+  }
+
+  reset() {
+    this.first = 0;
+  }
+
+  isLastPage(): boolean {
+    return this.first === (this.totalRecordsLazy - this.rows * this.first);
+  }
+
+  isFirstPage(): boolean {
+    return this.first === 0;
   }
 
   ngOnInit(): void {
@@ -67,6 +94,9 @@ export class GridComponent implements OnInit {
   }
 
   handleFilter(ev, filteredData) {
+    this.getData.emit(ev);
+    return;
+
     this.filteredData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
     if (!this.hasChart) {
       return;
