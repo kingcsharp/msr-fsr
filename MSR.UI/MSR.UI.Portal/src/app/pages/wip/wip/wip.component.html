@@ -57,9 +57,9 @@
 </ng-template>
 
 <widget *ngIf="globals.selectedCustomer !== undefined">
-        <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [reportInfo]="reportModel"
-        (getData)="getGridData($event)" [totalRecordsLazy]="totalRecords"
-        (expandRowClick)="expandRow($event)" [data]="data">
+    <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [isLazyLoad]="true" [reportInfo]="reportModel"
+        (getData)="getGridData($event)" [totalRecords]="totalRecords" (expandRowClick)="expandRow($event)"
+        [data]="data">
     </app-grid>
 </widget>
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>

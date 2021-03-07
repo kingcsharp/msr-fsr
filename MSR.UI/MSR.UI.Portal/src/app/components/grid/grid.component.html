@@ -5,8 +5,10 @@
 
 <p-table #dt *ngIf="showReport" [value]="gridData" dataKey="id" styleClass="ui-table-customers {{gridSaved.gridClass}}"
     [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
-    [paginator]="gridSaved.paginator" currentPageReportTemplate="Showing {first}-{last} of {{totalRecordsLazy}}"
-    [totalRecords]="totalRecordsLazy"
+    [paginator]="gridSaved.paginator" currentPageReportTemplate="Showing {first}-{last} of {{totalRecords}}"
+    [totalRecords]="totalRecords" 
+    [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getLazyLoadReport($event)" [totalRecords]="totalRecords"
+    
     [filterDelay]="0" stateStorage="local" stateKey="{{gridSaved.storageId}}" (onFilter)="handleFilter($event,dt)">
     <ng-template pTemplate="caption">
         <div class="pull-left">
@@ -60,7 +62,6 @@
         </tr>
         
     </ng-template>
-    rowViewData
     <ng-template pTemplate="emptymessage">
         <tr>
             <td [attr.colspan]="gridSaved.visibleColumns" style="text-align:left">No items found.</td>

@@ -29,7 +29,8 @@ import { LazyLoadEvent } from 'primeng/api';
 export class GridComponent implements OnInit {
   @Input() gridSaved: GridSaved;
   @Input() showReport: boolean;
-  @Input() totalRecordsLazy: number;
+  @Input() totalRecords: number;
+  @Input() isLazyLoad: boolean;
   @Input() showExportGrid: boolean;
   @Input() saveToLocalStorage: boolean;
   @Input() data;
@@ -46,9 +47,6 @@ export class GridComponent implements OnInit {
   calendarEn;
   filteredData: any;
 
-  first = 0;
-  rows = 10;
-
   @Output() getData = new EventEmitter<any>();
 
 
@@ -59,32 +57,14 @@ export class GridComponent implements OnInit {
 
   }
 
-  next() {
-    this.first = this.first + this.rows;
-  }
-
-  prev() {
-    this.first = this.first - this.rows;
-  }
-
-  reset() {
-    this.first = 0;
-  }
-
-  isLastPage(): boolean {
-    return this.first === (this.totalRecordsLazy - this.rows * this.first);
-  }
-
-  isFirstPage(): boolean {
-    return this.first === 0;
-  }
-
   ngOnInit(): void {
     this.calendarEn = this.globals.getCalendarDefault();
     if (this.saveToLocalStorage === undefined) {
       this.saveToLocalStorage = true;
     }
-    this.getReport(this.data, this.reportInfo);
+    if (!this.isLazyLoad) {
+      this.getReport(this.data, this.reportInfo);
+    }
   }
 
   expandRow(expanded, row) {
@@ -94,8 +74,9 @@ export class GridComponent implements OnInit {
   }
 
   handleFilter(ev, filteredData) {
-    this.getData.emit(ev);
-    return;
+    if(this.isLazyLoad){
+      return;
+    }
 
     this.filteredData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
     if (!this.hasChart) {
@@ -113,6 +94,12 @@ export class GridComponent implements OnInit {
       this.showCharts = true;
       this.globals.showLoader(false);
     }, 300);
+  }
+
+  getLazyLoadReport(event: LazyLoadEvent) {
+    this.gridData = this.data;
+    this.filteredData = this.data;
+    this.getData.emit(event);
   }
 
   getReport(data: any, reportInfo?: ReportModel) {

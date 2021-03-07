@@ -3,6 +3,7 @@ import { Exception, Filter, Sort } from "../../../app/services/api.client.genera
 import { environment as env } from '../../../environments/environment';
 import { EnumColumnType } from "../enums/EnumColumnType";
 import { ColumnsSaved } from "./ColumnsSaved";
+import * as moment from "moment";
 
 export function emptyArray(array) {
     let length = array.length;
@@ -185,6 +186,8 @@ export function callFunctionWithFiltersViews(service, func, extraParams: any, co
 
 export function getValueByType(filterValue: any, columnsSaved: ColumnsSaved) {
     switch (columnsSaved.type) {
+        case EnumColumnType.Date:
+            return moment(filterValue).format('yyyy-MM-DD');
         case EnumColumnType.StringArray:
             return JSON.stringify(filterValue).toString();
 
