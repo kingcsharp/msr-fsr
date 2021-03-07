@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj, callFunctionWithFilters } from '../../../models/lib/Utils';
 import { AllowedActions } from '../../../../app/models/lib/AllowedActions';
 import { LazyLoadEvent } from 'primeng/api';
+import { createUrlResolverWithoutPackagePrefix } from '@angular/compiler';
 
 declare let jQuery: any;
 
@@ -79,6 +80,7 @@ export class ApprovalStagesComponent implements OnInit {
         .subscribe(responseHandler(response => {
           this.globals.showLoader(false);
           ctrl.data = response.object;
+          ctrl.totalRecords = response.totalNumberOfRecords;
           this.setGroupsSaved();
         }));
     }, 10);

@@ -104,7 +104,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task<int> GetWorkFlowStageTotalRows(GetWorkflowStageModel command)
         {
-            var totalRows = await _unitOfWork.WorkflowStages.Query().CreateWorkflowStagesQuery(command).CountAsync();
+            var totalRows = await _unitOfWork.WorkflowStages.Query().CreateWorkflowStagesQuery(command, true).CountAsync();
             return totalRows;
         }
     }

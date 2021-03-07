@@ -65,7 +65,7 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.Id), s => s.Id);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.IsActive), s => s.IsActive);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.Name), s => s.Name);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.CreatedOn), s => s.Created.FullName);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.CreatedOn), s => s.CreatedOn);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.CreatedByName), s => s.Created.FullName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.LastUpdatedOn), s => s.LastUpdatedOn);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkflowStageSortFields.LastUpdatedByName), s => s.LastUpdated.FullName);
