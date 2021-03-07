@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -175,7 +174,14 @@ namespace MSR.Infrastructure.Resources.Queries
             {
                 return $"({filter.Field} != null && {filter.Field}.{comparison}(@{index}))";
             }
-
+            else if (DateTime.TryParse(filter.Value, out var date))
+            {
+                   var whilepart = $"({filter.Field} != null && (({filter.Field}.Year {comparison} {date.Year}) " +
+                                                           $"|| ({filter.Field}.Year = {date.Year} && {filter.Field}.Month {comparison} {date.Month}) " +
+                                                           $"|| ({filter.Field}.Year = {date.Year} && {filter.Field}.Month = {date.Month} && {filter.Field}.Day {comparison} {date.Day})))";
+                   
+                return whilepart;
+            }
             return $"{filter.Field} {comparison} @{index}";
         }
     }

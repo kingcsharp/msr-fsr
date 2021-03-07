@@ -121,18 +121,6 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public static GetWorkflowModel ToGetWorkflowCommand(this GetWorkflowRequest request)
-        {
-            return new GetWorkflowModel()
-            {
-                Id = request.Id
-            };
-        }
 
         /// <summary>
         ///
@@ -1043,5 +1031,10 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static QueryBase ToQueryBase(this QueryRequestBase request) => AutoMapperHelper.Mapper.Map<QueryBase>(request);
         public static GetWorkOrderMenuQueryModel ToGetWorkOrderQueryModel(this GetWorkOrderMenuRequest request) => AutoMapperHelper.Mapper.Map<GetWorkOrderMenuQueryModel>(request);
+
+        public static GetWorkflowModel ToGetWorkflowCommand(this GetWorkflowRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetWorkflowModel>(request);
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workflowService.GetWorkFlowAsync(command);
             ret = ret.AsQueryable().CreateWorkflowApprovalQuery(command).ToList();
-            var totalRows = ret.AsQueryable().CreateWorkflowApprovalQuery(command).Count();
+            var totalRows = ret.AsQueryable().CreateWorkflowApprovalQuery(command, true).Count();
 
             return new PagingCommandResponse<ICollection<WorkflowModel>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
