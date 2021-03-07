@@ -82,6 +82,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<WorkOrderStatusSummary> WorkOrderStatusSummary { get; set; }
         public DbSet<WorkOrderMenu> WorkOrderMenu { get; set; }
         public DbSet<PortalWorkOrderMenu> PortalWorkOrderMenu { get; set; }
+        public DbSet<WorkOrderStats> WorkOrderStats { get; set; }
 
         public AnswerContext() : base()
         {
