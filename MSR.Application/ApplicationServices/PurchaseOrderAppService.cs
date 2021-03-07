@@ -27,8 +27,9 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetPurchaseOrder command, CancellationToken cancellationToken = default)
         {
             var ret = await _purchaseOrderService.GetPurchaseOrderAsync(command);
-            ret = ret.AsQueryable().CreatePurchaseOrderViewQuery(command).ToList();
             var totalRows = ret.AsQueryable().CreatePurchaseOrderViewQuery(command, true).Count();
+            ret = ret.AsQueryable().CreatePurchaseOrderViewQuery(command).ToList();
+            
             return new PagingCommandResponse<IEnumerable<PurchaseOrderView>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
