@@ -42,7 +42,7 @@ export class ProceduresComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridVersion = '1.0.0';
-    this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
+    this.gridStorageId = this.constructor.name + this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
@@ -64,17 +64,15 @@ export class ProceduresComponent implements OnInit {
 
   getProcedures(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-
-    this.procedureService.procedureGet(null, null, null, null, null, null, null,
-      null, null, null, null, null, null, null, env.apiVersion)
-    callFunctionWithFilters(this.procedureService, this.procedureService.procedureGet, event)
-      .pipe(take(1))
-      .subscribe(responseHandler((response) => {
-        this.data = response.object;
-        this.currentEvent = event;
-        this.totalRecords = response.totalNumberOfRecords;
-      }));
-
+    setTimeout(() => {
+      callFunctionWithFilters(this.procedureService, this.procedureService.procedureGet, event)
+        .pipe(take(1))
+        .subscribe(responseHandler((response) => {
+          this.data = response.object;
+          this.currentEvent = event;
+          this.totalRecords = response.totalNumberOfRecords;
+        }));
+    }, 10);
   }
 
   hasPrivilege(privName) {

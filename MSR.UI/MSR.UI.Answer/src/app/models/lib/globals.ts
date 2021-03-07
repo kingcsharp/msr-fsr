@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized, RouteConfigLoadStart } from '@angular/router';
-import { MenuItem, EnumMenuItem, EnumApprovalTables, UserModel } from '../../services/api.client.generated';
+import { MenuItem, EnumMenuItem, EnumApprovalTables, UserModel, EnumSegregationType } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
@@ -281,6 +281,14 @@ export class Globals {
         return [
             { label: 'Yes', value: true },
             { label: 'No', value: false },
+        ];
+    }
+
+    getSegregationTypes() {
+        return [
+            { label: 'Cu', value: EnumSegregationType.CU },
+            { label: 'Non-Cu', value: EnumSegregationType.NONCU },
+            { label: 'Deseg', value: EnumSegregationType.DESEG }
         ];
     }
 }

@@ -104,12 +104,7 @@ export class QuotesProductsComponent implements OnInit {
     this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.QuotesProducts);
     this.showConfirmDeleteDialog = false;
     this.data = [];
-    this.segregationTypes = [
-      { label: 'Cu', value: EnumSegregationType.CU },
-      { label: 'Non-Cu', value: EnumSegregationType.NONCU },
-      { label: 'Deseg', value: EnumSegregationType.DESEG }
-    ];
-
+    this.segregationTypes = this.globals.getSegregationTypes();
     
     this.getCustomers();
     let ctrl = this;
