@@ -10,7 +10,7 @@ namespace MSR.Answer.API.V1.Models
         public int? PurchaseId { get; set; }
         public string WorkOrderItemNumber { get;set;}
         public string Customer { get; set; }
-        public string Location { get; set; }
+        public string[] Location { get; set; }
         public string SerialNumber { get; set; }
         public string PurchaseOrderNumber { get; set; }
         public int? Qty { get; set; }
