@@ -7405,7 +7405,7 @@ export class WorkOrderService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string[] | null | undefined, dispostion: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
+    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string[] | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string[] | null | undefined, dispostion: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7417,7 +7417,7 @@ export class WorkOrderService {
         if (customer !== undefined && customer !== null)
             url_ += "Customer=" + encodeURIComponent("" + customer) + "&";
         if (location !== undefined && location !== null)
-            url_ += "Location=" + encodeURIComponent("" + location) + "&";
+            location && location.forEach(item => { url_ += "Location=" + encodeURIComponent("" + item) + "&"; });
         if (serialNumber !== undefined && serialNumber !== null)
             url_ += "SerialNumber=" + encodeURIComponent("" + serialNumber) + "&";
         if (purchaseOrderNumber !== undefined && purchaseOrderNumber !== null)
@@ -7755,7 +7755,7 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfInvoiceableWorkOrderView>(<any>null);
     }
 
-    portal(customerId: number | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | undefined, toDate: Date | undefined, pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
+    portal(customerId: number | undefined, subPartName: string | null | undefined, partId: number | null | undefined, fromDate: Date | undefined, toDate: Date | undefined, pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Portal?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7764,8 +7764,8 @@ export class WorkOrderService {
             throw new Error("The parameter 'customerId' cannot be null.");
         else if (customerId !== undefined)
             url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
-        if (partName !== undefined && partName !== null)
-            url_ += "PartName=" + encodeURIComponent("" + partName) + "&";
+        if (subPartName !== undefined && subPartName !== null)
+            url_ += "SubPartName=" + encodeURIComponent("" + subPartName) + "&";
         if (partId !== undefined && partId !== null)
             url_ += "PartId=" + encodeURIComponent("" + partId) + "&";
         if (fromDate === null)

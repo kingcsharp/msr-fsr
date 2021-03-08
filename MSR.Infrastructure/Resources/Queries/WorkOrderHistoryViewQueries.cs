@@ -19,7 +19,7 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.PurchaseId, s => s.PurchaseId == command.PurchaseId);
             query = query.Where(command.WorkOrderItemNumber, s => (s.Customer + "-" + s.WorkOrderId).Contains(command.WorkOrderItemNumber));
             query = query.Where(command.Customer, s => s.Customer.Contains(command.Customer));
-            query = query.Where(command.Location, s => s.Location.Contains(command.Location));
+            query = query.Where(command.Location, s => command.Location.ToList().Contains(s.Location));
             query = query.Where(command.SerialNumber, s => s.SerialNumber.Contains(command.SerialNumber));
             query = query.Where(command.PurchaseOrderNumber, s => s.PurchaseOrderNumber.Contains(command.PurchaseOrderNumber));
             query = query.Where(command.Qty, s => s.Qty == command.Qty);
