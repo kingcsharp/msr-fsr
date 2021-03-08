@@ -16,7 +16,7 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.Id, s => s.Id == command.Id);
             query = query.Where(command.FirstName, s => s.FirstName.Contains(command.FirstName));
             query = query.Where(command.LastName, s => s.LastName.Contains(command.LastName));
-            query = query.Where(command.LastName, s => s.UserName.Contains(command.UserName));
+            query = query.Where(command.UserName, s => s.UserName.Contains(command.UserName));
             query = query.Where(command.Title, s => s.Title.Contains(command.Title));
             query = query.Where(command.Supervisor, s => s.SupervisorId == command.Supervisor);
             query = query.Where(command.PrimaryPhone, s => s.Phone.Contains( command.PrimaryPhone));
