@@ -395,8 +395,8 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setSubPartsProperties(subpart: any) {
-    subpart.partNumber = subpart.part?.partNumber || 'N/A';
-    subpart.name = subpart.part?.name || 'N/A';
+    subpart.partNumber = subpart.partNumber || 'N/A';
+    subpart.name = subpart.name || 'N/A';
   }
 
   setSubpartspropertiesToWoSubparts(workOrder: PortalWorkOrderPartsView) {
