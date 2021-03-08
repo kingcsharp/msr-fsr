@@ -111,7 +111,7 @@ export class ApprovalWorkflowComponent implements OnInit {
     this.globals.showLoader(true);
 
     setTimeout(() => {
-      callFunctionWithFilters(this.workflowService, this.workflowService.workflowGet, event)
+      callFunctionWithFilters(this.workflowService, this.workflowService.workflowGet, event, this.globals.functionDic)
         .pipe(take(1)).subscribe(responseHandler(response => {
           this.globals.showLoader(false);
           this.totalRecords = response.totalNumberOfRecords;

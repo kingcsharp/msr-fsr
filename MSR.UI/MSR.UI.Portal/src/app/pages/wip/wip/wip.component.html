@@ -14,7 +14,7 @@
                 class="form-control">
         </div>
         <div>
-            <button type="submit" (click)="getGridData()" class="btn btn-primary" role="button"
+            <button type="submit" (click)="getGridData(undefined)" class="btn btn-primary" role="button"
                 data-cy="confirmdelete-button">
                 <i class="fas fa-search"></i>Search
             </button>
@@ -57,9 +57,9 @@
 </ng-template>
 
 <widget *ngIf="globals.selectedCustomer !== undefined">
-    <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [reportInfo]="reportModel"
-
-    (getData)="getGridData($event)" (expandRowClick)="expandRow($event)" [data]="data" [totalRecords]="totalRecords">
+    <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [isLazyLoad]="true" [reportInfo]="reportModel"
+        (getData)="getGridData($event)" [totalRecords]="totalRecords" (expandRowClick)="expandRow($event)"
+        [data]="data">
     </app-grid>
 </widget>
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>

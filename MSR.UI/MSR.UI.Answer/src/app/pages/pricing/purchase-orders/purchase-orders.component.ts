@@ -96,7 +96,7 @@ export class PurchaseOrdersComponent implements OnInit {
   getPurchaseOrders(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.purchaseOrderService, this.purchaseOrderService.purchaseOrderGet, event)
+      callFunctionWithFilters(this.purchaseOrderService, this.purchaseOrderService.purchaseOrderGet, event, this.globals.functionDic)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.totalRecords = response.totalNumberOfRecords;

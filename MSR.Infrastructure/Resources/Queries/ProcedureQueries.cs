@@ -57,14 +57,14 @@ namespace MSR.Infrastructure.Resources.Queries
         {
 
             query = query.Where(command.Id, s => s.Id == command.Id);
-            query = query.Where(command.Name, s => s.Name.Contains(command.Name));
-            query = query.Where(command.ProcedureTypeName, s => s.ProcedureType.Name.Contains(command.ProcedureTypeName));
+            query = query.Where(command.Name, s => s.Name.ToLower().Contains(command.Name.ToLower()));
+            query = query.Where(command.ProcedureTypeName, s => s.ProcedureType.Name.ToLower().Contains(command.ProcedureTypeName.ToLower()));
             query = query.Where(command.Duration, s => s.Duration == command.Duration);
-            query = query.Where(command.DurationType, s => s.DurationType.Contains(command.DurationType));
+            query = query.Where(command.DurationType, s => s.DurationType.ToLower().Contains(command.DurationType.ToLower()));
             query = query.Where(command.Revision, s => s.Revision == command.Revision);
-            query = query.Where(command.CreatedFullName, s => s.Created.FullName.Contains(command.CreatedFullName));
+            query = query.Where(command.CreatedFullName, s => s.Created.FullName.ToLower().Contains(command.CreatedFullName.ToLower()));
             query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
-            query = query.Where(command.LastUpdatedFullName, s => s.LastUpdated.FullName.Contains(command.LastUpdatedFullName));
+            query = query.Where(command.LastUpdatedFullName, s => s.LastUpdated.FullName.ToLower().Contains(command.LastUpdatedFullName.ToLower()));
             query = query.Where(command.LastUpdatedOn, s => DateTime.Compare(s.LastUpdatedOn.Value.Date, command.LastUpdatedOn.Value.Date) == 0);
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))

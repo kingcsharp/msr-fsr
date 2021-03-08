@@ -131,7 +131,7 @@ export class UserComponent implements OnInit {
   async getUsers(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.userService, this.userService.userGet, event)
+      callFunctionWithFilters(this.userService, this.userService.userGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.totalRecords = response.totalNumberOfRecords;

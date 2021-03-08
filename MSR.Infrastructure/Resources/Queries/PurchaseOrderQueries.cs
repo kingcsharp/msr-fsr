@@ -15,11 +15,11 @@ namespace MSR.Infrastructure.Resources.Queries
         {
             query = query.Where(command.Balance, s => s.Balance == command.Balance);
             query = query.Where(command.CloseDate, s => DateTime.Compare(s.CloseDate.Value.Date,command.CloseDate.Value.Date) == 0);
-            query = query.Where(command.CustomerName, s => !string.IsNullOrEmpty(s.CustomerName) && s.CustomerName.Contains(command.CustomerName));
-            query = query.Where(command.CustomerReferencePO, s => s.CustomerReferencePO.Contains(command.CustomerReferencePO));
+            query = query.Where(command.CustomerName, s => !string.IsNullOrEmpty(s.CustomerName) && s.CustomerName.ToLower().Contains(command.CustomerName.ToLower()));
+            query = query.Where(command.CustomerReferencePO, s => s.CustomerReferencePO.ToLower().Contains(command.CustomerReferencePO.ToLower()));
             query = query.Where(command.Id, s => s.Id == command.Id);
             query = query.Where(command.InvoicedBalance, s => s.InvoicedBalance == command.InvoicedBalance);
-            query = query.Where(command.Name, s => !string.IsNullOrEmpty(s.Name) && s.Name.Contains(command.Name));
+            query = query.Where(command.Name, s => !string.IsNullOrEmpty(s.Name) && s.Name.ToLower().Contains(command.Name.ToLower()));
             query = query.Where(command.OpenDate, s => DateTime.Compare(s.OpenDate.Date, command.OpenDate.Value.Date) == 0);
             query = query.Where(command.Revision, s => s.Revision == command.Revision);
             query = query.Where(command.Status, s => !string.IsNullOrEmpty(s.Status) && command.Status.Contains(s.Status));

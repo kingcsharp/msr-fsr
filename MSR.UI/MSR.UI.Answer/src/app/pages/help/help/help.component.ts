@@ -55,7 +55,7 @@ export class HelpComponent implements OnInit {
   getHelpPages(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.helpService, this.helpService.helpGet, event)
+      callFunctionWithFilters(this.helpService, this.helpService.helpGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.currentEvent = event;

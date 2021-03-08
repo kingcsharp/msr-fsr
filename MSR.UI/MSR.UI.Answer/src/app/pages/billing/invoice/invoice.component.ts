@@ -163,7 +163,7 @@ export class InvoiceComponent implements OnInit {
 
   getCustomers() {
     this.globals.showLoader(true);
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null, env.apiVersion).pipe(take(1))
+    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customers = response.object;
       }));
@@ -299,7 +299,7 @@ export class InvoiceComponent implements OnInit {
   getInvoices(event: LazyLoadEvent) {
     setTimeout(() => {
       this.globals.showLoader(true);
-      callFunctionWithFilters(this.invoiceService, this.invoiceService.invoiceGet, event)
+      callFunctionWithFilters(this.invoiceService, this.invoiceService.invoiceGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.totalRecords = response.totalNumberOfRecords;

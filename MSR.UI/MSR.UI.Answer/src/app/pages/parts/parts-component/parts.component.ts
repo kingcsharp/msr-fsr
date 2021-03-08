@@ -87,7 +87,7 @@ export class PartsComponent implements OnInit {
   getParts(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.partsService, this.partsService.partGet, event).pipe(take(1))
+      callFunctionWithFilters(this.partsService, this.partsService.partGet, event, this.globals.functionDic).pipe(take(1))
         .subscribe(responseHandler(response => {
           this.globals.showLoader(false);
           this.data = response.object.map((elem) => {

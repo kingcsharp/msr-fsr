@@ -75,7 +75,7 @@ export class ApprovalStagesComponent implements OnInit {
     const ctrl = this;
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.workflowStageService, this.workflowStageService.workflowStageGet, event)
+      callFunctionWithFilters(this.workflowStageService, this.workflowStageService.workflowStageGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.globals.showLoader(false);
