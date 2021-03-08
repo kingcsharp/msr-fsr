@@ -10,8 +10,8 @@ pipeline {
         ACCOUNT_URL='425480257575.dkr.ecr.us-west-2.amazonaws.com'
         REGION='us-west-2'
         PROFILE='--profile msrfsr'
-        DEV_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-qa/2732ea92378da008"
-        STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-uat/551b7aafb24e8c90"
+        DEV_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/qa-portal-ui/c6a78bcc7e4e8133"
+        STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/uat-portal-ui/42895c4843815b25"
         PROD_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-prod/6c1b83ad4a20227f"
         DEV_PROJECT_UI='qa-portal-ui'
         STAGE_PROJECT_UI='uat-portal-ui'
@@ -27,49 +27,51 @@ pipeline {
                     try {
 
                         echo "GIT COMMIT HASH: ${env.GIT_COMMIT}"
-                        withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
-                            awsCodeBuild credentialsType: 'keys',
-                                    awsAccessKey: "${KEY}",
-                                    awsSecretKey: "${PASS}",
-                                    projectName: 'answer-ui',
-                                    region: "us-west-2",
-                                    sourceControlType: 'jenkins',
-                                    sourceTypeOverride: 'S3',
-                                    sourceLocationOverride: 'answer-codebuild-input/answer-ui-portal-qa.zip',
-                                    buildSpecFile: 'MSR.UI/MSR.UI.Portal/buildspec-portal-ui-qa.yml',
-                                    envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
-                        }
-
-
-//                        dir('MSR.UI/MSR.UI.Portal') {
-//                            sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui-portal ."
-//                            sh "docker tag msr-ui-portal ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
-//
-//                            sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-//                            sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+//                        withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'PASS', usernameVariable: 'KEY')]) {
+//                            awsCodeBuild credentialsType: 'keys',
+//                                    awsAccessKey: "${KEY}",
+//                                    awsSecretKey: "${PASS}",
+//                                    projectName: 'answer-ui',
+//                                    region: "us-west-2",
+//                                    sourceControlType: 'jenkins',
+//                                    sourceTypeOverride: 'S3',
+//                                    sourceLocationOverride: 'answer-codebuild-input/answer-ui-portal-qa.zip',
+//                                    buildSpecFile: 'MSR.UI/MSR.UI.Portal/buildspec-portal-ui-qa.yml',
+//                                    envVariables: "[{TAG, ${env.GIT_COMMIT}}]"
 //                        }
+
+
+                        dir('MSR.UI/MSR.UI.Portal') {
+                            sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui-portal ."
+                            sh "docker tag msr-ui-portal ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+
+                            sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                            sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+                        }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
                         sh "exit 1"
                     }
 
-//                    try {
-//                        sh "sh update_image_portal.sh QA ${env.GIT_COMMIT} ${UI_COMPOSE}"
-//                        sh "cat ${UI_COMPOSE}"
-//
-//                            if(env.BRANCH_NAME == 'Develop') {
-//                                echo "Deploying Develop"
-//                                deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
-//                            }
-//
-//                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
-//
-//                    } catch (e) {
-//                        office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
-//                        currentBuild.result = 'FAILURE'
-//                        sh "exit 1"
-//                    }
+                    try {
+                        dir('MSR.UI/MSR.UI.Portal') {
+                            sh "sh update_image_portal.sh QA ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                            sh "cat ${UI_COMPOSE}"
+
+                            if (env.BRANCH_NAME == 'Develop') {
+                                echo "Deploying Develop"
+                                deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
+                            }
+
+                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+                        }
+
+                    } catch (e) {
+                        office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
+                        sh "exit 1"
+                    }
                 }
             }
         }
@@ -102,13 +104,14 @@ pipeline {
 
                         sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                         sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+
+                        sh "sh update_image_portal.sh UAT ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                        sh "cat ${UI_COMPOSE}"
+
+                        deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+                        office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+
                     }
-
-                    sh "sh update_image_portal.sh UAT ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                    sh "cat ${UI_COMPOSE}"
-
-                    deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
-                    office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
                 }
             }
@@ -142,13 +145,14 @@ pipeline {
 
                         sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                         sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+                        sh "sh update_image_portal.sh Production ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                        sh "cat ${UI_COMPOSE}"
+
+                        deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
+                        office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+
                     }
 
-                    sh "sh update_image_portal.sh Production ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                    sh "cat ${UI_COMPOSE}"
-
-                    deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
-                    office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
                 }
             }
