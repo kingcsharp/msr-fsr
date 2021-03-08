@@ -98,8 +98,9 @@ export function getArguments(func) {
 }
 
 export function callFunctionWithFilters(service, func, event: LazyLoadEvent, globalDic, extraParams?: any) {
+    const sortField = event.sortField === null ? undefined : event.sortField;
     let filterEvObj: any = {
-        term: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(event.sortField)),
+        term: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(sortField)),
         pageNumber: event.first / event.rows,
         pageSize: event.rows,
         sortAscending: event.sortOrder === 1
