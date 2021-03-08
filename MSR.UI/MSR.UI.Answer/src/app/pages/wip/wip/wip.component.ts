@@ -38,7 +38,7 @@ export class WipComponent implements OnInit {
       new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false, type: EnumColumnType.Number }),
       new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true, type: EnumColumnType.StringArray }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true, type: EnumColumnType.Number }),

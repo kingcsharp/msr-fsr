@@ -151,7 +151,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 foreach (var product in productModels)
                 {
-                    if (!product.ProductSteps.Any())
+                    if (product.ProductSteps != null && !product.ProductSteps.Any())
                     {
                         var procedure =
                             await _unitOfWork.Procedures
@@ -171,8 +171,13 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                             }
                         }
                     }
-                    product.ProductSteps = product.ProductSteps
-                        .OrderBy(x => x.PrintOrder).ToList();
+
+                    if(product.ProductSteps != null) 
+                    {
+                        product.ProductSteps = product.ProductSteps
+                       .OrderBy(x => x.PrintOrder).ToList();
+                    }
+                    
                 }
             }
 
