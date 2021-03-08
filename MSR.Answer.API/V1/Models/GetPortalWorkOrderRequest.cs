@@ -11,7 +11,7 @@ namespace MSR.Answer.API.V1.Models
     {
         [Required]
         public int CustomerId { get; set; }
-        public string PartName { get; set; }
+        public string SubPartName { get; set; }
         public int? PartId { get; set; }
 
         [Required]

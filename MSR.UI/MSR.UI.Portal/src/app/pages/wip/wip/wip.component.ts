@@ -245,7 +245,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
     let isBuyerObservableSubscription = this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.selectedCustomer !== undefined) {
-          this.setCustomerName();
+        this.setCustomerName();
       }
     });
     this.subscriptions.push(isBuyerObservableSubscription);
@@ -395,8 +395,8 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setSubPartsProperties(subpart: any) {
-    subpart.partNumber = subpart.part?.partNumber || 'N/A';
-    subpart.name = subpart.part?.name || 'N/A';
+    subpart.partNumber = subpart.partNumber || 'N/A';
+    subpart.name = subpart.name || 'N/A';
   }
 
   setSubpartspropertiesToWoSubparts(workOrder: PortalWorkOrderPartsView) {
@@ -427,9 +427,9 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentEvent = event;
     }
 
-    const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate };
+    const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate, subPartName: this.subpartTextSearch };
     setTimeout(() => {
-      callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.portal, pageFilters, columnsSaved, this.currentEvent,this.globals.functionDic)
+      callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.portal, pageFilters, columnsSaved, this.currentEvent, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           const responseData = response.object.map((x: any) => {

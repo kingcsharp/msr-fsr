@@ -98,6 +98,15 @@
               ]
             },
             "dev": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -117,12 +126,8 @@
             "production": {
               "browserTarget": "LightBlue:build:production"
             },
-            "hmr": {
-              "hmr": true,
-              "browserTarget": "LightBlue:build:hmr"
-            },
-            "backend": {
-              "browserTarget": "LightBlue:build:backend"
+            "dev": {
+              "browserTarget": "LightBlue:build:dev"
             }
           }
         },

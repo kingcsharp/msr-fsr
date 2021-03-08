@@ -103,8 +103,14 @@ namespace MSR.Infrastructure.Resources.Queries
             }
 
             var portalWorkOrderViews = new List<PortalWorkOrderView>();
-            var pagedData = dbSet.AsQueryable().Where(i => i.CustomerId == portalWorkOrderQueryModel.CustomerId && i.CreatedOn >= portalWorkOrderQueryModel.FromDate && i.CreatedOn <= portalWorkOrderQueryModel.ToDate)
-                                                .ToFilterView(portalWorkOrderQueryModel);
+            var filteredData = dbSet.AsQueryable().Where(i => i.CustomerId == portalWorkOrderQueryModel.CustomerId && i.CreatedOn >= portalWorkOrderQueryModel.FromDate && i.CreatedOn <= portalWorkOrderQueryModel.ToDate);
+
+            if (!string.IsNullOrWhiteSpace(portalWorkOrderQueryModel.SubPartName))
+            {
+                filteredData = filteredData.Where(i => i.SubParts.Contains(portalWorkOrderQueryModel.SubPartName));
+            }
+                                                
+            var pagedData = filteredData.ToFilterView(portalWorkOrderQueryModel);
 
             var pagedList = await pagedData.data.ToListAsync();
             foreach (var view in pagedList)
