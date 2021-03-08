@@ -284,7 +284,7 @@ namespace MSR.Infrastructure.Resources.Services.Document
 
         public async Task<int> GetDocumentTotalRows(GetDocument command)
         {
-            var totalRows = await _unitOfWork.Documents.Query().CreateDocumentQuery(command).CountAsync();
+            var totalRows = await _unitOfWork.Documents.Query().CreateDocumentQuery(command,true).CountAsync();
             return totalRows;
         }
     }
