@@ -29,8 +29,8 @@
                         </th>
                     </tr>
                     <tr>
-                        <th grid-input-filter [dt]="dt" searchField="id"
-                            [hidden]="!commonGrid.isVisibleCol('id',gridSettings)"
+                        <th grid-input-filter [dt]="dt" searchField="userId"
+                            [hidden]="!commonGrid.isVisibleCol('userId',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
                         <th grid-input-filter [dt]="dt" searchField="employeeName"
@@ -67,8 +67,8 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-certification>
                     <tr class="ui-selectable-row">
-                        <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
-                            {{certification.id}}
+                        <td [hidden]="!commonGrid.isVisibleCol('userId', gridSettings)">
+                            {{certification.userId}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('employeeName', gridSettings)">
                             {{certification.employeeName}}

@@ -549,6 +549,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 .Select(i => new TrainingCertificationView()
                     {
                         Id = i.Id,
+                        UserId = i.UserId,
                         CertificationFromDate = i.CertificationFromDate,
                         CertificationToDate = i.CertificationToDate,
                         EmployeeName = i.User.GetFullName(),
