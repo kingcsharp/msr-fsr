@@ -7755,7 +7755,7 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfInvoiceableWorkOrderView>(<any>null);
     }
 
-    portal(customerId: number | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | undefined, toDate: Date | undefined, pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
+    portal(customerId: number | undefined, subPartName: string | null | undefined, partId: number | null | undefined, fromDate: Date | undefined, toDate: Date | undefined, pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Portal?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7764,8 +7764,8 @@ export class WorkOrderService {
             throw new Error("The parameter 'customerId' cannot be null.");
         else if (customerId !== undefined)
             url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
-        if (partName !== undefined && partName !== null)
-            url_ += "PartName=" + encodeURIComponent("" + partName) + "&";
+        if (subPartName !== undefined && subPartName !== null)
+            url_ += "SubPartName=" + encodeURIComponent("" + subPartName) + "&";
         if (partId !== undefined && partId !== null)
             url_ += "PartId=" + encodeURIComponent("" + partId) + "&";
         if (fromDate === null)

@@ -427,7 +427,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentEvent = event;
     }
 
-    const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate, partName: this.subpartTextSearch };
+    const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate, subPartName: this.subpartTextSearch };
     setTimeout(() => {
       callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.portal, pageFilters, columnsSaved, this.currentEvent, this.globals.functionDic)
         .pipe(take(1))
