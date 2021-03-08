@@ -27,7 +27,8 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
+      - eval $(/snap/bin/aws ecr get-login --region $REGION --no-include-email | sed 's|https://||')
+      #- aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
   build:
     commands:
       - echo $TAG
@@ -39,7 +40,6 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
       - docker push $ECR_URL/$ECR_REPO:$TAG
       - echo Updating $COMPOSE
       - cd ../../ && sh scripts/update_image_portal.sh $ENVIRONMENT $TAG $COMPOSE
