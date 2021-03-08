@@ -43,7 +43,7 @@ phases:
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URL
       - docker push $ECR_URL/$ECR_REPO:$TAG
       - echo Updating $COMPOSE
-      - cd ../../ && sh scripts/update_image_portal.sh $ENVIRONMENT $TAG $COMPOSE
+      - sh scripts/update_image_portal.sh $ENVIRONMENT $TAG $COMPOSE
       - cat $COMPOSE
       - ecs-cli configure --cluster $ECS_CLUSTER --default-launch-type FARGATE --config-name $ECS_CONFIG --region $REGION
       - ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID_PARAM --secret-key $AWS_SECRET_ACCESS_KEY_PARAM --profile-name $ECS_PROFILE
