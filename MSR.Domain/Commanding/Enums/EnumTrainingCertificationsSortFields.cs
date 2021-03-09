@@ -7,8 +7,8 @@ namespace MSR.Domain.Commanding.Enums
 {
     public enum EnumTrainingCertificationsSortFields
     {
-        [Description("Id")]
-        Id,
+        [Description("UserId")]
+        UserId,
         [Description("EmployeeName")]
         EmployeeName,
         [Description("CertificationName")]
