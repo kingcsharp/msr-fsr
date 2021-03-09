@@ -101,7 +101,6 @@ export class PartsComponent implements OnInit {
 
   async getPartsForDropdown(): Promise<any> {
     const filtering: LazyLoadEvent = { first: null, rows: null, sortField: null, filters: {} };
-    // this.partsService.partGet(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,'').
 
     let promise = new Promise((resolve, reject) => {
       this.globals.showLoader(true);
