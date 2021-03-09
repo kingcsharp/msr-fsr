@@ -7405,7 +7405,7 @@ export class WorkOrderService {
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string[] | null | undefined, dispostion: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
+    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string[] | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string[] | null | undefined, dispostion: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7417,7 +7417,7 @@ export class WorkOrderService {
         if (customer !== undefined && customer !== null)
             url_ += "Customer=" + encodeURIComponent("" + customer) + "&";
         if (location !== undefined && location !== null)
-            url_ += "Location=" + encodeURIComponent("" + location) + "&";
+            location && location.forEach(item => { url_ += "Location=" + encodeURIComponent("" + item) + "&"; });
         if (serialNumber !== undefined && serialNumber !== null)
             url_ += "SerialNumber=" + encodeURIComponent("" + serialNumber) + "&";
         if (purchaseOrderNumber !== undefined && purchaseOrderNumber !== null)
@@ -19541,6 +19541,7 @@ export interface IAuditActionResultOfIEnumerableOfTrainingCertificationView exte
 
 export class TrainingCertificationView implements ITrainingCertificationView {
     id?: number;
+    userId?: number;
     employeeName?: string | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
@@ -19559,6 +19560,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.userId = _data["userId"];
             this.employeeName = _data["employeeName"];
             this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
             this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
@@ -19577,6 +19579,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["userId"] = this.userId;
         data["employeeName"] = this.employeeName;
         data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
@@ -19588,6 +19591,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
 
 export interface ITrainingCertificationView {
     id?: number;
+    userId?: number;
     employeeName?: string | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
