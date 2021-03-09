@@ -95,6 +95,11 @@ namespace MSR.Infrastructure.Resources.Queries
             {
                 portalWorkOrderQueryModel.Sort = portalWorkOrderQueryModel.Sort.Where(i => i.Field.ToLower() != "supportinginfo");
             }
+            if(disposition != null)
+            {
+                portalWorkOrderQueryModel.Sort = portalWorkOrderQueryModel.Sort.Where(i => i.Field.ToLower() != "disposition");
+            }
+
             if(startDateFilter != null)
             {
                 startDateFilter.IsNullable = true;

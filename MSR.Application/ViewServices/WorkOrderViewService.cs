@@ -51,7 +51,14 @@ namespace MSR.Application.ViewServices
             var portalSubParts = new List<PortalSubPart>();
             if (!string.IsNullOrWhiteSpace(portalWorkOrderQueryModel.SubPartName))
             {
-                portalSubParts = await _unitOfWork.PortalSubParts.Query().Where(i => i.Name == portalWorkOrderQueryModel.SubPartName).ToListAsync();
+                try
+                {
+                    portalSubParts = await _unitOfWork.PortalSubParts.Query().Where(i => i.Name.Contains(portalWorkOrderQueryModel.SubPartName)).ToListAsync();
+                }
+                catch(Exception ex)
+                {
+                    var data = ex.Message;
+                }
             }
             var workOrderData = await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, portalWorkOrderQueryModel, portalSubParts.Select(i => i.Id).ToList());
             var workOrderIds = workOrderData.Data.Select(i => i.WorkOrderId).ToList();
