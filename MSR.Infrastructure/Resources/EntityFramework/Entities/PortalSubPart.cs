@@ -1,11 +1,10 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-//[{id, serialNumber, partNumber, cycleCount, qty, name}]
-namespace MSR.Domain.Views
+namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    public class PortalSubPartView
+    [Table("PortalSubParts")]
+    public class PortalSubPart: Entity
     {
-        public int Id { get; set; }
         public int WorkOrderId { get; set; }
         public int WorkOrderPartId { get; set; }
         public string SerialNumber { get; set; }
