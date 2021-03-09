@@ -82,6 +82,11 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 })
                 .FirstOrDefaultAsync();
 
+            if (user == null)
+            {
+                throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
+            }
+
             user.Roles = LoadChildRoles(user.Roles, childRoles);
 
             var loadRefs = await _unitOfWork.MenuRoles.Query()
@@ -115,11 +120,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
             foreach (var userRole in user.Roles)
             {
                 userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).Distinct().ToList();
-            }
-
-            if (user == null)
-            {
-                throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
             }
 
             if (user.IsAnswerUser.HasValue && !user.IsAnswerUser.Value && command.Host.IndexOf("answer") != -1 && command.Host.IndexOf("localhost") == -1)

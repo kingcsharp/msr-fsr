@@ -1,5 +1,6 @@
 import * as moment from "moment";
 import { LazyLoadEvent } from "primeng/api";
+import { Observable } from "rxjs";
 import { Exception, Filter, Sort } from "../../../app/services/api.client.generated";
 import { environment as env } from '../../../environments/environment';
 import { EnumColumnType } from "../enums/EnumColumnType";
@@ -97,11 +98,13 @@ export function getArguments(func) {
         .filter(String);
 }
 
-export function callFunctionWithFilters(service, func, event: LazyLoadEvent, globalDic, extraParams?: any) {
+export function callFunctionWithFilters(service, func, event: LazyLoadEvent, globalDic, extraParams?: any):Observable<any>{
     const sortField = event.sortField === null ? undefined : event.sortField;
+    const pageNumber = event.first === null || event.rows === null ? null : event.first / event.rows;
+
     let filterEvObj: any = {
         term: capitalizeFirstLetter(removeDotAndCamelCaseFromStr(sortField)),
-        pageNumber: event.first / event.rows,
+        pageNumber: pageNumber,
         pageSize: event.rows,
         sortAscending: event.sortOrder === 1
     }
