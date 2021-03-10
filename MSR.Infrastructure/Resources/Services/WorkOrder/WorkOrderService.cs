@@ -199,13 +199,13 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var procedureStepMonitors = _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId));
             var totalLaborTime = (decimal)0.0;
 
+            workOrderEntity.HasMonitor = workOrderEntity.WorkOrderTasks.Any(i => i.WorkOrderTaskMonitors.Any());
             foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
             {
                 var procedureStep = await procedureSteps.FirstOrDefaultAsync(s => s.Id == workOrderTask.ProcedureStepId);
                 workOrderTask.Title = procedureStep.Title;
                 workOrderTask.Description = procedureStep.StepText;
                 totalLaborTime += (decimal)procedureStep.LaborTime.GetValueOrDefault(0.0);
-
                 foreach (var workOrderTaskMonitor in workOrderTask.WorkOrderTaskMonitors)
                 {
 
@@ -726,6 +726,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 statEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
             }
 
+           
+
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(workOrderTaskEntity, workOrderTaskEntity.Id);
 
@@ -763,6 +765,19 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var workOrderEntity = workOrderTaskEntity.WorkOrder;
             _unitOfWork.WorkOrders.LoadCollection(workOrderEntity, "WorkOrderTasks");
+
+            var workOrderTaskIds = workOrderEntity.WorkOrderTasks.Select(i => i.Id).ToList();
+            var fileMaps = await _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).Where(j => j.EntityTableName == "WorkOrderTask" && workOrderTaskIds.Contains(j.EntityId)).ToListAsync();
+            var workOrderFileEntities = fileMaps.Where(i => i.FileObject != null).Select(j => j.FileObject).ToList();
+
+            workOrderEntity.HasFile = workOrderFileEntities.Any() 
+                                            ? workOrderFileEntities.Any(i => !i.ContentType.StartsWith("image"))
+                                            : false;
+            workOrderEntity.HasPhoto = workOrderFileEntities.Any()
+                                            ? workOrderFileEntities.Any(i => i.ContentType.StartsWith("image"))
+                                            : false;
+           
+
             // "DONE" states are:
             // 4   Cancelled
             // 8   Closed
@@ -782,10 +797,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 if (!workOrderTaskEntity.WorkOrder.ActualEndDate.HasValue)
                 {
                     workOrderEntity.ActualEndDate = DateTime.Now;
-                    _unitOfWork.WorkOrders.Update(workOrderEntity);
-                    await _unitOfWork.SaveChangesAsync();
                 }
             }
+
+            _unitOfWork.WorkOrders.Update(workOrderEntity);
+            await _unitOfWork.SaveChangesAsync();
 
             _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
             {

@@ -13,6 +13,8 @@ using System.Linq;
 using MSR.Domain.Abstractions.Services;
 using System;
 using MSR.Domain.Models.Query;
+using MSR.Domain.Helpers;
+using Newtonsoft.Json;
 
 namespace MSR.Application.ViewServices
 {
@@ -46,7 +48,27 @@ namespace MSR.Application.ViewServices
 
         public async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenuAsync(GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
         {
-            return await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, portalWorkOrderQueryModel);
+            var portalSubParts = new List<PortalSubPart>();
+            if (!string.IsNullOrWhiteSpace(portalWorkOrderQueryModel.SubPartName))
+            {
+                portalSubParts = await _unitOfWork.PortalSubParts.Query().Where(i => i.Name.Contains(portalWorkOrderQueryModel.SubPartName)).ToListAsync();
+            }
+
+            var workOrderData = await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, portalWorkOrderQueryModel, portalSubParts.Select(i => i.WorkOrderId).ToList());
+            var workOrderIds = workOrderData.Data.Select(i => i.WorkOrderId).ToList();
+
+            var messages = await _unitOfWork.WorkOrderMessages.Query().Include(i => i.Created).Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
+
+            var allPortalSubParts = await _unitOfWork.PortalSubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
+
+            foreach(var workOrder in workOrderData.Data)
+            {
+                workOrder.SubParts = allPortalSubParts.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<PortalSubPartView>(i)).ToList();
+                workOrder.Messages = messages.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<WorkOrderMessageModel>(i)).ToList();
+                workOrder.Disposition = JsonConvert.SerializeObject(messages.Select(i => new { i.Created.FullName, i.CreatedOn, i.Message }).ToList());
+            }
+
+            return workOrderData;
         }
     }
 }

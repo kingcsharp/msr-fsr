@@ -118,7 +118,6 @@ namespace MSR.Infrastructure.Resources.Projections
             CompanyPartNumber = i.CompanyPartNumber,
             CustomerId = i.CustomerId,
             CycleCount = i.CycleCount,
-            Disposition = i.Disposition,
             DueDate = i.DueDate,
             HasFiles = i.HasFiles,
             HasMonitors = i.HasMonitors,
@@ -144,7 +143,6 @@ namespace MSR.Infrastructure.Resources.Projections
             SerialNumber = i.SerialNumber,
             StartDate = i.StartDate,
             Status = i.Status,
-            SubParts = i.SubParts,
             WorkOrderId = i.WorkOrderId,
             CreatedOn = i.CreatedOn
         };

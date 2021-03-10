@@ -9,11 +9,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int CustomerId { get; set; }
         public string CompanyPartNumber { get; set; }
         public int? CycleCount { get; set; }
-        public string Disposition { get; set; }
         public DateTime? DueDate { get; set; }
+        [Column("HasFile")]
         public bool HasFiles { get; set; }
+        [Column("HasMonitor")]
         public bool HasMonitors { get; set; }
         public bool HasNCRs { get; set; }
+        [Column("HasPhoto")]
         public bool HasPhotos { get; set; }
         public decimal? InvoiceAmount { get; set; }
         public DateTime? InvoiceDate { get; set; }
@@ -34,7 +36,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string SerialNumber { get; set; }
         public DateTime? StartDate { get; set; }
         public string Status { get; set; }
-        public string SubParts { get; set; }
         public int WorkOrderId { get; set; }
         public DateTime CreatedOn { get; set; }
     }

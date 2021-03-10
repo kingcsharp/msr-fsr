@@ -83,16 +83,23 @@ namespace MSR.Infrastructure.Resources.Queries
 
         }
 
-        public static async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
+        public static async Task<(ICollection<PortalWorkOrderView> Data, int TotalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, 
+                                                                                                                GetPortalWorkOrderQueryModel portalWorkOrderQueryModel,List<int> subPartWorkOrderIds)
         {
             var startDateFilter = portalWorkOrderQueryModel.Filters?.FirstOrDefault(i => i.Field.ToLower() == "startdate");
             var dueDateFilter = portalWorkOrderQueryModel.Filters?.FirstOrDefault(i => i.Field.ToLower() == "duedate");
             var supportInfoSort = portalWorkOrderQueryModel.Sort?.FirstOrDefault(i => i.Field.ToLower() == "supportinginfo");
+            var disposition = portalWorkOrderQueryModel.Sort?.FirstOrDefault(i => i.Field.ToLower() == "disposition");
 
             if(supportInfoSort != null)
             {
-                supportInfoSort.Field = "Disposition";
+                portalWorkOrderQueryModel.Sort = portalWorkOrderQueryModel.Sort.Where(i => i.Field.ToLower() != "supportinginfo");
             }
+            if(disposition != null)
+            {
+                portalWorkOrderQueryModel.Sort = portalWorkOrderQueryModel.Sort.Where(i => i.Field.ToLower() != "disposition");
+            }
+
             if(startDateFilter != null)
             {
                 startDateFilter.IsNullable = true;
@@ -107,73 +114,46 @@ namespace MSR.Infrastructure.Resources.Queries
 
             if (!string.IsNullOrWhiteSpace(portalWorkOrderQueryModel.SubPartName))
             {
-                filteredData = filteredData.Where(i => i.SubParts.Contains(portalWorkOrderQueryModel.SubPartName));
+                filteredData = filteredData.Where(i => subPartWorkOrderIds.Contains(i.WorkOrderId));
             }
                                                 
             var pagedData = filteredData.ToFilterView(portalWorkOrderQueryModel);
 
             var pagedList = await pagedData.data.ToListAsync();
-            foreach (var view in pagedList)
+            return (pagedList.Select(view => new PortalWorkOrderView()
             {
-                var portalWorkOrderView = new PortalWorkOrderView()
-                {
-                    Id = view.WorkOrderId,
-                    WorkOrderId = view.WorkOrderId,
-                    SubParts = new List<PortalSubPartView>(),
-                    CompanyPartNumber = view.CompanyPartNumber,
-                    CustomerId = view.CustomerId,
-                    CycleCount = view.CycleCount,
-                    Disposition = view.Disposition,
-                    DueDate = view.DueDate,
-                    HasFiles = view.HasFiles,
-                    HasMonitors = view.HasMonitors,
-                    HasNCRs = view.HasNCRs,
-                    HasPhotos = view.HasPhotos,
-                    InvoiceAmount = view.InvoiceAmount,
-                    InvoiceDate = view.InvoiceDate,
-                    InvoiceName = view.InvoiceName,
-                    Messages = new List<WorkOrderMessageModel>(),
-                    PartId = view.PartId,
-                    PartName = view.PartName,
-                    PercentageOfExpectedDurationTimeLogged = view.PercentageOfExpectedDurationTimeLogged,
-                    PercentageOfExpectedDurationTimeLoggedDenominator = view.PercentageOfExpectedDurationTimeLoggedDenominator,
-                    PercentageOfExpectedDurationTimeLoggedNumerator = view.PercentageOfExpectedDurationTimeLoggedNumerator,
-                    PercentageOfTasksCompleted = view.PercentageOfTasksCompleted,
-                    PercentageOfTasksCompletedDenominator = view.PercentageOfTasksCompletedDenominator,
-                    PercentageOfTasksCompletedNumerator = view.PercentageOfTasksCompletedNumerator,
-                    Price = view.Price,
-                    ProcedureName = view.ProcedureName,
-                    ProductName = view.ProductName,
-                    PurchaseOrderNumber = view.PurchaseOrderNumber,
-                    Qty = view.Qty,
-                    SerialNumber = view.SerialNumber,
-                    StartDate = view.StartDate,
-                    Status = view.Status
-                };
-
-                if (!string.IsNullOrWhiteSpace(view.Disposition))
-                {
-                    var messages = (from messageItem in view.Disposition.Split(';', StringSplitOptions.RemoveEmptyEntries)
-                                    let eachMessage = messageItem.Split(',')
-                                    select new WorkOrderMessageModel()
-                                    {
-                                        Date = DateTime.Parse(eachMessage[1]),
-                                        Name = eachMessage[0],
-                                        Message = eachMessage[2]
-                                    }).ToList();
-
-                    portalWorkOrderView.Messages = messages;
-                }
-                var subParts = pagedList.First(i => i.WorkOrderId == view.WorkOrderId).SubParts;
-                if (!string.IsNullOrWhiteSpace(subParts))
-                {
-                    var subPartModels = JsonConvert.DeserializeObject<List<PortalSubPartView>>(subParts);
-                    portalWorkOrderView.SubParts = subPartModels;
-                }
-                portalWorkOrderViews.Add(portalWorkOrderView);
-            }
-
-            return (portalWorkOrderViews.ToList(), pagedData.totalRows);
+                Id = view.WorkOrderId,
+                WorkOrderId = view.WorkOrderId,
+                SubParts = new List<PortalSubPartView>(),
+                CompanyPartNumber = view.CompanyPartNumber,
+                CustomerId = view.CustomerId,
+                CycleCount = view.CycleCount,
+                DueDate = view.DueDate,
+                HasFiles = view.HasFiles,
+                HasMonitors = view.HasMonitors,
+                HasNCRs = view.HasNCRs,
+                HasPhotos = view.HasPhotos,
+                InvoiceAmount = view.InvoiceAmount,
+                InvoiceDate = view.InvoiceDate,
+                InvoiceName = view.InvoiceName,
+                Messages = new List<WorkOrderMessageModel>(),
+                PartId = view.PartId,
+                PartName = view.PartName,
+                PercentageOfExpectedDurationTimeLogged = view.PercentageOfExpectedDurationTimeLogged,
+                PercentageOfExpectedDurationTimeLoggedDenominator = view.PercentageOfExpectedDurationTimeLoggedDenominator,
+                PercentageOfExpectedDurationTimeLoggedNumerator = view.PercentageOfExpectedDurationTimeLoggedNumerator,
+                PercentageOfTasksCompleted = view.PercentageOfTasksCompleted,
+                PercentageOfTasksCompletedDenominator = view.PercentageOfTasksCompletedDenominator,
+                PercentageOfTasksCompletedNumerator = view.PercentageOfTasksCompletedNumerator,
+                Price = view.Price,
+                ProcedureName = view.ProcedureName,
+                ProductName = view.ProductName,
+                PurchaseOrderNumber = view.PurchaseOrderNumber,
+                Qty = view.Qty,
+                SerialNumber = view.SerialNumber,
+                StartDate = view.StartDate,
+                Status = view.Status
+            }).ToList(), pagedData.totalRows);
         }
 
         private static (int PercentageOfTasksCompletedDenominator, int PercentageOfTasksCompletedNumerator, decimal PercentageOfTasksCompleted,decimal PercentageOfExpectedDurationTimeLoggedNumerator, 
