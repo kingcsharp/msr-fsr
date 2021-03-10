@@ -6,5 +6,6 @@
         public int ParentId { get; set; }
         public int PartId { get; set; }
         public int Qty { get; set; }
+        public int WorkOrderId { get; set; }
     }
 }

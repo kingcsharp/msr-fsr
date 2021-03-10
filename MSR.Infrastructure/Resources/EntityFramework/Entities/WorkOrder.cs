@@ -26,6 +26,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public DateTime? ActualEndDate { get; set; }
 
         public bool HasNCR { get; set; }
+        public bool HasFile { get; set; }
+        public bool HasMonitor { get; set; }
+        public bool HasPhoto { get; set; }
 
         public int LocationId { get; set; }
 
