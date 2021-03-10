@@ -98,9 +98,7 @@ namespace MSR.Infrastructure.Resources.Services.Menu
 
         public async Task<bool> RemoveMenuRoleMap(RemoveMenuRoleMap command)
         {
-            var menuRole = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuItem)
-                                                              .Include(i => i.Role)
-                                                              .Include(i => i.MenuRolePermission)
+            var menuRole = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuRolePermission)
                                                               .FirstOrDefaultAsync(i => i.MenuItemId == command.MenuId && i.RoleId == command.RoleId);
 
             if(menuRole is null)
