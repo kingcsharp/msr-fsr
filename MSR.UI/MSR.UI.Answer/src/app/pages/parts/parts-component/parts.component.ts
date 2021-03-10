@@ -99,10 +99,31 @@ export class PartsComponent implements OnInit {
     }, 10);
   }
 
-  getPartsDropdown() {
+  async getPartsForDropdown(): Promise<any> {
+    const filtering: LazyLoadEvent = { first: null, rows: null, sortField: null, filters: {} };
+
+    let promise = new Promise((resolve, reject) => {
+      this.globals.showLoader(true);
+      callFunctionWithFilters(this.partsService, this.partsService.partGet, filtering, this.globals.functionDic)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          const responseResolved = response.object.map((elem) => {
+            elem.isActive = elem.isActive === null ? false : elem.isActive;
+            return elem;
+          });
+
+          resolve(responseResolved);
+        }));
+    });
+    return promise;
+
+  }
+
+  async getPartsDropdown() {
     const ctrl = this;
     this.emptyArr(ctrl.allParts);
-    const allPartsObjects = this.getAllPartsAndUsedIn();
+    const parts = await this.getPartsForDropdown();
+    const allPartsObjects = this.getAllPartsAndUsedIn(parts);
     Object.keys(allPartsObjects).forEach(function (key) {
       const item = allPartsObjects[key];
       const usedIn = item.usedIn.join(',');
@@ -111,21 +132,9 @@ export class PartsComponent implements OnInit {
     });
   }
 
-  uploadParts(ev) {
-    // ev.forEach((element: PartModel) => {
-    //   const index = this.data.findIndex(x => x.id === element.id);
-    //   if (index !== -1) {
-    //     this.data.splice(index, 1);
-    //     this.data.splice(index, 0, element);
-    //   } else {
-    //     this.data.push(element);
-    //   }
-    // });
-  }
-
-  getAllPartsAndUsedIn() {
+  getAllPartsAndUsedIn(parts) {
     let partsDictionary = {};
-    this.data.forEach((element: PartModel) => {
+    parts.forEach((element: PartModel) => {
       if (partsDictionary[element.id] === undefined) {
         partsDictionary[element.id] = { element: element, usedIn: [] };
         if (element.isKit) {
@@ -154,8 +163,8 @@ export class PartsComponent implements OnInit {
     return this.globals.hasPrivilege(this.menuItems.Parts, privName);
   }
 
-  showDialog(part: PartModel) {
-    this.getPartsDropdown();
+  async showDialog(part: PartModel) {
+    await this.getPartsDropdown();
     this.uploadedFiles = [];
     this.currPart = this.getPart(part);
     if (this.currPart.segregationType === undefined) {

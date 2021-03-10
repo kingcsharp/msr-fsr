@@ -19541,6 +19541,7 @@ export interface IAuditActionResultOfIEnumerableOfTrainingCertificationView exte
 
 export class TrainingCertificationView implements ITrainingCertificationView {
     id?: number;
+    userId?: number;
     employeeName?: string | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
@@ -19559,6 +19560,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.userId = _data["userId"];
             this.employeeName = _data["employeeName"];
             this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
             this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
@@ -19577,6 +19579,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["userId"] = this.userId;
         data["employeeName"] = this.employeeName;
         data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
@@ -19588,6 +19591,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
 
 export interface ITrainingCertificationView {
     id?: number;
+    userId?: number;
     employeeName?: string | undefined;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
