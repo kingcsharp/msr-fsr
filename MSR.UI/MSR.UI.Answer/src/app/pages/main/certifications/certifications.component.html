@@ -13,8 +13,6 @@
                 [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
                 [rowsPerPageOptions]="[10,25,50,100]"  [paginator]="true"  [filterDelay]="0"
                 [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getTrainingCertification($event)" [totalRecords]="totalRecords"
-
-
                 stateStorage="local"  stateKey="{{gridStorageId}}">
                 <ng-template pTemplate="caption">
                     <div class="text-right">
@@ -31,11 +29,17 @@
                         </th>
                     </tr>
                     <tr>
+                        <th grid-input-filter [dt]="dt" searchField="userId"
+                            [hidden]="!commonGrid.isVisibleCol('userId',gridSettings)"
+                            [gridSettings]="gridSettings">
+                        </th>
                         <th grid-input-filter [dt]="dt" searchField="employeeName"
-                            [hidden]="!commonGrid.isVisibleCol('employeeName',gridSettings)" [gridSettings]="gridSettings">
+                            [hidden]="!commonGrid.isVisibleCol('employeeName',gridSettings)"
+                            [gridSettings]="gridSettings">
                         </th>
                         <th grid-input-filter [dt]="dt" searchField="certificationName"
-                            [hidden]="!commonGrid.isVisibleCol('certificationName',gridSettings)" [gridSettings]="gridSettings">
+                            [hidden]="!commonGrid.isVisibleCol('certificationName',gridSettings)"
+                            [gridSettings]="gridSettings">
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('certificationFromDate',gridSettings)">
                             <div class="position-relative" tooltip="Search by From Date">
@@ -63,8 +67,8 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-certification>
                     <tr class="ui-selectable-row">
-                        <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
-                            {{certification.id}}
+                        <td [hidden]="!commonGrid.isVisibleCol('userId', gridSettings)">
+                            {{certification.userId}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('employeeName', gridSettings)">
                             {{certification.employeeName}}
