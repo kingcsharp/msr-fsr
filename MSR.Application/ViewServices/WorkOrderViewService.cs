@@ -60,19 +60,16 @@ namespace MSR.Application.ViewServices
                     var data = ex.Message;
                 }
             }
-            var workOrderData = await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, portalWorkOrderQueryModel, portalSubParts.Select(i => i.Id).ToList());
+            var workOrderData = await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, portalWorkOrderQueryModel, portalSubParts.Select(i => i.WorkOrderId).ToList());
             var workOrderIds = workOrderData.Data.Select(i => i.WorkOrderId).ToList();
 
             var messages = await _unitOfWork.WorkOrderMessages.Query().Include(i => i.Created).Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
-            if (!portalSubParts.Any())
-            {
-                //We didn't get any sub parts initially because it wasn't a Sub Part Search or there were none.  So let's try and get the list by WorkOrders
-                portalSubParts = await _unitOfWork.PortalSubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
-            }
-            
+
+            var allPortalSubParts = await _unitOfWork.PortalSubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
+
             foreach(var workOrder in workOrderData.Data)
             {
-                workOrder.SubParts = portalSubParts.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<PortalSubPartView>(i)).ToList();
+                workOrder.SubParts = allPortalSubParts.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<PortalSubPartView>(i)).ToList();
                 workOrder.Messages = messages.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<WorkOrderMessageModel>(i)).ToList();
                 workOrder.Disposition = JsonConvert.SerializeObject(messages.Select(i => new { i.Created.FullName, i.CreatedOn, i.Message }).ToList());
             }

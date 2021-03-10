@@ -10,8 +10,8 @@ namespace MSR.Domain.Views
         public int WorkOrderPartId { get; set; }
         public string SerialNumber { get; set; }
         public string PartNumber { get; set; }
-        public int CycleCount { get; set; }
-        public int Qty { get; set; }
+        public int? CycleCount { get; set; }
+        public int? Qty { get; set; }
         public string Name { get; set; }
     }
 }

@@ -8,8 +8,7 @@
     [paginator]="gridSaved.paginator" currentPageReportTemplate="Showing {first}-{last} of {{totalRecords}}"
     [totalRecords]="totalRecords" 
     [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getLazyLoadReport($event)" [totalRecords]="totalRecords"
-    
-    [filterDelay]="0" stateStorage="local" stateKey="{{gridSaved.storageId}}" (onFilter)="handleFilter($event,dt)">
+        stateStorage="local" stateKey="{{gridSaved.storageId}}" (onFilter)="handleFilter($event,dt)">
     <ng-template pTemplate="caption">
         <div class="pull-left">
             <h3 *ngIf="reportInfo.name.length > 0">
