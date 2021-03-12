@@ -30,7 +30,7 @@ namespace MSR.Domain.Views
         public DateTime? CreatedOn { get; set; }
         public int LastUpdatedBy { get; set; }
         public DateTime? LastUpdatedOn { get; set; }
-        public string? Dispostion { get; set; }
+        public string? Disposition { get; set; }
         public EnumSegregationType SegregationType { get;set;}
         public string WorkOrderItemNumber
         {

@@ -21,7 +21,7 @@ namespace MSR.Answer.API.V1.Models
         public string Product { get; set; }
         public string Procedure { get; set; }
         public string[]? Status { get; set; }
-        public string Dispostion { get; set; }
+        public string Disposition { get; set; }
         
     }
 }
