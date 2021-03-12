@@ -7399,13 +7399,13 @@ export class WorkOrderService {
      * @param product (optional) 
      * @param procedure (optional) 
      * @param status (optional) 
-     * @param dispostion (optional) 
+     * @param disposition (optional) 
      * @param term (optional) 
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string[] | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string[] | null | undefined, dispostion: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
+    history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string[] | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string[] | null | undefined, disposition: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7438,8 +7438,8 @@ export class WorkOrderService {
             url_ += "Procedure=" + encodeURIComponent("" + procedure) + "&";
         if (status !== undefined && status !== null)
             status && status.forEach(item => { url_ += "Status=" + encodeURIComponent("" + item) + "&"; });
-        if (dispostion !== undefined && dispostion !== null)
-            url_ += "Dispostion=" + encodeURIComponent("" + dispostion) + "&";
+        if (disposition !== undefined && disposition !== null)
+            url_ += "Disposition=" + encodeURIComponent("" + disposition) + "&";
         if (term !== undefined && term !== null)
             url_ += "Term=" + encodeURIComponent("" + term) + "&";
         if (pageNumber !== undefined && pageNumber !== null)
@@ -13275,6 +13275,7 @@ export class SubPartModel implements ISubPartModel {
     parentId?: number;
     partId?: number;
     qty?: number;
+    workOrderId?: number;
 
     constructor(data?: ISubPartModel) {
         if (data) {
@@ -13291,6 +13292,7 @@ export class SubPartModel implements ISubPartModel {
             this.parentId = _data["parentId"];
             this.partId = _data["partId"];
             this.qty = _data["qty"];
+            this.workOrderId = _data["workOrderId"];
         }
     }
 
@@ -13307,6 +13309,7 @@ export class SubPartModel implements ISubPartModel {
         data["parentId"] = this.parentId;
         data["partId"] = this.partId;
         data["qty"] = this.qty;
+        data["workOrderId"] = this.workOrderId;
         return data; 
     }
 }
@@ -13316,6 +13319,7 @@ export interface ISubPartModel {
     parentId?: number;
     partId?: number;
     qty?: number;
+    workOrderId?: number;
 }
 
 /** Base class for an API call with a typed result */
@@ -20205,7 +20209,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
     createdOn?: Date | undefined;
     lastUpdatedBy?: number;
     lastUpdatedOn?: Date | undefined;
-    dispostion?: string | undefined;
+    disposition?: string | undefined;
     segregationType?: EnumSegregationType;
     workOrderItemNumber?: string | undefined;
 
@@ -20240,7 +20244,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.lastUpdatedBy = _data["lastUpdatedBy"];
             this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
-            this.dispostion = _data["dispostion"];
+            this.disposition = _data["disposition"];
             this.segregationType = _data["segregationType"];
             this.workOrderItemNumber = _data["workOrderItemNumber"];
         }
@@ -20275,7 +20279,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         data["lastUpdatedBy"] = this.lastUpdatedBy;
         data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
-        data["dispostion"] = this.dispostion;
+        data["disposition"] = this.disposition;
         data["segregationType"] = this.segregationType;
         data["workOrderItemNumber"] = this.workOrderItemNumber;
         return data; 
@@ -20303,7 +20307,7 @@ export interface IWorkOrderHistoryView {
     createdOn?: Date | undefined;
     lastUpdatedBy?: number;
     lastUpdatedOn?: Date | undefined;
-    dispostion?: string | undefined;
+    disposition?: string | undefined;
     segregationType?: EnumSegregationType;
     workOrderItemNumber?: string | undefined;
 }
@@ -21167,10 +21171,12 @@ export interface IPortalWorkOrderView {
 
 export class PortalSubPartView implements IPortalSubPartView {
     id?: number;
+    workOrderId?: number;
+    workOrderPartId?: number;
     serialNumber?: string | undefined;
     partNumber?: string | undefined;
-    cycleCount?: number;
-    qty?: number;
+    cycleCount?: number | undefined;
+    qty?: number | undefined;
     name?: string | undefined;
 
     constructor(data?: IPortalSubPartView) {
@@ -21185,6 +21191,8 @@ export class PortalSubPartView implements IPortalSubPartView {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.workOrderId = _data["workOrderId"];
+            this.workOrderPartId = _data["workOrderPartId"];
             this.serialNumber = _data["serialNumber"];
             this.partNumber = _data["partNumber"];
             this.cycleCount = _data["cycleCount"];
@@ -21203,6 +21211,8 @@ export class PortalSubPartView implements IPortalSubPartView {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["workOrderId"] = this.workOrderId;
+        data["workOrderPartId"] = this.workOrderPartId;
         data["serialNumber"] = this.serialNumber;
         data["partNumber"] = this.partNumber;
         data["cycleCount"] = this.cycleCount;
@@ -21214,10 +21224,12 @@ export class PortalSubPartView implements IPortalSubPartView {
 
 export interface IPortalSubPartView {
     id?: number;
+    workOrderId?: number;
+    workOrderPartId?: number;
     serialNumber?: string | undefined;
     partNumber?: string | undefined;
-    cycleCount?: number;
-    qty?: number;
+    cycleCount?: number | undefined;
+    qty?: number | undefined;
     name?: string | undefined;
 }
 

@@ -21,6 +21,6 @@ namespace MSR.Domain.Commands
         public string Product { get; set; }
         public string Procedure { get; set; }
         public string[]? Status { get; set; }
-        public string Dispostion { get; set; }
+        public string Disposition { get; set; }
     }
 }

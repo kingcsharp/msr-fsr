@@ -35,7 +35,7 @@ namespace MSR.Domain.Commanding.Enums
         Procedure,
         [Description("Status")]
         Status,
-        [Description("Dispostion")]
-        Dispostion
+        [Description("Disposition")]
+        Disposition
     }
 }
