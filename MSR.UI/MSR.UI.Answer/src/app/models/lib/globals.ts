@@ -80,7 +80,7 @@ export class Globals {
         "product",
         "procedure",
         "status",
-        "dispostion",
+        "disposition",
         "term",
         "pageNumber",
         "pageSize",
