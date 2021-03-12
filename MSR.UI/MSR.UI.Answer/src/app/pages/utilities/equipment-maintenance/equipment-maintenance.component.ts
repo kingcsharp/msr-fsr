@@ -139,7 +139,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
       { label: 'Requested', value: 'Requested' },
       { label: 'Assigned', value: 'Assigned' },
       { label: 'Complete', value: 'Complete' },
-      { label: 'Scheduled', value: 'Scheduled' }]
+      { label: 'Scheduled', value: 'Scheduled' }];
 
     this.getUsers();
   }

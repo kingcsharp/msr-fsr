@@ -37,7 +37,7 @@ export class HelpCreateComponent implements OnInit {
   ngOnInit(): void {
 
     this.globals.showLoader(true);
-    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).subscribe(response => {
+    this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(response => {
       this.availableRoles = this.availableRoles.concat(response.object);
 
       this.loadHelpPage();
@@ -49,7 +49,7 @@ export class HelpCreateComponent implements OnInit {
   loadFriendlyUrls() {
 
     this.globals.showLoader(true);
-    this.helpService.helpGet(null, null, null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
+    this.helpService.helpGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
       let friendlyUrlsUsed = response.object.map(s => s.friendlyURL) as Array<string>;
 
@@ -79,7 +79,7 @@ export class HelpCreateComponent implements OnInit {
       if (this.helpPageToEditId !== 0) {
 
         this.globals.showLoader(true);
-        this.helpService.helpGet(this.helpPageToEditId, null,null,null,null,null,null,null, env.apiVersion).subscribe(responseHandler((response) => {
+        this.helpService.helpGet(this.helpPageToEditId, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
           this.helpPageToEdit = response.object[0] as HelpPage;
           this.helpPageToEdit.roles.forEach(role => {

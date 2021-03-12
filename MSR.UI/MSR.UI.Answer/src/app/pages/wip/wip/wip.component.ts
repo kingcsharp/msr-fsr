@@ -62,7 +62,7 @@ export class WipComponent implements OnInit {
     this.globals.showLoader(true);
     setTimeout(() => {
       // this.workOrderService.menu(0, 100, null, null, env.apiVersion)
-      callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.menu, {}, this.gridSettings, event,this.globals.functionDic)
+      callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.menu, {}, this.gridSettings, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.totalRecords = response.totalNumberOfRecords;

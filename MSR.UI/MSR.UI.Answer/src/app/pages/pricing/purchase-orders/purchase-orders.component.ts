@@ -10,7 +10,7 @@ import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, Up
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
-import { copyObj,callFunctionWithFilters } from '../../../models/lib/Utils';
+import { copyObj, callFunctionWithFilters } from '../../../models/lib/Utils';
 import { LazyLoadEvent } from 'primeng/api';
 
 declare let jQuery: any;
@@ -192,7 +192,7 @@ export class PurchaseOrdersComponent implements OnInit {
       return ctrl.customersData;
     }
     this.customerService.customerGet(null, null, null, null, null, null, null
-      , true, null, null, null, null, null, null, null, null, null, null,null,env.apiVersion).pipe(take(1))
+      , true, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.customersData = response.object;
         ctrl.getCustomersFlag = true;
@@ -235,9 +235,9 @@ export class PurchaseOrdersComponent implements OnInit {
     }
   }
 
-  isPoFormValid(){
+  isPoFormValid() {
 
-    if(this.currentPO.openDate === undefined || this.currentPO.openDate === null){
+    if (this.currentPO.openDate === undefined || this.currentPO.openDate === null) {
       this.formIsValid = false;
     } else {
       this.formIsValid = true;

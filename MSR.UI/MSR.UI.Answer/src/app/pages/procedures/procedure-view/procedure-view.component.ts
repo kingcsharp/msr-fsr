@@ -25,8 +25,8 @@ export class ProcedureViewComponent implements OnInit {
 
       if (this.procedure.id !== 0) {
 
-        this.procedureService.procedureGet(this.procedure.id,null,null,null,null,null,null,
-          null,null,null,null,null,null,null, env.apiVersion).subscribe(responseHandler((response) => {
+        this.procedureService.procedureGet(this.procedure.id, null, null, null, null, null, null,
+          null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
             this.procedure = response.object[0];
 
             this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((stepGetResponse) => {
