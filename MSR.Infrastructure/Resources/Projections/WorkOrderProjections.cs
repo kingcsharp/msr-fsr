@@ -66,7 +66,7 @@ namespace MSR.Infrastructure.Resources.Projections
         public static Expression<Func<WorkOrderStatusSummary, dynamic>> WorkOrderStatusView => i => new
         {
             ProductName = i.ProductName,
-            PartNumber = i.WorkOrderPartSerialNumber,
+            PartNumber = i.PartNumber,
             ProcedureName = i.ProcedureName,
             LocationName = i.LocationName,
             WorkOrderSummary = new
