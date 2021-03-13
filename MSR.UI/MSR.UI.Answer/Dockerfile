@@ -1,5 +1,5 @@
 # Build
-FROM 425480257575.dkr.ecr.us-west-2.amazonaws.com/trion-ng-cli AS build
+FROM trion/ng-cli AS build
 
 WORKDIR /app
 COPY package.json ./
