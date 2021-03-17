@@ -1,4 +1,5 @@
 export enum EnumFailAction {
-    StopUntilFaultCleared = 'STOP UNTIL FAULT CLEARED',
-    RecordAndContinue = 'RECORD AND CONTINUE'
+    StopUntilFaultCleared = 'DONOTCLOSE',
+    RecordAndContinue = 'CONTINUE',
+    Continue = 'RECORD AND CONTINUE',
 }

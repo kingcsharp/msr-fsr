@@ -87,7 +87,8 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       if (closeStep) {
         let indexOfNextTask = this.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
         if ((indexOfNextTask + 1) === this.workOrderTasks.length) {
-          this.router.navigate(['/app/wip/wipstatus']);
+          this.updateWorkOrderTaskToViewAndInProgress.emit(updateWorkOrderTaskRequest);
+          this.resetTimerDisplay();
         } else {
 
           let nextWorkOrderTask = this.workOrderTasks[indexOfNextTask + 1];
@@ -112,6 +113,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
           this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateNextWorkOrderTaskRequest).subscribe(responseHandler(nextWorkOrderTaskPatchResponse => {
             this.updateWorkOrderTaskToViewAndInProgress.emit(nextWorkOrderTask);
             this.resetTimerDisplay();
+            this.globals.showLoader(false);
           }));
 
 
@@ -152,6 +154,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   }
 
   done() {
+    this.globals.showLoader(true);
     this.completeTask();
   }
 
