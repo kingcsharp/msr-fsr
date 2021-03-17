@@ -6,7 +6,7 @@ import {
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
-  ProcedureStepModel, DocumentView, Role, UserModel, EnumSegregationType, StatusModel, IStatusModel
+  ProcedureStepModel, DocumentView, Role, UserModel, EnumSegregationType, StatusModel, IStatusModel, EnumStatusSteps
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -441,7 +441,7 @@ export class WipdetailsComponent implements OnInit {
   updateWorkOrderTaskToViewAndInProgress(workOrderTaskModel: WorkOrderTaskModel) {
     this.workOrderTaskInProgress = workOrderTaskModel;
     this.workOrderTaskToView = workOrderTaskModel;
-    this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
+    this.workOrderIsComplete = this.isWorkOrderComplete();
   }
 
   closeCurrentTask() {
@@ -452,10 +452,14 @@ export class WipdetailsComponent implements OnInit {
     this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
   }
 
+  isWorkOrderComplete():boolean{
+    return this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.id === EnumStatusSteps.WaitingtoStart || s.status?.id === EnumStatusSteps.InProgress || s.status.id === EnumStatusSteps.Approved) === undefined;
+  }
+
   cancelRemainingStepsAndInvoice(invoice: boolean) {
 
     this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
-    this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
+    this.workOrderIsComplete = this.isWorkOrderComplete();
 
     if (invoice) {
 
@@ -492,12 +496,12 @@ export class WipdetailsComponent implements OnInit {
       this.globals.showLoader(true);
       this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
 
-        this.workOrderModel.workOrderTasks[index].statusId = 3;
+        this.workOrderModel.workOrderTasks[index].statusId = EnumStatusSteps.Complete;
         this.workOrderModel.workOrderTasks[index].status = new StatusModel({
-          id: 3,
-          name: 'Complete'
+          id: EnumStatusSteps.Complete,
+          name: EnumStatusSteps[EnumStatusSteps.Complete]
         } as IStatusModel);
-        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
+        this.workOrderIsComplete = this.isWorkOrderComplete();
         
       }));
 
@@ -528,12 +532,12 @@ export class WipdetailsComponent implements OnInit {
       this.globals.showLoader(true);
       this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
         
-        this.workOrderModel.workOrderTasks[index].statusId = 4;
+        this.workOrderModel.workOrderTasks[index].statusId = EnumStatusSteps.Cancelled;
         this.workOrderModel.workOrderTasks[index].status = new StatusModel({
-          id: 4,
-          name: 'Cancelled'
+          id: EnumStatusSteps.Cancelled,
+          name: EnumStatusSteps[EnumStatusSteps.Cancelled]
         } as IStatusModel);
-        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
+        this.workOrderIsComplete = this.isWorkOrderComplete();
         
       }));
 
@@ -640,5 +644,10 @@ export class WipdetailsComponent implements OnInit {
 
   setStartDate(startDate: Date){
     this.workOrderModel.actualStartDate = startDate;
+  }
+
+  closeDialog(){
+    this.monitorsAreInvalidDialog = false;
+    this.globals.showLoader(false);
   }
 }

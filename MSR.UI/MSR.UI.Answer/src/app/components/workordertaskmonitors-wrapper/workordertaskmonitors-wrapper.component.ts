@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel } from '../../services/api.client.generated';
+import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel, EnumStatusSteps } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { take } from 'rxjs/operators';
 import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
@@ -251,6 +251,10 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
     });
 
+  }
+
+  public get WorkOrderIsComplete(): boolean{
+    return this.workOrderModel.workOrderTasks.find(s => s.status?.id === EnumStatusSteps.WaitingtoStart || s.status?.id === EnumStatusSteps.InProgress || s.status.id === EnumStatusSteps.Approved) === undefined;
   }
 
 }

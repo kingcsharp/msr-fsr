@@ -113,6 +113,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
           this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateNextWorkOrderTaskRequest).subscribe(responseHandler(nextWorkOrderTaskPatchResponse => {
             this.updateWorkOrderTaskToViewAndInProgress.emit(nextWorkOrderTask);
             this.resetTimerDisplay();
+            this.globals.showLoader(false);
           }));
 
 
