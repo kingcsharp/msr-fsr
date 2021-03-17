@@ -6,7 +6,7 @@ import {
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
-  ProcedureStepModel, DocumentView, Role, UserModel, EnumSegregationType
+  ProcedureStepModel, DocumentView, Role, UserModel, EnumSegregationType, StatusModel, IStatusModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -441,6 +441,7 @@ export class WipdetailsComponent implements OnInit {
   updateWorkOrderTaskToViewAndInProgress(workOrderTaskModel: WorkOrderTaskModel) {
     this.workOrderTaskInProgress = workOrderTaskModel;
     this.workOrderTaskToView = workOrderTaskModel;
+    this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
   }
 
   closeCurrentTask() {
@@ -452,6 +453,9 @@ export class WipdetailsComponent implements OnInit {
   }
 
   cancelRemainingStepsAndInvoice(invoice: boolean) {
+
+    this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
+    this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
 
     if (invoice) {
 
@@ -488,8 +492,14 @@ export class WipdetailsComponent implements OnInit {
       this.globals.showLoader(true);
       this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
 
-        this.router.navigate(['/app/wip/wipstatus']);
-
+        // this.router.navigate(['/app/wip/wipstatus']);
+        this.workOrderModel.workOrderTasks[index].statusId = 3;
+        this.workOrderModel.workOrderTasks[index].status = new StatusModel({
+          id: 3,
+          name: 'Complete'
+        } as IStatusModel);
+        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
+        
       }));
 
     }
@@ -518,9 +528,14 @@ export class WipdetailsComponent implements OnInit {
 
       this.globals.showLoader(true);
       this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
-
-        this.router.navigate(['/app/wip/wipstatus']);
-
+        
+        this.workOrderModel.workOrderTasks[index].statusId = 4;
+        this.workOrderModel.workOrderTasks[index].status = new StatusModel({
+          id: 4,
+          name: 'Cancelled'
+        } as IStatusModel);
+        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
+        
       }));
 
     }

@@ -67,12 +67,13 @@
             [interval]="false" [startFromIndex]="startSlideIndex" [(activeSlide)]="activeSlideIndex"
             data-ride="carousel">
             <slide id={{index}} *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"
-              (click)="selectTaskForViewing(workOrderTask)" [ngClass]="{ 'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
-                  'bg-light': workOrderTask.status?.name === 'In Progress',
-                  'text-dark': workOrderTask.status?.name === 'In Progress',
-                  'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'
-                  || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled',
-                  'step-viewed': workOrderTaskToView?.id === workOrderTask.id}">
+              (click)="selectTaskForViewing(workOrderTask)" [ngClass]="{ 
+                'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
+                'bg-light': workOrderTask.status?.name === 'In Progress',
+                'text-dark': workOrderTask.status?.name === 'In Progress',
+                'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'
+                || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled',
+                'step-viewed': workOrderTaskToView?.id === workOrderTask.id}">
               <div class="h-100 d-flex">
                 <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title | workOrderTaskAndMonitor: workOrderTask.procedureStepId : workOrderTask.title }}</div>
               </div>

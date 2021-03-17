@@ -100,25 +100,27 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
     let dropDownsAreValid = true;
 
     let passAndFailAndYesOrNoMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.PassOrFail
-      || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo);
+      || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo || s.monitorTypeId === EnumMonitorType.PassOrFail 
+      || s.monitorTypeId === EnumMonitorType.YesOrNo);
 
     passAndFailAndYesOrNoMonitors.map(monitor => {
 
-      if (monitor.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared) {
+      if (monitor.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared || monitor.faultHandling === EnumFailAction.StopUntilFaultCleared) {
 
-        if (monitor.numVal === undefined || monitor.numVal === null) {
-          dropDownsAreValid = false;
+        if ((monitor.numVal === undefined || monitor.numVal === null) && (monitor.targetValue === undefined || monitor.targetValue === null)) {
+          dropDownsAreValid = true;
         } else {
 
-          if (monitor.procedureStepMonitor.targetValue !== monitor.numVal.toString()) {
+          if (monitor.procedureStepMonitor.targetValue !== monitor.numVal.toString() &&
+           monitor.targetValue !== monitor.numVal.toString() && monitor.targetValue !== null && monitor.procedureStepMonitor.targetValue !== "") {
             dropDownsAreValid = false;
           }
 
         }
 
-      } else if (monitor.procedureStepMonitor.faultHandling === EnumFailAction.RecordAndContinue) {
+      } else if (monitor.procedureStepMonitor.faultHandling === EnumFailAction.RecordAndContinue || monitor.faultHandling === EnumFailAction.RecordAndContinue) {
 
-        if (monitor.numVal === undefined || monitor.numVal === null) {
+        if (monitor.targetValue == null && monitor.numVal === null) {
           dropDownsAreValid = false;
         }
 
@@ -135,7 +137,8 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
     });
 
 
-    let sensorMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Number && s.procedureStepMonitor.inputTypeId === EnumMonitorInputType.Sensor);
+    let sensorMonitors = this.workOrderMonitorsToView.filter(s => (s.procedureStepMonitor.monitorTypeId === EnumMonitorType.Number && s.procedureStepMonitor.inputTypeId === EnumMonitorInputType.Sensor) ||
+     (s.monitorTypeId === EnumMonitorType.Number && s.inputTypeId === EnumMonitorInputType.Sensor));
     sensorMonitors.map(sensorMonitor => {
 
       if (sensorMonitor.textVal === undefined || sensorMonitor.textVal === null || sensorMonitor.textVal === '') {
