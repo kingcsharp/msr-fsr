@@ -81,7 +81,7 @@ export class EmPmButtonWrapperComponent implements OnInit {
   addEmPm() {
 
     this.globals.showLoader(true);
-    this.locationService.locationGet(null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, env.apiVersion).subscribe(responseHandler(locationGetResponse => {
+    this.locationService.locationGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(locationGetResponse => {
 
       this.locationOptions = locationGetResponse.object.map(s => ({ label: s.name , value: s.id}));
       this.troubleState = true;
@@ -123,7 +123,7 @@ export class EmPmButtonWrapperComponent implements OnInit {
   lookUp() {
 
     this.globals.showLoader(true);
-    this.locationService.locationGet(null, null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler(response => {
+    this.locationService.locationGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
 
       this.equipmentMaintenanceModel.locationId = response.object.find(s => s.internalAddress === this.internalAddress).id;
 

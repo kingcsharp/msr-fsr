@@ -221,9 +221,9 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
   }
 
-  setStartDateToWorkOrder(){
-    if(this.workOrderTaskInProgress.taskStepOrder === 10){
-      this.setStartDate.emit(moment().toDate())
+  setStartDateToWorkOrder() {
+    if (this.workOrderTaskInProgress.taskStepOrder === 10) {
+      this.setStartDate.emit(moment().toDate());
     }
 
   }

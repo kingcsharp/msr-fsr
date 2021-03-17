@@ -21,7 +21,7 @@ export class MonitorStatusPipe implements PipeTransform {
 
     isMonitorPassing(workOrderTaskMonitor: WorkOrderTaskMonitorModel) {
 
-        const monitorType =  workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null 
+        const monitorType =  workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null
         ? workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId : workOrderTaskMonitor?.monitorTypeId;
 
         switch (monitorType) {
@@ -42,12 +42,12 @@ export class MonitorStatusPipe implements PipeTransform {
                     }
 
                     let targetValue;
-                    if(workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null){
+                    if (workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null) {
                         targetValue = Number(workOrderTaskMonitor.procedureStepMonitor?.targetValue);
-                    }else{
+                    } else {
                         targetValue = Number(workOrderTaskMonitor.targetValue);
                     }
-                    
+
 
                     switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
                         case EnumMonitorShouldBe.EQUAL: {
@@ -61,15 +61,15 @@ export class MonitorStatusPipe implements PipeTransform {
                         }
                         case EnumMonitorShouldBe.BETWEEN: {
 
-                            if(workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null){
+                            if (workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null) {
                                 return (workOrderTaskMonitor.procedureStepMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
                                     workOrderTaskMonitor.procedureStepMonitor.highTarget >= workOrderTaskMonitor.numVal);
-                            }else{
+                            } else {
                                 return (workOrderTaskMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
                                     workOrderTaskMonitor.highTarget >= workOrderTaskMonitor.numVal);
-                                
+
                             }
-                            
+
                         }
                         default:
                             return false;

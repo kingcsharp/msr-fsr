@@ -100,7 +100,7 @@ export class WipdetailsComponent implements OnInit {
     ];
 
     this.globals.showLoader(true);
-    this.roleService.roleGet(null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.roles = response.object;
 
@@ -164,7 +164,7 @@ export class WipdetailsComponent implements OnInit {
 
   getCustomerContacts(customerId: number) {
 
-    this.customerService.customerGet(customerId, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null,null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+    this.customerService.customerGet(customerId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       if (response.object.length > 0) {
         this.workOrderModel.purchase.purchaseOrder.customer = response.object[0];
@@ -203,7 +203,7 @@ export class WipdetailsComponent implements OnInit {
 
       documentIds.forEach(documentId => {
 
-        documentRequests.push(this.documentService.documentGet(documentId, null,null,null,null,null,null,null,null,env.apiVersion));
+        documentRequests.push(this.documentService.documentGet(documentId, null, null, null, null, null, null, null, null, env.apiVersion));
 
       });
 
@@ -278,7 +278,7 @@ export class WipdetailsComponent implements OnInit {
         s.referenceFiles = new Array<FileModel>();
       }
 
-      s.workOrderTaskMonitors.filter(m => m.procedureStepMonitor !== undefined).map(s => s.procedureStepMonitor).map(u => {
+      s.workOrderTaskMonitors.filter(m => m.procedureStepMonitor !== undefined).map(u => u.procedureStepMonitor).map(u => {
 
         if (u.monitorTypeId === 1 && u.inputTypeId === 1) {
           u.inputType = 'Manual';
@@ -310,7 +310,7 @@ export class WipdetailsComponent implements OnInit {
 
       });
 
-      s.workOrderTaskMonitors.filter(m => m.procedureStepMonitor !== undefined).map(s => s.procedureStepMonitor).map(u => {
+      s.workOrderTaskMonitors.filter(m => m.procedureStepMonitor !== undefined).map(u => u.procedureStepMonitor).map(u => {
 
         u.monitorType = this.monitorTypes.find(t => t.value === u.monitorTypeId).label;
 
@@ -624,7 +624,7 @@ export class WipdetailsComponent implements OnInit {
     this.printOtherReport.selectedReport = 'NCRReport';
   }
 
-  setStartDate(startDate: Date){
+  setStartDate(startDate: Date) {
     this.workOrderModel.actualStartDate = startDate;
   }
 }

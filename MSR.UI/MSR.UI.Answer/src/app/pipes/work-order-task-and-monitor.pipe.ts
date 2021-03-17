@@ -21,7 +21,7 @@ export class WorkOrderTaskAndMonitorPipe implements PipeTransform {
 
     }
 
-    if(isMonitorType){
+    if (isMonitorType) {
 
       const monitorTypeId = this.getValueByModelId(modelId, primaryValue, backupValue);
 

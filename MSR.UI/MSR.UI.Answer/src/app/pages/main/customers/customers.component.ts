@@ -34,7 +34,7 @@ export class CustomersComponent implements OnInit, AfterViewInit {
   statusOptions: any[];
   totalRecords: number = 0;
   statuss: any[];
-  isActive:any[];
+  isActive: any[];
 
 
   constructor(private customerService: CustomerService, private userService: UserService, public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
@@ -113,7 +113,7 @@ export class CustomersComponent implements OnInit, AfterViewInit {
     this.customerService.customerDelete(this.customerToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
       this.data.length = 0;
-      //TODO FIX THIS SHIT
+      // TODO FIX THIS SHIT
       // this.getCustomers();
 
     }));

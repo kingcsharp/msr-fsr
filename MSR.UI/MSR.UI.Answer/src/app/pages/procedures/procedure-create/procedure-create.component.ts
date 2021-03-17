@@ -28,7 +28,7 @@ export class ProcedureCreateComponent implements OnInit {
 
     this.globals.showLoader(true);
     this.durationTypeOptions = new LookUpItems().DurationType();
-    this.procedureTypeService.procedureTypeGet(null, null,null,null,null,null,env.apiVersion).subscribe(responseHandler((procedureTypeGetResponse) => {
+    this.procedureTypeService.procedureTypeGet(null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((procedureTypeGetResponse) => {
       this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
     }));
 

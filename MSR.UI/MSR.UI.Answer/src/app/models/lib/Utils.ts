@@ -1,10 +1,10 @@
-import * as moment from "moment";
-import { LazyLoadEvent } from "primeng/api";
-import { Observable } from "rxjs";
-import { Exception, Filter, Sort } from "../../../app/services/api.client.generated";
+import * as moment from 'moment';
+import { LazyLoadEvent } from 'primeng/api';
+import { Observable } from 'rxjs';
+import { Exception, Filter, Sort } from '../../../app/services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
-import { EnumColumnType } from "../enums/EnumColumnType";
-import { ColumnsSaved } from "./ColumnsSaved";
+import { EnumColumnType } from '../enums/EnumColumnType';
+import { ColumnsSaved } from './ColumnsSaved';
 
 export function emptyArray(array) {
     let length = array.length;
@@ -17,9 +17,7 @@ export function removeDotAndCamelCaseFromObj(elem: any) {
     let objToReturn = {};
     Object.keys(elem).forEach((key) => {
         const keysplitted = key.split('.');
-        //capitalizeFirstLetter(string: any)
         const keysCapitalized = keysplitted.map((x: string, index: number) => index < 1 ? lowerCaseFirstLetter(x) : capitalizeFirstLetter(x)).join('');
-        // const keyVal = keysplitted.length > 1 ? 1 : 0;
         objToReturn[keysCapitalized] = elem[key];
     });
     return objToReturn;
@@ -98,7 +96,7 @@ export function getArguments(func) {
         .filter(String);
 }
 
-export function callFunctionWithFilters(service, func, event: LazyLoadEvent, globalDic, extraParams?: any):Observable<any>{
+export function callFunctionWithFilters(service, func, event: LazyLoadEvent, globalDic, extraParams?: any): Observable<any> {
     const sortField = event.sortField === null ? undefined : event.sortField;
     const pageNumber = event.first === null || event.rows === null ? null : event.first / event.rows;
 
@@ -107,13 +105,9 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent, glo
         pageNumber: pageNumber,
         pageSize: event.rows,
         sortAscending: event.sortOrder === 1
-    }
+    };
     Object.assign(filterEvObj, event);
     Object.assign(filterEvObj, extraParams);
-
-    //to generate dic.
-    // const args = getArguments(func);
-    // globalDic[func.toString().split('(')[0]] = args;
 
     const args = globalDic[func.toString().split('(')[0]];
 
@@ -123,14 +117,14 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent, glo
         const filterObj = filterEvObj.filters[arg];
         if (filterObj !== undefined) {
             if (Array.isArray(filterObj.value)) {
-                if (typeof (filterObj.value[0]) === "boolean") {
+                if (typeof (filterObj.value[0]) === 'boolean') {
                     if (filterObj.value.length === 1) {
                         argsToCallFn.push(filterObj.value[0]);
                     } else {
                         argsToCallFn.push(null);
                     }
                 } else {
-                    if (typeof (filterObj.value[0]) === "object") {
+                    if (typeof (filterObj.value[0]) === 'object') {
                         const parentRoles = filterObj.value.map(x => x.id);
                         argsToCallFn.push(parentRoles);
                     } else {
@@ -155,7 +149,7 @@ export function callFunctionWithFiltersViews(service, func, extraParams: any, co
         pageNumber: event.first / event.rows,
         pageSize: event.rows,
         sort: new Array<Sort>()
-    }
+    };
 
     filterEvObj.sort.push(
         new Sort({
@@ -177,7 +171,7 @@ export function callFunctionWithFiltersViews(service, func, extraParams: any, co
             value: getValueByType(filterObj.value, columnsSaved.find(x => x.id === filter)),
             operator: getOperatorByColumn(filter, columnsSaved),
             logic: 'and'
-        }))
+        }));
     });
 
     Object.assign(filterEvObj, extraParams);
