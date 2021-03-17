@@ -492,7 +492,6 @@ export class WipdetailsComponent implements OnInit {
       this.globals.showLoader(true);
       this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
 
-        // this.router.navigate(['/app/wip/wipstatus']);
         this.workOrderModel.workOrderTasks[index].statusId = 3;
         this.workOrderModel.workOrderTasks[index].status = new StatusModel({
           id: 3,
