@@ -104,7 +104,7 @@ export class RoleComponent implements OnInit {
   getRoles(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+      this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion);
       callFunctionWithFilters(this.roleService, this.roleService.roleGet, event, this.globals.functionDic)
         .pipe(take(1))
         .subscribe(responseHandler(response => {

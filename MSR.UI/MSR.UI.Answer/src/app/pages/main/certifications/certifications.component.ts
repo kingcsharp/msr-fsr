@@ -47,7 +47,7 @@ export class CertificationsComponent implements OnInit {
     this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
     this.statusOptions = [
       { label: 'Active', value: true },
-      { label: 'InActive', value: false }]
+      { label: 'InActive', value: false }];
   }
 
   getTrainingCertification(event: LazyLoadEvent) {

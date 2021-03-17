@@ -57,7 +57,7 @@ export class WiphistoryComponent implements OnInit {
     this.locationOptions = this.globals.getTopLevelLocations();
     this.statusOptions = [{ label: 'Complete', value: 'Complete' },
     { label: 'Cancelled', value: 'Cancelled' }];
-    
+
     this.canRead = this.globals.hasPrivilege(EnumMenuItem.WIPHistory, this.privileges.CanRead);
 
     if (this.canRead === false) {
