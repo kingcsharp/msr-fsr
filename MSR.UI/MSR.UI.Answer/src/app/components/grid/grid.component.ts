@@ -122,16 +122,10 @@ export class GridComponent implements OnInit {
 
   regnerateCharOptions(chartOptions) {
     chartOptions.series.map(data => {
-      let index, value;
-      for (let i=data['data'].length-1; i >= 0; i--) {
-        if (data['data'][i] !== 0) {
-         index = i;
-         value = data['data'][i];
-         break;
+      for (let i = 1; i < data['data'].length; i++) {
+        if (data['data'][i] === 0) {
+          data['data'][i] = data['data'][i - 1];
         }
-      }
-      if (value) {
-        for (let i = index; i < data['data'].length; i++) data['data'][i] = value;
       }
       return data;
     });
