@@ -200,19 +200,20 @@ export class WipstatusWrapperComponent implements OnInit {
 
           let workOrderTaskPatchRequests = new Array<any>();
 
-          tasks.map(task => {
+          tasks.map(workOrderTask => {
 
-            if (task.status?.name === 'Waiting to Start' || task.status?.name === 'Approved' || task.assignedTo !== this.globals.getCurrentUser().id) {
+            if (!(workOrderTask.status?.name === 'Complete' ||
+                  workOrderTask.status?.name === 'Cancelled')) {
 
               let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest();
-              updateWorkOrderTaskRequest.status = 'Waiting to Start';
-              updateWorkOrderTaskRequest.taskIsRunning = false;
-              updateWorkOrderTaskRequest.taskRunningSince = task.taskRunningSince;
-              updateWorkOrderTaskRequest.taskStepOrder = task.taskStepOrder;
-              updateWorkOrderTaskRequest.workOrderTaskId = task.id;
+              updateWorkOrderTaskRequest.workOrderTaskId = workOrderTask.id;
               updateWorkOrderTaskRequest.assignedUserId = loggedInUser.id;
 
-              workOrderTaskPatchRequests.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
+              workOrderTaskPatchRequests.push(
+                  this.workOrderTaskService.workOrderTaskPatch(
+                      env.apiVersion, updateWorkOrderTaskRequest
+                  )
+              );
 
             }
 
