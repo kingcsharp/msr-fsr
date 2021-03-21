@@ -85,6 +85,9 @@ export class GridComponent implements OnInit {
     this.showCharts = false;
     setTimeout(() => {
       const resp = this.reportCubeService.generateChart(this.chartInfo);
+      if (this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
+        this.regnerateCharOptions(resp.chartOptions);
+      }
       this.chartOptions = resp.chartOptions;
       this.chartInfo = resp.chartInfo;
       this.showCharts = true;
@@ -102,6 +105,9 @@ export class GridComponent implements OnInit {
         if (resp.chartOptions !== undefined) {
           this.hasChart = true;
           this.gridData = resp.resultData;
+          if (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
+            this.regnerateCharOptions(resp.chartOptions);
+          }
           this.chartOptions = resp.chartOptions;
           this.chartInfo = resp.chartInfo;
           this.showCharts = true;
@@ -112,6 +118,17 @@ export class GridComponent implements OnInit {
         this.globals.showLoader(false);
       });
     }
+  }
+
+  regnerateCharOptions(chartOptions) {
+    chartOptions.series.map(data => {
+      for (let i = 1; i < data['data'].length; i++) {
+        if (data['data'][i] === 0) {
+          data['data'][i] = data['data'][i - 1];
+        }
+      }
+      return data;
+    });
   }
 
   printCsvReport() {
