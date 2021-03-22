@@ -124,8 +124,9 @@ ol{
         display: none !important;
     }
     .report.ui-dialog .report-viewport{
-        height:100% !important;
-    }
+      height:100% !important;
+      display: inline-block;
+  }
 
     .ui-dialog-mask{
       position: absolute;
