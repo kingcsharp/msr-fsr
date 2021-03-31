@@ -110,6 +110,7 @@ ol{
         max-width: none;
         width: 100% !important;
         height:100% !important;
+        max-height: unset !important;
     }
     .report.ui-dialog .ui-dialog-titlebar {
         display: none !important;
@@ -119,6 +120,7 @@ ol{
         border:none;
         height: 100% !important;
         overflow: visible;
+        padding: 0px;
     }
     .report.ui-dialog .ui-dialog-footer{
         display: none !important;
