@@ -11,7 +11,7 @@
             <p-dropdown [options]="reportsAvailable" [(ngModel)]="selectedReport"  placeholder="Select"></p-dropdown>
         </div>
     </div>
-    <div class="report-viewport m-4 d-print-flex">
+    <div class="report-viewport d-print-flex">
         <delivery-ticket-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'DeliveryTicket'"></delivery-ticket-report>
         <wip-history-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'WIPHistoryReport'"></wip-history-report>
         <ncr-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'NCRReport'"></ncr-report>
