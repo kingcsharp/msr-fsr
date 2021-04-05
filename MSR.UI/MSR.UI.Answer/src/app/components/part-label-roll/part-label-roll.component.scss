@@ -6,6 +6,11 @@
       margin-top: .0625in;
       margin-left: .0625in;
   }
+
+  .roll-label {
+    margin-bottom: 0in !important;
+    margin-top: 0in !important;
+  }
 }
 
 .roll-container {
@@ -32,6 +37,7 @@ table.tight td {
 .roll-label {
   height: 4in;
   width: 4in;
+  margin-top: 0.125in;
   margin-bottom: 0.125in;
   padding: 0 .1in;
   left: 0in;
