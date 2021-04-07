@@ -84,7 +84,7 @@ export class GridComponent implements OnInit {
 
     this.showCharts = false;
     setTimeout(() => {
-      const resp = this.reportCubeService.generateChart(this.chartInfo);
+      const resp = this.reportCubeService.getResultDataAndChart(this.chartInfo);
       if (this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
         this.regnerateCharOptions(resp.chartOptions);
       }
