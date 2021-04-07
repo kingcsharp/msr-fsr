@@ -96,6 +96,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'id', label: 'WO#', visible: true, type: this.enumColumnType.Number, styles: { 'width': '7rem' } }),
                     new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date, styles: { 'width': '8rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
                     new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO#', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true, type: this.enumColumnType.Number }),
