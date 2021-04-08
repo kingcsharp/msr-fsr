@@ -1437,76 +1437,65 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             </style>
             <div class=""w-100"">
                 <div class=""w-100 mb-10 p-2"">Part Non Conformance Report - Work Order {workOrderEntity.Id}</div>
-                <table class=""w-100 border mb-10 p-2"">
+                <table class=""w-100 border mb-10"">
                     <tr>
-                        <td width=""20%"">MSR-FSR</td>
+                        <td width=""20%"" class=""p-2"">MSR-FSR</td>
                         <td width=""10%""></td>
-                        <td>Customer Part # {workOrderPartEntity?.Part?.PartNumber}, (Serial #: {workOrderPartEntity?.SerialNumber}), {workOrderPartEntity?.Part?.Name}</td>
-                    </tr>
-                </table>
-                <table class=""w-100 border mb-10 p-2"">
-                    <tr>
-                        <td width=""30%"" style=""text-align: right;"">Date Report Prepared: </td>
-                        <td width=""10%""></td>
-                        <td>{workOrderTaskMonitorEntity.LastUpdatedOn}</td>
-                    </tr>
-                    <tr>
-                        <td width=""30%"" style=""text-align: right;"">Work Order #: </td>
-                        <td width=""10%""></td>
-                        <td>{workOrderPartEntity.Id}</td>
-                    </tr>
-                    <tr>
-                        <td width=""30%"" style=""text-align: right;"">Customer: </td>
-                        <td width=""10%""></td>
-                        <td>{customerEntity.Name}</td>
-                    </tr>
-                    <tr>
-                        <td width=""30%"" style=""text-align: right;"">Technician: </td>
-                        <td width=""10%""></td>
-                        <td>{workOrderTaskAssignedUserModel.FirstName} {workOrderTaskAssignedUserModel.LastName}</td>
-                    </tr>
-                </table>
-                <table class=""w-100 border mb-10 p-2"">
-                    <tr>
-                        <td class=""font-weight-bold"" width=""30%"">Part #</td>
-                        <td class=""font-weight-bold"" width=""10%""></td>
-                        <td class=""font-weight-bold"" width=""30%"">Part Name</td>
-                        <td class=""font-weight-bold"" width=""10%""></td>
-                        <td class=""font-weight-bold"" width=""30%"">Serial Number</td>
-                    </tr>
-                    <tr>
-                        <td width=""30%"">{workOrderPartEntity.Part?.PartNumber}</td>
-                        <td width=""10%""></td>
-                        <td width=""30%"">{workOrderPartEntity.Part?.Name}</td>
-                        <td width=""10%""></td>
-                        <td width=""30%"">{workOrderPartEntity.SerialNumber}</td>
-                    </tr>
-                </table>
-                <table class=""w-100 border mb-10 p-2"">
-                    <tr>
-                        <td class=""font-weight-bold text-right"" width=""30%"">Associated Documents:</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class=""font-weight-bold text-right"" width=""30%"">Associated Digital Pictures:</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class=""font-weight-bold text-right"" width=""30%"">Comments:</td>
-                        <td></td>
+                        <td class=""p-2"">Customer Part # {workOrderPartEntity?.Part?.PartNumber}, (Serial #: {workOrderPartEntity?.SerialNumber}), {workOrderPartEntity?.Part?.Name}</td>
                     </tr>
                 </table>
                 <table class=""w-100 border mb-10"">
+                    <tr>
+                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Date Report Prepared: </td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"">{workOrderTaskMonitorEntity.LastUpdatedOn}</td>
+                    </tr>
+                    <tr>
+                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Work Order #: </td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"">{workOrderPartEntity.Id}</td>
+                    </tr>
+                    <tr>
+                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Customer: </td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"">{customerEntity.Name}</td>
+                    </tr>
+                    <tr>
+                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Technician: </td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"">{workOrderTaskAssignedUserModel.FirstName} {workOrderTaskAssignedUserModel.LastName}</td>
+                    </tr>
+                </table>
+                <table class=""w-100 border mb-10"">
+                    <tr>
+                        <td class=""font-weight-bold p-2"" width=""30%"">Part #</td>
+                        <td class=""font-weight-bold p-2"" width=""10%""></td>
+                        <td class=""font-weight-bold p-2"" width=""30%"">Part Name</td>
+                        <td class=""font-weight-bold p-2"" width=""10%""></td>
+                        <td class=""font-weight-bold p-2"" width=""30%"">Serial Number</td>
+                    </tr>
+                    <tr>
+                        <td class=""p-2"" width=""30%"">{workOrderPartEntity.Part?.PartNumber}</td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"" width=""30%"">{workOrderPartEntity.Part?.Name}</td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"" width=""30%"">{workOrderPartEntity.SerialNumber}</td>
+                    </tr>
+                </table>
             ";
+
+            List<FileModel> referenceFiles = new List<FileModel>();
+            var taskMonitorReport = "";
 
             foreach(var woTaskEntity in workOrderEntity.WorkOrderTasks)
             {
                 var isNCRTask = woTaskEntity.IsNCRTask.HasValue ? woTaskEntity.IsNCRTask.Value : false;
                 if ((woTaskEntity.ProcedureStep != null && woTaskEntity.ProcedureStep.ProcedureStepTypeId == 6) || isNCRTask)
                 {
+                    referenceFiles.AddRange(_fileService.ListFiles(nameof(WorkOrderTask), woTaskEntity.Id).ToList());
                     var procedureStepEntity = await _unitOfWork.ProcedureSteps.Query().FirstOrDefaultAsync(s => s.Id == woTaskEntity.ProcedureStepId);
                     var taskName = woTaskEntity.ProcedureStepId == null ? woTaskEntity.Title :procedureStepEntity.Title;
-                    ncrReport += $@"
+                    taskMonitorReport += $@"
                     <tr>
                         <td class=""border bg-dark p-2"" colspan=""3"">{taskName}</td>
                     </tr>
@@ -1520,7 +1509,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     foreach(var woTaskMonitorEntity in woTaskEntity.WorkOrderTaskMonitors)
                     {
                         var desc = woTaskMonitorEntity.ProcedureMonitorId != null ? woTaskMonitorEntity.ProcedureStepMonitor?.Description : woTaskMonitorEntity.Description;
-                        ncrReport += $@"
+                        taskMonitorReport += $@"
                             <tr>
                                 <td class=""border p-2"" width=""50%"">
                                     {desc}
@@ -1531,9 +1520,58 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                         ";
                     };
                 }
-
             }
-            ncrReport += "</table></div>";
+
+            var associatedPictures = "";
+            var associatedDocumentCounts = 0;
+            foreach(var referenceFileModel in referenceFiles)
+            {
+                if (referenceFileModel.ContentType.Contains("image"))
+                {
+                    associatedPictures += $@"
+                    <a href=""{referenceFileModel.FileURL}"" target=""_blank"">
+                        <img style=""width: 33%"" src=""{referenceFileModel.FileURL}"" alt=""{referenceFileModel.Name}"">
+                    </a>
+                ";
+                }
+                else
+                {
+                    associatedDocumentCounts++;
+                }
+            }
+
+            ncrReport += $@"
+                <table class=""w-100 border mb-10 p-2"">
+                    <tr>
+                        <td class=""font-weight-bold text-right"" width=""30%"">Associated Documents:</td>
+                        <td>
+            ";
+            if (associatedDocumentCounts > 1)
+            {
+                ncrReport += $@"{associatedDocumentCounts} files";
+            }
+            else if (associatedDocumentCounts == 1)
+            {
+                ncrReport += "1 file";
+            }
+            
+            ncrReport += $@"
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class=""font-weight-bold text-right"" width=""30%"">Associated Digital Pictures:</td>
+                        <td>
+                            <div style=""display: flex; align-item: flex-start; justify-content: flex-start; flex-wrap: wrap"">{associatedPictures}</div>
+                        </td>
+                    <tr>
+                        <td class=""font-weight-bold text-right"" width=""30%"">Comments:</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <table class=""w-100 border mb-10"">
+                {taskMonitorReport}
+                </table></div>
+            ";
 
             var renderer = new IronPdf.HtmlToPdf();
             var pdf = renderer.RenderHtmlAsPdf(ncrReport);
