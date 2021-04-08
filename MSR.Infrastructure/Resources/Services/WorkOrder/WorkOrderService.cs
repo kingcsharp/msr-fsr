@@ -20,6 +20,8 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using MSR.Infrastructure.Resources.Queries;
+using IronPdf;
+using System.Net.Mail;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -1334,6 +1336,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderTaskEntity = await _unitOfWork.WorkOrderTasks.Query()
                 .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorEntity.WorkOrderTaskId);
             var workOrderEntity = await _unitOfWork.WorkOrders.Query()
+                .Include(s => s.WorkOrderTasks)
+                .ThenInclude(s => s.WorkOrderTaskMonitors)
+                .ThenInclude(s => s.ProcedureStepMonitor)
                 .FirstOrDefaultAsync(s => s.Id == workOrderTaskEntity.WorkOrderId);
             var purchaseEntity = await _unitOfWork.Purchases.Query()
                 .FirstOrDefaultAsync(s => s.Id == workOrderEntity.PurchaseId);
@@ -1398,8 +1403,186 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var subject = $"Non-Conformity Reported on {workOrderEntity.Id}";
 
-            await _emailService.SendEmailAsync(from, to, subject, body.ToString(), carbonCopyList, true);
+            var attachments =  new List<Attachment>();
 
+            License.LicenseKey = _generalInformation.IronPDFLicense;
+            var workOrderPartEntity = workOrderEntity.WorkOrderParts.First();
+            var ncrReport = $@"
+            <style>
+                .text-right {{
+                    text-align: right!important;
+                }}
+                .mb-10 {{
+                    margin-bottom: 10px;
+                }}
+                .border {{
+                    border: 1px solid #000!important;
+                }}
+                .bg-dark {{
+                    background-color: #495057!important;
+                }}
+                .bg-secondary {{
+                    background-color: #868e96!important;
+                }}
+                .p-2 {{
+                    padding: .5rem;
+                }}
+                .w-100 {{
+                    width: 100%;
+                }}
+                .font-weight-bold {{
+                    font-weight: 70;
+                }}
+            </style>
+            <div class=""w-100"">
+                <div class=""w-100 mb-10 p-4"">Part Non Conformance Report - Work Order {workOrderEntity.Id}</div>
+                <table class=""w-100 border mb-10 p-2"">
+                    <tr>
+                        <td width=""20%"">MSR-FSR</td>
+                        <td width=""10%""></td>
+                        <td>Customer Part # {workOrderPartEntity?.Part?.PartNumber}, (Serial #: {workOrderPartEntity?.SerialNumber}), {workOrderPartEntity?.Part?.Name}</td>
+                    </tr>
+                </table>
+                <table class=""w-100 border mb-10 p-2"">
+                    <tr>
+                        <td width=""30%"" style=""text-align: right;"">Date Report Prepared: </td>
+                        <td width=""10%""></td>
+                        <td>{workOrderTaskMonitorEntity.LastUpdatedOn}</td>
+                    </tr>
+                    <tr>
+                        <td width=""30%"" style=""text-align: right;"">Work Order #: </td>
+                        <td width=""10%""></td>
+                        <td>{workOrderPartEntity.Id}</td>
+                    </tr>
+                    <tr>
+                        <td width=""30%"" style=""text-align: right;"">Customer: </td>
+                        <td width=""10%""></td>
+                        <td>{customerEntity.Name}</td>
+                    </tr>
+                    <tr>
+                        <td width=""30%"" style=""text-align: right;"">Technician: </td>
+                        <td width=""10%""></td>
+                        <td>{workOrderTaskAssignedUserModel.FirstName} {workOrderTaskAssignedUserModel.LastName}</td>
+                    </tr>
+                </table>
+                <table class=""w-100 border mb-10 p-2"">
+                    <tr>
+                        <td class=""font-weight-bold"" width=""30%"">Part #</td>
+                        <td class=""font-weight-bold"" width=""10%""></td>
+                        <td class=""font-weight-bold"" width=""30%"">Part Name</td>
+                        <td class=""font-weight-bold"" width=""10%""></td>
+                        <td class=""font-weight-bold"" width=""30%"">Serial Number</td>
+                    </tr>
+                    <tr>
+                        <td width=""30%"">{workOrderPartEntity.Part?.PartNumber}</td>
+                        <td width=""10%""></td>
+                        <td width=""30%"">{workOrderPartEntity.Part?.Name}</td>
+                        <td width=""10%""></td>
+                        <td width=""30%"">{workOrderPartEntity.SerialNumber}</td>
+                    </tr>
+                </table>
+                <table class=""w-100 border mb-10 p-2"">
+                    <tr>
+                        <td class=""font-weight-bold text-right"" width=""30%"">Associated Documents:</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class=""font-weight-bold text-right"" width=""30%"">Associated Digital Pictures:</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class=""font-weight-bold text-right"" width=""30%"">Comments:</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <table class=""w-100 border mb-10"">
+            ";
+
+            foreach(var woTaskEntity in workOrderEntity.WorkOrderTasks)
+            {
+                var isNCRTask = woTaskEntity.IsNCRTask.HasValue ? woTaskEntity.IsNCRTask.Value : false;
+                if ((woTaskEntity.ProcedureStep != null && woTaskEntity.ProcedureStep.ProcedureStepTypeId == 6) || isNCRTask)
+                {
+                    var procedureStepEntity = await _unitOfWork.ProcedureSteps.Query().FirstOrDefaultAsync(s => s.Id == woTaskEntity.ProcedureStepId);
+                    var taskName = woTaskEntity.ProcedureStepId == null ? woTaskEntity.Title :procedureStepEntity.Title;
+                    ncrReport += $@"
+                    <tr>
+                        <td class=""border bg-dark p-2"" colspan=""3"">{taskName}</td>
+                    </tr>
+                    <tr>
+                        <td class=""border bg-secondary p-2"" width=""50%"">Monitor {woTaskEntity.Id}</ div>
+                        <td class=""border bg-secondary p-2"" width=""25%"">Result</td>
+                        <td class=""border bg-secondary p-2"" width=""25%"">Comment</td>
+                    </tr>
+                    ";
+
+                    foreach(var woTaskMonitorEntity in woTaskEntity.WorkOrderTaskMonitors)
+                    {
+                        var desc = woTaskMonitorEntity.ProcedureMonitorId != null ? woTaskMonitorEntity.ProcedureStepMonitor?.Description : woTaskMonitorEntity.Description;
+                        ncrReport += $@"
+                            <tr>
+                                <td class=""border p-2"" width=""50%"">
+                                    {desc}
+                                </td>
+                                <td class=""border p-2"" width=""25%"">{getResultFromMonitor(woTaskMonitorEntity)}</td>
+                                <td class=""border p-2"" width=""25%"">{woTaskMonitorEntity.Comment}</td>
+                            </tr>
+                        ";
+                    };
+                }
+
+            }
+            ncrReport += "</table></div>";
+
+            var renderer = new IronPdf.HtmlToPdf();
+            var pdf = renderer.RenderHtmlAsPdf(ncrReport);
+            attachments.Add(new Attachment(pdf.Stream, "ncr-report.pdf", "application/pdf"));
+
+            await _emailService.SendEmailAsync(from, to, subject, body.ToString(), carbonCopyList, true, attachments);
+        }
+
+        private string getResultFromMonitor(WorkOrderTaskMonitor workOrderTaskMonitor)
+        {
+            var monitorType = workOrderTaskMonitor?.ProcedureStepMonitor?.MonitorTypeId;
+
+            switch (monitorType)
+            {
+                case 1: // Equipment
+                    return workOrderTaskMonitor.TextVal;
+                case 2: // Number
+                {
+                    if (workOrderTaskMonitor.ProcedureStepMonitor?.InputTypeId == 6)
+                    {
+                        return workOrderTaskMonitor.TextVal;
+                    } else {
+                        return workOrderTaskMonitor.NumVal.HasValue ? (workOrderTaskMonitor.NumVal.Value ==  1 ?  "1" : "0") : null;
+                    }
+                }
+                case 3: // YesOrNo
+                {
+                    if (!workOrderTaskMonitor.NumVal.HasValue)
+                    {
+                        return null;
+                    } else {
+                        return workOrderTaskMonitor.NumVal.Value == 1 ? "Yes" : "No";
+                    }
+                }
+                case 4: // Text
+                    return workOrderTaskMonitor.TextVal;
+                case 5: // PassOrFail
+                {
+                    if (!workOrderTaskMonitor.NumVal.HasValue)
+                    {
+                        return null;
+                    } else {
+                        return workOrderTaskMonitor.NumVal == 1 ? "Pass" : "Fail";
+                    }
+                }
+                case 6: // Select
+                    return workOrderTaskMonitor.TextVal;
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
