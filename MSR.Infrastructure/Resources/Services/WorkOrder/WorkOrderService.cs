@@ -1410,19 +1410,20 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var ncrReport = $@"
             <style>
                 .text-right {{
-                    text-align: right!important;
+                    text-align: right;
                 }}
                 .mb-10 {{
                     margin-bottom: 10px;
                 }}
                 .border {{
-                    border: 1px solid #000!important;
+                    border: 1px solid #000;
+                    border-collapse: collapse;
                 }}
                 .bg-dark {{
-                    background-color: #495057!important;
+                    background-color: #495057;
                 }}
                 .bg-secondary {{
-                    background-color: #868e96!important;
+                    background-color: #868e96;
                 }}
                 .p-2 {{
                     padding: .5rem;
@@ -1431,11 +1432,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     width: 100%;
                 }}
                 .font-weight-bold {{
-                    font-weight: 70;
+                    font-weight: 700;
                 }}
             </style>
             <div class=""w-100"">
-                <div class=""w-100 mb-10 p-4"">Part Non Conformance Report - Work Order {workOrderEntity.Id}</div>
+                <div class=""w-100 mb-10 p-2"">Part Non Conformance Report - Work Order {workOrderEntity.Id}</div>
                 <table class=""w-100 border mb-10 p-2"">
                     <tr>
                         <td width=""20%"">MSR-FSR</td>
