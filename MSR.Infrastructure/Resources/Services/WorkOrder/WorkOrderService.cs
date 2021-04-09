@@ -1434,8 +1434,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 .font-weight-bold {{
                     font-weight: 700;
                 }}
+                .container {{
+                    width: 100%;
+                    font-family: arial, sans-serif;
+                }}
             </style>
-            <div class=""w-100"">
+            <div class=""container"">
                 <div class=""w-100 mb-10 p-2"">Part Non Conformance Report - Work Order {workOrderEntity.Id}</div>
                 <table class=""w-100 border mb-10"">
                     <tr>
@@ -1523,7 +1527,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var associatedPictures = "";
-            var associatedDocumentCounts = 0;
+            var associatedDocuments = "";
             foreach(var referenceFileModel in referenceFiles)
             {
                 if (referenceFileModel.ContentType.Contains("image"))
@@ -1536,36 +1540,24 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
                 else
                 {
-                    associatedDocumentCounts++;
+                    associatedDocuments += $@"{referenceFileModel.Name} ";
                 }
             }
 
             ncrReport += $@"
                 <table class=""w-100 border mb-10 p-2"">
                     <tr>
-                        <td class=""font-weight-bold text-right"" width=""30%"">Associated Documents:</td>
-                        <td>
-            ";
-            if (associatedDocumentCounts > 1)
-            {
-                ncrReport += $@"{associatedDocumentCounts} files";
-            }
-            else if (associatedDocumentCounts == 1)
-            {
-                ncrReport += "1 file";
-            }
-            
-            ncrReport += $@"
-                        </td>
+                        <td class=""font-weight-bold text-right p-2"" width=""30%"">Associated Documents:</td>
+                        <td class=""p-2"">{associatedDocuments}</td>
                     </tr>
                     <tr>
-                        <td class=""font-weight-bold text-right"" width=""30%"">Associated Digital Pictures:</td>
-                        <td>
+                        <td class=""font-weight-bold text-right p-2"" width=""30%"">Associated Digital Pictures:</td>
+                        <td class=""p-2"">
                             <div style=""display: flex; align-item: flex-start; justify-content: flex-start; flex-wrap: wrap"">{associatedPictures}</div>
                         </td>
                     <tr>
-                        <td class=""font-weight-bold text-right"" width=""30%"">Comments:</td>
-                        <td></td>
+                        <td class=""font-weight-bold text-right p-2"" width=""30%"">Comments:</td>
+                        <td class=""p-2""></td>
                     </tr>
                 </table>
                 <table class=""w-100 border mb-10"">
