@@ -118,5 +118,14 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<WorkOrderMessageModel>("Message added successfully");
 
         }
+
+        [HttpPatch("TakeOver")]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderTaskModel>>))]
+        public async Task<IActionResult> WorkOrderTakeOver([FromBody] TakeOverWorkOrderRequest request)
+        {
+            var command = request.ToTakeOverWorkOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderTaskModel>>("Work Order has been taken over");
+        }
     }
 }

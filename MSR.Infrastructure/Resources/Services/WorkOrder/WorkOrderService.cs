@@ -643,6 +643,61 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return workOrderTaskModel;
         }
 
+        public async Task<ICollection<WorkOrderTaskModel>> TakeOverWorkOrderTasks(TakeOverWorkOrder takeOverWorkOrder) {
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderTask)}s uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
+            }
+
+            var userEntity = _unitOfWork.Users.Query().FirstOrDefault(s => s.Id == takeOverWorkOrder.UserId);
+
+            if (userEntity == null)
+            {
+
+                throw new DomainException(
+                    $"No User exist with uid {takeOverWorkOrder.UserId}",
+                    DomainError.BadRequest);
+            }
+
+            var workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Where(s => s.WorkOrderId == takeOverWorkOrder.WorkOrderId).ToListAsync();
+
+            if (!workOrderTaskEntities.Any()) {
+
+                throw new DomainException(
+                    $"No {nameof(WorkOrderTask)}s exist for WorkOrder uid {takeOverWorkOrder.WorkOrderId}",
+                    DomainError.BadRequest);
+
+            }
+
+            var workOrderTasksToTakeOverEntities = workOrderTaskEntities.Where(s => s.StatusId == (int)EnumStatusSteps.InProgress || s.StatusId == (int)EnumStatusSteps.WaitingtoStart || s.StatusId == (int)EnumStatusSteps.Approved);
+
+            if (!workOrderTasksToTakeOverEntities.Any())
+            {
+
+                throw new DomainException(
+                    $"No {nameof(WorkOrderTask)}s to take over since all are Completed or Cancelled for {nameof(WorkOrder)} with uid {takeOverWorkOrder.WorkOrderId}",
+                    DomainError.BadRequest);
+
+            }
+
+            workOrderTasksToTakeOverEntities.ToList().ForEach(workOrderTaskEntity => { 
+               
+                workOrderTaskEntity.AssignedTo = userEntity.Id;
+                _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
+
+            });
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var workOrderTaskModels = _mapper.Map<ICollection<WorkOrderTaskModel>>(workOrderTaskEntities);
+
+
+            return workOrderTaskModels;
+        }
+
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
@@ -714,6 +769,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     workOrderTaskEntity.ReferenceFiles.Add(fem);
                 }
             }
+
             var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
 
             if (isTaskStarted)
