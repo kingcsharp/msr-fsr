@@ -661,7 +661,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     $"No User exist with uid {takeOverWorkOrder.UserId}",
                     DomainError.BadRequest);
             }
-
+            /*
             var workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Where(s => s.WorkOrderId == takeOverWorkOrder.WorkOrderId).ToListAsync();
 
             if (!workOrderTaskEntities.Any()) {
@@ -671,8 +671,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
 
             }
-
-            var workOrderTasksToTakeOverEntities = workOrderTaskEntities.Where(s => s.StatusId == (int)EnumStatusSteps.InProgress || s.StatusId == (int)EnumStatusSteps.WaitingtoStart || s.StatusId == (int)EnumStatusSteps.Approved);
+            */
+            var workOrderTasksToTakeOverEntities = await _unitOfWork.WorkOrderTasks.Query()
+                .Where(s => (s.StatusId == (int)EnumStatusSteps.InProgress || s.StatusId == (int)EnumStatusSteps.WaitingtoStart || s.StatusId == (int)EnumStatusSteps.Approved) && s.WorkOrderId == takeOverWorkOrder.WorkOrderId).ToListAsync();
 
             if (!workOrderTasksToTakeOverEntities.Any())
             {
@@ -686,13 +687,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             workOrderTasksToTakeOverEntities.ToList().ForEach(workOrderTaskEntity => { 
                
                 workOrderTaskEntity.AssignedTo = userEntity.Id;
+                workOrderTaskEntity.AssignedToUser = userEntity;
                 _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
 
             });
 
             await _unitOfWork.SaveChangesAsync();
 
-            var workOrderTaskModels = _mapper.Map<ICollection<WorkOrderTaskModel>>(workOrderTaskEntities);
+            var workOrderTaskModels = _mapper.Map<ICollection<WorkOrderTaskModel>>(workOrderTasksToTakeOverEntities);
 
 
             return workOrderTaskModels;
