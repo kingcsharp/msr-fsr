@@ -65,7 +65,7 @@ namespace MSR.Application.ViewServices
             {
                 workOrder.SubParts = allPortalSubParts.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<PortalSubPartView>(i)).ToList();
                 workOrder.Messages = messages.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<WorkOrderMessageModel>(i)).ToList();
-                workOrder.Disposition = string.Join(";",messages.Select(i => $"{i.Created.FullName}, {i.CreatedOn}, {i.Message}").ToList());
+                workOrder.Disposition = string.Join(";", workOrder.Messages.Select(i => $"{i.Name}, {i.Date}, {i.Message}").ToList());
             }
 
             return workOrderData;
