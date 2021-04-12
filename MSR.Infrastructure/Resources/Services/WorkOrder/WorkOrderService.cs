@@ -716,17 +716,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
             var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
 
-            if (isTaskStarted)
+            if (statEntity != null)
             {
-                statEntity.ActiveTitle = workOrderTaskEntity.Title;
+                if (isTaskStarted)
+                {
+                    statEntity.ActiveTitle = workOrderTaskEntity.Title;
+                }
+                else if (isTaskCompleted)
+                {
+                    statEntity.CompletedTasks += 1;
+                    statEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
+                }
             }
-            else if (isTaskCompleted)
-            {
-                statEntity.CompletedTasks += 1;
-                statEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
-            }
-
-           
 
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(workOrderTaskEntity, workOrderTaskEntity.Id);
