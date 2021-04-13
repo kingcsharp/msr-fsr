@@ -1036,5 +1036,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetWorkflowModel>(request);
         }
+
+        public static TakeOverWorkOrder ToTakeOverWorkOrderCommand(this TakeOverWorkOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<TakeOverWorkOrder>(request);
+        }
     }
 }

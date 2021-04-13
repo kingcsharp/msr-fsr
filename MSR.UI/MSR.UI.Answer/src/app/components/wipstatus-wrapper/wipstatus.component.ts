@@ -1,13 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
-import { UpdateWorkOrderTaskRequest, WorkOrderService, WorkOrderStatus, WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel, WorkOrderSummary } from '../../services/api.client.generated';
+import { WorkOrderService, WorkOrderTaskService, UserService, UserModel, WorkOrderSummary, TakeOverWorkOrderRequest, ITakeOverWorkOrderRequest } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { SignalRService } from '../../services/signalr.service';
 import { Globals } from '../../models/lib/globals';
-import { forkJoin } from 'rxjs';
-import { AxisDateTimeLabelFormatsOptions } from 'highcharts';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -31,8 +29,7 @@ export class WipstatusWrapperComponent implements OnInit {
   currentDate: Date = new Date;
   warningDate: Date = new Date(new Date().setDate(new Date().getDate() - 1));
   constructor(private router: Router, private workOrderService: WorkOrderService, public globals: Globals,
-    private workOrderTaskService: WorkOrderTaskService, private userService: UserService,
-    private signalrService: SignalRService) { }
+    private userService: UserService, private signalrService: SignalRService) { }
 
 
   ngOnInit(): void {
@@ -194,40 +191,16 @@ export class WipstatusWrapperComponent implements OnInit {
         let loggedInUser = <UserModel>response.object;
 
         this.globals.showLoader(true);
-        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(workOrderGetResponse => {
 
-          let tasks = <Array<WorkOrderTaskModel>>workOrderGetResponse.object[0].workOrderTasks;
+        let takeOverWorkOrderRequest = new TakeOverWorkOrderRequest({
+          userId: loggedInUser.id,
+          workOrderId: this.workOrderToTakeOverId
+        } as ITakeOverWorkOrderRequest);
 
-          let workOrderTaskPatchRequests = new Array<any>();
+        this.workOrderService.takeOver(env.apiVersion,takeOverWorkOrderRequest).pipe(take(1)).subscribe( () => {
+          this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
+        });
 
-          tasks.map(workOrderTask => {
-
-            if (!(workOrderTask.status?.name === 'Complete' ||
-                  workOrderTask.status?.name === 'Cancelled')) {
-
-              let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest();
-              updateWorkOrderTaskRequest.workOrderTaskId = workOrderTask.id;
-              updateWorkOrderTaskRequest.assignedUserId = loggedInUser.id;
-
-              workOrderTaskPatchRequests.push(
-                  this.workOrderTaskService.workOrderTaskPatch(
-                      env.apiVersion, updateWorkOrderTaskRequest
-                  )
-              );
-
-            }
-
-          });
-
-          if (workOrderTaskPatchRequests.length === 0) {
-            this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-          } else {
-            this.globals.showLoader(true);
-            forkJoin(workOrderTaskPatchRequests).subscribe(responseHandler(responses => {
-              this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-            }));
-          }
-        }));
       }));
     }
   }
