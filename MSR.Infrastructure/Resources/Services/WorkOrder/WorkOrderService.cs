@@ -647,14 +647,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         public async Task<ICollection<WorkOrderTaskModel>> TakeOverWorkOrderTasks(TakeOverWorkOrder takeOverWorkOrder) {
 
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
-            {
-                throw new DomainException(
-                    $"Permission denied for {nameof(WorkOrderTask)}s uid {CurrentUser.GetId()}",
-                    DomainError.BadRequest);
-            }
-
             var userEntity = _unitOfWork.Users.Query().FirstOrDefault(s => s.Id == takeOverWorkOrder.UserId);
+
 
             if (userEntity == null)
             {
@@ -663,17 +657,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     $"No User exist with uid {takeOverWorkOrder.UserId}",
                     DomainError.BadRequest);
             }
-            /*
-            var workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Where(s => s.WorkOrderId == takeOverWorkOrder.WorkOrderId).ToListAsync();
 
-            if (!workOrderTaskEntities.Any()) {
-
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
                 throw new DomainException(
-                    $"No {nameof(WorkOrderTask)}s exist for WorkOrder uid {takeOverWorkOrder.WorkOrderId}",
+                    $"{userEntity.GetFullName()} does not have edit privileges for Work Order with Id {takeOverWorkOrder.WorkOrderId}",
                     DomainError.BadRequest);
-
             }
-            */
+
             var workOrderTasksToTakeOverEntities = await _unitOfWork.WorkOrderTasks.Query()
                 .Where(s => (s.StatusId == (int)EnumStatusSteps.InProgress || s.StatusId == (int)EnumStatusSteps.WaitingtoStart || s.StatusId == (int)EnumStatusSteps.Approved) && s.WorkOrderId == takeOverWorkOrder.WorkOrderId).ToListAsync();
 
@@ -681,7 +672,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             {
 
                 throw new DomainException(
-                    $"No {nameof(WorkOrderTask)}s to take over since all are Completed or Cancelled for {nameof(WorkOrder)} with uid {takeOverWorkOrder.WorkOrderId}",
+                    $"No {nameof(WorkOrderTask)}s to take over since all are Completed or Cancelled for {nameof(WorkOrder)} with Id {takeOverWorkOrder.WorkOrderId}",
                     DomainError.BadRequest);
 
             }
