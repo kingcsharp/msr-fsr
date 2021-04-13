@@ -904,7 +904,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 wosum.WorkOrderItemNumber = GetWorkOrderItemNumber(m);
 
                 // PurchaseOrderLineNumber
-                wosum.PurchaseOrderLineNumber = m.Purchase.CustomerLineNumber.ToString();
+                wosum.PurchaseOrderLineNumber = "NONE"; // FIXME
 
                 // WorkOrderPartSerialNumber
                 if (m.WorkOrderParts != null && m.WorkOrderParts.Count > 0)

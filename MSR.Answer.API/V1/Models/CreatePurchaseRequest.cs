@@ -51,11 +51,6 @@ namespace MSR.Answer.API.V1.Models
         public int Qty { get; set; }
 
         /// <summary>
-        /// CustomerLineNumber
-        /// </summary>
-        public int CustomerLineNumber { get; set; }
-
-        /// <summary>
         /// Material Transfer Number (MTTN)
         /// </summary>
         [StringLength(10)]

@@ -20,7 +20,6 @@ namespace MSR.Infrastructure.Resources.Projections
             PurchaseOrderId = i.Purchase.PurchaseOrderId,
             ReferencePO = i.Purchase.PurchaseOrder.ReferencePO,
             CustomerPurchaseNumber = i.Purchase.CustomerPurchaseNumber,
-            CustomerLineNumber = i.Purchase.CustomerLineNumber,
             SerialNumber = i.Purchase.SerialNumber,
             LocationId = i.LocationId,
             LocationName = i.Location.Name,

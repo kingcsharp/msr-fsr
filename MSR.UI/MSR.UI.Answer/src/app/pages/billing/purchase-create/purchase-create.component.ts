@@ -151,7 +151,6 @@ export class PurchaseCreateComponent implements OnInit {
               this.purchaseItems.push({
                 id: product.id,
                 productName: product.name,
-                customerLineNumber: null,
                 mttn: null,
                 dueDate: product.dueDate,
                 qty: product.qty,
@@ -168,7 +167,6 @@ export class PurchaseCreateComponent implements OnInit {
                 this.purchaseItems.push({
                   id: product.id,
                   productName: product.name,
-                  customerLineNumber: null,
                   mttn: null,
                   dueDate: product.dueDate,
                   qty: 1,
@@ -231,7 +229,6 @@ export class PurchaseCreateComponent implements OnInit {
               serialNumbers: serialNumbers,
               locationId: rootItem.locationId,
               qty: purchaseItem.qty,
-              customerLineNumber: rootItem.customerLineNumber ? parseInt(rootItem.customerLineNumber, 10) : null,
               mttn: rootItem.mttn,
               dueDate: rootItem.dueDate,
               purchasePrice: rootItem.unitPrice,

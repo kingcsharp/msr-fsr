@@ -16581,7 +16581,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
     locationId?: number;
     serialNumber?: string | undefined;
     qty?: number;
-    customerLineNumber?: number;
     mttn?: string | undefined;
     dueDate?: Date;
     purchasePrice?: number;
@@ -16606,7 +16605,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
             this.locationId = _data["locationId"];
             this.serialNumber = _data["serialNumber"];
             this.qty = _data["qty"];
-            this.customerLineNumber = _data["customerLineNumber"];
             this.mttn = _data["mttn"];
             this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
             this.purchasePrice = _data["purchasePrice"];
@@ -16639,7 +16637,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
         data["locationId"] = this.locationId;
         data["serialNumber"] = this.serialNumber;
         data["qty"] = this.qty;
-        data["customerLineNumber"] = this.customerLineNumber;
         data["mttn"] = this.mttn;
         data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["purchasePrice"] = this.purchasePrice;
@@ -16666,7 +16663,6 @@ export interface IPurchaseModel extends ICreatableModel {
     locationId?: number;
     serialNumber?: string | undefined;
     qty?: number;
-    customerLineNumber?: number;
     mttn?: string | undefined;
     dueDate?: Date;
     purchasePrice?: number;
@@ -17744,8 +17740,6 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     serialNumbers?: string[] | undefined;
     /** Quantity */
     qty!: number;
-    /** CustomerLineNumber */
-    customerLineNumber?: number;
     /** Material Transfer Number (MTTN) */
     mttn?: string | undefined;
     /** DueDate */
@@ -17777,7 +17771,6 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
                     this.serialNumbers!.push(item);
             }
             this.qty = _data["qty"];
-            this.customerLineNumber = _data["customerLineNumber"];
             this.mttn = _data["mttn"];
             this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
             this.purchasePrice = _data["purchasePrice"];
@@ -17805,7 +17798,6 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
                 data["serialNumbers"].push(item);
         }
         data["qty"] = this.qty;
-        data["customerLineNumber"] = this.customerLineNumber;
         data["mttn"] = this.mttn;
         data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["purchasePrice"] = this.purchasePrice;
@@ -17830,8 +17822,6 @@ export interface ICreatePurchaseRequest {
     serialNumbers?: string[] | undefined;
     /** Quantity */
     qty: number;
-    /** CustomerLineNumber */
-    customerLineNumber?: number;
     /** Material Transfer Number (MTTN) */
     mttn?: string | undefined;
     /** DueDate */
