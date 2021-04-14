@@ -1506,7 +1506,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     <tr>
                         <td class=""p-2"" width=""30%"" style=""text-align: right;"">Work Order #: </td>
                         <td width=""10%""></td>
-                        <td class=""p-2"">{workOrderPartEntity.Id}</td>
+                        <td class=""p-2"">{workOrderEntity.Id}</td>
                     </tr>
                     <tr>
                         <td class=""p-2"" width=""30%"" style=""text-align: right;"">Customer: </td>
