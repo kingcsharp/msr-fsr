@@ -26,8 +26,8 @@ export class ReportCubeService {
         const headers = new HttpHeaders().set('key', this.cubeKey);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
-        //const apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
-        const apiEndPointUrl = reportInfo.apiEndPointURL;
+        const apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
+        //const apiEndPointUrl = reportInfo.apiEndPointURL;
 
         return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
             return this.filterReportData(response, reportInfo);
@@ -161,7 +161,8 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'fillqty', label: 'Qty', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
                     new ColumnsSaved({ id: 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
+                    new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: this.enumColumnType.String, dropdownHeader: true  })
                 ];
             case 'WorkOrdersNotInvoicedbyWorkOrder':
                 return [

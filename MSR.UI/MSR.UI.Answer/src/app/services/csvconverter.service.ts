@@ -66,6 +66,9 @@ export class CSVConverterService {
         if (column.type === EnumColumnType.StringArray) {
             return value.map(x => x.name).join(',');
         }
+        if (column.type === EnumColumnType.Money) {
+            return `$${value}`;
+        }
 
         return value;
     }
