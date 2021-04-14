@@ -27,5 +27,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderMessageModel> CreateWorkOrderMessageAsync(CreateWorkOrderMessage command);
         Task<ICollection<WorkOrderHistoryView>> GetWorkOrderHistoryView(GetWorkOrderHistory command);
         Task<int> GetTotalWorkOrderHistoryViewRows(GetWorkOrderHistory command);
+        Task<ICollection<WorkOrderTaskModel>> TakeOverWorkOrderTasks(TakeOverWorkOrder takeOverWorkOrderTasks);
     }
 }
