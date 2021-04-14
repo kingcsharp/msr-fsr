@@ -26,8 +26,8 @@ export class ReportCubeService {
         const headers = new HttpHeaders().set('key', this.cubeKey);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
-        const apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
-        //const apiEndPointUrl = reportInfo.apiEndPointURL;
+        //const apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
+        const apiEndPointUrl = reportInfo.apiEndPointURL;
 
         return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
             return this.filterReportData(response, reportInfo);
@@ -420,14 +420,15 @@ export class ReportCubeService {
                 });
 
                 return this.getResultDataAndChart(chartInfo3);
-            case 'WorkInProcessbyWorkOrder':
+            case 'CombinedFinancialDatabyWorkOrder':
                 if (data.length > 0) {
-                    const resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
+                    let resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
+                    resultDataArr = resultDataArr.filter(s => moment(s.invoicedate) > moment(moment()).subtract(1, 'months').endOf('month'));
                     return resultDataArr;
                 }
             default:
                 if (data.length > 0) {
-                    const resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
+                    let resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
                     return resultDataArr;
                 }
                 break;
