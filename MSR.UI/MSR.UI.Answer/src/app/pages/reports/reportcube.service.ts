@@ -161,7 +161,8 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'fillqty', label: 'Qty', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
                     new ColumnsSaved({ id: 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
+                    new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: this.enumColumnType.String, dropdownHeader: true  })
                 ];
             case 'WorkOrdersNotInvoicedbyWorkOrder':
                 return [
@@ -419,14 +420,15 @@ export class ReportCubeService {
                 });
 
                 return this.getResultDataAndChart(chartInfo3);
-            case 'WorkInProcessbyWorkOrder':
+            case 'CombinedFinancialDatabyWorkOrder':
                 if (data.length > 0) {
-                    const resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
+                    let resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
+                    resultDataArr = resultDataArr.filter(s => moment(s.invoicedate) > moment(moment()).subtract(1, 'months').endOf('month'));
                     return resultDataArr;
                 }
             default:
                 if (data.length > 0) {
-                    const resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
+                    let resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
                     return resultDataArr;
                 }
                 break;
