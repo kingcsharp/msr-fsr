@@ -162,7 +162,8 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
                     new ColumnsSaved({ id: 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: this.enumColumnType.String, dropdownHeader: true  })
+                    new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: this.enumColumnType.String, dropdownHeader: true  }),
+                    new ColumnsSaved({ id: 'wocompleteddate', label: 'Completion Date', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
                 ];
             case 'WorkOrdersNotInvoicedbyWorkOrder':
                 return [
@@ -423,7 +424,7 @@ export class ReportCubeService {
             case 'CombinedFinancialDatabyWorkOrder':
                 if (data.length > 0) {
                     let resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
-                    resultDataArr = resultDataArr.filter(s => moment(s.invoicedate) > moment(moment()).subtract(1, 'months').endOf('month'));
+                    resultDataArr = resultDataArr.filter(s => moment(s.wocompleteddate) > moment(moment()).subtract(1, 'months').endOf('month'));
                     return resultDataArr;
                 }
             default:
