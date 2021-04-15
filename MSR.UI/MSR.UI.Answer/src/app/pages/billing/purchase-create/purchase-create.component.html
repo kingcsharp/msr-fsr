@@ -244,7 +244,6 @@
           <tbody>
             <tr>
               <th>Product Name</th>
-              <th>Cust Line</th>
               <th>Material Transfer #</th>
               <th>Due Date</th>
               <th>Qty</th>
@@ -260,19 +259,6 @@
                   name="purchaseItems[{{i}}].PROD_SHOW_NAME"
                   readonly
                   type="text"
-                >
-              </td>
-              <td>
-                <input
-                  pInputText
-                  type="text"
-                  class="form-control input-transparent custLineNumber"
-                  [(ngModel)]="purchaseItems[i].customerLineNumber"
-                  name="purchaseItem[{{i}}].CUST_LINE_ITEM"
-                  data-validate="parsley"
-                  data-parsley-required="true"
-                  data-parsley-trigger="change"
-                  data-parsley-type="integer"
                 >
               </td>
               <td>
@@ -357,10 +343,9 @@
             <tr *ngFor="let purchaseSerializeItem of purchaseSerializeItems; index as i">
               <td>
                 <input
-                  [value]="purchaseSerializeItem.customerLineNumber"
+                  [(ngModel)]="purchaseSerializeItem.customerLineNumber"
                   class="form-control input-transparent disable"
                   name="purchaseSerializeItem[{{i}}].CUST_LINE_ITEM"
-                  readonly
                   type="text"
                 >
               </td>
