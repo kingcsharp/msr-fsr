@@ -335,7 +335,20 @@
               <th>Cust Line #</th>
               <th>Serial / Kit Number</th>
               <th>Quantity</th>
-              <th>Site</th>
+              <th>Site
+                <p-dropdown
+                  placeholder="Location For All Parts"
+                  name="purchaseSerializeItem[global].SITE"
+                  [options]="locationsData"
+                  appendTo="body"
+                  [baseZIndex]="100001"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                  (onChange)="changeAllLocations($event)"
+                >
+                </p-dropdown>
+              </th>
               <th>Part</th>
               <th>Procedure</th>
             </tr>

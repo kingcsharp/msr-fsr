@@ -128,6 +128,12 @@ export class PurchaseCreateComponent implements OnInit {
       }));
   }
 
+  changeAllLocations(event) {
+    this.purchaseSerializeItems.forEach(e => {
+        e.locationId = event.value;
+    });
+  }
+
   applyGlobalDueDate() {
     this.purchaseItems.forEach((item, index) => {
       this.purchaseItems[index].dueDate = this.globalDueDate;
