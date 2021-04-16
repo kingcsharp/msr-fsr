@@ -286,7 +286,7 @@ namespace MSR.Infrastructure.Resources.Services
         {
             var listObjectsV2Response = await _fileDownloader.GetS3Files(folderName);
             var archiveDocuments = new List<ArchiveDocumentView>();
-            foreach (var item in listObjectsV2Response.S3Objects)
+            foreach (var item in listObjectsV2Response.S3Objects.OrderBy(s => s.LastModified))
             {
                 if (item.Size > 0)
                 {
