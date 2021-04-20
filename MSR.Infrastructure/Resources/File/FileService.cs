@@ -286,7 +286,7 @@ namespace MSR.Infrastructure.Resources.Services
         {
             var listObjectsV2Response = await _fileDownloader.GetS3Files(folderName);
             var archiveDocuments = new List<ArchiveDocumentView>();
-            foreach (var item in listObjectsV2Response.S3Objects)
+            foreach (var item in listObjectsV2Response.S3Objects.OrderBy(s => s.LastModified))
             {
                 if (item.Size > 0)
                 {
@@ -298,12 +298,14 @@ namespace MSR.Infrastructure.Resources.Services
                         DownloadURL = _fileDownloader.GetURL(item.Key, 6000)
                     };
 
-                    var maxMonthDate = archiveDocuments.Where(x => x.CreateDate.Year == archiveToAdd.CreateDate.Year && x.CreateDate.Month == archiveToAdd.CreateDate.Month).FirstOrDefault();
-                    if (maxMonthDate == null || DateTime.Compare(archiveToAdd.CreateDate, maxMonthDate.CreateDate) > 0)
+                    var maxMonthDate = archiveDocuments.Where(x => x.FileName == archiveToAdd.FileName).FirstOrDefault();
+                    if (maxMonthDate != null)
                     {
                         archiveDocuments.Remove(maxMonthDate);
-                        archiveDocuments.Add(archiveToAdd);
                     }
+
+                    archiveDocuments.Add(archiveToAdd);
+
                 }
             }
 
