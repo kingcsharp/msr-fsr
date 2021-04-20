@@ -12,5 +12,7 @@ namespace MSR.Domain.Events
         /// (if any)
         /// </summary>
         public List<string> serialNumbers { get; set; }
+
+        public List<string> CustomerLineNumbers { get; set; }
     }
 }

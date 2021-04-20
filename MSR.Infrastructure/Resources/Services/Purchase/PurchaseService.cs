@@ -91,6 +91,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 WorkOrderCreateEvent woEvent = new WorkOrderCreateEvent();
                 woEvent.purchaseInfo = ret;
                 woEvent.serialNumbers = command.SerialNumbers;
+                woEvent.CustomerLineNumbers = command.CustomerLineNumbers;
                 MessageEnvelope sqsmsg = new MessageEnvelope(
                     woEvent.GetType().Name,
                     woEvent,

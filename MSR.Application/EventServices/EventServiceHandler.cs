@@ -145,6 +145,11 @@ namespace MSR.Application.EventServices
                         parts[workOrderPartIndex].SerialNumber =
                             handledEvent.serialNumbers[workOrderPartIndex];
                     }
+                    if (handledEvent.CustomerLineNumbers[workOrderPartIndex] != null)
+                    {
+                        parts[workOrderPartIndex].CustomerLineNumber =
+                            handledEvent.CustomerLineNumbers[workOrderPartIndex];
+                    }
 
                 }
                 command.WorkOrderParts = parts;

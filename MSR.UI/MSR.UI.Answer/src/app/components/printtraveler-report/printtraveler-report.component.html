@@ -36,8 +36,7 @@
                         <div class="row align-items-center">
                             <div class="col-5 text-right">Reference Number:</div>
                             <div class="col-7">
-                            {{WorkOrder.purchase?.purchaseOrder?.referencePO}} /
-                            {{WorkOrder.purchase?.customerLineNumber}}
+                            {{WorkOrder.purchase?.purchaseOrder?.referencePO}}
                             </div>
                         </div>
                         <div class="row">
@@ -76,16 +75,23 @@
                     && WorkOrder.workOrderParts?.length !== 0">
                     <ul>
                         <li *ngFor="let part of WorkOrder.workOrderParts">
-                          <span *ngIf="part.serialNumber; else noSerial">
-                          Part # {{part.part?.partNumber}}, {{part.part?.name}}, S/N: ({{part.serialNumber}}), (CycleCount: {{part.cycleCount}})
-                          (Qty: {{part.qty}})
-                          </span>
-                          <ng-template #noSerial>
                             <span>
-                              Part # {{part.part?.partNumber}}, {{part.part?.name}}, S/N: (N/A), (CycleCount: {{part.cycleCount}})
-                            (Qty: {{part.qty}})
+                              Part # {{part.part?.partNumber}},
+                              {{part.part?.name}},
+                              <span *ngIf="part.serialNumber; else noSerial">
+                                  S/N: {{part.serialNumber}},
+                              </span>
+                              <ng-template #noSerial>
+                                <span>
+                                    S/N: (N/A),
+                                </span>
+                              </ng-template>
+                              <span *ngIf="part.customerLineNumber">
+                                  Line # {{part.customerLineNumber}},
+                              </span>
+                              (CycleCount: {{part.cycleCount}})
+                              (Qty: {{part.qty}})
                             </span>
-                          </ng-template>
                         </li>
                       </ul>    
                     </div>
