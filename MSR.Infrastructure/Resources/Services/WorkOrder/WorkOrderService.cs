@@ -775,6 +775,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
                 else if (isTaskCompleted)
                 {
+                    statEntity.ActiveTitle = null;
                     statEntity.CompletedTasks += 1;
                     statEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
                 }
