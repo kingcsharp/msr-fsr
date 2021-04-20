@@ -20,6 +20,8 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using MSR.Infrastructure.Resources.Queries;
+using IronPdf;
+using System.Net.Mail;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -643,6 +645,54 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return workOrderTaskModel;
         }
 
+        public async Task<ICollection<WorkOrderTaskModel>> TakeOverWorkOrderTasks(TakeOverWorkOrder takeOverWorkOrder) {
+
+            var userEntity = _unitOfWork.Users.Query().FirstOrDefault(s => s.Id == takeOverWorkOrder.UserId);
+
+
+            if (userEntity == null)
+            {
+
+                throw new DomainException(
+                    $"No User exist with uid {takeOverWorkOrder.UserId}",
+                    DomainError.BadRequest);
+            }
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
+                throw new DomainException(
+                    $"{userEntity.GetFullName()} does not have edit privileges for Work Order with Id {takeOverWorkOrder.WorkOrderId}",
+                    DomainError.BadRequest);
+            }
+
+            var workOrderTasksToTakeOverEntities = await _unitOfWork.WorkOrderTasks.Query()
+                .Where(s => (s.StatusId == (int)EnumStatusSteps.InProgress || s.StatusId == (int)EnumStatusSteps.WaitingtoStart || s.StatusId == (int)EnumStatusSteps.Approved) && s.WorkOrderId == takeOverWorkOrder.WorkOrderId).ToListAsync();
+
+            if (!workOrderTasksToTakeOverEntities.Any())
+            {
+
+                throw new DomainException(
+                    $"No {nameof(WorkOrderTask)}s to take over since all are Completed or Cancelled for {nameof(WorkOrder)} with Id {takeOverWorkOrder.WorkOrderId}",
+                    DomainError.BadRequest);
+
+            }
+
+            workOrderTasksToTakeOverEntities.ToList().ForEach(workOrderTaskEntity => { 
+               
+                workOrderTaskEntity.AssignedTo = userEntity.Id;
+                workOrderTaskEntity.AssignedToUser = userEntity;
+                _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
+
+            });
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var workOrderTaskModels = _mapper.Map<ICollection<WorkOrderTaskModel>>(workOrderTasksToTakeOverEntities);
+
+
+            return workOrderTaskModels;
+        }
+
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
@@ -714,6 +764,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     workOrderTaskEntity.ReferenceFiles.Add(fem);
                 }
             }
+
             var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
 
             if (statEntity != null)
@@ -1232,6 +1283,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderTaskEntity = await _unitOfWork.WorkOrderTasks.Query()
                 .FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitorEntity.WorkOrderTaskId);
             var workOrderEntity = await _unitOfWork.WorkOrders.Query()
+                .Include(s => s.WorkOrderTasks)
+                .ThenInclude(s => s.WorkOrderTaskMonitors)
+                .ThenInclude(s => s.ProcedureStepMonitor)
                 .FirstOrDefaultAsync(s => s.Id == workOrderTaskEntity.WorkOrderId);
             var purchaseEntity = await _unitOfWork.Purchases.Query()
                 .FirstOrDefaultAsync(s => s.Id == workOrderEntity.PurchaseId);
@@ -1296,8 +1350,217 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var subject = $"Non-Conformity Reported on {workOrderEntity.Id}";
 
-            await _emailService.SendEmailAsync(from, to, subject, body.ToString(), carbonCopyList, true);
+            var attachments =  new List<Attachment>();
 
+            License.LicenseKey = _generalInformation.IronPDFLicense;
+            var workOrderPartEntity = workOrderEntity.WorkOrderParts.First();
+            var ncrReport = $@"
+            <style>
+                .text-right {{
+                    text-align: right;
+                }}
+                .mb-10 {{
+                    margin-bottom: 10px;
+                }}
+                .border {{
+                    border: 1px solid #000;
+                    border-collapse: collapse;
+                }}
+                .bg-dark {{
+                    background-color: #495057;
+                }}
+                .bg-secondary {{
+                    background-color: #868e96;
+                }}
+                .p-2 {{
+                    padding: .5rem;
+                }}
+                .w-100 {{
+                    width: 100%;
+                }}
+                .font-weight-bold {{
+                    font-weight: 700;
+                }}
+                .container {{
+                    width: 100%;
+                    font-family: arial, sans-serif;
+                }}
+            </style>
+            <div class=""container"">
+                <div class=""w-100 mb-10 p-2"">Part Non Conformance Report - Work Order {workOrderEntity.Id}</div>
+                <table class=""w-100 border mb-10"">
+                    <tr>
+                        <td width=""20%"" class=""p-2"">MSR-FSR</td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"">Customer Part # {workOrderPartEntity?.Part?.PartNumber}, (Serial #: {workOrderPartEntity?.SerialNumber}), {workOrderPartEntity?.Part?.Name}</td>
+                    </tr>
+                </table>
+                <table class=""w-100 border mb-10"">
+                    <tr>
+                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Date Report Prepared: </td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"">{workOrderTaskMonitorEntity.LastUpdatedOn}</td>
+                    </tr>
+                    <tr>
+                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Work Order #: </td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"">{workOrderEntity.Id}</td>
+                    </tr>
+                    <tr>
+                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Customer: </td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"">{customerEntity.Name}</td>
+                    </tr>
+                    <tr>
+                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Technician: </td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"">{workOrderTaskAssignedUserModel.FirstName} {workOrderTaskAssignedUserModel.LastName}</td>
+                    </tr>
+                </table>
+                <table class=""w-100 border mb-10"">
+                    <tr>
+                        <td class=""font-weight-bold p-2"" width=""30%"">Part #</td>
+                        <td class=""font-weight-bold p-2"" width=""10%""></td>
+                        <td class=""font-weight-bold p-2"" width=""30%"">Part Name</td>
+                        <td class=""font-weight-bold p-2"" width=""10%""></td>
+                        <td class=""font-weight-bold p-2"" width=""30%"">Serial Number</td>
+                    </tr>
+                    <tr>
+                        <td class=""p-2"" width=""30%"">{workOrderPartEntity.Part?.PartNumber}</td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"" width=""30%"">{workOrderPartEntity.Part?.Name}</td>
+                        <td width=""10%""></td>
+                        <td class=""p-2"" width=""30%"">{workOrderPartEntity.SerialNumber}</td>
+                    </tr>
+                </table>
+            ";
+
+            List<FileModel> referenceFiles = new List<FileModel>();
+            var taskMonitorReport = "";
+
+            foreach(var woTaskEntity in workOrderEntity.WorkOrderTasks)
+            {
+                var isNCRTask = woTaskEntity.IsNCRTask.HasValue ? woTaskEntity.IsNCRTask.Value : false;
+                if ((woTaskEntity.ProcedureStep != null && woTaskEntity.ProcedureStep.ProcedureStepTypeId == 6) || isNCRTask)
+                {
+                    referenceFiles.AddRange(_fileService.ListFiles(nameof(WorkOrderTask), woTaskEntity.Id).ToList());
+                    var procedureStepEntity = await _unitOfWork.ProcedureSteps.Query().FirstOrDefaultAsync(s => s.Id == woTaskEntity.ProcedureStepId);
+                    var taskName = woTaskEntity.ProcedureStepId == null ? woTaskEntity.Title :procedureStepEntity.Title;
+                    taskMonitorReport += $@"
+                    <tr>
+                        <td class=""border bg-dark p-2"" colspan=""3"">{taskName}</td>
+                    </tr>
+                    <tr>
+                        <td class=""border bg-secondary p-2"" width=""50%"">Monitor {woTaskEntity.Id}</ div>
+                        <td class=""border bg-secondary p-2"" width=""25%"">Result</td>
+                        <td class=""border bg-secondary p-2"" width=""25%"">Comment</td>
+                    </tr>
+                    ";
+
+                    foreach(var woTaskMonitorEntity in woTaskEntity.WorkOrderTaskMonitors)
+                    {
+                        var desc = woTaskMonitorEntity.ProcedureMonitorId != null ? woTaskMonitorEntity.ProcedureStepMonitor?.Description : woTaskMonitorEntity.Description;
+                        taskMonitorReport += $@"
+                            <tr>
+                                <td class=""border p-2"" width=""50%"">
+                                    {desc}
+                                </td>
+                                <td class=""border p-2"" width=""25%"">{getResultFromMonitor(woTaskMonitorEntity)}</td>
+                                <td class=""border p-2"" width=""25%"">{woTaskMonitorEntity.Comment}</td>
+                            </tr>
+                        ";
+                    };
+                }
+            }
+
+            var associatedPictures = "";
+            var associatedDocuments = "";
+            foreach(var referenceFileModel in referenceFiles)
+            {
+                if (referenceFileModel.ContentType.Contains("image"))
+                {
+                    associatedPictures += $@"
+                    <a href=""{referenceFileModel.FileURL}"" target=""_blank"">
+                        <img style=""width: 33%"" src=""{referenceFileModel.FileURL}"" alt=""{referenceFileModel.Name}"">
+                    </a>
+                ";
+                }
+                else
+                {
+                    associatedDocuments += $@"{referenceFileModel.Name} ";
+                }
+            }
+
+            ncrReport += $@"
+                <table class=""w-100 border mb-10 p-2"">
+                    <tr>
+                        <td class=""font-weight-bold text-right p-2"" width=""30%"">Associated Documents:</td>
+                        <td class=""p-2"">{associatedDocuments}</td>
+                    </tr>
+                    <tr>
+                        <td class=""font-weight-bold text-right p-2"" width=""30%"">Associated Digital Pictures:</td>
+                        <td class=""p-2"">
+                            <div style=""display: flex; align-item: flex-start; justify-content: flex-start; flex-wrap: wrap"">{associatedPictures}</div>
+                        </td>
+                    <tr>
+                        <td class=""font-weight-bold text-right p-2"" width=""30%"">Comments:</td>
+                        <td class=""p-2""></td>
+                    </tr>
+                </table>
+                <table class=""w-100 border mb-10"">
+                {taskMonitorReport}
+                </table></div>
+            ";
+
+            var renderer = new IronPdf.HtmlToPdf();
+            var pdf = renderer.RenderHtmlAsPdf(ncrReport);
+            attachments.Add(new Attachment(pdf.Stream, "ncr-report.pdf", "application/pdf"));
+
+            await _emailService.SendEmailAsync(from, to, subject, body.ToString(), carbonCopyList, true, attachments);
+        }
+
+        private string getResultFromMonitor(WorkOrderTaskMonitor workOrderTaskMonitor)
+        {
+            var monitorType = workOrderTaskMonitor?.ProcedureStepMonitor?.MonitorTypeId;
+
+            switch (monitorType)
+            {
+                case 1: // Equipment
+                    return workOrderTaskMonitor.TextVal;
+                case 2: // Number
+                {
+                    if (workOrderTaskMonitor.ProcedureStepMonitor?.InputTypeId == 6)
+                    {
+                        return workOrderTaskMonitor.TextVal;
+                    } else {
+                        return workOrderTaskMonitor.NumVal.HasValue ? (workOrderTaskMonitor.NumVal.Value ==  1 ?  "1" : "0") : null;
+                    }
+                }
+                case 3: // YesOrNo
+                {
+                    if (!workOrderTaskMonitor.NumVal.HasValue)
+                    {
+                        return null;
+                    } else {
+                        return workOrderTaskMonitor.NumVal.Value == 1 ? "Yes" : "No";
+                    }
+                }
+                case 4: // Text
+                    return workOrderTaskMonitor.TextVal;
+                case 5: // PassOrFail
+                {
+                    if (!workOrderTaskMonitor.NumVal.HasValue)
+                    {
+                        return null;
+                    } else {
+                        return workOrderTaskMonitor.NumVal == 1 ? "Pass" : "Fail";
+                    }
+                }
+                case 6: // Select
+                    return workOrderTaskMonitor.TextVal;
+                default:
+                    return null;
+            }
         }
 
         /// <summary>

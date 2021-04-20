@@ -33,6 +33,7 @@ export class GridComponent implements OnInit {
   @Input() saveToLocalStorage: boolean;
   @Input() data;
   @Input() reportInfo: ReportModel;
+  @Input() calanderIsRange: boolean = false;
   @Output() expandRowClick = new EventEmitter<any>();
   @ViewChild('downlodInfo') downlodInfo: ElementRef;
 
