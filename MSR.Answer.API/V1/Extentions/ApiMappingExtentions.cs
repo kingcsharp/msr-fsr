@@ -1041,5 +1041,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<TakeOverWorkOrder>(request);
         }
+
+        public static CancelWorkOrder ToCancelWorkOrderCommand(this CancelWorkOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CancelWorkOrder>(request);
+        }
     }
 }

@@ -693,6 +693,80 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return workOrderTaskModels;
         }
 
+        public async Task<ICollection<WorkOrderTaskModel>> CancelWorkOrderTasksAsync(CancelWorkOrder cancelWorkOrder) {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
+                throw new DomainException(
+                    $"user does not have edit privileges for Work Order with Id {cancelWorkOrder.WorkOrderId}",
+                    DomainError.BadRequest);
+            }
+
+            var workOrderEntity = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == cancelWorkOrder.WorkOrderId);
+
+            if (workOrderEntity == null)
+            {
+                throw new DomainException(
+                    $"No Work Order with Id {cancelWorkOrder.WorkOrderId}",
+                    DomainError.BadRequest);
+            }
+
+            var workOrderTasksEntities = await _unitOfWork.WorkOrderTasks.Query()
+                .Where(s => s.WorkOrderId == cancelWorkOrder.WorkOrderId).ToListAsync();
+
+            var workOrderTasksEntitiesToCancel = workOrderTasksEntities
+                .Where(s => s.StatusId == (int)EnumStatusSteps.InProgress || s.StatusId == (int)EnumStatusSteps.WaitingtoStart || s.StatusId == (int)EnumStatusSteps.Approved).ToList();
+
+            if (!workOrderTasksEntitiesToCancel.Any())
+            {
+
+                throw new DomainException(
+                    $"No {nameof(WorkOrderTask)}s to cancel since all are Completed or Cancelled for {nameof(WorkOrder)} with Id {cancelWorkOrder.WorkOrderId}",
+                    DomainError.BadRequest);
+
+            }
+
+            var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == cancelWorkOrder.WorkOrderId);
+
+            if (workOrderStatEntity == null)
+            {
+                workOrderStatEntity = new WorkOrderStats()
+                {
+                    WorkOrderId = workOrderEntity.Id,
+                    TotalTasks = workOrderTasksEntities.Count(),
+                    CompletedTasks = 0,
+                    TotalTimeLogged = 0,
+                    TotalTaskTime = 0,
+                    ActiveTitle = null
+                };
+
+                await _unitOfWork.WorkOrderStats.AddAsync(workOrderStatEntity);
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            workOrderTasksEntitiesToCancel.ToList().ForEach(workOrderTaskEntity => { 
+               
+                workOrderTaskEntity.StatusId = cancelWorkOrder.Invoiceable ? (int)EnumStatusSteps.Complete : (int)EnumStatusSteps.Cancelled;
+
+                if (cancelWorkOrder.Invoiceable)
+                {
+                    workOrderStatEntity.CompletedTasks += 1;
+                    workOrderStatEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
+                }
+                _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
+
+            });
+            _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
+
+            workOrderEntity.ActualEndDate = DateTime.Now;
+            _unitOfWork.WorkOrders.Update(workOrderEntity);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var workOrderTaskModels = _mapper.Map<ICollection<WorkOrderTaskModel>>(workOrderTasksEntitiesToCancel);
+
+            return workOrderTaskModels;
+        }
+
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
