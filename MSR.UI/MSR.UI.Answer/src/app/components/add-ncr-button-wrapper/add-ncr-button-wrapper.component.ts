@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Procedure, WorkOrderPartService,
-  WorkOrderModel, WorkOrderService, ProcedureStepMonitorService, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest,
-  WorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest,
+  WorkOrderModel, WorkOrderService, ProcedureStepMonitorService,
+  WorkOrderTaskModel,
+  AddNCRWorkOrderTaskRequest, IAddNCRWorkOrderTaskRequest,
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
@@ -28,8 +29,11 @@ export class AddNcrButtonWrapperComponent implements OnInit {
   ncrProceduresAvailable: Array<Procedure>;
   workOrderTasks: Array<any>;
 
-  constructor(public globals: Globals, private procedureService: ProcedureService,
-    private workOrderTaskService: WorkOrderTaskService) { }
+  constructor(
+    public globals: Globals,
+    private procedureService: ProcedureService,
+    private workOrderService: WorkOrderService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -46,62 +50,19 @@ export class AddNcrButtonWrapperComponent implements OnInit {
 
   insertNCR(ncrProcedure: Procedure) {
     this.showAddNcrDialog = !this.showAddNcrDialog;
-    this.procedureService.stepGet(ncrProcedure.id, null, env.apiVersion).subscribe(responseHandler((response) => {
-
-      let procedureSteps = <Array<ProcedureStepModel>>response.object;
-      this.workOrderTasks = new Array<any>();
-
-      procedureSteps.map((procedureStep) => {
-        procedureStep.procedure = ncrProcedure;
-      });
-
-      this.addNCRWorkOrderTask(procedureSteps, 0);
-    }));
-  }
-
-  addNCRWorkOrderTask(procedureSteps, index) {
-
-    let seedStepOrderNumber = this.workOrderTaskInProgress.taskStepOrder;
-
-    let createWorkOrderTaskRequest = new CreateWorkOrderTaskRequest({
-      procedureId: procedureSteps[index].procedureId,
-      procedureStepId: procedureSteps[index].id,
-      workOrderId: this.workOrderModel.id,
-      taskStepOrder: seedStepOrderNumber + (index + 1)
-    } as ICreateWorkOrderTaskRequest);
-
     this.globals.showLoader(true);
-    this.workOrderTaskService.workOrderTaskPost(env.apiVersion, createWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler((postWorkOrderTaskResponse) => {
 
-      let workOrderTask = postWorkOrderTaskResponse.object;
-      let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-        assignedUserId: this.globals.getCurrentUser().id,
-        status: 'Waiting to Start',
-        taskIsRunning: false,
-        taskRunningSince: null,
-        taskStepOrder: workOrderTask.taskStepOrder,
-        totalTaskTime: 0,
-        workOrderTaskId: workOrderTask.id
-      } as IUpdateWorkOrderTaskRequest);
-
-      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler((patchWorkOrderTaskResponse) => {
-
-        let updatedWorkOrderTask = patchWorkOrderTaskResponse.object;
-        updatedWorkOrderTask.procedureStep = procedureSteps[index];
-        updatedWorkOrderTask.workOrderTaskMonitors = workOrderTask.workOrderTaskMonitors;
-
-        this.workOrderTasks.push(updatedWorkOrderTask);
-
-        if (index < procedureSteps.length - 1) {
-          this.addNCRWorkOrderTask(procedureSteps, index + 1);
-        }
-
-        if (index = procedureSteps.length - 1) {
-          this.workOrderModel.hasNCR = true;
-          this.addNcrTasks.emit(this.workOrderTasks);
-        }
-      }));
+    let addNCRWorkOrderTaskRequest = new AddNCRWorkOrderTaskRequest({
+      workOrderId: this.workOrderModel.id,
+      userId: this.globals.getCurrentUser().id,
+      procedureId: ncrProcedure.id,
+    } as IAddNCRWorkOrderTaskRequest);
+    this.workOrderService.addNCRWorkOrderTask(env.apiVersion, addNCRWorkOrderTaskRequest)
+    .pipe(take(1))
+    .subscribe(responseHandler(response => {
+      this.workOrderTasks = response.object;
+      this.workOrderModel.hasNCR = true;
+      this.addNcrTasks.emit(this.workOrderTasks);
     }));
   }
-
 }
