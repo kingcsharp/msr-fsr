@@ -693,6 +693,139 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return workOrderTaskModels;
         }
 
+        public async Task<ICollection<WorkOrderTaskModel>> AddNCRWorkOrderTasksAsync(AddNCRWorkOrderTask addNCRWorkOrderTask) {
+
+            var userEntity = _unitOfWork.Users.Query().FirstOrDefault(s => s.Id == addNCRWorkOrderTask.UserId);
+
+            if (userEntity == null)
+            {
+
+                throw new DomainException(
+                    $"No User exist with uid {addNCRWorkOrderTask.UserId}",
+                    DomainError.BadRequest);
+            }
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
+                throw new DomainException(
+                    $"user does not have edit privileges for Work Order with Id {addNCRWorkOrderTask.WorkOrderId}",
+                    DomainError.BadRequest);
+            }
+
+            var workOrderEntity = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == addNCRWorkOrderTask.WorkOrderId);
+
+            if (workOrderEntity == null)
+            {
+                throw new DomainException(
+                    $"No Work Order with Id {addNCRWorkOrderTask.WorkOrderId}",
+                    DomainError.BadRequest);
+            }
+
+            var procedureEntity = await _unitOfWork.Procedures.Query()
+                .Include(x => x.ProcedureSteps)
+                .ThenInclude(p => p.ProcedureStepMonitors)
+                .Where(x => x.Id == addNCRWorkOrderTask.ProcedureId)
+                .FirstOrDefaultAsync();
+
+            if (procedureEntity == null)
+            {
+                throw new DomainException(
+                    $"No Procedure with Id {addNCRWorkOrderTask.ProcedureId}",
+                    DomainError.BadRequest);
+            }
+
+            var workOrderTaskIsInProgress =  await _unitOfWork.WorkOrderTasks.Query()
+            .Where(s => s.WorkOrderId == addNCRWorkOrderTask.WorkOrderId && s.StatusId == (int)EnumStatusSteps.InProgress).FirstOrDefaultAsync();
+
+            var seedStepOrderNumber = workOrderTaskIsInProgress != null ? workOrderTaskIsInProgress.TaskStepOrder : 0;
+
+            var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == addNCRWorkOrderTask.WorkOrderId);
+
+            var workOrderTaskEntities = new List<WorkOrderTask>();
+            var waitingToStartStatusEntity = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)EnumStatusSteps.WaitingtoStart);
+
+            foreach(var procedureStepEntity in procedureEntity.ProcedureSteps)
+            {
+                if (!workOrderEntity.HasNCR)
+                {
+                    workOrderEntity.HasNCR = true;
+                    _unitOfWork.WorkOrders.Update(workOrderEntity);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+
+                seedStepOrderNumber += 1;
+
+                var workOrderTaskEntity = new WorkOrderTask()
+                {
+                    WorkOrderId = workOrderEntity.Id,
+                    ProcedureStepId = procedureStepEntity.Id,
+                    TaskStepOrder = seedStepOrderNumber,
+                    AssignedTo = addNCRWorkOrderTask.UserId,
+                    StatusId = (int)EnumStatusSteps.WaitingtoStart,
+                    TaskIsRunning = false,
+                    TaskRunningSince = null,
+                    TotalTaskTime = 0,
+                };
+
+                if (procedureStepEntity.ProcedureStepTypeId.HasValue)
+                {
+                    workOrderTaskEntity.ProcedureStepTypeId = procedureStepEntity.ProcedureStepTypeId.Value;
+                }
+
+                workOrderTaskEntity.WorkOrderTaskMonitors = _mapper.Map<List<WorkOrderTaskMonitor>>(procedureStepEntity.ProcedureStepMonitors);
+
+                workOrderTaskEntity.Description = procedureStepEntity.StepText;
+                workOrderTaskEntity.Title = procedureStepEntity.Title;
+                workOrderTaskEntity.IsNCRTask = true;
+
+                foreach (var workOrderTaskMonitor in workOrderTaskEntity.WorkOrderTaskMonitors)
+                {
+                    var procedureStepMonitor =
+                        procedureStepEntity.ProcedureStepMonitors.FirstOrDefault(s =>
+                            s.Id == workOrderTaskMonitor.ProcedureMonitorId);
+
+                    if (procedureStepMonitor != null)
+                    {
+                        workOrderTaskMonitor.FailAction = procedureStepMonitor.FailAction;
+                        workOrderTaskMonitor.Description = procedureStepMonitor.Description;
+                        workOrderTaskMonitor.MonitorListId = procedureStepMonitor.MonitorListId;
+                        workOrderTaskMonitor.ShouldBe = procedureStepMonitor.ShouldBe;
+                        workOrderTaskMonitor.HighTarget = procedureStepMonitor.HighTarget;
+                        workOrderTaskMonitor.LowTarget = procedureStepMonitor.LowTarget;
+                        workOrderTaskMonitor.Target = procedureStepMonitor.Target;
+                        workOrderTaskMonitor.FailAction = procedureStepMonitor.FailAction;
+                        workOrderTaskMonitor.SensorName = procedureStepMonitor.SensorName;
+                        workOrderTaskMonitor.MonitorTypeId = procedureStepMonitor.MonitorTypeId;
+                        workOrderTaskMonitor.InputTypeId = procedureStepMonitor.InputTypeId;
+                    }
+                }
+
+                workOrderStatEntity.TotalTasks += 1;
+                workOrderStatEntity.TotalTaskTime += procedureStepEntity?.LaborTime == null ? 0 : (decimal)procedureStepEntity?.LaborTime.Value;
+                _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);           
+            
+                await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
+                await _unitOfWork.SaveChangesAsync();               
+                
+                workOrderTaskEntities.Add(workOrderTaskEntity);
+            }
+
+            foreach(var workOrderTaskEntity in workOrderTaskEntities)
+            {
+                foreach (var workOrderTaskMonitorEntity in workOrderTaskEntity.WorkOrderTaskMonitors)
+                {
+                    workOrderTaskMonitorEntity.WorkOrderTask = null;
+                }
+
+                workOrderTaskEntity.WorkOrder = null;
+                workOrderTaskEntity.Status = waitingToStartStatusEntity;
+            }
+
+            var workOrderTaskModels = _mapper.Map<ICollection<WorkOrderTaskModel>>(workOrderTaskEntities);
+
+            return workOrderTaskModels;
+        }
+
         public async Task<ICollection<WorkOrderTaskModel>> CancelWorkOrderTasksAsync(CancelWorkOrder cancelWorkOrder) {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {

@@ -158,6 +158,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetWorkflowRequest, GetWorkflowModel>();
             CreateMap<TakeOverWorkOrderRequest, TakeOverWorkOrder>();
             CreateMap<CancelWorkOrderRequest, CancelWorkOrder>();
+            CreateMap<AddNCRWorkOrderTaskRequest, AddNCRWorkOrderTask>();
         }
     }
 }
