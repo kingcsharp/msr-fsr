@@ -834,7 +834,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            var workOrderEntity = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == cancelWorkOrder.WorkOrderId);
+            var workOrderEntity = await _unitOfWork.WorkOrders.Query()
+                .Include(x => x.WorkOrderTasks)
+                .Where(x => x.Id == cancelWorkOrder.WorkOrderId)
+                .FirstOrDefaultAsync();
 
             if (workOrderEntity == null)
             {
@@ -843,10 +846,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            var workOrderTasksEntities = await _unitOfWork.WorkOrderTasks.Query()
-                .Where(s => s.WorkOrderId == cancelWorkOrder.WorkOrderId).ToListAsync();
-
-            var workOrderTasksEntitiesToCancel = workOrderTasksEntities
+            var workOrderTasksEntitiesToCancel = workOrderEntity.WorkOrderTasks
                 .Where(s => s.StatusId == (int)EnumStatusSteps.InProgress || s.StatusId == (int)EnumStatusSteps.WaitingtoStart || s.StatusId == (int)EnumStatusSteps.Approved).ToList();
 
             if (!workOrderTasksEntitiesToCancel.Any())
@@ -860,24 +860,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == cancelWorkOrder.WorkOrderId);
 
-            if (workOrderStatEntity == null)
+
+            foreach (var workOrderTaskEntity in workOrderTasksEntitiesToCancel)
             {
-                workOrderStatEntity = new WorkOrderStats()
-                {
-                    WorkOrderId = workOrderEntity.Id,
-                    TotalTasks = workOrderTasksEntities.Count(),
-                    CompletedTasks = 0,
-                    TotalTimeLogged = 0,
-                    TotalTaskTime = 0,
-                    ActiveTitle = null
-                };
-
-                await _unitOfWork.WorkOrderStats.AddAsync(workOrderStatEntity);
-                await _unitOfWork.SaveChangesAsync();
-            }
-
-            workOrderTasksEntitiesToCancel.ToList().ForEach(workOrderTaskEntity => { 
-               
                 workOrderTaskEntity.StatusId = cancelWorkOrder.Invoiceable ? (int)EnumStatusSteps.Complete : (int)EnumStatusSteps.Cancelled;
 
                 if (cancelWorkOrder.Invoiceable)
@@ -886,14 +871,30 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     workOrderStatEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
                 }
                 _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
-
-            });
-            _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
+                    await _unitOfWork.SaveChangesAsync();
+            }
+            _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);            
 
             workOrderEntity.ActualEndDate = DateTime.Now;
             _unitOfWork.WorkOrders.Update(workOrderEntity);
 
             await _unitOfWork.SaveChangesAsync();
+
+            var workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query()
+                .Include(x => x.ProcedureStep)
+                .Include(x => x.WorkOrderTaskMonitors)
+                .Include(x => x.Status)
+                .Where(s => s.WorkOrderId == cancelWorkOrder.WorkOrderId).ToListAsync();
+
+            foreach(var workOrderTaskEntity in workOrderTaskEntities)
+            {
+                foreach (var workOrderTaskMonitorEntity in workOrderTaskEntity.WorkOrderTaskMonitors)
+                {
+                    workOrderTaskMonitorEntity.WorkOrderTask = null;
+                }
+
+                workOrderTaskEntity.WorkOrder = null;
+            }
 
             var workOrderTaskModels = _mapper.Map<ICollection<WorkOrderTaskModel>>(workOrderTasksEntitiesToCancel);
 

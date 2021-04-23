@@ -467,20 +467,10 @@ export class WipdetailsComponent implements OnInit {
     } as ICancelWorkOrderRequest);
 
     this.globals.showLoader(true);
-    this.workOrdersService.workOrderCancel(env.apiVersion, cancelWorkOrderRequest).pipe(take(1)).subscribe(responseHandler(() => {
-      let indexOfCurrentWorkOrderInProgress = 0;
-      if (this.workOrderTaskInProgress != null) {
-        indexOfCurrentWorkOrderInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
+    this.workOrdersService.workOrderCancel(env.apiVersion, cancelWorkOrderRequest).pipe(take(1)).subscribe(responseHandler((response) => {
+      if(response.object) {
+        this.workOrderModel.workOrderTasks = response.object;
       }
-
-      for (let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++) {
-        this.workOrderModel.workOrderTasks[index].statusId = invoice ? EnumStatusSteps.Complete : EnumStatusSteps.Cancelled;
-        this.workOrderModel.workOrderTasks[index].status = new StatusModel({
-          id: invoice ? EnumStatusSteps.Complete : EnumStatusSteps.Cancelled,
-          name: EnumStatusSteps[invoice ? EnumStatusSteps.Complete : EnumStatusSteps.Cancelled],
-        } as IStatusModel);
-      }
-
       this.workOrderIsComplete = this.isWorkOrderComplete();
     }));
   }
