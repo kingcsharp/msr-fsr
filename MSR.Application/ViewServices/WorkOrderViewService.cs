@@ -65,7 +65,14 @@ namespace MSR.Application.ViewServices
             {
                 workOrder.SubParts = allPortalSubParts.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<PortalSubPartView>(i)).ToList();
                 workOrder.Messages = messages.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<WorkOrderMessageModel>(i)).ToList();
-                workOrder.Disposition = string.Join(";", workOrder.Messages.Select(i => $"{i.Name}, {i.Date}, {i.Message}").ToList());
+                if(workOrder.Disposition != null)
+                {
+                    var dispositionItems = workOrder.Disposition.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var dispositionMessages = dispositionItems.Select(i => i.Split(';', StringSplitOptions.RemoveEmptyEntries)).ToList();
+                    var itemsToAdd = dispositionMessages.Select(j => new WorkOrderMessageModel() { Date = DateTime.Parse(j[1].ToString()), Message = j[2].ToString(), Name = j[0].ToString() });
+
+                    workOrder.Messages = workOrder.Messages.Concat(itemsToAdd).ToList();
+                }
             }
 
             return workOrderData;

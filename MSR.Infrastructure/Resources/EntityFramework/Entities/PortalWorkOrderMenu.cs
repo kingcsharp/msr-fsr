@@ -38,5 +38,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Status { get; set; }
         public int WorkOrderId { get; set; }
         public DateTime CreatedOn { get; set; }
+        public string Disposition { get; set; }
     }
 }
