@@ -29,13 +29,13 @@
     <div *ngIf="colsDataAndSettings.colData.status === 'In Progress'">
         <div class="activetask-container">{{colsDataAndSettings.colData.stepText}}</div>
         <div class="progressbar-container">
-            <progressbar [value]="colsDataAndSettings.colData.percentageOfTasksCompleted * 100"
+            <progressbar [value]="colsDataAndSettings.colData.percentageOfTasksCompleted"
                 [type]="colsDataAndSettings.colData.tasksCompletedType" [striped]="true" [animate]="true"></progressbar>
             <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">
-                {{colsDataAndSettings.colData.percentageOfTasksCompleted | percent : '2.2-2'}}
+                {{colsDataAndSettings.colData.percentageOfTasksCompleted}}%
             </div>
             <ng-template #percentOfTaskCompletedTemplate>
-                {{colsDataAndSettings.colData.percentageOfTasksCompleted | percent : '2.2-2'}}
+                {{colsDataAndSettings.colData.percentageOfTasksCompleted}}%
                 {{colsDataAndSettings.colData.percentageOfTasksCompletedNumerator}}/{{colsDataAndSettings.colData.percentageOfTasksCompletedDenominator}}
                 steps completed
             </ng-template>

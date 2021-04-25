@@ -12,7 +12,6 @@ namespace MSR.Infrastructure.Tests.TestFixtures
         public static Purchase PlainPurchase =>
             new Faker<Purchase>()
                 .RuleFor(o => o.Id, f => purchaseid)
-                .RuleFor(o => o.CustomerLineNumber, f => f.Random.Int(1,999))
                 .RuleFor(o => o.CustomerPurchaseNumber, cpn)
                 .Generate();
         public static WorkOrder PlainWorkOrder =>

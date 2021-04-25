@@ -102,7 +102,6 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<Models.UserRoleModel, MSR.Domain.Models.UserRoleModel>();
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
-            CreateMap<GetWorkOrderStatus, GetWorkOrder>();
             CreateMap<WorkOrderModel, WorkOrderGridSummary>()
                 // SerialNumber
                 .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => (src.WorkOrderParts != null && src.WorkOrderParts.Count > 0) ? src.WorkOrderParts.First().SerialNumber : ""))
@@ -157,6 +156,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetProcedureRequest, GetProcedure>();
             CreateMap<GetWorkOrderMenuRequest, GetWorkOrderMenuQueryModel>();
             CreateMap<GetWorkflowRequest, GetWorkflowModel>();
+            CreateMap<TakeOverWorkOrderRequest, TakeOverWorkOrder>();
         }
     }
 }

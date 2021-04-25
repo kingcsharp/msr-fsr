@@ -45,15 +45,15 @@ namespace MSR.Answer.API.V1.Models
         public List<string> SerialNumbers { get; set; }
 
         /// <summary>
+        /// CustomerLineNumbers
+        /// </summary>
+        public List<string> CustomerLineNumbers { get; set; }
+
+        /// <summary>
         /// Quantity
         /// </summary>
         [Required]
         public int Qty { get; set; }
-
-        /// <summary>
-        /// CustomerLineNumber
-        /// </summary>
-        public int CustomerLineNumber { get; set; }
 
         /// <summary>
         /// Material Transfer Number (MTTN)

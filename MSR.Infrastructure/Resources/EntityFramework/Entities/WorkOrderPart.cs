@@ -28,6 +28,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(10)]
         public string SegregationType { get; set; }
 
+        public string CustomerLineNumber { get; set; }
+
         public virtual Part Part { get; set; }
 
         public virtual WorkOrder WorkOrder { get; set; }

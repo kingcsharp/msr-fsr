@@ -13,7 +13,6 @@ namespace MSR.Domain.Models
         public int LocationId { get; set; }
         public string SerialNumber { get; set; }
         public int Qty { get; set; }
-        public int CustomerLineNumber { get; set; }
         public string MTTN { get; set; }
         public DateTime DueDate { get; set; }
         public decimal PurchasePrice { get; set; }

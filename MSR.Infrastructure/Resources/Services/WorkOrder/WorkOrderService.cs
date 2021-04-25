@@ -645,6 +645,54 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return workOrderTaskModel;
         }
 
+        public async Task<ICollection<WorkOrderTaskModel>> TakeOverWorkOrderTasks(TakeOverWorkOrder takeOverWorkOrder) {
+
+            var userEntity = _unitOfWork.Users.Query().FirstOrDefault(s => s.Id == takeOverWorkOrder.UserId);
+
+
+            if (userEntity == null)
+            {
+
+                throw new DomainException(
+                    $"No User exist with uid {takeOverWorkOrder.UserId}",
+                    DomainError.BadRequest);
+            }
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
+                throw new DomainException(
+                    $"{userEntity.GetFullName()} does not have edit privileges for Work Order with Id {takeOverWorkOrder.WorkOrderId}",
+                    DomainError.BadRequest);
+            }
+
+            var workOrderTasksToTakeOverEntities = await _unitOfWork.WorkOrderTasks.Query()
+                .Where(s => (s.StatusId == (int)EnumStatusSteps.InProgress || s.StatusId == (int)EnumStatusSteps.WaitingtoStart || s.StatusId == (int)EnumStatusSteps.Approved) && s.WorkOrderId == takeOverWorkOrder.WorkOrderId).ToListAsync();
+
+            if (!workOrderTasksToTakeOverEntities.Any())
+            {
+
+                throw new DomainException(
+                    $"No {nameof(WorkOrderTask)}s to take over since all are Completed or Cancelled for {nameof(WorkOrder)} with Id {takeOverWorkOrder.WorkOrderId}",
+                    DomainError.BadRequest);
+
+            }
+
+            workOrderTasksToTakeOverEntities.ToList().ForEach(workOrderTaskEntity => { 
+               
+                workOrderTaskEntity.AssignedTo = userEntity.Id;
+                workOrderTaskEntity.AssignedToUser = userEntity;
+                _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
+
+            });
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var workOrderTaskModels = _mapper.Map<ICollection<WorkOrderTaskModel>>(workOrderTasksToTakeOverEntities);
+
+
+            return workOrderTaskModels;
+        }
+
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
@@ -716,19 +764,21 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     workOrderTaskEntity.ReferenceFiles.Add(fem);
                 }
             }
+
             var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
 
-            if (isTaskStarted)
+            if (statEntity != null)
             {
-                statEntity.ActiveTitle = workOrderTaskEntity.Title;
+                if (isTaskStarted)
+                {
+                    statEntity.ActiveTitle = workOrderTaskEntity.Title;
+                }
+                else if (isTaskCompleted)
+                {
+                    statEntity.CompletedTasks += 1;
+                    statEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
+                }
             }
-            else if (isTaskCompleted)
-            {
-                statEntity.CompletedTasks += 1;
-                statEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
-            }
-
-           
 
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(workOrderTaskEntity, workOrderTaskEntity.Id);
@@ -862,109 +912,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return await GetWorkOrderGridSummaryImpl();
         }
 
-        public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command)
-        {
-            var gwo = _mapper.Map<GetWorkOrder>(command);
-
-            gwo.completedOnly = false;
-
-            ICollection<WorkOrderModel> models = await GetWorkOrderAsync(gwo);
-            List<WorkOrderStatus> ret = new List<WorkOrderStatus>();
-            foreach (WorkOrderModel m in models)
-            {
-                var sum = _mapper.Map<WorkOrderStatus>(m);
-
-                // PartNumber
-                // Lists the first part in the set (this follows
-                // the behavior of Answer 2).
-                if (m.WorkOrderParts != null && m.WorkOrderParts.Count > 0)
-                {
-                    sum.PartNumber = m.WorkOrderParts.First().Part.PartNumber;
-                }
-                else
-                {
-                    sum.PartNumber = "";
-                }
-
-                // ProcedureName
-                if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0)
-                {
-                    sum.ProcedureName = m.WorkOrderTasks.First().ProcedureStep?.Procedure?.Name;
-                }
-                else
-                {
-                    sum.ProcedureName = "";
-                }
-
-                WorkOrderSummary wosum = new WorkOrderSummary();
-
-                // WorkOrderId
-                wosum.WorkOrderId = m.Id.GetValueOrDefault();
-
-                // WorkOrderItemNumber
-                wosum.WorkOrderItemNumber = GetWorkOrderItemNumber(m);
-
-                // PurchaseOrderLineNumber
-                wosum.PurchaseOrderLineNumber = m.Purchase.CustomerLineNumber.ToString();
-
-                // WorkOrderPartSerialNumber
-                if (m.WorkOrderParts != null && m.WorkOrderParts.Count > 0)
-                {
-                    wosum.WorkOrderPartSerialNumber = m.WorkOrderParts.First().SerialNumber;
-                }
-                else
-                {
-                    wosum.WorkOrderPartSerialNumber = "";
-                }
-
-                // WorkOrderStatus ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
-                wosum.WorkOrderStatus = m.Status;
-
-                // WorkOrderAssignedTo
-                var curstepq = m.WorkOrderTasks.Where(x => !(
-                    x.Status.Name.ToUpper().Equals("COMPLETE") ||
-                    x.Status.Name.ToUpper().Equals("CANCELLED"))
-                );
-                if (curstepq.Count() > 0)
-                {
-                    WorkOrderTaskModel curstep = curstepq.OrderBy(x => x.TaskStepOrder).First();
-                    if (curstep.AssignedToUser == null)
-                    {
-                        wosum.WorkOrderAssignedTo = "";
-                    }
-                    else
-                    {
-                        wosum.WorkOrderAssignedTo = curstep.AssignedToUser.FullName;
-                    }
-                }
-                else if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0)
-                {
-                    if (m.WorkOrderTasks.First().AssignedToUser == null)
-                    {
-                        wosum.WorkOrderAssignedTo = "";
-                    }
-                    else
-                    {
-                        wosum.WorkOrderAssignedTo = m.WorkOrderTasks.First().AssignedToUser.FullName;
-                    }
-                }
-                else
-                {
-                    wosum.WorkOrderAssignedTo = "";
-                }
-
-                // WorkOrderHasNcr
-                wosum.WorkOrderHasNcr = m.HasNCR.GetValueOrDefault();
-
-                // WorkOrderScheduledEndDate
-                wosum.WorkOrderScheduledEndDate = m.ScheduledEndDate;
-
-                sum.WorkOrderSummary = wosum;
-
-                ret.Add(sum);
-            }
-            return ret;
-        }
         /// <summary>
         /// Return a list of statuses for active work order tasks
         /// (and by extension, work order).
@@ -1457,7 +1404,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     <tr>
                         <td class=""p-2"" width=""30%"" style=""text-align: right;"">Work Order #: </td>
                         <td width=""10%""></td>
-                        <td class=""p-2"">{workOrderPartEntity.Id}</td>
+                        <td class=""p-2"">{workOrderEntity.Id}</td>
                     </tr>
                     <tr>
                         <td class=""p-2"" width=""30%"" style=""text-align: right;"">Customer: </td>

@@ -22,7 +22,6 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetWorkOrder>,
         ICommandHandler<GetWorkOrderMenu>,
         ICommandHandler<DeleteWorkOrder>,
-        ICommandHandler<GetWorkOrderStatus>,
         ICommandHandler<UpdateWorkOrderPart>,
         ICommandHandler<CreateWorkOrderTask>,
         ICommandHandler<UpdateWorkOrderTask>,
@@ -31,17 +30,20 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetPortalWorkOrder>,
         ICommandHandler<CreateWorkOrderMessage>,
         ICommandHandler<GetWorkOrderPart>,
-        ICommandHandler<GetWorkOrderHistory>
+        ICommandHandler<GetWorkOrderHistory>,
+        ICommandHandler<TakeOverWorkOrder>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
+        private readonly IDocumentService _documentService;
 
-        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper, IFileService fileService)
+        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper, IFileService fileService, IDocumentService documentService)
         {
             _workOrderService = procedureService;
             _mapper = mapper;
             _fileService = fileService;
+            _documentService = documentService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetWorkOrder command, CancellationToken cancellationToken = default)
@@ -64,12 +66,6 @@ namespace MSR.Application.ApplicationServices
         {
             ICollection<WorkOrderGridSummary> ret = await _workOrderService.GetWorkOrderGridSummaryAsync(command);
             return new CommandResponse<ICollection<WorkOrderGridSummary>>(ret);
-        }
-
-        public async Task<ICommandResponse> HandleAsync(GetWorkOrderStatus command, CancellationToken cancellationToken = default)
-        {
-            ICollection<WorkOrderStatus> ret = await _workOrderService.GetWorkOrderStatusAsync(command);
-            return new CommandResponse<ICollection<WorkOrderStatus>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderPart command, CancellationToken cancellationToken = default)
@@ -134,6 +130,13 @@ namespace MSR.Application.ApplicationServices
             var ret = await _workOrderService.GetWorkOrderHistoryView(command);
             int totalRows = await _workOrderService.GetTotalWorkOrderHistoryViewRows(command);
             return new PagingCommandResponse<ICollection<Domain.Views.WorkOrderHistoryView>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(TakeOverWorkOrder command, CancellationToken cancellationToken = default)
+        {
+            var workOrderTaskModels = await _workOrderService.TakeOverWorkOrderTasks(command);
+            
+            return new CommandResponse<ICollection<WorkOrderTaskModel>>(workOrderTaskModels);
         }
     }
 }
