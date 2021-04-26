@@ -152,7 +152,8 @@ namespace MSR.Infrastructure.Resources.Queries
                 Qty = view.Qty,
                 SerialNumber = view.SerialNumber,
                 StartDate = view.StartDate,
-                Status = view.Status
+                Status = view.Status,
+                Disposition = view.Disposition
             }).ToList(), pagedData.totalRows);
         }
 

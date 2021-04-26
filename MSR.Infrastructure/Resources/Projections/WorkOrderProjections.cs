@@ -143,7 +143,8 @@ namespace MSR.Infrastructure.Resources.Projections
             StartDate = i.StartDate,
             Status = i.Status,
             WorkOrderId = i.WorkOrderId,
-            CreatedOn = i.CreatedOn
+            CreatedOn = i.CreatedOn,
+            Disposition = i.Disposition
         };
 
         private static EnumStatusSteps GetWorkOrderStatusFromTasks(ICollection<WorkOrderTask> tasks)
