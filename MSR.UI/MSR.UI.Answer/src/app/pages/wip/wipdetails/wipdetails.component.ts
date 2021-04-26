@@ -6,7 +6,7 @@ import {
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
-  ProcedureStepModel, DocumentView, Role, UserModel, EnumSegregationType, StatusModel, IStatusModel, EnumStatusSteps
+  ProcedureStepModel, DocumentView, Role, UserModel, EnumSegregationType, StatusModel, IStatusModel, EnumStatusSteps, CancelWorkOrderRequest, ICancelWorkOrderRequest,
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -461,87 +461,18 @@ export class WipdetailsComponent implements OnInit {
     this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
     this.workOrderIsComplete = this.isWorkOrderComplete();
 
-    if (invoice) {
+    let cancelWorkOrderRequest = new CancelWorkOrderRequest({
+      workOrderId: this.workOrderModel.id,
+      invoiceable: invoice,
+    } as ICancelWorkOrderRequest);
 
-      this.completeRemainingSteps();
-
-    } else {
-
-      this.cancelRemainingSteps();
-
-    }
-
-  }
-  completeRemainingSteps() {
-
-    let indexOfCurrentWorkOrderInProgress = 0;
-    if (this.workOrderTaskInProgress != null) {
-      indexOfCurrentWorkOrderInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
-    }
-
-    for (let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++) {
-
-      let workOrderTaskToClose = this.workOrderModel.workOrderTasks[index];
-
-      let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-        assignedUserId: this.globals.getCurrentUser().id,
-        status: 'Complete',
-        taskIsRunning: false,
-        taskRunningSince: null,
-        taskStepOrder: workOrderTaskToClose.taskStepOrder,
-        workOrderTaskId: workOrderTaskToClose.id,
-        totalTaskTime: 0
-      } as IUpdateWorkOrderTaskRequest);
-
-      this.globals.showLoader(true);
-      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
-
-        this.workOrderModel.workOrderTasks[index].statusId = EnumStatusSteps.Complete;
-        this.workOrderModel.workOrderTasks[index].status = new StatusModel({
-          id: EnumStatusSteps.Complete,
-          name: EnumStatusSteps[EnumStatusSteps.Complete]
-        } as IStatusModel);
-        this.workOrderIsComplete = this.isWorkOrderComplete();
-        
-      }));
-
-    }
-  }
-
-  cancelRemainingSteps() {
-
-    let indexOfCurrentWorkOrderInProgress = 0;
-    if (this.workOrderTaskInProgress != null) {
-      indexOfCurrentWorkOrderInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
-    }
-
-    for (let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++) {
-
-      let workOrderTaskToClose = this.workOrderModel.workOrderTasks[index];
-
-      let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-        assignedUserId: this.globals.getCurrentUser().id,
-        status: 'Cancelled',
-        taskIsRunning: false,
-        taskRunningSince: workOrderTaskToClose.taskRunningSince,
-        taskStepOrder: workOrderTaskToClose.taskStepOrder,
-        workOrderTaskId: workOrderTaskToClose.id,
-        totalTaskTime: 0
-      } as IUpdateWorkOrderTaskRequest);
-
-      this.globals.showLoader(true);
-      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
-        
-        this.workOrderModel.workOrderTasks[index].statusId = EnumStatusSteps.Cancelled;
-        this.workOrderModel.workOrderTasks[index].status = new StatusModel({
-          id: EnumStatusSteps.Cancelled,
-          name: EnumStatusSteps[EnumStatusSteps.Cancelled]
-        } as IStatusModel);
-        this.workOrderIsComplete = this.isWorkOrderComplete();
-        
-      }));
-
-    }
+    this.globals.showLoader(true);
+    this.workOrdersService.workOrderCancel(env.apiVersion, cancelWorkOrderRequest).pipe(take(1)).subscribe(responseHandler((response) => {
+      if(response.object) {
+        this.workOrderModel.workOrderTasks = response.object;
+      }
+      this.workOrderIsComplete = this.isWorkOrderComplete();
+    }));
   }
 
   takeOverThisStep() {
