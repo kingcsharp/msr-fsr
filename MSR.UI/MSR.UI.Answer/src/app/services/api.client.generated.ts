@@ -7953,6 +7953,116 @@ export class WorkOrderService {
         }
         return _observableOf<AuditActionResultOfICollectionOfWorkOrderTaskModel>(<any>null);
     }
+
+    workOrderCancel(version: string, request: CancelWorkOrderRequest): Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/WorkOrderCancel";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkOrderCancel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkOrderCancel(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkOrderCancel(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfWorkOrderTaskModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfWorkOrderTaskModel>(<any>null);
+    }
+
+    addNCRWorkOrderTask(version: string, request: AddNCRWorkOrderTaskRequest): Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/AddNCRWorkOrderTask";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddNCRWorkOrderTask(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddNCRWorkOrderTask(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddNCRWorkOrderTask(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfWorkOrderTaskModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfWorkOrderTaskModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -21451,6 +21561,90 @@ export class TakeOverWorkOrderRequest implements ITakeOverWorkOrderRequest {
 
 export interface ITakeOverWorkOrderRequest {
     workOrderId?: number;
+    userId?: number;
+}
+
+export class CancelWorkOrderRequest implements ICancelWorkOrderRequest {
+    workOrderId?: number;
+    invoiceable?: boolean;
+
+    constructor(data?: ICancelWorkOrderRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.invoiceable = _data["invoiceable"];
+        }
+    }
+
+    static fromJS(data: any): CancelWorkOrderRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CancelWorkOrderRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["invoiceable"] = this.invoiceable;
+        return data; 
+    }
+}
+
+export interface ICancelWorkOrderRequest {
+    workOrderId?: number;
+    invoiceable?: boolean;
+}
+
+export class AddNCRWorkOrderTaskRequest implements IAddNCRWorkOrderTaskRequest {
+    workOrderId?: number;
+    procedureId?: number;
+    userId?: number;
+
+    constructor(data?: IAddNCRWorkOrderTaskRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.procedureId = _data["procedureId"];
+            this.userId = _data["userId"];
+        }
+    }
+
+    static fromJS(data: any): AddNCRWorkOrderTaskRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddNCRWorkOrderTaskRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["procedureId"] = this.procedureId;
+        data["userId"] = this.userId;
+        return data; 
+    }
+}
+
+export interface IAddNCRWorkOrderTaskRequest {
+    workOrderId?: number;
+    procedureId?: number;
     userId?: number;
 }
 
