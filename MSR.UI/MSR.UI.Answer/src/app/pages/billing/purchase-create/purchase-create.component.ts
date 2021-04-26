@@ -128,6 +128,12 @@ export class PurchaseCreateComponent implements OnInit {
       }));
   }
 
+  changeAllLocations(event) {
+    this.purchaseSerializeItems.forEach(e => {
+        e.locationId = event.value;
+    });
+  }
+
   applyGlobalDueDate() {
     this.purchaseItems.forEach((item, index) => {
       this.purchaseItems[index].dueDate = this.globalDueDate;
@@ -151,7 +157,6 @@ export class PurchaseCreateComponent implements OnInit {
               this.purchaseItems.push({
                 id: product.id,
                 productName: product.name,
-                customerLineNumber: null,
                 mttn: null,
                 dueDate: product.dueDate,
                 qty: product.qty,
@@ -168,7 +173,6 @@ export class PurchaseCreateComponent implements OnInit {
                 this.purchaseItems.push({
                   id: product.id,
                   productName: product.name,
-                  customerLineNumber: null,
                   mttn: null,
                   dueDate: product.dueDate,
                   qty: 1,
@@ -192,6 +196,7 @@ export class PurchaseCreateComponent implements OnInit {
             this.purchaseSerializeItems.push({
               serialKitNo: null,
               locationId: null,
+              customerLineNumber: null,
               ...item,
             });
           } else {
@@ -199,6 +204,7 @@ export class PurchaseCreateComponent implements OnInit {
               this.purchaseSerializeItems.push({
                 serialKitNo: null,
                 locationId:  null,
+                customerLineNumber: null,
                 ...item,
                 qty: 1,
               });
@@ -217,10 +223,20 @@ export class PurchaseCreateComponent implements OnInit {
           const rootItem = this.purchaseSerializeItems[rootItemIndex];
 
           const serialNumbers: string[] = [];
+          const customerLineNumbers: string[] = [];
           let purchaseSerializeItemsCount = purchaseItem.serializeIndividually ? purchaseItem.qty : 1;
 
-          for (let i = rootItemIndex; i < rootItemIndex + purchaseSerializeItemsCount; i++) {
-            serialNumbers.push(this.purchaseSerializeItems[i].serialKitNo ? this.purchaseSerializeItems[i].serialKitNo : '');
+          for (let i = rootItemIndex;
+               i < rootItemIndex + purchaseSerializeItemsCount;
+               i++) {
+            serialNumbers.push(
+                this.purchaseSerializeItems[i].serialKitNo ?
+                    this.purchaseSerializeItems[i].serialKitNo : ''
+            );
+            customerLineNumbers.push(
+                this.purchaseSerializeItems[i].customerLineNumber ?
+                    this.purchaseSerializeItems[i].customerLineNumber : ''
+            );
           }
 
           const requestData = new CreatePurchaseRequest(
@@ -229,9 +245,9 @@ export class PurchaseCreateComponent implements OnInit {
               statusId: 1, // Approved
               purchaseOrderProductId: rootItem.id,
               serialNumbers: serialNumbers,
+              customerLineNumbers: customerLineNumbers,
               locationId: rootItem.locationId,
               qty: purchaseItem.qty,
-              customerLineNumber: rootItem.customerLineNumber ? parseInt(rootItem.customerLineNumber, 10) : null,
               mttn: rootItem.mttn,
               dueDate: rootItem.dueDate,
               purchasePrice: rootItem.unitPrice,

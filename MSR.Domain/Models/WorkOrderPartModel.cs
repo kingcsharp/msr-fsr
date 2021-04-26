@@ -11,6 +11,7 @@ namespace MSR.Domain.Models
         public int CycleCount { get; set; }
         public int? ParentId { get; set; }
         public string SerialNumber { get; set; }
+        public string CustomerLineNumber { get; set; }
         public int? Qty { get; set; }
         public EnumSegregationType? SegregationType { get; set; }
         public virtual PartModel Part { get; set; }
