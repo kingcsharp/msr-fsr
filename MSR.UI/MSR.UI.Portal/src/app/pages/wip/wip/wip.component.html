@@ -32,21 +32,22 @@
             <progressbar [value]="colsDataAndSettings.colData.percentageOfTasksCompleted"
                 [type]="colsDataAndSettings.colData.tasksCompletedType" [striped]="true" [animate]="true"></progressbar>
             <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">
-                {{colsDataAndSettings.colData.percentageOfTasksCompleted}}%
+              {{colsDataAndSettings.colData.percentageOfTasksCompleted/100 | percent:'2.2-2'}}
             </div>
             <ng-template #percentOfTaskCompletedTemplate>
-                {{colsDataAndSettings.colData.percentageOfTasksCompleted}}%
-                {{colsDataAndSettings.colData.percentageOfTasksCompletedNumerator}}/{{colsDataAndSettings.colData.percentageOfTasksCompletedDenominator}}
-                steps completed
+              {{colsDataAndSettings.colData.percentageOfTasksCompleted/100 | percent:'2.2-2'}}
+              {{colsDataAndSettings.colData.percentageOfTasksCompletedNumerator}}/{{colsDataAndSettings.colData.percentageOfTasksCompletedDenominator}}
+              steps completed
             </ng-template>
         </div>
         <div class="progressbar-container">
             <progressbar [value]="colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged"
                 [type]="colsDataAndSettings.colData.timeLoggedType" [striped]="true" [animate]="true"></progressbar>
             <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
-                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged}}%</div>
+              {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged/100 | percent:'2.2-2'}}
+            </div>
             <ng-template #percentageOfExpectedDurationTimeLogged>
-                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged}}%
+                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged/100 | percent:'2.2-2'}}
                 {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedNumerator/60 |
                 number:'1.1-1'}}/{{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedDenominator/60 |
                 number:'1.1-1'}}
