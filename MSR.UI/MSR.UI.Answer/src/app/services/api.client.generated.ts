@@ -16636,7 +16636,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
     locationId?: number;
     serialNumber?: string | undefined;
     qty?: number;
-    customerLineNumber?: number;
     mttn?: string | undefined;
     dueDate?: Date;
     purchasePrice?: number;
@@ -16661,7 +16660,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
             this.locationId = _data["locationId"];
             this.serialNumber = _data["serialNumber"];
             this.qty = _data["qty"];
-            this.customerLineNumber = _data["customerLineNumber"];
             this.mttn = _data["mttn"];
             this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
             this.purchasePrice = _data["purchasePrice"];
@@ -16694,7 +16692,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
         data["locationId"] = this.locationId;
         data["serialNumber"] = this.serialNumber;
         data["qty"] = this.qty;
-        data["customerLineNumber"] = this.customerLineNumber;
         data["mttn"] = this.mttn;
         data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["purchasePrice"] = this.purchasePrice;
@@ -16721,7 +16718,6 @@ export interface IPurchaseModel extends ICreatableModel {
     locationId?: number;
     serialNumber?: string | undefined;
     qty?: number;
-    customerLineNumber?: number;
     mttn?: string | undefined;
     dueDate?: Date;
     purchasePrice?: number;
@@ -16878,6 +16874,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     cycleCount?: number;
     parentId?: number | undefined;
     serialNumber?: string | undefined;
+    customerLineNumber?: string | undefined;
     qty?: number | undefined;
     segregationType?: EnumSegregationType | undefined;
     part?: PartModel | undefined;
@@ -16902,6 +16899,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             this.cycleCount = _data["cycleCount"];
             this.parentId = _data["parentId"];
             this.serialNumber = _data["serialNumber"];
+            this.customerLineNumber = _data["customerLineNumber"];
             this.qty = _data["qty"];
             this.segregationType = _data["segregationType"];
             this.part = _data["part"] ? PartModel.fromJS(_data["part"]) : <any>undefined;
@@ -16930,6 +16928,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         data["cycleCount"] = this.cycleCount;
         data["parentId"] = this.parentId;
         data["serialNumber"] = this.serialNumber;
+        data["customerLineNumber"] = this.customerLineNumber;
         data["qty"] = this.qty;
         data["segregationType"] = this.segregationType;
         data["part"] = this.part ? this.part.toJSON() : <any>undefined;
@@ -16951,6 +16950,7 @@ export interface IWorkOrderPartModel {
     cycleCount?: number;
     parentId?: number | undefined;
     serialNumber?: string | undefined;
+    customerLineNumber?: string | undefined;
     qty?: number | undefined;
     segregationType?: EnumSegregationType | undefined;
     part?: PartModel | undefined;
@@ -17797,10 +17797,10 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     locationId!: number;
     /** SerialNumber */
     serialNumbers?: string[] | undefined;
+    /** CustomerLineNumbers */
+    customerLineNumbers?: string[] | undefined;
     /** Quantity */
     qty!: number;
-    /** CustomerLineNumber */
-    customerLineNumber?: number;
     /** Material Transfer Number (MTTN) */
     mttn?: string | undefined;
     /** DueDate */
@@ -17831,8 +17831,12 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
                 for (let item of _data["serialNumbers"])
                     this.serialNumbers!.push(item);
             }
+            if (Array.isArray(_data["customerLineNumbers"])) {
+                this.customerLineNumbers = [] as any;
+                for (let item of _data["customerLineNumbers"])
+                    this.customerLineNumbers!.push(item);
+            }
             this.qty = _data["qty"];
-            this.customerLineNumber = _data["customerLineNumber"];
             this.mttn = _data["mttn"];
             this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
             this.purchasePrice = _data["purchasePrice"];
@@ -17859,8 +17863,12 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
             for (let item of this.serialNumbers)
                 data["serialNumbers"].push(item);
         }
+        if (Array.isArray(this.customerLineNumbers)) {
+            data["customerLineNumbers"] = [];
+            for (let item of this.customerLineNumbers)
+                data["customerLineNumbers"].push(item);
+        }
         data["qty"] = this.qty;
-        data["customerLineNumber"] = this.customerLineNumber;
         data["mttn"] = this.mttn;
         data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["purchasePrice"] = this.purchasePrice;
@@ -17883,10 +17891,10 @@ export interface ICreatePurchaseRequest {
     locationId: number;
     /** SerialNumber */
     serialNumbers?: string[] | undefined;
+    /** CustomerLineNumbers */
+    customerLineNumbers?: string[] | undefined;
     /** Quantity */
     qty: number;
-    /** CustomerLineNumber */
-    customerLineNumber?: number;
     /** Material Transfer Number (MTTN) */
     mttn?: string | undefined;
     /** DueDate */
