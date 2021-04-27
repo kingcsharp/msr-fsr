@@ -127,5 +127,23 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<WorkOrderTaskModel>>("Work Order has been taken over");
         }
+
+        [HttpPatch("WorkOrderCancel")]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderTaskModel>>))]
+        public async Task<IActionResult> WorkOrderCancel([FromBody] CancelWorkOrderRequest request)
+        {
+            var command = request.ToCancelWorkOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderTaskModel>>("Work Order has been cancelled!");
+        }
+
+        [HttpPost("AddNCRWorkOrderTask")]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderTaskModel>>))]
+        public async Task<IActionResult> AddNCRWorkOrderTask([FromBody] AddNCRWorkOrderTaskRequest request)
+        {
+            var command = request.ToAddNCRWorkOrderTaskCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderTaskModel>>("NCR Work Order Task has been added!");
+        }
     }
 }
