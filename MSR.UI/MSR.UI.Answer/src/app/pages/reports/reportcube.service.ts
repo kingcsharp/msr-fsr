@@ -26,8 +26,8 @@ export class ReportCubeService {
         const headers = new HttpHeaders().set('key', this.cubeKey);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
-        //const apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
-        const apiEndPointUrl = reportInfo.apiEndPointURL;
+        const apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
+        //const apiEndPointUrl = reportInfo.apiEndPointURL;
 
         return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
             return this.filterReportData(response, reportInfo);
