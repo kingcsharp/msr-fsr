@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MSR.Domain.Hub;
 using MSR.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Concurrent;
 
 namespace MSR.Answer.MessageHub.Hubs
 {
@@ -15,8 +16,8 @@ namespace MSR.Answer.MessageHub.Hubs
     /// <typeparam name="T"></typeparam>
     public class ConnectionMapping<T>
     {
-        private readonly Dictionary<T, HashSet<string>> _connections =
-            new Dictionary<T, HashSet<string>>();
+        private readonly ConcurrentDictionary<T, HashSet<string>> _connections =
+            new ConcurrentDictionary<T, HashSet<string>>();
 
         /// <summary>
         /// Count
@@ -30,17 +31,13 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <param name="connectionId"></param>
         public void Add(T key, string connectionId)
         {
-            lock (_connections) {
-                HashSet<string> connections;
-                if (!_connections.TryGetValue(key, out connections)) {
-                    connections = new HashSet<string>();
-                    _connections.Add(key, connections);
-                }
-
-                lock (connections) {
-                    connections.Add(connectionId);
-                }
+            HashSet<string> connections;
+            if (!_connections.TryGetValue(key, out connections)) {
+                connections = new HashSet<string>();
+                _connections.TryAdd(key, connections);
             }
+
+            connections.Add(connectionId);
         }
 
         /// <summary>
@@ -65,18 +62,16 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <param name="connectionId"></param>
         public void Remove(T key, string connectionId)
         {
-            lock (_connections) {
-                HashSet<string> connections;
-                if (!_connections.TryGetValue(key, out connections)) {
-                    return;
-                }
+            HashSet<string> connections;
+            if (!_connections.TryGetValue(key, out connections)) {
+                return;
+            }
 
-                lock (connections) {
-                    connections.Remove(connectionId);
-                    if (connections.Count == 0) {
-                        _connections.Remove(key);
-                    }
-                }
+            // FIXME: remove from status list
+
+            connections.Remove(connectionId);
+            if (connections.Count == 0) {
+                _connections.TryRemove(key, out _);
             }
         }
     }
@@ -99,10 +94,7 @@ namespace MSR.Answer.MessageHub.Hubs
         public async Task SendMessage(string user, Toaster message)
         {
             IEnumerable<string> connections;
-            lock(Connections)
-            {
-                connections = Connections.GetConnections(user).ToList();
-            }
+            connections = Connections.GetConnections(user).ToList();
             foreach (var client in connections) {
                 await Clients.Clients(client).SendAsync("ToasterMessage", message);
             }
@@ -114,22 +106,16 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <returns></returns>
         public void SubscribeWorkOrderUpdate()
         {
-            lock(Connections)
-            {
-                Connections.Add("status", Context.ConnectionId);
-            }
+            Connections.Add("status", Context.ConnectionId);
         }
 
-        public async Task SendWorkOrderUpdate(WorkOrderStatusUpdate update)
+        public void SendWorkOrderUpdate(WorkOrderStatusUpdate update)
         {
             IEnumerable<string> connections;
-            lock(Connections)
-            {
-                connections = Connections.GetConnections("status").ToList();
-            }
+            connections = Connections.GetConnections("status").ToList();
             foreach (var client in connections)
             {
-                await Clients.Clients(client).SendAsync("WorkOrderUpdate", update);
+                _ = Clients.Clients(client).SendAsync("WorkOrderUpdate", update);
             }
         }
 
