@@ -38,7 +38,18 @@ namespace MSR.Domain.Commanding
             }
             catch (Exception ex)
             {
-                return CommandResponse.Error(ex);
+                if (ex.Message.ToUpper().StartsWith("EXECUTION TIMEOUT EXPIRED") ||
+                    ex.Message.ToUpper().StartsWith("TIMEOUT EXPIRED") ||
+                    (ex.InnerException != null &&
+                     ex.InnerException.Message
+                       .ToUpper().StartsWith("EXECUTION TIMEOUT EXPIRED")))
+                {
+                    return CommandResponse.Retry(ex);
+                }
+                else
+                {
+                    return CommandResponse.Error(ex);
+                }
             }
         }
 
