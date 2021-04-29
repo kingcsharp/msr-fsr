@@ -67,8 +67,6 @@ namespace MSR.Answer.MessageHub.Hubs
                 return;
             }
 
-            // FIXME: remove from status list
-
             connections.Remove(connectionId);
             if (connections.Count == 0) {
                 _connections.TryRemove(key, out _);
@@ -82,6 +80,7 @@ namespace MSR.Answer.MessageHub.Hubs
     [Authorize]
     public class MessageHub : Hub
     {
+        private const string StatusGroup = "status";
         private static readonly ConnectionMapping<string> Connections = new
             ConnectionMapping<string>();
 
@@ -106,13 +105,13 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <returns></returns>
         public void SubscribeWorkOrderUpdate()
         {
-            Connections.Add("status", Context.ConnectionId);
+            Connections.Add(StatusGroup, Context.ConnectionId);
         }
 
         public void SendWorkOrderUpdate(WorkOrderStatusUpdate update)
         {
             IEnumerable<string> connections;
-            connections = Connections.GetConnections("status").ToList();
+            connections = Connections.GetConnections(StatusGroup).ToList();
             foreach (var client in connections)
             {
                 _ = Clients.Clients(client).SendAsync("WorkOrderUpdate", update);
@@ -137,15 +136,8 @@ namespace MSR.Answer.MessageHub.Hubs
         public override async Task OnConnectedAsync()
         {
             var name = Context.User.Identity.Name;
-            if (name == null)
+            if (name != null)
             {
-                // heartbeat
-                await Groups.AddToGroupAsync(Context.ConnectionId, "answer");
-                Connections.Add("ping", Context.ConnectionId);
-            }
-            else
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, "answer");
                 Connections.Add(name, Context.ConnectionId);
             }
             await base.OnConnectedAsync();
@@ -160,8 +152,8 @@ namespace MSR.Answer.MessageHub.Hubs
         {
             var name = Context.User.Identity.Name;
             if (name != null) {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, "answer");
                 Connections.Remove(name, Context.ConnectionId);
+                Connections.Remove(StatusGroup, Context.ConnectionId);
             }
             await base.OnDisconnectedAsync(e);
         }
