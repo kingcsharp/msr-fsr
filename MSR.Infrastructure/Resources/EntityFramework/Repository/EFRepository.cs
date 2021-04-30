@@ -20,7 +20,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
         public EFRepository(AnswerContext context)
         {
             _context = context;
-            _context.Database.SetCommandTimeout(45);
             _dbSet = _context.Set<TEntity>();
         }
 
