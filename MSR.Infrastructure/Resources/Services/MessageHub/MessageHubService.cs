@@ -66,7 +66,8 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
             {
                 _logger.LogError(ex, ex.Message);
             }
-            finally {
+            finally
+            {
                 isConnecting = false;
             }
         }
@@ -86,7 +87,8 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
             {
                 _logger.LogError(ex, ex.Message);
             }
-            finally {
+            finally
+            {
                 isConnecting = false;
             }
         }
@@ -106,7 +108,8 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
             {
                 _logger.LogError(ex, ex.Message);
             }
-            finally {
+            finally
+            {
                 isConnecting = false;
             }
         }
