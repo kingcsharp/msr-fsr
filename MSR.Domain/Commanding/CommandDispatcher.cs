@@ -9,6 +9,8 @@ namespace MSR.Domain.Commanding
 {
     public class CommandDispatcher : ICommandDispatcher
     {
+        public const string EXECUTION_TIMEOUT_EXPIRED = "EXECUTION TIMEOUT EXPIRED";
+        public const string TIMEOUT_EXPIRED = "TIMEOUT EXPIRED";
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
 
@@ -38,7 +40,18 @@ namespace MSR.Domain.Commanding
             }
             catch (Exception ex)
             {
-                return CommandResponse.Error(ex);
+                if (ex.Message.ToUpper().StartsWith(EXECUTION_TIMEOUT_EXPIRED) ||
+                    ex.Message.ToUpper().StartsWith(TIMEOUT_EXPIRED) ||
+                    (ex.InnerException != null &&
+                     ex.InnerException.Message
+                       .ToUpper().StartsWith(EXECUTION_TIMEOUT_EXPIRED)))
+                {
+                    return CommandResponse.Retry(ex);
+                }
+                else
+                {
+                    return CommandResponse.Error(ex);
+                }
             }
         }
 

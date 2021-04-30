@@ -24,10 +24,13 @@ namespace MSR.Domain.Commanding
 
         public bool Success { get; set; }
 
+        public bool CanTryAgain { get; set; }
+
         public CommandResponse(Exception ex)
         {
             ResponseError = new Error() { Exception = ex, Message = ex.Message };
             Success = false;
+            CanTryAgain = false;
         }
 
         public Error ResponseError { get; }
@@ -35,6 +38,11 @@ namespace MSR.Domain.Commanding
         public string DisplayString { get; set; }
 
         public static ICommandResponse Error(Exception ex) => new CommandResponse(ex) { Success = false };
+
+        public static ICommandResponse Retry(Exception ex) => new CommandResponse(ex) {
+            Success = false,
+            CanTryAgain = true
+        };
 
         public static ICommandResponse SuccessCommand => new CommandResponse() { Success = true };
     }

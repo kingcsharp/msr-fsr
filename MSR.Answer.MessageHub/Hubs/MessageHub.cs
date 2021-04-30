@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MSR.Domain.Hub;
 using MSR.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Concurrent;
 
 namespace MSR.Answer.MessageHub.Hubs
 {
@@ -15,8 +16,8 @@ namespace MSR.Answer.MessageHub.Hubs
     /// <typeparam name="T"></typeparam>
     public class ConnectionMapping<T>
     {
-        private readonly Dictionary<T, HashSet<string>> _connections =
-            new Dictionary<T, HashSet<string>>();
+        private readonly ConcurrentDictionary<T, HashSet<string>> _connections =
+            new ConcurrentDictionary<T, HashSet<string>>();
 
         /// <summary>
         /// Count
@@ -30,17 +31,13 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <param name="connectionId"></param>
         public void Add(T key, string connectionId)
         {
-            lock (_connections) {
-                HashSet<string> connections;
-                if (!_connections.TryGetValue(key, out connections)) {
-                    connections = new HashSet<string>();
-                    _connections.Add(key, connections);
-                }
-
-                lock (connections) {
-                    connections.Add(connectionId);
-                }
+            HashSet<string> connections;
+            if (!_connections.TryGetValue(key, out connections)) {
+                connections = new HashSet<string>();
+                _connections.TryAdd(key, connections);
             }
+
+            connections.Add(connectionId);
         }
 
         /// <summary>
@@ -65,18 +62,14 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <param name="connectionId"></param>
         public void Remove(T key, string connectionId)
         {
-            lock (_connections) {
-                HashSet<string> connections;
-                if (!_connections.TryGetValue(key, out connections)) {
-                    return;
-                }
+            HashSet<string> connections;
+            if (!_connections.TryGetValue(key, out connections)) {
+                return;
+            }
 
-                lock (connections) {
-                    connections.Remove(connectionId);
-                    if (connections.Count == 0) {
-                        _connections.Remove(key);
-                    }
-                }
+            connections.Remove(connectionId);
+            if (connections.Count == 0) {
+                _connections.TryRemove(key, out _);
             }
         }
     }
@@ -87,6 +80,7 @@ namespace MSR.Answer.MessageHub.Hubs
     [Authorize]
     public class MessageHub : Hub
     {
+        private const string StatusGroup = "status";
         private static readonly ConnectionMapping<string> Connections = new
             ConnectionMapping<string>();
 
@@ -99,10 +93,7 @@ namespace MSR.Answer.MessageHub.Hubs
         public async Task SendMessage(string user, Toaster message)
         {
             IEnumerable<string> connections;
-            lock(Connections)
-            {
-                connections = Connections.GetConnections(user).ToList();
-            }
+            connections = Connections.GetConnections(user).ToList();
             foreach (var client in connections) {
                 await Clients.Clients(client).SendAsync("ToasterMessage", message);
             }
@@ -112,25 +103,14 @@ namespace MSR.Answer.MessageHub.Hubs
         /// Subscribe this connection to work order update messages.
         /// </summary>
         /// <returns></returns>
-        public void SubscribeWorkOrderUpdate()
+        public async void SubscribeWorkOrderUpdate()
         {
-            lock(Connections)
-            {
-                Connections.Add("status", Context.ConnectionId);
-            }
+            await Groups.AddToGroupAsync(Context.ConnectionId, StatusGroup);
         }
 
-        public async Task SendWorkOrderUpdate(WorkOrderStatusUpdate update)
+        public async void SendWorkOrderUpdate(WorkOrderStatusUpdate update)
         {
-            IEnumerable<string> connections;
-            lock(Connections)
-            {
-                connections = Connections.GetConnections("status").ToList();
-            }
-            foreach (var client in connections)
-            {
-                await Clients.Clients(client).SendAsync("WorkOrderUpdate", update);
-            }
+            await Clients.Group(StatusGroup).SendAsync("WorkOrderUpdate", update);
         }
 
         /// <summary>
@@ -151,15 +131,8 @@ namespace MSR.Answer.MessageHub.Hubs
         public override async Task OnConnectedAsync()
         {
             var name = Context.User.Identity.Name;
-            if (name == null)
+            if (name != null)
             {
-                // heartbeat
-                await Groups.AddToGroupAsync(Context.ConnectionId, "answer");
-                Connections.Add("ping", Context.ConnectionId);
-            }
-            else
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, "answer");
                 Connections.Add(name, Context.ConnectionId);
             }
             await base.OnConnectedAsync();
@@ -174,8 +147,8 @@ namespace MSR.Answer.MessageHub.Hubs
         {
             var name = Context.User.Identity.Name;
             if (name != null) {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, "answer");
                 Connections.Remove(name, Context.ConnectionId);
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, StatusGroup);
             }
             await base.OnDisconnectedAsync(e);
         }

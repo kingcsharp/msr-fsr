@@ -139,6 +139,10 @@ namespace MSR.Answer.API.V1.Extentions
                 {
                     return HandleDomainException(domainException);
                 }
+                if (commandResponse.CanTryAgain)
+                {
+                    return RetryError(commandResponse.ResponseError.Exception.ToString());
+                }
 
                 return InternalServerError(commandResponse.ResponseError.Exception.ToString());
             }
@@ -150,6 +154,12 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new ObjectResult(new AuditActionResult(!string.IsNullOrWhiteSpace(message) ? message : "API Ran Into an error.  Kick it and try again."))
             { StatusCode = (int)HttpStatusCode.InternalServerError };
+        }
+
+        private static IActionResult RetryError(string message = null)
+        {
+            return new ObjectResult(new AuditActionResult(!string.IsNullOrWhiteSpace(message) ? message : "Retry Error"))
+            { StatusCode = (int)HttpStatusCode.ServiceUnavailable };
         }
 
         private static IActionResult HandleDomainException(DomainException ex)

@@ -1064,7 +1064,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _unitOfWork.WorkOrders.Update(workOrderEntity);
             await _unitOfWork.SaveChangesAsync();
 
-            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            await _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
             {
                 workOrderId = workOrderEntity.Id,
                 workOrderStatus = TranslateWOStatusToViewModel(workOrderEntity.WorkOrderTasks)
