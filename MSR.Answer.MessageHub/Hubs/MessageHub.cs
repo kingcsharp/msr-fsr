@@ -103,19 +103,14 @@ namespace MSR.Answer.MessageHub.Hubs
         /// Subscribe this connection to work order update messages.
         /// </summary>
         /// <returns></returns>
-        public void SubscribeWorkOrderUpdate()
+        public async void SubscribeWorkOrderUpdate()
         {
-            Connections.Add(StatusGroup, Context.ConnectionId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, StatusGroup);
         }
 
-        public void SendWorkOrderUpdate(WorkOrderStatusUpdate update)
+        public async void SendWorkOrderUpdate(WorkOrderStatusUpdate update)
         {
-            IEnumerable<string> connections;
-            connections = Connections.GetConnections(StatusGroup).ToList();
-            foreach (var client in connections)
-            {
-                _ = Clients.Clients(client).SendAsync("WorkOrderUpdate", update);
-            }
+            await Clients.Group(StatusGroup).SendAsync("WorkOrderUpdate", update);
         }
 
         /// <summary>
@@ -153,7 +148,7 @@ namespace MSR.Answer.MessageHub.Hubs
             var name = Context.User.Identity.Name;
             if (name != null) {
                 Connections.Remove(name, Context.ConnectionId);
-                Connections.Remove(StatusGroup, Context.ConnectionId);
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, StatusGroup);
             }
             await base.OnDisconnectedAsync(e);
         }
