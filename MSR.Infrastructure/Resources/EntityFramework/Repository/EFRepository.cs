@@ -14,10 +14,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 {
     public class EFRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-
-        private const int FETCH_RETRIES = 2;
-        private const int BACKOFF_SECONDS = 2;
-
         private readonly AnswerContext _context;
         private readonly DbSet<TEntity> _dbSet;
 
@@ -30,53 +26,17 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 
         public void LoadCollection(TEntity entity, string navSelector)
         {
-            int retryFetchTask = FETCH_RETRIES;
-            int backoffSeconds = BACKOFF_SECONDS;
-            while(retryFetchTask > 0) {
-                try {
-                    _context.Entry(entity).Collection(navSelector).Load();
-                    break;
-                } catch {
-                    retryFetchTask -= 1;
-                    if (retryFetchTask <= 0) throw;
-                }
-                System.Threading.Thread.Sleep(backoffSeconds * 1000);
-                backoffSeconds *= 2;
-            }
+            _context.Entry(entity).Collection(navSelector).Load();
         }
 
         public void LoadReference(TEntity entity, Expression<Func<TEntity, object>> navSelector)
         {
-            int retryFetchTask = FETCH_RETRIES;
-            int backoffSeconds = BACKOFF_SECONDS;
-            while(retryFetchTask > 0) {
-                try {
-                    _context.Entry(entity).Reference(navSelector).Load();
-                    break;
-                } catch {
-                    retryFetchTask -= 1;
-                    if (retryFetchTask <= 0) throw;
-                }
-                System.Threading.Thread.Sleep(backoffSeconds * 1000);
-                backoffSeconds *= 2;
-            }
+            _context.Entry(entity).Reference(navSelector).Load();
         }
 
         public void LoadReference(TEntity entity, string navSelector)
         {
-            int retryFetchTask = FETCH_RETRIES;
-            int backoffSeconds = BACKOFF_SECONDS;
-            while(retryFetchTask > 0) {
-                try {
-                    _context.Entry(entity).Reference(navSelector).Load();
-                    break;
-                } catch {
-                    retryFetchTask -= 1;
-                    if (retryFetchTask <= 0) throw;
-                }
-                System.Threading.Thread.Sleep(backoffSeconds * 1000);
-                backoffSeconds *= 2;
-            }
+            _context.Entry(entity).Reference(navSelector).Load();
         }
 
         public virtual bool Exist(object id)
@@ -252,21 +212,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
                 foreach (Expression<Func<TEntity, object>> include in includes)
                     query = query.Include(include);
 
-            TEntity entity = null;
-
-            int retryFetchTask = FETCH_RETRIES;
-            int backoffSeconds = BACKOFF_SECONDS;
-            while(retryFetchTask > 0) {
-                try {
-                    entity = query.FirstOrDefault(filter);
-                    break;
-                } catch {
-                    retryFetchTask -= 1;
-                    if (retryFetchTask <= 0) throw;
-                }
-                System.Threading.Thread.Sleep(backoffSeconds * 1000);
-                backoffSeconds *= 2;
-            }
+            TEntity entity = query.FirstOrDefault(filter);
 
             if (validateOwnership)
                 ValidateOwnership(entity);
@@ -301,21 +247,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
                 foreach (Expression<Func<TEntity, object>> include in includes)
                     query = query.Include(include);
 
-            TEntity entity = null;
-
-            int retryFetchTask = FETCH_RETRIES;
-            int backoffSeconds = BACKOFF_SECONDS;
-            while(retryFetchTask > 0) {
-                try {
-                    entity = await query.FirstOrDefaultAsync(filter);
-                    break;
-                } catch {
-                    retryFetchTask -= 1;
-                    if (retryFetchTask <= 0) throw;
-                }
-                await Task.Delay(backoffSeconds * 1000);
-                backoffSeconds *= 2;
-            }
+            TEntity entity = await query.FirstOrDefaultAsync(filter);
 
             if (validateOwnership)
                 ValidateOwnership(entity);
