@@ -2,7 +2,7 @@
 {
     public interface ICommandResponse
     {
-        bool Again { get; set; }
+        bool CanTryAgain { get; set; }
         Error ResponseError { get; }
         string DisplayString { get; }
     }

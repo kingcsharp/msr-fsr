@@ -139,7 +139,7 @@ namespace MSR.Answer.API.V1.Extentions
                 {
                     return HandleDomainException(domainException);
                 }
-                if (commandResponse.Again)
+                if (commandResponse.CanTryAgain)
                 {
                     return RetryError(commandResponse.ResponseError.Exception.ToString());
                 }
