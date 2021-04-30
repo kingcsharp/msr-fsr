@@ -58,9 +58,9 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
                 await Connect();
                 await connection.InvokeAsync("WorkflowMessage", guid, message);
             }
-            catch(OperationCanceledException)
+            catch(OperationCanceledException ex)
             {
-                // ignore
+                _logger.LogInformation(ex, ex.Message);
             }
             catch(Exception ex)
             {
@@ -78,9 +78,9 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
                 await Connect();
                 await connection.InvokeAsync("SendWorkOrderUpdate", update);
             }
-            catch(OperationCanceledException)
+            catch(OperationCanceledException ex)
             {
-                // ignore
+                _logger.LogInformation(ex, ex.Message);
             }
             catch(Exception ex)
             {
@@ -98,9 +98,9 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
                 await Connect();
                 await connection.InvokeAsync("SendMessage", userId, message);
             }
-            catch(OperationCanceledException)
+            catch(OperationCanceledException ex)
             {
-                // ignore
+                _logger.LogInformation(ex, ex.Message);
             }
             catch(Exception ex)
             {
