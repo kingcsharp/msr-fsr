@@ -1027,10 +1027,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     // Reference documents are stored by string.  The IDs will need
                     // to be fetched from database later
                     newStepExtra.REF_DOC_ID = step.ItemArray[fieldMap["REF_DOC_ID"]].ToString();
-                    var defaultDocId = Convert.ToInt32(((double) step.ItemArray[fieldMap["REF_DOC_ID"]]));
-                    var referenceDocumentIds = new List<int>();
-                    referenceDocumentIds.Add(defaultDocId);
-                    newStep.ReferenceDocumentIds = referenceDocumentIds;
+
+                    if (!(newStepExtra.REF_DOC_ID is null || newStepExtra.REF_DOC_ID == ""))
+                    {
+                        var defaultDocId = Convert.ToInt32(((double)step.ItemArray[fieldMap["REF_DOC_ID"]]));
+                        var referenceDocumentIds = new List<int>();
+                        referenceDocumentIds.Add(defaultDocId);
+                        newStep.ReferenceDocumentIds = referenceDocumentIds;
+                    }
 
                     // The IDs used in the spreadsheet will need to be collated at creation
                     // time, so for now we just store a separate mapping.
