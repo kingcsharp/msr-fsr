@@ -1028,12 +1028,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     // to be fetched from database later
                     newStepExtra.REF_DOC_ID = step.ItemArray[fieldMap["REF_DOC_ID"]].ToString();
 
-                    if (!(newStepExtra.REF_DOC_ID is null || newStepExtra.REF_DOC_ID == ""))
+                    if (!string.IsNullOrWhiteSpace(newStepExtra.REF_DOC_ID))
                     {
-                        var defaultDocId = Convert.ToInt32(((double)step.ItemArray[fieldMap["REF_DOC_ID"]]));
-                        var referenceDocumentIds = new List<int>();
-                        referenceDocumentIds.Add(defaultDocId);
-                        newStep.ReferenceDocumentIds = referenceDocumentIds;
+                        var defaultDocId = Convert.ToInt32(step.ItemArray[fieldMap["REF_DOC_ID"]]);
+                        newStep.ReferenceDocumentIds = new List<int>() { defaultDocId };
                     }
 
                     // The IDs used in the spreadsheet will need to be collated at creation
