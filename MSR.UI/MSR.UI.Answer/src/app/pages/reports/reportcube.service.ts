@@ -30,7 +30,7 @@ export class ReportCubeService {
         //const apiEndPointUrl = reportInfo.apiEndPointURL;
 
         return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
-            return this.filterReportData(response, reportInfo);
+            return this.filterReportData(response['data'], reportInfo);
         });
     }
 
@@ -420,12 +420,6 @@ export class ReportCubeService {
                 });
 
                 return this.getResultDataAndChart(chartInfo3);
-            case 'CombinedFinancialDatabyWorkOrder':
-                if (data.length > 0) {
-                    let resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
-                    resultDataArr = resultDataArr.filter(s => moment(s.shipdate) > moment(moment()).subtract(3, 'months').endOf('month'));
-                    return resultDataArr;
-                }
             default:
                 if (data.length > 0) {
                     let resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));

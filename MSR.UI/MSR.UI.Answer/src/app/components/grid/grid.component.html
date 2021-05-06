@@ -6,12 +6,12 @@
 <p-table #dt *ngIf="showReport" [value]="gridData" dataKey="id" styleClass="ui-table-customers {{gridSaved.gridClass}}"
     [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
     [paginator]="gridSaved.paginator" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-    [filterDelay]="0" stateStorage="local" stateKey="{{gridSaved.storageId}}" (onFilter)="handleFilter($event,dt)">
+    [filterDelay]="0" stateStorage="local" stateKey="{{gridSaved.storageId}}" (onFilter)="filterEventHandler($event,dt)">
     <ng-template pTemplate="caption">
         <div class="pull-left">
             <h3 *ngIf="reportInfo.name.length > 0">
                 <span class="fw-semi-bold">{{reportInfo.name}}</span>
-                <span *ngIf="reportInfo.subtitle !== undefiend"> -</span> {{reportInfo.subtitle}}</h3>
+                <span *ngIf="reportInfo.subtitle !== undefined"> -</span> {{reportInfo.subtitle}}</h3>
         </div>
         <div *ngIf="gridSaved.showMyViewsFeature" class="pull-right">
             <grid-options [(defaultColumns)]="gridSaved.columnsSaved" [gridStorageId]="gridSaved.storageId"
@@ -29,12 +29,6 @@
             <button class="btn btn-secondary pull-right" (click)="printCsvReport()">
                 <i class="fas fa-file-csv"></i> Export CSV
             </button>
-            <!-- <button class="btn btn-success pull-right">
-                <i class="fas fa-file-excel"></i> Export Excel
-            </button>
-            <button class="btn btn-danger pull-right">
-                <i class="fas fa-file-pdf"></i> Export PDF
-            </button> -->
         </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -125,10 +119,10 @@
     </td>
     <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.InputDateTime"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
-        <div data-cy="{{colsDataAndSettings.col.id}}" class="display-inline-block isActive">
+        <div class="display-inline-block isActive">
             <p-calendar [ngModelOptions]="{standalone: true}"
                 [(ngModel)]="colsDataAndSettings.colData[colsDataAndSettings.col.id]" dataType="string"
-                [locale]="calendarEn" appendTo="body">
+                [locale]="calendarLocalSettings" appendTo="body">
             </p-calendar>
         </div>
     </td>

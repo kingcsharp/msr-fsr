@@ -1,26 +1,23 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  ReportService, ReportModel, EnumAwsFolders, DocumentService, AuditActionResultOfICollectionOfArchiveDocumentView, ArchiveDocumentView
+  ReportModel, DocumentService, AuditActionResultOfICollectionOfArchiveDocumentView, ArchiveDocumentView
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
 import { EnumPrivilege } from '../../models/enums/privileges';
 import { responseHandler } from '../../utils/responseHandler';
-import { ViewSaved } from '../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../models/lib/CommonGrid';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, forkJoin, of } from 'rxjs';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj, formatBytes } from '../../models/lib/Utils';
-import { ActivatedRoute } from '@angular/router';
+import { formatBytes } from '../../models/lib/Utils';
 import { EnumColumnType } from '../../models/enums/EnumColumnType';
 import { GridSaved } from '../../models/lib/GridSaved';
 import { ReportCubeService } from '../../pages/reports/reportcube.service';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { CSVConverterService } from '../../services/csvconverter.service';
-// import * as $ from 'jquery';
+import { LocaleSettings } from 'primeng/calendar';
+
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',
@@ -45,23 +42,21 @@ export class GridComponent implements OnInit {
   gridData: any = [];
   privileges = EnumPrivilege;
   enumColumnType = EnumColumnType;
-  calendarEn;
+  calendarLocalSettings: LocaleSettings;
   filteredData: any;
   showArchiveDialogue: boolean = false;
   archivedGridData: ArchiveDocumentView[] = [];
   archiveDocsGrid: GridSaved;
   reportArchiveModel: ReportModel;
 
-  // expanded: boolean = false;
-  constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
-    private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
-    private reportCubeService: ReportCubeService, private cSVConverterService: CSVConverterService,
+  constructor(public globals: Globals, public cg: CommonGrid, private reportCubeService: ReportCubeService, 
+    private cSVConverterService: CSVConverterService,
     private documentService: DocumentService) {
 
   }
 
   ngOnInit(): void {
-    this.calendarEn = this.globals.getCalendarDefault();
+    this.calendarLocalSettings = this.globals.getCalendarDefault();
     if (this.saveToLocalStorage === undefined) {
       this.saveToLocalStorage = true;
     }
@@ -74,11 +69,18 @@ export class GridComponent implements OnInit {
     }
   }
 
-  handleFilter(ev, filteredData) {
-    this.filteredData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
+  filterEventHandler(filters,table) {
+    this.filteredData = table.filteredValue === null ? table.value : table.filteredValue;
     if (!this.hasChart) {
       return;
+    } else {
+      this.updateChartWhenGridFiltersChange();
     }
+
+    
+  }
+
+  updateChartWhenGridFiltersChange(){
 
     this.globals.showLoader(true);
     this.chartInfo.gridData = this.filteredData;
@@ -94,6 +96,7 @@ export class GridComponent implements OnInit {
       this.showCharts = true;
       this.globals.showLoader(false);
     }, 300);
+
   }
 
   getReport(data: any, reportInfo?: ReportModel) {
