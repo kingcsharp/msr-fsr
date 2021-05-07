@@ -8,6 +8,7 @@ export interface IPagingModel {
     data: Array<any>;
     HighChartsOptions: Options;
     ChartInformation: ChartInfo;
+    queryString: string;
 }
 
 
@@ -19,6 +20,7 @@ export class PagingModel {
     public data: Array<any> = new Array<any>();
     public HighChartsOptions: Options;
     public ChartInformation: ChartInfo;
+    public queryString: string = '';
 
     constructor(pagingModel: IPagingModel) {
         this.pageNumber = pagingModel.pageNumber === undefined ? 0 : pagingModel.pageNumber;

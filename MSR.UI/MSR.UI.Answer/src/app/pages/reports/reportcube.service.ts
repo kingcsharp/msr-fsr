@@ -11,6 +11,7 @@ import { Globals } from '../../models/lib/globals';
 import { EnumChartType } from '../../../app/models/enums/ChartType';
 import { EnumChartStackType } from '../../../app/models/enums/EnumChartStackType';
 import { IPagingModel, PagingModel } from '../../../app/models/paging-model';
+import { FilterMetadata } from 'primeng/api';
 
 @Injectable({
     providedIn: 'root'
@@ -23,20 +24,33 @@ export class ReportCubeService {
 
     }
 
-    public getReport = async (reportInfo: ReportModel, pagingModel:PagingModel = null) => {
+    public getReport = async (reportInfo: ReportModel, pagingModel:PagingModel = null, forReportDownload:boolean = true) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
         let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
         //const apiEndPointUrl = reportInfo.apiEndPointURL;
 
-        apiEndPointUrl = `${apiEndPointUrl}?pagesize=${pagingModel.pageSize}&pagenumber=${pagingModel.pageNumber}`;
+        if(forReportDownload){
+            apiEndPointUrl = `${apiEndPointUrl}?pagesize=${pagingModel.pageSize}&pagenumber=${pagingModel.pageNumber}`;
+
+            if(pagingModel.queryString !== ''){
+                apiEndPointUrl += `&${pagingModel.queryString}`;
+            }
+            
+        } else {
+
+            if(pagingModel.queryString !== ''){
+                apiEndPointUrl += `?${pagingModel.queryString}`;
+            }
+        }
+        
 
         return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
 
             let pagingModel = new PagingModel({
-                pageNumber: response['pagenumber'],
-                pageSize: response['pagesize'],
+                pageNumber: forReportDownload ? response['pagenumber'] : undefined,
+                pageSize: forReportDownload ? response['pagesize'] : undefined,
                 totalRows: response['totalrows'],
                 data: response['data']
             } as IPagingModel);
@@ -609,5 +623,45 @@ export class ReportCubeService {
         pagingModel.ChartInformation = chartInfo;
 
         return pagingModel;
+    }
+
+    public primeNgFilterToQueryStringConverter(filters: {[s: string]: FilterMetadata;}){
+        
+        let queryString = '';
+
+        Object.keys(filters).map(filterName => {
+
+           const filter = filters[filterName];
+           switch(filter.matchMode){
+                case 'in':
+
+                    filter.value.forEach(filterValue => {
+                        queryString += `${filterName}=${filterValue}&`;
+                    });
+
+                    break;
+                case 'contains':
+
+                    queryString += `${filterName}=${filter.value}&`;
+
+                    break;
+                case 'dateRangeFilter':
+
+                    filter.value.forEach(filterValue => {
+                        if(filterValue !== null){
+                            queryString += `${filterName}=${filterValue}&`;
+                        }
+                    });
+
+                    break;
+                default:
+                    break;
+           } 
+
+        });
+
+
+        return queryString.substring(0,queryString.length-1);
+
     }
 }

@@ -75,11 +75,11 @@ export class GridComponent implements OnInit {
 
   getData(lazyLoadEvent: LazyLoadEvent){
 
-    console.log(lazyLoadEvent.first / lazyLoadEvent.rows)
     if(lazyLoadEvent.first !== undefined && lazyLoadEvent.rows !== undefined && lazyLoadEvent.rows !== 0){
       this.pagingModel.pageNumber = lazyLoadEvent.first / lazyLoadEvent.rows;
     }
     this.pagingModel.pageSize = lazyLoadEvent.rows;
+    this.pagingModel.queryString = this.reportCubeService.primeNgFilterToQueryStringConverter(lazyLoadEvent.filters);
     this.getReport(this.data, this.reportInfo);
 
   }
@@ -155,7 +155,13 @@ export class GridComponent implements OnInit {
   }
 
   printCsvReport() {
-    this.cSVConverterService.downloadFile(this.filteredData, this.gridSaved.columnsSaved, this.reportInfo.name);
+
+    this.reportCubeService.getReport(this.reportInfo, this.pagingModel, false).then(<PagingModel>(pagingModel) => {
+      
+      this.cSVConverterService.downloadFile(pagingModel.data, this.gridSaved.columnsSaved, this.reportInfo.name);
+    });
+
+    
   }
 
   viewArchives() {
