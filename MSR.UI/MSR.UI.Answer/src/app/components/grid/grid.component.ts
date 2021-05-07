@@ -17,6 +17,8 @@ import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { CSVConverterService } from '../../services/csvconverter.service';
 import { LocaleSettings } from 'primeng/calendar';
+import { IPagingModel, PagingModel } from '../../models/paging-model';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-grid',
@@ -49,6 +51,8 @@ export class GridComponent implements OnInit {
   archiveDocsGrid: GridSaved;
   reportArchiveModel: ReportModel;
 
+  pagingModel: PagingModel = new PagingModel({} as IPagingModel);
+  totalRows: number = 0;
   constructor(public globals: Globals, public cg: CommonGrid, private reportCubeService: ReportCubeService, 
     private cSVConverterService: CSVConverterService,
     private documentService: DocumentService) {
@@ -60,7 +64,7 @@ export class GridComponent implements OnInit {
     if (this.saveToLocalStorage === undefined) {
       this.saveToLocalStorage = true;
     }
-    this.getReport(this.data, this.reportInfo);
+    // this.getReport(this.data, this.reportInfo);
   }
 
   expandRow(expanded, row) {
@@ -69,6 +73,17 @@ export class GridComponent implements OnInit {
     }
   }
 
+  getData(lazyLoadEvent: LazyLoadEvent){
+
+    console.log(lazyLoadEvent.first / lazyLoadEvent.rows)
+    if(lazyLoadEvent.first !== undefined && lazyLoadEvent.rows !== undefined && lazyLoadEvent.rows !== 0){
+      this.pagingModel.pageNumber = lazyLoadEvent.first / lazyLoadEvent.rows;
+    }
+    this.pagingModel.pageSize = lazyLoadEvent.rows;
+    this.getReport(this.data, this.reportInfo);
+
+  }
+  // (onFilter)="filterEventHandler($event,dt)"
   filterEventHandler(filters,table) {
     this.filteredData = table.filteredValue === null ? table.value : table.filteredValue;
     if (!this.hasChart) {
@@ -87,12 +102,12 @@ export class GridComponent implements OnInit {
 
     this.showCharts = false;
     setTimeout(() => {
-      const resp = this.reportCubeService.getResultDataAndChart(this.chartInfo);
+      const pagingModel = this.reportCubeService.getResultDataAndChart(this.chartInfo,this.pagingModel);
       if (this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
-        this.regnerateCharOptions(resp.chartOptions);
+        this.regnerateCharOptions(pagingModel.HighChartsOptions);
       }
-      this.chartOptions = resp.chartOptions;
-      this.chartInfo = resp.chartInfo;
+      this.chartOptions = pagingModel.HighChartsOptions;
+      this.chartInfo = pagingModel.ChartInformation;
       this.showCharts = true;
       this.globals.showLoader(false);
     }, 300);
@@ -105,20 +120,24 @@ export class GridComponent implements OnInit {
       this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
-      this.reportCubeService.getReport(reportInfo).then((resp) => {
-        if (resp.chartOptions !== undefined) {
+
+      this.reportCubeService.getReport(reportInfo, this.pagingModel).then(<PagingModel>(pagingModel) => {
+        if (pagingModel.hasChart) {
           this.hasChart = true;
-          this.gridData = resp.resultData;
+          this.gridData = pagingModel.resultData;
           if (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
-            this.regnerateCharOptions(resp.chartOptions);
+            this.regnerateCharOptions(pagingModel.chartOptions);
           }
-          this.chartOptions = resp.chartOptions;
-          this.chartInfo = resp.chartInfo;
+          this.chartOptions = pagingModel.chartOptions;
+          this.chartInfo = pagingModel.chartInfo;
           this.showCharts = true;
         } else {
-          this.gridData = resp;
+          this.gridData = pagingModel.data;
         }
         this.filteredData = this.gridData;
+        this.totalRows = pagingModel.totalRows;
+        this.pagingModel.pageNumber = pagingModel.pageNumber;
+        this.pagingModel.pageSize = pagingModel.pageSize;
         this.globals.showLoader(false);
       });
     }
