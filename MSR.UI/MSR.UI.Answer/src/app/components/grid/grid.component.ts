@@ -115,6 +115,7 @@ export class GridComponent implements OnInit {
   }
 
   getReport(data: any, reportInfo?: ReportModel) {
+    this.showCharts = false;
     if (reportInfo === undefined || reportInfo.apiEndPointURL === undefined) {
       this.gridData = data;
       this.filteredData = this.gridData;
@@ -122,19 +123,19 @@ export class GridComponent implements OnInit {
       this.globals.showLoader(true);
 
       this.reportCubeService.getReport(reportInfo, this.pagingModel).then(<PagingModel>(pagingModel) => {
-        if (pagingModel.hasChart) {
+        if (pagingModel.HasChart) {
           this.hasChart = true;
-          this.gridData = pagingModel.resultData;
+          this.gridData = pagingModel.data;
           if (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
-            this.regnerateCharOptions(pagingModel.chartOptions);
+            this.regnerateCharOptions(pagingModel.HighChartsOptions);
           }
-          this.chartOptions = pagingModel.chartOptions;
-          this.chartInfo = pagingModel.chartInfo;
+          this.chartOptions = pagingModel.HighChartsOptions;
+          this.chartInfo = pagingModel.ChartInformation;
           this.showCharts = true;
         } else {
           this.gridData = pagingModel.data;
         }
-        this.filteredData = this.gridData;
+        this.filteredData = pagingModel.data;
         this.totalRows = pagingModel.totalRows;
         this.pagingModel.pageNumber = pagingModel.pageNumber;
         this.pagingModel.pageSize = pagingModel.pageSize;
