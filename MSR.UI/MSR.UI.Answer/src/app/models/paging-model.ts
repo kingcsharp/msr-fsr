@@ -40,4 +40,25 @@ export class PagingModel {
         }
 
     }
+
+    public getReportingQueryString(apiEndPointUrl, forReportDownload = true): string {
+
+        if(forReportDownload){
+
+            apiEndPointUrl = `${apiEndPointUrl}?pagesize=${this.pageSize}&pagenumber=${this.pageNumber}`;
+
+            if(this.queryString !== ''){
+                apiEndPointUrl += `&${this.queryString}`;
+            }
+            
+        } else {
+
+            if(this.queryString !== ''){
+                apiEndPointUrl += `?${this.queryString}`;
+            }
+        }
+
+        return apiEndPointUrl;
+        
+    }
 }

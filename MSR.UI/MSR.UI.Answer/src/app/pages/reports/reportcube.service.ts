@@ -31,21 +31,8 @@ export class ReportCubeService {
         let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
         //const apiEndPointUrl = reportInfo.apiEndPointURL;
 
-        if(forReportDownload){
-            apiEndPointUrl = `${apiEndPointUrl}?pagesize=${pagingModel.pageSize}&pagenumber=${pagingModel.pageNumber}`;
-
-            if(pagingModel.queryString !== ''){
-                apiEndPointUrl += `&${pagingModel.queryString}`;
-            }
-            
-        } else {
-
-            if(pagingModel.queryString !== ''){
-                apiEndPointUrl += `?${pagingModel.queryString}`;
-            }
-        }
+        apiEndPointUrl = pagingModel.getReportingQueryString(apiEndPointUrl, forReportDownload);
         
-
         return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
 
             let pagingModel = new PagingModel({
@@ -363,10 +350,10 @@ export class ReportCubeService {
                 });
                 break;
             case 'WorkOrdersNotInvoicedbyWorkOrder':
-                const workOrdersNotInvoicedbyWorkOrder =
-                pagingModel.data.filter(x => x['CubeFinancial.status'] === 'Completed' && x['CubeFinancial.shipdate'] !== undefined && x['CubeFinancial.shipdate'] !== null
+                pagingModel.data = pagingModel.data.filter(x => x['CubeFinancial.status'] === 'Completed' && x['CubeFinancial.shipdate'] !== undefined && x['CubeFinancial.shipdate'] !== null
                         && (x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null));
-                return workOrdersNotInvoicedbyWorkOrder.map((elem) => this.removePrefixesOfPropertyNames(elem));
+                pagingModel.data = pagingModel.data.map((elem) => this.removePrefixesOfPropertyNames(elem));
+                break;
             case 'RevenuebyCustomerbyTimePeriod':
                 const resultDataRevenuebyCustomerbyTimePeriod = pagingModel.data.map(elem => {
                     elem = this.removePrefixesOfPropertyNames(elem);
