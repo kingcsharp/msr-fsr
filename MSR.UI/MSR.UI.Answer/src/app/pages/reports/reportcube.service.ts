@@ -349,11 +349,6 @@ export class ReportCubeService {
                     return elem;
                 });
                 break;
-            case 'WorkOrdersNotInvoicedbyWorkOrder':
-                pagingModel.data = pagingModel.data.filter(x => x['CubeFinancial.status'] === 'Completed' && x['CubeFinancial.shipdate'] !== undefined && x['CubeFinancial.shipdate'] !== null
-                        && (x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null));
-                pagingModel.data = pagingModel.data.map((elem) => this.removePrefixesOfPropertyNames(elem));
-                break;
             case 'RevenuebyCustomerbyTimePeriod':
                 const resultDataRevenuebyCustomerbyTimePeriod = pagingModel.data.map(elem => {
                     elem = this.removePrefixesOfPropertyNames(elem);
