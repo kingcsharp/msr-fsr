@@ -78,6 +78,12 @@ export class GridComponent implements OnInit {
     if(lazyLoadEvent.first !== undefined && lazyLoadEvent.rows !== undefined && lazyLoadEvent.rows !== 0){
       this.pagingModel.pageNumber = lazyLoadEvent.first / lazyLoadEvent.rows;
     }
+
+    if(lazyLoadEvent.sortField !== undefined){
+      this.pagingModel.sortTerm = lazyLoadEvent.sortField;
+      this.pagingModel.sortAscending = lazyLoadEvent.sortOrder === 1 ? true : false;
+    }
+
     this.pagingModel.pageSize = lazyLoadEvent.rows;
     this.pagingModel.queryString = this.reportCubeService.primeNgFilterToQueryStringConverter(lazyLoadEvent.filters);
     this.getReport(this.data, this.reportInfo);

@@ -21,6 +21,8 @@ export class PagingModel {
     public HighChartsOptions: Options;
     public ChartInformation: ChartInfo;
     public queryString: string = '';
+    public sortTerm: string = null;
+    public sortAscending: boolean = null;
 
     constructor(pagingModel: IPagingModel) {
         this.pageNumber = pagingModel.pageNumber === undefined ? 0 : pagingModel.pageNumber;
@@ -56,6 +58,12 @@ export class PagingModel {
             if(this.queryString !== ''){
                 apiEndPointUrl += `?${this.queryString}`;
             }
+        }
+
+        if(this.sortTerm !== null && this.sortAscending !== null){
+
+            apiEndPointUrl += `&term=${this.sortTerm}&sortascending=${this.sortAscending}`;
+
         }
 
         return apiEndPointUrl;

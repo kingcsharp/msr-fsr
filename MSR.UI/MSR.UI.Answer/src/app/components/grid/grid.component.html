@@ -6,7 +6,7 @@
 <p-table #dt *ngIf="showReport" [value]="gridData" dataKey="id" styleClass="ui-table-customers {{gridSaved.gridClass}}"
     [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
     [paginator]="gridSaved.paginator" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-    [filterDelay]="0" stateStorage="local" stateKey="{{gridSaved.storageId}}"
+    [filterDelay]="1300" stateStorage="local" stateKey="{{gridSaved.storageId}}"
     [totalRecords]="totalRows" (onLazyLoad)="getData($event)" [lazy]="true">
     <ng-template pTemplate="caption">
         <div class="pull-left">
