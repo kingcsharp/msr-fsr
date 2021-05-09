@@ -242,7 +242,7 @@ export class ReportCubeService {
         return isValid;
     }
 
-    private getCycleCount(row, prop) {
+    private checkIfCycleCountIsNaN(row, prop) {
         const cycleCount = row[prop];
         if (isNaN(cycleCount)) {
             return 0;
@@ -257,7 +257,7 @@ export class ReportCubeService {
                     elem = this.removePrefixesOfPropertyNames(elem);
                     elem.elemKey = elem['startdate'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
                     elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
-                    elem.cyclecount = this.getCycleCount(elem, 'cyclecount');
+                    elem.cyclecount = this.checkIfCycleCountIsNaN(elem, 'cyclecount');
                     elem.startdate = moment(elem['startdate']);
                     return elem;
                 });
@@ -311,7 +311,7 @@ export class ReportCubeService {
                     elem = this.removePrefixesOfPropertyNames(elem);
                     elem.elemKey = elem['lastupdatedon'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
                     elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
-                    elem.cyclecount = this.getCycleCount(elem, 'cyclecount');
+                    elem.cyclecount = this.checkIfCycleCountIsNaN(elem, 'cyclecount');
                     elem.lastupdatedon = moment(elem['lastupdatedon']);
                     elem.partname = [{ name: elem['partname'], id: elem['partname'] }];
                     return elem;
@@ -343,7 +343,7 @@ export class ReportCubeService {
                     elem = this.removePrefixesOfPropertyNames(elem);
                     elem.elemKey = elem['lastupdatedon'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
                     elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
-                    elem.cyclecount = this.getCycleCount(elem, 'cyclecount');
+                    elem.cyclecount = this.checkIfCycleCountIsNaN(elem, 'cyclecount');
                     elem.lastupdatedon = moment(elem['lastupdatedon']);
                     elem.partname = [{ name: elem['partname'], id: elem['partname'] }];
                     return elem;
