@@ -35,6 +35,8 @@ export class GridComponent implements OnInit {
   @Input() calanderIsRange: boolean = false;
   @Output() expandRowClick = new EventEmitter<any>();
   @ViewChild('downlodInfo') downlodInfo: ElementRef;
+  @Input() staticOptions: any;
+  @Input() partOptions: any;
 
   showCharts: boolean = false;
   hasChart: boolean = false;
@@ -53,6 +55,8 @@ export class GridComponent implements OnInit {
 
   pagingModel: PagingModel = new PagingModel({} as IPagingModel);
   totalRows: number = 0;
+  completedOrCancelledStatuses: Array<any>;
+  waitingToStartOrInProgressStatuses: Array<any>;
   constructor(public globals: Globals, public cg: CommonGrid, private reportCubeService: ReportCubeService, 
     private cSVConverterService: CSVConverterService,
     private documentService: DocumentService) {
@@ -64,7 +68,22 @@ export class GridComponent implements OnInit {
     if (this.saveToLocalStorage === undefined) {
       this.saveToLocalStorage = true;
     }
-    // this.getReport(this.data, this.reportInfo);
+
+    this.completedOrCancelledStatuses = [
+      { status: 'Completed' },
+      { status: 'Cancelled' }
+    ];
+
+    this.waitingToStartOrInProgressStatuses = [
+      { status: 'Waiting to Start' },
+      { status: 'In Progress' }
+    ];
+
+    if(this.reportInfo.name === 'Work In Process'){
+      this.staticOptions = this.waitingToStartOrInProgressStatuses;
+    } else if(this.reportInfo.name === 'Combined Financial Data'){
+      this.staticOptions = this.completedOrCancelledStatuses;
+    }
   }
 
   expandRow(expanded, row) {
@@ -88,17 +107,6 @@ export class GridComponent implements OnInit {
     this.pagingModel.queryString = this.reportCubeService.primeNgFilterToQueryStringConverter(lazyLoadEvent.filters);
     this.getReport(this.data, this.reportInfo);
 
-  }
-  // (onFilter)="filterEventHandler($event,dt)"
-  filterEventHandler(filters,table) {
-    this.filteredData = table.filteredValue === null ? table.value : table.filteredValue;
-    if (!this.hasChart) {
-      return;
-    } else {
-      this.updateChartWhenGridFiltersChange();
-    }
-
-    
   }
 
   updateChartWhenGridFiltersChange(){

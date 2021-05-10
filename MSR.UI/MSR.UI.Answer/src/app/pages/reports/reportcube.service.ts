@@ -614,7 +614,9 @@ export class ReportCubeService {
         Object.keys(filters).map(filterName => {
 
            const filter = filters[filterName];
-           switch(filter.matchMode){
+           const matchMode = filter.matchMode.includes('multipleValuesFilter') ? 'multipleValuesFilter' : filter.matchMode;
+
+           switch(matchMode){
                 case 'in':
 
                     filter.value.forEach(filterValue => {
@@ -633,6 +635,13 @@ export class ReportCubeService {
                         if(filterValue !== null){
                             queryString += `${filterName}=${filterValue}&`;
                         }
+                    });
+
+                    break;
+                case 'multipleValuesFilter':
+
+                    filter.value.forEach(filterValue => {
+                        queryString += `${filterName}=${filterValue.name}&`;
                     });
 
                     break;

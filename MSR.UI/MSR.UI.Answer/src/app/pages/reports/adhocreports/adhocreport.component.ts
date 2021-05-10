@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-    ReportService, ReportModel
+    ReportService, ReportModel, CustomerService, PartService
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -28,10 +28,13 @@ export class AdhocComponent implements OnInit {
     showReport: boolean;
     hasChart: boolean = false;
     subscriptions: Subscription[] = [];
+    staticOptions: any;
+    partOptions: Array<any> = new Array<any>();
+    customerNamesAndIds: Array<any>;
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
-        private reportCubeService: ReportCubeService) {
+        private reportCubeService: ReportCubeService, private customerService: CustomerService, private partService:PartService) {
     }
 
     ngOnInit(): void {
@@ -40,6 +43,89 @@ export class AdhocComponent implements OnInit {
         }));
 
         this.getReportData();
+
+        this.staticOptions = [
+            {
+                msrfsrfacility: 'Chandler'
+            },
+            {    
+                msrfsrfacility: 'Naas'
+            },
+            {
+                msrfsrfacility: 'Hillsboro'
+            },
+            {
+                msrfsrfacility: 'Kiryat Gat'
+            },
+            {
+                locationname: 'Chandler'
+            },
+            {    
+                locationname: 'Naas'
+            },
+            {
+                locationname: 'Hillsboro'
+            },
+            {
+                locationname: 'Kiryat Gat'
+            },
+            {
+                site: 'Chandler'
+            },
+            {    
+                site: 'Naas'
+            },
+            {
+                site: 'Hillsboro'
+            },
+            {
+                site: 'Kiryat Gat'
+            }
+        ];
+
+        this.customerService.customerGet(null,null,null,null,null,null,null,null,null,null,
+            null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(customers => {
+                this.customerNamesAndIds = customers.object.map(s =>  { 
+
+                    return {
+                        id: s.id, 
+                        customername: s.name 
+                    }
+                    
+                });
+
+                this.customerNamesAndIds.map(s => {
+
+                    this.staticOptions.push({ customername: s.customername});
+
+                });
+
+                this.customerNamesAndIds.map(s => {
+
+                    this.staticOptions.push({ customerid: s.id});
+
+                });
+                this.partService.partGet(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(parts => {
+                    
+                    let partObjects = parts.object.map(s =>  { 
+
+                        return {
+                            id: s.id, 
+                            name: s.name 
+                        }
+                        
+                    });
+                    
+                    partObjects.map(s => {
+
+                        this.partOptions.push([{ name: s.name, id: s.name }]);
+    
+                    });
+
+                })
+            });
+
+        
     }
 
     getReportData() {
