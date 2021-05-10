@@ -10,7 +10,7 @@
     "nswag": "nswag run",
     "build": "nswag run && ng build",
     "builddev": "ng build --configuration=dev",
-    "buildstage": "ng build --configuration=stage",
+    "buildstage": "ng build --configuration=stage --prod --output-path=/dist",
     "builddevprodsetting": "ng build --prod --configuration=dev",
     "buildstageprodsetting": "ng build --prod --configuration=stage",
     "buildprod": "ng build --prod --configuration=prod",
