@@ -403,14 +403,12 @@ export class ReportCubeService {
                     elem.isValidForChart = this.isValidRowForChart(elem, 'kitname', 'msrfsrfacility');
                     elem.yearMonth = moment(elem['duedate']);
                     elem.site = elem['msrfsrfacility'];
-                    elem.count = 1;
+                    
                     if (elem.isValidForChart) {
-                        if (countOfKitsGridDataDic[key] === undefined) {
-                            countOfKitsGridDataDic[key] = elem;
-                        } else {
-                            countOfKitsGridDataDic[key].count++;
-                        }
+                        countOfKitsGridDataDic[key] = elem;
+    
                     }
+                    
                 });
 
                 const countOfKitsGridData = [];
@@ -428,7 +426,7 @@ export class ReportCubeService {
                     tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
                 });
 
-                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel);
+                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel, true);
             default:
                 if (pagingModel.data.length > 0) {
                     pagingModel.data = pagingModel.data.map((elem) => this.removePrefixesOfPropertyNames(elem));
@@ -479,8 +477,9 @@ export class ReportCubeService {
         return savedElement;
     }
 
-    public getResultDataAndChart(chartInfo: ChartInfo, pagingModel: PagingModel) {
+    public getResultDataAndChart(chartInfo: ChartInfo, pagingModel: PagingModel, doNotFoldRows: boolean = false) {
         chartInfo.chartData = this.groupChartDataFromGridRows(chartInfo);
+
         const monthsFromTo = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
         const dataSeries = [];
         const dataSeriesMaxDateStackValueFromTo = {};
@@ -600,7 +599,19 @@ export class ReportCubeService {
             series: dataSeries
         };
 
-        pagingModel.data = chartInfo.gridData;
+        if(doNotFoldRows){
+            pagingModel.data = pagingModel.data.map((elem) => this.removePrefixesOfPropertyNames(elem));
+        
+            pagingModel.data = pagingModel.data.map(elem => {
+                elem.yearMonth = moment(elem['duedate']);
+                elem.site = elem['msrfsrfacility'];
+                return elem;
+            });
+        } else {
+            pagingModel.data = chartInfo.gridData;
+        }
+
+        
         pagingModel.HighChartsOptions = chartOptions;
         pagingModel.ChartInformation = chartInfo;
 
