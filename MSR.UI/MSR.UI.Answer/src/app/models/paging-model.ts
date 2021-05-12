@@ -52,19 +52,23 @@ export class PagingModel {
             if(this.queryString !== ''){
                 apiEndPointUrl += `&${this.queryString}`;
             }
+
+            if(this.sortTerm !== null && this.sortAscending !== null){
+
+                apiEndPointUrl += `&term=${this.sortTerm}&sortascending=${this.sortAscending}`;
+    
+            }
             
         } else {
 
             if(this.queryString !== ''){
                 apiEndPointUrl += `?${this.queryString}`;
             }
+
+            
         }
 
-        if(this.sortTerm !== null && this.sortAscending !== null){
-
-            apiEndPointUrl += `&term=${this.sortTerm}&sortascending=${this.sortAscending}`;
-
-        }
+        
 
         return apiEndPointUrl;
         

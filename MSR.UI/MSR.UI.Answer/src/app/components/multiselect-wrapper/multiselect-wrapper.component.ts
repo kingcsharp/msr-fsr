@@ -21,6 +21,7 @@ export class MultiselectWrapperComponent implements OnInit {
   @Input() reset: any;
   @Input() filterProp: string;
   @Input() multipleValues: boolean;
+  @Input() staticOptions: any;
   currentOptions: any = [];
   basicOptions: any;
   isOldFilter: boolean = false;

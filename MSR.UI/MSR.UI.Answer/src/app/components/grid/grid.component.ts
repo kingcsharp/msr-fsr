@@ -80,9 +80,13 @@ export class GridComponent implements OnInit {
     ];
 
     if(this.reportInfo.name === 'Work In Process'){
-      this.staticOptions = this.waitingToStartOrInProgressStatuses;
+      this.waitingToStartOrInProgressStatuses.map(status => {
+        this.staticOptions.push(status);
+      })
     } else if(this.reportInfo.name === 'Combined Financial Data'){
-      this.staticOptions = this.completedOrCancelledStatuses;
+      this.completedOrCancelledStatuses.map(status => {
+        this.staticOptions.push(status);
+      });
     }
   }
 

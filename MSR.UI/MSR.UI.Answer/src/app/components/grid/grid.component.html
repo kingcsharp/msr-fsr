@@ -136,10 +136,10 @@
 <ng-template #rowView let-colsAndSettings='colsAndSettings'>
     <th *ngIf="colsAndSettings.col.dropdownHeader && !colsAndSettings.col.multipleValues"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)">
-        <multiselect-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId"
+        <multiselect-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId" [options]="staticOptions"
             filterProp="{{colsAndSettings.col.id}}" defaultId="{{colsAndSettings.col.id}}"
             filterId="{{colsAndSettings.col.id}}" defaultText="Select {{colsAndSettings.col.label}}"
-            defaultTextTooltip="" [datatable]="colsAndSettings.dt"  [options]="staticOptions">
+            defaultTextTooltip="" [datatable]="colsAndSettings.dt">
         </multiselect-wrapper>
     </th>
     <th *ngIf="colsAndSettings.col.dropdownHeader && colsAndSettings.col.multipleValues"
