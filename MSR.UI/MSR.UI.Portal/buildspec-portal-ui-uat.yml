@@ -12,7 +12,7 @@ env:
     PROJECT_UI: "uat-portal-ui"
     COMPOSE: "MSR.UI/MSR.UI.Portal/docker-compose-ui-portal.yml"
     ECS_PARAMS: "MSR.UI/MSR.UI.Portal/ecs-params-ui.yml"
-    UI_BUILD_ENV: "buildstageprodsetting"
+    UI_BUILD_ENV: "builduatprodsetting"
     ECR_URL: "425480257575.dkr.ecr.us-west-2.amazonaws.com"
     ECR_REPO: "msr-portal-ui"
     TAG: 'latest'
