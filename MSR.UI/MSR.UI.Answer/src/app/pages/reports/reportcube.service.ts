@@ -356,7 +356,7 @@ export class ReportCubeService {
                     elem.yearMonth = moment(elem['duedate']);
                     elem.isValidForChart = true;
                     elem.site = elem['msrfsrfacility'];
-                    elem.total = parseFloat(elem['wtax'].substring(1));
+                    elem.total = parseFloat(elem['total']);
                     return elem;
                 });
 
