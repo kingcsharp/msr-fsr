@@ -377,7 +377,7 @@ export class ReportCubeService {
                     elem.elemKey = elem['duedate'] + this.splitChars + elem['kitname'].replace(/\s/g, '') + this.splitChars + elem['msrfsrfacility'].replace(/\s/g, '');
                     elem.yearMonth = moment(elem['duedate']);
                     elem.isValidForChart = true;
-                    elem.total = parseFloat(elem['wtax'].substring(1));
+                    elem.total = parseFloat(elem['wtax']);
                     elem.site = elem['msrfsrfacility'];
                     return elem;
                 });
