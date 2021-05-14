@@ -43,11 +43,11 @@ export class GridComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions: Highcharts.Options;
   chartInfo: ChartInfo;
-  gridData: any = [];
+  gridData: Array<any> = new Array<any>();
   privileges = EnumPrivilege;
   enumColumnType = EnumColumnType;
   calendarLocalSettings: LocaleSettings;
-  filteredData: any;
+  filteredData: Array<any> = new Array<any>();
   showArchiveDialogue: boolean = false;
   archivedGridData: ArchiveDocumentView[] = [];
   archiveDocsGrid: GridSaved;
@@ -57,7 +57,7 @@ export class GridComponent implements OnInit {
   totalRows: number = 0;
   completedOrCancelledStatuses: Array<any>;
   waitingToStartOrInProgressStatuses: Array<any>;
-  constructor(public globals: Globals, public cg: CommonGrid, private reportCubeService: ReportCubeService, 
+  constructor(public globals: Globals, public cg: CommonGrid, private reportCubeService: ReportCubeService,
     private cSVConverterService: CSVConverterService,
     private documentService: DocumentService) {
 
@@ -79,11 +79,11 @@ export class GridComponent implements OnInit {
       { status: 'In Progress' }
     ];
 
-    if(this.reportInfo.name === 'Work In Process'){
+    if (this.reportInfo.name === 'Work In Process') {
       this.waitingToStartOrInProgressStatuses.map(status => {
         this.staticOptions.push(status);
       })
-    } else if(this.reportInfo.name === 'Combined Financial Data'){
+    } else if (this.reportInfo.name === 'Combined Financial Data') {
       this.completedOrCancelledStatuses.map(status => {
         this.staticOptions.push(status);
       });
@@ -96,31 +96,36 @@ export class GridComponent implements OnInit {
     }
   }
 
-  getData(lazyLoadEvent: LazyLoadEvent){
+  getData(lazyLoadEvent: LazyLoadEvent) {
 
-    if(lazyLoadEvent.first !== undefined && lazyLoadEvent.rows !== undefined && lazyLoadEvent.rows !== 0){
-      this.pagingModel.pageNumber = lazyLoadEvent.first / lazyLoadEvent.rows;
+    if (this.reportInfo.name !== '' && this.reportInfo.apiEndPointURL !== undefined) {
+
+
+      if (lazyLoadEvent.first !== undefined && lazyLoadEvent.rows !== undefined && lazyLoadEvent.rows !== 0) {
+        this.pagingModel.pageNumber = lazyLoadEvent.first / lazyLoadEvent.rows;
+      }
+
+      if (lazyLoadEvent.sortField !== undefined) {
+        this.pagingModel.sortTerm = lazyLoadEvent.sortField;
+        this.pagingModel.sortAscending = lazyLoadEvent.sortOrder === 1 ? true : false;
+      }
+
+      this.pagingModel.pageSize = lazyLoadEvent.rows;
+      this.pagingModel.queryString = this.reportCubeService.primeNgFilterToQueryStringConverter(lazyLoadEvent.filters);
     }
 
-    if(lazyLoadEvent.sortField !== undefined){
-      this.pagingModel.sortTerm = lazyLoadEvent.sortField;
-      this.pagingModel.sortAscending = lazyLoadEvent.sortOrder === 1 ? true : false;
-    }
-
-    this.pagingModel.pageSize = lazyLoadEvent.rows;
-    this.pagingModel.queryString = this.reportCubeService.primeNgFilterToQueryStringConverter(lazyLoadEvent.filters);
     this.getReport(this.data, this.reportInfo);
 
   }
 
-  updateChartWhenGridFiltersChange(){
+  updateChartWhenGridFiltersChange() {
 
     this.globals.showLoader(true);
     this.chartInfo.gridData = this.filteredData;
 
     this.showCharts = false;
     setTimeout(() => {
-      const pagingModel = this.reportCubeService.getResultDataAndChart(this.chartInfo,this.pagingModel);
+      const pagingModel = this.reportCubeService.getResultDataAndChart(this.chartInfo, this.pagingModel);
       if (this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
         this.regnerateCharOptions(pagingModel.HighChartsOptions);
       }
@@ -135,8 +140,15 @@ export class GridComponent implements OnInit {
   getReport(data: any, reportInfo?: ReportModel) {
     this.showCharts = false;
     if (reportInfo === undefined || reportInfo.apiEndPointURL === undefined) {
-      this.gridData = data;
-      this.filteredData = this.gridData;
+      this.showReport = false;
+      this.gridData.length = 0;
+      data.map(item => {
+        this.gridData.push(item);
+        this.filteredData.push(item);
+      });
+      this.showReport = true;
+      //this.gridData = data;
+      //this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
 
@@ -176,11 +188,11 @@ export class GridComponent implements OnInit {
   printCsvReport() {
 
     this.reportCubeService.getReport(this.reportInfo, this.pagingModel, false).then(<PagingModel>(pagingModel) => {
-      
+
       this.cSVConverterService.downloadFile(pagingModel.data, this.gridSaved.columnsSaved, this.reportInfo.name);
     });
 
-    
+
   }
 
   viewArchives() {

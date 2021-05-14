@@ -2,7 +2,6 @@
     <highcharts-chart *ngIf="showCharts" [Highcharts]="Highcharts" [options]="chartOptions"
         style="width: 100%; height: 100%; display: block;"></highcharts-chart>
 </div>
-
 <p-table #dt *ngIf="showReport" [value]="gridData" dataKey="id" styleClass="ui-table-customers {{gridSaved.gridClass}}"
     [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
     [paginator]="gridSaved.paginator" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
