@@ -348,6 +348,7 @@ export class ReportCubeService {
                     elem.partname = [{ name: elem['partname'], id: elem['partname'] }];
                     return elem;
                 });
+                return pagingModel;
                 break;
             case 'RevenuebyCustomerbyTimePeriod':
                 const resultDataRevenuebyCustomerbyTimePeriod = pagingModel.data.map(elem => {

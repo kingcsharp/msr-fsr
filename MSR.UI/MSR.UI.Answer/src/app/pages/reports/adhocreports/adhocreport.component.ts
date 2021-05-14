@@ -105,7 +105,7 @@ export class AdhocComponent implements OnInit {
                     this.staticOptions.push({ customerid: s.id});
 
                 });
-                this.partService.partGet(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(parts => {
+                this.partService.partGet(null,null,null,null,null,null,null,null,null,null,null,null,false,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(parts => {
                     
                     let partObjects = parts.object.map(s =>  { 
 
