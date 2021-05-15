@@ -28,8 +28,8 @@ export class ReportCubeService {
         const headers = new HttpHeaders().set('key', this.cubeKey);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
-        let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
-        //let apiEndPointUrl = reportInfo.apiEndPointURL;
+        //let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
+        let apiEndPointUrl = reportInfo.apiEndPointURL;
 
         apiEndPointUrl = pagingModel.getReportingQueryString(apiEndPointUrl, forReportDownload);
         
