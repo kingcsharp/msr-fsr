@@ -36,7 +36,6 @@ export class GridComponent implements OnInit {
   @Output() expandRowClick = new EventEmitter<any>();
   @ViewChild('downlodInfo') downlodInfo: ElementRef;
   @Input() staticOptions: any;
-  @Input() partOptions: any;
 
   showCharts: boolean = false;
   hasChart: boolean = false;
@@ -57,6 +56,7 @@ export class GridComponent implements OnInit {
   totalRows: number = 0;
   completedOrCancelledStatuses: Array<any>;
   waitingToStartOrInProgressStatuses: Array<any>;
+  partOptions: Array<any> = new Array<any>();
   constructor(public globals: Globals, public cg: CommonGrid, private reportCubeService: ReportCubeService,
     private cSVConverterService: CSVConverterService,
     private documentService: DocumentService) {
@@ -147,8 +147,6 @@ export class GridComponent implements OnInit {
         this.filteredData.push(item);
       });
       this.showReport = true;
-      //this.gridData = data;
-      //this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
 
@@ -162,13 +160,28 @@ export class GridComponent implements OnInit {
           this.chartOptions = pagingModel.HighChartsOptions;
           this.chartInfo = pagingModel.ChartInformation;
           this.showCharts = true;
+          
         } else {
           this.gridData = pagingModel.data;
+        }
+        this.partOptions.length = 0;
+        if(pagingModel.partsdata !== undefined && pagingModel.partsdata.length !== 0){
+          pagingModel.partsdata.map(part => {
+            if(part['CubePartsmonitors.partname'] !== null && part['CubePartsmonitors.partname'] !== undefined){
+              this.partOptions.push([{ name: part['CubePartsmonitors.partname'], id: part['CubePartsmonitors.partname'] }]);
+            }
+
+            if(part['CubeMonitors.partname'] !== null && part['CubeMonitors.partname'] !== undefined){
+              this.partOptions.push([{ name: part['CubeMonitors.partname'], id: part['CubeMonitors.partname'] }]);
+            }
+
+          });
         }
         this.filteredData = pagingModel.data;
         this.totalRows = pagingModel.totalRows;
         this.pagingModel.pageNumber = pagingModel.pageNumber;
         this.pagingModel.pageSize = pagingModel.pageSize;
+        console.log(this.partOptions.length);
         this.globals.showLoader(false);
       });
     }

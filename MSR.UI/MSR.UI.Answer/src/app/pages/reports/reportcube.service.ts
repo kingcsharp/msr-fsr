@@ -39,7 +39,8 @@ export class ReportCubeService {
                 pageNumber: forReportDownload ? response['pagenumber'] : undefined,
                 pageSize: forReportDownload ? response['pagesize'] : undefined,
                 totalRows: response['totalrows'],
-                data: response['data']
+                data: response['data'],
+                partsdata: response['partsdata']
             } as IPagingModel);
 
 

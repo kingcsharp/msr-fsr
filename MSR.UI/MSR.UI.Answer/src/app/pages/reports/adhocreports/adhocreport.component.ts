@@ -29,7 +29,6 @@ export class AdhocComponent implements OnInit {
     hasChart: boolean = false;
     subscriptions: Subscription[] = [];
     staticOptions: any;
-    partOptions: Array<any> = new Array<any>();
     customerNamesAndIds: Array<any>;
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
@@ -105,24 +104,6 @@ export class AdhocComponent implements OnInit {
                     this.staticOptions.push({ customerid: s.id});
 
                 });
-                this.partService.partGet(null,null,null,null,null,null,null,null,null,null,null,null,false,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(parts => {
-                    
-                    let partObjects = parts.object.map(s =>  { 
-
-                        return {
-                            id: s.id, 
-                            name: s.name 
-                        }
-                        
-                    });
-                    
-                    partObjects.map(s => {
-
-                        this.partOptions.push([{ name: s.name, id: s.name }]);
-    
-                    });
-
-                })
             });
 
         

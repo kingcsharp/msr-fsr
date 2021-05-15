@@ -9,6 +9,7 @@ export interface IPagingModel {
     HighChartsOptions: Options;
     ChartInformation: ChartInfo;
     queryString: string;
+    partsdata: Array<any>;
 }
 
 
@@ -23,6 +24,7 @@ export class PagingModel {
     public queryString: string = '';
     public sortTerm: string = null;
     public sortAscending: boolean = null;
+    partsdata: Array<any> = new Array<any>();
 
     constructor(pagingModel: IPagingModel) {
         this.pageNumber = pagingModel.pageNumber === undefined ? 0 : pagingModel.pageNumber;
@@ -31,6 +33,7 @@ export class PagingModel {
         this.data = pagingModel.data;
         this.HighChartsOptions = pagingModel.HighChartsOptions;
         this.ChartInformation = pagingModel.ChartInformation;
+        this.partsdata = pagingModel.partsdata;
     }
 
     get HasChart(){
