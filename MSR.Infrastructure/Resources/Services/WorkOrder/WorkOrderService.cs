@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -383,8 +382,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 .FirstAsync(x => x.Id == command.ProductId);
             List<ProcedureStep> steps = await _unitOfWork.ProcedureSteps.Query()
                 .Where(x => x.ProcedureId == product.ProcedureId)
-                .Include(x => x.ProcedureStepMonitors)
                 .OrderBy(x => x.PrintOrder)
+                .ToListAsync();
+
+            _ = await _unitOfWork.ProcedureStepMonitors.Query()
+                .Where(x => x.ProcedureStepId.HasValue &&
+                            steps.Select(y => y.Id).Contains(x.ProcedureStepId.Value))
                 .ToListAsync();
 
             List<WorkOrderTask> tasks = new List<WorkOrderTask>();
@@ -621,7 +624,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             workOrderStatEntity.TotalTasks += 1;
             workOrderStatEntity.TotalTaskTime += procedureStepEntity?.LaborTime == null ? 0 : (decimal)procedureStepEntity?.LaborTime.Value;
             _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
-            
+
             var created = await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
 
             // This will call SaveChangesAsync
@@ -677,8 +680,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             }
 
-            workOrderTasksToTakeOverEntities.ToList().ForEach(workOrderTaskEntity => { 
-               
+            workOrderTasksToTakeOverEntities.ToList().ForEach(workOrderTaskEntity => {
+
                 workOrderTaskEntity.AssignedTo = userEntity.Id;
                 workOrderTaskEntity.AssignedToUser = userEntity;
                 _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
@@ -802,11 +805,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
                 workOrderStatEntity.TotalTasks += 1;
                 workOrderStatEntity.TotalTaskTime += procedureStepEntity?.LaborTime == null ? 0 : (decimal)procedureStepEntity?.LaborTime.Value;
-                _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);           
-            
+                _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
+
                 await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
-                await _unitOfWork.SaveChangesAsync();               
-                
+                await _unitOfWork.SaveChangesAsync();
+
                 workOrderTaskEntities.Add(workOrderTaskEntity);
             }
 
@@ -873,7 +876,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
                     await _unitOfWork.SaveChangesAsync();
             }
-            _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);            
+            _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
 
             workOrderEntity.ActualEndDate = DateTime.Now;
             _unitOfWork.WorkOrders.Update(workOrderEntity);
@@ -1031,13 +1034,13 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var fileMaps = await _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).Where(j => j.EntityTableName == "WorkOrderTask" && workOrderTaskIds.Contains(j.EntityId)).ToListAsync();
             var workOrderFileEntities = fileMaps.Where(i => i.FileObject != null).Select(j => j.FileObject).ToList();
 
-            workOrderEntity.HasFile = workOrderFileEntities.Any() 
+            workOrderEntity.HasFile = workOrderFileEntities.Any()
                                             ? workOrderFileEntities.Any(i => !i.ContentType.StartsWith("image"))
                                             : false;
             workOrderEntity.HasPhoto = workOrderFileEntities.Any()
                                             ? workOrderFileEntities.Any(i => i.ContentType.StartsWith("image"))
                                             : false;
-           
+
 
             // "DONE" states are:
             // 4   Cancelled
@@ -1064,7 +1067,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _unitOfWork.WorkOrders.Update(workOrderEntity);
             await _unitOfWork.SaveChangesAsync();
 
-            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            await _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
             {
                 workOrderId = workOrderEntity.Id,
                 workOrderStatus = TranslateWOStatusToViewModel(workOrderEntity.WorkOrderTasks)
@@ -1446,7 +1449,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             List<WorkOrderPart> workOrderParts = await _unitOfWork.WorkOrderParts.Query().Where(s => s.SerialNumber == workOrderPart.SerialNumber).ToListAsync();
             var workOrderPartIds = workOrderParts.Select(m => m.PartId);
             List<EntityFramework.Entities.Part> partEntities = await _unitOfWork.Parts.Query().Where(s => workOrderPartIds.Contains(s.Id)).ToListAsync();
-            
+
             workOrderParts = workOrderParts.Where(s => s.SerialNumber == workOrderPart.SerialNumber && s.Part.PartNumber == workOrderPart.Part.PartNumber).ToList();
 
 

@@ -16,9 +16,8 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
         private HubConnection connection = null;
         private ILogger _logger;
         private string _url;
-
-        public static int pingCounterSend = 0;
-        public static int pingCounterRcv = 0;
+        private object _mutex = new object();
+        private bool isConnecting = false;
 
         public MessageHubService(ILogger<MessageHubService> logger, GeneralInformation config)
         {
@@ -28,12 +27,19 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
             _logger = logger;
         }
 
-        public async Task Connect()
+        private async Task Connect()
         {
-            if (connection != null)
+            if (connection != null && connection.State != HubConnectionState.Disconnected)
             {
                 return;
             }
+            lock(_mutex) {
+                if (isConnecting) {
+                    return;
+                }
+                isConnecting = true;
+            }
+
             connection = new HubConnectionBuilder()
                 .WithAutomaticReconnect()
                 .WithUrl(_url, options =>
@@ -42,27 +48,7 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
                 })
                 .Build();
 
-            connection.Closed += async (error) =>
-            {
-                await Task.Delay(new Random().Next(0, 5) * 1000);
-                await connection.StartAsync();
-            };
-
             await connection.StartAsync();
-
-            connection.On<Toaster>("ToasterMessage", (msg) =>
-            {
-                if (_logger != null)
-                {
-                    if (pingCounterRcv % 20 == 0)
-                    {
-                        _logger.LogDebug($"Received SignalR Heartbeat {msg.Message} " +
-                            $"(repeated {pingCounterRcv} times)");
-                        pingCounterRcv = 0;
-                    }
-                    pingCounterRcv += 1;
-                }
-            });
         }
 
         public async Task SendNotification(Guid guid, PendingNotificationItem message)
@@ -72,9 +58,17 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
                 await Connect();
                 await connection.InvokeAsync("WorkflowMessage", guid, message);
             }
+            catch(OperationCanceledException ex)
+            {
+                _logger.LogInformation(ex, ex.Message);
+            }
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
+            }
+            finally
+            {
+                isConnecting = false;
             }
         }
 
@@ -85,9 +79,17 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
                 await Connect();
                 await connection.InvokeAsync("SendWorkOrderUpdate", update);
             }
+            catch(OperationCanceledException ex)
+            {
+                _logger.LogInformation(ex, ex.Message);
+            }
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
+            }
+            finally
+            {
+                isConnecting = false;
             }
         }
 
@@ -97,29 +99,18 @@ namespace MSR.Infrastructure.Resources.Services.MessageHub
             {
                 await Connect();
                 await connection.InvokeAsync("SendMessage", userId, message);
-
-                // Log the message.  If it's a ping, show it only once
-                // ever 20 times (approx. every 400 seconds).
-                bool logit = true;
-                int pc = 0;
-                if (userId.Equals("ping")) {
-                    if (pingCounterSend % 20 == 0) {
-                        pc = pingCounterSend;
-                        pingCounterSend = 0;
-                    } else {
-                        logit = false;
-                    }
-                    pingCounterSend += 1;
-                }
-                if (logit) {
-                    _logger.LogDebug(
-                        $"SendMessage userId={userId} message={message.Message} " +
-                        $"(repeated {pc} times");
-                }
+            }
+            catch(OperationCanceledException ex)
+            {
+                _logger.LogInformation(ex, ex.Message);
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
+            }
+            finally
+            {
+                isConnecting = false;
             }
         }
 

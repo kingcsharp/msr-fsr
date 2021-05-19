@@ -1,5 +1,5 @@
 {
-    "baseUrl": "https://stage3.answer.msr-fsr.com",
+    "baseUrl": "https://uat.answer.msr-fsr.com",
     "env": {
       "admin-username": "admin",
       "admin-password": "cmhworks.2020",
