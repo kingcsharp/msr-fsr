@@ -10,6 +10,8 @@ import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { Globals } from '../../models/lib/globals';
 import { EnumChartType } from '../../../app/models/enums/ChartType';
 import { EnumChartStackType } from '../../../app/models/enums/EnumChartStackType';
+import { IPagingModel, PagingModel } from '../../../app/models/paging-model';
+import { FilterMetadata } from 'primeng/api';
 
 @Injectable({
     providedIn: 'root'
@@ -22,15 +24,27 @@ export class ReportCubeService {
 
     }
 
-    public getReport = async (reportInfo: ReportModel) => {
+    public getReport = async (reportInfo: ReportModel, pagingModel:PagingModel = null, forReportDownload:boolean = true) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
-        //const apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
-        const apiEndPointUrl = reportInfo.apiEndPointURL;
+        //let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
+        let apiEndPointUrl = reportInfo.apiEndPointURL;
 
+        apiEndPointUrl = pagingModel.getReportingQueryString(apiEndPointUrl, forReportDownload);
+        
         return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
-            return this.filterReportData(response, reportInfo);
+
+            let pagingModel = new PagingModel({
+                pageNumber: forReportDownload ? response['pagenumber'] : undefined,
+                pageSize: forReportDownload ? response['pagesize'] : undefined,
+                totalRows: response['totalrows'],
+                data: response['data'],
+                partsdata: response['partsdata']
+            } as IPagingModel);
+
+
+            return this.filterReportData(pagingModel, reportInfo);
         });
     }
 
@@ -229,7 +243,7 @@ export class ReportCubeService {
         return isValid;
     }
 
-    private getCycleCount(row, prop) {
+    private checkIfCycleCountIsNaN(row, prop) {
         const cycleCount = row[prop];
         if (isNaN(cycleCount)) {
             return 0;
@@ -237,18 +251,18 @@ export class ReportCubeService {
         return cycleCount;
     }
 
-    public filterReportData(data: any, reportInfo: ReportModel) {
+    private filterReportData(pagingModel: PagingModel, reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
             case 'PartsCycleCountsbyWorkOrderDate':
-                const gridData = data.map(elem => {
+                const gridData = pagingModel.data.map(elem => {
                     elem = this.removePrefixesOfPropertyNames(elem);
                     elem.elemKey = elem['startdate'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
                     elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
-                    elem.cyclecount = this.getCycleCount(elem, 'cyclecount');
+                    elem.cyclecount = this.checkIfCycleCountIsNaN(elem, 'cyclecount');
                     elem.startdate = moment(elem['startdate']);
                     return elem;
                 });
-                const chartInfoPartsCycleCounts = new ChartInfo({
+                pagingModel.ChartInformation = new ChartInfo({
                     gridData: gridData,
                     chartType: EnumChartType.Line,
                     stackByType: EnumChartStackType.MaxStackDateValue,
@@ -291,19 +305,19 @@ export class ReportCubeService {
                         }
                     }
                 });
-
-                return this.getResultDataAndChart(chartInfoPartsCycleCounts);
+                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel);
+                break;
             case 'MonitorsHistorybyWorkOrder':
-                const gridDataRet = data.map(elem => {
+                const gridDataRet = pagingModel.data.map(elem => {
                     elem = this.removePrefixesOfPropertyNames(elem);
                     elem.elemKey = elem['lastupdatedon'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
                     elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
-                    elem.cyclecount = this.getCycleCount(elem, 'cyclecount');
+                    elem.cyclecount = this.checkIfCycleCountIsNaN(elem, 'cyclecount');
                     elem.lastupdatedon = moment(elem['lastupdatedon']);
                     elem.partname = [{ name: elem['partname'], id: elem['partname'] }];
                     return elem;
                 });
-                const chartInfoDicworkInProcessbyWorkOrder = new ChartInfo({
+                pagingModel.ChartInformation = new ChartInfo({
                     gridData: gridDataRet,
                     chartType: EnumChartType.Bar,
                     stackBy: 'cyclecount',
@@ -323,37 +337,32 @@ export class ReportCubeService {
                         }
                     }
                 });
-                return this.getResultDataAndChart(chartInfoDicworkInProcessbyWorkOrder);
+                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel);
                 break;
             case 'MonitorsbyWorkOrder':
-                const gridDataMonitorsbyWorkOrder = data.map(elem => {
+                pagingModel.data = pagingModel.data.map(elem => {
                     elem = this.removePrefixesOfPropertyNames(elem);
                     elem.elemKey = elem['lastupdatedon'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
                     elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
-                    elem.cyclecount = this.getCycleCount(elem, 'cyclecount');
+                    elem.cyclecount = this.checkIfCycleCountIsNaN(elem, 'cyclecount');
                     elem.lastupdatedon = moment(elem['lastupdatedon']);
                     elem.partname = [{ name: elem['partname'], id: elem['partname'] }];
                     return elem;
                 });
-                return gridDataMonitorsbyWorkOrder;
+                return pagingModel;
                 break;
-            case 'WorkOrdersNotInvoicedbyWorkOrder':
-                const workOrdersNotInvoicedbyWorkOrder =
-                    data.filter(x => x['CubeFinancial.status'] === 'Completed' && x['CubeFinancial.shipdate'] !== undefined && x['CubeFinancial.shipdate'] !== null
-                        && (x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null));
-                return workOrdersNotInvoicedbyWorkOrder.map((elem) => this.removePrefixesOfPropertyNames(elem));
             case 'RevenuebyCustomerbyTimePeriod':
-                const resultDataRevenuebyCustomerbyTimePeriod = data.map(elem => {
+                const resultDataRevenuebyCustomerbyTimePeriod = pagingModel.data.map(elem => {
                     elem = this.removePrefixesOfPropertyNames(elem);
                     elem.elemKey = elem['duedate'] + this.splitChars + elem['customername'].replace(/\s/g, '') + this.splitChars + elem['msrfsrfacility'].replace(/\s/g, '');
                     elem.yearMonth = moment(elem['duedate']);
                     elem.isValidForChart = true;
                     elem.site = elem['msrfsrfacility'];
-                    elem.total = parseFloat(elem['wtax'].substring(1));
+                    elem.total = parseFloat(elem['total']);
                     return elem;
                 });
 
-                const chartInfoRevenuebyCustomerbyTimePeriod = new ChartInfo({
+                pagingModel.ChartInformation = new ChartInfo({
                     gridData: resultDataRevenuebyCustomerbyTimePeriod,
                     stackBy: 'total',
                     chartTitle: 'Revenue by Customer',
@@ -362,20 +371,21 @@ export class ReportCubeService {
                     tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
                 });
 
-                return this.getResultDataAndChart(chartInfoRevenuebyCustomerbyTimePeriod);
+                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel);
+                break
             case 'RevenuebyKitbyPart/Kit':
-                const resultData2 = data.map(elem => {
+                const resultData = pagingModel.data.map(elem => {
                     elem = this.removePrefixesOfPropertyNames(elem);
                     elem.elemKey = elem['duedate'] + this.splitChars + elem['kitname'].replace(/\s/g, '') + this.splitChars + elem['msrfsrfacility'].replace(/\s/g, '');
                     elem.yearMonth = moment(elem['duedate']);
                     elem.isValidForChart = true;
-                    elem.total = parseFloat(elem['wtax'].substring(1));
+                    elem.total = parseFloat(elem['wtax']);
                     elem.site = elem['msrfsrfacility'];
                     return elem;
                 });
 
-                const chartInfo2 = new ChartInfo({
-                    gridData: resultData2,
+                pagingModel.ChartInformation = new ChartInfo({
+                    gridData: resultData,
                     stackBy: 'total',
                     chartTitle: 'Revenue by Kit',
                     xAxisTitle: 'Month (Previous 12 Months Rolling)',
@@ -383,10 +393,11 @@ export class ReportCubeService {
                     tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
                 });
 
-                return this.getResultDataAndChart(chartInfo2);
+                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel);
+                break;
             case 'CountofKitsbyPart/Kit':
                 let countOfKitsGridDataDic = {};
-                data.forEach(elem => {
+                pagingModel.data.forEach(elem => {
                     elem = this.removePrefixesOfPropertyNames(elem);
                     const keyCombinedName = this.setName(elem, 'kitname', 'msrfsrfacility', '-');
                     const key = moment(elem['duedate']).format('YYYY-MM') + this.splitChars + keyCombinedName;
@@ -394,14 +405,12 @@ export class ReportCubeService {
                     elem.isValidForChart = this.isValidRowForChart(elem, 'kitname', 'msrfsrfacility');
                     elem.yearMonth = moment(elem['duedate']);
                     elem.site = elem['msrfsrfacility'];
-                    elem.count = 1;
+                    
                     if (elem.isValidForChart) {
-                        if (countOfKitsGridDataDic[key] === undefined) {
-                            countOfKitsGridDataDic[key] = elem;
-                        } else {
-                            countOfKitsGridDataDic[key].count++;
-                        }
+                        countOfKitsGridDataDic[key] = elem;
+    
                     }
+                    
                 });
 
                 const countOfKitsGridData = [];
@@ -410,7 +419,7 @@ export class ReportCubeService {
                     countOfKitsGridData.push(countOfKitsGridDataDic[chartDataKey]);
                 });
 
-                const chartInfo3 = new ChartInfo({
+                pagingModel.ChartInformation = new ChartInfo({
                     gridData: countOfKitsGridData,
                     stackBy: 'count',
                     chartTitle: 'Count of Kits',
@@ -419,21 +428,14 @@ export class ReportCubeService {
                     tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
                 });
 
-                return this.getResultDataAndChart(chartInfo3);
-            case 'CombinedFinancialDatabyWorkOrder':
-                if (data.length > 0) {
-                    let resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
-                    resultDataArr = resultDataArr.filter(s => moment(s.shipdate) > moment(moment()).subtract(3, 'months').endOf('month'));
-                    return resultDataArr;
-                }
+                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel, true);
             default:
-                if (data.length > 0) {
-                    let resultDataArr = data.map((elem) => this.removePrefixesOfPropertyNames(elem));
-                    return resultDataArr;
+                if (pagingModel.data.length > 0) {
+                    pagingModel.data = pagingModel.data.map((elem) => this.removePrefixesOfPropertyNames(elem));
                 }
                 break;
         }
-        return data;
+        return pagingModel;
     }
 
     private removePrefixesOfPropertyNames(elem: any) {
@@ -477,8 +479,9 @@ export class ReportCubeService {
         return savedElement;
     }
 
-    public getResultDataAndChart(chartInfo: ChartInfo) {
+    public getResultDataAndChart(chartInfo: ChartInfo, pagingModel: PagingModel, doNotFoldRows: boolean = false) {
         chartInfo.chartData = this.groupChartDataFromGridRows(chartInfo);
+
         const monthsFromTo = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
         const dataSeries = [];
         const dataSeriesMaxDateStackValueFromTo = {};
@@ -500,7 +503,6 @@ export class ReportCubeService {
                 } else {
                     const seriesDataArray = [];
                     dataSeriesMaxDateStackValueFromTo[keyName] = [];
-                    // just to initialize an array with a 0 in all it's positions.
                     monthsFromTo.forEach(element => {
                         seriesDataArray.push(0);
                         dataSeriesMaxDateStackValueFromTo[keyName].push({ monthYear: element, maxDate: undefined, row: {} });
@@ -587,22 +589,6 @@ export class ReportCubeService {
             legend: chartInfo.chartTOptions?.legend === undefined ? {
                 enabled: false
             } : chartInfo.chartTOptions.legend,
-            // legend: {
-            //     align: 'right',
-            //     x: -5,
-            //     verticalAlign: 'top',
-            //     y: 5,
-            //     floating: true,
-            //     backgroundColor:'white',
-            //     borderColor: '#CCC',
-            //     borderWidth: 1,
-            //     shadow: false,
-            //     maxHeight:100,
-            //     width:200,
-            //     itemHoverStyle:{
-            //         opacity:1
-            //     }
-            // },
             tooltip: chartInfo.chartTOptions?.tooltip === undefined ? {
                 headerFormat: '<b>Month:</b> {point.x}<br/>',
                 pointFormat: '<b>{series.name}</b>: {point.y:,.2f}<br/> <b>Total</b>: {point.stackTotal:,.2f}'
@@ -610,15 +596,76 @@ export class ReportCubeService {
             plotOptions: chartInfo.chartTOptions?.plotOptions === undefined ? {
                 column: {
                     stacking: 'normal',
-                    // dataLabels: {
-                    //     enabled: true
-                    // }
                 }
             } : chartInfo.chartTOptions.plotOptions,
             series: dataSeries
         };
 
+        if(doNotFoldRows){
+            pagingModel.data = pagingModel.data.map((elem) => this.removePrefixesOfPropertyNames(elem));
+        
+            pagingModel.data = pagingModel.data.map(elem => {
+                elem.yearMonth = moment(elem['duedate']);
+                elem.site = elem['msrfsrfacility'];
+                return elem;
+            });
+        } else {
+            pagingModel.data = chartInfo.gridData;
+        }
 
-        return { resultData: chartInfo.gridData, chartOptions: chartOptions, chartInfo: chartInfo };
+        
+        pagingModel.HighChartsOptions = chartOptions;
+        pagingModel.ChartInformation = chartInfo;
+
+        return pagingModel;
+    }
+
+    public primeNgFilterToQueryStringConverter(filters: {[s: string]: FilterMetadata;}){
+        
+        let queryString = '';
+
+        Object.keys(filters).map(filterName => {
+
+           const filter = filters[filterName];
+           const matchMode = filter.matchMode.includes('multipleValuesFilter') ? 'multipleValuesFilter' : filter.matchMode;
+
+           switch(matchMode){
+                case 'in':
+
+                    filter.value.forEach(filterValue => {
+                        queryString += `${filterName}=${filterValue}&`;
+                    });
+
+                    break;
+                case 'contains':
+
+                    queryString += `${filterName}=${filter.value}&`;
+
+                    break;
+                case 'dateRangeFilter':
+
+                    filter.value.forEach(filterValue => {
+                        if(filterValue !== null){
+                            queryString += `${filterName}=${filterValue}&`;
+                        }
+                    });
+
+                    break;
+                case 'multipleValuesFilter':
+
+                    filter.value.forEach(filterValue => {
+                        queryString += `${filterName}=${filterValue.name}&`;
+                    });
+
+                    break;
+                default:
+                    break;
+           } 
+
+        });
+
+
+        return queryString.substring(0,queryString.length-1);
+
     }
 }

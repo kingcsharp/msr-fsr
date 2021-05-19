@@ -253,7 +253,7 @@ export class ProductDefinitionComponent implements OnInit {
     }
 
     this.partsService.partGet(null, null, null, null, null, null, null, null, null, null
-      , null, null, null, null, null, null, env.apiVersion).pipe(take(1))
+      , null, null,null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           this.partsData.push({ label: `${x.name} [${x.partNumber}] [ID: ${x.id}]`, partNumber: x.partNumber, value: x.id });

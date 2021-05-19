@@ -15,8 +15,11 @@ namespace MSR.Infrastructure.Resources.Queries
     public static class PartQueries
     {
         public static IQueryable<Part> CreatePartQuery(this IQueryable<Part> query, GetParts command, bool forRowCount = false) {
-            
-            query = query.Include(x => x.Subparts).AsQueryable();
+
+
+            if (command.IncludeChildParts) { 
+                query = query.Include(x => x.Subparts).AsQueryable();
+            }
 
             query = query.Where(command.CreatedByName, s => s.Created.FirstName.Contains(command.CreatedByName));
             query = query.Where(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date,command.CreatedOn.Value.Date) == 0);

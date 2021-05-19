@@ -1,26 +1,25 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  ReportService, ReportModel, EnumAwsFolders, DocumentService, AuditActionResultOfICollectionOfArchiveDocumentView, ArchiveDocumentView
+  ReportModel, DocumentService, AuditActionResultOfICollectionOfArchiveDocumentView, ArchiveDocumentView
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
 import { EnumPrivilege } from '../../models/enums/privileges';
 import { responseHandler } from '../../utils/responseHandler';
-import { ViewSaved } from '../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../models/lib/CommonGrid';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, forkJoin, of } from 'rxjs';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj, formatBytes } from '../../models/lib/Utils';
-import { ActivatedRoute } from '@angular/router';
+import { formatBytes } from '../../models/lib/Utils';
 import { EnumColumnType } from '../../models/enums/EnumColumnType';
 import { GridSaved } from '../../models/lib/GridSaved';
 import { ReportCubeService } from '../../pages/reports/reportcube.service';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { CSVConverterService } from '../../services/csvconverter.service';
-// import * as $ from 'jquery';
+import { LocaleSettings } from 'primeng/calendar';
+import { IPagingModel, PagingModel } from '../../models/paging-model';
+import { LazyLoadEvent } from 'primeng/api';
+
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',
@@ -36,36 +35,59 @@ export class GridComponent implements OnInit {
   @Input() calanderIsRange: boolean = false;
   @Output() expandRowClick = new EventEmitter<any>();
   @ViewChild('downlodInfo') downlodInfo: ElementRef;
+  @Input() staticOptions: any;
 
   showCharts: boolean = false;
   hasChart: boolean = false;
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions: Highcharts.Options;
   chartInfo: ChartInfo;
-  gridData: any = [];
+  gridData: Array<any> = new Array<any>();
   privileges = EnumPrivilege;
   enumColumnType = EnumColumnType;
-  calendarEn;
-  filteredData: any;
+  calendarLocalSettings: LocaleSettings;
+  filteredData: Array<any> = new Array<any>();
   showArchiveDialogue: boolean = false;
   archivedGridData: ArchiveDocumentView[] = [];
   archiveDocsGrid: GridSaved;
   reportArchiveModel: ReportModel;
 
-  // expanded: boolean = false;
-  constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
-    private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
-    private reportCubeService: ReportCubeService, private cSVConverterService: CSVConverterService,
+  pagingModel: PagingModel = new PagingModel({} as IPagingModel);
+  totalRows: number = 0;
+  completedOrCancelledStatuses: Array<any>;
+  waitingToStartOrInProgressStatuses: Array<any>;
+  partOptions: Array<any> = new Array<any>();
+  constructor(public globals: Globals, public cg: CommonGrid, private reportCubeService: ReportCubeService,
+    private cSVConverterService: CSVConverterService,
     private documentService: DocumentService) {
 
   }
 
   ngOnInit(): void {
-    this.calendarEn = this.globals.getCalendarDefault();
+    this.calendarLocalSettings = this.globals.getCalendarDefault();
     if (this.saveToLocalStorage === undefined) {
       this.saveToLocalStorage = true;
     }
-    this.getReport(this.data, this.reportInfo);
+
+    this.completedOrCancelledStatuses = [
+      { status: 'Completed' },
+      { status: 'Cancelled' }
+    ];
+
+    this.waitingToStartOrInProgressStatuses = [
+      { status: 'Waiting to Start' },
+      { status: 'In Progress' }
+    ];
+
+    if (this.reportInfo.name === 'Work In Process') {
+      this.waitingToStartOrInProgressStatuses.map(status => {
+        this.staticOptions.push(status);
+      })
+    } else if (this.reportInfo.name === 'Combined Financial Data') {
+      this.completedOrCancelledStatuses.map(status => {
+        this.staticOptions.push(status);
+      });
+    }
   }
 
   expandRow(expanded, row) {
@@ -74,48 +96,92 @@ export class GridComponent implements OnInit {
     }
   }
 
-  handleFilter(ev, filteredData) {
-    this.filteredData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
-    if (!this.hasChart) {
-      return;
+  getData(lazyLoadEvent: LazyLoadEvent) {
+
+    if (this.reportInfo.name !== '' && this.reportInfo.apiEndPointURL !== undefined) {
+
+
+      if (lazyLoadEvent.first !== undefined && lazyLoadEvent.rows !== undefined && lazyLoadEvent.rows !== 0) {
+        this.pagingModel.pageNumber = lazyLoadEvent.first / lazyLoadEvent.rows;
+      }
+
+      if (lazyLoadEvent.sortField !== undefined) {
+        this.pagingModel.sortTerm = lazyLoadEvent.sortField;
+        this.pagingModel.sortAscending = lazyLoadEvent.sortOrder === 1 ? true : false;
+      }
+
+      this.pagingModel.pageSize = lazyLoadEvent.rows;
+      this.pagingModel.queryString = this.reportCubeService.primeNgFilterToQueryStringConverter(lazyLoadEvent.filters);
     }
+
+    this.getReport(this.data, this.reportInfo);
+
+  }
+
+  updateChartWhenGridFiltersChange() {
 
     this.globals.showLoader(true);
     this.chartInfo.gridData = this.filteredData;
 
     this.showCharts = false;
     setTimeout(() => {
-      const resp = this.reportCubeService.getResultDataAndChart(this.chartInfo);
+      const pagingModel = this.reportCubeService.getResultDataAndChart(this.chartInfo, this.pagingModel);
       if (this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
-        this.regnerateCharOptions(resp.chartOptions);
+        this.regnerateCharOptions(pagingModel.HighChartsOptions);
       }
-      this.chartOptions = resp.chartOptions;
-      this.chartInfo = resp.chartInfo;
+      this.chartOptions = pagingModel.HighChartsOptions;
+      this.chartInfo = pagingModel.ChartInformation;
       this.showCharts = true;
       this.globals.showLoader(false);
     }, 300);
+
   }
 
   getReport(data: any, reportInfo?: ReportModel) {
+    this.showCharts = false;
     if (reportInfo === undefined || reportInfo.apiEndPointURL === undefined) {
-      this.gridData = data;
-      this.filteredData = this.gridData;
+      this.showReport = false;
+      this.gridData.length = 0;
+      data.map(item => {
+        this.gridData.push(item);
+        this.filteredData.push(item);
+      });
+      this.showReport = true;
     } else {
       this.globals.showLoader(true);
-      this.reportCubeService.getReport(reportInfo).then((resp) => {
-        if (resp.chartOptions !== undefined) {
+
+      this.reportCubeService.getReport(reportInfo, this.pagingModel).then(<PagingModel>(pagingModel) => {
+        if (pagingModel.HasChart) {
           this.hasChart = true;
-          this.gridData = resp.resultData;
+          this.gridData = pagingModel.data;
           if (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
-            this.regnerateCharOptions(resp.chartOptions);
+            this.regnerateCharOptions(pagingModel.HighChartsOptions);
           }
-          this.chartOptions = resp.chartOptions;
-          this.chartInfo = resp.chartInfo;
+          this.chartOptions = pagingModel.HighChartsOptions;
+          this.chartInfo = pagingModel.ChartInformation;
           this.showCharts = true;
+          
         } else {
-          this.gridData = resp;
+          this.gridData = pagingModel.data;
         }
-        this.filteredData = this.gridData;
+        this.partOptions.length = 0;
+        if(pagingModel.partsdata !== undefined && pagingModel.partsdata.length !== 0){
+          pagingModel.partsdata.map(part => {
+            if(part['CubePartsmonitors.partname'] !== null && part['CubePartsmonitors.partname'] !== undefined){
+              this.partOptions.push([{ name: part['CubePartsmonitors.partname'], id: part['CubePartsmonitors.partname'] }]);
+            }
+
+            if(part['CubeMonitors.partname'] !== null && part['CubeMonitors.partname'] !== undefined){
+              this.partOptions.push([{ name: part['CubeMonitors.partname'], id: part['CubeMonitors.partname'] }]);
+            }
+
+          });
+        }
+        this.filteredData = pagingModel.data;
+        this.totalRows = pagingModel.totalRows;
+        this.pagingModel.pageNumber = pagingModel.pageNumber;
+        this.pagingModel.pageSize = pagingModel.pageSize;
+        console.log(this.partOptions.length);
         this.globals.showLoader(false);
       });
     }
@@ -133,7 +199,13 @@ export class GridComponent implements OnInit {
   }
 
   printCsvReport() {
-    this.cSVConverterService.downloadFile(this.filteredData, this.gridSaved.columnsSaved, this.reportInfo.name);
+
+    this.reportCubeService.getReport(this.reportInfo, this.pagingModel, false).then(<PagingModel>(pagingModel) => {
+
+      this.cSVConverterService.downloadFile(pagingModel.data, this.gridSaved.columnsSaved, this.reportInfo.name);
+    });
+
+
   }
 
   viewArchives() {
