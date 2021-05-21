@@ -173,7 +173,7 @@ export class RoleComponent implements OnInit {
         this.rolesUsers.length = 0;
         roles.map(role => {
           this.rolesUsers.push(role);
-        })
+        });
 
         this.canGetRoles = true;
       }));
@@ -186,7 +186,7 @@ export class RoleComponent implements OnInit {
     this.rolesUsers.length = 0;
     filteredRoles.map(role => {
       this.rolesUsers.push(role);
-    })
+    });
     // this.rolesUsers = filteredRoles;
   }
 
