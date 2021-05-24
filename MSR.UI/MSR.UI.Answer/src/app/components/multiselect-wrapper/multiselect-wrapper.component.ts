@@ -138,13 +138,13 @@ export class MultiselectWrapperComponent implements OnInit {
       } else {
         const labels = this.getLabel(item);
         const values = this.getValue(item);
-        
+
         if (Array.isArray(labels) && Array.isArray(values)) {
           for (let index = 0; index < labels.length; index++) {
             this.insertItemIfNotRepeated(this.currentOptions, labels[index], values[index]);
           }
         } else {
-          if(labels !== undefined && values !== undefined){
+          if (labels !== undefined && values !== undefined) {
             this.insertItemIfNotRepeated(this.currentOptions, labels, values);
           }
         }

@@ -1,5 +1,5 @@
-import { Options } from "highcharts";
-import { ChartInfo } from "./lib/ChartInfo";
+import { Options } from 'highcharts';
+import { ChartInfo } from './lib/ChartInfo';
 
 export interface IPagingModel {
     pageNumber: number;
@@ -36,9 +36,9 @@ export class PagingModel {
         this.partsdata = pagingModel.partsdata;
     }
 
-    get HasChart(){
+    get HasChart() {
 
-        if(this.HighChartsOptions === undefined || this.ChartInformation === undefined){
+        if (this.HighChartsOptions === undefined || this.ChartInformation === undefined) {
             return false;
         } else {
             return true;
@@ -48,32 +48,32 @@ export class PagingModel {
 
     public getReportingQueryString(apiEndPointUrl, forReportDownload = true): string {
 
-        if(forReportDownload){
+        if (forReportDownload) {
 
             apiEndPointUrl = `${apiEndPointUrl}?pagesize=${this.pageSize}&pagenumber=${this.pageNumber}`;
 
-            if(this.queryString !== ''){
+            if (this.queryString !== '') {
                 apiEndPointUrl += `&${this.queryString}`;
             }
 
-            if(this.sortTerm !== null && this.sortAscending !== null){
+            if (this.sortTerm !== null && this.sortAscending !== null) {
 
                 apiEndPointUrl += `&term=${this.sortTerm}&sortascending=${this.sortAscending}`;
-    
+
             }
-            
+
         } else {
 
-            if(this.queryString !== ''){
+            if (this.queryString !== '') {
                 apiEndPointUrl += `?${this.queryString}`;
             }
 
-            
+
         }
 
-        
+
 
         return apiEndPointUrl;
-        
+
     }
 }

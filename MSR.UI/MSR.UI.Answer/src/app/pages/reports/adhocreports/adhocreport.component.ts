@@ -33,7 +33,7 @@ export class AdhocComponent implements OnInit {
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
-        private reportCubeService: ReportCubeService, private customerService: CustomerService, private partService:PartService) {
+        private reportCubeService: ReportCubeService, private customerService: CustomerService, private partService: PartService) {
     }
 
     ngOnInit(): void {
@@ -47,7 +47,7 @@ export class AdhocComponent implements OnInit {
             {
                 msrfsrfacility: 'Chandler'
             },
-            {    
+            {
                 msrfsrfacility: 'Naas'
             },
             {
@@ -59,7 +59,7 @@ export class AdhocComponent implements OnInit {
             {
                 locationname: 'Chandler'
             },
-            {    
+            {
                 locationname: 'Naas'
             },
             {
@@ -71,7 +71,7 @@ export class AdhocComponent implements OnInit {
             {
                 site: 'Chandler'
             },
-            {    
+            {
                 site: 'Naas'
             },
             {
@@ -82,15 +82,15 @@ export class AdhocComponent implements OnInit {
             }
         ];
 
-        this.customerService.customerGet(null,null,null,null,null,null,null,null,null,null,
-            null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(customers => {
-                this.customerNamesAndIds = customers.object.map(s =>  { 
+        this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(customers => {
+                this.customerNamesAndIds = customers.object.map(s =>  {
 
                     return {
-                        id: s.id, 
-                        customername: s.name 
-                    }
-                    
+                        id: s.id,
+                        customername: s.name
+                    };
+
                 });
 
                 this.customerNamesAndIds.map(s => {
@@ -106,7 +106,7 @@ export class AdhocComponent implements OnInit {
                 });
             });
 
-        
+
     }
 
     getReportData() {

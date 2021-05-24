@@ -100,7 +100,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
     let dropDownsAreValid = true;
 
     let passAndFailAndYesOrNoMonitors = this.workOrderMonitorsToView.filter(s => s.procedureStepMonitor.monitorTypeId === EnumMonitorType.PassOrFail
-      || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo || s.monitorTypeId === EnumMonitorType.PassOrFail 
+      || s.procedureStepMonitor.monitorTypeId === EnumMonitorType.YesOrNo || s.monitorTypeId === EnumMonitorType.PassOrFail
       || s.monitorTypeId === EnumMonitorType.YesOrNo);
 
     passAndFailAndYesOrNoMonitors.map(monitor => {
@@ -112,7 +112,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
         } else {
 
           if (monitor.procedureStepMonitor.targetValue !== monitor.numVal.toString() &&
-           monitor.targetValue !== monitor.numVal.toString() && monitor.targetValue !== null && monitor.procedureStepMonitor.targetValue !== "") {
+           monitor.targetValue !== monitor.numVal.toString() && monitor.targetValue !== null && monitor.procedureStepMonitor.targetValue !== '') {
             dropDownsAreValid = false;
           }
 
@@ -253,7 +253,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
   }
 
-  public get WorkOrderIsComplete(): boolean{
+  public get WorkOrderIsComplete(): boolean {
     return this.workOrderModel.workOrderTasks.find(s => s.status?.id === EnumStatusSteps.WaitingtoStart || s.status?.id === EnumStatusSteps.InProgress || s.status.id === EnumStatusSteps.Approved) === undefined;
   }
 

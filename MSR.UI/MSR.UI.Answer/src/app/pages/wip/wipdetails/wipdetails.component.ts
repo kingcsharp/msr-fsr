@@ -452,7 +452,7 @@ export class WipdetailsComponent implements OnInit {
     this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
   }
 
-  isWorkOrderComplete():boolean{
+  isWorkOrderComplete(): boolean {
     return this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.id === EnumStatusSteps.WaitingtoStart || s.status?.id === EnumStatusSteps.InProgress || s.status.id === EnumStatusSteps.Approved) === undefined;
   }
 
@@ -468,7 +468,7 @@ export class WipdetailsComponent implements OnInit {
 
     this.globals.showLoader(true);
     this.workOrdersService.workOrderCancel(env.apiVersion, cancelWorkOrderRequest).pipe(take(1)).subscribe(responseHandler((response) => {
-      if(response.object) {
+      if (response.object) {
         this.workOrderModel.workOrderTasks = response.object;
       }
       this.workOrderIsComplete = this.isWorkOrderComplete();
@@ -577,7 +577,7 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderModel.actualStartDate = startDate;
   }
 
-  closeDialog(){
+  closeDialog() {
     this.monitorsAreInvalidDialog = false;
     this.globals.showLoader(false);
   }

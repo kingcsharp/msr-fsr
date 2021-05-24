@@ -49,7 +49,7 @@ export class TakeOverTaskButtonWrapperComponent implements OnInit {
     this.showTakeOverAsUserConfirmationDialog = !this.showTakeOverAsUserConfirmationDialog;
   }
 
-  takeOverWorkOrder(){
+  takeOverWorkOrder() {
 
     let takeOverWorkOrderRequest = new TakeOverWorkOrderRequest({
       userId: this.globals.getCurrentUser().id,
@@ -57,7 +57,7 @@ export class TakeOverTaskButtonWrapperComponent implements OnInit {
     } as ITakeOverWorkOrderRequest);
 
     this.globals.showLoader(true);
-    this.workOrderService.takeOver(env.apiVersion,takeOverWorkOrderRequest).pipe(take(1)).subscribe(takeOverWorkOrderResponse => {
+    this.workOrderService.takeOver(env.apiVersion, takeOverWorkOrderRequest).pipe(take(1)).subscribe(takeOverWorkOrderResponse => {
 
       let workOrdersTaksTakenOver = takeOverWorkOrderResponse.object;
       workOrdersTaksTakenOver.forEach(workOrderTaskTakenOver => {

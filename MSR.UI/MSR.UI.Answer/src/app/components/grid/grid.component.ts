@@ -82,7 +82,7 @@ export class GridComponent implements OnInit {
     if (this.reportInfo.name === 'Work In Process') {
       this.waitingToStartOrInProgressStatuses.map(status => {
         this.staticOptions.push(status);
-      })
+      });
     } else if (this.reportInfo.name === 'Combined Financial Data') {
       this.completedOrCancelledStatuses.map(status => {
         this.staticOptions.push(status);
@@ -160,18 +160,18 @@ export class GridComponent implements OnInit {
           this.chartOptions = pagingModel.HighChartsOptions;
           this.chartInfo = pagingModel.ChartInformation;
           this.showCharts = true;
-          
+
         } else {
           this.gridData = pagingModel.data;
         }
         this.partOptions.length = 0;
-        if(pagingModel.partsdata !== undefined && pagingModel.partsdata.length !== 0){
+        if (pagingModel.partsdata !== undefined && pagingModel.partsdata.length !== 0) {
           pagingModel.partsdata.map(part => {
-            if(part['CubePartsmonitors.partname'] !== null && part['CubePartsmonitors.partname'] !== undefined){
+            if (part['CubePartsmonitors.partname'] !== null && part['CubePartsmonitors.partname'] !== undefined) {
               this.partOptions.push([{ name: part['CubePartsmonitors.partname'], id: part['CubePartsmonitors.partname'] }]);
             }
 
-            if(part['CubeMonitors.partname'] !== null && part['CubeMonitors.partname'] !== undefined){
+            if (part['CubeMonitors.partname'] !== null && part['CubeMonitors.partname'] !== undefined) {
               this.partOptions.push([{ name: part['CubeMonitors.partname'], id: part['CubeMonitors.partname'] }]);
             }
 

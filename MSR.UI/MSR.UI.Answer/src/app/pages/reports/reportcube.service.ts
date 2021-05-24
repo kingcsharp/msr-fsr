@@ -24,7 +24,7 @@ export class ReportCubeService {
 
     }
 
-    public getReport = async (reportInfo: ReportModel, pagingModel:PagingModel = null, forReportDownload:boolean = true) => {
+    public getReport = async (reportInfo: ReportModel, pagingModel: PagingModel = null, forReportDownload: boolean = true) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
@@ -32,7 +32,7 @@ export class ReportCubeService {
         let apiEndPointUrl = reportInfo.apiEndPointURL;
 
         apiEndPointUrl = pagingModel.getReportingQueryString(apiEndPointUrl, forReportDownload);
-        
+
         return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
 
             let pagingModel = new PagingModel({
@@ -305,7 +305,7 @@ export class ReportCubeService {
                         }
                     }
                 });
-                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel);
+                return this.getResultDataAndChart(pagingModel.ChartInformation, pagingModel);
                 break;
             case 'MonitorsHistorybyWorkOrder':
                 const gridDataRet = pagingModel.data.map(elem => {
@@ -337,7 +337,7 @@ export class ReportCubeService {
                         }
                     }
                 });
-                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel);
+                return this.getResultDataAndChart(pagingModel.ChartInformation, pagingModel);
                 break;
             case 'MonitorsbyWorkOrder':
                 pagingModel.data = pagingModel.data.map(elem => {
@@ -371,8 +371,8 @@ export class ReportCubeService {
                     tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
                 });
 
-                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel);
-                break
+                return this.getResultDataAndChart(pagingModel.ChartInformation, pagingModel);
+                break;
             case 'RevenuebyKitbyPart/Kit':
                 const resultData = pagingModel.data.map(elem => {
                     elem = this.removePrefixesOfPropertyNames(elem);
@@ -393,7 +393,7 @@ export class ReportCubeService {
                     tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
                 });
 
-                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel);
+                return this.getResultDataAndChart(pagingModel.ChartInformation, pagingModel);
                 break;
             case 'CountofKitsbyPart/Kit':
                 let countOfKitsGridDataDic = {};
@@ -405,12 +405,12 @@ export class ReportCubeService {
                     elem.isValidForChart = this.isValidRowForChart(elem, 'kitname', 'msrfsrfacility');
                     elem.yearMonth = moment(elem['duedate']);
                     elem.site = elem['msrfsrfacility'];
-                    
+
                     if (elem.isValidForChart) {
                         countOfKitsGridDataDic[key] = elem;
-    
+
                     }
-                    
+
                 });
 
                 const countOfKitsGridData = [];
@@ -428,7 +428,7 @@ export class ReportCubeService {
                     tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
                 });
 
-                return this.getResultDataAndChart(pagingModel.ChartInformation,pagingModel, true);
+                return this.getResultDataAndChart(pagingModel.ChartInformation, pagingModel, true);
             default:
                 if (pagingModel.data.length > 0) {
                     pagingModel.data = pagingModel.data.map((elem) => this.removePrefixesOfPropertyNames(elem));
@@ -601,9 +601,9 @@ export class ReportCubeService {
             series: dataSeries
         };
 
-        if(doNotFoldRows){
+        if (doNotFoldRows) {
             pagingModel.data = pagingModel.data.map((elem) => this.removePrefixesOfPropertyNames(elem));
-        
+
             pagingModel.data = pagingModel.data.map(elem => {
                 elem.yearMonth = moment(elem['duedate']);
                 elem.site = elem['msrfsrfacility'];
@@ -613,15 +613,15 @@ export class ReportCubeService {
             pagingModel.data = chartInfo.gridData;
         }
 
-        
+
         pagingModel.HighChartsOptions = chartOptions;
         pagingModel.ChartInformation = chartInfo;
 
         return pagingModel;
     }
 
-    public primeNgFilterToQueryStringConverter(filters: {[s: string]: FilterMetadata;}){
-        
+    public primeNgFilterToQueryStringConverter(filters: {[s: string]: FilterMetadata; }) {
+
         let queryString = '';
 
         Object.keys(filters).map(filterName => {
@@ -629,7 +629,7 @@ export class ReportCubeService {
            const filter = filters[filterName];
            const matchMode = filter.matchMode.includes('multipleValuesFilter') ? 'multipleValuesFilter' : filter.matchMode;
 
-           switch(matchMode){
+           switch (matchMode) {
                 case 'in':
 
                     filter.value.forEach(filterValue => {
@@ -645,7 +645,7 @@ export class ReportCubeService {
                 case 'dateRangeFilter':
 
                     filter.value.forEach(filterValue => {
-                        if(filterValue !== null){
+                        if (filterValue !== null) {
                             queryString += `${filterName}=${filterValue}&`;
                         }
                     });
@@ -660,12 +660,12 @@ export class ReportCubeService {
                     break;
                 default:
                     break;
-           } 
+           }
 
         });
 
 
-        return queryString.substring(0,queryString.length-1);
+        return queryString.substring(0, queryString.length - 1);
 
     }
 }
