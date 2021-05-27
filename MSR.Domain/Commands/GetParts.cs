@@ -18,6 +18,5 @@ namespace MSR.Domain.Commands
         public string CreatedByName { get; set; }
         public DateTime? lastUpdatedOn { get; set; }
         public string LastUpdatedByName { get; set; }
-        public bool IncludeChildParts { get; set; } = true;
     }
 }
