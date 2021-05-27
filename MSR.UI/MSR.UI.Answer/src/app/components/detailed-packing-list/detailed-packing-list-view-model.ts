@@ -54,11 +54,8 @@ export class PackingListViewModel {
             }
         }
 
-        console.log('yo');
-
         this.sortedParts = new Array();
         Object.keys(parents).sort().forEach(partid => {
-            console.log(partid);
             let parts: Array<WorkOrderPartModel> = parents[partid];
             let subpartIndex: number;
             for (subpartIndex = 0;
