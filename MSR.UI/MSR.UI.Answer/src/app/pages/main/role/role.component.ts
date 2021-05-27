@@ -46,8 +46,8 @@ export class RoleComponent implements OnInit {
   data: Array<Role>;
   availableRoles: Array<Role>;
   isCertificationRole: any[];
-  rolesUsers: RolesUsersView[];
-  roleUsers: RolesUsersView[] = [];
+  rolesUsers: Array<RolesUsersView> = new Array<RolesUsersView>();
+  roleUsers: Array<RolesUsersView> = new Array<RolesUsersView>();
   showGrid: boolean = false;
   users: UserModel[];
   userOptions: RolesUsersView[] = [];
@@ -169,7 +169,12 @@ export class RoleComponent implements OnInit {
   getRolesUsers() {
     this.roleService.rolesUsers(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.rolesUsers = this.setFullNameToParentObjAndSortIt(response.object);
+        const roles = this.setFullNameToParentObjAndSortIt(response.object);
+        this.rolesUsers.length = 0;
+        roles.map(role => {
+          this.rolesUsers.push(role);
+        });
+
         this.canGetRoles = true;
       }));
   }
@@ -177,7 +182,12 @@ export class RoleComponent implements OnInit {
   updateRoleUsers(roleId: number, roleUsers: any) {
     const filteredRoles = this.rolesUsers.filter(x => x.roleId !== roleId);
     filteredRoles.push(...this.setFullNameToParentObjAndSortIt(roleUsers));
-    this.rolesUsers = filteredRoles;
+
+    this.rolesUsers.length = 0;
+    filteredRoles.map(role => {
+      this.rolesUsers.push(role);
+    });
+    // this.rolesUsers = filteredRoles;
   }
 
   getRoleUsersByRoleId(roleId) {

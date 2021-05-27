@@ -21,6 +21,7 @@ export class MultiselectWrapperComponent implements OnInit {
   @Input() reset: any;
   @Input() filterProp: string;
   @Input() multipleValues: boolean;
+  @Input() staticOptions: any;
   currentOptions: any = [];
   basicOptions: any;
   isOldFilter: boolean = false;
@@ -137,17 +138,19 @@ export class MultiselectWrapperComponent implements OnInit {
       } else {
         const labels = this.getLabel(item);
         const values = this.getValue(item);
+
         if (Array.isArray(labels) && Array.isArray(values)) {
           for (let index = 0; index < labels.length; index++) {
             this.insertItemIfNotRepeated(this.currentOptions, labels[index], values[index]);
           }
         } else {
-          this.insertItemIfNotRepeated(this.currentOptions, labels, values);
+          if (labels !== undefined && values !== undefined) {
+            this.insertItemIfNotRepeated(this.currentOptions, labels, values);
+          }
         }
       }
     });
 
-    // this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
   }
 
   insertItemIfNotRepeated(currentOptions: any, label: any, val: any) {

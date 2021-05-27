@@ -921,6 +921,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 new Dictionary<string, CreateProcedure>();
             Dictionary<string, CreateProcedureImport> newProcsExtra =
                 new Dictionary<string, CreateProcedureImport>();
+            
+            var procedureTypeIds = _unitOfWork.ProcedureTypes.Query().Select(i => i.Id).ToList();
+
             foreach (DataRow proc in procedures.Rows)
             {
                 string procedureIdString = "";
@@ -945,7 +948,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     procedureIdString = proc.ItemArray[fieldMap["PROCEDURE_ID"]].ToString();
                     newProc.Name = proc.ItemArray[fieldMap["PROCEDURE_NAME"]].ToString();
                     newProcExtra.ANS_ID = proc.ItemArray[fieldMap["ANS_ID"]].ToString();
-                    newProc.ProcedureTypeId = Convert.ToInt32((double) proc.ItemArray[fieldMap["PROC_TYPE_ID"]]);
+
+                    if (int.TryParse(proc.ItemArray[fieldMap["PROC_TYPE_ID"]].ToString(), out var procedureTypeId))
+                    {
+                        if (procedureTypeIds.Contains(procedureTypeId))
+                        {
+                            newProc.ProcedureTypeId = procedureTypeId;
+                        }
+                    }
 
                     // Store the new procedure data in memory.
                     if (newProcs.ContainsKey(procedureIdString))
@@ -986,6 +996,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 new Dictionary<string, List<CreateProcedureStep>>();
             Dictionary<string, List<CreateProcedureStepImport>> newStepsExtra =
                 new Dictionary<string, List<CreateProcedureStepImport>>();
+
+            var roleIds = _unitOfWork.Roles.Query().Select(i => i.Id).ToList();
+            var documentIds = _unitOfWork.Documents.Query().Select(i => i.Id).ToList();
+
             foreach (DataRow step in procedureSteps.Rows)
             {
                 string procedureIdString = "";
@@ -1010,14 +1024,30 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                     procedureIdString = step.ItemArray[fieldMap["PROCEDURE_ID"]].ToString();
                     newStep.StepText = step.ItemArray[fieldMap["STEP_TEXT"]].ToString();
-                    newStep.PrintOrder = Convert.ToInt32((double) step.ItemArray[fieldMap["PRINT_ORDER"]]);
+
+                    if (int.TryParse(step.ItemArray[fieldMap["PRINT_ORDER"]].ToString(), out var printOrder))
+                    {
+                        newStep.PrintOrder = printOrder;
+                    }
+
                     newStepExtra.COMMENT = step.ItemArray[fieldMap["COMMENT"]].ToString();
-                    newStep.LaborTime = Convert.ToInt32(((double) step.ItemArray[fieldMap["STEP_TIME"]]));
+
+                    if (int.TryParse(step.ItemArray[fieldMap["STEP_TIME"]].ToString(), out var laborTime))
+                    {
+                        newStep.LaborTime = laborTime;
+                    }
+                    
                     newStepExtra.EXTRA_NOTE1 = step.ItemArray[fieldMap["EXTRA_NOTE1"]].ToString();
-                    var defaultRoleId = Convert.ToInt32(((double) step.ItemArray[fieldMap["DEFAULT_ROLE_ID"]]));
-                    var defaultRoleModel = new List<Domain.Models.Role>();
-                    defaultRoleModel.Add(new Domain.Models.Role() { Id = defaultRoleId });
-                    newStep.Roles = defaultRoleModel;
+
+                    if (int.TryParse(step.ItemArray[fieldMap["DEFAULT_ROLE_ID"]].ToString(), out var defaultRoleId))
+                    {
+                        if (roleIds.Contains(defaultRoleId))
+                        {
+                            var defaultRoleModel = new Domain.Models.Role() { Id = defaultRoleId };
+                            newStep.Roles = new List<Domain.Models.Role>() { defaultRoleModel };
+                        }
+                    }
+                    
                     newStepExtra.SERIALIZE = step.ItemArray[fieldMap["SERIALIZE"]].ToString();
                     newStepExtra.SUCCESS_MONITOR = step.ItemArray[fieldMap["SUCCESS_MONITOR"]].ToString();
                     newStepExtra.INTERNAL_LOCATION = step.ItemArray[fieldMap["INTERNAL_LOCATION"]].ToString();
@@ -1028,10 +1058,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     // to be fetched from database later
                     newStepExtra.REF_DOC_ID = step.ItemArray[fieldMap["REF_DOC_ID"]].ToString();
 
-                    if (!string.IsNullOrWhiteSpace(newStepExtra.REF_DOC_ID))
+                    if (int.TryParse(step.ItemArray[fieldMap["REF_DOC_ID"]].ToString(), out var refDocId))
                     {
-                        var defaultDocId = Convert.ToInt32(step.ItemArray[fieldMap["REF_DOC_ID"]]);
-                        newStep.ReferenceDocumentIds = new List<int>() { defaultDocId };
+                        if (documentIds.Contains(refDocId))
+                        {
+                            newStep.ReferenceDocumentIds = new List<int>() { refDocId };
+                        }
                     }
 
                     // The IDs used in the spreadsheet will need to be collated at creation

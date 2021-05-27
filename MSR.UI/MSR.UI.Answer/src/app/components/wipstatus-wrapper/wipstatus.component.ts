@@ -197,7 +197,7 @@ export class WipstatusWrapperComponent implements OnInit {
           workOrderId: this.workOrderToTakeOverId
         } as ITakeOverWorkOrderRequest);
 
-        this.workOrderService.takeOver(env.apiVersion,takeOverWorkOrderRequest).pipe(take(1)).subscribe( () => {
+        this.workOrderService.takeOver(env.apiVersion, takeOverWorkOrderRequest).pipe(take(1)).subscribe( () => {
           this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
         });
 
