@@ -25,14 +25,52 @@
                 {{ WorkOrder.product?.customer?.phone }}
             </div>
             <div class="col-3">
-                <u>Date</u>: {{ (WorkOrder.actualEndDate?.getMonth() + 1) + "/" + WorkOrder.actualEndDate?.getDate() + "/" + WorkOrder.actualEndDate?.getFullYear() }}<br/>
-                <u>WO number</u>: {{ WorkOrder.id }}<br/>
-                <u>MTTN</u>: {{ WorkOrder.purchase?.purchaseOrder?.customerReference }}<br/>
+                <b>Date</b>: {{ (WorkOrder.actualEndDate?.getMonth() + 1) + "/" + WorkOrder.actualEndDate?.getDate() + "/" + WorkOrder.actualEndDate?.getFullYear() }}<br/>
+                <b>WO number</b>: {{ WorkOrder.id }}<br/>
+                <b>MTTN</b>: {{ WorkOrder.purchase?.mttn }}<br/>
             </div>
         </div>
-        <div *ngFor="let workOrderPart of WorkOrder.workOrderParts">
-            <div class="row mx-2">
-                wow {{workOrderPart.id}}
+
+        <div class="border row m-4"></div>
+        <div class="row m-2">
+            <div class="col"><b>PO / Line</b></div>
+            <div class="col"><b>Part Number</b></div>
+            <div class="col"><b>Part Name</b></div>
+            <div class="col"><b>Serial</b></div>
+            <div class="col"><b>Cycle Count</b></div>
+        </div>
+        <div *ngFor="let workOrderPart of packingList.sortedParts">
+            <div class="{{workOrderPart.poLineLabel == '' ? '' : 'border'}} row"></div>
+            <div class="row m-2">
+                <div class="col">
+                    {{ workOrderPart.poLineLabel }}<br/>
+                    <ngx-barcode [bc-format]="'CODE128'"
+                        [bc-background]="'none'"
+                        [bc-value]="workOrderPart.poLineLabel"
+                        [bc-display-value]="false"
+                        [bc-height]="40" >
+                    </ngx-barcode>
+                </div>
+                <div class="col">
+                    {{ workOrderPart.part.part?.partNumber }}<br/>
+                    <ngx-barcode [bc-format]="'CODE128'"
+                        [bc-background]="'none'"
+                        [bc-value]="workOrderPart.part.part?.partNumber"
+                        [bc-display-value]="false"
+                        [bc-height]="40" >
+                    </ngx-barcode>
+                </div>
+                <div class="col">{{ workOrderPart.part.part?.name }}</div>
+                <div class="col">
+                    {{ workOrderPart.part.serialNumber }}<br/>
+                    <ngx-barcode [bc-format]="'CODE128'"
+                        [bc-background]="'none'"
+                        [bc-value]="workOrderPart.part.serialNumber"
+                        [bc-display-value]="false"
+                        [bc-height]="40" >
+                    </ngx-barcode>
+                </div>
+                <div class="col">{{ workOrderPart.part.cycleCount }}</div>
             </div>
         </div>
     </div>

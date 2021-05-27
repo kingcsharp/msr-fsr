@@ -29,6 +29,7 @@ import { PrinttravelerReportComponent } from '../../components/printtraveler-rep
 import { QRCodeModule } from 'angularx-qrcode';
 import { PrintotherReportComponent } from '../../components/printother-report/printother-report.component';
 import { DeliveryTicketReportComponent } from '../../components/delivery-ticket-report/delivery-ticket-report.component';
+import { DetailedPackingListComponent } from '../../components/detailed-packing-list/detailed-packing-list.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
 import { WipHistoryReportComponent } from '../../components/wip-history-report/wip-history-report.component';
 import { NcrReportComponent } from '../../components/ncr-report/ncr-report.component';
@@ -50,7 +51,7 @@ export const routes = [
     WorkordertasktimerWrapperComponent, WorkordertaskmonitorsWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
     WipListButtonWrapperComponent, SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent, PrintotherReportComponent,
     DeliveryTicketReportComponent, WipHistoryReportComponent, NcrReportComponent, PartLabelRollComponent, TechnicalDataLabelComponent,
-    WorkReportComponent, TakeOverTaskButtonWrapperComponent],
+    WorkReportComponent, TakeOverTaskButtonWrapperComponent, DetailedPackingListComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
