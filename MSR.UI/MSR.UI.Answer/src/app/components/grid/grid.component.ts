@@ -181,7 +181,6 @@ export class GridComponent implements OnInit {
         this.totalRows = pagingModel.totalRows;
         this.pagingModel.pageNumber = pagingModel.pageNumber;
         this.pagingModel.pageSize = pagingModel.pageSize;
-        console.log(this.partOptions.length);
         this.globals.showLoader(false);
       });
     }
