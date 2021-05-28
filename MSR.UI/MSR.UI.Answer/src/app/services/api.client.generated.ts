@@ -2992,13 +2992,12 @@ export class PartService {
      * @param createdByName (optional) 
      * @param lastUpdatedOn (optional) 
      * @param lastUpdatedByName (optional) 
-     * @param includeChildParts (optional) 
      * @param term (optional) 
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param sortAscending (optional) 
      */
-    partGet(id: number | null | undefined, name: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, partNumber: string | null | undefined, oemPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, includeChildParts: boolean | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
+    partGet(id: number | null | undefined, name: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, partNumber: string | null | undefined, oemPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3027,10 +3026,6 @@ export class PartService {
             url_ += "lastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
         if (lastUpdatedByName !== undefined && lastUpdatedByName !== null)
             url_ += "LastUpdatedByName=" + encodeURIComponent("" + lastUpdatedByName) + "&";
-        if (includeChildParts === null)
-            throw new Error("The parameter 'includeChildParts' cannot be null.");
-        else if (includeChildParts !== undefined)
-            url_ += "IncludeChildParts=" + encodeURIComponent("" + includeChildParts) + "&";
         if (term !== undefined && term !== null)
             url_ += "Term=" + encodeURIComponent("" + term) + "&";
         if (pageNumber !== undefined && pageNumber !== null)

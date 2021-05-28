@@ -17,7 +17,6 @@ namespace MSR.Answer.API.V1.Models
         public string CreatedByName { get;set;}
         public DateTime? lastUpdatedOn { get; set; }
         public string LastUpdatedByName { get; set; }
-        public bool IncludeChildParts { get;set; } = true;
         
     }
 }
