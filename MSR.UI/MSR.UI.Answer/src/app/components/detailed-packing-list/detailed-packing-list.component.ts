@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { WorkOrderModel } from '../../services/api.client.generated';
 import { PackingListViewModel } from './detailed-packing-list-view-model';
-import {formatDate} from '@angular/common';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'detailed-packing-list',
