@@ -25,7 +25,7 @@
                 {{ WorkOrder.product?.customer?.phone }}
             </div>
             <div class="col-3">
-                <b>Date</b>: {{ (WorkOrder.actualEndDate?.getMonth() + 1) + "/" + WorkOrder.actualEndDate?.getDate() + "/" + WorkOrder.actualEndDate?.getFullYear() }}<br/>
+                <b>Date</b>: {{ currentDate }}<br/>
                 <b>WO number</b>: {{ WorkOrder.id }}<br/>
                 <b>MTTN</b>: {{ WorkOrder.purchase?.mttn }}<br/>
             </div>
