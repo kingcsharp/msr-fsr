@@ -1,7 +1,7 @@
 import { WorkOrderModel, WorkOrderPartModel, PurchaseModel }
     from '../../services/api.client.generated';
 
-interface NumberHashMap<T> {
+export class NumberHashMap<T> {
     [key: number]: T
 }
 
@@ -25,7 +25,8 @@ export class PackingListViewModel {
     populate(workOrder: WorkOrderModel, purchase: PurchaseModel) {
         let index: number;
         let partCount: number = workOrder.workOrderParts.length;
-        let parents: NumberHashMap<Array<WorkOrderPartModel>> = {};
+        let parents: NumberHashMap<Array<WorkOrderPartModel>> =
+            new NumberHashMap<Array<WorkOrderPartModel>>();
         let referencePO: string = purchase?.purchaseOrder?.referencePO;
 
         // scan for parents
