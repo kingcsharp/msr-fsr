@@ -69,6 +69,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Invoice> Invoices { get; }
         IRepository<InvoiceItem> InvoiceItems { get; }
         IRepository<WorkOrder> WorkOrders { get; }
+        IRepository<CancelledWorkOrderLog> CancelledWorkOrderLogs { get; }
         IRepository<WorkOrderPart> WorkOrderParts { get; }
         IRepository<WorkOrderTask> WorkOrderTasks { get; }
         IRepository<File> Files { get; }
