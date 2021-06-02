@@ -26,6 +26,7 @@ export class ReportCubeService {
 
     public getReport = async (reportInfo: ReportModel, pagingModel: PagingModel = null, forReportDownload: boolean = true) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
+        headers.set('timeout',`${5*60000}`);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
         //let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
