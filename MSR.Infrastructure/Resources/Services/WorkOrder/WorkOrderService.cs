@@ -863,6 +863,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == cancelWorkOrder.WorkOrderId);
 
+            _unitOfWork.CancelledWorkOrderLogs.Add(
+                new CancelledWorkOrderLog() {
+                    WasInvoiced = cancelWorkOrder.Invoiceable,
+                    WorkOrderId = workOrderEntity.Id
+                }
+            );
 
             foreach (var workOrderTaskEntity in workOrderTasksEntitiesToCancel)
             {
