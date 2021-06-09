@@ -26,17 +26,17 @@ export class ReportCubeService {
 
     public getReport = async (reportInfo: ReportModel, pagingModel: PagingModel = null, forReportDownload: boolean = true) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
-        headers.set('timeout',`${5*60000}`);
+        headers.set('timeout', `${5 * 60000}`);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
-        //let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
+        // let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
         let apiEndPointUrl = reportInfo.apiEndPointURL;
 
         apiEndPointUrl = pagingModel.getReportingQueryString(apiEndPointUrl, forReportDownload);
 
         return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
 
-            let pagingModel = new PagingModel({
+            let newPagingModel = new PagingModel({
                 pageNumber: forReportDownload ? response['pagenumber'] : undefined,
                 pageSize: forReportDownload ? response['pagesize'] : undefined,
                 totalRows: response['totalrows'],
@@ -45,7 +45,7 @@ export class ReportCubeService {
             } as IPagingModel);
 
 
-            return this.filterReportData(pagingModel, reportInfo);
+            return this.filterReportData(newPagingModel, reportInfo);
         });
     }
 
