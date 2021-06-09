@@ -25,12 +25,12 @@ export class ReportCubeService {
 
     }
 
-    public getReport = async (reportInfo: ReportModel,pagingModel: PagingModel = null,forReportDownload: boolean = true) => {
+    public getReport = async (reportInfo: ReportModel, pagingModel: PagingModel = null, forReportDownload: boolean = true) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
-        let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
-        //let apiEndPointUrl = reportInfo.apiEndPointURL;
+        // let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
+        let apiEndPointUrl = reportInfo.apiEndPointURL;
 
         apiEndPointUrl = pagingModel.getReportingQueryString(apiEndPointUrl, forReportDownload);
 
@@ -42,15 +42,15 @@ export class ReportCubeService {
             }
         }).toPromise().then(response => {
 
-            let pagingModel = new PagingModel({
+            let newPagingModel = new PagingModel({
                 pageNumber: forReportDownload ? response['pagenumber'] : undefined,
                 pageSize: forReportDownload ? response['pagesize'] : undefined,
                 totalRows: response['totalrows'],
                 data: response['data'],
                 partsdata: response['partsdata']
             } as IPagingModel);
-            
-            return this.filterReportData(pagingModel, reportInfo);
+
+            return this.filterReportData(newPagingModel, reportInfo);
         });
 
     }
@@ -584,7 +584,7 @@ export class ReportCubeService {
         }
         return cycleCount;
     }
-    
+
     removeObjectsPropertyPrefix(elem: any) {
         let objToReturn = {};
         Object.keys(elem).forEach((key) => {
@@ -596,7 +596,7 @@ export class ReportCubeService {
     }
 
     public generateChart(chartInfo3, pagingModel) {
-        return this.getResultDataAndChart(chartInfo3,pagingModel);
+        return this.getResultDataAndChart(chartInfo3, pagingModel);
     }
 
     private groupChartDataFromGridRows(chartInfo: ChartInfo) {

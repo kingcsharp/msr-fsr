@@ -1,5 +1,4 @@
-import { WorkOrderModel, WorkOrderPartModel, PurchaseModel }
-    from '../../services/api.client.generated';
+import { WorkOrderModel, WorkOrderPartModel, PurchaseModel } from '../../services/api.client.generated';
 
 export class NumberHashMap<T> {
     [key: number]: T
@@ -30,19 +29,19 @@ export class PackingListViewModel {
         let referencePO: string = purchase?.purchaseOrder?.referencePO;
 
         // scan for parents
-        for (index = 0; index < partCount ; index++) {
+        for (index = 0; index < partCount; index++) {
             let part: WorkOrderPartModel = workOrder.workOrderParts[index];
-            if (typeof(part.parentId) === 'undefined' ||
+            if (typeof (part.parentId) === 'undefined' ||
                 part.parentId === null) {
                 parents[part.id] = [part];
             }
         }
 
         // scan for children
-        for (index = 0; index < partCount ; index++) {
+        for (index = 0; index < partCount; index++) {
             let part: WorkOrderPartModel = workOrder.workOrderParts[index];
 
-            if (typeof(part.parentId) === 'undefined' ||
+            if (typeof (part.parentId) === 'undefined' ||
                 part.parentId === null) {
                 continue;
             }
@@ -60,20 +59,20 @@ export class PackingListViewModel {
             let parts: Array<WorkOrderPartModel> = parents[partid];
             let subpartIndex: number;
             for (subpartIndex = 0;
-                 subpartIndex < parts.length;
-                 subpartIndex++) {
+                subpartIndex < parts.length;
+                subpartIndex++) {
                 let part: WorkOrderPartModel = parts[subpartIndex];
                 let partViewModel: PackingListPartViewModel = {
                     part,
-                    poLineLabel: ""
+                    poLineLabel: ''
                 };
 
                 // parent is index 0, children are the rest
-                if (subpartIndex == 0) {
+                if (subpartIndex === 0) {
                     partViewModel.poLineLabel =
                         `${referencePO}/${part.customerLineNumber}`;
                 } else {
-                    partViewModel.poLineLabel = "";
+                    partViewModel.poLineLabel = '';
                 }
 
                 this.sortedParts.push(partViewModel);

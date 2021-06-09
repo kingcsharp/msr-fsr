@@ -77,7 +77,7 @@ export class GridComponent implements OnInit {
   }
 
   handleFilter(ev, filteredData) {
-    if(this.isLazyLoad){
+    if (this.isLazyLoad) {
       return;
     }
 
@@ -135,7 +135,7 @@ export class GridComponent implements OnInit {
       this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
-      this.reportCubeService.getReport(reportInfo,this.pagingModel).then((resp) => {
+      this.reportCubeService.getReport(reportInfo, this.pagingModel).then((resp) => {
         if (resp.HighChartsOptions !== undefined) {
           this.hasChart = true;
           this.gridData = resp.data;
@@ -168,9 +168,9 @@ export class GridComponent implements OnInit {
 
   printCsvReport() {
 
-    this.reportCubeService.getReport(this.reportInfo, this.pagingModel, false).then(<PagingModel>(pagingModel) => {
+    this.reportCubeService.getReport(this.reportInfo, this.pagingModel, false).then((responsePagingModel) => {
 
-      this.cSVConverterService.downloadFile(pagingModel.data, this.gridSaved.columnsSaved, this.reportInfo.name);
+      this.cSVConverterService.downloadFile(responsePagingModel.data, this.gridSaved.columnsSaved, this.reportInfo.name);
     });
 
   }

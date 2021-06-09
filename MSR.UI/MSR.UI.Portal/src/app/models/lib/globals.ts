@@ -26,7 +26,7 @@ export class Globals {
         showModal: false,
         comment: new Subject<string>()
     };
-    functionDic: any = {"portal":["customerId","subPartName","partId","fromDate","toDate","pageNumber","pageSize","sort","filters","version"]};
+    functionDic: any = {'portal': ['customerId', 'subPartName', 'partId', 'fromDate', 'toDate', 'pageNumber', 'pageSize', 'sort', 'filters', 'version']};
 
     isAnswerUser: boolean = false;
 

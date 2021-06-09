@@ -81,7 +81,7 @@ export class FinancialComponent implements OnInit {
                 site: 'Kiryat Gat'
             }
         ];
-        
+
         this.getReportData();
     }
 
