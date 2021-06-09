@@ -21,6 +21,7 @@ import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { CSVConverterService } from '../../services/csvconverter.service';
 import { LazyLoadEvent } from 'primeng/api';
+import { IPagingModel, PagingModel } from '../../../app/models/paging-model';
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',
@@ -46,6 +47,8 @@ export class GridComponent implements OnInit {
   enumColumnType = EnumColumnType;
   calendarEn;
   filteredData: any;
+  pagingModel: PagingModel = new PagingModel({} as IPagingModel);
+  @Input() calanderIsRange: boolean = false;
 
   @Output() getData = new EventEmitter<any>();
 
@@ -88,21 +91,43 @@ export class GridComponent implements OnInit {
 
     this.showCharts = false;
     setTimeout(() => {
-      const resp = this.reportCubeService.generateChart(this.chartInfo);
+      const resp = this.reportCubeService.generateChart(this.pagingModel.ChartInformation, this.pagingModel);
       if (this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
-        this.regnerateCharOptions(resp.chartOptions);
+        this.regnerateCharOptions(resp.HighChartsOptions);
       }
-      this.chartOptions = resp.chartOptions;
-      this.chartInfo = resp.chartInfo;
+      this.chartOptions = resp.HighChartsOptions;
+      this.chartInfo = resp.ChartInformation;
       this.showCharts = true;
       this.globals.showLoader(false);
     }, 300);
   }
 
-  getLazyLoadReport(event: LazyLoadEvent) {
-    this.gridData = this.data;
-    this.filteredData = this.data;
-    this.getData.emit(event);
+  getLazyLoadReport(lazyLoadEvent: LazyLoadEvent) {
+
+    if (this.reportInfo.name !== '' && this.reportInfo.apiEndPointURL !== undefined) {
+
+      if (lazyLoadEvent.first !== undefined && lazyLoadEvent.rows !== undefined && lazyLoadEvent.rows !== 0) {
+        this.pagingModel.pageNumber = lazyLoadEvent.first / lazyLoadEvent.rows;
+      }
+
+      if (lazyLoadEvent.sortField !== undefined) {
+        this.pagingModel.sortTerm = lazyLoadEvent.sortField;
+        this.pagingModel.sortAscending = lazyLoadEvent.sortOrder === 1 ? true : false;
+      }
+
+      this.pagingModel.pageSize = lazyLoadEvent.rows;
+      this.pagingModel.queryString = this.reportCubeService.primeNgFilterToQueryStringConverter(lazyLoadEvent.filters);
+
+      this.getReport(this.data, this.reportInfo);
+      debugger;
+    } else {
+
+      this.gridData = this.data;
+      this.filteredData = this.data;
+      this.getData.emit(lazyLoadEvent);
+
+    }
+
   }
 
   getReport(data: any, reportInfo?: ReportModel) {
@@ -111,20 +136,21 @@ export class GridComponent implements OnInit {
       this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
-      this.reportCubeService.getReport(reportInfo).then((resp) => {
-        if (resp.chartOptions !== undefined) {
+      this.reportCubeService.getReport(reportInfo,this.pagingModel).then((resp) => {
+        if (resp.HighChartsOptions !== undefined) {
           this.hasChart = true;
-          this.gridData = resp.resultData;
+          this.gridData = resp.data;
           if (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
-            this.regnerateCharOptions(resp.chartOptions);
+            this.regnerateCharOptions(resp.HighChartsOptions);
           }
-          this.chartOptions = resp.chartOptions;
-          this.chartInfo = resp.chartInfo;
+          this.chartOptions = resp.HighChartsOptions;
+          this.chartInfo = resp.ChartInformation;
           this.showCharts = true;
         } else {
-          this.gridData = resp;
+          this.gridData = resp.data;
         }
         this.filteredData = this.gridData;
+        this.totalRecords = resp.totalRows;
         this.globals.showLoader(false);
       });
     }
@@ -142,7 +168,12 @@ export class GridComponent implements OnInit {
   }
 
   printCsvReport() {
-    this.cSVConverterService.downloadFile(this.filteredData, this.gridSaved.columnsSaved, this.reportInfo.name);
+
+    this.reportCubeService.getReport(this.reportInfo, this.pagingModel, false).then(<PagingModel>(pagingModel) => {
+
+      this.cSVConverterService.downloadFile(pagingModel.data, this.gridSaved.columnsSaved, this.reportInfo.name);
+    });
+
   }
 
 }

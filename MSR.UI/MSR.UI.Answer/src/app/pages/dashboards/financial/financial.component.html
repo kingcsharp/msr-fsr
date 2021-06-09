@@ -5,12 +5,12 @@
 
 <widget>
     <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [showExportGrid]="true"
-        [reportInfo]="reportInfo" [calanderIsRange]="true">
+        [reportInfo]="reportInfo" [calanderIsRange]="true" [staticOptions]="staticOptions">
     </app-grid>
 </widget>
 
 <widget>
     <app-grid *ngIf="showReport2" [gridSaved]="gridSaved2" [showReport]="showReport2" [showExportGrid]="true"
-        [reportInfo]="reportInfo2" [calanderIsRange]="true">
+        [reportInfo]="reportInfo2" [calanderIsRange]="true" [staticOptions]="staticOptions">
     </app-grid>
 </widget>

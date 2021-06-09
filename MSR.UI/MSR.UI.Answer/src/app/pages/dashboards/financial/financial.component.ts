@@ -32,6 +32,7 @@ export class FinancialComponent implements OnInit {
     reportInfo2: ReportModel;
     showReport2: boolean;
     hasChart2: boolean = false;
+    staticOptions: any;
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
@@ -41,6 +42,46 @@ export class FinancialComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
+        this.staticOptions = [
+            {
+                msrfsrfacility: 'Chandler'
+            },
+            {
+                msrfsrfacility: 'Naas'
+            },
+            {
+                msrfsrfacility: 'Hillsboro'
+            },
+            {
+                msrfsrfacility: 'Kiryat Gat'
+            },
+            {
+                locationname: 'Chandler'
+            },
+            {
+                locationname: 'Naas'
+            },
+            {
+                locationname: 'Hillsboro'
+            },
+            {
+                locationname: 'Kiryat Gat'
+            },
+            {
+                site: 'Chandler'
+            },
+            {
+                site: 'Naas'
+            },
+            {
+                site: 'Hillsboro'
+            },
+            {
+                site: 'Kiryat Gat'
+            }
+        ];
+        
         this.getReportData();
     }
 
