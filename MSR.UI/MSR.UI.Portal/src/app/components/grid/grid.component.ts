@@ -119,7 +119,6 @@ export class GridComponent implements OnInit {
       this.pagingModel.queryString = this.reportCubeService.primeNgFilterToQueryStringConverter(lazyLoadEvent.filters);
 
       this.getReport(this.data, this.reportInfo);
-      debugger;
     } else {
 
       this.gridData = this.data;
