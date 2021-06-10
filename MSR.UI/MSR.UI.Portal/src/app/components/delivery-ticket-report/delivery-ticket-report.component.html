@@ -1,4 +1,4 @@
-<div class="row border">
+<div class="row border m-4">
     <div class="col-12 mb-2 border-bottom">
         <div class="row">
             <div class="col-6">
@@ -13,7 +13,10 @@
         <div class="row mx-2">
             <div class="col-3">
                 <u>Ship From</u><br />
-                MSR-FSR
+                MSR-FSR<br/>
+                {{ WorkOrder.location?.name }}<br/>
+                {{ WorkOrder.location?.address1 }} {{ WorkOrder.location?.address2 }}<br/>
+                {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} {{ WorkOrder.location?.postalCode }}<br/>
             </div>
             <div class="col-3">
                 <u>Ship To</u><br />
@@ -21,12 +24,12 @@
             </div>
             <div class="col-6">
                 <div class="row">
-                    <div class="col-6 text-right">Ship Date:</div><div class="col-6">{{ WorkOrder.actualEndDate }}</div>
+                    <div class="col-6 text-right">Ship Date:</div><div class="col-6">{{ WorkOrder.actualEndDate | userTimezone }}</div>
                     <div class="col-6 text-right">Material Transfer #:</div><div class="col-6">{{ WorkOrder.purchase?.mttn }}</div>
                     <div class="col-6 text-right">Customer PO #:</div><div class="col-6">{{ WorkOrder.purchase?.purchaseOrder?.referencePO }}</div>
-                    <div class="col-6 text-right">Order QTY:</div><div class="col-6">{{ WorkOrder.purchase?.purchaseOrder?.qty }}</div>
+                    <div class="col-6 text-right">Order QTY:</div><div class="col-6">{{ WorkOrder.purchase?.qty }}</div>
                     <div class="col-6 text-right">Purchase #:</div><div class="col-6">{{ WorkOrder.purchase?.id }}</div>
-                    <div class="col-6 text-right">Customer WO Item #:</div><div class="col-6">{{ WorkOrder.purchase?.customerPurchaseNumber }}</div>
+                    <div class="col-6 text-right">Customer WO Item #:</div><div class="col-6">{{ WorkOrder.id }}</div>
                     <div class="col-6 text-right">Barcode:</div>
                     <div class="col-6">
                         <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"
@@ -54,8 +57,8 @@
             <div class="col-2 border">{{WorkOrder.workOrderParts[0]?.serialNumber}}</div>
             <div class="col-1 border"></div>
             <div class="col-3 border">
-                PO /Line #: {{ WorkOrder.purchase?.purchaseOrder?.referencePO }}/{{ WorkOrder.purchase?.customerLineNumber }}<br />
-                <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO + '/' + WorkOrder.purchase?.customerLineNumber"
+                PO: {{ WorkOrder.purchase?.purchaseOrder?.referencePO }}<br />
+                <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"
                          [bc-display-value]="false" [bc-height]="40" ></ngx-barcode>
             </div>
         </div>
