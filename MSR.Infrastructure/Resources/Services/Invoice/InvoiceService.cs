@@ -263,10 +263,25 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 invoices = invoices.Where(i => i.InvoiceNumber == command.InvoiceNumber);
             }
-            if (command.DueDate.HasValue)
+
+            if (command.DueDate != null)
             {
-                invoices = invoices.Where(i => i.InvoiceDate == command.DueDate);
+
+                if (command.DueDate.Length == 1)
+                {
+
+                    invoices = invoices.Where(command.DueDate, s => DateTime.Compare(s.InvoiceDate.Date, command.DueDate[0].Date) == 0);
+
+                }
+                else if (command.DueDate.Length == 2)
+                {
+
+                    invoices = invoices.Where(command.DueDate, s => DateTime.Compare(s.InvoiceDate.Date, command.DueDate[0].Date) == -1 && DateTime.Compare(s.InvoiceDate.Date, command.DueDate[1].Date) == 1);
+
+                }
             }
+
+ 
             if (command.CreatedOn.HasValue)
             {
                 invoices = invoices.Where(i => i.CreatedOn == command.CreatedOn);

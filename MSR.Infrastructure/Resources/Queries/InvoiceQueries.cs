@@ -42,12 +42,26 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.CreatedOn,s => DateTime.Compare(s.CreatedOn.Date, command.CreatedOn.Value.Date) == 0);
             query = query.Where(command.CustomerName, s => s.Customer.Name.Contains(command.CustomerName));
             query = query.Where(command.Description, s => s.Description.Contains(command.Description));
-            query = query.Where(command.DueDate, s => DateTime.Compare(s.InvoiceDate.Date, command.DueDate.Value.Date) == 0);
             query = query.Where(command.Id, s => s.Id == command.Id);
             query = query.Where(command.InvoiceNumber, s => s.InvoiceNumber.Contains(command.InvoiceNumber));
             query = query.Where(command.LastUpdatedByName, s => s.LastUpdated.FullName.Contains(command.LastUpdatedByName));
             query = query.Where(command.LastUpdatedOn, s => DateTime.Compare(s.LastUpdatedOn.Value.Date,command.LastUpdatedOn.Value.Date) == 0);
             query = query.Where(command.StatusId, s => s.StatusId == command.StatusId);
+
+
+            if(command.DueDate != null) { 
+                
+                if(command.DueDate.Length == 1) {
+
+                    query = query.Where(command.DueDate, s => DateTime.Compare(s.InvoiceDate.Date, command.DueDate[0].Date) == 0);
+
+                } else if(command.DueDate.Length == 2) {
+
+                    query = query.Where(command.DueDate, s =>  DateTime.Compare(s.InvoiceDate.Date, command.DueDate[0].Date) > 0 && DateTime.Compare(s.InvoiceDate.Date, command.DueDate[1].Date) < 0);
+
+                }
+                
+            }
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {

@@ -184,7 +184,7 @@ export class InvoiceComponent implements OnInit {
       let filters = JSON.parse(localStorage[this.gridStorageId]).filters;
       this.invoiceService.download(this.getFilterVal(filters, 'id'), this.getFilterVal(filters, 'customerName'),
         this.getFilterVal(filters, 'description'),
-        this.getFilterVal(filters, 'invoiceNumber'), this.getFilterVal(filters, 'invoiceDate'),
+        this.getFilterVal(filters, 'invoiceNumber'), this.getFilterVal(filters, 'dueDate'),
         this.getFilterVal(filters, 'createdOn'), this.getFilterVal(filters, 'createdByName'),
         this.getFilterVal(filters, 'lastUpdatedOn'), this.getFilterVal(filters, 'lastUpdatedByName'),
         this.getFilterVal(filters, 'total'), this.getFilterVal(filters, 'statusId'), env.apiVersion)
@@ -372,7 +372,7 @@ export class InvoiceComponent implements OnInit {
     if (item === undefined) {
       return null;
     }
-    return sotorageGridFilters[id].value;
+    return item.value;
   }
 
   getInvoice(invoice) {
