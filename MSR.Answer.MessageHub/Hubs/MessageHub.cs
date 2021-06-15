@@ -16,8 +16,10 @@ namespace MSR.Answer.MessageHub.Hubs
     /// <typeparam name="T"></typeparam>
     public class ConnectionMapping<T>
     {
-        private readonly ConcurrentDictionary<T, HashSet<string>> _connections =
-            new ConcurrentDictionary<T, HashSet<string>>();
+        // The set of connection IDs per key is stored in another ConcurrentDictionary
+        // because there is no thread-safe HashSet.  The "byte" value is ignored.
+        private readonly ConcurrentDictionary<T, ConcurrentDictionary<string, byte>> _connections =
+            new ConcurrentDictionary<T, ConcurrentDictionary<string, byte>>();
 
         /// <summary>
         /// Count
@@ -31,13 +33,13 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <param name="connectionId"></param>
         public void Add(T key, string connectionId)
         {
-            HashSet<string> connections;
+            ConcurrentDictionary<string, byte> connections;
             if (!_connections.TryGetValue(key, out connections)) {
-                connections = new HashSet<string>();
+                connections = new ConcurrentDictionary<string, byte>();
                 _connections.TryAdd(key, connections);
             }
 
-            connections.Add(connectionId);
+            connections.TryAdd(connectionId, 1);
         }
 
         /// <summary>
@@ -47,9 +49,9 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <returns></returns>
         public IEnumerable<string> GetConnections(T key)
         {
-            HashSet<string> connections;
+            ConcurrentDictionary<string, byte> connections;
             if (_connections.TryGetValue(key, out connections)) {
-                return connections;
+                return connections.Keys;
             }
 
             return Enumerable.Empty<string>();
@@ -62,12 +64,12 @@ namespace MSR.Answer.MessageHub.Hubs
         /// <param name="connectionId"></param>
         public void Remove(T key, string connectionId)
         {
-            HashSet<string> connections;
+            ConcurrentDictionary<string, byte> connections;
             if (!_connections.TryGetValue(key, out connections)) {
                 return;
             }
 
-            connections.Remove(connectionId);
+            connections.TryRemove(connectionId, out _);
             if (connections.Count == 0) {
                 _connections.TryRemove(key, out _);
             }
