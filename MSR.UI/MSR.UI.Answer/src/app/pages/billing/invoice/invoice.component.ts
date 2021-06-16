@@ -187,7 +187,7 @@ export class InvoiceComponent implements OnInit {
         this.getFilterVal(filters, 'invoiceNumber'), this.getFilterVal(filters, 'dueDate'),
         this.getFilterVal(filters, 'createdOn'), this.getFilterVal(filters, 'createdByName'),
         this.getFilterVal(filters, 'lastUpdatedOn'), this.getFilterVal(filters, 'lastUpdatedByName'),
-        this.getFilterVal(filters, 'total'), this.getFilterVal(filters, 'statusId'), env.apiVersion)
+        this.getFilterVal(filters, 'amount'), this.getFilterVal(filters, 'statusId'), env.apiVersion)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.downloadItem(response.data);
