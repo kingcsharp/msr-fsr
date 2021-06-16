@@ -43,7 +43,6 @@
             <i [ngClass]="{'fa': true, 'fa-2x': true,'text-white': true,
                   'fa-clock': isWarning(workOrderSummary.workOrderScheduledEndDate),
                   'fa-cog': workOrderSummary.workOrderStatus === 'In Progress',
-                  'fa-spin': workOrderSummary.workOrderStatus === 'In Progress',
                   'fa-hourglass': !isLate(workOrderSummary.workOrderScheduledEndDate) && workOrderSummary.workOrderStatus === 'Waiting to Start',
                   'fa-exclamation-circle': isLate && workOrderSummary.workOrderStatus !== 'In Progress'
                 } " placement="bottom" data-cy="workordersummary-icon" [tooltip]="workOrderSummaryToolTipTemplate"></i>
