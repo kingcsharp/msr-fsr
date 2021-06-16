@@ -14,7 +14,7 @@ namespace MSR.Domain.Commands
         public string CreatedByName { get; set; }
         public DateTime? LastUpdatedOn { get; set; }
         public string LastUpdatedByName { get; set; }
-        public decimal? Total { get; set; }
+        public decimal? Amount { get; set; }
         public int? StatusId { get; set; }
     }
 }
