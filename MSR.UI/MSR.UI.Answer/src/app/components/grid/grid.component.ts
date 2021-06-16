@@ -199,6 +199,7 @@ export class GridComponent implements OnInit {
 
   printCsvReport() {
 
+    this.globals.showLoader(true);
     this.reportCubeService.getReport(this.reportInfo, this.pagingModel, false).then((pagingModel) => {
 
       this.cSVConverterService.downloadFile(pagingModel.data, this.gridSaved.columnsSaved, this.reportInfo.name);
