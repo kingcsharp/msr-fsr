@@ -9,7 +9,7 @@ namespace MSR.Answer.API.V1.Models
         public string CustomerName { get; set; }
         public string Description { get; set; }
         public string InvoiceNumber { get; set; }
-        public DateTime? DueDate { get; set; }
+        public DateTime[]? DueDate { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string CreatedByName { get; set; }
         public DateTime? LastUpdatedOn { get; set; }
