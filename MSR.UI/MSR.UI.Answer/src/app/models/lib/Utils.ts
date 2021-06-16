@@ -138,7 +138,15 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent, glo
 
                         
                     } else {
-                        argsToCallFn.push(filterObj.value);
+
+                        if(filterObj.value instanceof Array && moment(filterObj.value[0]).isValid() ){
+
+                            argsToCallFn.push(filterObj.value.filter(s => s !== null).map(m => new Date(m)));
+                      
+                      
+                        } else {
+                            argsToCallFn.push(filterObj.value);
+                        }
                     }
                 }
             } else {
