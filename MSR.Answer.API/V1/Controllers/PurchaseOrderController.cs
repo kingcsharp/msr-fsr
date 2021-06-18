@@ -14,6 +14,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 using MSR.Domain.Commands;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -85,6 +86,11 @@ namespace MSR.Answer.API.V1.Controllers
 
         private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
+            if(!(commandResponse as CommandResponse).Success) { 
+            
+                return commandResponse.ResponseError.Message;    
+            }
+
             var poView = commandResponse.ToEntity<PurchaseOrderView>();
             var response = $"PurchaseOrder {action} Pending Approval";
 
