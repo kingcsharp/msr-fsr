@@ -15,7 +15,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetPurchaseOrder>,
         ICommandHandler<CreatePurchaseOrder>,
         ICommandHandler<UpdatePurchaseOrder>,
-        ICommandHandler<DeletePurchaseOrder>
+        ICommandHandler<DeletePurchaseOrder>,
+        ICommandHandler<GetPurchaseOrderDBView>
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
 
@@ -24,12 +25,20 @@ namespace MSR.Application.ApplicationServices
             _purchaseOrderService = purchaseOrderService;
         }
 
+        public async Task<ICommandResponse> HandleAsync(GetPurchaseOrderDBView command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _purchaseOrderService.GetPurchaseOrderDBViewAsync(command);
+            var totalRows = await _purchaseOrderService.GetPurchaseOrderDBViewTotalRowsAsync(command);
+            
+            return new PagingCommandResponse<IEnumerable<PurchaseOrderDBView>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
+        }
+
         public async Task<ICommandResponse> HandleAsync(GetPurchaseOrder command, CancellationToken cancellationToken = default)
         {
             var ret = await _purchaseOrderService.GetPurchaseOrderAsync(command);
             var totalRows = ret.AsQueryable().CreatePurchaseOrderViewQuery(command, true).Count();
             ret = ret.AsQueryable().CreatePurchaseOrderViewQuery(command).ToList();
-            
+
             return new PagingCommandResponse<IEnumerable<PurchaseOrderView>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 

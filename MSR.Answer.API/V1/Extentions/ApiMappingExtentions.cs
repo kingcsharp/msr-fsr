@@ -853,6 +853,11 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<GetPurchaseOrder>(request);
         }
 
+        public static GetPurchaseOrderDBView ToGetPurchaseOrderDBViewCommand(this GetPurchaseOrderDBRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetPurchaseOrderDBView>(request);
+        }
+
         /// <summary>
         ///
         /// </summary>

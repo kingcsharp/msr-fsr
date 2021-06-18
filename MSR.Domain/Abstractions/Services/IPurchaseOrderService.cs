@@ -11,5 +11,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<PurchaseOrderView> CreatePurchaseOrderAsync(CreatePurchaseOrder command);
         Task<PurchaseOrderView> UpdatePurchaseOrderAsync(UpdatePurchaseOrder command);
         Task<PurchaseOrderView> DeletePurchaseOrderAsync(DeletePurchaseOrder command);
+        Task<IEnumerable<PurchaseOrderDBView>> GetPurchaseOrderDBViewAsync(GetPurchaseOrderDBView command);
+        Task<int> GetPurchaseOrderDBViewTotalRowsAsync(GetPurchaseOrderDBView command);
     }
 }

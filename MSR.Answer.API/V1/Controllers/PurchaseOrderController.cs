@@ -74,6 +74,15 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Delete"));
         }
 
+        [HttpGet("View")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseOrderDBView>>))]
+        public async Task<IActionResult> GetPurchaseOrdersDBView([FromQuery] GetPurchaseOrderDBRequest request)
+        {
+            var getPurchaseOrder = request.ToGetPurchaseOrderDBViewCommand();
+            var ret = await _dispatcher.DispatchAsync(getPurchaseOrder);
+            return ret.ToOkObjectResponse<IEnumerable<PurchaseOrderDBView>>();
+        }
+
         private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
             var poView = commandResponse.ToEntity<PurchaseOrderView>();
