@@ -5512,6 +5512,91 @@ export class PurchaseOrderService {
         }
         return _observableOf<AuditActionResult>(<any>null);
     }
+
+    view(id: number | null | undefined, name: string | null | undefined, customerReferencePO: string | null | undefined, invoicedBalance: number | null | undefined, uninvoicedBalance: number | null | undefined, balance: number | null | undefined, customerName: string | null | undefined, openDate: Date | null | undefined, closeDate: Date | null | undefined, totalPurchaseLimit: number | null | undefined, unusedAmount: number | null | undefined, revision: number | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderDBView> {
+        let url_ = this.baseUrl + "/v{version}/PurchaseOrder/View?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (customerReferencePO !== undefined && customerReferencePO !== null)
+            url_ += "CustomerReferencePO=" + encodeURIComponent("" + customerReferencePO) + "&";
+        if (invoicedBalance !== undefined && invoicedBalance !== null)
+            url_ += "InvoicedBalance=" + encodeURIComponent("" + invoicedBalance) + "&";
+        if (uninvoicedBalance !== undefined && uninvoicedBalance !== null)
+            url_ += "UninvoicedBalance=" + encodeURIComponent("" + uninvoicedBalance) + "&";
+        if (balance !== undefined && balance !== null)
+            url_ += "Balance=" + encodeURIComponent("" + balance) + "&";
+        if (customerName !== undefined && customerName !== null)
+            url_ += "CustomerName=" + encodeURIComponent("" + customerName) + "&";
+        if (openDate !== undefined && openDate !== null)
+            url_ += "OpenDate=" + encodeURIComponent(openDate ? "" + openDate.toJSON() : "") + "&";
+        if (closeDate !== undefined && closeDate !== null)
+            url_ += "CloseDate=" + encodeURIComponent(closeDate ? "" + closeDate.toJSON() : "") + "&";
+        if (totalPurchaseLimit !== undefined && totalPurchaseLimit !== null)
+            url_ += "TotalPurchaseLimit=" + encodeURIComponent("" + totalPurchaseLimit) + "&";
+        if (unusedAmount !== undefined && unusedAmount !== null)
+            url_ += "UnusedAmount=" + encodeURIComponent("" + unusedAmount) + "&";
+        if (revision !== undefined && revision !== null)
+            url_ += "Revision=" + encodeURIComponent("" + revision) + "&";
+        if (status !== undefined && status !== null)
+            status && status.forEach(item => { url_ += "Status=" + encodeURIComponent("" + item) + "&"; });
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processView(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processView(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfPurchaseOrderDBView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfPurchaseOrderDBView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processView(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderDBView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfPurchaseOrderDBView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfPurchaseOrderDBView>(<any>null);
+    }
 }
 
 @Injectable()
@@ -18320,6 +18405,153 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
 export interface IUpdatePurchaseOrderRequest extends ICreatePurchaseOrderRequest {
     id: number;
     closePurchaseOrder?: boolean;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfIEnumerableOfPurchaseOrderDBView extends AuditActionResult implements IAuditActionResultOfIEnumerableOfPurchaseOrderDBView {
+    object?: PurchaseOrderDBView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfPurchaseOrderDBView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(PurchaseOrderDBView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfPurchaseOrderDBView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfPurchaseOrderDBView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfIEnumerableOfPurchaseOrderDBView extends IAuditActionResult {
+    object?: PurchaseOrderDBView[] | undefined;
+}
+
+export class PurchaseOrderDBView implements IPurchaseOrderDBView {
+    id?: number;
+    customerId?: number;
+    customerName?: string | undefined;
+    referenceName?: string | undefined;
+    name?: string | undefined;
+    customerReferencePO?: string | undefined;
+    customerReferenceNo?: string | undefined;
+    invoicedBalance?: number;
+    uninvoicedBalance?: number;
+    balance?: number;
+    openDate?: Date;
+    closeDate?: Date | undefined;
+    totalPurchaseLimit?: number;
+    customerReference?: string | undefined;
+    isDeletable?: boolean;
+    status?: string | undefined;
+    revision?: number | undefined;
+    unusedAmount?: number;
+
+    constructor(data?: IPurchaseOrderDBView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.customerId = _data["customerId"];
+            this.customerName = _data["customerName"];
+            this.referenceName = _data["referenceName"];
+            this.name = _data["name"];
+            this.customerReferencePO = _data["customerReferencePO"];
+            this.customerReferenceNo = _data["customerReferenceNo"];
+            this.invoicedBalance = _data["invoicedBalance"];
+            this.uninvoicedBalance = _data["uninvoicedBalance"];
+            this.balance = _data["balance"];
+            this.openDate = _data["openDate"] ? new Date(_data["openDate"].toString()) : <any>undefined;
+            this.closeDate = _data["closeDate"] ? new Date(_data["closeDate"].toString()) : <any>undefined;
+            this.totalPurchaseLimit = _data["totalPurchaseLimit"];
+            this.customerReference = _data["customerReference"];
+            this.isDeletable = _data["isDeletable"];
+            this.status = _data["status"];
+            this.revision = _data["revision"];
+            this.unusedAmount = _data["unusedAmount"];
+        }
+    }
+
+    static fromJS(data: any): PurchaseOrderDBView {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseOrderDBView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["customerId"] = this.customerId;
+        data["customerName"] = this.customerName;
+        data["referenceName"] = this.referenceName;
+        data["name"] = this.name;
+        data["customerReferencePO"] = this.customerReferencePO;
+        data["customerReferenceNo"] = this.customerReferenceNo;
+        data["invoicedBalance"] = this.invoicedBalance;
+        data["uninvoicedBalance"] = this.uninvoicedBalance;
+        data["balance"] = this.balance;
+        data["openDate"] = this.openDate ? this.openDate.toISOString() : <any>undefined;
+        data["closeDate"] = this.closeDate ? this.closeDate.toISOString() : <any>undefined;
+        data["totalPurchaseLimit"] = this.totalPurchaseLimit;
+        data["customerReference"] = this.customerReference;
+        data["isDeletable"] = this.isDeletable;
+        data["status"] = this.status;
+        data["revision"] = this.revision;
+        data["unusedAmount"] = this.unusedAmount;
+        return data; 
+    }
+}
+
+export interface IPurchaseOrderDBView {
+    id?: number;
+    customerId?: number;
+    customerName?: string | undefined;
+    referenceName?: string | undefined;
+    name?: string | undefined;
+    customerReferencePO?: string | undefined;
+    customerReferenceNo?: string | undefined;
+    invoicedBalance?: number;
+    uninvoicedBalance?: number;
+    balance?: number;
+    openDate?: Date;
+    closeDate?: Date | undefined;
+    totalPurchaseLimit?: number;
+    customerReference?: string | undefined;
+    isDeletable?: boolean;
+    status?: string | undefined;
+    revision?: number | undefined;
+    unusedAmount?: number;
 }
 
 /** Base class for an API call with a typed result */

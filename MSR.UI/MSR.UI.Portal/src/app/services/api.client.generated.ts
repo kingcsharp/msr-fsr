@@ -1913,7 +1913,7 @@ export class InvoiceService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    invoiceGet(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceView> {
+    invoiceGet(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceView> {
         let url_ = this.baseUrl + "/v{version}/Invoice?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1927,7 +1927,7 @@ export class InvoiceService {
         if (invoiceNumber !== undefined && invoiceNumber !== null)
             url_ += "InvoiceNumber=" + encodeURIComponent("" + invoiceNumber) + "&";
         if (dueDate !== undefined && dueDate !== null)
-            url_ += "DueDate=" + encodeURIComponent(dueDate ? "" + dueDate.toJSON() : "") + "&";
+            dueDate && dueDate.forEach(item_ => { url_ += "DueDate=" + encodeURIComponent(item_ ? "" + item_.toJSON() : "null") + "&"; });
         if (createdOn !== undefined && createdOn !== null)
             url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
         if (createdByName !== undefined && createdByName !== null)
@@ -2159,7 +2159,7 @@ export class InvoiceService {
         return _observableOf<AuditActionResultOfIEnumerableOfInvoiceView>(<any>null);
     }
 
-    download(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, version: string): Observable<FileResponse> {
+    download(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, version: string): Observable<FileResponse> {
         let url_ = this.baseUrl + "/v{version}/Invoice/Download?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2173,7 +2173,7 @@ export class InvoiceService {
         if (invoiceNumber !== undefined && invoiceNumber !== null)
             url_ += "InvoiceNumber=" + encodeURIComponent("" + invoiceNumber) + "&";
         if (dueDate !== undefined && dueDate !== null)
-            url_ += "DueDate=" + encodeURIComponent(dueDate ? "" + dueDate.toJSON() : "") + "&";
+            dueDate && dueDate.forEach(item_ => { url_ += "DueDate=" + encodeURIComponent(item_ ? "" + item_.toJSON() : "null") + "&"; });
         if (createdOn !== undefined && createdOn !== null)
             url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
         if (createdByName !== undefined && createdByName !== null)

@@ -459,7 +459,6 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.CustomerReferencePO, opts => opts.MapFrom(src => src.ReferencePO))
                 .ForMember(dest => dest.CustomerReferenceNo, opts => opts.MapFrom(src => src.CustomerReference))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status == null ? "Pending" : src.Status.Name));
-
             CreateMap<Product, PurchaseOrderProductView>();
             CreateMap<CreatePurchaseOrder, PurchaseOrder>()
                 .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.CustomerReferencePO))
@@ -569,6 +568,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.SegregationType, opts => opts.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU));
             CreateMap<PortalSubPart, PortalSubPartView>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.WorkOrderId));
+
+            CreateMap<Domain.Views.PurchaseOrderDBView, Resources.EntityFramework.Entities.PurchaseOrderDBView>().ReverseMap();
 
         }
 
