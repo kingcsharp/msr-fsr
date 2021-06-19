@@ -49,6 +49,22 @@ export class ReportCubeService {
         });
     }
 
+    public getAllReportData = async (reportInfo: ReportModel) => {
+        const headers = new HttpHeaders().set('key', this.cubeKey);
+        headers.set('timeout', `${5 * 60000}`);
+
+        // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
+        // let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
+        let apiEndPointUrl = reportInfo.apiEndPointURL;
+
+        return this.http.get(apiEndPointUrl, { headers: headers }).toPromise().then(response => {
+
+            let unProcessedData = response['data'];
+
+            return unProcessedData.map((objectProperty) => this.removePrefixesOfPropertyNames(objectProperty));
+        });
+    }
+
     public getArchivedEnum(reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
             case 'CombinedFinancialDatabyWorkOrder':

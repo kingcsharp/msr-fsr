@@ -14,6 +14,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 using MSR.Domain.Commands;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -74,8 +75,22 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Delete"));
         }
 
+        [HttpGet("View")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseOrderDBView>>))]
+        public async Task<IActionResult> GetPurchaseOrdersDBView([FromQuery] GetPurchaseOrderDBRequest request)
+        {
+            var getPurchaseOrder = request.ToGetPurchaseOrderDBViewCommand();
+            var ret = await _dispatcher.DispatchAsync(getPurchaseOrder);
+            return ret.ToOkObjectResponse<IEnumerable<PurchaseOrderDBView>>();
+        }
+
         private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
+            if(!(commandResponse as CommandResponse).Success) { 
+            
+                return commandResponse.ResponseError.Message;    
+            }
+
             var poView = commandResponse.ToEntity<PurchaseOrderView>();
             var response = $"PurchaseOrder {action} Pending Approval";
 
