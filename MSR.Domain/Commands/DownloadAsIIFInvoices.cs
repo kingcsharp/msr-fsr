@@ -9,12 +9,12 @@ namespace MSR.Domain.Commands
         public string CustomerName { get; set; }
         public string Description { get; set; }
         public string InvoiceNumber { get; set; }
-        public DateTime? InvoiceDate { get; set; }
+        public DateTime[]? dueDate { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string CreatedByName { get; set; }
         public DateTime? LastUpdatedOn { get; set; }
         public string LastUpdatedByName { get; set; }
-        public decimal? Total { get; set; }
+        public decimal? Amount { get; set; }
         public int? StatusId { get; set; }
     }
 }

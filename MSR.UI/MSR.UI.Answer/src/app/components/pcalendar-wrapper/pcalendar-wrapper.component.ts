@@ -62,7 +62,14 @@ export class PcalendarWrapperComponent implements OnInit {
         const restoredVal = elem.filters[ctrl.filterId].value;
 
         if (Array.isArray(restoredVal)) {
-          this.selectedDate = [moment(restoredVal[0]).toDate(), moment(restoredVal[1]).toDate()];
+          if(this.selectedDate !== undefined){
+            this.selectedDate.length = 0;
+          } else {
+            this.selectedDate = new Array();
+          }
+
+          restoredVal.filter(s => s !== null).map(m => this.selectedDate.push(moment(m).toDate()));
+          
         } else {
           this.selectedDate = moment(restoredVal).toDate();
         }
@@ -86,7 +93,7 @@ export class PcalendarWrapperComponent implements OnInit {
     }
 
     if (Array.isArray(filters.value)) {
-      this.selectedDate = [moment(filters.value[0]).toDate(), moment(filters.value[1]).toDate()];
+      this.selectedDate = filters.value.filter(s => s !== null).map(m => moment(m).toDate());
     } else {
       this.selectedDate = moment(filters.value).toDate();
     }

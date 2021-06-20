@@ -5,7 +5,7 @@
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
-    currentPageReportTemplate="Showing {first}-{last} of {{totalRecords}}" [filterDelay]="0" stateStorage="local"
+    currentPageReportTemplate="Showing {first}-{last} of {{totalRecords}}" [filterDelay]="1500" stateStorage="local"
 
     [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getInvoices($event)" [totalRecords]="totalRecords"
     
@@ -55,7 +55,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('dueDate',gridSettings)">
           <div class="position-relative" tooltip="Search by Invoice Date">
-            <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="dueDate" [datatable]="dt">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="dueDate" [datatable]="dt" [isRanged]="true">
             </pcalendar-wrapper>
           </div>
         </th>
