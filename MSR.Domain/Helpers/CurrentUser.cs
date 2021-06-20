@@ -11,5 +11,6 @@ namespace MSR.Domain.Helpers
         public static Func<EnumMenuItem, EnumPrivilege, bool> HasPrivilege;
         public static Func<string, bool> SetCurrentUser;
         public static Func<string> GetAccessToken;
+        public static Func<string> GetTokenString;
     }
 }
