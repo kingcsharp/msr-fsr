@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSR.Domain.Abstractions.Email;
@@ -24,6 +25,7 @@ using MSR.Infrastructure.Resources.Services.Invoices;
 using MSR.Infrastructure.Resources.Services.MessageHub;
 using MSR.Domain.Abstractions;
 using MSR.Infrastructure.Factories;
+using MSR.Infrastructure.Resources.Answer;
 using MSR.Infrastructure.Resources.AWS;
 using MSR.Infrastructure.Resources.Services.Sensor;
 using MSR.Infrastructure.Resources.Services.PurchaseOrder;
@@ -40,12 +42,13 @@ namespace MSR.Infrastructure.Extensions
 {
     public static class InfrastructureServiceExtensions
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config, GeneralInformation generalInfo)
         {
             var dbConfig = config.GetSection(nameof(DatabaseInformation)).Get<DatabaseInformation>();
 
             services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseSqlServer(dbConfig.ConnectionString));
-
+            services.AddHttpClient<IAnswerRestClient,AnswerClient>(c => c.BaseAddress = new Uri(generalInfo.APIURL));
+            
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ILocationService, LocationService>();
@@ -84,7 +87,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IEquipmentMaintenanceService, EquipmentMaintenanceService>();
             services.AddScoped<IDocumentService, DocumentService>();
-
+            
             services.AddSingleton<IMessageHubClient, MessageHubService>();
 
             return services;

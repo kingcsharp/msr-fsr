@@ -52,7 +52,7 @@ namespace MSR.Answer.Processor.Extentions
             AutoMapperHelper.Initialize(mapperConfiguration);
             services.AddApplicationServices();
             services.AddDomainServices(configuration);
-            services.AddInfrastructureServices(configuration);
+            services.AddInfrastructureServices(configuration,generalConfig);
             services.AddJWTServices(configuration);
             services.AddSingleton(mapperConfiguration.CreateMapper());
 
