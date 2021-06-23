@@ -33,7 +33,7 @@
       <td class="wipListItem" *ngIf="!isDisplayedInWipList" data-cy="wipstatus-location">
         {{ workOrderStatus.locationName }} </td>
       <td>
-        <span class="m-1" *ngFor="let workOrderSummary of workOrderStatus.workOrderSummaries"  placement="auto" [tooltip]="workOrderSummaryToolTipTemplate">
+        <span class="m-1" *ngFor="let workOrderSummary of workOrderStatus.workOrderSummaries"  placement="left" [tooltip]="workOrderSummaryToolTipTemplate">
           <button [ngClass]="{'btn':true, 'btn-lg': true,
                 'bg-warning': isWarning(workOrderSummary.workOrderScheduledEndDate),
                 'bg-info': !isWarning(workOrderSummary.workOrderScheduledEndDate) && !isLate(workOrderSummary.workOrderScheduledEndDate),
