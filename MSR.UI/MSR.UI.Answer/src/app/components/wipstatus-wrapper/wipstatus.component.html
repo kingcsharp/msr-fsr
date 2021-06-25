@@ -2,10 +2,10 @@
   <thead class="thead-dark">
     <tr data-cy="wipstatus-header">
       <th class="wipListHeader" *ngIf="isDisplayedInWipList">Procedure & Product</th>
-      <th class="wipListHeader" width="20%" *ngIf="!isDisplayedInWipList">Product</th>
-      <th class="wipListHeader" width="10%" *ngIf="!isDisplayedInWipList">PN/IPN</th>
-      <th class="wipListHeader" width="20%" *ngIf="!isDisplayedInWipList">Procedure</th>
-      <th class="wipListHeader" width="10%" *ngIf="!isDisplayedInWipList">
+      <th class="wipListHeader" *ngIf="!isDisplayedInWipList">Product</th>
+      <th class="wipListHeader" *ngIf="!isDisplayedInWipList">PN/IPN</th>
+      <th class="wipListHeader" *ngIf="!isDisplayedInWipList">Procedure</th>
+      <th class="wipListHeader" *ngIf="!isDisplayedInWipList">
         <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All"
           maxSelectedLabels="1" (onChange)="locationsSelectedUpdated($event)" data-cy="location-multiselect">
         </p-multiSelect>
