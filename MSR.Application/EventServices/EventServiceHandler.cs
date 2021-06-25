@@ -128,6 +128,7 @@ namespace MSR.Application.EventServices
                 command.SerialNumbers = handledEvent.serialNumbers;
                 command.CustomerLineNumbers = handledEvent.CustomerLineNumbers;
                 command.ScheduledStartDate = DateTime.Now;
+                command.Qty = handledEvent.purchaseInfo.Qty;
 
                 var workOrderNumber = await _restClient.PostWorkOrderAsync(command, cancellationToken);
                 _logger.LogInformation($"Finished creating WorkOrder: {workOrderNumber}");
