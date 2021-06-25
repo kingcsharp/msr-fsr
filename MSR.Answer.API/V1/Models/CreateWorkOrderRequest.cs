@@ -19,5 +19,6 @@ namespace MSR.Answer.API.V1.Models
         public virtual ICollection<WorkOrderTaskRequest> WorkOrderTasks { get; set; }
         public ICollection<string> SerialNumbers { get; set; }
         public ICollection<string> CustomerLineNumbers { get; set; }
+        public int Qty { get; set; }
     }
 }
