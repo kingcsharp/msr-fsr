@@ -150,23 +150,23 @@ export class GridComponent implements OnInit {
     } else {
       this.globals.showLoader(true);
 
-      this.reportCubeService.getReport(reportInfo, this.pagingModel).then(<PagingModel>(pagingModel) => {
-        if (pagingModel.HasChart) {
+      this.reportCubeService.getReport(reportInfo, this.pagingModel).then((responsePagingModel) => {
+        if (responsePagingModel.HasChart) {
           this.hasChart = true;
-          this.gridData = pagingModel.data;
+          this.gridData = responsePagingModel.data;
           if (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '') === 'PartsCycleCountsbyWorkOrderDate') {
-            this.regnerateCharOptions(pagingModel.HighChartsOptions);
+            this.regnerateCharOptions(responsePagingModel.HighChartsOptions);
           }
-          this.chartOptions = pagingModel.HighChartsOptions;
-          this.chartInfo = pagingModel.ChartInformation;
+          this.chartOptions = responsePagingModel.HighChartsOptions;
+          this.chartInfo = responsePagingModel.ChartInformation;
           this.showCharts = true;
 
         } else {
-          this.gridData = pagingModel.data;
+          this.gridData = responsePagingModel.data;
         }
         this.partOptions.length = 0;
-        if (pagingModel.partsdata !== undefined && pagingModel.partsdata.length !== 0) {
-          pagingModel.partsdata.map(part => {
+        if (responsePagingModel.partsdata !== undefined && responsePagingModel.partsdata.length !== 0) {
+          responsePagingModel.partsdata.map(part => {
             if (part['CubePartsmonitors.partname'] !== null && part['CubePartsmonitors.partname'] !== undefined) {
               this.partOptions.push([{ name: part['CubePartsmonitors.partname'], id: part['CubePartsmonitors.partname'] }]);
             }
@@ -177,10 +177,10 @@ export class GridComponent implements OnInit {
 
           });
         }
-        this.filteredData = pagingModel.data;
-        this.totalRows = pagingModel.totalRows;
-        this.pagingModel.pageNumber = pagingModel.pageNumber;
-        this.pagingModel.pageSize = pagingModel.pageSize;
+        this.filteredData = responsePagingModel.data;
+        this.totalRows = responsePagingModel.totalRows;
+        this.pagingModel.pageNumber = responsePagingModel.pageNumber;
+        this.pagingModel.pageSize = responsePagingModel.pageSize;
         this.globals.showLoader(false);
       });
     }
@@ -199,7 +199,8 @@ export class GridComponent implements OnInit {
 
   printCsvReport() {
 
-    this.reportCubeService.getReport(this.reportInfo, this.pagingModel, false).then(<PagingModel>(pagingModel) => {
+    this.globals.showLoader(true);
+    this.reportCubeService.getReport(this.reportInfo, this.pagingModel, false).then((pagingModel) => {
 
       this.cSVConverterService.downloadFile(pagingModel.data, this.gridSaved.columnsSaved, this.reportInfo.name);
     });

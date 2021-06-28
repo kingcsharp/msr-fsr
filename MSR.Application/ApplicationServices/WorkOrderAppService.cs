@@ -33,7 +33,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetWorkOrderHistory>,
         ICommandHandler<TakeOverWorkOrder>,
         ICommandHandler<CancelWorkOrder>,
-        ICommandHandler<AddNCRWorkOrderTask>
+        ICommandHandler<AddNCRWorkOrderTask>,
+        ICommandHandler<CreateWorkOrder>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
@@ -79,10 +80,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(CreateWorkOrderTask command, CancellationToken cancellationToken = default)
         {
             // some additional defaults, if needed
-            if (!command.StatusId.HasValue)
-            {
-                command.StatusId = 1;
-            }
+            command.StatusId ??= 1;
 
             var ret = await _workOrderService.CreateWorkOrderTaskAsync(command);
             return new CommandResponse<WorkOrderTaskModel>(ret);
@@ -153,6 +151,34 @@ namespace MSR.Application.ApplicationServices
             var workOrderTaskModels = await _workOrderService.AddNCRWorkOrderTasksAsync(command);
             
             return new CommandResponse<ICollection<WorkOrderTaskModel>>(workOrderTaskModels);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
+        {
+            var tasks = await _workOrderService.GetWorkOrderTasksAsync(command);
+            command.WorkOrderTasks = tasks;
+
+            var parts = (await _workOrderService.GetWorkOrderPartsAsync(command)).ToList();
+            var serialNumberList = command.SerialNumbers.ToList();
+            var customerLineNumbers = command.CustomerLineNumbers.ToList();
+            
+            // Copy in the serial numbers entered at purchase time, if any.
+            for (var workOrderPartIndex = 0; workOrderPartIndex < serialNumberList.Count && workOrderPartIndex < parts.Count; workOrderPartIndex += 1)
+            {
+                if (serialNumberList[workOrderPartIndex] != null)
+                {
+                    parts[workOrderPartIndex].SerialNumber = serialNumberList[workOrderPartIndex];
+                }
+                if (customerLineNumbers[workOrderPartIndex] != null)
+                {
+                    parts[workOrderPartIndex].CustomerLineNumber = customerLineNumbers[workOrderPartIndex];
+                }
+            }
+            
+            command.WorkOrderParts = parts;
+
+            var model = await _workOrderService.CreateWorkOrderAsync(command);
+            return new CommandResponse<string>(_workOrderService.GetWorkOrderItemNumber(model));
         }
     }
 }

@@ -69,6 +69,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Invoice> Invoices { get; }
         IRepository<InvoiceItem> InvoiceItems { get; }
         IRepository<WorkOrder> WorkOrders { get; }
+        IRepository<CancelledWorkOrderLog> CancelledWorkOrderLogs { get; }
         IRepository<WorkOrderPart> WorkOrderParts { get; }
         IRepository<WorkOrderTask> WorkOrderTasks { get; }
         IRepository<File> Files { get; }
@@ -95,6 +96,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<PortalWorkOrderMenu> PortalWorkOrderMenus { get;}
         IRepository<WorkOrderStats> WorkOrderStats { get; }
         IRepository<PortalSubPart> PortalSubParts { get; }
+        IRepository<PurchaseOrderDBView> PurchaseOrderDBViews { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();

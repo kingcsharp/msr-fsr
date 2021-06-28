@@ -52,9 +52,10 @@ export class ReportComponent implements OnInit, OnDestroy {
     let reportInfo = this.data.filter(x => x.id === reportId)[0];
     const reportColumns = this.reportCubeService.getReportColumns(reportInfo);
     this.globals.showLoader(true);
-    this.reportCubeService.getReport(reportInfo).then((resp) => {
-      this.globals.showLoader(false);
+    this.reportCubeService.getAllReportData(reportInfo).then((resp) => {
+      
       this.cSVConverterService.downloadFile(resp, reportColumns, reportInfo.name);
+      this.globals.showLoader(false);
     });
   }
 }

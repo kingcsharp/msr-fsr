@@ -43,7 +43,7 @@ namespace MSR.Answer.API.Extentions
             AutoMapperHelper.Initialize(mapperConfiguration);
             services.AddApplicationServices();
             services.AddDomainServices(config);
-            services.AddInfrastructureServices(config);
+            services.AddInfrastructureServices(config,generalConfig);
             services.AddJWTServices(config);
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {

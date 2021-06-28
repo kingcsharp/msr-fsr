@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-    ReportService, ReportModel
+    ReportService, CustomerService, ReportModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -32,15 +32,81 @@ export class FinancialComponent implements OnInit {
     reportInfo2: ReportModel;
     showReport2: boolean;
     hasChart2: boolean = false;
+    staticOptions: any;
+    customerNamesAndIds: Array<any>;
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
-        private reportCubeService: ReportCubeService) {
+        private reportCubeService: ReportCubeService, private customerService: CustomerService) {
 
 
     }
 
     ngOnInit(): void {
+
+        this.staticOptions = [
+            {
+                msrfsrfacility: 'Chandler'
+            },
+            {
+                msrfsrfacility: 'Naas'
+            },
+            {
+                msrfsrfacility: 'Hillsboro'
+            },
+            {
+                msrfsrfacility: 'Kiryat Gat'
+            },
+            {
+                locationname: 'Chandler'
+            },
+            {
+                locationname: 'Naas'
+            },
+            {
+                locationname: 'Hillsboro'
+            },
+            {
+                locationname: 'Kiryat Gat'
+            },
+            {
+                site: 'Chandler'
+            },
+            {
+                site: 'Naas'
+            },
+            {
+                site: 'Hillsboro'
+            },
+            {
+                site: 'Kiryat Gat'
+            }
+        ];
+
+        this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(customers => {
+                this.customerNamesAndIds = customers.object.map(s =>  {
+
+                    return {
+                        id: s.id,
+                        customername: s.name
+                    };
+
+                });
+
+                this.customerNamesAndIds.map(s => {
+
+                    this.staticOptions.push({ customername: s.customername});
+
+                });
+
+                this.customerNamesAndIds.map(s => {
+
+                    this.staticOptions.push({ customerid: s.id});
+
+                });
+            });
+
         this.getReportData();
     }
 

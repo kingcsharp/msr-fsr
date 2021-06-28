@@ -338,5 +338,22 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             return result;
         }
 
+        public async Task<IEnumerable<Domain.Views.PurchaseOrderDBView>> GetPurchaseOrderDBViewAsync(GetPurchaseOrderDBView command)
+        {
+
+          var purchaseOrders = await _unitOfWork.PurchaseOrderDBViews.Query().CreatePurchaseOrderDBViewQuery(command).ToListAsync();
+           
+          var purchaseOrderDBViewsModels = _mapper.Map<ICollection<MSR.Domain.Views.PurchaseOrderDBView>>(purchaseOrders);
+          
+          return purchaseOrderDBViewsModels;
+        }
+
+        public async Task<int> GetPurchaseOrderDBViewTotalRowsAsync(GetPurchaseOrderDBView command)
+        {
+            var totalRows = await _unitOfWork.PurchaseOrderDBViews.Query().CreatePurchaseOrderDBViewQuery(command, true).CountAsync();
+
+            return totalRows;
+        }
+
     }
 }

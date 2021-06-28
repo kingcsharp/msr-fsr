@@ -45,7 +45,7 @@ namespace MSR.Answer.MessageHub.Extensions
             AutoMapperHelper.Initialize(mapperConfiguration);
             services.AddApplicationServices();
             services.AddDomainServices(config);
-            services.AddInfrastructureServices(config);
+            services.AddInfrastructureServices(config, generalConfig);
             services.AddJWTServices(config);
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
@@ -62,7 +62,7 @@ namespace MSR.Answer.MessageHub.Extensions
                 .WriteTo.Rollbar("0e34b5fc000342528dc361a4bb90f085", environment: generalConfig.Environment, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
 
             Log.Logger = loggerConfig.CreateLogger();
-            services.AddLogging(loggerConfig => loggerConfig.AddSerilog(dispose: true));
+            services.AddLogging(logConfig => logConfig.AddSerilog(dispose: true));
 
             return services;
         }

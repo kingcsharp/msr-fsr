@@ -29,16 +29,13 @@ namespace MSR.Answer.API.V1.Extentions
             var dataObject = ((ICommandResponse<TResult>)commandResponse).Data;
             int id = 0;
 
-            if (dataObject is EntityModel)
+            if (dataObject is EntityModel model)
             {
-                id = (dataObject as EntityModel).Id;
+                id = model.Id;
             }
 
-            if (commandResponse is IPagingCommandResponse<TResult>) 
+            if (commandResponse is IPagingCommandResponse<TResult> pagedCommandResponse) 
             {
-
-                var pagedCommandResponse = commandResponse as IPagingCommandResponse<TResult>;
-
                 int? totalNumberOfRecords = pagedCommandResponse.TotalRows;
                 int? pageNumber = pagedCommandResponse.PageNumber;
                 int? pageSize = pagedCommandResponse.PageSize;
@@ -133,21 +130,12 @@ namespace MSR.Answer.API.V1.Extentions
                 return InternalServerError();
             }
 
-            if (commandResponse.ResponseError != null)
+            if (commandResponse.ResponseError == null) return null;
+            if (commandResponse.ResponseError.Exception is DomainException domainException)
             {
-                if (commandResponse.ResponseError.Exception is DomainException domainException)
-                {
-                    return HandleDomainException(domainException);
-                }
-                if (commandResponse.CanTryAgain)
-                {
-                    return RetryError(commandResponse.ResponseError.Exception.ToString());
-                }
-
-                return InternalServerError(commandResponse.ResponseError.Exception.ToString());
+                return HandleDomainException(domainException);
             }
-
-            return null;
+            return commandResponse.CanTryAgain ? RetryError(commandResponse.ResponseError.Exception.ToString()) : InternalServerError(commandResponse.ResponseError.Exception.ToString());
         }
 
         private static IActionResult InternalServerError(string message = null)
@@ -172,6 +160,10 @@ namespace MSR.Answer.API.V1.Extentions
                     return new ConflictObjectResult(new AuditActionResult(ex.Message));
                 case DomainError.NotFound:
                     return new NotFoundObjectResult(new AuditActionResult(ex.Message));
+                case DomainError.RemoteServerError:
+                    return new ObjectResult(new AuditActionResult(ex.Message))
+                        {StatusCode = (int) HttpStatusCode.BadGateway};
+                case DomainError.Unknown:
                 case DomainError.Teapot:
                 case DomainError.BadRequest:
                 default:

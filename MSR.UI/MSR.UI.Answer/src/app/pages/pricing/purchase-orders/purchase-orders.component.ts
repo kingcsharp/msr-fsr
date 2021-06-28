@@ -96,7 +96,7 @@ export class PurchaseOrdersComponent implements OnInit {
   getPurchaseOrders(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.purchaseOrderService, this.purchaseOrderService.purchaseOrderGet, event, this.globals.functionDic)
+      callFunctionWithFilters(this.purchaseOrderService, this.purchaseOrderService.view, event, this.globals.functionDic)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.totalRecords = response.totalNumberOfRecords;
@@ -114,6 +114,7 @@ export class PurchaseOrdersComponent implements OnInit {
       this.globals.showLoader(true);
       this.productService.productGet(null, purchaseOrder.customerId, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
+          this.globals.showLoader(true);
           this.showProductsSelect = false;
           response.object.map(product => {
             this.productsData.push({
@@ -121,11 +122,8 @@ export class PurchaseOrdersComponent implements OnInit {
               label: `${product.name} (R-${product.revision})`,
             });
           });
-          this.currentPO = this.getPuchaseOrder(purchaseOrder);
-          this.display = true;
-          setTimeout(() => {
-            this.showProductsSelect = true;
-          }, 10);
+          this.getPuchaseOrder(purchaseOrder);
+          
         }));
     }
   }
@@ -149,17 +147,24 @@ export class PurchaseOrdersComponent implements OnInit {
     this.globals.showLoader(true);
     let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
     Object.assign(purchaseOrderRequest, this.poToCloseOrDelete);
-    purchaseOrderRequest.products = this.poToCloseOrDelete.products.map((elem) => elem.id);
-    purchaseOrderRequest.closeDate = new Date();
-    purchaseOrderRequest.closePurchaseOrder = true;
-    this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        const index = this.data.findIndex(x => x.id === this.poToCloseOrDelete.id);
-        this.data.splice(index, 1);
-        this.data.splice(index, 0, response.object);
-        this.data = this.data.slice(0);
-        this.closeConfirmDialog();
-      }));
+
+    this.purchaseOrderService.purchaseOrderGet(this.poToCloseOrDelete.id,null,null,null,null,null,null,null,
+      null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(response => {
+        
+        purchaseOrderRequest.products = response.object[0].products.map((elem) => elem.id);
+        purchaseOrderRequest.closeDate = new Date();
+        purchaseOrderRequest.closePurchaseOrder = true;
+        this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
+          .subscribe(responseHandler(response => {
+            const index = this.data.findIndex(x => x.id === this.poToCloseOrDelete.id);
+            this.data.splice(index, 1);
+            this.data.splice(index, 0, response.object);
+            this.data = this.data.slice(0);
+            this.closeConfirmDialog();
+          }));
+
+      });
+
   }
 
   setCustomerId(purchaseOrderRequest: any, purchaseOrder: any) {
@@ -172,13 +177,21 @@ export class PurchaseOrdersComponent implements OnInit {
       purchaseOrder.selectedProducts = [];
       return purchaseOrder;
     }
-    let ret = copyObj(purchaseOrder);
-    ret.selectedProducts = [];
-    ret.products.forEach(product => {
-      ret.selectedProducts.push(this.productsData.find(x => x.id === product.productId));
-    });
-    this.setCurrentCustomer(ret, purchaseOrder);
-    return ret;
+
+    this.purchaseOrderService.purchaseOrderGet(purchaseOrder.id,null,null,null,null,null,null,null,
+      null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(response => {
+        this.globals.showLoader(true);
+        purchaseOrder.selectedProducts = [];
+        response.object[0].products.forEach(product => {
+          purchaseOrder.selectedProducts.push(this.productsData.find(x => x.id === product.productId));
+        });
+        this.setCurrentCustomer(purchaseOrder, purchaseOrder);
+        this.currentPO = purchaseOrder;
+        this.display = true;
+        this.showProductsSelect = true;
+        this.globals.showLoader(false);
+      });
+    
   }
 
   closeDialog() {

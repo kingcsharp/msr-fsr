@@ -142,8 +142,8 @@ export class ProfileComponent implements OnInit {
 
   getUser() {
     this.globals.showLoader(true);
-    this.userService.userGet(this.user.id, null, null, null, null, null, null, null, null,null,null,
-      null,null,null,null,null,null, env.apiVersion)
+    this.userService.userGet(this.user.id, null, null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1)).subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.user = response.object[0];
