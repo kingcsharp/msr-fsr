@@ -149,7 +149,6 @@
             [multipleValues]="true">
         </multiselect-wrapper>
     </th>
-
     <th *ngIf="colsAndSettings.col.type === enumColumnType.ByteToMb" grid-input-filter [dt]="colsAndSettings.dt"
         searchField="{{colsAndSettings.col.id}}"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)"
@@ -176,7 +175,7 @@
         <div class="position-relative" tooltip="{{colsAndSettings.col.label}}">
             <pcalendar-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId"
                 [isRanged]="colsAndSettings.col.isRanged" [filterId]="colsAndSettings.col.id"
-                [datatable]="colsAndSettings.dt" [isRanged]="calanderIsRange">
+                [datatable]="colsAndSettings.dt" [isRanged]="calanderIsRange" [colsAndSettings]="colsAndSettings" >
             </pcalendar-wrapper>
         </div>
     </th>

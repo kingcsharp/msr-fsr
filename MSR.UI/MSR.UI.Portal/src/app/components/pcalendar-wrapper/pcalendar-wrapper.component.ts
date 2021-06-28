@@ -18,6 +18,7 @@ export class PcalendarWrapperComponent implements OnInit, OnDestroy {
   @Input() datatable: any;
   @Input() reset: any;
   @Input() isRanged: boolean;
+  @Input() colsAndSettings: any;
   constructor(public cg: CommonGrid) {
   }
 

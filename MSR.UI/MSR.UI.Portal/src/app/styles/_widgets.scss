@@ -1470,6 +1470,59 @@ body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker
 body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker-next:hover {
   color: #5e6b7a;
 }
+
+/* DATE MONTH PICKERS */
+body .ui-monthpicker {
+  padding: 0.857em;
+  min-width: 20em;
+  background-color: #222d3c;
+  color: #ffffff;
+}
+
+body .ui-datepicker .ui-monthpicker .ui-monthpicker-month {
+  color: #ffffff
+}
+
+body .ui-monthpicker .ui-monthpicker-header {
+  padding: 0.429em 0.857em 0.429em 0.857em;
+  background-color: #ffffff;
+  color: #222d3c;
+  border-radius: 0;
+}
+
+body .ui-datepicker .ui-monthpicker .ui-monthpicker-month table td.ui-monthpicker > a,
+body .ui-datepicker .ui-monthpicker .ui-monthpicker-month table td.ui-monthpicker > span {
+  background-color: #5b6777;
+  color: #ffffff;
+}
+
+body .ui-datepicker:not(.ui-state-disabled) .ui-monthpicker a.ui-monthpicker-month:not(.ui-state-active):hover {
+  background-color: #5b6877;
+  text-decoration: none;
+}
+
+body .ui-monthpicker .ui-monthpicker-header .ui-monthpicker-prev,
+body .ui-monthpicker .ui-monthpicker-header .ui-monthpicker-next {
+  cursor: pointer;
+  top: 0;
+  color: #5b6777;
+  transition: color 0.2s, box-shadow 0.2s;
+}
+
+body .ui-monthpicker table td > a,
+body .ui-monthpicker table td > span {
+  display: block;
+  text-align: center;
+  color: #5b6777;
+  padding: 0.5em;
+  transition: box-shadow 0.2s;
+  border-radius: 3px;
+}
+
+body .ui-monthpicker:not(.ui-state-disabled) .ui-monthpicker-header .ui-monthpicker-prev:hover,
+body .ui-monthpicker:not(.ui-state-disabled) .ui-monthpicker-header .ui-monthpicker-next:hover {
+  color: #5e6b7a;
+}
 /*END DATE TIME PICKERS*/
 
 .switch {
