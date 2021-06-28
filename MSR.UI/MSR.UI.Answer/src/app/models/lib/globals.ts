@@ -261,6 +261,27 @@ export class Globals {
         'sortAscending',
         'version',
       ],
+      view: [
+        'id',
+        'name',
+        'customerReferencePO',
+        'invoicedBalance',
+        'uninvoicedBalance',
+        'balance',
+        'customerName',
+        'openDate',
+        'closeDate',
+        'totalPurchaseLimit',
+        'unusedAmount',
+        'revision',
+        'status',
+        'term',
+        'pageNumber',
+        'pageSize',
+        'sortAscending',
+        'version',
+      ],
+      
       purchaseGet: [
         'id',
         'mttn',
@@ -399,7 +420,7 @@ export class Globals {
                 return;
             });
         } else {
-            return new Promise((resolve) => {
+            return new Promise<void>((resolve) => {
                 return resolve();
             });
         }

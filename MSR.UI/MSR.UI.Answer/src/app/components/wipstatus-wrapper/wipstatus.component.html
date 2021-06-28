@@ -1,11 +1,11 @@
-<table class="table table-striped">
+<table class="table table-striped table-width">
   <thead class="thead-dark">
     <tr data-cy="wipstatus-header">
       <th class="wipListHeader" *ngIf="isDisplayedInWipList">Procedure & Product</th>
-      <th class="wipListHeader" width="20%" *ngIf="!isDisplayedInWipList">Product</th>
-      <th class="wipListHeader" width="10%" *ngIf="!isDisplayedInWipList">PN/IPN</th>
-      <th class="wipListHeader" width="20%" *ngIf="!isDisplayedInWipList">Procedure</th>
-      <th class="wipListHeader" width="10%" *ngIf="!isDisplayedInWipList">
+      <th class="wipListHeader" *ngIf="!isDisplayedInWipList">Product</th>
+      <th class="wipListHeader" *ngIf="!isDisplayedInWipList">PN/IPN</th>
+      <th class="wipListHeader" *ngIf="!isDisplayedInWipList">Procedure</th>
+      <th class="wipListHeader" *ngIf="!isDisplayedInWipList">
         <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All"
           maxSelectedLabels="1" (onChange)="locationsSelectedUpdated($event)" data-cy="location-multiselect">
         </p-multiSelect>
@@ -33,20 +33,19 @@
       <td class="wipListItem" *ngIf="!isDisplayedInWipList" data-cy="wipstatus-location">
         {{ workOrderStatus.locationName }} </td>
       <td>
-        <span class="m-1" *ngFor="let workOrderSummary of workOrderStatus.workOrderSummaries">
+        <span class="m-1" *ngFor="let workOrderSummary of workOrderStatus.workOrderSummaries"  placement="left" [tooltip]="workOrderSummaryToolTipTemplate">
           <button [ngClass]="{'btn':true, 'btn-lg': true,
                 'bg-warning': isWarning(workOrderSummary.workOrderScheduledEndDate),
                 'bg-info': !isWarning(workOrderSummary.workOrderScheduledEndDate) && !isLate(workOrderSummary.workOrderScheduledEndDate),
-                'bg-danger': isLate(workOrderSummary.workOrderScheduledEndDate)}" placement="bottom"
+                'bg-danger': isLate(workOrderSummary.workOrderScheduledEndDate)}"
             data-cy="workordersummary-icon"
             (click)="openTakeOverAsUserConfirmationDialog(workOrderSummary.workOrderId, workOrderSummary.workOrderAssignedTo)">
             <i [ngClass]="{'fa': true, 'fa-2x': true,'text-white': true,
                   'fa-clock': isWarning(workOrderSummary.workOrderScheduledEndDate),
                   'fa-cog': workOrderSummary.workOrderStatus === 'In Progress',
-                  'fa-spin': workOrderSummary.workOrderStatus === 'In Progress',
                   'fa-hourglass': !isLate(workOrderSummary.workOrderScheduledEndDate) && workOrderSummary.workOrderStatus === 'Waiting to Start',
                   'fa-exclamation-circle': isLate && workOrderSummary.workOrderStatus !== 'In Progress'
-                } " placement="bottom" data-cy="workordersummary-icon" [tooltip]="workOrderSummaryToolTipTemplate"></i>
+                } "  data-cy="workordersummary-icon"></i>
             <ng-template #workOrderSummaryToolTipTemplate>
               <strong>WorkOrder Item Number:</strong> {{ workOrderSummary.workOrderItemNumber }}<br />
               <strong>Purchase Order / Line Number:</strong> {{ workOrderSummary.purchaseOrderLineNumber }}<br />

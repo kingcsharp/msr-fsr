@@ -98,10 +98,8 @@
     "zone.js": "~0.10.2"
   },
   "napa": {
-    "twitter-bootstrap-wizard": "git://github.com/VinceG/twitter-bootstrap-wizard.git#62a9aca8cc61fdb496c4bf7b92e1ff70c698667e",
     "bootstrap_calendar": "https://github.com/xero/bootstrap_calendar.git#1.0.1",
     "jquery.nestable": "https://github.com/dbushell/Nestable.git#4f93032cfafe2002f24ed6bd7dc1510931498503",
-    "jquery.flot.animator": "https://github.com/Codicode/flotanimator.git#3c256c0183d713fd3bf41d04417873928eb1a751",
     "jQuery-Mapael": "https://github.com/neveldo/jQuery-Mapael.git#0.7.1",
     "flot.dashes": "https://github.com/cquartier/flot.dashes.git",
     "jquery.flot-orderBars": "https://github.com/emmerich/flot-orderBars.git"

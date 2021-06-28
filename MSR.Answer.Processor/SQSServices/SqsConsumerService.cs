@@ -63,8 +63,6 @@ namespace MSR.Answer.Processor.SQSServices
                 catch(Exception ex)
                 {
                     _logger.LogError(ex, ex.Message);
-
-                    throw;
                 }
             }
         }
@@ -79,14 +77,13 @@ namespace MSR.Answer.Processor.SQSServices
 
         private bool IsConsuming()
         {
-            return _tokenSource != null && !_tokenSource.Token.IsCancellationRequested;
+            return _tokenSource is {Token: {IsCancellationRequested: false}};
         }
 
         private async Task ProcessAsync()
         {
             try
             {
-
                 while (!_tokenSource.Token.IsCancellationRequested)
                 {
                     try
@@ -99,7 +96,7 @@ namespace MSR.Answer.Processor.SQSServices
                             MessageAttributeNames = new List<string> { "All" }
                         });
 
-                        _logger.LogInformation($"Number of messages Recevied: {response.Messages.Count}");
+                        _logger.LogInformation($"Number of messages Received: {response.Messages.Count}");
                         if (response.HttpStatusCode != HttpStatusCode.OK)
                         {
                             throw new AmazonSQSException($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName}. Response: {response.HttpStatusCode}");
@@ -108,17 +105,18 @@ namespace MSR.Answer.Processor.SQSServices
                         // Need to use foreach keyword here to ensure that
                         // processing stops and the entire SQS item completes before
                         // moving on to the next one.
-                        foreach (Message x in response.Messages) {
-                            await ProcessMessageAsync(x);
+                        foreach (var message in response.Messages) 
+                        {
+                            await ProcessMessageAsync(message, _tokenSource.Token);
                         }
                     }
                     catch (TaskCanceledException)
                     {
                         _logger.LogWarning($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName} because the task was canceled");
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        _logger.LogError($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName}");
+                        _logger.LogError(ex, ex.Message);
                     }
                 }
             }
@@ -132,13 +130,13 @@ namespace MSR.Answer.Processor.SQSServices
             }
         }
 
-        private async Task ProcessMessageAsync(Message message)
+        private async Task ProcessMessageAsync(Message message, CancellationToken cancellationToken)
         {
             try
             {
                 var envelope = JsonConvert.DeserializeObject<MessageEnvelope>(message.Body);
 
-                if (envelope is null || envelope.Message is null)
+                if (envelope?.Message is null)
                 {
                     throw new Exception($"Unable to handle Message.  Message is not of Type: {typeof(MessageEnvelope)}");
                 }
@@ -146,27 +144,27 @@ namespace MSR.Answer.Processor.SQSServices
                 HandleUserToken(envelope.TokenData);
 
                 var messageType = _eventHandlers.GetReference(envelope.MessageType);
-                var @event = JsonConvert.DeserializeObject(envelope.Message.ToString(), messageType);
+                var @event = JsonConvert.DeserializeObject(envelope.Message.ToString() ?? string.Empty, messageType);
 
                 using var scope = _serviceProvider.CreateScope();
                 var dispatcher = (EventDispatcher)(scope.ServiceProvider.GetService(typeof(EventDispatcher<>).MakeGenericType(messageType)));
 
-                Task opr = dispatcher.Dispatch((IEvent)@event);
-                await _sqsClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle);
-
-                // The process thread must wait for operation to complete before
-                // going on to the next one, otherwise the database context
-                // will complain about threading errors.
-                Task.WaitAll(opr);
+                await dispatcher.Dispatch((IEvent)@event, cancellationToken);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Cannot process message [id: {message.MessageId}, receiptHandle: {message.ReceiptHandle}, body: {message.Body}] from queue");
-                await _sqsClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle);
+                await _sqsClient.SendMessageAsync(new SendMessageRequest(_sQSInformation.DLQueueURL, message.Body)
+                                                    { 
+                                                        MessageGroupId = Guid.NewGuid().ToString(),
+                                                        MessageDeduplicationId = Guid.NewGuid().ToString()
+                                                    }, cancellationToken);
             }
+            
+            await _sqsClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle,cancellationToken);
         }
 
-        private void HandleUserToken(string token)
+        private static void HandleUserToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -179,36 +177,33 @@ namespace MSR.Answer.Processor.SQSServices
             var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
 
             CurrentUser.GetId = () => accountId;
+            
             CurrentUser.CanApproveActivity = (EnumApprovalTables) =>
             {
                 var activityToBeApproved = (int)EnumApprovalTables;
 
                 approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
 
-                return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
+                return privileges?.Contains((int)EnumPrivilege.CanApprove) ?? false;
             };
+            
             CurrentUser.CanReadActivity = (EnumApprovalTables) =>
             {
                 var activityToBeApproved = (int)EnumApprovalTables;
 
                 approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
 
-                return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanRead);
+                return privileges?.Contains((int)EnumPrivilege.CanRead) ?? false;
             };
+            
             CurrentUser.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
             {
                 var menuItemPrivileges = deserializedUserPrivileges[(int)EnumMenuItem];
-                if (Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
-                {
-                    return false;
-                }
-
-                return true;
+                return Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) != -1;
             };
-            CurrentUser.GetAccessToken = () =>
-            {
-                return tokenData.RawData;
-            };
+            
+            CurrentUser.GetAccessToken = () => tokenData.RawData;
+            CurrentUser.GetTokenString = () => token;
         }
     }
 }

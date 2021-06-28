@@ -13,33 +13,26 @@ namespace MSR.Domain.Commanding
         public EventDispatcher(IServiceProvider serviceProvider, ILogger<EventDispatcher> logger) : base(serviceProvider, logger)
         { }
 
-        public async override Task Dispatch(IEvent @event)
+        public override async Task Dispatch(IEvent @event, CancellationToken cancellationToken)
         {
-            try
-            {
-                using var scope = _provider.CreateScope();
-                var handler = scope.ServiceProvider.GetService<IEventHandler<T>>();
+            using var scope = _provider.CreateScope();
+            var handler = scope.ServiceProvider.GetService<IEventHandler<T>>();
 
-                await handler.HandleAsync((T)@event, new CancellationToken());
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-            }
+            await handler.HandleAsync((T)@event, cancellationToken);
         }
     }
 
     public abstract class EventDispatcher
     {
-        protected ILogger _logger;
+        protected readonly ILogger _logger;
         protected readonly IServiceProvider _provider;
 
-        public EventDispatcher(IServiceProvider serviceProvider, ILogger<EventDispatcher> logger)
+        protected EventDispatcher(IServiceProvider serviceProvider, ILogger<EventDispatcher> logger)
         {
             _provider = serviceProvider;
             _logger = logger;
         }
 
-        public abstract Task Dispatch(IEvent @event);
+        public abstract Task Dispatch(IEvent @event, CancellationToken cancellationToken);
     }
 }

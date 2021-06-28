@@ -18,6 +18,8 @@ namespace MSR.Domain.Commands
         public bool SerializeIndividually { get; set; }
         public virtual ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
         public virtual ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
+        public ICollection<string> SerialNumbers { get; set; }
+        public ICollection<string> CustomerLineNumbers { get; set; }
 
     }
 }

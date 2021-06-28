@@ -84,6 +84,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<PortalWorkOrderMenu> PortalWorkOrderMenu { get; set; }
         public DbSet<WorkOrderStats> WorkOrderStats { get; set; }
         public DbSet<PortalSubPart> PortalSubParts { get; set; }
+        public DbSet<CancelledWorkOrderLog> CancelledWorkOrderLog { get; set; }
+
+        public DbSet<PurchaseOrderDBView> PurchaseOrderDBView { get; set; }
 
         public AnswerContext() : base()
         {
@@ -191,6 +194,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework
             {
                 d.HasKey("WorkOrderId");
                 d.ToView("WorkOrder_History");
+            });
+
+            modelBuilder.Entity<PurchaseOrderDBView>(d =>
+            {
+                d.HasKey("Id");
+                d.ToView("PurchaseOrderView");
             });
         }
     }

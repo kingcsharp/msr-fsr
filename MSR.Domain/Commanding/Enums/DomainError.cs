@@ -7,6 +7,7 @@
         NotFound,
         Conflict,
         Teapot,
-        InternalServerError
+        InternalServerError,
+        RemoteServerError
     }
 }

@@ -1,5 +1,4 @@
 import 'jquery-flot/jquery.flot.js';
-import 'jquery.flot.animator/jquery.flot.animator';
 import 'jquery-flot/jquery.flot.pie.js';
 import 'jquery-flot/jquery.flot.selection.js';
 import 'jquery-flot/jquery.flot.resize.js';
@@ -28,7 +27,6 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { CsvImportComponent } from '../../../app/components/csv-import/csv-import.component';
 import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploader/cmh-file-uploader.component';
 import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
-// import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
 import { BytePipe } from '../../../app/pipes/bytes.pipe';
 import { MonitorResultPipe } from '../../../app/pipes/monitorResult.pipe';

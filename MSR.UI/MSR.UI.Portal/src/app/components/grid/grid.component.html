@@ -3,7 +3,8 @@
         style="width: 100%; height: 100%; display: block;"></highcharts-chart>
 </div>
 
-<p-table #dt *ngIf="showReport && isLazyLoad" [value]="gridData" dataKey="id" styleClass="ui-table-customers {{gridSaved.gridClass}}"
+
+<p-table #dt *ngIf="showReport && isLazyLoad" [resetPageOnSort] = "false"  [value]="gridData" dataKey="id" styleClass="ui-table-customers {{gridSaved.gridClass}}"
     [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
     [paginator]="gridSaved.paginator" currentPageReportTemplate="Showing {first}-{last} of {{totalRecords}}"
     [totalRecords]="totalRecords" 
@@ -22,15 +23,9 @@
             </grid-options>
         </div>
         <div *ngIf="showExportGrid" class="pull-right exportBtnsMargin">
-            <button class="btn btn-secondary pull-right" (click)="printCsvReport()">
+            <button class="btn btn-success pull-right" (click)="printCsvReport()">
                 <i class="fas fa-file-csv"></i> Export CSV
             </button>
-            <!-- <button class="btn btn-success pull-right">
-                <i class="fas fa-file-excel"></i> Export Excel
-            </button>
-            <button class="btn btn-danger pull-right">
-                <i class="fas fa-file-pdf"></i> Export PDF
-            </button> -->
         </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -239,7 +234,7 @@
         <div class="position-relative" tooltip="{{colsAndSettings.col.label}}">
             <pcalendar-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId"
                 [isRanged]="colsAndSettings.col.isRanged" [filterId]="colsAndSettings.col.id"
-                [datatable]="colsAndSettings.dt" [colsAndSettings]="colsAndSettings">
+                [datatable]="colsAndSettings.dt" [colsAndSettings]="colsAndSettings"  [isRanged]="calanderIsRange">
             </pcalendar-wrapper>
         </div>
     </th>

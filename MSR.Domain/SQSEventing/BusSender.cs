@@ -24,7 +24,6 @@ namespace MSR.Domain.SQSEventing
 
         public async Task<string> SendMessage(MessageEnvelope data)
         {
-            //TODO: Work with Tim to figure out why permissions are not allowing to get QUEUE URL
             var queueURL = _sQSInformation.QueueURL;
             SendMessageResponse response =
                 await _handler.SendMessageAsync(new SendMessageRequest(queueURL, JsonConvert.SerializeObject(data))
