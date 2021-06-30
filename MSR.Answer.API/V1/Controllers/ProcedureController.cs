@@ -46,13 +46,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToCreateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            string message = "Procedure successfully added";
-            if (ret.DisplayString != null)
-            {
-                message = ret.DisplayString;
-            }
-
-            return ret.ToOkObjectResponse<Procedure>(message);
+            return ret.ToOkObjectResponse<Procedure>(
+                DetermineResponseMessage<Procedure>(ret, "add", "Procedure")
+            );
         }
 
         /// <summary>
@@ -103,7 +99,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedure() { procedureID = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse("Procedure successfully deleted");
+            return ret.ToOkObjectResponse(
+                DetermineResponseMessage<bool>(ret, "delete", "Procedure")
+            );
         }
 
         /// <summary>
@@ -166,7 +164,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToUpdateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<Procedure>("Procedure successfully updated");
+            return ret.ToOkObjectResponse<Procedure>(
+                DetermineResponseMessage<Procedure>(ret, "update", "Procedure")
+            );
         }
 
         /// <summary>
