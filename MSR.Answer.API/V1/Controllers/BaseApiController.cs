@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Helpers;
 
@@ -26,11 +27,19 @@ namespace MSR.Answer.API.V1.Controllers
 
         protected static string DetermineResponseMessage<T>(ICommandResponse commandResponse, string action, string actionObjectName)
         {
-            var entity = commandResponse.ToEntity<T>();
+            if (commandResponse is CommandResponse &&
+                !(((CommandResponse)commandResponse).Success))
+            {
+                return $"{actionObjectName} {action} Failed: " +
+                    commandResponse.ResponseError?.Message;
+            }
+
             var response = $"{actionObjectName} {action} Successful";
+            var entity = commandResponse.ToEntity<T>();
 
             if (entity == null) {
-                if (commandResponse.ResponseError != null) {
+                if (commandResponse.ResponseError != null)
+                {
                     response = $"{actionObjectName} {action} Failed: " +
                         commandResponse.ResponseError.Message;
                 }
