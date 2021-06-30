@@ -45,7 +45,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = product.ToCreateProductCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProductModel>(DetermineResponseMessage(ret, "Create"));
+            return ret.ToOkObjectResponse<ProductModel>(
+                DetermineResponseMessage<ProductModel>(ret, "Create", "Product")
+            );
         }
 
         /// <summary>
@@ -72,20 +74,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             UpdateProduct updateProduct = request.ToUpdateProductCommand();
             var ret = await _dispatcher.DispatchAsync(updateProduct);
-            return ret.ToOkObjectResponse<ProductModel>(DetermineResponseMessage(ret, "Update"));
-        }
-
-        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
-        {
-            var product = commandResponse.ToEntity<ProductModel>();
-            var response = $"Product {action} Successful";
-
-            if (!string.IsNullOrWhiteSpace(product.ApprovalStatus))
-            {
-                response = $"Product {action} Pending Approval";
-            }
-
-            return response;
+            return ret.ToOkObjectResponse<ProductModel>(
+                DetermineResponseMessage<ProductModel>(ret, "Update", "Product")
+            );
         }
     }
 }

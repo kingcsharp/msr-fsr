@@ -51,8 +51,14 @@ namespace MSR.Application.ApplicationServices
         }
         public async Task<ICommandResponse> HandleAsync(UpdateProcedure command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.UpdateProcedureAsync(command);
-            return new CommandResponse<Procedure>(ret);
+            var procedure = await _procedureService.UpdateProcedureAsync(command);
+            CommandResponse<Procedure> response = new CommandResponse<Procedure>(procedure);
+            if (procedure.ApprovalStatus != null)
+            {
+                response.DisplayString = "Procedure updated, pending approval: " + procedure.Id;
+            }
+
+            return response;
         }
         public async Task<ICommandResponse> HandleAsync(CreateProcedureStep command, CancellationToken cancellationToken = default)
         {

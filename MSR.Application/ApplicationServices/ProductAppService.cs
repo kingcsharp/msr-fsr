@@ -23,8 +23,13 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(CreateProduct command, CancellationToken cancellationToken = default)
         {
-            var ret = await _productService.CreateProductAsync(command);
-            return new CommandResponse<ProductModel>(ret);
+            var product = await _productService.CreateProductAsync(command);
+            CommandResponse<ProductModel> response = new CommandResponse<ProductModel>(product);
+            if (product.ApprovalStatus != null)
+            {
+                response.DisplayString = "Procedure added, pending approval: " + product.Id;
+            }
+            return response;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetProduct command, CancellationToken cancellationToken = default)
@@ -35,8 +40,13 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(UpdateProduct command, CancellationToken cancellationToken = default)
         {
-            var ret = await _productService.UpdateProductAsync(command);
-            return new CommandResponse<ProductModel>(ret);
+            var product = await _productService.UpdateProductAsync(command);
+            CommandResponse<ProductModel> response = new CommandResponse<ProductModel>(product);
+            if (product.ApprovalStatus != null)
+            {
+                response.DisplayString = "Procedure updated, pending approval: " + product.Id;
+            }
+            return response;
         }
     }
 }

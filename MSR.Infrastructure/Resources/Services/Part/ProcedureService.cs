@@ -16,7 +16,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using System;
-using System.Diagnostics;
 using MSR.Infrastructure.Resources.Queries;
 using MSR.Infrastructure.Resources.EntityFramework.Projections;
 using MSR.Domain.Views;
