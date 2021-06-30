@@ -87,7 +87,9 @@ namespace MSR.Answer.API.V1.Controllers
             var command = body.ToCreateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepModel>(DetermineStepResponseMessage(ret, "add"));
+            return ret.ToOkObjectResponse<ProcedureStepModel>(
+                DetermineResponseMessage<ProcedureStepModel>(ret, "add", "Procedure Step")
+            );
         }
 
         /// <summary>
@@ -116,7 +118,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedureStep() { procedureID = id, procedureStepID = stepid };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse(DetermineStepResponseMessage(ret, "delete"));
+            return ret.ToOkObjectResponse(
+                DetermineResponseMessage<ProcedureStepModel>(ret, "delete", "Procedure Step")
+            );
         }
 
         /// <summary>
@@ -179,21 +183,9 @@ namespace MSR.Answer.API.V1.Controllers
             var command = body.ToUpdateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepModel>(DetermineStepResponseMessage(ret, "update"));
+            return ret.ToOkObjectResponse<ProcedureStepModel>(
+                DetermineResponseMessage<ProcedureStepModel>(ret, "update", "Procedure Step")
+            );
         }
-
-        private string DetermineStepResponseMessage(ICommandResponse commandResponse, string action)
-        {
-            var procStep = commandResponse.ToEntity<ProcedureStepModel>();
-            var response = $"Procedure step {action} Successful";
-
-            if (!string.IsNullOrWhiteSpace(procStep.ApprovalStatus))
-            {
-                response = $"Procedure step {action} Pending Approval";
-            }
-
-            return response;
-        }
-
     }
 }
