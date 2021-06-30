@@ -21948,6 +21948,7 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
     workOrderTasks?: WorkOrderTaskRequest[] | undefined;
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
+    qty?: number;
 
     constructor(data?: ICreateWorkOrderRequest) {
         if (data) {
@@ -21988,6 +21989,7 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
                 for (let item of _data["customerLineNumbers"])
                     this.customerLineNumbers!.push(item);
             }
+            this.qty = _data["qty"];
         }
     }
 
@@ -22028,6 +22030,7 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
             for (let item of this.customerLineNumbers)
                 data["customerLineNumbers"].push(item);
         }
+        data["qty"] = this.qty;
         return data; 
     }
 }
@@ -22045,6 +22048,7 @@ export interface ICreateWorkOrderRequest {
     workOrderTasks?: WorkOrderTaskRequest[] | undefined;
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
+    qty?: number;
 }
 
 export class WorkOrderPartRequest implements IWorkOrderPartRequest {
