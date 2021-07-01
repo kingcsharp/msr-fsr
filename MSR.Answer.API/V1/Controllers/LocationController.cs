@@ -54,7 +54,9 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToCreateLocationCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<LocationModel>(DetermineResponseMessage(ret, "Create"));
+            return ret.ToOkObjectResponse<LocationModel>(
+                DetermineResponseMessage<LocationModel>(ret, "Create", "Location")
+            );
         }
 
         [HttpPost("{locationId}/Sensor/{sensorId}"), SwaggerResponse(typeof(AuditActionResult))]
@@ -72,7 +74,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdateLocationCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse(DetermineResponseMessage(ret, "Update"));
+            return ret.ToOkObjectResponse(
+                DetermineResponseMessage<LocationModel>(ret, "Update", "Location")
+            );
         }
 
 
@@ -83,7 +87,9 @@ namespace MSR.Answer.API.V1.Controllers
             var command = new DeactivateLocation() { LocationId = id };
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse(DetermineResponseMessage(ret, "Deactivate"));
+            return ret.ToOkObjectResponse(
+                DetermineResponseMessage<LocationModel>(ret, "Deactivate", "Location")
+            );
         }
 
         [HttpDelete("{locationId}/Sensor/{sensorId}"), SwaggerResponse(typeof(AuditActionResult))]
@@ -93,19 +99,6 @@ namespace MSR.Answer.API.V1.Controllers
             var command = new DeleteLocationSensorMap() { LocationId = locationId, SensorItemId = sensorId };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse("Sensor Successfully Removed");
-        }
-
-        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
-        {
-            var location = commandResponse.ToEntity<LocationModel>();
-            var response = $"Location {action} Successful";
-
-            if (!string.IsNullOrWhiteSpace(location.Status))
-            {
-                response = $"Location {action} Pending Approval";
-            }
-
-            return response;
         }
     }
 }
