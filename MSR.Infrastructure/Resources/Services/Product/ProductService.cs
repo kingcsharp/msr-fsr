@@ -118,7 +118,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<ICollection<ProductModel>> GetProductAsync(GetProduct command)
         {
-            IQueryable<Product> productQuery = _unitOfWork.Products.Query();
+            IQueryable<Product> productQuery = _unitOfWork.Products.Query()
+                .Include(x => x.Part)
+                .Include(x => x.Procedure)
+                .Include(x => x.Customer)
+                .Include(x => x.ProductSteps);
 
             if (command.Id.HasValue)
             {
@@ -130,19 +134,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 productQuery = productQuery.Where(x => x.CustomerId == command.CustomerId.Value);
             }
 
-            var productEntities = await productQuery.ToListAsync();
-            var productIds = productEntities.Select(s => s.Id).ToList();
-            var partIds = productEntities.Select(s => s.PartId).ToList();
-            var procedureIds = productEntities.Select(s => s.ProcedureId).ToList();
-            var customerIds = productEntities.Select(s => s.CustomerId).ToList();
-            _ = await _unitOfWork.Parts.Query().Where(s => partIds.Contains(s.Id)).ToListAsync();
-            _ = await _unitOfWork.Procedures.Query().Where(s => procedureIds.Contains(s.Id)).ToListAsync();
-            _ = await _unitOfWork.ProductSteps.Query().Where(s => productIds.Contains(s.ProductId)).ToListAsync();
-            _ = await _unitOfWork.Customers.Query().Where(s => customerIds.Contains(s.Id)).ToListAsync();
-
-
-            var productModels = _mapper.Map<ICollection<ProductModel>>(productEntities);
-
+            var productModels = await productQuery.Select(p => _mapper.Map<ProductModel>(p)).ToListAsync();
+            
             // removing child product from the Model to avoid loop
             productModels.ToList().ForEach(p => p.ProductSteps?.ToList().ForEach(ps => ps.Product = null));
 
