@@ -15,7 +15,10 @@ namespace MSR.Answer.API.V1.Extentions
     {
         public static T ToEntity<T>(this ICommandResponse commandResponse)
         {
-            return ((ICommandResponse<T>)commandResponse).Data;
+            if (commandResponse is ICommandResponse<T>) {
+                return ((ICommandResponse<T>)commandResponse).Data;
+            }
+            return default(T);
         }
 
         public static IActionResult ToOkObjectResponse<TResult>(this ICommandResponse commandResponse, string message = null)

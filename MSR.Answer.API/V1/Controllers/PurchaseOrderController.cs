@@ -44,7 +44,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToCreatePurchaseOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Create"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(
+                DetermineResponseMessage<PurchaseOrderView>(ret, "Create", "Purchase Order")
+            );
         }
 
         /// <summary>
@@ -58,7 +60,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdatePurchaseOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Update"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(
+                DetermineResponseMessage<PurchaseOrderView>(ret, "Update", "Purchase Order")
+            );
         }
         
         /// <summary>
@@ -72,7 +76,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeletePurchaseOrder() { Id = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Delete"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(
+                DetermineResponseMessage<PurchaseOrderView>(ret, "Delete", "Purchase Order")
+            );
         }
 
         [HttpGet("View")]
@@ -82,25 +88,6 @@ namespace MSR.Answer.API.V1.Controllers
             var getPurchaseOrder = request.ToGetPurchaseOrderDBViewCommand();
             var ret = await _dispatcher.DispatchAsync(getPurchaseOrder);
             return ret.ToOkObjectResponse<IEnumerable<PurchaseOrderDBView>>();
-        }
-
-        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
-        {
-            if(!(commandResponse as CommandResponse).Success) { 
-            
-                return commandResponse.ResponseError.Message;    
-            }
-
-            var poView = commandResponse.ToEntity<PurchaseOrderView>();
-            var response = $"PurchaseOrder {action} Pending Approval";
-
-            if (string.IsNullOrWhiteSpace(poView.Status) ||
-                poView.Status.ToUpper().Equals("OPEN"))
-            {
-                response = $"PurchaseOrder {action} Successful";
-            }
-
-            return response;
         }
     }
 }
