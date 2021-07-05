@@ -85,20 +85,114 @@
 
 <!-- Total and complete hack to break the page.
      There is no other way that I can find.
-     16 parts per page.  6 inches header/footer on first page only.  Assuming
-     11.75 inch paper length (the size of A4).
+     16 parts per page.  6 inches header/footer on first page only.
+     Assuming 11 inch paper length.
  -->
-<div style='height:{{((-10.75*((packingList.sortedParts.length + 6) % 16)/16))+11.75}}in;break-inside:avoid'>&nbsp;</div>
+<div style='height:{{((-10.00*((packingList.sortedParts.length + 6) % 16)/16))+11}}in;break-inside:avoid'>&nbsp;</div>
 
-<div class="row border m-4">
-    <div class="col-12 mb-2 border-bottom">
-        <div class="row">
-            <div class="col-6">
-                <h1>MSR-FSR</h1>
-            </div>
-            <div class="col-6 text-right">
-                <h2>CERTIFICATE OF COMPLIANCE</h2>
-            </div>
+<div *ngFor="let workOrderParentPart of packingList.parentParts" class="row border m-4">
+  <div class="col-12 mb-2 border-bottom">
+    <div class="row">
+        <div class="col-6">
+            <h1>MSR-FSR</h1>
+        </div>
+        <div class="col-6 text-right">
+            <h2>CERTIFICATE OF COMPLIANCE</h2>
         </div>
     </div>
+  </div>
+  <div class="col-12">
+      <div class="row">
+        <div class="col">
+            <p>Customer:</p>
+            <p style="margin-left:5em">
+                {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}<br/>
+                {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.city }},
+                {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.state }}
+            </p>
+        </div>
+        <div class="col">
+            <p><b>Date</b>: {{ currentDate }}</p>
+            <p>Cust PO / Line: {{ workOrderParentPart.poLineLabel }}</p>
+            <p>MSR-FSR WO #: {{ WorkOrder.id }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+            <p>Supplier:</p>
+            <p style="margin-left:5em">
+                {{ WorkOrder.location?.name }}<br/>
+                {{ WorkOrder.location?.address1 }}<br/>
+                {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} <br/>
+                {{ WorkOrder.location?.phone }}
+            </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+            Customer Main Part Name: {{ workOrderParentPart.part.part.name }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+            Customer Main Part Number: {{ workOrderParentPart.part.part.partNumber }} 
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+            Process: {{ WorkOrder.product?.procedure?.name }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+            Detailed Parts List
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+          <div class="row border">
+            <div class="col border"> Part Number </div>
+            <div class="col border"> Description </div>
+            <div class="col border"> SN </div>
+          </div>
+          <div class="row border">
+            <div class="col border"> {{ workOrderParentPart.part.part.partNumber }}</div>
+            <div class="col border"> {{ workOrderParentPart.part.part.name }}</div>
+            <div class="col border"> {{ workOrderParentPart.part.serialNumber }} </div>
+          </div>
+          <div *ngFor="let workOrderSubPart of workOrderParentPart.subparts" class="row border">
+            <div class="col border"> &nbsp;&nbsp;&nbsp;{{ workOrderSubPart.part.partNumber }}</div>
+            <div class="col border"> {{ workOrderSubPart.part.name }}</div>
+            <div class="col border"> {{ workOrderSubPart.serialNumber }} </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+            Monitor Data Collected if applicable:
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-10">
+          <div class="row border">
+            <div class="col border"> Monitor </div>
+            <div class="col border"> Value </div>
+            <div class="col-3 border"> Pass/Fail </div>
+          </div>
+
+          <div *ngFor="let monitor of packingList.allMonitors" class="row border">
+            <div class="col border"> {{ monitor.monitorDescription }} </div>
+            <div class="col border"> {{ monitor.valueAsString }} </div>
+            <div class="col-3 border {{ monitor.isPassing ? 'text-success' : 'text-danger' }}">
+                {{ monitor.isPassing ? 'PASS' : 'FAIL' }}
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
 </div>
