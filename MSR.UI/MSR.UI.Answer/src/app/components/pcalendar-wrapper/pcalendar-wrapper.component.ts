@@ -105,6 +105,14 @@ export class PcalendarWrapperComponent implements OnInit {
   }
 
   filterGrid() {
+    if(this.selectedDate[1] === null && this.colsAndSettings.col.formattingMoment === "MM-YYYY") {
+      this.selectedDate.push(moment(this.selectedDate[0]).endOf('month').toDate());
+    }
+    else if (Array.isArray(this.selectedDate) && this.colsAndSettings.col.formattingMoment === "MM-YYYY") {
+      this.selectedDate.push(moment(this.selectedDate[1]).endOf('month').toDate());
+      this.selectedDate.splice(1, 1)
+    }
+    
     this.datatable.filter(this.selectedDate, this.filterId, 'dateRangeFilter');
   }
 }
