@@ -148,17 +148,17 @@ export class PurchaseOrdersComponent implements OnInit {
     let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
     Object.assign(purchaseOrderRequest, this.poToCloseOrDelete);
 
-    this.purchaseOrderService.purchaseOrderGet(this.poToCloseOrDelete.id,null,null,null,null,null,null,null,
-      null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(response => {
+    this.purchaseOrderService.purchaseOrderGet(this.poToCloseOrDelete.id, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(response => {
 
         purchaseOrderRequest.products = response.object[0].products.map((elem) => elem.id);
         purchaseOrderRequest.closeDate = new Date();
         purchaseOrderRequest.closePurchaseOrder = true;
         this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
-          .subscribe(responseHandler(response => {
+          .subscribe(responseHandler(purchaseOrderResponse => {
             const index = this.data.findIndex(x => x.id === this.poToCloseOrDelete.id);
             this.data.splice(index, 1);
-            this.data.splice(index, 0, response.object);
+            this.data.splice(index, 0,  purchaseOrderResponse.object);
             this.data = this.data.slice(0);
             this.closeConfirmDialog();
           }));
@@ -178,8 +178,8 @@ export class PurchaseOrdersComponent implements OnInit {
       return purchaseOrder;
     }
 
-    this.purchaseOrderService.purchaseOrderGet(purchaseOrder.id,null,null,null,null,null,null,null,
-      null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(response => {
+    this.purchaseOrderService.purchaseOrderGet(purchaseOrder.id, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(response => {
         this.globals.showLoader(true);
         purchaseOrder.selectedProducts = [];
         response.object[0].products.forEach(product => {
