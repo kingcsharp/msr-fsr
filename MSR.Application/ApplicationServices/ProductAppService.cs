@@ -12,6 +12,7 @@ namespace MSR.Application.ApplicationServices
     public class ProductAppService :
         ICommandHandler<CreateProduct>,
         ICommandHandler<GetProduct>,
+        ICommandHandler<GetPurchaseOrderProduct>,
         ICommandHandler<UpdateProduct>
     {
         private readonly IProductService _productService;
@@ -37,6 +38,13 @@ namespace MSR.Application.ApplicationServices
             var ret = await _productService.GetProductAsync(command);
             return new CommandResponse<IEnumerable<ProductModel>>(ret);
         }
+
+        public async Task<ICommandResponse> HandleAsync(GetPurchaseOrderProduct command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _productService.GetPurchaseOrderProductAsync(command);
+            return new CommandResponse<IEnumerable<PurchaseOrderProductModel>>(ret);
+        }
+
 
         public async Task<ICommandResponse> HandleAsync(UpdateProduct command, CancellationToken cancellationToken = default)
         {

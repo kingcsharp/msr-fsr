@@ -184,6 +184,27 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             return productModels;
         }
 
+        public async Task<ICollection<PurchaseOrderProductModel>> GetPurchaseOrderProductAsync(GetPurchaseOrderProduct command)
+        {
+            IQueryable<Product> productQuery = _unitOfWork.Products.Query()
+                .Include(x => x.Part)
+                .Include(x => x.Procedure);
+
+            if (command.Id.HasValue)
+            {
+                productQuery = productQuery.Where(x => x.Id == command.Id.Value);
+            }
+
+            if (command.CustomerId.HasValue)
+            {
+                productQuery = productQuery.Where(x => x.CustomerId == command.CustomerId.Value);
+            }
+
+            var purchaseOrderProductModels = await productQuery.Select(p => _mapper.Map<PurchaseOrderProductModel>(p)).ToListAsync();
+
+            return purchaseOrderProductModels;
+        }
+
 
         public async Task<ProductModel> UpdateProductAsync(UpdateProduct command)
         {

@@ -403,6 +403,7 @@ namespace MSR.Infrastructure.Profiles
 
             #region Product
             CreateMap<Product, ProductModel>().ReverseMap();
+            CreateMap<Product, PurchaseOrderProductModel>();
             CreateMap<CreateProduct, Product>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<ProductModel, Product>();

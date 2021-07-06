@@ -822,6 +822,11 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<GetProduct>(request);
         }
 
+        public static GetPurchaseOrderProduct ToGetPurchaseOrderProductCommand(this GetProductRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetPurchaseOrderProduct>(request);
+        }
+
         public static UpdateProduct ToUpdateProductCommand(this UpdateProductRequest request)
         {
             return AutoMapperHelper.Mapper.Map<UpdateProduct>(request);
