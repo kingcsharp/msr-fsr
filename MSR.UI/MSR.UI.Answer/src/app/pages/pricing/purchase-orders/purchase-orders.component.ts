@@ -6,7 +6,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ConfirmationService } from 'primeng/api';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest, CreatePurchaseOrderRequest, PurchaseOrderView, CustomerModel, ProductModel } from '../../../services/api.client.generated';
+import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest, CreatePurchaseOrderRequest, PurchaseOrderView, CustomerModel, PurchaseOrderProductModel } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -112,7 +112,7 @@ export class PurchaseOrdersComponent implements OnInit {
       this.display = true;
     } else {
       this.globals.showLoader(true);
-      this.productService.productGet(null, purchaseOrder.customerId, env.apiVersion).pipe(take(1))
+      this.productService.getPurchaseOrderProduct(null, purchaseOrder.customerId, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           this.globals.showLoader(true);
           this.showProductsSelect = false;
@@ -123,7 +123,7 @@ export class PurchaseOrdersComponent implements OnInit {
             });
           });
           this.getPuchaseOrder(purchaseOrder);
-          
+
         }));
     }
   }
@@ -150,7 +150,7 @@ export class PurchaseOrdersComponent implements OnInit {
 
     this.purchaseOrderService.purchaseOrderGet(this.poToCloseOrDelete.id,null,null,null,null,null,null,null,
       null,null,null,null,null,null,null,null,null,env.apiVersion).pipe(take(1)).subscribe(response => {
-        
+
         purchaseOrderRequest.products = response.object[0].products.map((elem) => elem.id);
         purchaseOrderRequest.closeDate = new Date();
         purchaseOrderRequest.closePurchaseOrder = true;
@@ -191,7 +191,7 @@ export class PurchaseOrdersComponent implements OnInit {
         this.showProductsSelect = true;
         this.globals.showLoader(false);
       });
-    
+
   }
 
   closeDialog() {
@@ -216,7 +216,7 @@ export class PurchaseOrdersComponent implements OnInit {
   getProducts() {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.productService.productGet(null, this.currentPO.customer.id, env.apiVersion).pipe(take(1))
+    this.productService.getPurchaseOrderProduct(null, this.currentPO.customer.id, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.showProductsSelect = false;
         ctrl.productsData = [];
@@ -313,6 +313,6 @@ export class PurchaseOrdersComponent implements OnInit {
 
 class PurcahseOrderEditModel extends PurchaseOrderView {
   customer?: CustomerModel | undefined;
-  selectedProducts!: ProductModel[];
+  selectedProducts!: PurchaseOrderProductModel[];
 }
 

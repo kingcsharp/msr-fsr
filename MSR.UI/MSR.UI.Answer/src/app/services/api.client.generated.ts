@@ -5094,6 +5094,66 @@ export class ProductService {
         }
         return _observableOf<AuditActionResultOfProductModel>(<any>null);
     }
+
+    /**
+     * GetPurchaseOrderProduct
+     * @param id (optional) Get product by Id
+     * @param customerId (optional) 
+     */
+    getPurchaseOrderProduct(id: number | null | undefined, customerId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderProductModel> {
+        let url_ = this.baseUrl + "/v{version}/Product/GetPurchaseOrderProduct?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (customerId !== undefined && customerId !== null)
+            url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPurchaseOrderProduct(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPurchaseOrderProduct(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfPurchaseOrderProductModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfPurchaseOrderProductModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPurchaseOrderProduct(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderProductModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfPurchaseOrderProductModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfPurchaseOrderProductModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -17849,6 +17909,93 @@ export class AuditActionResultOfIEnumerableOfProductModel extends AuditActionRes
 /** Base class for an API call with a typed result */
 export interface IAuditActionResultOfIEnumerableOfProductModel extends IAuditActionResult {
     object?: ProductModel[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfIEnumerableOfPurchaseOrderProductModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfPurchaseOrderProductModel {
+    object?: PurchaseOrderProductModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfPurchaseOrderProductModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(PurchaseOrderProductModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfPurchaseOrderProductModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfPurchaseOrderProductModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfIEnumerableOfPurchaseOrderProductModel extends IAuditActionResult {
+    object?: PurchaseOrderProductModel[] | undefined;
+}
+
+export class PurchaseOrderProductModel implements IPurchaseOrderProductModel {
+    id?: number;
+    name?: string | undefined;
+    revision?: number;
+
+    constructor(data?: IPurchaseOrderProductModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.revision = _data["revision"];
+        }
+    }
+
+    static fromJS(data: any): PurchaseOrderProductModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseOrderProductModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["revision"] = this.revision;
+        return data; 
+    }
+}
+
+export interface IPurchaseOrderProductModel {
+    id?: number;
+    name?: string | undefined;
+    revision?: number;
 }
 
 export class UpdateProductRequest implements IUpdateProductRequest {

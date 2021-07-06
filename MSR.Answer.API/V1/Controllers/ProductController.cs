@@ -64,6 +64,21 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
+        /// GetPurchaseOrderProduct
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <returns></returns>
+        [HttpGet("GetPurchaseOrderProduct")]
+        [HasPrivilegeApi(PrivilegeApiName, EnumPrivilege.CanRead)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseOrderProductModel>>))]
+        public async Task<IActionResult> GetPurchaseOrderProduct([FromQuery] GetProductRequest filters)
+        {
+            var getPurchaseOrderProduct = filters.ToGetPurchaseOrderProductCommand();
+            var ret = await _dispatcher.DispatchAsync(getPurchaseOrderProduct);
+            return ret.ToOkObjectResponse<IEnumerable<PurchaseOrderProductModel>>();
+        }
+
+        /// <summary>
         /// UpdateProduct
         /// </summary>
         /// <param name="request"></param>

@@ -94,6 +94,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetQuoteRequest, GetQuote>();
             CreateMap<CreateProductRequest, CreateProduct>();
             CreateMap<GetProductRequest, GetProduct>();
+            CreateMap<GetProductRequest, GetPurchaseOrderProduct>();
             CreateMap<UpdateProductRequest, UpdateProduct>();
             CreateMap<ProductStep, ProductStepModel>();
             CreateMap<CreateRoleRequest, CreateRole>();
