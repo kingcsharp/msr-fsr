@@ -114,12 +114,11 @@ export class PackingListViewModel {
                 );
             }
         });
-        console.log(this.allMonitors);
     }
 
     // Check a monitor's data to determine status of pass/fail
     getMonitorResult(monitorModel: WorkOrderTaskMonitorModel): MonitorResult {
-    console.log('wa');
+
         let result: MonitorResult = {
             monitorDescription: '',
             valueAsString: '',
