@@ -585,10 +585,12 @@ namespace MSR.Infrastructure.Resources.Services
             if (purchaseOrderApproval.PurchaseOrderId is null)
             {
                 //It's a new one so create it
-                var purchaseOrder = _mapper.Map<EntityFramework.Entities.PurchaseOrder>(purchaseOrderApproval);
-                purchaseOrder.Revision = 1;
+                var purchaseOrderEntity = _mapper.Map<EntityFramework.Entities.PurchaseOrder>(purchaseOrderApproval);
+                purchaseOrderEntity.Revision = 1;
+                purchaseOrderEntity.UninvoicedBalance = 0;
+                purchaseOrderEntity.InvoicedBalance = 0;
 
-                await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrder);
+                await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrderEntity);
 
                 var purchaseOrderProductApprovals = await _unitOfWork.PurchaseOrderProductApprovals.Query().Where(i => i.PurchaseOrderApprovalId == purchaseOrderApproval.Id).ToListAsync();
 
@@ -596,7 +598,7 @@ namespace MSR.Infrastructure.Resources.Services
                 {
                     var map = new PurchaseOrderProduct()
                     {
-                        PurchaseOrder = purchaseOrder,
+                        PurchaseOrder = purchaseOrderEntity,
                         ProductId = purchaseOrderProduct.ProductId
                     };
 
@@ -604,7 +606,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.PurchaseOrderProductApprovals.Delete(false, purchaseOrderProduct);
                 }
                 await _unitOfWork.SaveChangesAsync();
-                await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, status.Name, command.Comments);
+                await _unitOfWork.LogApprovalTransaction(purchaseOrderEntity, purchaseOrderEntity.Id, status.Name, command.Comments);
             }
             else
             {
