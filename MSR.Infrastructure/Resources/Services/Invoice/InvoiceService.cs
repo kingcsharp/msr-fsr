@@ -223,6 +223,15 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Update Invoice with the new InvoiceNumber
             await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoiceDb);
 
+            foreach (var invoiceItem in invoice.InvoiceItems)
+            {
+                var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.FirstOrDefaultAsync(false, i => i.Id == invoiceItem.PurchaseOrderId);
+                var workOrderEntity = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == invoiceItem.WorkOrderId);
+                purchaseOrderEntity.UninvoicedBalance -= workOrderEntity.Price;
+                purchaseOrderEntity.InvoicedBalance += workOrderEntity.Price;
+                await _unitOfWork.PurchaseOrders.UpdateAndSaveChangesAsync(purchaseOrderEntity);
+            }
+
             return invoiceDb;
         }
 
