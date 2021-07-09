@@ -30,6 +30,18 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Column(TypeName = "money")]
         public decimal? TotalPurchaseLimit { get; set; }
 
+        [Column(TypeName = "money")]
+        public decimal? InvoicedBalance { get; set; }
+
+        [Column(TypeName = "money")]
+        public decimal? UninvoicedBalance { get; set; }
+
+        [Column(TypeName = "money")]
+        public decimal? Balance { get; set; }
+
+        [Column(TypeName = "money")]
+        public decimal? UnusedAmount { get; set; }
+
         [StringLength(100)]
         public string CustomerReference { get; set; }
 
