@@ -36,10 +36,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Column(TypeName = "money")]
         public decimal? UninvoicedBalance { get; set; }
 
-        [Column(TypeName = "money")]
+        [Column(TypeName = "money"), DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public decimal? Balance { get; set; }
 
-        [Column(TypeName = "money")]
+        [Column(TypeName = "money"), DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public decimal? UnusedAmount { get; set; }
 
         [StringLength(100)]
