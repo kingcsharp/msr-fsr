@@ -304,6 +304,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 serialNumber = workOrderEntity.WorkOrderParts.First().SerialNumber,
             });
 
+            var purchaseEntity = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(p => p.Id == workOrderEntity.PurchaseId);
+            var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(p => p.Id == purchaseEntity.PurchaseOrderId);
+            purchaseOrderEntity.UninvoicedBalance += workOrderEntity.Price;
+
+            await _unitOfWork.PurchaseOrders.UpdateAndSaveChangesAsync(purchaseOrderEntity);
+
             return workOrderModel;
         }
 

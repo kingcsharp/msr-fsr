@@ -96,6 +96,41 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Save invoice changes
             await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoice);
 
+            var purchaseOrderEntities = await _unitOfWork.PurchaseOrders.Query()
+                .Where(x => invoice.InvoiceItems.Select(x => x.PurchaseOrderId).ToList().Contains(x.Id))
+                .ToListAsync();
+            
+            foreach (var purchaseOrderEntity in purchaseOrderEntities)
+            {
+                var purchaseIds = await _unitOfWork.Purchases.Query()
+                    .Where(p => p.PurchaseOrderId == purchaseOrderEntity.Id)
+                    .Select(p => p.Id)
+                    .ToListAsync();
+
+                var workOrderEntities = await _unitOfWork.WorkOrders.Query()
+                    .Where(w => purchaseIds.Contains(w.PurchaseId))
+                    .ToListAsync();
+
+                var invoicedWorkOrderIds = await _unitOfWork.InvoiceItems.Query()
+                    .Where(i => i.PurchaseOrderId == purchaseOrderEntity.Id)
+                    .Select(i => i.WorkOrderId).ToListAsync();
+
+                purchaseOrderEntity.UninvoicedBalance = 0;
+                purchaseOrderEntity.InvoicedBalance = 0;
+
+                foreach(var workOrderEntity in workOrderEntities)
+                {
+                    if (invoicedWorkOrderIds.Contains(workOrderEntity.Id))
+                    {
+                        purchaseOrderEntity.InvoicedBalance += workOrderEntity.Price;
+                    }
+                    else {
+                        purchaseOrderEntity.UninvoicedBalance += workOrderEntity.Price;
+                    }
+                }
+                await _unitOfWork.PurchaseOrders.UpdateAndSaveChangesAsync(purchaseOrderEntity);
+            }
+
             var retInvoice = _mapper.Map<InvoiceView>(invoice);
 
             return retInvoice;
@@ -222,6 +257,15 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             // Update Invoice with the new InvoiceNumber
             await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoiceDb);
+
+            foreach (var invoiceItem in invoice.InvoiceItems)
+            {
+                var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.FirstOrDefaultAsync(false, i => i.Id == invoiceItem.PurchaseOrderId);
+                var workOrderEntity = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == invoiceItem.WorkOrderId);
+                purchaseOrderEntity.UninvoicedBalance -= workOrderEntity.Price;
+                purchaseOrderEntity.InvoicedBalance += workOrderEntity.Price;
+                await _unitOfWork.PurchaseOrders.UpdateAndSaveChangesAsync(purchaseOrderEntity);
+            }
 
             return invoiceDb;
         }

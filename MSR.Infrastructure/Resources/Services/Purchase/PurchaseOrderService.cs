@@ -130,6 +130,8 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 var purchaseOrderEntity = _mapper.Map<EntityFramework.Entities.PurchaseOrder>(command);
                 purchaseOrderEntity.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Name == "Open");
                 purchaseOrderEntity.Revision = 1;
+                purchaseOrderEntity.UninvoicedBalance = 0;
+                purchaseOrderEntity.InvoicedBalance = 0;
 
                 await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrderEntity);
                 await _unitOfWork.SaveChangesAsync();
