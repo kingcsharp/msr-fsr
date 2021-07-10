@@ -90,7 +90,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
         public AnswerContext() : base()
         {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public AnswerContext(DbContextOptions<AnswerContext> options)

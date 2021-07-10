@@ -989,7 +989,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
-
+            
             if (statEntity != null)
             {
                 if (isTaskStarted)
@@ -1002,6 +1002,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     statEntity.CompletedTasks += 1;
                     statEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
                 }
+
+                _unitOfWork.WorkOrderStats.Update(statEntity);
             }
 
             // This will call SaveChangesAsync

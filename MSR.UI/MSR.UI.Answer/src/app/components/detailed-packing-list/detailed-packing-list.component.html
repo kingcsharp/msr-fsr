@@ -185,12 +185,10 @@
             <div class="col-3 border"> Pass/Fail </div>
           </div>
 
-          <div *ngFor="let monitor of packingList.allMonitors" class="row border">
-            <div class="col border"> {{ monitor.monitorDescription }} </div>
-            <div class="col border"> {{ monitor.valueAsString }} </div>
-            <div class="col-3 border {{ monitor.isPassing ? 'text-success' : 'text-danger' }}">
-                {{ monitor.isPassing ? 'PASS' : 'FAIL' }}
-            </div>
+          <div *ngFor="let workOrderTaskMonitor of packingList.allMonitors" class="row border">
+            <div class="col border" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureStepId : workOrderTaskMonitor.description"></div>
+            <div class="col border">{{workOrderTaskMonitor | monitorResult }}</div>
+            <div class="col-3 border" [ngClass]="(workOrderTaskMonitor | monitorstatus) ? 'text-success' : 'text-danger'">{{ (workOrderTaskMonitor | monitorstatus) ? 'PASS' : 'FAIL' }}</div>
           </div>
         </div>
       </div>
