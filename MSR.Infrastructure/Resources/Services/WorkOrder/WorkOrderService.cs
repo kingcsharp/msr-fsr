@@ -176,7 +176,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             List<EntityFramework.Entities.WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
             List<int> workOrderIds = workOrderEntities.Select(m => m.Id).ToList();
             _ = await _unitOfWork.WorkOrderParts.Query().Include(m => m.Part).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
-            List<WorkOrderTask> workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Include(u => u.ReferenceFiles).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
+            List<WorkOrderTask> workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
             List<ProcedureStep> procedureStepEntities = await _unitOfWork.ProcedureSteps.Query()
                 .Include(y => y.ProcedureStepRoles)
                 .ThenInclude(y => y.Role)
@@ -234,12 +234,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                         i += 1;
                     }
                     workOrderTaskModel.WorkOrderTaskMonitors = workOrderTaskMonitorModels;
-                    /*
-                    if (workOrderTaskModel.ReferenceFiles.Any())
-                    {
-                        workOrderTaskModel.ReferenceFiles = _fileService.ListFiles(nameof(WorkOrderTask), workOrderTaskModel.Id).ToList();
-                    }
-                    */
 
                 }
                 workOrderModels.Add(DetachBackPointers(workOrderModel));
