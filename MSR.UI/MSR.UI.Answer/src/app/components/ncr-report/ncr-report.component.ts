@@ -35,18 +35,19 @@ export class NcrReportComponent implements OnInit {
   }
 
   generateMonitorSummaries() {
-    this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
-      if ((workOrderTask.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR)
-      || workOrderTask.isNCRTask) {
+    this.WorkOrder.workOrderTasks.filter(s => 
+      (s.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR)
+    || s.isNCRTask).map(workOrderTask => {
+
         let taskSummary = {
-          taskName: workOrderTask.procedureStepId === null ? workOrderTask.title : workOrderTask.procedureStep.title,
+          taskName: workOrderTask.procedureStep === undefined ? workOrderTask.title : workOrderTask.procedureStep.title,
           taskId: workOrderTask.id,
           monitors: new Array<any>()
         };
 
-        workOrderTask.workOrderTaskMonitors.forEach(workOrderTaskMonitor => {
+        workOrderTask.workOrderTaskMonitors.map(workOrderTaskMonitor => {
           taskSummary.monitors.push({
-            monitorTitle: workOrderTaskMonitor.procedureMonitorId !== null ? workOrderTaskMonitor.procedureStepMonitor?.description : workOrderTaskMonitor.description,
+            monitorTitle: workOrderTask.procedureStep === undefined  !== null ? workOrderTaskMonitor.procedureStepMonitor?.description : workOrderTaskMonitor.description,
             result: workOrderTaskMonitor,
             comment: workOrderTaskMonitor.comment
           });
@@ -61,7 +62,7 @@ export class NcrReportComponent implements OnInit {
             this.associatedDocuments.push(referenceFile);
           }
         });
-      }
+
     });
   }
 
