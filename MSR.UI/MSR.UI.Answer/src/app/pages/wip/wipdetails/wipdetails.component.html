@@ -75,7 +75,7 @@
                 || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled',
                 'step-viewed': workOrderTaskToView?.id === workOrderTask.id}">
               <div class="h-100 d-flex">
-                <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title | workOrderTaskAndMonitor: workOrderTask.procedureStepId : workOrderTask.title }}</div>
+                <div class="carousel-step-title m-auto">{{ workOrderTask | tasktitle }}</div>
               </div>
             </slide>
           </carousel>
@@ -196,7 +196,7 @@
                     <button id="workordertaskfiles" class="btn btn-primary mb-2"
                       (click)="uploadFilesAndDocumentsForTask()">Submit</button>
                     <cmh-file-uploader name="referencefiles" class="col-12" [showSelectButton]="true"
-                      [showUploadButton]="false"
+                      [showUploadButton]="false" [useLoader]="false"
                       *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
                       [menuItem]="menuItems.Templates" multiple="multiple"
                       [(files)]="workOrderTaskToView.referenceFiles">

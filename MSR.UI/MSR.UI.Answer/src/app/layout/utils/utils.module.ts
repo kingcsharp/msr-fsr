@@ -39,6 +39,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { GalleriaModule } from 'primeng/galleria';
 import { MonitorStatusPipe } from '../../../app/pipes/monitorstatus';
 import { WorkOrderTaskAndMonitorPipe } from '../../pipes/work-order-task-and-monitor.pipe';
+import {TaskTitlePipe}from '../../pipes/task-title.pipe';
 import { SegregationTypePipe} from '../../pipes/segregation-type.pipe';
 import { NumberToPercentrPipe } from '../../pipes/number-to-percent.pipe';
 
@@ -64,7 +65,8 @@ import { NumberToPercentrPipe } from '../../pipes/number-to-percent.pipe';
     MonitorStatusPipe,
     WorkOrderTaskAndMonitorPipe,
     SegregationTypePipe,
-    NumberToPercentrPipe
+    NumberToPercentrPipe,
+    TaskTitlePipe
   ],
   exports: [
     GridComponent,
@@ -94,7 +96,8 @@ import { NumberToPercentrPipe } from '../../pipes/number-to-percent.pipe';
     MonitorStatusPipe,
     WorkOrderTaskAndMonitorPipe,
     SegregationTypePipe,
-    NumberToPercentrPipe
+    NumberToPercentrPipe,
+    TaskTitlePipe
   ],
   imports: [
     TableModule,

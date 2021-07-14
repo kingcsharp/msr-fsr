@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EnumStatusSteps, WorkOrderModel, WorkOrderService} from '../../services/api.client.generated';
+import { EnumStatusSteps, IWorkOrderSelectItem, WorkOrderModel, WorkOrderSelectItem, WorkOrderService} from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Router } from '@angular/router';
@@ -25,20 +25,20 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
   ngOnInit(): void {
 
     this.globals.addRequestToIgnore('v1/WorkOrder?assignedToId');
-     this.workOrderService.workOrder(null, null, null, null,
-      this.globals.getCurrentUser().id, true, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
-      let workOrders = <Array<WorkOrderModel>>response.object;
+      this.workOrderService.selectItems(this.globals.getCurrentUser().id, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+
+      let workOrderSelectItems = <Array<WorkOrderSelectItem>>response.object;
       this.workOrdersAvailable = new Array<WorkOrderItem>();
-      workOrders.map(workOrder => {
-
+      workOrderSelectItems.map(workOrderSelectItem => {
         let workOrderItem = new WorkOrderItem();
-        workOrderItem.WorkOrderId = workOrder.id;
-        workOrderItem.CustomerPurchaseNumber = workOrder.purchase?.customerPurchaseNumber === undefined ? '' :
-        workOrder.purchase?.customerPurchaseNumber ;
-        workOrderItem.ProcedureName = workOrder.product?.procedure?.name;
-        workOrderItem.SerialNumber = workOrder.purchase?.serialNumber;
-
+        workOrderItem.WorkOrderId = workOrderSelectItem.workOrderId;
+        workOrderItem.CustomerPurchaseNumber = workOrderSelectItem.customerPurchaseNumber ;
+        workOrderItem.ProcedureName = workOrderSelectItem.procedureName;
+        workOrderItem.SerialNumber = workOrderSelectItem.purchaseSerialNumber;
+        this.workOrdersAvailable.push(workOrderItem);
+        // TODO: WorkOrder Status is Needed
+        /*
         if (workOrder.workOrderTasks.map(s => s.statusId).every(m => m === EnumStatusSteps.WaitingtoStart)) {
 
           workOrderItem.Status = 'Requested';
@@ -52,6 +52,7 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
           this.workOrdersAvailable.push(workOrderItem);
 
         }
+        */
 
       });
 

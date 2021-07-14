@@ -90,6 +90,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
         public AnswerContext() : base()
         {
+            Database.SetCommandTimeout(60);
         }
 
         public AnswerContext(DbContextOptions<AnswerContext> options)

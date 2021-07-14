@@ -1,12 +1,10 @@
-import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  FileService, FileModel, EnumMenuItem, CreateFileRequest
-} from '../../services/api.client.generated';
+  FileService, FileModel, EnumMenuItem} from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
-import { Utils } from 'ngx-bootstrap/utils';
 import { emptyArray } from '../../models/lib/Utils';
 import { CommonGrid } from '../../models/lib/CommonGrid';
 
@@ -16,16 +14,6 @@ import { CommonGrid } from '../../models/lib/CommonGrid';
   styleUrls: ['./cmh-file-uploader.component.scss']
 })
 export class CmhFileUploaderComponent implements OnInit {
-  uploadedFiles: FileModel[] = [];
-  showLi: boolean = false;
-  showSelectModal: boolean = false;
-  fileTypes: any[] = [];
-  selectAll: boolean = false;
-  selectedFiles: FileModel[] = [];
-  constructor(private fileService: FileService, private globals: Globals, public cg: CommonGrid, ) {
-
-  }
-
   @Input() files: FileModel[];
   @Input() menuItem: EnumMenuItem; // Need to pick which view you are trying to get the files from
   @Output() filesChange: EventEmitter<Array<FileModel>> = new EventEmitter<Array<FileModel>>();
@@ -37,13 +25,31 @@ export class CmhFileUploaderComponent implements OnInit {
   @Input() accept: string;
   @Input() chooseLabel: string;
   @Input() selectLabel: string;
+  @Input() useLoader: boolean = true;
+  uploadedFiles: FileModel[] = [];
+  showLi: boolean = false;
+  showSelectModal: boolean = false;
+  fileTypes: any[] = [];
+  selectAll: boolean = false;
+  selectedFiles: FileModel[] = [];
+
+  constructor(private fileService: FileService, private globals: Globals, public cg: CommonGrid, ) {
+
+  }
+
+
   ngOnInit(): void {
     if (this.chooseLabel === '' || this.chooseLabel === undefined) {
       this.chooseLabel = 'Select Files';
     }
 
     if (this.files.length > 0) {
-      this.globals.showLoader(true);
+      if(this.useLoader){
+        this.globals.showLoader(true);
+      } else {
+        this.globals.showLoader(false);
+      }
+      
       this.fileService.fileGet(this.globals.getSingularMenuName(this.menuItem), this.files[0].entityId, null, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           if (resp.object.length > 0) {
@@ -62,13 +68,20 @@ export class CmhFileUploaderComponent implements OnInit {
     }
 
     if (this.showSelectButton) {
-      this.globals.showLoader(true);
+      
+      if(this.useLoader){
+        this.globals.showLoader(true);
+      } else {
+        this.globals.showLoader(false);
+      }
+
       this.fileService.fileGet(null, null, null, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.uploadedFiles = resp.object;
           this.fileTypes = this.uploadedFiles.filter(
             (thing, i, arr) => arr.findIndex(t => t.contentType === thing.contentType) === i
           ).map(x => ({ label: x.contentType, value: x.contentType }));
+
         }));
     }
   }
