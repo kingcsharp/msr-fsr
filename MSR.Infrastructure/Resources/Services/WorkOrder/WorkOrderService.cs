@@ -72,7 +72,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var workOrderEntity= await _unitOfWork.WorkOrders.Query()
                 .Include(s => s.WorkOrderParts).ThenInclude(s => s.Part)
-                .Include(s => s.WorkOrderTasks)
+                .Include(s => s.WorkOrderTasks).ThenInclude(s => s.WorkOrderTaskMonitors).ThenInclude(s => s.ProcedureStepMonitor)
                 .Include(s => s.WorkOrderMessages).FirstOrDefaultAsync(s => s.Id == id);
 
             _ = await _unitOfWork.Products.Query()
