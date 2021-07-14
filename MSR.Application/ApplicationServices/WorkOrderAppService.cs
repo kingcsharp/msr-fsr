@@ -35,7 +35,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<TakeOverWorkOrder>,
         ICommandHandler<CancelWorkOrder>,
         ICommandHandler<AddNCRWorkOrderTask>,
-        ICommandHandler<CreateWorkOrder>
+        ICommandHandler<CreateWorkOrder>,
+        ICommandHandler<GetAssignedWorkOrders>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
@@ -50,12 +51,17 @@ namespace MSR.Application.ApplicationServices
             _documentService = documentService;
         }
 
+        public async Task<ICommandResponse> HandleAsync(GetAssignedWorkOrders command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.GetWorkOrderSelectItems(command);
+            return new CommandResponse<ICollection<WorkOrderSelectItem>>(ret);
+        }
+
         public async Task<ICommandResponse> HandleAsync(GetWorkOrder command, CancellationToken cancellationToken = default)
         {
             if (command.Id.HasValue && command.Id > 0)
             {
                 var ret = await _workOrderService.GetWorkOrderById(command.Id.Value);
-                // var ret = await _workOrderService.GetWorkOrderAsync(command);
                 return new CommandResponse<ICollection<WorkOrderModel>>(ret);
             }
             else {

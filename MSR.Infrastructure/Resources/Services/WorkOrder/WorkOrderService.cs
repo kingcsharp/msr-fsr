@@ -49,6 +49,25 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _messageHub = messageHub;
         }
 
+        // TODO: WorkOrder Status needs to be calculated in a timely matter
+        public async Task<ICollection<WorkOrderSelectItem>> GetWorkOrderSelectItems(GetAssignedWorkOrders command) {
+
+            var workOrderSelectItems = await _unitOfWork.WorkOrders.Query()
+                            .Include(s => s.Purchase)
+                            .Include(s => s.Product).ThenInclude(s => s.Procedure)
+                            .Include(s => s.WorkOrderTasks)
+                            .Where(m => m.WorkOrderTasks.Any(u => u.AssignedTo == command.AssignedUserId)).Select(s => new WorkOrderSelectItem
+                            {
+                                WorkOrderId = s.Id,
+                                CustomerPurchaseNumber = s.Purchase.CustomerPurchaseNumber,
+                                ProcedureName = s.Product.Procedure.Name,
+                                PurchaseSerialNumber = s.Purchase.SerialNumber
+                            }).ToListAsync();
+
+
+            return workOrderSelectItems;
+        }
+
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderById(int id) {
 
             var workOrderEntity= await _unitOfWork.WorkOrders.Query()

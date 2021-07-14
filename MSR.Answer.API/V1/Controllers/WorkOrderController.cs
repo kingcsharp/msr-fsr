@@ -50,6 +50,19 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
+        /// Returns WorkOrder SelectItems
+        /// </summary>
+        /// <response code="200"></response>
+        [HttpGet("SelectItems")]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderSelectItem>>))]
+        public async Task<IActionResult> WorkOrderGetSelectItems([FromQuery] GetAssignedWorkOrdersRequest request)
+        {
+            var command = request.ToWorkOrderSelectItem();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderSelectItem>>();
+        }
+
+        /// <summary>
         /// Returns a summary of WorkOrders IN PROGRESS or WAITING
         /// </summary>
         /// <response code="200"></response>

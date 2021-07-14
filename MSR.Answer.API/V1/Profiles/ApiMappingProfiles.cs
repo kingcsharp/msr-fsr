@@ -161,6 +161,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CancelWorkOrderRequest, CancelWorkOrder>();
             CreateMap<AddNCRWorkOrderTaskRequest, AddNCRWorkOrderTask>();
             CreateMap<GetPurchaseOrderDBRequest, GetPurchaseOrderDBView>();
+            CreateMap<GetAssignedWorkOrdersRequest, GetAssignedWorkOrders>();
         }
     }
 }

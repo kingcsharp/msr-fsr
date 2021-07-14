@@ -1061,5 +1061,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<AddNCRWorkOrderTask>(request);
         }
+
+        public static GetAssignedWorkOrders ToWorkOrderSelectItem(this GetAssignedWorkOrdersRequest request) {
+
+            return AutoMapperHelper.Mapper.Map<GetAssignedWorkOrders>(request);
+        }
     }
 }
