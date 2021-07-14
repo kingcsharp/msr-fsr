@@ -6,13 +6,12 @@ import {
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
-  ProcedureStepModel, DocumentView, Role, UserModel, EnumSegregationType, StatusModel, IStatusModel, EnumStatusSteps, CancelWorkOrderRequest, ICancelWorkOrderRequest,
+  ProcedureStepModel, UserModel, EnumSegregationType, EnumStatusSteps, CancelWorkOrderRequest, ICancelWorkOrderRequest,
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
-import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 import { WorkordertaskmonitorsWrapperComponent } from '../../../components/workordertaskmonitors-wrapper/workordertaskmonitors-wrapper.component';
 import { PrintotherReportComponent } from '../../../components/printother-report/printother-report.component';
 import { CarouselComponent } from 'ngx-bootstrap/carousel';
@@ -62,7 +61,6 @@ export class WipdetailsComponent implements OnInit {
   hasAccessToTaskBeingViewed: boolean = false;
   areMonitorsValid: boolean = false;
   monitorsAreInvalidDialog: boolean = false;
-  roles: Array<Role> = new Array<Role>();
   allUserRoleIds: Array<number>;
   EnumSegregationType = EnumSegregationType;
 
@@ -100,18 +98,15 @@ export class WipdetailsComponent implements OnInit {
     ];
 
     this.globals.showLoader(true);
-    this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
-      this.roles = response.object;
+    this.route.params.subscribe(params => {
 
-      this.route.params.subscribe(params => {
+      let workOrderId = params['id'] == null ? 0 : Number(params['id']);
+      this.getWorkOrder(workOrderId);
 
-        let workOrderId = params['id'] == null ? 0 : Number(params['id']);
-        this.getWorkOrder(workOrderId);
+    });
 
-      });
 
-    }));
 
   }
 
@@ -121,7 +116,6 @@ export class WipdetailsComponent implements OnInit {
     this.workOrdersService.workOrder(workOrderId, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.workOrderModel = this.cleanData(response.object[0]);
-      this.getCustomerContacts(this.workOrderModel.purchase?.purchaseOrder?.customer?.id);
       this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
       this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.title)?.find(m => m?.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
       this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
@@ -158,18 +152,6 @@ export class WipdetailsComponent implements OnInit {
       }
 
       this.globals.showLoader(false);
-    }));
-
-  }
-
-  getCustomerContacts(customerId: number) {
-
-    this.customerService.customerGet(customerId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
-
-      if (response.object.length > 0) {
-        this.workOrderModel.purchase.purchaseOrder.customer = response.object[0];
-      }
-
     }));
 
   }

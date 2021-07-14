@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -51,8 +52,19 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetWorkOrder command, CancellationToken cancellationToken = default)
         {
-            var ret = await _workOrderService.GetWorkOrderAsync(command);
-            return new CommandResponse<ICollection<WorkOrderModel>>(ret);
+            if (command.Id.HasValue && command.Id > 0)
+            {
+                var ret = await _workOrderService.GetWorkOrderById(command.Id.Value);
+                // var ret = await _workOrderService.GetWorkOrderAsync(command);
+                return new CommandResponse<ICollection<WorkOrderModel>>(ret);
+            }
+            else {
+
+                var ret = await _workOrderService.GetWorkOrderAsync(command);
+                return new CommandResponse<ICollection<WorkOrderModel>>(ret);
+
+            }
+            
         }
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrder command, CancellationToken cancellationToken = default)
         {

@@ -29,5 +29,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<WorkOrderTaskModel>> TakeOverWorkOrderTasks(TakeOverWorkOrder takeOverWorkOrderTasks);
         Task<ICollection<WorkOrderTaskModel>> CancelWorkOrderTasksAsync(CancelWorkOrder command);
         Task<ICollection<WorkOrderTaskModel>> AddNCRWorkOrderTasksAsync(AddNCRWorkOrderTask command);
+        Task<ICollection<WorkOrderModel>> GetWorkOrderById(int id);
     }
 }

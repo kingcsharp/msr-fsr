@@ -19,10 +19,11 @@
     "MSR.Answer.API": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "https://localhost:44398/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://0.0.0.0:5001"
+      "applicationUrl": "https://localhost:44398"
     },
     "Docker": {
       "commandName": "Docker",

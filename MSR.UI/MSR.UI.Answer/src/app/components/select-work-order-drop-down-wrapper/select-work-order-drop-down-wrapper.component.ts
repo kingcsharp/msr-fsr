@@ -31,7 +31,6 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
       let workOrders = <Array<WorkOrderModel>>response.object;
       this.workOrdersAvailable = new Array<WorkOrderItem>();
       workOrders.map(workOrder => {
-
         let workOrderItem = new WorkOrderItem();
         workOrderItem.WorkOrderId = workOrder.id;
         workOrderItem.CustomerPurchaseNumber = workOrder.purchase?.customerPurchaseNumber === undefined ? '' :

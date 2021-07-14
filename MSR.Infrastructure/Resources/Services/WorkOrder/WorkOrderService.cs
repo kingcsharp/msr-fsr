@@ -49,6 +49,66 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _messageHub = messageHub;
         }
 
+        public async Task<ICollection<WorkOrderModel>> GetWorkOrderById(int id) {
+
+            var workOrderEntity= await _unitOfWork.WorkOrders.Query()
+                .Include(s => s.WorkOrderParts)
+                .Include(s => s.WorkOrderTasks)
+                .Include(s => s.WorkOrderMessages).FirstOrDefaultAsync(s => s.Id == id);
+
+            _ = await _unitOfWork.Products.Query()
+                .Include(u => u.Part)
+                .Include(t => t.Customer)
+                .Include(v => v.Procedure)
+                .Where(s => workOrderEntity.ProductId == s.Id).ToListAsync();
+
+            _ = await _unitOfWork.ProcedureSteps.Query()
+                .Include(y => y.ProcedureStepRoles).ThenInclude(y => y.Role)
+                .Where(s => s.ProcedureId == workOrderEntity.Product.ProcedureId).ToListAsync();
+
+            _ = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(m => m.ProcedureStepMonitor)
+                .Where(s => workOrderEntity.WorkOrderTasks.Select(m => m.Id).Contains(s.WorkOrderTaskId)).ToListAsync();
+
+            _ = await _unitOfWork.Purchases.Query()
+                .Include(s => s.PurchaseOrder)
+                .ThenInclude(u => u.Customer).ThenInclude(s => s.PrimaryContactUser)
+                .Include(s => s.PurchaseOrder)
+                .ThenInclude(u => u.Customer).ThenInclude(s => s.SecondaryContactUser)
+                .Include(m => m.Location)
+                .Where(s => workOrderEntity.PurchaseId == s.Id)
+                .ToListAsync();
+            
+            _ = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
+            _ = await _unitOfWork.Status.Query().ToListAsync();
+            _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
+            _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
+
+            var workOrderModel = _mapper.Map<WorkOrderModel>(workOrderEntity);
+
+            workOrderModel.Status = TranslateWOStatusToViewModel(workOrderModel.WorkOrderTasks);
+
+            foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
+            {
+                // enforce sane data by limiting the status IDs returned by the API
+                workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
+
+                var workOrderTaskMonitorModels = new List<WorkOrderTaskMonitorModel>();
+                int i = 1; // Monitor Number starts at 1
+                foreach (var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
+                {
+                    workOrderTaskMonitorModel.MonitorNumber = i;
+                    workOrderTaskMonitorModel.WorkOrderTask = null; // avoid loops
+                    workOrderTaskMonitorModels.Add(workOrderTaskMonitorModel);
+                    i += 1;
+                }
+                workOrderTaskModel.WorkOrderTaskMonitors = workOrderTaskMonitorModels;
+                
+
+            }
+
+            return new List<WorkOrderModel>() { DetachBackPointers(workOrderModel) };
+        }
+
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
             IQueryable<EntityFramework.Entities.WorkOrder> query = _unitOfWork.WorkOrders.Query();
@@ -155,10 +215,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                         i += 1;
                     }
                     workOrderTaskModel.WorkOrderTaskMonitors = workOrderTaskMonitorModels;
+                    /*
                     if (workOrderTaskModel.ReferenceFiles.Any())
                     {
                         workOrderTaskModel.ReferenceFiles = _fileService.ListFiles(nameof(WorkOrderTask), workOrderTaskModel.Id).ToList();
                     }
+                    */
 
                 }
                 workOrderModels.Add(DetachBackPointers(workOrderModel));
