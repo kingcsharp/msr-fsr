@@ -7835,30 +7835,16 @@ export class WorkOrderService {
 
     /**
      * Get work order list by id, customerid, locationid, or date
-     * @param id (optional) Get work order by ID
-     * @param customerId (optional) Get work orders by customer ID
-     * @param locationId (optional) Get work orders by location ID
-     * @param invoiceDate (optional) Get work orders by invoice Date
-     * @param assignedToId (optional) Get work orders with ANY tasks assigned to this user ID
-     * @param openOnly (optional) 
+     * @param id Get work order by ID
      */
-    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, openOnly: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder?";
+    workOrder(id: number | null, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (id !== undefined && id !== null)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        if (customerId !== undefined && customerId !== null)
-            url_ += "customerId=" + encodeURIComponent("" + customerId) + "&";
-        if (locationId !== undefined && locationId !== null)
-            url_ += "locationId=" + encodeURIComponent("" + locationId) + "&";
-        if (invoiceDate !== undefined && invoiceDate !== null)
-            url_ += "invoiceDate=" + encodeURIComponent("" + invoiceDate) + "&";
-        if (assignedToId !== undefined && assignedToId !== null)
-            url_ += "assignedToId=" + encodeURIComponent("" + assignedToId) + "&";
-        if (openOnly !== undefined && openOnly !== null)
-            url_ += "openOnly=" + encodeURIComponent("" + openOnly) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

@@ -3,16 +3,15 @@ import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { LazyLoadEvent, SelectItem } from 'primeng/api';
 import {
-  EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, Sort,
-  ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel, WorkOrderMessageModel, WorkOrderTaskMonitorModel, WorkOrderPartModel, WorkOrderModel
-} from '../../../services/api.client.generated';
+  EnumMenuItem, WorkOrderService, ReportModel, CreateWorkOrderMessageRequest, FileService, 
+  FileModel, WorkOrderTaskMonitorModel} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
 import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
-import { pushIfNotExists, callFunctionWithFilters, callFunctionWithFiltersViews, emptyArray } from '../../../models/lib/Utils';
+import { callFunctionWithFiltersViews, emptyArray } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -21,7 +20,6 @@ import { EnumMonitorShouldBe } from '../../../models/enums/EnumMonitorShouldBe';
 import { EnumMonitorType } from '../../../models/enums/EnumMonitorType';
 import { EnumMonitorPassFailStatus } from '../../../models/enums/EnumMonitorPassFailStatus';
 import { Subscription } from 'rxjs';
-import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-wip',
@@ -133,8 +131,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showPhotos(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null, null,
-      env.apiVersion).pipe(take(1))
+    this.workOrderService.workOrder(rowData.workOrderId, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(true);
         this.images = [];
@@ -175,8 +172,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showFiles(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null, null,
-      env.apiVersion).pipe(take(1))
+    this.workOrderService.workOrder(rowData.workOrderId, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(true);
         this.files = [];
@@ -291,8 +287,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     this.globals.showLoader(true);
     this.selectedReport = reportType;
     if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId) {
-      this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id,
-        null, null, null, null, env.apiVersion).pipe(take(1))
+      this.workOrderService.workOrder(row.colData.workOrderId, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           response.object[0].workOrderTasks.forEach(workOrderTask => {
             workOrderTask.workOrderTaskMonitors.forEach((workOrderTaskMonitor: any) => {

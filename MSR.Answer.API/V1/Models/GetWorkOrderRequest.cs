@@ -18,27 +18,5 @@ namespace MSR.Answer.API.V1.Models
         /// Get work order by ID
         /// </summary>
         public int? id { get; set; }
-
-        /// <summary>
-        /// Get work orders by customer ID
-        /// </summary>
-        public int? customerId { get; set; }
-
-        /// <summary>
-        /// Get work orders by location ID
-        /// </summary>
-        public int? locationId { get; set; }
-
-        /// <summary>
-        /// Get work orders by invoice Date
-        /// </summary>
-        public string invoiceDate { get; set; }
-
-        /// <summary>
-        /// Get work orders with ANY tasks assigned to this user ID
-        /// </summary>
-        public int? assignedToId { get; set; }
-
-        public bool? openOnly { get; set; }
     }
 }

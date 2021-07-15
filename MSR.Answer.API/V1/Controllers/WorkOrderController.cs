@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
-using MSR.Answer.API.V1.Models.Paging;
 using MSR.Application.Abstractions;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
 using NSwag.Annotations;
@@ -92,9 +90,9 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("{id}")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
-        public async Task<IActionResult> GetWorkOrder([FromQuery] GetWorkOrderRequest request)
+        public async Task<IActionResult> GetWorkOrder([FromRoute] GetWorkOrderRequest request)
         {
             var command = request.ToGetWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);

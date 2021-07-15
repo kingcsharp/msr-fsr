@@ -6,8 +6,6 @@ import { WidgetModule } from '../../layout/widget/widget.module';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { UtilsModule } from '../../layout/utils/utils.module';
-import { LiveTileModule } from '../../components/tile/tile.module';
-import { MapaelLayersMapModule } from '../../components/mapael/mapael.module';
 import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { FormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';
@@ -44,9 +42,7 @@ export const routes = [
     TableModule,
     CalendarModule,
     UtilsModule,
-    LiveTileModule,
     WidgetModule,
-    MapaelLayersMapModule,
     NewWidgetModule,
     ListboxModule
   ],

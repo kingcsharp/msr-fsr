@@ -7640,6 +7640,65 @@ export class WorkOrderService {
     }
 
     /**
+     * Returns WorkOrder SelectItems
+     * @param assignedUserId (optional) 
+     */
+    selectItems(assignedUserId: number | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderSelectItem> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/SelectItems?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (assignedUserId === null)
+            throw new Error("The parameter 'assignedUserId' cannot be null.");
+        else if (assignedUserId !== undefined)
+            url_ += "AssignedUserId=" + encodeURIComponent("" + assignedUserId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSelectItems(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSelectItems(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfWorkOrderSelectItem>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfWorkOrderSelectItem>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSelectItems(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderSelectItem> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfWorkOrderSelectItem.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfWorkOrderSelectItem>(<any>null);
+    }
+
+    /**
      * Returns a summary of WorkOrders IN PROGRESS or WAITING
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
@@ -7776,30 +7835,16 @@ export class WorkOrderService {
 
     /**
      * Get work order list by id, customerid, locationid, or date
-     * @param id (optional) Get work order by ID
-     * @param customerId (optional) Get work orders by customer ID
-     * @param locationId (optional) Get work orders by location ID
-     * @param invoiceDate (optional) Get work orders by invoice Date
-     * @param assignedToId (optional) Get work orders with ANY tasks assigned to this user ID
-     * @param openOnly (optional) 
+     * @param id Get work order by ID
      */
-    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, assignedToId: number | null | undefined, openOnly: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder?";
+    workOrder(id: number | null, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (id !== undefined && id !== null)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        if (customerId !== undefined && customerId !== null)
-            url_ += "customerId=" + encodeURIComponent("" + customerId) + "&";
-        if (locationId !== undefined && locationId !== null)
-            url_ += "locationId=" + encodeURIComponent("" + locationId) + "&";
-        if (invoiceDate !== undefined && invoiceDate !== null)
-            url_ += "invoiceDate=" + encodeURIComponent("" + invoiceDate) + "&";
-        if (assignedToId !== undefined && assignedToId !== null)
-            url_ += "assignedToId=" + encodeURIComponent("" + assignedToId) + "&";
-        if (openOnly !== undefined && openOnly !== null)
-            url_ += "openOnly=" + encodeURIComponent("" + openOnly) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -20917,6 +20962,101 @@ export interface IWorkOrderHistoryView {
     disposition?: string | undefined;
     segregationType?: EnumSegregationType;
     workOrderItemNumber?: string | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfWorkOrderSelectItem extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderSelectItem {
+    object?: WorkOrderSelectItem[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfWorkOrderSelectItem) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(WorkOrderSelectItem.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkOrderSelectItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfWorkOrderSelectItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfWorkOrderSelectItem extends IAuditActionResult {
+    object?: WorkOrderSelectItem[] | undefined;
+}
+
+export class WorkOrderSelectItem implements IWorkOrderSelectItem {
+    workOrderId?: number;
+    customerPurchaseNumber?: string | undefined;
+    procedureName?: string | undefined;
+    purchaseSerialNumber?: string | undefined;
+    workOrderStatusId?: string | undefined;
+
+    constructor(data?: IWorkOrderSelectItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.customerPurchaseNumber = _data["customerPurchaseNumber"];
+            this.procedureName = _data["procedureName"];
+            this.purchaseSerialNumber = _data["purchaseSerialNumber"];
+            this.workOrderStatusId = _data["workOrderStatusId"];
+        }
+    }
+
+    static fromJS(data: any): WorkOrderSelectItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderSelectItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["customerPurchaseNumber"] = this.customerPurchaseNumber;
+        data["procedureName"] = this.procedureName;
+        data["purchaseSerialNumber"] = this.purchaseSerialNumber;
+        data["workOrderStatusId"] = this.workOrderStatusId;
+        return data; 
+    }
+}
+
+export interface IWorkOrderSelectItem {
+    workOrderId?: number;
+    customerPurchaseNumber?: string | undefined;
+    procedureName?: string | undefined;
+    purchaseSerialNumber?: string | undefined;
+    workOrderStatusId?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
