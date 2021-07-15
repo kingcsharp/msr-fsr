@@ -1,5 +1,4 @@
 import 'jquery-flot/jquery.flot.js';
-import 'jquery.flot.animator/jquery.flot.animator';
 import 'jquery-flot/jquery.flot.pie.js';
 import 'jquery-flot/jquery.flot.selection.js';
 import 'jquery-flot/jquery.flot.resize.js';
