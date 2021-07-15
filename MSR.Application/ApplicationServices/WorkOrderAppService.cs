@@ -21,14 +21,12 @@ namespace MSR.Application.ApplicationServices
 
     public class WorkOrderAppService :
         ICommandHandler<GetWorkOrder>,
-        ICommandHandler<GetWorkOrderMenu>,
         ICommandHandler<DeleteWorkOrder>,
         ICommandHandler<UpdateWorkOrderPart>,
         ICommandHandler<CreateWorkOrderTask>,
         ICommandHandler<UpdateWorkOrderTask>,
         ICommandHandler<UpdateWorkOrderTaskMonitor>,
         ICommandHandler<UpdateWorkOrder>,
-        ICommandHandler<GetPortalWorkOrder>,
         ICommandHandler<CreateWorkOrderMessage>,
         ICommandHandler<GetWorkOrderPart>,
         ICommandHandler<GetWorkOrderHistory>,
@@ -59,17 +57,10 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetWorkOrder command, CancellationToken cancellationToken = default)
         {
-            if (command.Id.HasValue && command.Id > 0)
-            {
-                var ret = await _workOrderService.GetWorkOrderById(command.Id.Value);
-                return new CommandResponse<ICollection<WorkOrderModel>>(ret);
-            }
-            else {
 
-                var ret = await _workOrderService.GetWorkOrderAsync(command);
-                return new CommandResponse<ICollection<WorkOrderModel>>(ret);
-
-            }
+            var ret = await _workOrderService.GetWorkOrderById(command.Id.Value);
+            return new CommandResponse<ICollection<WorkOrderModel>>(ret);
+            
             
         }
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrder command, CancellationToken cancellationToken = default)
@@ -81,12 +72,6 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workOrderService.DeleteWorkOrderAsync(command);
             return new CommandResponse<bool>(ret);
-        }
-
-        public async Task<ICommandResponse> HandleAsync(GetWorkOrderMenu command, CancellationToken cancellationToken = default)
-        {
-            ICollection<WorkOrderGridSummary> ret = await _workOrderService.GetWorkOrderGridSummaryAsync(command);
-            return new CommandResponse<ICollection<WorkOrderGridSummary>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderPart command, CancellationToken cancellationToken = default)
@@ -114,12 +99,6 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workOrderService.UpdateWorkOrderTaskMonitorAsync(command);
             return new CommandResponse<WorkOrderTaskMonitorModel>(ret);
-        }
-
-        public async Task<ICommandResponse> HandleAsync(GetPortalWorkOrder command, CancellationToken cancellationToken = default)
-        {
-            var ret = await _workOrderService.GetPortalWorkOrders(command);
-            return new CommandResponse<ICollection<PortalWorkOrderView>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateWorkOrderMessage command, CancellationToken cancellationToken = default)

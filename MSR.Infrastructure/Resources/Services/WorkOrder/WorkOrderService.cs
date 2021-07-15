@@ -148,130 +148,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return new List<WorkOrderModel>() { DetachBackPointers(workOrderModel) };
         }
 
-        public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
-        {
-            IQueryable<EntityFramework.Entities.WorkOrder> query = _unitOfWork.WorkOrders.Query();
-
-            if (command.Id.HasValue && command.Id > 0)
-            {
-                query = query.Where(x => x.Id == command.Id.Value);
-            }
-
-            if (command.completedOnly.HasValue)
-            {
-                query = query.Where(x => x.ActualEndDate.HasValue == command.completedOnly.Value);
-            }
-
-            if (command.assignedToId.HasValue)
-            {
-                query = query.Where(x =>
-                    x.WorkOrderTasks.Any(y =>
-                        y.AssignedTo == command.assignedToId));
-            }
-
-            if (command.LocationId.HasValue && command.LocationId > 0)
-            {
-                query = query.Where(x => x.LocationId == command.LocationId);
-            }
-
-            if (command.FromDate.HasValue)
-            {
-                query = query.Where(x => x.CreatedOn >= command.FromDate);
-            }
-
-            if (command.ToDate.HasValue)
-            {
-                query = query.Where(x => x.CreatedOn <= command.ToDate);
-            }
-
-            // There is a 1-to-1 purchase to work order mapping.  This
-            // should be a safe include with minimal impact, and it is
-            // required to filter on customer ID.
-            query = query.Include(x => x.Purchase).ThenInclude(y => y.PurchaseOrder);
-            if (command.CustomerId.HasValue)
-            {
-                query = query.Where(i => i.Purchase.PurchaseOrder.CustomerId == command.CustomerId.Value);
-            }
-
-            List<EntityFramework.Entities.WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
-            List<int> workOrderIds = workOrderEntities.Select(m => m.Id).ToList();
-            _ = await _unitOfWork.WorkOrderParts.Query().Include(m => m.Part).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
-            List<WorkOrderTask> workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
-            List<ProcedureStep> procedureStepEntities = await _unitOfWork.ProcedureSteps.Query()
-                .Include(y => y.ProcedureStepRoles)
-                .ThenInclude(y => y.Role)
-                .Where(s => workOrderTaskEntities.Select(m => m.ProcedureStepId).Contains(s.Id)).ToListAsync();
-
-            _ = await _unitOfWork.WorkOrderMessages.Query().Where(x => workOrderIds.Contains(x.WorkOrderId)).ToListAsync();
-            _ = await _unitOfWork.Procedures.Query().Where(s => procedureStepEntities.Select(m => m.ProcedureId).Contains(s.Id)).ToListAsync();
-            _ = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(m => m.ProcedureStepMonitor)
-                .Where(s => workOrderTaskEntities.Select(m => m.Id).Contains(s.WorkOrderTaskId)).ToListAsync();
-            _ = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
-            _ = await _unitOfWork.Status.Query().ToListAsync();
-
-            _ = await _unitOfWork.Products.Query()
-                .Include(u => u.Part)
-                .Include(t => t.Customer)
-                .Include(v => v.Procedure)
-                .Where(s => workOrderEntities.Select(m => m.ProductId).Contains(s.Id)).ToListAsync();
-
-            _ = await _unitOfWork.Purchases.Query()
-                .Include(s => s.PurchaseOrder)
-                .ThenInclude(u => u.Customer)
-                .Include(m => m.Location)
-                .Where(s => workOrderEntities.Select(m => m.PurchaseId).Contains(s.Id))
-                .ToListAsync();
-
-
-            if (workOrderEntities.Count == 0 && command.Id.HasValue)
-            {
-                throw new DomainException($"Work Order ID {command.Id.GetValueOrDefault()} not found", DomainError.NotFound);
-            }
-
-            var workOrderModels = new List<WorkOrderModel>();
-
-            _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
-            _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
-
-            foreach (var workOrderEntity in workOrderEntities)
-            {
-                var workOrderModel = _mapper.Map<WorkOrderModel>(workOrderEntity);
-
-                workOrderModel.Status = TranslateWOStatusToViewModel(workOrderModel.WorkOrderTasks);
-
-                foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
-                {
-                    // enforce sane data by limiting the status IDs returned by the API
-                    workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
-
-                    var workOrderTaskMonitorModels = new List<WorkOrderTaskMonitorModel>();
-                    int i = 1; // Monitor Number starts at 1
-                    foreach (var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
-                    {
-                        workOrderTaskMonitorModel.MonitorNumber = i;
-                        workOrderTaskMonitorModel.WorkOrderTask = null; // avoid loops
-                        workOrderTaskMonitorModels.Add(workOrderTaskMonitorModel);
-                        i += 1;
-                    }
-                    workOrderTaskModel.WorkOrderTaskMonitors = workOrderTaskMonitorModels;
-
-                }
-                workOrderModels.Add(DetachBackPointers(workOrderModel));
-            };
-
-            if (command.completedOnly.HasValue && command.completedOnly.Value)
-            {
-                workOrderModels = workOrderModels.Where(x => x.Status == EnumUtils.GetDescription(EnumStatusSteps.Cancelled) || x.Status == EnumUtils.GetDescription(EnumStatusSteps.Complete)).ToList();
-            }
-
-            if (command.openOnly.HasValue && command.openOnly.Value)
-            {
-                workOrderModels = workOrderModels.Where(x => x.Status != EnumUtils.GetDescription(EnumStatusSteps.Cancelled) && x.Status != EnumUtils.GetDescription(EnumStatusSteps.Complete)).ToList();
-            }
-
-            return workOrderModels.OrderBy(x => x.Id).ToList();
-        }
-
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
             // Note the menu permission here: Purchases.  Work orders are created by a user
@@ -1228,11 +1104,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return workOrderTaskMonitorModel;
         }
 
-        public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command)
-        {
-            return await GetWorkOrderGridSummaryImpl();
-        }
-
         /// <summary>
         /// Return a list of statuses for active work order tasks
         /// (and by extension, work order).
@@ -1253,6 +1124,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 x.Name.ToUpper().Equals("closed"))).ToList();
             return rows.Select(x => _mapper.Map<StatusModel>(x)).ToList();
         }
+
         public int TranslateWOTaskStatusToViewModel(WorkOrderTaskModel task)
         {
             // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
@@ -1276,6 +1148,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
             return status;
         }
+
         public string GetWorkOrderItemNumber(WorkOrderModel workOrderModel)
         {
             string customerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name;
@@ -1286,92 +1159,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             return $"{customerName}-{workOrderModel.Id}";
         }
-        public async Task<ICollection<PortalWorkOrderView>> GetPortalWorkOrders(GetPortalWorkOrder command)
-        {
-            var workOrders = await GetWorkOrderAsync(_mapper.Map<GetWorkOrder>(command));
 
-            if (command.PartId.HasValue)
-            {
-                workOrders = workOrders.Where(i => i.WorkOrderParts.Any(j => j.PartId == command.PartId.Value)).ToList();
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.PartName))
-            {
-                workOrders = workOrders.Where(i => i.WorkOrderParts.Any(j => j.Part != null && j.Part.Name == command.PartName)).ToList();
-            }
-
-            var portalViews = workOrders.Select(i => _mapper.Map<PortalWorkOrderView>(i)).ToList();
-
-            var workOrderIds = portalViews.Select(i => i.Id).ToList();
-            var workOrderTaskIds = (await _unitOfWork.WorkOrderTasks.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync()).GroupBy(j => j.WorkOrderId).ToDictionary(k => k.Key, l => l.Select(m => m.Id).ToList());
-
-            var notes = await _unitOfWork.WorkOrderMessages.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
-            var files = _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.EntityId)) && i.EntityTableName.Equals("WorkOrderTask") && i.FileObject != null).Select(i => i).ToList();
-            var monitors = _unitOfWork.WorkOrderTaskMonitors.Query().ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.WorkOrderTaskId))).Select(i => i).ToList();
-            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Include(i => i.Invoice).Where(i => workOrderIds.Contains(i.WorkOrderId)).Select(i => i).ToListAsync();
-            var imageContentTypes = new List<string>() { "image/jpg", "image/jpeg", "image/gif", "image/png" };
-
-            foreach (var portalView in portalViews)
-            {
-                var associatedWorkOrder = workOrders.FirstOrDefault(i => i.Id == portalView.Id);
-                if (associatedWorkOrder != null)
-                {
-                    var (completedDenominator, completedNumerator, percentComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration) = GetStatusValues(associatedWorkOrder);
-                    var parentPart = associatedWorkOrder.WorkOrderParts.Any() ? associatedWorkOrder.WorkOrderParts.FirstOrDefault(i => i.Part != null && i.ParentId == null) : (new WorkOrderPartModel());
-                    var inProgressTask = associatedWorkOrder.WorkOrderTasks.FirstOrDefault(i => i.StatusId == (int)WorkOrderStatusEnum.InProgress);
-                    if (inProgressTask != null)
-                    {
-                        portalView.StepText = inProgressTask.ProcedureStep?.Title;
-                    }
-                    portalView.Messages = notes.Where(i => i.WorkOrderId == portalView.Id).Select(j => _mapper.Map<WorkOrderMessageModel>(j)).ToList();
-                    portalView.WorkOrderId = portalView.Id;
-                    portalView.PercentageOfTasksCompleted = percentComplete;
-                    portalView.PercentageOfTasksCompletedDenominator = completedDenominator;
-                    portalView.PercentageOfTasksCompletedNumerator = completedNumerator;
-                    portalView.PercentageOfExpectedDurationTimeLogged = percentExpectedDuration;
-                    portalView.PercentageOfExpectedDurationTimeLoggedDenominator = expectedDurationDenominator;
-                    portalView.PercentageOfExpectedDurationTimeLoggedNumerator = expectedDurationNumerator;
-                    portalView.SubParts = new List<PortalSubPartView>();//associatedWorkOrder.WorkOrderParts.Where(i => i.ParentId != null).ToList();
-                    portalView.PartId = parentPart.PartId;
-                    portalView.PartName = parentPart.Part != null ? parentPart.Part.Name : string.Empty;
-                    portalView.CustomerId = associatedWorkOrder.Purchase?.PurchaseOrder?.CustomerId;
-                    portalView.CustomerName = associatedWorkOrder.Purchase?.PurchaseOrder?.Customer?.Name;
-                    portalView.SerialNumber = parentPart.SerialNumber;
-                    portalView.CompanyPartNumber = parentPart.Part?.PartNumber;
-                    portalView.CycleCount = parentPart.CycleCount;
-                    portalView.PurchaseOrderNumber = associatedWorkOrder.Purchase?.PurchaseOrder?.ReferencePO;
-                    portalView.Qty = associatedWorkOrder.Purchase?.Qty;
-                    portalView.StartDate = associatedWorkOrder.ActualStartDate;
-                    portalView.DueDate = associatedWorkOrder.ScheduledEndDate;
-                    portalView.Price = associatedWorkOrder.Price;
-                    portalView.Disposition = getWorkOrderDisposition(associatedWorkOrder);
-
-                }
-
-                var workOrderTasks = workOrderTaskIds.ContainsKey(portalView.Id) ? workOrderTaskIds[portalView.Id] : new List<int>();
-                if (workOrderTasks.Any())
-                {
-                    var firstTask = workOrderTasks.First();
-                    var workOrderTask = _unitOfWork.WorkOrderTasks.Query().Include(i => i.ProcedureStep).ThenInclude(i => i.Procedure).FirstOrDefault(i => i.Id == firstTask);
-                    portalView.HasMonitors = monitors.Any(i => workOrderTasks.Contains(i.WorkOrderTaskId));
-                    portalView.HasFiles = files.Any(i => workOrderTasks.Contains(i.EntityId) && !imageContentTypes.Contains(i.FileObject.ContentType));
-                    portalView.HasPhotos = files.Any(i => workOrderTasks.Contains(i.EntityId) && imageContentTypes.Contains(i.FileObject.ContentType));
-                    portalView.WorkOrderTaskId = firstTask;
-                    portalView.ProcedureName = workOrderTask.ProcedureStep?.Procedure?.Name;
-                }
-
-                var invoiceItem = invoiceItems.FirstOrDefault(i => i.WorkOrderId == portalView.WorkOrderId);
-
-                if (invoiceItem != null)
-                {
-                    portalView.InvoiceAmount = invoiceItem.Invoice.Total;
-                    portalView.InvoiceDate = invoiceItem.Invoice.InvoiceDate;
-                    portalView.InvoiceName = invoiceItem.Invoice.Description;
-                }
-            }
-
-            return portalViews;
-        }
         public async Task<WorkOrderMessageModel> CreateWorkOrderMessageAsync(CreateWorkOrderMessage command)
         {
             var message = new WorkOrderMessage()
@@ -1385,6 +1173,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             return _mapper.Map<WorkOrderMessageModel>(message);
         }
+
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)
         {
             var model = _mapper.Map<WorkOrderModel>(wom);
@@ -1476,56 +1265,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 status = EnumUtils.GetDescription(EnumStatusSteps.WaitingtoStart);
             }
             return status;
-        }
-
-        private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl()
-        {
-            var getWorkOrderCommand = new GetWorkOrder()
-            {
-                completedOnly = false
-            };
-
-            ICollection<WorkOrderModel> workOrderModels = await GetWorkOrderAsync(getWorkOrderCommand);
-            List<WorkOrderGridSummary> workOrderGridSummaries = new List<WorkOrderGridSummary>();
-            foreach (WorkOrderModel workOrderModel in workOrderModels)
-            {
-                var workOrderGridSummary = _mapper.Map<WorkOrderGridSummary>(workOrderModel);
-
-                var workOrderTaskEntitiesInProgress = workOrderModel.WorkOrderTasks
-                    .Where(x => x.StatusId == (int)EnumStatusSteps.InProgress)
-                    .OrderBy(s => s.TaskStepOrder).ToList();
-
-                if (workOrderTaskEntitiesInProgress.Any())
-                {
-                    var workOrderTaskEntityInProgress = workOrderTaskEntitiesInProgress.First();
-                    workOrderGridSummary.CurrentActiveTaskName = workOrderTaskEntityInProgress.ProcedureStep?.Title;
-                }
-
-                workOrderGridSummary.CustomerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name ?? string.Empty;
-                workOrderGridSummary.WorkOrderItemNumber = GetWorkOrderItemNumber(workOrderModel);
-                workOrderGridSummary.ReferencePO = workOrderModel.Purchase?.PurchaseOrder?.ReferencePO;
-
-                var firstWorkOrderTask = workOrderModel.WorkOrderTasks.OrderBy(s => s.TaskStepOrder).FirstOrDefault();
-                workOrderGridSummary.ProcedureName = firstWorkOrderTask == null ? string.Empty : firstWorkOrderTask.ProcedureStep?.Procedure?.Name;
-
-                workOrderGridSummary.Disposition = getWorkOrderDisposition(workOrderModel, true);
-
-                var statusValues = GetStatusValues(workOrderModel);
-                //workOrderGridSummary.PercentageOfTasksCompleted = statusValues.percentComplete;
-                workOrderGridSummary.PercentageOfTasksCompletedDenominator = statusValues.completedDenominator;
-                workOrderGridSummary.PercentageOfTasksCompletedNumerator = statusValues.completedNumerator;
-                //workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = statusValues.percentExpectedDuration;
-                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = statusValues.expectedDurationDenominator;
-                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = statusValues.expectedDurationNumerator;
-
-
-                PartModel parentPart = workOrderModel.Product?.Part;
-                workOrderGridSummary.SegregationType = parentPart == null ? EnumSegregationType.NONCU : parentPart.SegregationType;
-
-                workOrderGridSummaries.Add(workOrderGridSummary);
-            }
-
-            return workOrderGridSummaries;
         }
 
         private (int completedDenominator, int completedNumerator, decimal percentComplete, decimal expectedDurationNumerator, decimal expectedDurationDenominator, decimal percentExpectedDuration) GetStatusValues(WorkOrderModel workOrderModel)

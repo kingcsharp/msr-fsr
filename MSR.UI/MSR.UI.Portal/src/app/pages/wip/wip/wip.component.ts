@@ -131,8 +131,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showPhotos(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null, null,
-      env.apiVersion).pipe(take(1))
+    this.workOrderService.workOrder(rowData.workOrderId, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(true);
         this.images = [];
@@ -173,8 +172,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showFiles(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null, null,
-      env.apiVersion).pipe(take(1))
+    this.workOrderService.workOrder(rowData.workOrderId, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(true);
         this.files = [];
@@ -289,8 +287,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     this.globals.showLoader(true);
     this.selectedReport = reportType;
     if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId) {
-      this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id,
-        null, null, null, null, env.apiVersion).pipe(take(1))
+      this.workOrderService.workOrder(row.colData.workOrderId, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           response.object[0].workOrderTasks.forEach(workOrderTask => {
             workOrderTask.workOrderTaskMonitors.forEach((workOrderTaskMonitor: any) => {

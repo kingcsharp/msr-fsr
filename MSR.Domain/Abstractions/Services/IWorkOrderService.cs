@@ -8,7 +8,6 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IWorkOrderService
     {
-        Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command);
         Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command);
         Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command);
         Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command);
@@ -20,9 +19,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command);
         Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command);
         Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command);
-        Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command);
         string GetWorkOrderItemNumber(WorkOrderModel model);
-        Task<ICollection<PortalWorkOrderView>> GetPortalWorkOrders(GetPortalWorkOrder command);
         Task<WorkOrderMessageModel> CreateWorkOrderMessageAsync(CreateWorkOrderMessage command);
         Task<ICollection<WorkOrderHistoryView>> GetWorkOrderHistoryView(GetWorkOrderHistory command);
         Task<int> GetTotalWorkOrderHistoryViewRows(GetWorkOrderHistory command);
