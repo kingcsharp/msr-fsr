@@ -21,12 +21,6 @@ namespace MSR.Infrastructure.Resources.Queries
 {
     public static class WorkOrderQueries
     {
-        public static async Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrders(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection, List<int> invoicedWorkOrderIds)
-        {
-            var workOrderViews = await QueryHelper.GetViewDataFor<WorkOrder, ICollection<InvoiceableWorkOrderView>>(dbSet,projection);
-            var invoiceableWorkOrderViews = workOrderViews.Where(i => !invoicedWorkOrderIds.Contains(i.Id) && i.Status == EnumStatusSteps.Complete).ToList();
-            return invoiceableWorkOrderViews;
-        }
 
         public static async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistory(this DbSet<WorkOrder> dbSet, Expression<Func<WorkOrder, dynamic>> projection)
         {

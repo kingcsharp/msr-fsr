@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MSR.Domain.Views
+namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    public class InvoiceableWorkOrderView
+    public class InvoiceableWorkOrdersView
     {
         public string Name { get; set; }
         public int CustomerId { get; set; }

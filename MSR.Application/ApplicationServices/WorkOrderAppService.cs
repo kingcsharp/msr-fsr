@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -14,7 +10,6 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
-using MSR.Infrastructure.Resources.Services.Part;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -34,7 +29,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<CancelWorkOrder>,
         ICommandHandler<AddNCRWorkOrderTask>,
         ICommandHandler<CreateWorkOrder>,
-        ICommandHandler<GetAssignedWorkOrders>
+        ICommandHandler<GetAssignedWorkOrders>,
+        ICommandHandler<GetInvoiceableWorkOrders>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
@@ -47,6 +43,12 @@ namespace MSR.Application.ApplicationServices
             _mapper = mapper;
             _fileService = fileService;
             _documentService = documentService;
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetInvoiceableWorkOrders command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.GetInvoiceableWorkOrdersView();
+            return new CommandResponse<ICollection<InvoiceableWorkOrderView>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(GetAssignedWorkOrders command, CancellationToken cancellationToken = default)

@@ -6,7 +6,7 @@ import {
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
-  ProcedureStepModel, UserModel, EnumSegregationType, EnumStatusSteps, CancelWorkOrderRequest, ICancelWorkOrderRequest,
+  ProcedureStepModel, UserModel, EnumSegregationType, CancelWorkOrderRequest, ICancelWorkOrderRequest,
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -19,6 +19,7 @@ import { SelectItem } from 'primeng/api';
 import { take } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 import { ProductSegregationService } from '../../../services/product-segregation.service';
+import { EnumStatusSteps } from '../../../models/enums/EnumStatusSteps';
 
 @Component({
   selector: 'app-wipdetails',
