@@ -7,6 +7,7 @@ using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Application.Abstractions;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
 using NSwag.Annotations;
@@ -107,8 +108,9 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ICollection<InvoiceableWorkOrderView>>))]
         public async Task<IActionResult> GetInvoiceableWorkOrders()
         {
-            var workOrders = await _workOrderViewService.GetInvoiceableWorkOrdersAsync();
-            return GenerateOkViewResponse(workOrders);
+
+            var ret = await _dispatcher.DispatchAsync(new GetInvoiceableWorkOrders());
+            return ret.ToOkObjectResponse<ICollection<InvoiceableWorkOrderView>>();
         }
 
         [HttpGet("Portal")]

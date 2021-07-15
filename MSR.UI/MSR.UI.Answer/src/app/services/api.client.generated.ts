@@ -21576,13 +21576,12 @@ export interface IAuditActionResultOfICollectionOfInvoiceableWorkOrderView exten
 }
 
 export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
-    customerName?: string | undefined;
+    name?: string | undefined;
     customerId?: number;
     id?: number;
     purchaseOrderId?: number;
     referencePO?: string | undefined;
     customerPurchaseNumber?: string | undefined;
-    customerLineNumber?: number | undefined;
     serialNumber?: string | undefined;
     locationId?: number;
     locationName?: string | undefined;
@@ -21590,7 +21589,7 @@ export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
     productName?: string | undefined;
     actualEndDate?: Date | undefined;
     totalSalePrice?: number;
-    status?: EnumStatusSteps;
+    customerLineNumber?: number | undefined;
 
     constructor(data?: IInvoiceableWorkOrderView) {
         if (data) {
@@ -21603,13 +21602,12 @@ export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
 
     init(_data?: any) {
         if (_data) {
-            this.customerName = _data["customerName"];
+            this.name = _data["name"];
             this.customerId = _data["customerId"];
             this.id = _data["id"];
             this.purchaseOrderId = _data["purchaseOrderId"];
             this.referencePO = _data["referencePO"];
             this.customerPurchaseNumber = _data["customerPurchaseNumber"];
-            this.customerLineNumber = _data["customerLineNumber"];
             this.serialNumber = _data["serialNumber"];
             this.locationId = _data["locationId"];
             this.locationName = _data["locationName"];
@@ -21617,7 +21615,7 @@ export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
             this.productName = _data["productName"];
             this.actualEndDate = _data["actualEndDate"] ? new Date(_data["actualEndDate"].toString()) : <any>undefined;
             this.totalSalePrice = _data["totalSalePrice"];
-            this.status = _data["status"];
+            this.customerLineNumber = _data["customerLineNumber"];
         }
     }
 
@@ -21630,13 +21628,12 @@ export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["customerName"] = this.customerName;
+        data["name"] = this.name;
         data["customerId"] = this.customerId;
         data["id"] = this.id;
         data["purchaseOrderId"] = this.purchaseOrderId;
         data["referencePO"] = this.referencePO;
         data["customerPurchaseNumber"] = this.customerPurchaseNumber;
-        data["customerLineNumber"] = this.customerLineNumber;
         data["serialNumber"] = this.serialNumber;
         data["locationId"] = this.locationId;
         data["locationName"] = this.locationName;
@@ -21644,19 +21641,18 @@ export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
         data["productName"] = this.productName;
         data["actualEndDate"] = this.actualEndDate ? this.actualEndDate.toISOString() : <any>undefined;
         data["totalSalePrice"] = this.totalSalePrice;
-        data["status"] = this.status;
+        data["customerLineNumber"] = this.customerLineNumber;
         return data; 
     }
 }
 
 export interface IInvoiceableWorkOrderView {
-    customerName?: string | undefined;
+    name?: string | undefined;
     customerId?: number;
     id?: number;
     purchaseOrderId?: number;
     referencePO?: string | undefined;
     customerPurchaseNumber?: string | undefined;
-    customerLineNumber?: number | undefined;
     serialNumber?: string | undefined;
     locationId?: number;
     locationName?: string | undefined;
@@ -21664,21 +21660,7 @@ export interface IInvoiceableWorkOrderView {
     productName?: string | undefined;
     actualEndDate?: Date | undefined;
     totalSalePrice?: number;
-    status?: EnumStatusSteps;
-}
-
-export enum EnumStatusSteps {
-    Approved = 1,
-    InProgress = 2,
-    Complete = 3,
-    Cancelled = 4,
-    Pending = 5,
-    Rejected = 6,
-    Open = 7,
-    Closed = 8,
-    Requested = 9,
-    Assigned = 10,
-    WaitingtoStart = 11,
+    customerLineNumber?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */

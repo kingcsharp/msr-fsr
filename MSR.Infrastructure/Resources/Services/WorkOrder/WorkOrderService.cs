@@ -1679,5 +1679,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             return totalRows;
         }
+
+        public async Task<ICollection<MSR.Domain.Views.InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersView() {
+
+            var invoiceableWorkOrdersViewEntities = await _unitOfWork.InvoiceableWorkOrdersViews.Query().ToListAsync();
+
+            var invoiceableWorkOrdersViewMdoels = _mapper.Map<ICollection<Domain.Views.InvoiceableWorkOrderView>>(invoiceableWorkOrdersViewEntities);
+
+            return invoiceableWorkOrdersViewMdoels;
+        } 
     }
 }

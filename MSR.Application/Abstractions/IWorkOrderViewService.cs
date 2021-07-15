@@ -10,8 +10,6 @@ namespace MSR.Application.Abstractions
 {
     public interface IWorkOrderViewService
     {
-        Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersAsync();
-        Task<ICollection<WorkOrderGridSummary>> GetWorkOrderHistoryAsync();
         Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync();
         Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenuAsync(GetWorkOrderMenuQueryModel filters);
         Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenuAsync(GetPortalWorkOrderQueryModel portalWorkOrderQueryModel);

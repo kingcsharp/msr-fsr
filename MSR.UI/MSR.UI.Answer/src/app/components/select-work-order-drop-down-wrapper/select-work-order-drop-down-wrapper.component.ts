@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EnumStatusSteps, IWorkOrderSelectItem, WorkOrderModel, WorkOrderSelectItem, WorkOrderService} from '../../services/api.client.generated';
+import { WorkOrderSelectItem, WorkOrderService} from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Router } from '@angular/router';

@@ -571,6 +571,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.WorkOrderId));
 
             CreateMap<Domain.Views.PurchaseOrderDBView, Resources.EntityFramework.Entities.PurchaseOrderDBView>().ReverseMap();
+            CreateMap<Domain.Views.InvoiceableWorkOrderView, Resources.EntityFramework.Entities.InvoiceableWorkOrdersView>().ReverseMap();
 
         }
 

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel, EnumStatusSteps } from '../../services/api.client.generated';
+import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { take } from 'rxjs/operators';
 import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
@@ -8,6 +8,7 @@ import { EnumFailAction } from '../../models/enums/EnumFailAction';
 import { EnumMonitorInputType } from '../../models/enums/EnumMonitorInputType';
 import { EnumMonitorShouldBe } from '../../models/enums/EnumMonitorShouldBe';
 import { Globals } from '../../models/lib/globals';
+import { EnumStatusSteps } from '../../models/enums/EnumStatusSteps';
 
 declare let jQuery: any;
 declare let Parsley: any;

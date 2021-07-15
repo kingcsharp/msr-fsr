@@ -97,6 +97,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<WorkOrderStats> WorkOrderStats { get; }
         IRepository<PortalSubPart> PortalSubParts { get; }
         IRepository<PurchaseOrderDBView> PurchaseOrderDBViews { get; }
+        IRepository<InvoiceableWorkOrdersView> InvoiceableWorkOrdersViews { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();
