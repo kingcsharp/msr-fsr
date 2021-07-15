@@ -98,22 +98,35 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             var purchaseOrderEntities = await _unitOfWork.PurchaseOrders.Query()
                 .Where(x => invoice.InvoiceItems.Select(x => x.PurchaseOrderId).ToList().Contains(x.Id))
+                .ToListAsync();            
+            var purchaseOrderIds = purchaseOrderEntities.Select(p => p.Id).ToList();
+
+            var allPurchaseEntities = await _unitOfWork.Purchases.Query()
+                .Where(p => purchaseOrderIds.Contains(p.PurchaseOrderId))
+                .ToListAsync();
+            var allPurchaseIds = allPurchaseEntities.Select(p => p.Id).ToList();
+
+            var allWorkOrderEntities = await _unitOfWork.WorkOrders.Query()
+                .Where(w => allPurchaseIds.Contains(w.PurchaseId))
+                .ToListAsync();
+
+            var allInvoiceItemEntities = await _unitOfWork.InvoiceItems.Query()
+                .Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
                 .ToListAsync();
             
             foreach (var purchaseOrderEntity in purchaseOrderEntities)
             {
-                var purchaseIds = await _unitOfWork.Purchases.Query()
+                var purchaseIds = allPurchaseEntities
                     .Where(p => p.PurchaseOrderId == purchaseOrderEntity.Id)
-                    .Select(p => p.Id)
-                    .ToListAsync();
+                    .Select(p => p.Id).ToList();
 
-                var workOrderEntities = await _unitOfWork.WorkOrders.Query()
+                var workOrderEntities = allWorkOrderEntities
                     .Where(w => purchaseIds.Contains(w.PurchaseId))
-                    .ToListAsync();
+                    .ToList();
 
-                var invoicedWorkOrderIds = await _unitOfWork.InvoiceItems.Query()
+                var invoicedWorkOrderIds = allInvoiceItemEntities
                     .Where(i => i.PurchaseOrderId == purchaseOrderEntity.Id)
-                    .Select(i => i.WorkOrderId).ToListAsync();
+                    .Select(i => i.WorkOrderId).ToList();
 
                 purchaseOrderEntity.UninvoicedBalance = 0;
                 purchaseOrderEntity.InvoicedBalance = 0;
