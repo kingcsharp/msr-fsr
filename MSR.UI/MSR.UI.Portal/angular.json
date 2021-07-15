@@ -59,7 +59,6 @@
               "node_modules/jquery-flot/jquery.flot.js",
               "node_modules/jquery-flot/jquery.flot.time.js",
               "node_modules/morris.js/morris.js",
-              "node_modules/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js",
               "node_modules/chart.js/dist/Chart.js"
             ]
           },
