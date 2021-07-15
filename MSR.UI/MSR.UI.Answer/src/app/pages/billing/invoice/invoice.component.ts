@@ -85,7 +85,7 @@ export class InvoiceComponent implements OnInit {
     ];
 
     this.gridWoSettings = [
-      new ColumnsSaved({ id: 'Name', label: 'Customer Name', visible: true }),
+      new ColumnsSaved({ id: 'name', label: 'Customer Name', visible: true }),
       new ColumnsSaved({ id: 'id', label: 'WorkOrder #', visible: true }),
       new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true }),
       new ColumnsSaved({ id: 'customerPurchaseNumber', label: 'Customer Puchase Number', visible: true }),
