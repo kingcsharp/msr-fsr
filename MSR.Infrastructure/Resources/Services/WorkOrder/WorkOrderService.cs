@@ -71,32 +71,52 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderById(int id) {
 
             var workOrderEntity= await _unitOfWork.WorkOrders.Query()
-                .Include(s => s.WorkOrderParts).ThenInclude(s => s.Part)
-                .Include(s => s.WorkOrderTasks).ThenInclude(s => s.WorkOrderTaskMonitors).ThenInclude(s => s.ProcedureStepMonitor)
-                .Include(s => s.WorkOrderMessages).FirstOrDefaultAsync(s => s.Id == id);
+                .Include(s => s.WorkOrderParts)
+                .FirstOrDefaultAsync(s => s.Id == id);
 
-            _ = await _unitOfWork.Products.Query()
-                .Include(u => u.Part)
-                .Include(t => t.Customer)
-                .Include(v => v.Procedure)
-                .Where(s => workOrderEntity.ProductId == s.Id).ToListAsync();
+            _ = await _unitOfWork.WorkOrderMessages.Query().Where(s => s.WorkOrderId == workOrderEntity.Id).ToListAsync();
+            _ = await _unitOfWork.WorkOrderTasks.Query().Where(s => s.WorkOrderId == workOrderEntity.Id).ToListAsync();
+
+            var workOrderPartIds = workOrderEntity.WorkOrderParts.Select(s => s.PartId).ToList();
+
+            _  = await _unitOfWork.Parts.Query().Where(s => workOrderPartIds.Contains(s.Id)).ToListAsync();
+
+            _ = await _unitOfWork.Products.Query().FirstOrDefaultAsync(s => workOrderEntity.ProductId == s.Id);
+
+            if (workOrderEntity.Product != null) {
+
+                _ = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Product.PartId);
+                _ = await _unitOfWork.Customers.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Product.CustomerId);
+                _ = await _unitOfWork.Procedures.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Product.ProcedureId);
+
+            }
 
             _ = await _unitOfWork.ProcedureSteps.Query()
                 .Include(y => y.ProcedureStepRoles).ThenInclude(y => y.Role)
                 .Where(s => s.ProcedureId == workOrderEntity.Product.ProcedureId).ToListAsync();
 
-            _ = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(m => m.ProcedureStepMonitor)
+            _ = await _unitOfWork.WorkOrderTaskMonitors.Query()
+                .Include(m => m.ProcedureStepMonitor)
                 .Where(s => workOrderEntity.WorkOrderTasks.Select(m => m.Id).Contains(s.WorkOrderTaskId)).ToListAsync();
 
-            _ = await _unitOfWork.Purchases.Query()
-                .Include(s => s.PurchaseOrder)
-                .ThenInclude(u => u.Customer).ThenInclude(s => s.PrimaryContactUser)
-                .Include(s => s.PurchaseOrder)
-                .ThenInclude(u => u.Customer).ThenInclude(s => s.SecondaryContactUser)
-                .Include(m => m.Location)
-                .Where(s => workOrderEntity.PurchaseId == s.Id)
-                .ToListAsync();
+            _ = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => workOrderEntity.PurchaseId == s.Id);
+
+            if (workOrderEntity.Purchase != null ){
+                _ = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.PurchaseOrderId);
+                _ = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.LocationId);
+            }
             
+
+            if (workOrderEntity.Purchase.PurchaseOrder.Customer != null) {
+
+                if(workOrderEntity.Purchase.PurchaseOrder.Customer.PrimaryContactUserId.HasValue)
+                _ = await _unitOfWork.Customers.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.PurchaseOrder.Customer.PrimaryContactUser.Id);
+
+                if (workOrderEntity.Purchase.PurchaseOrder.Customer.SecondaryContactUserId.HasValue)
+                    _ = await _unitOfWork.Customers.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.PurchaseOrder.Customer.SecondaryContactUser.Id);
+
+            }
+
             _ = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
             _ = await _unitOfWork.Status.Query().ToListAsync();
             _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();

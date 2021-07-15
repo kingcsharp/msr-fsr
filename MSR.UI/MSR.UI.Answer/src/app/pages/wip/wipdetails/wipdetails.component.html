@@ -161,7 +161,7 @@
                   <tbody
                     *ngIf="workOrderModel.workOrderParts !== undefined && workOrderModel.workOrderParts.length !== 0">
                     <tr *ngFor="let workOrderPart of workOrderModel.workOrderParts; let index=index">
-                      <td>{{workOrderPart.part.name}}</td>
+                      <td>{{workOrderPart.part?.name}}</td>
                       <td>{{workOrderPart.cycleCount}}</td>
                       <td class="d-flex serialinput-td" *ngIf="hasAccessToTaskBeingViewed">
                         <input type="text" id="serialnumber{{index}}" [(ngModel)]="workOrderPart.serialNumber"
