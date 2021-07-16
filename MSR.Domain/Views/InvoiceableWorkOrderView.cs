@@ -4,7 +4,7 @@ namespace MSR.Domain.Views
 {
     public class InvoiceableWorkOrderView
     {
-        public string Name { get; set; }
+        public string CustomerName { get; set; }
         public int CustomerId { get; set; }
         public int Id { get; set; }
         public int PurchaseOrderId { get; set; }//

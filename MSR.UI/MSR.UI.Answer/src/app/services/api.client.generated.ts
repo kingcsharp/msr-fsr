@@ -21576,7 +21576,7 @@ export interface IAuditActionResultOfICollectionOfInvoiceableWorkOrderView exten
 }
 
 export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
-    name?: string | undefined;
+    customerName?: string | undefined;
     customerId?: number;
     id?: number;
     purchaseOrderId?: number;
@@ -21602,7 +21602,7 @@ export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
 
     init(_data?: any) {
         if (_data) {
-            this.name = _data["name"];
+            this.customerName = _data["customerName"];
             this.customerId = _data["customerId"];
             this.id = _data["id"];
             this.purchaseOrderId = _data["purchaseOrderId"];
@@ -21628,7 +21628,7 @@ export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
+        data["customerName"] = this.customerName;
         data["customerId"] = this.customerId;
         data["id"] = this.id;
         data["purchaseOrderId"] = this.purchaseOrderId;
@@ -21647,7 +21647,7 @@ export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
 }
 
 export interface IInvoiceableWorkOrderView {
-    name?: string | undefined;
+    customerName?: string | undefined;
     customerId?: number;
     id?: number;
     purchaseOrderId?: number;
