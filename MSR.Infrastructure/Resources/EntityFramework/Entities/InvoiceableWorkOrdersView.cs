@@ -5,7 +5,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     public class InvoiceableWorkOrdersView
     {
-        public string Name { get; set; }
+        public string CustomerName { get; set; }
         public int CustomerId { get; set; }
         public int Id { get; set; }
         public int PurchaseOrderId { get; set; }//

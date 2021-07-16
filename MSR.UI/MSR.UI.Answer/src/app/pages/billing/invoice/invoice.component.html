@@ -41,8 +41,8 @@
         <th grid-input-filter [dt]="dt" searchField="id" [hidden]="!cg.isVisibleCol('id',gridSettings)"
           [gridSettings]="gridSettings">
         </th>
-        <th grid-input-filter [dt]="dt" searchField="name"
-          [hidden]="!cg.isVisibleCol('name',gridSettings)" [gridSettings]="gridSettings">
+        <th grid-input-filter [dt]="dt" searchField="customerName"
+          [hidden]="!cg.isVisibleCol('customerName',gridSettings)" [gridSettings]="gridSettings">
         </th>
         <th grid-input-filter [dt]="dt" searchField="description"
           [hidden]="!cg.isVisibleCol('description',gridSettings)" [gridSettings]="gridSettings">
@@ -85,8 +85,8 @@
         <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
           {{invoiceModel.id}}
         </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
-          {{invoiceModel.name}}
+        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('customerName',gridSettings)">
+          {{invoiceModel.customerName}}
         </td>
         <td [hidden]="!cg.isVisibleCol('description',gridSettings)">
           {{invoiceModel.description}}
