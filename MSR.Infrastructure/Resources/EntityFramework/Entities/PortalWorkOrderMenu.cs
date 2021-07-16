@@ -21,7 +21,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public DateTime? InvoiceDate { get; set; }
         public string InvoiceName { get; set; }
         public string PartName { get; set; }
-        public int PartId { get; set; }
+        public int? PartId { get; set; }
         public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
         public decimal? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
         public decimal? PercentageOfExpectedDurationTimeLoggedNumerator { get; set; }
