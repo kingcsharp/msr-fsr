@@ -35,14 +35,15 @@ export class NcrReportComponent implements OnInit {
   }
 
   generateMonitorSummaries() {
-    this.WorkOrder.workOrderTasks.filter(s => 
+    this.WorkOrder.workOrderTasks.filter(s =>
       (s.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR)
     || s.isNCRTask).map(workOrderTask => {
 
         let taskSummary = {
           taskName: workOrderTask.procedureStep === undefined ? workOrderTask.title : workOrderTask.procedureStep.title,
           taskId: workOrderTask.id,
-          monitors: new Array<any>()
+          monitors: new Array<any>(),
+          taskStepOrder: workOrderTask.taskStepOrder
         };
 
         workOrderTask.workOrderTaskMonitors.map(workOrderTaskMonitor => {
@@ -62,8 +63,9 @@ export class NcrReportComponent implements OnInit {
             this.associatedDocuments.push(referenceFile);
           }
         });
-
     });
+
+    this.taskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
   }
 
   showImagePreviewDialog(fileModel: FileModel) {

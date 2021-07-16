@@ -142,14 +142,14 @@ export class WipdetailsComponent implements OnInit {
         this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[0]);
       }
 
-      this.productSegregationService.SegregationType = this.parentPart.part?.segregationType;
+      this.productSegregationService.SegregationType = this.parentPart?.part?.segregationType;
       this.productSegregationService.PartTitle = `Customer Part # ${this.parentPart?.part?.partNumber}`;
       this.productSegregationService.WipDetailsBeingDisplayed = true;
 
-      if (this.parentPart.serialNumber === null) {
+      if (this.parentPart?.serialNumber === null) {
         this.productSegregationService.PartTitle += `, (Serial #: N/A), ${this.parentPart?.part?.name}`;
       } else {
-        this.productSegregationService.PartTitle += `, (Serial #: ${this.parentPart.serialNumber}), ${this.parentPart?.part?.name}`;
+        this.productSegregationService.PartTitle += `, (Serial #: ${this.parentPart?.serialNumber}), ${this.parentPart?.part?.name}`;
       }
 
       this.globals.showLoader(false);
