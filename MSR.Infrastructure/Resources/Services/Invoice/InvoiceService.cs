@@ -102,7 +102,6 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             // cleared InvoiceItems
             var unInvoicedItems = oldInvoiceItems.Except(newInvoiceItems).ToList();
-            var unInvoicedWorkOrderIds = unInvoicedItems.Select(i => i.WorkOrderId).ToList();
 
             // new InvoiceItems
             var invoicedItems = newInvoiceItems.Except(oldInvoiceItems).ToList();
@@ -139,8 +138,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                         purchaseOrderEntity.InvoicedBalance += workOrderEntity.Price;
                         purchaseOrderEntity.UninvoicedBalance -= workOrderEntity.Price;
                     }
-                    
-                    if (unInvoicedWorkOrderIds.Contains(workOrderEntity.Id)) 
+                    else
                     {
                         purchaseOrderEntity.InvoicedBalance -= workOrderEntity.Price;
                         purchaseOrderEntity.UninvoicedBalance += workOrderEntity.Price;
