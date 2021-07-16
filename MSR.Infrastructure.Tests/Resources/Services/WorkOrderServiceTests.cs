@@ -24,29 +24,6 @@ namespace MSR.Infrastructure.Tests.Resources.Services
         }
 
         [Fact]
-        public Task Call_GetWorkOrderAsync_NotFound()
-        {
-            Func<Task<ICollection<WorkOrderModel>>> response = () =>
-                _workorderService.GetWorkOrderAsync(WorkOrderFixture.NotFoundWorkOrder);
-            return Task.FromResult(response.Should().Throw<DomainException>());
-        }
-
-        [Fact]
-        public async Task Call_GetWorkOrderAsync_Found()
-        {
-            var response = await _workorderService.GetWorkOrderAsync(
-                WorkOrderFixture.AllWorkOrders
-            );
-            response.Should().HaveCount(1);
-            response.First()
-                .Purchase
-                .CustomerPurchaseNumber
-                .Should().Be(
-                    WorkOrderFixture.PlainPurchase.CustomerPurchaseNumber
-                );
-        }
-
-        [Fact]
         public async Task Call_CreateWorkOrderAsync()
         {
             var response = await _workorderService.CreateWorkOrderAsync(
