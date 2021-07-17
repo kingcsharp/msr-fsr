@@ -38,15 +38,15 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             #region Customer
-            CreateMap<Customer, Domain.Models.CustomerModel>()
+            CreateMap<Customer, CustomerModel>()
                     .ForMember(dest => dest.Location, opts => opts.AllowNull())
                     .ForMember(dest => dest.PrimaryContactUser, opts => opts.AllowNull())
                     .ForMember(dest => dest.SecondaryContactUser, opts => opts.AllowNull())
                     .AfterMap((src, dest) => dest.Location = src.Location == null ? null : dest.Location)
                     .AfterMap((src, dest) => dest.PrimaryContactUser = src.PrimaryContactUser == null ? null : dest.PrimaryContactUser)
                     .AfterMap((src, dest) => dest.SecondaryContactUser = src.SecondaryContactUser == null ? null : dest.SecondaryContactUser);
-            CreateMap<Domain.Models.CustomerModel, Customer>();
-            CreateMap<CustomerApproval, Domain.Models.CustomerModel>()
+            CreateMap<CustomerModel, Customer>();
+            CreateMap<CustomerApproval, CustomerModel>()
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status.Name));
             CreateMap<CreateCustomer, Customer>();
             CreateMap<CreateCustomer, CustomerApproval>();
@@ -76,7 +76,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProductStepApproval, ProductStepModel>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProductStepId));
 
-            CreateMap<Resources.EntityFramework.Entities.ProductStep, ProductStepModel>().ReverseMap();
+            CreateMap<ProductStep, ProductStepModel>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>();
             CreateMap<Purchase, CreatePurchase>();
             CreateMap<CreatePurchase, Purchase>()
@@ -206,8 +206,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdatePart, Part>()
                 .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => EnumUtils.GetDescription<EnumSegregationType>(src.SegregationType.HasValue ? src.SegregationType.Value : EnumSegregationType.NONCU)))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<Domain.Models.PartModel, CreatePart>();
-            CreateMap<Domain.Models.PartModel, UpdatePart>();
+            CreateMap<PartModel, CreatePart>();
+            CreateMap<PartModel, UpdatePart>();
             #endregion
 
             #region Procedure
@@ -224,14 +224,14 @@ namespace MSR.Infrastructure.Profiles
                     Id = src.ProcedureTypeId,
                     Name = src.ProcedureTypeName
                 }))
-                .ForMember(dest => dest.LastUpdated, opts => opts.MapFrom(src => new MSR.Domain.Models.UserModel()
+                .ForMember(dest => dest.LastUpdated, opts => opts.MapFrom(src => new UserModel()
                 {
                     Id = src.LastUpdatedById,
                     FirstName = src.LastUpdatedByFirstName,
                     LastName = src.LastUpdatedByLastName
                 }))
                 .ForMember(dest => dest.CreatedBy, opts => opts.MapFrom(src => src.CreatedById))
-                .ForMember(dest => dest.Created, opts => opts.MapFrom(src => new MSR.Domain.Models.UserModel()
+                .ForMember(dest => dest.Created, opts => opts.MapFrom(src => new UserModel()
                 {
                     Id = src.CreatedById,
                     FirstName = src.CreatedByFirstName,
@@ -431,8 +431,8 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             #region Quote
-            CreateMap<Quote, Domain.Models.QuoteModel>().ReverseMap();
-            CreateMap<QuoteItem, Domain.Models.QuoteItemModel>().ReverseMap();
+            CreateMap<Quote, QuoteModel>().ReverseMap();
+            CreateMap<QuoteItem, QuoteItemModel>().ReverseMap();
             CreateMap<CreateQuote, Quote>();
             CreateMap<CreateQuoteItem, QuoteItem>();
             CreateMap<QuoteImportItem, CreateQuote>();
@@ -559,7 +559,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<GetPortalWorkOrder, GetWorkOrder>();
 
             CreateMap<WorkOrderHistoryViewDTO, WorkOrderGridSummary>();
-            CreateMap<Resources.EntityFramework.Entities.WorkOrderHistoryView, MSR.Domain.Views.WorkOrderHistoryView>()
+            CreateMap<Resources.EntityFramework.Entities.WorkOrderHistoryView, Domain.Views.WorkOrderHistoryView>()
                 .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU))
                 .ForMember(dest => dest.Disposition, opts => opts.MapFrom(src => src.Dispostion));
 
@@ -571,7 +571,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.WorkOrderId));
 
             CreateMap<Domain.Views.PurchaseOrderDBView, Resources.EntityFramework.Entities.PurchaseOrderDBView>().ReverseMap();
-            CreateMap<Domain.Views.InvoiceableWorkOrderView, Resources.EntityFramework.Entities.InvoiceableWorkOrdersView>().ReverseMap();
+            CreateMap<InvoiceableWorkOrderView, InvoiceableWorkOrdersView>().ReverseMap();
+            
+            CreateMap<CreateWorkOrderDTO, WorkOrder>().ReverseMap();
 
         }
 

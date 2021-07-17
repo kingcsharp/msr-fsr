@@ -3,12 +3,13 @@ using MSR.Domain.Models;
 using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MSR.Domain.DTOs;
 
 namespace MSR.Domain.Abstractions.Services
 {
     public interface IWorkOrderService
     {
-        Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command);
+        Task<string> CreateWorkOrderAsync(CreateWorkOrderDTO createWorkOrderDto);
         Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command);
         Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command);
         Task<bool> DeleteWorkOrderAsync(DeleteWorkOrder command);
@@ -19,7 +20,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command);
         Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command);
         Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command);
-        string GetWorkOrderItemNumber(WorkOrderModel model);
         Task<WorkOrderMessageModel> CreateWorkOrderMessageAsync(CreateWorkOrderMessage command);
         Task<ICollection<WorkOrderHistoryView>> GetWorkOrderHistoryView(GetWorkOrderHistory command);
         Task<int> GetTotalWorkOrderHistoryViewRows(GetWorkOrderHistory command);
@@ -28,6 +28,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<WorkOrderTaskModel>> AddNCRWorkOrderTasksAsync(AddNCRWorkOrderTask command);
         Task<ICollection<WorkOrderModel>> GetWorkOrderById(int id);
         Task<ICollection<WorkOrderSelectItem>> GetWorkOrderSelectItems(GetAssignedWorkOrders command);
-        Task<ICollection<MSR.Domain.Views.InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersView();
+        Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersView();
     }
 }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -74,35 +75,43 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 await _unitOfWork.LogApprovalTransaction(purchase, purchase.Id);
 
                 // load required navigation fields
-                created.Context.Entry(purchase)
-                    .Reference(x => x.Status).Load();
-                created.Context.Entry(purchase)
-                    .Reference(x => x.Location).Load();
-                created.Context.Entry(purchase)
-                    .Reference(x => x.PurchaseOrder).Load();
-                created.Context.Entry(purchase)
-                    .Reference(x => x.PurchaseOrderProduct).Load();
-                created.Context.Entry(purchase.PurchaseOrderProduct)
-                    .Reference(x => x.Product).Load();
+                await created.Context.Entry(purchase)
+                    .Reference(x => x.Status).LoadAsync();
+                await created.Context.Entry(purchase)
+                    .Reference(x => x.Location).LoadAsync();
+                await created.Context.Entry(purchase)
+                    .Reference(x => x.PurchaseOrder).LoadAsync();
+                await created.Context.Entry(purchase)
+                    .Reference(x => x.PurchaseOrderProduct).LoadAsync();
+                await created.Context.Entry(purchase.PurchaseOrderProduct)
+                    .Reference(x => x.Product).LoadAsync();
 
                 ret = _mapper.Map<Domain.Models.PurchaseModel>(purchase);
                 ret.SerializeIndividually = command.SerializeIndividually;
 
-                WorkOrderCreateEvent woEvent = new WorkOrderCreateEvent();
-                woEvent.purchaseInfo = ret;
-                woEvent.serialNumbers = command.SerialNumbers;
-                woEvent.CustomerLineNumbers = command.CustomerLineNumbers;
-                MessageEnvelope sqsmsg = new MessageEnvelope(
-                    woEvent.GetType().Name,
-                    woEvent,
-                    await _accountService.GetJWTTokenAsync()
-                );
-                await _bus.SendMessage(sqsmsg);
+                var workOrderCreateEvent = new WorkOrderCreateEvent
+                {
+                    SerialNumbers = command.SerialNumbers,
+                    CustomerLineNumbers = command.CustomerLineNumbers,
+                    Qty = ret.Qty,
+                    Price = ret.PurchasePrice,
+                    LocationId = ret.LocationId,
+                    PurchaseId = ret.Id,
+                    ScheduledEndDate = ret.DueDate,
+                    ScheduledStartDate = DateTime.UtcNow,
+                    ProductId = ret.PurchaseOrderProduct?.ProductId,
+                    SerializeIndividually = ret.SerializeIndividually,
+                    HasNCR = false,
+                    PurchaseOrderId = ret.PurchaseOrderId
+                };
+
+                var sqsMessageEnvelope = new MessageEnvelope(workOrderCreateEvent.GetType().Name,workOrderCreateEvent,await _accountService.GetJWTTokenAsync());
+                await _bus.SendMessage(sqsMessageEnvelope);
 
             }
             else
             {
-                throw new DomainException($"Permission deined on {nameof(Purchase)} for user {CurrentUser.GetId()}");
+                throw new DomainException($"Permission denied on {nameof(Purchase)} for user {CurrentUser.GetId()}");
             }
 
             return ret;

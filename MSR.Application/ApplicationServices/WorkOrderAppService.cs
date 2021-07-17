@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,7 +7,10 @@ using AutoMapper;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
+using MSR.Domain.DTOs;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -154,30 +158,49 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
         {
-            var tasks = await _workOrderService.GetWorkOrderTasksAsync(command);
-            command.WorkOrderTasks = tasks;
-
-            var parts = (await _workOrderService.GetWorkOrderPartsAsync(command)).ToList();
-            var serialNumberList = command.SerialNumbers.ToList();
-            var customerLineNumbers = command.CustomerLineNumbers.ToList();
-            
-            // Copy in the serial numbers entered at purchase time, if any.
-            for (var workOrderPartIndex = 0; workOrderPartIndex < serialNumberList.Count && workOrderPartIndex < parts.Count; workOrderPartIndex += 1)
+            try
             {
-                if (serialNumberList[workOrderPartIndex] != null)
-                {
-                    parts[workOrderPartIndex].SerialNumber = serialNumberList[workOrderPartIndex];
-                }
-                if (customerLineNumbers[workOrderPartIndex] != null)
-                {
-                    parts[workOrderPartIndex].CustomerLineNumber = customerLineNumbers[workOrderPartIndex];
-                }
-            }
-            
-            command.WorkOrderParts = parts;
+                var workOrderDto = CreateWorkOrderDTO.FromCommand(command);
+                var tasks = await _workOrderService.GetWorkOrderTasksAsync(command);
+                workOrderDto.WorkOrderTasks = tasks;
 
-            var model = await _workOrderService.CreateWorkOrderAsync(command);
-            return new CommandResponse<string>(_workOrderService.GetWorkOrderItemNumber(model));
+                var parts = (await _workOrderService.GetWorkOrderPartsAsync(command)).ToList();
+                var serialNumberList = workOrderDto.SerialNumbers.ToList();
+                var customerLineNumbers = workOrderDto.CustomerLineNumbers.ToList();
+
+                // Copy in the serial numbers entered at purchase time, if any.
+                for (var workOrderPartIndex = 0;
+                    workOrderPartIndex < serialNumberList.Count && workOrderPartIndex < parts.Count;
+                    workOrderPartIndex += 1)
+                {
+                    if (serialNumberList[workOrderPartIndex] != null)
+                    {
+                        parts[workOrderPartIndex].SerialNumber = serialNumberList[workOrderPartIndex];
+                    }
+
+                    if (customerLineNumbers[workOrderPartIndex] != null)
+                    {
+                        parts[workOrderPartIndex].CustomerLineNumber = customerLineNumbers[workOrderPartIndex];
+                    }
+                }
+
+                workOrderDto.WorkOrderParts = parts;
+
+                var workOrderModelNumber = await _workOrderService.CreateWorkOrderAsync(workOrderDto);
+                return new CommandResponse<string>(workOrderModelNumber);
+            }
+            catch (Exception ex)
+            {
+                var innerException = ex.InnerException;
+                var error = ex.Message;
+                while(innerException != null)
+                {
+                    error = $"{error} | Inner Exception: {innerException.Message}";
+                    innerException = innerException.InnerException;
+                }
+
+                throw new DomainException($"PurchaseID: {command.PurchaseId} | error", DomainError.InternalServerError);
+            }
         }
     }
 }

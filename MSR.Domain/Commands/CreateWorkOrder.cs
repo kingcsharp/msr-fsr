@@ -7,19 +7,36 @@ namespace MSR.Domain.Commands
 {
     public class CreateWorkOrder : Command
     {
-        public int? PurchaseId { get; set; }
-        public int? ProductId { get; set; }
-        public decimal? Price { get; set; }
-        public DateTime ScheduledStartDate { get; set; }
-        public DateTime ScheduledEndDate { get; set; }
-        public bool? HasNCR { get; set; }
-        public int? LocationId { get; set; }
-        public int Qty { get; set; }
-        public bool SerializeIndividually { get; set; }
-        public virtual ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
-        public virtual ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
-        public ICollection<string> SerialNumbers { get; set; }
-        public ICollection<string> CustomerLineNumbers { get; set; }
+        public int? PurchaseId { get; }
+        public int? ProductId { get; }
+        public int? PurchaseOrderId { get; }
+        public decimal? Price { get; }
+        public DateTime ScheduledStartDate { get; }
+        public DateTime ScheduledEndDate { get; }
+        public bool? HasNCR { get; }
+        public int? LocationId { get; }
+        public int Qty { get; }
+        public bool SerializeIndividually { get; }
+        public ICollection<string> SerialNumbers { get; }
+        public ICollection<string> CustomerLineNumbers { get; }
+
+        public CreateWorkOrder(int? purchaseId, int? productId, int? purchaseOrderId, decimal? price, DateTime scheduledStartDate,
+            DateTime scheduledEndDate, bool? hasNcr, int? locationId, int qty, bool serializeIndividually, 
+            ICollection<string> serialNumbers, ICollection<string> customerLineNumbers)
+        {
+            PurchaseId = purchaseId;
+            ProductId = productId;
+            PurchaseOrderId = purchaseOrderId;
+            Price = price;
+            ScheduledEndDate = scheduledEndDate;
+            ScheduledStartDate = scheduledStartDate;
+            HasNCR = hasNcr;
+            LocationId = locationId;
+            Qty = qty;
+            SerializeIndividually = serializeIndividually;
+            SerialNumbers = serialNumbers;
+            CustomerLineNumbers = customerLineNumbers;
+        }
 
     }
 }
