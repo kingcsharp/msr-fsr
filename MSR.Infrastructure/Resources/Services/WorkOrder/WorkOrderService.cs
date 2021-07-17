@@ -21,6 +21,8 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using MSR.Infrastructure.Resources.Queries;
 using IronPdf;
 using System.Net.Mail;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using MSR.Domain.DTOs;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -132,7 +134,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
 
                 var workOrderTaskMonitorModels = new List<WorkOrderTaskMonitorModel>();
-                int i = 1; // Monitor Number starts at 1
+                var i = 1; // Monitor Number starts at 1
                 foreach (var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
                 {
                     workOrderTaskMonitorModel.MonitorNumber = i;
@@ -148,7 +150,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return new List<WorkOrderModel>() { DetachBackPointers(workOrderModel) };
         }
 
-        public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
+        public async Task<string> CreateWorkOrderAsync(CreateWorkOrderDTO createWorkOrderDto)
         {
             // Note the menu permission here: Purchases.  Work orders are created by a user
             // entering a purchase against a purchase order.  The Processor then creates the
@@ -160,62 +162,49 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            if (command.ScheduledStartDate == null || command.ScheduledStartDate.Ticks == 0)
+            if (createWorkOrderDto.ScheduledStartDate.Ticks == 0)
             {
-                command.ScheduledStartDate = DateTime.Now;
+                createWorkOrderDto.ScheduledStartDate = DateTime.UtcNow;
             }
 
-            var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(command);
+            var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(createWorkOrderDto);
+
             var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
-            var procedureSteps = _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id));
-            var procedureStepMonitors = _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId));
+            var procedureSteps = await _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id)).ToListAsync();
+            var procedureStepMonitors = await _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId)).ToListAsync();
             var totalLaborTime = (decimal)0.0;
 
             workOrderEntity.HasMonitor = workOrderEntity.WorkOrderTasks.Any(i => i.WorkOrderTaskMonitors.Any());
+            
             foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
             {
-                var procedureStep = await procedureSteps.FirstOrDefaultAsync(s => s.Id == workOrderTask.ProcedureStepId);
-                workOrderTask.Title = procedureStep.Title;
-                workOrderTask.Description = procedureStep.StepText;
-                totalLaborTime += (decimal)procedureStep.LaborTime.GetValueOrDefault(0.0);
+                var procedureStep = procedureSteps.FirstOrDefault(s => s.Id == workOrderTask.ProcedureStepId);
+                workOrderTask.Title = procedureStep?.Title;
+                workOrderTask.Description = procedureStep?.StepText;
+                totalLaborTime += (decimal)(procedureStep?.LaborTime ?? 0.0);
+
                 foreach (var workOrderTaskMonitor in workOrderTask.WorkOrderTaskMonitors)
                 {
+                    var procedureStepMonitor =  procedureStepMonitors.FirstOrDefault(s => s.Id == workOrderTaskMonitor.ProcedureMonitorId);
 
-                    var procedureStepMonitor =  await procedureStepMonitors.FirstOrDefaultAsync(s => s.Id == workOrderTaskMonitor.ProcedureMonitorId);
-
-                    workOrderTaskMonitor.Description = procedureStepMonitor.Description;
-                    workOrderTaskMonitor.MonitorListId = procedureStepMonitor.MonitorListId;
-                    workOrderTaskMonitor.ShouldBe = procedureStepMonitor.ShouldBe;
-                    workOrderTaskMonitor.HighTarget = procedureStepMonitor.HighTarget;
-                    workOrderTaskMonitor.LowTarget = procedureStepMonitor.LowTarget;
-                    workOrderTaskMonitor.Target = procedureStepMonitor.Target;
-                    workOrderTaskMonitor.FailAction = procedureStepMonitor.FailAction;
-                    workOrderTaskMonitor.SensorName = procedureStepMonitor.SensorName;
-                    workOrderTaskMonitor.MonitorTypeId = procedureStepMonitor.MonitorTypeId;
-                    workOrderTaskMonitor.InputTypeId = procedureStepMonitor.InputTypeId;
+                    workOrderTaskMonitor.Description = procedureStepMonitor?.Description;
+                    workOrderTaskMonitor.MonitorListId = procedureStepMonitor?.MonitorListId;
+                    workOrderTaskMonitor.ShouldBe = procedureStepMonitor?.ShouldBe;
+                    workOrderTaskMonitor.HighTarget = procedureStepMonitor?.HighTarget;
+                    workOrderTaskMonitor.LowTarget = procedureStepMonitor?.LowTarget;
+                    workOrderTaskMonitor.Target = procedureStepMonitor?.Target;
+                    workOrderTaskMonitor.FailAction = procedureStepMonitor?.FailAction;
+                    workOrderTaskMonitor.SensorName = procedureStepMonitor?.SensorName;
+                    workOrderTaskMonitor.MonitorTypeId = procedureStepMonitor?.MonitorTypeId;
+                    workOrderTaskMonitor.InputTypeId = procedureStepMonitor?.InputTypeId;
                 }
             }
 
             var created = await _unitOfWork.WorkOrders.AddAsync(workOrderEntity);
 
-            // link work order IDs for all parts
-            Stack<WorkOrderPart> parts = new Stack<WorkOrderPart>();
-            foreach (var p in workOrderEntity.WorkOrderParts)
-            {
-                parts.Push(p);
-            }
-            while (parts.Count > 0)
-            {
-                var p = parts.Pop();
-                p.WorkOrder = workOrderEntity;
-                if (p.Children != null && p.Children.Count > 0)
-                {
-                    foreach (var sp in p.Children)
-                    {
-                        parts.Push(sp);
-                    }
-                }
-            }
+            var workOrderParts = workOrderEntity.WorkOrderParts.ToList();
+            workOrderParts.AddRange(workOrderEntity.WorkOrderParts.SelectMany(i => i.Children));
+            workOrderParts.ForEach(wop => wop.WorkOrder = workOrderEntity);
 
             var parentParts = workOrderEntity.WorkOrderParts.Where(s => s.ParentId == null).ToList();
 
@@ -225,34 +214,29 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             await _unitOfWork.LogApprovalTransaction(workOrderEntity, workOrderEntity.Id);
-
-
+            
             // load required navigation fields
-            created.Context.Entry(workOrderEntity)
-                .Collection(x => x.WorkOrderParts).Load();
-            created.Context.Entry(workOrderEntity)
-                .Collection(x => x.WorkOrderTasks).Load();
-            created.Context.Entry(workOrderEntity)
-                .Reference(x => x.Location).Load();
-            created.Context.Entry(workOrderEntity)
-                .Reference(x => x.Purchase).Load();
-            created.Context.Entry(workOrderEntity)
-                .Reference(x => x.Product).Load();
-            created.Context.Entry(workOrderEntity.Product)
-                .Reference(x => x.Procedure).Load();
-            created.Context.Entry(workOrderEntity.Purchase)
-                .Reference(x => x.PurchaseOrder).Load();
-            created.Context.Entry(workOrderEntity.Purchase.PurchaseOrder)
-                .Reference(x => x.Customer).Load();
-
-            WorkOrderModel workOrderModel = DetachBackPointers(
-                _mapper.Map<WorkOrderModel>(workOrderEntity)
-            );
-
+            await created.Context.Entry(workOrderEntity)
+                .Collection(x => x.WorkOrderParts).LoadAsync();
+            await created.Context.Entry(workOrderEntity)
+                .Collection(x => x.WorkOrderTasks).LoadAsync();
+            await created.Context.Entry(workOrderEntity)
+                .Reference(x => x.Location).LoadAsync();
+            await created.Context.Entry(workOrderEntity)
+                .Reference(x => x.Purchase).LoadAsync();
+            await created.Context.Entry(workOrderEntity)
+                .Reference(x => x.Product).LoadAsync();
+            await created.Context.Entry(workOrderEntity.Product)
+                .Reference(x => x.Procedure).LoadAsync();
+            await created.Context.Entry(workOrderEntity.Purchase)
+                .Reference(x => x.PurchaseOrder).LoadAsync();
+            await created.Context.Entry(workOrderEntity.Purchase.PurchaseOrder)
+                .Reference(x => x.Customer).LoadAsync();
+                
             var workOrderStatEntity = new WorkOrderStats()
             {
                 WorkOrderId = workOrderEntity.Id,
-                TotalTasks = workOrderEntity.WorkOrderTasks != null ? workOrderEntity.WorkOrderTasks.Count() : 0,
+                TotalTasks = (int) workOrderEntity.WorkOrderTasks?.Count(),
                 CompletedTasks = 0,
                 TotalTimeLogged = 0,
                 TotalTaskTime = totalLaborTime,
@@ -263,7 +247,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             await _unitOfWork.SaveChangesAsync();
             // Build out minimal information so this can be
             // displayed on the WO status screen without a reload.
-            _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+            await _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
             {
                 workOrderId = workOrderEntity.Id,
                 workOrderStatus = TranslateWOStatusToViewModel(workOrderEntity.WorkOrderTasks),
@@ -274,14 +258,13 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 customerName = workOrderEntity.Product?.Customer?.Name,
                 serialNumber = workOrderEntity.WorkOrderParts.First().SerialNumber,
             });
-
-            var purchaseEntity = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(p => p.Id == workOrderEntity.PurchaseId);
-            var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(p => p.Id == purchaseEntity.PurchaseOrderId);
+            
+            var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(p => p.Id == createWorkOrderDto.PurchaseOrderId);
             purchaseOrderEntity.UninvoicedBalance += workOrderEntity.Price;
 
             await _unitOfWork.PurchaseOrders.UpdateAndSaveChangesAsync(purchaseOrderEntity);
 
-            return workOrderModel;
+            return $"{(workOrderEntity.Purchase?.PurchaseOrder?.Customer?.Name ?? string.Empty)}-{workOrderEntity.Id}";
         }
 
         public async Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command)
@@ -414,38 +397,40 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 quantity = 1;
             }
 
-            List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
-            for ( ; createCount > 0; createCount -= 1)
+            //we only have to do subpart mapping once because it doesn't change
+            var subParts = new List<WorkOrderPartModel>();
+            if(product.Part.Subparts != null && product.Part.Subparts.Any())
             {
-                List<WorkOrderPartModel> subs = new List<WorkOrderPartModel>();
-                if (product.Part.Subparts != null && product.Part.Subparts.Count > 0)
+                foreach(var partSubPartMapForSubPart in product.Part.Subparts)
                 {
-                    foreach (PartSubPartMap partSubPartMapForSubPart in product.Part.Subparts)
+                    var subPartQuantity = partSubPartMapForSubPart.Qty;
+                    if(subPartQuantity == 0)
                     {
-                        int subPartQuantity = partSubPartMapForSubPart.Qty;
-                        if (subPartQuantity == 0)
-                        {
-                            subPartQuantity = 1;
-                        }
+                        subPartQuantity = 1;
+                    }
 
-                        var partSegregationTypeValue = partSubPartMapForSubPart.Part?.SegregationType;
+                    var partSegregationTypeValue = partSubPartMapForSubPart.Part?.SegregationType;
 
-                        for ( ; subPartQuantity > 0; subPartQuantity -= 1)
+                    for(; subPartQuantity > 0; subPartQuantity -= 1)
+                    {
+                        subParts.Add(new WorkOrderPartModel()
                         {
-                            subs.Add(new WorkOrderPartModel()
-                            {
-                                PartId = partSubPartMapForSubPart.PartId,
-                                ParentId = partSubPartMapForSubPart.ParentPartId,
-                                Qty = partSubPartMapForSubPart.Qty,
-                                SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
-                            });
-                        }
+                            PartId = partSubPartMapForSubPart.PartId,
+                            ParentId = partSubPartMapForSubPart.ParentPartId,
+                            Qty = partSubPartMapForSubPart.Qty,
+                            SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
+                        });
                     }
                 }
+            }
+            
+            var parts = new List<WorkOrderPartModel>();
+            for ( ; createCount > 0; createCount -= 1)
+            {
                 parts.Add(new WorkOrderPartModel()
                     {
                         PartId = product.PartId,
-                        Children = subs,
+                        Children = subParts,
                         Qty = quantity
                     });
             }

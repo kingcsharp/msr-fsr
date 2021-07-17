@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -88,16 +89,24 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 ret = _mapper.Map<Domain.Models.PurchaseModel>(purchase);
                 ret.SerializeIndividually = command.SerializeIndividually;
 
-                WorkOrderCreateEvent woEvent = new WorkOrderCreateEvent();
-                woEvent.purchaseInfo = ret;
-                woEvent.serialNumbers = command.SerialNumbers;
-                woEvent.CustomerLineNumbers = command.CustomerLineNumbers;
-                MessageEnvelope sqsmsg = new MessageEnvelope(
-                    woEvent.GetType().Name,
-                    woEvent,
-                    await _accountService.GetJWTTokenAsync()
-                );
-                await _bus.SendMessage(sqsmsg);
+                var workOrderCreateEvent = new WorkOrderCreateEvent
+                {
+                    SerialNumbers = command.SerialNumbers,
+                    CustomerLineNumbers = command.CustomerLineNumbers,
+                    Qty = ret.Qty,
+                    Price = ret.PurchasePrice,
+                    LocationId = ret.LocationId,
+                    PurchaseId = ret.Id,
+                    ScheduledEndDate = ret.DueDate,
+                    ScheduledStartDate = DateTime.UtcNow,
+                    ProductId = ret.PurchaseOrderProductId,
+                    SerializeIndividually = ret.SerializeIndividually,
+                    HasNCR = false,
+                    PurchaseOrderId = ret.PurchaseOrderId
+                };
+
+                var sqsMessageEnvelope = new MessageEnvelope(workOrderCreateEvent.GetType().Name,workOrderCreateEvent,await _accountService.GetJWTTokenAsync());
+                await _bus.SendMessage(sqsMessageEnvelope);
 
             }
             else
