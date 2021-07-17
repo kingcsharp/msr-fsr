@@ -55,14 +55,16 @@ export class NcrReportComponent implements OnInit {
         });
 
         this.taskSummaries.push(taskSummary);
-        workOrderTask.referenceFiles.map(referenceFile => {
-
-          if (this.getViewerType(referenceFile.contentType) === 'img') {
-            this.associatedDigitalPictures.push(referenceFile);
-          } else {
-            this.associatedDocuments.push(referenceFile);
-          }
-        });
+        if (typeof workOrderTask.referenceFiles !== 'undefined' &&
+            workOrderTask.referenceFiles !== null) {
+            workOrderTask.referenceFiles.map(referenceFile => {
+              if (this.getViewerType(referenceFile.contentType) === 'img') {
+                this.associatedDigitalPictures.push(referenceFile);
+              } else {
+                this.associatedDocuments.push(referenceFile);
+              }
+            });
+        }
     });
 
     this.taskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
