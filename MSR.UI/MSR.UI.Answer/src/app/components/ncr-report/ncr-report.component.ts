@@ -35,14 +35,15 @@ export class NcrReportComponent implements OnInit {
   }
 
   generateMonitorSummaries() {
-    this.WorkOrder.workOrderTasks.filter(s => 
+    this.WorkOrder.workOrderTasks.filter(s =>
       (s.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR)
     || s.isNCRTask).map(workOrderTask => {
 
         let taskSummary = {
           taskName: workOrderTask.procedureStep === undefined ? workOrderTask.title : workOrderTask.procedureStep.title,
           taskId: workOrderTask.id,
-          monitors: new Array<any>()
+          monitors: new Array<any>(),
+          taskStepOrder: workOrderTask.taskStepOrder
         };
 
         workOrderTask.workOrderTaskMonitors.map(workOrderTaskMonitor => {
@@ -54,16 +55,19 @@ export class NcrReportComponent implements OnInit {
         });
 
         this.taskSummaries.push(taskSummary);
-        workOrderTask.referenceFiles.map(referenceFile => {
-
-          if (this.getViewerType(referenceFile.contentType) === 'img') {
-            this.associatedDigitalPictures.push(referenceFile);
-          } else {
-            this.associatedDocuments.push(referenceFile);
-          }
-        });
-
+        if (typeof workOrderTask.referenceFiles !== 'undefined' &&
+            workOrderTask.referenceFiles !== null) {
+            workOrderTask.referenceFiles.map(referenceFile => {
+              if (this.getViewerType(referenceFile.contentType) === 'img') {
+                this.associatedDigitalPictures.push(referenceFile);
+              } else {
+                this.associatedDocuments.push(referenceFile);
+              }
+            });
+        }
     });
+
+    this.taskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
   }
 
   showImagePreviewDialog(fileModel: FileModel) {

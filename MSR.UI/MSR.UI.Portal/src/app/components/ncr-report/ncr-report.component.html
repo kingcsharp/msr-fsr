@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row m-4" *ngIf="workOrderPart !== undefined">
     <div class="col-12">Part Non Conformance Report - Work Order {{WorkOrder.id}}</div>
     <div class="col-12 border mb-2">
         <div class="row">
@@ -9,7 +9,7 @@
     </div>
     <div class="col-12 border mb-2">
         <div class="row">
-            <div class="col-3 text-right">Date Report Prepared:</div><div class="col-9">{{date}}</div>
+            <div class="col-3 text-right">Date Report Prepared:</div><div class="col-9">{{date | userTimezone }}</div>
             <div class="col-3 text-right">Work Order #:</div><div class="col-9">{{WorkOrder.id}}</div>
             <div class="col-3 text-right">Customer:</div><div class="col-9">{{WorkOrder.purchase?.purchaseOrder?.customer?.name}}</div>
             <div class="col-3 text-right">Technician:</div><div class="col-9">{{technicianFullName}}</div>
@@ -35,9 +35,12 @@
             <div class="col-9">
                 <div class="row">
                     <div class="col-4 mt-4" *ngFor="let fileModel of associatedDigitalPictures">
-                        <a href="{{fileModel.fileURL}}" target="_blank">
+                        <a *ngIf="fileModel.fileId !== undefined" href="{{fileModel.fileURL}}" target="_blank">
                             <img class="card-img-top" src="{{fileModel.fileURL}}" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
                         </a>
+                        <a *ngIf="fileModel.fileId === undefined || fileModel.fileId === null">
+                          <img class="card-img-top" [src]="fileModel.base64String" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
+                      </a>
                     </div>
                 </div>
             </div>

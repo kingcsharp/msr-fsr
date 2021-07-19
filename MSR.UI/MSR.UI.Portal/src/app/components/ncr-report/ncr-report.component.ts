@@ -35,33 +35,36 @@ export class NcrReportComponent implements OnInit {
   }
 
   generateMonitorSummaries() {
-    this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
-      if (workOrderTask.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR) {
+    this.WorkOrder.workOrderTasks.filter(s =>
+      (s.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR)
+    || s.isNCRTask).map(workOrderTask => {
+
         let taskSummary = {
-          taskName: workOrderTask.procedureStep.title,
+          taskName: workOrderTask.procedureStep === undefined ? workOrderTask.title : workOrderTask.procedureStep.title,
           taskId: workOrderTask.id,
           monitors: new Array<any>(),
           taskStepOrder: workOrderTask.taskStepOrder
         };
 
-        workOrderTask.workOrderTaskMonitors.forEach(workOrderTaskMonitor => {
+        workOrderTask.workOrderTaskMonitors.map(workOrderTaskMonitor => {
           taskSummary.monitors.push({
-            monitorTitle: workOrderTaskMonitor.procedureStepMonitor?.description,
+            monitorTitle: workOrderTask.procedureStep === undefined  !== null ? workOrderTaskMonitor.procedureStepMonitor?.description : workOrderTaskMonitor.description,
             result: workOrderTaskMonitor,
             comment: workOrderTaskMonitor.comment
           });
         });
 
         this.taskSummaries.push(taskSummary);
-        workOrderTask.referenceFiles.map(referenceFile => {
-
-          if (this.getViewerType(referenceFile.contentType) === 'img') {
-            this.associatedDigitalPictures.push(referenceFile);
-          } else {
-            this.associatedDocuments.push(referenceFile);
-          }
-        });
-      }
+        if (typeof workOrderTask.referenceFiles !== 'undefined' &&
+            workOrderTask.referenceFiles !== null) {
+            workOrderTask.referenceFiles.map(referenceFile => {
+              if (this.getViewerType(referenceFile.contentType) === 'img') {
+                this.associatedDigitalPictures.push(referenceFile);
+              } else {
+                this.associatedDocuments.push(referenceFile);
+              }
+            });
+        }
     });
 
     this.taskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
