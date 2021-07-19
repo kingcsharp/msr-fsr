@@ -95,7 +95,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
         public AnswerContext(DbContextOptions<AnswerContext> options)
         : base(options)
-        { }
+        {
+            Database.SetCommandTimeout(60);
+        }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
