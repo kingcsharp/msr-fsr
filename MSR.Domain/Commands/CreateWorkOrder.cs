@@ -7,21 +7,21 @@ namespace MSR.Domain.Commands
 {
     public class CreateWorkOrder : Command
     {
-        public int? PurchaseId { get; }
-        public int? ProductId { get; }
-        public int? PurchaseOrderId { get; }
-        public decimal? Price { get; }
+        public int PurchaseId { get; }
+        public int ProductId { get; }
+        public int PurchaseOrderId { get; }
+        public decimal Price { get; }
         public DateTime ScheduledStartDate { get; }
         public DateTime ScheduledEndDate { get; }
-        public bool? HasNCR { get; }
-        public int? LocationId { get; }
+        public bool HasNCR { get; }
+        public int LocationId { get; }
         public int Qty { get; }
         public bool SerializeIndividually { get; }
         public ICollection<string> SerialNumbers { get; }
         public ICollection<string> CustomerLineNumbers { get; }
 
-        public CreateWorkOrder(int? purchaseId, int? productId, int? purchaseOrderId, decimal? price, DateTime scheduledStartDate,
-            DateTime scheduledEndDate, bool? hasNcr, int? locationId, int qty, bool serializeIndividually, 
+        public CreateWorkOrder(int purchaseId, int productId, int purchaseOrderId, decimal price, DateTime scheduledStartDate,
+            DateTime scheduledEndDate, bool hasNcr, int locationId, int qty, bool serializeIndividually, 
             ICollection<string> serialNumbers, ICollection<string> customerLineNumbers)
         {
             PurchaseId = purchaseId;

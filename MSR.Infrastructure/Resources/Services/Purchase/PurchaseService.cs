@@ -99,7 +99,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                     PurchaseId = ret.Id,
                     ScheduledEndDate = ret.DueDate,
                     ScheduledStartDate = DateTime.UtcNow,
-                    ProductId = ret.PurchaseOrderProduct?.ProductId,
+                    ProductId = ret.PurchaseOrderProduct.ProductId,
                     SerializeIndividually = ret.SerializeIndividually,
                     HasNCR = false,
                     PurchaseOrderId = ret.PurchaseOrderId

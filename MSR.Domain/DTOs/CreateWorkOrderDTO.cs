@@ -8,14 +8,14 @@ namespace MSR.Domain.DTOs
 {
     public class CreateWorkOrderDTO
     {
-        public int? PurchaseId { get; set; }
-        public int? ProductId { get; set; }
-        public int? PurchaseOrderId { get; set; }
-        public decimal? Price { get; set; }
+        public int PurchaseId { get; set; }
+        public int ProductId { get; set; }
+        public int PurchaseOrderId { get; set; }
+        public decimal Price { get; set; }
         public DateTime ScheduledStartDate { get; set; }
         public DateTime ScheduledEndDate { get; set; }
-        public bool? HasNCR { get; set; }
-        public int? LocationId { get; set; }
+        public bool HasNCR { get; set; }
+        public int LocationId { get; set; }
         public int Qty { get; set; }
         public bool SerializeIndividually { get; set; }
         public virtual ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
