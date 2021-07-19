@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MSR.Domain.DTOs;
 using Xunit;
 
 namespace MSR.Infrastructure.Tests.Resources.Services
@@ -26,9 +27,8 @@ namespace MSR.Infrastructure.Tests.Resources.Services
         [Fact]
         public async Task Call_CreateWorkOrderAsync()
         {
-            var response = await _workorderService.CreateWorkOrderAsync(
-                WorkOrderFixture.WorkOrderCreate
-            );
+            var workOrderDto = CreateWorkOrderDTO.FromCommand(WorkOrderFixture.WorkOrderCreate);
+            var response = await _workorderService.CreateWorkOrderAsync(workOrderDto);
             response.Should().NotBeNull();
         }
 

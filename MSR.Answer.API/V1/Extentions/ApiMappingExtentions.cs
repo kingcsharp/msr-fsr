@@ -584,7 +584,10 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static CreateWorkOrder ToCreateWorkOrderCommand(this CreateWorkOrderRequest request)
         {
-            return AutoMapperHelper.Mapper.Map<CreateWorkOrder>(request);
+            return new CreateWorkOrder(request.PurchaseId, request.ProductId, request.PurchaseOrderId, request.Price,
+                request.ScheduledStartDate, request.ScheduledEndDate,
+                request.HasNCR, request.LocationId, request.Qty, request.SerializeIndividually, request.SerialNumbers,
+                request.CustomerLineNumbers);
         }
 
         /// <summary>

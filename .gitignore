@@ -39,3 +39,4 @@ docker-compose.override.yml.OLD
 *.yarn-integrity
 *.lock
 *.patch
+/scripts
