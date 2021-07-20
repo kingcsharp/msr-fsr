@@ -198,8 +198,8 @@ namespace MSR.Application.ApplicationServices
                     error = $"{error} | Inner Exception: {innerException.Message}";
                     innerException = innerException.InnerException;
                 }
-
-                throw new DomainException($"PurchaseID: {command.PurchaseId} | error", DomainError.InternalServerError);
+                
+                throw new DomainException($"PurchaseID: {command.PurchaseId} | {error}", DomainError.InternalServerError);
             }
         }
     }
