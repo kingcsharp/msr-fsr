@@ -23,6 +23,10 @@ RUN dotnet publish "MSR.Answer.Processor.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+COPY --from=gik25138.live.dynatrace.com/linux/oneagent-codemodules-musl:dotnet / /
+ENV LD_PRELOAD /opt/dynatrace/oneagent/agent/lib64/liboneagentproc.so
+
 ENV ASPNETCORE_ENVIRONMENT=Development
 ENV ASPNETCORE_URLS http://+:5001
 EXPOSE 5001
