@@ -360,6 +360,10 @@
                   class="form-control input-transparent disable"
                   name="purchaseSerializeItem[{{i}}].CUST_LINE_ITEM"
                   type="text"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-minlength="3"
+                  data-parsley-required="true"
                 >
               </td>
               <td>
@@ -401,7 +405,7 @@
                   hidden
                   [(ngModel)]="purchaseSerializeItems[i].locationId"
                   class="form-control input-transparent"
-                  name="purchaseSerializeItem_SITE"
+                  name="purchaseSerializeItem[{{i}}].SITE_INPUT"
                   type="text"
                   data-validate="parsley"
                   data-parsley-trigger="change"
