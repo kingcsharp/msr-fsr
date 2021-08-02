@@ -18240,7 +18240,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     /** SerialNumber */
     serialNumbers?: string[] | undefined;
     /** CustomerLineNumbers */
-    customerLineNumbers?: string[] | undefined;
+    customerLineNumbers!: string[];
     /** Quantity */
     qty!: number;
     /** Material Transfer Number (MTTN) */
@@ -18258,6 +18258,9 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.customerLineNumbers = [];
         }
     }
 
@@ -18334,7 +18337,7 @@ export interface ICreatePurchaseRequest {
     /** SerialNumber */
     serialNumbers?: string[] | undefined;
     /** CustomerLineNumbers */
-    customerLineNumbers?: string[] | undefined;
+    customerLineNumbers: string[];
     /** Quantity */
     qty: number;
     /** Material Transfer Number (MTTN) */
@@ -22206,15 +22209,14 @@ export interface IAddNCRWorkOrderTaskRequest {
 
 export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
     purchaseId!: number;
-    productId?: number | undefined;
-    price?: number | undefined;
+    productId?: number;
+    purchaseOrderId?: number;
+    price?: number;
     scheduledStartDate?: Date;
     scheduledEndDate?: Date;
-    hasNCR?: boolean | undefined;
-    locationId?: number | undefined;
+    hasNCR?: boolean;
+    locationId?: number;
     serializeIndividually?: boolean;
-    workOrderParts?: WorkOrderPartRequest[] | undefined;
-    workOrderTasks?: WorkOrderTaskRequest[] | undefined;
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
     qty?: number;
@@ -22232,22 +22234,13 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
         if (_data) {
             this.purchaseId = _data["purchaseId"];
             this.productId = _data["productId"];
+            this.purchaseOrderId = _data["purchaseOrderId"];
             this.price = _data["price"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
             this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
             this.hasNCR = _data["hasNCR"];
             this.locationId = _data["locationId"];
             this.serializeIndividually = _data["serializeIndividually"];
-            if (Array.isArray(_data["workOrderParts"])) {
-                this.workOrderParts = [] as any;
-                for (let item of _data["workOrderParts"])
-                    this.workOrderParts!.push(WorkOrderPartRequest.fromJS(item));
-            }
-            if (Array.isArray(_data["workOrderTasks"])) {
-                this.workOrderTasks = [] as any;
-                for (let item of _data["workOrderTasks"])
-                    this.workOrderTasks!.push(WorkOrderTaskRequest.fromJS(item));
-            }
             if (Array.isArray(_data["serialNumbers"])) {
                 this.serialNumbers = [] as any;
                 for (let item of _data["serialNumbers"])
@@ -22273,22 +22266,13 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
         data = typeof data === 'object' ? data : {};
         data["purchaseId"] = this.purchaseId;
         data["productId"] = this.productId;
+        data["purchaseOrderId"] = this.purchaseOrderId;
         data["price"] = this.price;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
         data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
         data["hasNCR"] = this.hasNCR;
         data["locationId"] = this.locationId;
         data["serializeIndividually"] = this.serializeIndividually;
-        if (Array.isArray(this.workOrderParts)) {
-            data["workOrderParts"] = [];
-            for (let item of this.workOrderParts)
-                data["workOrderParts"].push(item.toJSON());
-        }
-        if (Array.isArray(this.workOrderTasks)) {
-            data["workOrderTasks"] = [];
-            for (let item of this.workOrderTasks)
-                data["workOrderTasks"].push(item.toJSON());
-        }
         if (Array.isArray(this.serialNumbers)) {
             data["serialNumbers"] = [];
             for (let item of this.serialNumbers)
@@ -22306,315 +22290,17 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
 
 export interface ICreateWorkOrderRequest {
     purchaseId: number;
-    productId?: number | undefined;
-    price?: number | undefined;
+    productId?: number;
+    purchaseOrderId?: number;
+    price?: number;
     scheduledStartDate?: Date;
     scheduledEndDate?: Date;
-    hasNCR?: boolean | undefined;
-    locationId?: number | undefined;
+    hasNCR?: boolean;
+    locationId?: number;
     serializeIndividually?: boolean;
-    workOrderParts?: WorkOrderPartRequest[] | undefined;
-    workOrderTasks?: WorkOrderTaskRequest[] | undefined;
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
     qty?: number;
-}
-
-export class WorkOrderPartRequest implements IWorkOrderPartRequest {
-    workOrderId?: number;
-    partId?: number;
-    parentId?: number | undefined;
-    serialNumber?: string | undefined;
-    segregationType?: EnumSegregationType | undefined;
-    part?: UpdatePartRequest | undefined;
-    workOrder?: UpdateWorkOrderRequest | undefined;
-    children?: WorkOrderPartRequest[] | undefined;
-    parent?: WorkOrderPartRequest | undefined;
-
-    constructor(data?: IWorkOrderPartRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.workOrderId = _data["workOrderId"];
-            this.partId = _data["partId"];
-            this.parentId = _data["parentId"];
-            this.serialNumber = _data["serialNumber"];
-            this.segregationType = _data["segregationType"];
-            this.part = _data["part"] ? UpdatePartRequest.fromJS(_data["part"]) : <any>undefined;
-            this.workOrder = _data["workOrder"] ? UpdateWorkOrderRequest.fromJS(_data["workOrder"]) : <any>undefined;
-            if (Array.isArray(_data["children"])) {
-                this.children = [] as any;
-                for (let item of _data["children"])
-                    this.children!.push(WorkOrderPartRequest.fromJS(item));
-            }
-            this.parent = _data["parent"] ? WorkOrderPartRequest.fromJS(_data["parent"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): WorkOrderPartRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkOrderPartRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["workOrderId"] = this.workOrderId;
-        data["partId"] = this.partId;
-        data["parentId"] = this.parentId;
-        data["serialNumber"] = this.serialNumber;
-        data["segregationType"] = this.segregationType;
-        data["part"] = this.part ? this.part.toJSON() : <any>undefined;
-        data["workOrder"] = this.workOrder ? this.workOrder.toJSON() : <any>undefined;
-        if (Array.isArray(this.children)) {
-            data["children"] = [];
-            for (let item of this.children)
-                data["children"].push(item.toJSON());
-        }
-        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IWorkOrderPartRequest {
-    workOrderId?: number;
-    partId?: number;
-    parentId?: number | undefined;
-    serialNumber?: string | undefined;
-    segregationType?: EnumSegregationType | undefined;
-    part?: UpdatePartRequest | undefined;
-    workOrder?: UpdateWorkOrderRequest | undefined;
-    children?: WorkOrderPartRequest[] | undefined;
-    parent?: WorkOrderPartRequest | undefined;
-}
-
-export class UpdateWorkOrderRequest extends CreateWorkOrderRequest implements IUpdateWorkOrderRequest {
-    id?: number;
-
-    constructor(data?: IUpdateWorkOrderRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): UpdateWorkOrderRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateWorkOrderRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IUpdateWorkOrderRequest extends ICreateWorkOrderRequest {
-    id?: number;
-}
-
-/**  */
-export class WorkOrderTaskRequest implements IWorkOrderTaskRequest {
-    /**   */
-    workOrderId?: number;
-    /**   */
-    procedureStepId?: number;
-    /**   */
-    procedureStepTypeId?: number;
-    /**   */
-    statusId?: number;
-    /**   */
-    taskStepOrder?: number;
-    /**   */
-    assignedTo?: number | undefined;
-    /**   */
-    userId?: number | undefined;
-    /**   */
-    totalTaskTime?: number | undefined;
-    /**   */
-    taskIsRunning?: boolean | undefined;
-    /**   */
-    taskRunningSince?: Date | undefined;
-    /**   */
-    workOrderTaskMonitors?: WorkOrderTaskMonitorRequest[] | undefined;
-
-    constructor(data?: IWorkOrderTaskRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.workOrderId = _data["workOrderId"];
-            this.procedureStepId = _data["procedureStepId"];
-            this.procedureStepTypeId = _data["procedureStepTypeId"];
-            this.statusId = _data["statusId"];
-            this.taskStepOrder = _data["taskStepOrder"];
-            this.assignedTo = _data["assignedTo"];
-            this.userId = _data["userId"];
-            this.totalTaskTime = _data["totalTaskTime"];
-            this.taskIsRunning = _data["taskIsRunning"];
-            this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
-            if (Array.isArray(_data["workOrderTaskMonitors"])) {
-                this.workOrderTaskMonitors = [] as any;
-                for (let item of _data["workOrderTaskMonitors"])
-                    this.workOrderTaskMonitors!.push(WorkOrderTaskMonitorRequest.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): WorkOrderTaskRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkOrderTaskRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["workOrderId"] = this.workOrderId;
-        data["procedureStepId"] = this.procedureStepId;
-        data["procedureStepTypeId"] = this.procedureStepTypeId;
-        data["statusId"] = this.statusId;
-        data["taskStepOrder"] = this.taskStepOrder;
-        data["assignedTo"] = this.assignedTo;
-        data["userId"] = this.userId;
-        data["totalTaskTime"] = this.totalTaskTime;
-        data["taskIsRunning"] = this.taskIsRunning;
-        data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
-        if (Array.isArray(this.workOrderTaskMonitors)) {
-            data["workOrderTaskMonitors"] = [];
-            for (let item of this.workOrderTaskMonitors)
-                data["workOrderTaskMonitors"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-/**  */
-export interface IWorkOrderTaskRequest {
-    /**   */
-    workOrderId?: number;
-    /**   */
-    procedureStepId?: number;
-    /**   */
-    procedureStepTypeId?: number;
-    /**   */
-    statusId?: number;
-    /**   */
-    taskStepOrder?: number;
-    /**   */
-    assignedTo?: number | undefined;
-    /**   */
-    userId?: number | undefined;
-    /**   */
-    totalTaskTime?: number | undefined;
-    /**   */
-    taskIsRunning?: boolean | undefined;
-    /**   */
-    taskRunningSince?: Date | undefined;
-    /**   */
-    workOrderTaskMonitors?: WorkOrderTaskMonitorRequest[] | undefined;
-}
-
-export class WorkOrderTaskMonitorRequest implements IWorkOrderTaskMonitorRequest {
-    /**   */
-    workOrderTaskId?: number;
-    /**   */
-    workOrderTask?: WorkOrderTaskRequest | undefined;
-    /**   */
-    procedureMonitorId?: number;
-    /**   */
-    numVal?: number | undefined;
-    /**   */
-    textVal?: string | undefined;
-    /**   */
-    multiVal?: string | undefined;
-    /**   */
-    sensorMappingId?: number;
-    /**   */
-    comment?: string | undefined;
-
-    constructor(data?: IWorkOrderTaskMonitorRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.workOrderTaskId = _data["workOrderTaskId"];
-            this.workOrderTask = _data["workOrderTask"] ? WorkOrderTaskRequest.fromJS(_data["workOrderTask"]) : <any>undefined;
-            this.procedureMonitorId = _data["procedureMonitorId"];
-            this.numVal = _data["numVal"];
-            this.textVal = _data["textVal"];
-            this.multiVal = _data["multiVal"];
-            this.sensorMappingId = _data["sensorMappingId"];
-            this.comment = _data["comment"];
-        }
-    }
-
-    static fromJS(data: any): WorkOrderTaskMonitorRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkOrderTaskMonitorRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["workOrderTaskId"] = this.workOrderTaskId;
-        data["workOrderTask"] = this.workOrderTask ? this.workOrderTask.toJSON() : <any>undefined;
-        data["procedureMonitorId"] = this.procedureMonitorId;
-        data["numVal"] = this.numVal;
-        data["textVal"] = this.textVal;
-        data["multiVal"] = this.multiVal;
-        data["sensorMappingId"] = this.sensorMappingId;
-        data["comment"] = this.comment;
-        return data; 
-    }
-}
-
-export interface IWorkOrderTaskMonitorRequest {
-    /**   */
-    workOrderTaskId?: number;
-    /**   */
-    workOrderTask?: WorkOrderTaskRequest | undefined;
-    /**   */
-    procedureMonitorId?: number;
-    /**   */
-    numVal?: number | undefined;
-    /**   */
-    textVal?: string | undefined;
-    /**   */
-    multiVal?: string | undefined;
-    /**   */
-    sensorMappingId?: number;
-    /**   */
-    comment?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
