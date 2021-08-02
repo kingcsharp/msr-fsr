@@ -18240,7 +18240,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     /** SerialNumber */
     serialNumbers?: string[] | undefined;
     /** CustomerLineNumbers */
-    customerLineNumbers?: string[] | undefined;
+    customerLineNumbers!: string[];
     /** Quantity */
     qty!: number;
     /** Material Transfer Number (MTTN) */
@@ -18258,6 +18258,9 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.customerLineNumbers = [];
         }
     }
 
@@ -18334,7 +18337,7 @@ export interface ICreatePurchaseRequest {
     /** SerialNumber */
     serialNumbers?: string[] | undefined;
     /** CustomerLineNumbers */
-    customerLineNumbers?: string[] | undefined;
+    customerLineNumbers: string[];
     /** Quantity */
     qty: number;
     /** Material Transfer Number (MTTN) */

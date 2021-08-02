@@ -47,6 +47,7 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// CustomerLineNumbers
         /// </summary>
+        [Required]
         public List<string> CustomerLineNumbers { get; set; }
 
         /// <summary>
