@@ -107,15 +107,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 _ = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.PurchaseOrderId);
                 _ = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.LocationId);
             }
-            
 
             if (workOrderEntity.Purchase.PurchaseOrder.Customer != null) {
 
+                var userIds = new List<int>();
+
                 if(workOrderEntity.Purchase.PurchaseOrder.Customer.PrimaryContactUserId.HasValue)
-                _ = await _unitOfWork.Customers.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.PurchaseOrder.Customer.PrimaryContactUser.Id);
+                    userIds.Add(workOrderEntity.Purchase.PurchaseOrder.Customer.PrimaryContactUserId.Value);
 
                 if (workOrderEntity.Purchase.PurchaseOrder.Customer.SecondaryContactUserId.HasValue)
-                    _ = await _unitOfWork.Customers.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.PurchaseOrder.Customer.SecondaryContactUser.Id);
+                    userIds.Add(workOrderEntity.Purchase.PurchaseOrder.Customer.SecondaryContactUserId.Value);
+
+                _ = await _unitOfWork.Users.Query().Where(s => userIds.Contains(s.Id)).ToListAsync();
 
             }
 
