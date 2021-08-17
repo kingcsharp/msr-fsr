@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { WorkOrderModel } from '../../services/api.client.generated';
+import { PackingListViewModel } from '../detailed-packing-list/detailed-packing-list-view-model';
 
 @Component({
   selector: 'delivery-ticket-report',
@@ -9,10 +10,13 @@ import { WorkOrderModel } from '../../services/api.client.generated';
 export class DeliveryTicketReportComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
+  
+  packingList: PackingListViewModel;
 
-  constructor() { }
+  constructor() {  this.packingList = new PackingListViewModel(); }
 
   ngOnInit(): void {
+    this.packingList.populate(this.WorkOrder, this.WorkOrder.purchase);
   }
 
 }
