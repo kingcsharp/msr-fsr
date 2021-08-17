@@ -38,6 +38,7 @@
             <div class="col"><b>Part Name</b></div>
             <div class="col"><b>Serial</b></div>
             <div class="col"><b>Cycle Count</b></div>
+            <div class="col"><b>Quantity</b></div>
         </div>
         <div *ngFor="let workOrderPart of packingList.sortedParts">
             <div class="{{workOrderPart.poLineLabel == '' ? '' : 'border'}} row"></div>
@@ -71,6 +72,7 @@
                     </ngx-barcode>
                 </div>
                 <div class="col">{{ workOrderPart.part.cycleCount }}</div>
+                <div class="col">{{ workOrderPart.part.qty }}</div>
             </div>
         </div>
     </div>
@@ -135,7 +137,7 @@
       </div>
       <div class="row">
         <div class="col">
-            Customer Main Part Number: {{ workOrderParentPart.part.part.partNumber }} 
+            Customer Main Part Number: {{ workOrderParentPart.part.part.partNumber }}
         </div>
       </div>
       <div class="row">
@@ -157,15 +159,17 @@
             <div class="col border"> Description </div>
             <div class="col border"> SN </div>
           </div>
-          <div class="row border">
+          <div *ngFor="let counter of generateArray(workOrderParentPart.part.qty)" class="row border">
             <div class="col border"> {{ workOrderParentPart.part.part.partNumber }}</div>
             <div class="col border"> {{ workOrderParentPart.part.part.name }}</div>
             <div class="col border"> {{ workOrderParentPart.part.serialNumber }} </div>
           </div>
           <div *ngFor="let workOrderSubPart of workOrderParentPart.subparts" class="row border">
-            <div class="col border"> &nbsp;&nbsp;&nbsp;{{ workOrderSubPart.part.partNumber }}</div>
-            <div class="col border"> {{ workOrderSubPart.part.name }}</div>
-            <div class="col border"> {{ workOrderSubPart.serialNumber }} </div>
+            <ng-container *ngFor="let counter of generateArray(workOrderSubPart.qty)">
+              <div class="col border"> &nbsp;&nbsp;&nbsp;{{ workOrderSubPart.part.partNumber }}</div>
+              <div class="col border"> {{ workOrderSubPart.part.name }}</div>
+              <div class="col border"> {{ workOrderSubPart.serialNumber }} </div>
+            </ng-container>
           </div>
         </div>
       </div>

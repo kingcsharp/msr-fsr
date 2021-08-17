@@ -24,4 +24,8 @@ export class DetailedPackingListComponent implements OnInit {
     this.currentDate = formatDate(new Date(), 'MM/dd/yyyy', 'en');
   }
 
+  generateArray(qty: number = 1) {
+    return new Array(qty);
+  }
+
 }
