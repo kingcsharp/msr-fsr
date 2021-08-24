@@ -139,14 +139,16 @@ export class UserComponent implements OnInit {
         }));
     }, 10);
 
-    setTimeout(() => {
-      event.rows = 200;
-      callFunctionWithFilters(this.userService, this.userService.userGet, event, this.globals.functionDic)
-        .pipe(take(1))
-        .subscribe(responseHandler(response => {
-          this.updateUsersData(response.object);
-        }));
-    }, 10);
+    if(this.allUsers.length === 0) {
+      setTimeout(() => {
+        event.rows = 200;
+        callFunctionWithFilters(this.userService, this.userService.userGet, event, this.globals.functionDic)
+          .pipe(take(1))
+          .subscribe(responseHandler(response => {
+            this.updateUsersData(response.object);
+          }));
+      }, 10);
+    }
   }
 
   updateUsersData(usersData) {
