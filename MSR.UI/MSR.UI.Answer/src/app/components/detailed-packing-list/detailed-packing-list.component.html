@@ -1,4 +1,4 @@
-<div class="row border my-5">
+<div class="row border mx-2 my-5">
     <div class="col-12 my-2">
         <div class="row">
             <div class="col-6">
@@ -35,7 +35,7 @@
             <div class="col-3 border"><b>Part Name</b></div>
             <div class="col-2 border"><b>Serial</b></div>
             <div class="col-2 border text-center"><b>Cycle Count</b></div>
-            <div class="col-1 border text-center"><b>Quantity</b></div>
+            <div class="col-1 border text-center"><b>Qty</b></div>
         </div>
         <div *ngFor="let workOrderPart of packingList.sortedParts">
             <div class="row mx-2">
@@ -61,7 +61,7 @@
         </div>
     </div>
 </div>
-<div class="row mt-3 mb-5">
+<div class="row mx-2 mt-3 mb-5">
     <div class="col-3" style='text-align:right'>Signature of Recipient</div>
     <div class="col-9" style='border-bottom:1px solid'>&nbsp;</div>
 </div>
@@ -69,7 +69,7 @@
 <div *ngFor="let workOrderParentPart of packingList.parentParts" class="row border m-4">
     <div class="page col-12">
         <div class="container">
-            <div class="row border">
+            <div class="row">
                 <div class="col-12 mb-2 border-bottom">
                     <div class="row">
                         <div class="col-4">
@@ -80,9 +80,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-8 text-right">
-                    <h2 class="mt-2">CERTIFICATE OF COMPLIANCE</h2>
-                </div>
             </div>
         </div>
         <div class="row header">
@@ -90,8 +87,7 @@
                 <p><strong>Customer:</strong></p>
             </div>
             <div class="col-5 text-left">
-                <p style="margin-left:5em">
-                    {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}<br />
+                <p> {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}<br />
                     {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.city }},
                     {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.state }}
                 </p>
@@ -102,27 +98,27 @@
                     <strong>MSR-FSR WO #</strong>: </p>
             </div>
             <div class="col-2 text-left">
-                <p>{{ currentDate }}<br />
+                <p> {{ currentDate }}<br />
                     {{ workOrderParentPart.poLineLabel }}<br />
                     {{ WorkOrder.id }}</p>
             </div>
-            <div class="col-2 text-right">
+            <div class="col-2 mt-3 text-right">
                 <p><strong>Supplier</strong>:</p>
             </div>
-            <div class="col-3 text-left">
+            <div class="col-3 mt-3 text-left">
                 MSR-FSR {{ WorkOrder.location?.name }}<br />
                 {{ WorkOrder.location?.address1 }}<br />
                 {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} <br />
                 {{ WorkOrder.location?.phone }}
             </div>
-            <div class="col-3 text-right">
+            <div class="col-3 mt-3 text-right">
                 <!-- Note changes to the Labels -->
-                <p><strong>Customer Main Part Name</strong>:<br />
-                    <strong>Customer Main Part Number</strong>:<br />
+                <p><strong>Main Part Name</strong>:<br />
+                    <strong>Main Part Number</strong>:<br />
                     <strong>Process</strong>:</p>
             </div>
-            <div class="col-4 text-left">
-                <p>{{ workOrderParentPart.part.part.name }}<br />
+            <div class="col-4 mt-3 text-left">
+                <p> {{ workOrderParentPart.part.part.name }}<br />
                     {{ workOrderParentPart.part.part.partNumber }}<br />
                     {{ WorkOrder.product?.procedure?.name }}</p>
             </div>
@@ -134,7 +130,7 @@
         </div>
     </div>
     <div class="parts-list">
-        <div class="row ">
+        <div class="row">
             <div class="col border"><strong>Part Number</strong></div>
             <div class="col border"><strong>Description</strong></div>
             <div class="col border"><strong>SN</strong></div>
