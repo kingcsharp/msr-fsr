@@ -1,82 +1,84 @@
-<div class="container">
-    <div class="row border m-4">
-        <div class="col-12 mb-2 border-bottom">
-            <div class="row">
-                <div class="col-6">
-                    <h1>MSR-FSR</h1>
-                </div>
-                <div class="col-6 text-right">
-                    <h2>DETAILED PACKING LIST</h2>
-                </div>
+<div class="row border my-5">
+    <div class="col-12 my-2">
+        <div class="row">
+            <div class="col-6">
+                <h1>MSR-FSR</h1>
             </div>
-        </div>
-        <div class="col-12 mb-2">
-            <div class="row mx-2">
-                <div class="col-3">
-                    <u>Ship From</u><br />
-                    MSR-FSR<br />
-                    {{ WorkOrder.location?.name }}<br />
-                    {{ WorkOrder.location?.address1 }} {{ WorkOrder.location?.address2 }}<br />
-                    {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} {{ WorkOrder.location?.postalCode }}<br />
-                </div>
-                <div class="col-6">
-                    <u>Ship To</u><br />
-                    {{ WorkOrder.product?.customer?.name }}
-                    {{ WorkOrder.product?.customer?.address }}
-                    {{ WorkOrder.product?.customer?.phone }}
-                </div>
-                <div class="col-3">
-                    <b>Date</b>: {{ currentDate }}<br />
-                    <b>WO number</b>: {{ WorkOrder.id }}<br />
-                    <b>MTTN</b>: {{ WorkOrder.purchase?.mttn }}<br />
-                </div>
-            </div>
-
-            <div class="row m-2">
-                <div class="col-2 border"><b>PO/Line</b></div>
-                <div class="col-2 border"><b>Part #</b></div>
-                <div class="col-3 border"><b>Part Name</b></div>
-                <div class="col-2 border "><b>Serial</b></div>
-                <div class="col-2 border text-center"><b>Cycle Count</b></div>
-                <div class="col-1 border text-center"><b>Qty</b></div>
-            </div>
-            <div *ngFor="let workOrderPart of packingList.sortedParts">
-                <div class="{{workOrderPart.poLineLabel == '' ? '' : 'border'}} row"></div>
-                <div class="row m-2">
-                    <div class="col-2 border">
-                        {{ workOrderPart.poLineLabel }}<br />
-                        <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.poLineLabel" [bc-display-value]="false" [bc-height]="40">
-                        </ngx-barcode>
-                    </div>
-                    <div class="col-2 border">
-                        {{ workOrderPart.part.part?.partNumber }}<br />
-                        <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.part.part?.partNumber" [bc-display-value]="false" [bc-height]="40">
-                        </ngx-barcode>
-                    </div>
-                    <div class="col-3 border">{{ workOrderPart.part.part?.name }}</div>
-                    <div class="col-2 border">
-                        {{ workOrderPart.part.serialNumber }}<br />
-                        <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.part.serialNumber" [bc-display-value]="false" [bc-height]="40">
-                        </ngx-barcode>
-                    </div>
-                    <div class="col-2 border text-center">{{ workOrderPart.part.cycleCount }}</div>
-                    <div class="col-1 border text-center">{{ workOrderPart.part.qty }}</div>
-                </div>
+            <div class="col-6 text-right">
+                <h2>DETAILED PACKING LIST</h2>
             </div>
         </div>
     </div>
-    <div class="row m-4">
-        <div class="col-3 text-right">Signature of Recipient</div>
-        <div class="col-9" style='border-bottom:1px solid'>&nbsp;</div>
+    <div class="col-12 mb-4">
+        <div class="row mb-3 mx-2">
+            <div class="col-4">
+                <u>Ship From</u><br />
+                MSR-FSR {{ WorkOrder.location?.name }}<br />
+                {{ WorkOrder.location?.address1 }} {{ WorkOrder.location?.address2 }}<br />
+                {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} {{ WorkOrder.location?.postalCode }}<br />
+            </div>
+            <div class="col-4">
+                <u>Ship To</u><br />
+                {{ WorkOrder.product?.customer?.name }}
+                {{ WorkOrder.product?.customer?.address }}
+                {{ WorkOrder.product?.customer?.phone }}
+            </div>
+            <div class="col-4">
+                <b>Date</b>: {{ currentDate }}<br />
+                <b>WO number</b>: {{ WorkOrder.id }}<br />
+                <b>MTTN</b>: {{ WorkOrder.purchase?.mttn }}<br />
+            </div>
+
+        <div class="row mx-2">
+            <div class="col-2 border"><b>PO / Line</b></div>
+            <div class="col-2 border"><b>Part Number</b></div>
+            <div class="col-3 border"><b>Part Name</b></div>
+            <div class="col-2 border"><b>Serial</b></div>
+            <div class="col-2 border text-center"><b>Cycle Count</b></div>
+            <div class="col-1 border text-center"><b>Quantity</b></div>
+        </div>
+        <div *ngFor="let workOrderPart of packingList.sortedParts">
+            <div class="row mx-2">
+                <div class="col-2 border">
+                    {{ workOrderPart.poLineLabel }}<br />
+                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.poLineLabel" [bc-display-value]="false" [bc-height]="40">
+                    </ngx-barcode>
+                </div>
+                <div class="col-2 border">
+                    {{ workOrderPart.part.part?.partNumber }}<br />
+                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.part.part?.partNumber" [bc-display-value]="false" [bc-height]="40">
+                    </ngx-barcode>
+                </div>
+                <div class="col-3 border">{{ workOrderPart.part.part?.name }}</div>
+                <div class="col-2 border">
+                    {{ workOrderPart.part.serialNumber }}<br />
+                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.part.serialNumber" [bc-display-value]="false" [bc-height]="40">
+                    </ngx-barcode>
+                </div>
+                <div class="col-2 border text-center">{{ workOrderPart.part.cycleCount }}</div>
+                <div class="col-1 border text-center">{{ workOrderPart.part.qty }}</div>
+            </div>
+        </div>
     </div>
 </div>
+<div class="row mt-3 mb-5">
+    <div class="col-3" style='text-align:right'>Signature of Recipient</div>
+    <div class="col-9" style='border-bottom:1px solid'>&nbsp;</div>
+</div>
 
-<div *ngFor="let workOrderParentPart of packingList.parentParts" class="page container border m-4">
-    <div class="row border">
-        <div class="col-12 mb-2 border-bottom">
-            <div class="row">
-                <div class="col-4">
-                    <h1>MSR-FSR</h1>
+<div *ngFor="let workOrderParentPart of packingList.parentParts" class="row border m-4">
+    <div class="page col-12">
+        <div class="container">
+            <div class="row border">
+                <div class="col-12 mb-2 border-bottom">
+                    <div class="row">
+                        <div class="col-4">
+                            <h1>MSR-FSR</h1>
+                        </div>
+                        <div class="col-8 text-right">
+                            <h2 class="mt-2">CERTIFICATE OF COMPLIANCE</h2>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-8 text-right">
                     <h2 class="mt-2">CERTIFICATE OF COMPLIANCE</h2>

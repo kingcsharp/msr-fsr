@@ -23,6 +23,8 @@
 
 .page{
     page-break-inside: avoid;
+    page-break-before: always;
+    height: 100vh;
 }
 
 @media print {
