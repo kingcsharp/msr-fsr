@@ -28,7 +28,6 @@
                 <b>WO number</b>: {{ WorkOrder.id }}<br />
                 <b>MTTN</b>: {{ WorkOrder.purchase?.mttn }}<br />
             </div>
-        </div>
 
         <div class="row mx-2">
             <div class="col-2 border"><b>PO / Line</b></div>
@@ -81,101 +80,104 @@
                         </div>
                     </div>
                 </div>
-                <div class="row header">
-                    <div class="col-2 text-right">
-                        <p><strong>Customer:</strong></p>
-                    </div>
-                    <div class="col-5 text-left">
-                        <p style="margin-left:5em">
-                            {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}<br />
-                            {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.city }},
-                            {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.state }}
-                        </p>
-                    </div>
-                    <div class="col-3">
-                        <p><strong>Date</strong>: <br />
-                            <strong>Cust PO / Line</strong>: <br />
-                            <strong>MSR-FSR WO #</strong>: </p>
-                    </div>
-                    <div class="col-2 text-left">
-                        <p>{{ currentDate }}<br />
-                            {{ workOrderParentPart.poLineLabel }}<br />
-                            {{ WorkOrder.id }}</p>
-                    </div>
-                    <div class="col-2 text-right">
-                        <p><strong>Supplier</strong>:</p>
-                    </div>
-                    <div class="col-3 text-left">
-                        MSR-FSR {{ WorkOrder.location?.name }}<br />
-                        {{ WorkOrder.location?.address1 }}<br />
-                        {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} <br />
-                        {{ WorkOrder.location?.phone }}
-                    </div>
-                    <div class="col-3 text-right">
-                        <!-- Note changes to the Labels -->
-                        <p><strong>Customer Main Part Name</strong>:<br />
-                            <strong>Customer Main Part Number</strong>:<br />
-                            <strong>Process</strong>:</p>
-                    </div>
-                    <div class="col-4 text-left">
-                        <p>{{ workOrderParentPart.part.part.name }}<br />
-                            {{ workOrderParentPart.part.part.partNumber }}<br />
-                            {{ WorkOrder.product?.procedure?.name }}</p>
-                    </div>
+                <div class="col-8 text-right">
+                    <h2 class="mt-2">CERTIFICATE OF COMPLIANCE</h2>
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="col">
-                    <h3>Detailed Parts List</h3>
-                </div>
+        </div>
+        <div class="row header">
+            <div class="col-2 text-right">
+                <p><strong>Customer:</strong></p>
             </div>
-            <div class="parts-list">
-                <div class="row ">
-                    <div class="col border"><strong>Part Number</strong></div>
-                    <div class="col border"><strong>Description</strong></div>
-                    <div class="col border"><strong>SN</strong></div>
-                </div>
-                <div *ngFor="let counter of generateArray(workOrderParentPart.part.qty)" class="row">
-                    <div class="col border"> {{ workOrderParentPart.part.part.partNumber }}</div>
-                    <div class="col border"> {{ workOrderParentPart.part.part.name }}</div>
-                    <div class="col border"> {{ workOrderParentPart.part.serialNumber }} </div>
-                </div>
-                <div *ngFor="let workOrderSubPart of workOrderParentPart.subparts" class="row">
-                    <ng-container *ngFor="let counter of generateArray(workOrderSubPart.qty)">
-                        <div class="col border"> &nbsp;&nbsp;&nbsp;{{ workOrderSubPart.part.partNumber }}</div>
-                        <div class="col border"> {{ workOrderSubPart.part.name }}</div>
-                        <div class="col border"> {{ workOrderSubPart.serialNumber }} </div>
-                    </ng-container>
-                </div>
+            <div class="col-5 text-left">
+                <p style="margin-left:5em">
+                    {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}<br />
+                    {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.city }},
+                    {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.state }}
+                </p>
             </div>
-            <div class="row mt-3">
-                <div class="col">
-                    <h3>Monitor Data Collected:</h3>
-                </div>
+            <div class="col-3">
+                <p><strong>Date</strong>: <br />
+                    <strong>Cust PO / Line</strong>: <br />
+                    <strong>MSR-FSR WO #</strong>: </p>
             </div>
+            <div class="col-2 text-left">
+                <p>{{ currentDate }}<br />
+                    {{ workOrderParentPart.poLineLabel }}<br />
+                    {{ WorkOrder.id }}</p>
+            </div>
+            <div class="col-2 text-right">
+                <p><strong>Supplier</strong>:</p>
+            </div>
+            <div class="col-3 text-left">
+                MSR-FSR {{ WorkOrder.location?.name }}<br />
+                {{ WorkOrder.location?.address1 }}<br />
+                {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} <br />
+                {{ WorkOrder.location?.phone }}
+            </div>
+            <div class="col-3 text-right">
+                <!-- Note changes to the Labels -->
+                <p><strong>Customer Main Part Name</strong>:<br />
+                    <strong>Customer Main Part Number</strong>:<br />
+                    <strong>Process</strong>:</p>
+            </div>
+            <div class="col-4 text-left">
+                <p>{{ workOrderParentPart.part.part.name }}<br />
+                    {{ workOrderParentPart.part.part.partNumber }}<br />
+                    {{ WorkOrder.product?.procedure?.name }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <h3>Detailed Parts List</h3>
+        </div>
+    </div>
+    <div class="parts-list">
+        <div class="row ">
+            <div class="col border"><strong>Part Number</strong></div>
+            <div class="col border"><strong>Description</strong></div>
+            <div class="col border"><strong>SN</strong></div>
+        </div>
+        <div *ngFor="let counter of generateArray(workOrderParentPart.part.qty)" class="row">
+            <div class="col border"> {{ workOrderParentPart.part.part.partNumber }}</div>
+            <div class="col border"> {{ workOrderParentPart.part.part.name }}</div>
+            <div class="col border"> {{ workOrderParentPart.part.serialNumber }} </div>
+        </div>
+        <div *ngFor="let workOrderSubPart of workOrderParentPart.subparts" class="row">
+            <ng-container *ngFor="let counter of generateArray(workOrderSubPart.qty)">
+                <div class="col border"> &nbsp;&nbsp;&nbsp;{{ workOrderSubPart.part.partNumber }}</div>
+                <div class="col border"> {{ workOrderSubPart.part.name }}</div>
+                <div class="col border"> {{ workOrderSubPart.serialNumber }} </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <h3>Monitor Data Collected:</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
             <div class="row">
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-6 border"><strong>Monitor</strong></div>
-                        <div class="col-3 border text-center"><strong>Value</strong></div>
-                        <div class="col-3 border text-center"><strong>Pass/Fail</strong></div>
-                    </div>
-                    <div *ngFor="let workOrderTaskMonitor of packingList.allMonitors" class="row">
-                        <div class="col-6 border" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureStepId : workOrderTaskMonitor.description"></div>
-                        <div class="col-3 border text-center">{{workOrderTaskMonitor | monitorResult }}</div>
-                        <div class="col-3 border text-center" [ngClass]="(workOrderTaskMonitor | monitorstatus) ? 'text-success' : 'text-danger'">{{ (workOrderTaskMonitor | monitorstatus) ? 'PASS' : 'FAIL' }}</div>
-                    </div>
-                </div>
+                <div class="col-6 border"><strong>Monitor</strong></div>
+                <div class="col-3 border text-center"><strong>Value</strong></div>
+                <div class="col-3 border text-center"><strong>Pass/Fail</strong></div>
             </div>
-            <div class="flex mt-5 mx-0">
-                <div class="flex-column">This document certifies that the material and/or work performed under the above referenced purchase order are under full conformance to the specifications and requirements of same.</div>
-                <div class="d-flex flex-row d-flex justify-content-between mt-3 mb-5">
-                    <div class="d-flex-inline">By:</div>
-                    <div class="d-flex-inline flex-grow-1 border-bottom">&nbsp;</div>
-                    <div class="d-flex-inline">Date:&nbsp; </div>
-                    <div class="d-flex-inline border-bottom flex-grow">{{ currentDate }}</div>
-                </div>
+            <div *ngFor="let workOrderTaskMonitor of packingList.allMonitors" class="row">
+                <div class="col-6 border" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureStepId : workOrderTaskMonitor.description"></div>
+                <div class="col-3 border text-center">{{workOrderTaskMonitor | monitorResult }}</div>
+                <div class="col-3 border text-center" [ngClass]="(workOrderTaskMonitor | monitorstatus) ? 'text-success' : 'text-danger'">{{ (workOrderTaskMonitor | monitorstatus) ? 'PASS' : 'FAIL' }}</div>
             </div>
+        </div>
+    </div>
+    <div class="flex mt-5 mx-0">
+        <div class="flex-column">This document certifies that the material and/or work performed under the above referenced purchase order are under full conformance to the specifications and requirements of same.</div>
+        <div class="d-flex flex-row d-flex justify-content-between mt-3 mb-5">
+            <div class="d-flex-inline">By:</div>
+            <div class="d-flex-inline flex-grow-1 border-bottom" style='border-bottom:1px solid'>&nbsp;</div>
+            <div class="d-flex-inline">Date:&nbsp; </div>
+            <div class="d-flex-inline border-bottom flex-grow">{{ currentDate }}</div>
         </div>
     </div>
 </div>
