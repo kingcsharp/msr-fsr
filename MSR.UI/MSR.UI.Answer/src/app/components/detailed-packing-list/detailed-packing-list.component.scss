@@ -6,31 +6,29 @@
     font-size: smaller;
 }
 
-.row,
-.col-1,
-.col-2,
-.col-3,
-.col-4,
-.col-5,
-.col-6,
-.col-7,
-.col-8,
-.col-9,
-.col-11,
-.col12 {
-    float: none !important;
-}
-
-.page{
-    page-break-inside: avoid;
-    page-break-before: always;
-    height: 100vh;
-}
-
 @media print {
     @page {
         size: 8.5in 11in;
         margin-top: 10%;
         margin-bottom: 10%;
+    }
+    .page{
+      page-break-inside: avoid;
+      page-break-before: always;
+      height: 100vh;
+    }
+    .row,
+    .col-1,
+    .col-2,
+    .col-3,
+    .col-4,
+    .col-5,
+    .col-6,
+    .col-7,
+    .col-8,
+    .col-9,
+    .col-11,
+    .col12 {
+        float: none !important;
     }
 }
