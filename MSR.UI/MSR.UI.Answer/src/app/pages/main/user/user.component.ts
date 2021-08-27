@@ -141,12 +141,11 @@ export class UserComponent implements OnInit {
 
     if(this.allUsers.length === 0) {
       setTimeout(() => {
-        event.rows = 200;
-        callFunctionWithFilters(this.userService, this.userService.userGet, event, this.globals.functionDic)
-          .pipe(take(1))
-          .subscribe(responseHandler(response => {
-            this.updateUsersData(response.object);
-          }));
+        this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.updateUsersData(response.object)
+        }))
       }, 10);
     }
   }
