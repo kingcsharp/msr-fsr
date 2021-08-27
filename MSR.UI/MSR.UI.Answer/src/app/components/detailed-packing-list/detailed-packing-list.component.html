@@ -66,102 +66,102 @@
     <div class="col-9" style='border-bottom:1px solid'>&nbsp;</div>
 </div>
 
-<div *ngFor="let workOrderParentPart of packingList.parentParts" class="row border mx-2 mb-3">
-  <div class="col-4">
-       <h1>MSR-FSR</h1>
-  </div>
-  <div class="col-8 text-right">
-      <h2 class="mt-2">CERTIFICATE OF COMPLIANCE</h2>
-  </div>
-  <div class="col-2 header text-right">
-   <p><strong>Customer:</strong></p>
-  </div>
-   <div class="col-5 text-left">
-     <p> {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}<br />
-       {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.city }},
-       {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.state }}
-     </p>
-  </div>
-  <div class="col-3">
-    <p><strong>Date</strong>: <br />
-      <strong>Cust PO / Line</strong>: <br />
-      <strong>MSR-FSR WO #</strong>: </p>
-  </div>
-  <div class="col-2 text-left">
-    <p> {{ currentDate }}<br />
-      {{ workOrderParentPart.poLineLabel }}<br />
-      {{ WorkOrder.id }}</p>
-  </div>
-  <div class="col-2 my-3 text-right">
-    <p><strong>Supplier</strong>:</p>
-  </div>
-  <div class="col-3 my-3 text-left">
-    MSR-FSR {{ WorkOrder.location?.name }}<br />
-    {{ WorkOrder.location?.address1 }}<br />
-    {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} <br />
-    {{ WorkOrder.location?.phone }}
-  </div>
-  <div class="col-3 my-3 text-right">
-    <!-- Note changes to the Labels -->
-    <p><strong>Main Part Name</strong>:<br />
-      <strong>Main Part Number</strong>:<br />
-      <strong>Process</strong>:</p>
-  </div>
-  <div class="col-4 mt-3 text-left">
-    <p> {{ workOrderParentPart.part.part.name }}<br />
-      {{ workOrderParentPart.part.part.partNumber }}<br />
-      {{ WorkOrder.product?.procedure?.name }}</p>
-  </div>
-</div>
-
-<div class="row mx-2 mt-3">
-  <div class="col-12">
-    <h3>Detailed Parts List</h3>
-  </div>
-</div>
-<div class="row parts-list mx-2">
-    <div class="col-4 border"><strong>Part Number</strong></div>
-    <div class="col-4 border"><strong>Description</strong></div>
-    <div class="col-4 border"><strong>SN</strong></div>
-</div>
-<div *ngFor="let counter of generateArray(workOrderParentPart.part.qty)" class="row mx-2">
-    <div class="col-4 border"> {{ workOrderParentPart.part.part.partNumber }}</div>
-    <div class="col-4 border"> {{ workOrderParentPart.part.part.name }}</div>
-    <div class="col-4 border"> {{ workOrderParentPart.part.serialNumber }} </div>
-</div>
-<div *ngFor="let workOrderSubPart of workOrderParentPart.subparts" class="row mx-2">
-    <ng-container *ngFor="let counter of generateArray(workOrderSubPart.qty)">
-      <div class="col-4 border"> &nbsp;&nbsp;&nbsp;{{ workOrderSubPart.part.partNumber }}</div>
-      <div class="col-4 border"> {{ workOrderSubPart.part.name }}</div>
-      <div class="col-4 border"> {{ workOrderSubPart.serialNumber }} </div>
-    </ng-container>
-</div>
-
-<div class="row mx-2 mt-3">
-    <div class="col-12">
-        <h3>Monitor Data Collected:</h3>
+<div *ngFor="let workOrderParentPart of packingList.parentParts" class="page">
+  <div class="row border mx-2 mb-3">
+    <div class="col-4">
+         <h1>MSR-FSR</h1>
     </div>
-</div>
-<div class="row mx-2">
-  <div class="col-6 border"><strong>Monitor</strong></div>
-  <div class="col-3 border text-center"><strong>Value</strong></div>
-  <div class="col-3 border text-center"><strong>Pass/Fail</strong></div>
-</div>
-<div *ngFor="let workOrderTaskMonitor of packingList.allMonitors" class="row mx-2">
-   <div class="col-6 border" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureStepId : workOrderTaskMonitor.description"></div>
-   <div class="col-3 border text-center">{{workOrderTaskMonitor | monitorResult }}</div>
-   <div class="col-3 border text-center" [ngClass]="(workOrderTaskMonitor | monitorstatus) ? 'text-success' : 'text-danger'">{{ (workOrderTaskMonitor | monitorstatus) ? 'PASS' : 'FAIL' }}</div>
- </div>
- <div class="row mt-5 mx-2">
-        <div class="col-12">This document certifies that the material and/or work performed under the above referenced purchase order are under full conformance to the specifications and requirements of same.</div>
-</div>
-<div class="row my-5 mx-2">
-  <table border="0" width="100%">
-    <tr>
-      <td class="text-right">By:&nbsp;</td>
-      <td style="width:70%; border-bottom: 1px solid">&nbsp;</td>
-      <td class="text-right">Date:&nbsp;</td>
-      <td style="border-bottom: 1px solid">{{ currentDate }}</td>
-    </tr>
-  </table>
+    <div class="col-8 text-right">
+        <h2 class="mt-2">CERTIFICATE OF COMPLIANCE</h2>
+    </div>
+    <div class="col-2 header text-right">
+     <p><strong>Customer:</strong></p>
+    </div>
+    <div class="col-5 text-left">
+       <p> {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}<br />
+         {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.city }},
+         {{ WorkOrder.purchase?.purchaseOrder?.customer?.location?.state }}
+       </p>
+    </div>
+    <div class="col-3">
+      <p><strong>Date</strong>: <br />
+        <strong>Cust PO / Line</strong>: <br />
+        <strong>MSR-FSR WO #</strong>: </p>
+    </div>
+    <div class="col-2 text-left">
+      <p> {{ currentDate }}<br />
+        {{ workOrderParentPart.poLineLabel }}<br />
+        {{ WorkOrder.id }}</p>
+    </div>
+    <div class="col-2 my-3 text-right">
+      <p><strong>Supplier</strong>:</p>
+    </div>
+    <div class="col-3 my-3 text-left">
+      MSR-FSR {{ WorkOrder.location?.name }}<br />
+      {{ WorkOrder.location?.address1 }}<br />
+      {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }} <br />
+      {{ WorkOrder.location?.phone }}
+    </div>
+    <div class="col-3 my-3 text-right">
+      <!-- Note changes to the Labels -->
+      <p><strong>Main Part Name</strong>:<br />
+        <strong>Main Part Number</strong>:<br />
+        <strong>Process</strong>:</p>
+    </div>
+    <div class="col-4 mt-3 text-left">
+      <p> {{ workOrderParentPart.part.part.name }}<br />
+        {{ workOrderParentPart.part.part.partNumber }}<br />
+        {{ WorkOrder.product?.procedure?.name }}</p>
+    </div>
+  </div>
+  <div class="row mx-2 mt-3">
+    <div class="col-12">
+      <h3>Detailed Parts List</h3>
+    </div>
+  </div>
+  <div class="row parts-list mx-2">
+      <div class="col-4 border"><strong>Part Number</strong></div>
+      <div class="col-4 border"><strong>Description</strong></div>
+      <div class="col-4 border"><strong>SN</strong></div>
+  </div>
+  <div *ngFor="let counter of generateArray(workOrderParentPart.part.qty)" class="row mx-2">
+      <div class="col-4 border"> {{ workOrderParentPart.part.part.partNumber }}</div>
+      <div class="col-4 border"> {{ workOrderParentPart.part.part.name }}</div>
+      <div class="col-4 border"> {{ workOrderParentPart.part.serialNumber }} </div>
+  </div>
+  <div *ngFor="let workOrderSubPart of workOrderParentPart.subparts" class="row mx-2">
+      <ng-container *ngFor="let counter of generateArray(workOrderSubPart.qty)">
+        <div class="col-4 border"> &nbsp;&nbsp;&nbsp;{{ workOrderSubPart.part.partNumber }}</div>
+        <div class="col-4 border"> {{ workOrderSubPart.part.name }}</div>
+        <div class="col-4 border"> {{ workOrderSubPart.serialNumber }} </div>
+      </ng-container>
+  </div>
+  <div class="row mx-2 mt-3">
+      <div class="col-12">
+          <h3>Monitor Data Collected:</h3>
+      </div>
+  </div>
+  <div class="row mx-2">
+    <div class="col-6 border"><strong>Monitor</strong></div>
+    <div class="col-3 border text-center"><strong>Value</strong></div>
+    <div class="col-3 border text-center"><strong>Pass/Fail</strong></div>
+  </div>
+  <div *ngFor="let workOrderTaskMonitor of packingList.allMonitors" class="row mx-2">
+     <div class="col-6 border" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureStepId : workOrderTaskMonitor.description"></div>
+     <div class="col-3 border text-center">{{workOrderTaskMonitor | monitorResult }}</div>
+     <div class="col-3 border text-center" [ngClass]="(workOrderTaskMonitor | monitorstatus) ? 'text-success' : 'text-danger'">{{ (workOrderTaskMonitor | monitorstatus) ? 'PASS' : 'FAIL' }}</div>
+   </div>
+   <div class="row mt-5 mx-2">
+      <div class="col-12">This document certifies that the material and/or work performed under the above referenced purchase order are under full conformance to the specifications and requirements of same.</div>
+   </div>
+   <div class="row my-5 mx-2">
+      <table border="0" width="100%">
+        <tr>
+          <td class="text-right">By:&nbsp;</td>
+          <td style="width:70%; border-bottom: 1px solid">&nbsp;</td>
+          <td class="text-right">Date:&nbsp;</td>
+          <td style="border-bottom: 1px solid">{{ currentDate }}</td>
+        </tr>
+      </table>
+    </div>
 </div>
