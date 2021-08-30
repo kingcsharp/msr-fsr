@@ -47,6 +47,8 @@
             <div class="col-2 border">Serial #***</div>
             <div class="col-1 border">Notes</div>
             <div class="col-3 border">Barcode</div>
+        </div>
+        <div *ngFor="let workOrderParentPart of packingList.parentParts" class="row mx-2">
             <div class="col-2 border">{{ WorkOrder.purchase?.mttn }}</div>
             <div class="col-2 border">{{ WorkOrder.product?.part?.partNumber }}</div>
             <div class="col-2 border">
@@ -54,13 +56,11 @@
                 {{ WorkOrder.product?.name }}
                 {{ WorkOrder.product?.procedure?.name }}
             </div>
-            <div class="col-2 border">{{WorkOrder.workOrderParts[0]?.serialNumber}}</div>
+            <div class="col-2 border">{{workOrderParentPart.part.serialNumber}}</div>
             <div class="col-1 border"></div>
             <div class="col-3 border">
-                PO: {{ WorkOrder.purchase?.purchaseOrder?.referencePO }}<br />
-                <div *ngFor="let workOrderPart of packingList.sortedParts">
-                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.poLineLabel"></ngx-barcode>
-                </div>
+                PO / Line #: {{ workOrderParentPart.poLineLabel }}<br />
+                <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderParentPart.poLineLabel"></ngx-barcode>
             </div>
         </div>
     </div>
