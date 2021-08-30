@@ -56,10 +56,11 @@
             </div>
             <div class="col-2 border">{{WorkOrder.workOrderParts[0]?.serialNumber}}</div>
             <div class="col-1 border"></div>
-            <div *ngFor="let workOrderParentPart of packingList.parentParts" class="col-3 border">
-                PO / Line: {{ workOrderParentPart.poLineLabel }}<br />
-                <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"
-                         [bc-display-value]="false" [bc-height]="40" ></ngx-barcode>
+            <div class="col-3 border">
+                PO: {{ WorkOrder.purchase?.purchaseOrder?.referencePO }}<br />
+                <div *ngFor="let workOrderPart of packingList.sortedParts">
+                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.poLineLabel"></ngx-barcode>
+                </div>
             </div>
         </div>
     </div>
