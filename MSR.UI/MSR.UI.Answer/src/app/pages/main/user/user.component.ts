@@ -136,9 +136,18 @@ export class UserComponent implements OnInit {
         .subscribe(responseHandler(response => {
           this.totalRecords = response.totalNumberOfRecords;
           this.data = response.object;
-          this.updateUsersData(this.data);
         }));
     }, 10);
+
+    if(this.allUsers.length === 0) {
+      setTimeout(() => {
+        this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.updateUsersData(response.object)
+        }))
+      }, 10);
+    }
   }
 
   updateUsersData(usersData) {
