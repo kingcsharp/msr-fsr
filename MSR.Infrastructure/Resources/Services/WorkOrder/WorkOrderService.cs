@@ -400,35 +400,37 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             //we only have to do subpart mapping once because it doesn't change
-            var subParts = new List<WorkOrderPartModel>();
-            if(product.Part.Subparts != null && product.Part.Subparts.Any())
-            {
-                foreach(var partSubPartMapForSubPart in product.Part.Subparts)
-                {
-                    var subPartQuantity = partSubPartMapForSubPart.Qty;
-                    if(subPartQuantity == 0)
-                    {
-                        subPartQuantity = 1;
-                    }
-
-                    var partSegregationTypeValue = partSubPartMapForSubPart.Part?.SegregationType;
-
-                    for(; subPartQuantity > 0; subPartQuantity -= 1)
-                    {
-                        subParts.Add(new WorkOrderPartModel()
-                        {
-                            PartId = partSubPartMapForSubPart.PartId,
-                            ParentId = partSubPartMapForSubPart.ParentPartId,
-                            Qty = partSubPartMapForSubPart.Qty,
-                            SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
-                        });
-                    }
-                }
-            }
             
+
             var parts = new List<WorkOrderPartModel>();
             for ( ; createCount > 0; createCount -= 1)
             {
+                var subParts = new List<WorkOrderPartModel>();
+                if(product.Part.Subparts != null && product.Part.Subparts.Any())
+                {
+                    foreach(var partSubPartMapForSubPart in product.Part.Subparts)
+                    {
+                        var subPartQuantity = partSubPartMapForSubPart.Qty;
+                        if(subPartQuantity == 0)
+                        {
+                            subPartQuantity = 1;
+                        }
+
+                        var partSegregationTypeValue = partSubPartMapForSubPart.Part?.SegregationType;
+
+                        for(; subPartQuantity > 0; subPartQuantity -= 1)
+                        {
+                            subParts.Add(new WorkOrderPartModel()
+                            {
+                                PartId = partSubPartMapForSubPart.PartId,
+                                ParentId = partSubPartMapForSubPart.ParentPartId,
+                                Qty = partSubPartMapForSubPart.Qty,
+                                SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
+                            });
+                        }
+                    }
+                }
+
                 parts.Add(new WorkOrderPartModel()
                     {
                         PartId = product.PartId,

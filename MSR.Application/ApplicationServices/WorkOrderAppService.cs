@@ -156,51 +156,37 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<ICollection<WorkOrderTaskModel>>(workOrderTaskModels);
         }
 
-        public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command,
+            CancellationToken cancellationToken = default)
         {
-            try
+            var workOrderDto = CreateWorkOrderDTO.FromCommand(command);
+            var tasks = await _workOrderService.GetWorkOrderTasksAsync(command);
+            workOrderDto.WorkOrderTasks = tasks;
+
+            var parts = (await _workOrderService.GetWorkOrderPartsAsync(command)).ToList();
+            var serialNumberList = workOrderDto.SerialNumbers.ToList();
+            var customerLineNumbers = workOrderDto.CustomerLineNumbers.ToList();
+
+            // Copy in the serial numbers entered at purchase time, if any.
+            for (var workOrderPartIndex = 0;
+                workOrderPartIndex < serialNumberList.Count && workOrderPartIndex < parts.Count;
+                workOrderPartIndex += 1)
             {
-                var workOrderDto = CreateWorkOrderDTO.FromCommand(command);
-                var tasks = await _workOrderService.GetWorkOrderTasksAsync(command);
-                workOrderDto.WorkOrderTasks = tasks;
-
-                var parts = (await _workOrderService.GetWorkOrderPartsAsync(command)).ToList();
-                var serialNumberList = workOrderDto.SerialNumbers.ToList();
-                var customerLineNumbers = workOrderDto.CustomerLineNumbers.ToList();
-
-                // Copy in the serial numbers entered at purchase time, if any.
-                for (var workOrderPartIndex = 0;
-                    workOrderPartIndex < serialNumberList.Count && workOrderPartIndex < parts.Count;
-                    workOrderPartIndex += 1)
+                if (serialNumberList[workOrderPartIndex] != null)
                 {
-                    if (serialNumberList[workOrderPartIndex] != null)
-                    {
-                        parts[workOrderPartIndex].SerialNumber = serialNumberList[workOrderPartIndex];
-                    }
-
-                    if (customerLineNumbers[workOrderPartIndex] != null)
-                    {
-                        parts[workOrderPartIndex].CustomerLineNumber = customerLineNumbers[workOrderPartIndex];
-                    }
+                    parts[workOrderPartIndex].SerialNumber = serialNumberList[workOrderPartIndex];
                 }
 
-                workOrderDto.WorkOrderParts = parts;
-
-                var workOrderModelNumber = await _workOrderService.CreateWorkOrderAsync(workOrderDto);
-                return new CommandResponse<string>(workOrderModelNumber);
-            }
-            catch (Exception ex)
-            {
-                var innerException = ex.InnerException;
-                var error = ex.Message;
-                while(innerException != null)
+                if (customerLineNumbers[workOrderPartIndex] != null)
                 {
-                    error = $"{error} | Inner Exception: {innerException.Message}";
-                    innerException = innerException.InnerException;
+                    parts[workOrderPartIndex].CustomerLineNumber = customerLineNumbers[workOrderPartIndex];
                 }
-                
-                throw new DomainException($"PurchaseID: {command.PurchaseId} | {error}", DomainError.InternalServerError);
             }
+
+            workOrderDto.WorkOrderParts = parts;
+
+            var workOrderModelNumber = await _workOrderService.CreateWorkOrderAsync(workOrderDto);
+            return new CommandResponse<string>(workOrderModelNumber);
         }
     }
 }
