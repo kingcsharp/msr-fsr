@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewEncapsulation } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService, EnumMenuItem,
@@ -22,6 +22,7 @@ declare let jQuery: any;
 
 @Component({
   selector: 'invoice',
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.scss']
 })
