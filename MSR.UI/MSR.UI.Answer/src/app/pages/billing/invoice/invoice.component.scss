@@ -1,4 +1,20 @@
-// Add Invoice Modal should be 90vw at all resolutions.
-.ui-dialog {
-  width: 90vw !important;
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+  .ui-dialog {
+    width: 95vw !important;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .ui-dialog {
+    width: 90vw !important;
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1439.99px) {
+    .ui-dialog {
+    width: 50vw !important;
+  }
 }
