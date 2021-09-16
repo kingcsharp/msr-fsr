@@ -15,7 +15,7 @@
     .page{
       page-break-inside: avoid;
       page-break-before: always;
-      height: 100vh;
+      min-height: 100vh;
     }
     .row,
     .col-1,
