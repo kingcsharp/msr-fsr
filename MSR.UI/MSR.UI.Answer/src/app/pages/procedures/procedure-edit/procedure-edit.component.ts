@@ -187,7 +187,7 @@ export class ProcedureEditComponent implements OnInit {
 
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
+    return this.globals.hasPrivilege(EnumMenuItem.RunnableProcedures, privName);
   }
 
   openConfirmDeleteStepDialog(procedureStep) {
