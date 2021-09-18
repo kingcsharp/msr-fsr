@@ -620,8 +620,9 @@
             <th width="7%">Item No.</th>
             <th width="8%">Qty</th>
             <th width="10%">Unit</th>
-            <th width="30%" style="text-align: left !important">Description</th>
-            <th width="15%" style="text-align: left !important">Part No.</th>
+            <th width="25%" style="text-align: left !important">Description</th>
+            <th width="8%">Lead Time</th>
+            <th width="12%" style="text-align: left !important">Part No.</th>
             <th>Price</th>
             <th>Extension</th>
           </tr>
@@ -637,6 +638,9 @@
             </td>
             <td>
               {{quoteItem.description}}
+            </td>
+            <td>
+              {{quoteItem.leadTime}}
             </td>
             <td>
               {{quoteItem.customerPartNo}}
