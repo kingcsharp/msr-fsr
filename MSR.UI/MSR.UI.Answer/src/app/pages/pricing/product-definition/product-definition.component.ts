@@ -176,6 +176,7 @@ export class ProductDefinitionComponent implements OnInit {
               description: this.productData.procedure?.name,
               price: this.productData.totalSalePrice,
               extension: this.productData.totalSalePrice,
+              cycleTime: this.customerRequirementJson.ExpectedCycleTime,
             }];
           }
         }
