@@ -88,12 +88,13 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderTask, WorkOrderTaskModel>()
                 .ForMember(dest => dest.TaskStarted, opts => opts.MapFrom(src => (
                     src.StartedOn != null && src.StartedOn.Value.Ticks > 0
-                )));
+                )))
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.NullSubstitute(new List<FileEntityMap>()))
+                .ReverseMap();
             CreateMap<WorkOrderPartModel, WorkOrderPart>()
                 .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => EnumUtils.GetDescription<EnumSegregationType>(src.SegregationType.HasValue ? src.SegregationType.Value : EnumSegregationType.NONCU)));
-            CreateMap<WorkOrderTask, WorkOrderTaskModel>()
-                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Description))
-               .ReverseMap();
+              
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>()
                 .ForMember(dest => dest.FaultHandling, opts => opts.MapFrom(src => src.FailAction))
                 .ForMember(dest => dest.TargetValue, opts => opts.MapFrom(src => src.Target))

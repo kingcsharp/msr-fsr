@@ -702,6 +702,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var procedureEntity = await _unitOfWork.Procedures.Query()
                 .Include(x => x.ProcedureSteps)
                 .ThenInclude(p => p.ProcedureStepMonitors)
+                .Include(x => x.ProcedureSteps)
+                .ThenInclude(y => y.ProcedureStepRoles)
+                .ThenInclude(z => z.Role)
                 .Where(x => x.Id == addNCRWorkOrderTask.ProcedureId)
                 .FirstOrDefaultAsync();
 
