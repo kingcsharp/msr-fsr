@@ -36,7 +36,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _unitOfWork.CycleCountHistory.Add(cycleCountHistory);
 
             await _unitOfWork.SaveChangesAsync();
-            await _unitOfWork.LogApprovalTransaction(cycleCountHistory, cycleCountHistory.Id);
 
             ret = _mapper.Map<CycleCountHistoryModel>(cycleCountHistory);
 

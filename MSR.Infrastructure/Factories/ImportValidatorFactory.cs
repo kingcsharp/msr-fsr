@@ -29,6 +29,8 @@ namespace MSR.Infrastructure.Factories
                     return scope.ServiceProvider.GetService<ProcedureValidator>();
                 case EnumMenuItem.QuotesProducts:
                     return scope.ServiceProvider.GetService<QuoteImportValidator>();
+                case EnumMenuItem.CycleCountImport:
+                    return scope.ServiceProvider.GetService<CycleCountImportValidator>();
                 default:
                     throw new NotImplementedException($"No Validator for Menu Item: {menuItem}");
             }

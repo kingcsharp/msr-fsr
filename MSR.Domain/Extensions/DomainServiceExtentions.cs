@@ -30,6 +30,7 @@ namespace MSR.Domain.Extensions
             services.AddTransient<PartValidator>();
             services.AddTransient<ProcedureValidator>();
             services.AddTransient<QuoteImportValidator>();
+            services.AddTransient<CycleCountImportValidator>();
 
             return services;
         }
