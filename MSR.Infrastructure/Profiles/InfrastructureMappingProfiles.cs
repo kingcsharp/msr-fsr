@@ -497,6 +497,18 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartImportItem, PartModel>();
             CreateMap<PartImportItem, UpdatePart>();
             CreateMap<PartImportItem, CreatePart>();
+            
+            CreateMap<CycleCountHistoryImportItem, CycleCountHistoryModel>();
+            CreateMap<CycleCountHistoryImportItem, CreateCycleCountHistory>();
+            CreateMap<CycleCountHistoryImportItem, UpdateCycleCountHistory>();
+
+            CreateMap<CreateCycleCountHistory, CycleCountHistory>();
+            CreateMap<UpdateCycleCountHistory, CycleCountHistory>();
+            
+            CreateMap<CycleCountHistory, CycleCountHistoryModel>();
+
+            CreateMap<PartModel, CreatePart>();
+            CreateMap<PartModel, UpdatePart>();
 
             #region Reporting
             CreateMap<Report, ReportModel>();

@@ -30,6 +30,7 @@ namespace MSR.Application.EventServices
         private readonly IPartService _partService;
         private readonly IProcedureService _procedureService;
         private readonly IQuoteService _quoteService;
+        private readonly ICycleCountHistoryService _cycleCountHistoryService;
         private readonly IMessageHubClient _messageHub;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
@@ -41,6 +42,7 @@ namespace MSR.Application.EventServices
             IPartService partService,
             IProcedureService procedureService,
             IQuoteService quoteService,
+            ICycleCountHistoryService cycleCountHistoryService,
             GeneralInformation processorConfig,
             IMapper mapper,
             IMessageHubClient messageHub,
@@ -52,6 +54,7 @@ namespace MSR.Application.EventServices
             _partService = partService;
             _procedureService = procedureService;
             _quoteService = quoteService;
+            _cycleCountHistoryService = cycleCountHistoryService;
             _messageHub = messageHub;
             _mapper = mapper;
             _logger = logger;
@@ -93,6 +96,12 @@ namespace MSR.Application.EventServices
                             Encoding.UTF8.GetString(handledEvent.data)
                         );
                         count = importedQuotes.Count();
+                        break;
+                    case EnumMenuItem.CycleCountImport:
+                        var importedCycleCounts = await _cycleCountHistoryService.ImportCycleCountHistories(
+                            Encoding.UTF8.GetString(handledEvent.data)
+                        );
+                        count = importedCycleCounts.Count();
                         break;
                     default:
                         throw new DomainException("Import function not found for " +
