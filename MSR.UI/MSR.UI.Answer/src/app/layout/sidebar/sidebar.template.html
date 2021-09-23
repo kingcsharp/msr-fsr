@@ -19,12 +19,12 @@
     <ul *ngIf="item.submenu.length > 0" id="{{item.name}}" class="accordion-body collapse" aria-expanded="false">
       <li *ngFor="let subItem of item.submenu" [routerLinkActive]="['active']">
 
-        <a routerLink="{{item.name | lowercase}}/{{subItem.url | lowercase}}" tooltip="{{subItem.info}}" [delay]="600" [container]="body" *ngIf="subItem.name != 'Support Ticket'">
+        <a routerLink="{{item.name | lowercase}}/{{subItem.url | lowercase}}" tooltip="{{subItem.info}}" [delay]="600" [container]="body" *ngIf="subItem.name != 'Support Ticket' && subItem.name != 'Cycle Count Import'">
           <i [ngClass]="'fas '+subItem.icon"></i>
           &nbsp; <span>{{subItem.name}}</span>
         </a>
 
-        <a (click)="toggleSupportTicketModal()" tooltip="{{subItem.info}}" [delay]="600" [container]="body" *ngIf="subItem.name =='Support Ticket'">
+        <a (click)="toggleModal(subItem.name)" tooltip="{{subItem.info}}" [delay]="600" [container]="body" *ngIf="subItem.name =='Support Ticket' || subItem.name == 'Cycle Count Import'">
           <i [ngClass]="'fas '+subItem.icon"></i>
           &nbsp; <span>{{subItem.name}}</span>
         </a>

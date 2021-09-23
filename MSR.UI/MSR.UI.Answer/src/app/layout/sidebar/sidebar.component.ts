@@ -10,6 +10,7 @@ declare let jQuery: any;
 })
 export class Sidebar {
   @Output() displaySupportTicketModalDisplay = new EventEmitter();
+  @Output() displayCycleCountImportModal = new EventEmitter();
   sidebarHeight: number = 0;
   sidebarMenu: any = 0;
   sidebarItems: any;
@@ -95,6 +96,23 @@ export class Sidebar {
 
   toggleSupportTicketModal() {
     this.displaySupportTicketModalDisplay.emit();
+  }
+
+  toggleCycleCountImportModal() {
+    this.displayCycleCountImportModal.emit();
+  }
+
+  toggleModal(name) {
+    switch(name) {
+      case 'Support Ticket':
+        this.toggleSupportTicketModal();
+        break;
+      case 'Cycle Count Import':
+        this.toggleCycleCountImportModal();
+        break;
+      default:
+        break;
+    }
   }
 
 }

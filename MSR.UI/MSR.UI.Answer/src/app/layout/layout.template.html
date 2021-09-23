@@ -9,10 +9,11 @@
   'segregation-active-width': productSegregationService.WipDetailsBeingDisplayed,
   'open-width-non-segregation': !closed && !productSegregationService.WipDetailsBeingDisplayed,
   'open-width-segregation': !closed && productSegregationService.WipDetailsBeingDisplayed
-  }" (displaySupportTicketModalDisplay)="displaySupportTicketModalDisplay()">
+  }" (displaySupportTicketModalDisplay)="displaySupportTicketModalDisplay()"
+  (displayCycleCountImportModal)="displayCycleCountImportModal()">
 </nav>
 
-<div [ngClass]="{ 'wrap content content-div': true, 
+<div [ngClass]="{ 'wrap content content-div': true,
 'wip-content': productSegregationService.WipDetailsBeingDisplayed,
 'not-wip-content': !productSegregationService.WipDetailsBeingDisplayed,
 'cu-background-color': productSegregationService.SegregationType === EnumSegregationType.CU,
@@ -51,7 +52,57 @@
             Close
           </button>
         </div>
-      </p-footer> 
+      </p-footer>
+    </p-dialog>
+
+    <p-dialog header="Import" [(visible)]="cycleCountImportModalDisplayed" [style]="{width: '50vw'}" [dismissableMask]="true" appendTo="body" [baseZIndex]="100002" [modal]='true'>
+      <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" (ngSubmit)="submitCycleCountImport()" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+          <header>
+            <h5>
+              <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+              </span>
+              Cycle Count Import
+            </h5>
+          </header>
+          <div class="widget-body">
+            <fieldset>
+              <legend>
+              </legend>
+              <div class="form-group row">
+                <label class="col-md-2 col-form-label text-md-right">
+                  Select Csv File
+                </label>
+                <cmh-file-uploader class="col-md-10" [menuItem]="menuItems.CycleCountImport" [(files)]="uploadedFiles"
+                  accept=".csv, .xlsx, .xls" chooseLabel="Select CSV File">
+                </cmh-file-uploader>
+              </div>
+              <div>
+                <label class="col-md-2 col-form-label text-md-right">
+                  Sample File
+                </label>
+                <a href="/assets/CsvFiles/CycleCountsSample.csv" download>
+                  <button type="button" class="btn" download><i class="fas fa-download"></i> Download
+                    Sample
+                    File</button>
+                </a>
+              </div>
+            </fieldset>
+          </div>
+        </section>
+        <p-footer>
+          <div class="pull-right">
+            <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+              data-cy="save-import-button">
+              Save
+            </button>
+            <button type="button" (click)="hideCycleCountImportModal()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+              Close
+            </button>
+          </div>
+        </p-footer>
+      </form>
     </p-dialog>
 
     <approval-comment [modalData]="globals.modalData">
