@@ -45,25 +45,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public async Task<ICollection<CycleCountHistoryModel>> ImportCycleCountHistories(string csvData)
         {
             IEnumerable records = CSVHelper.ParseRecords<CycleCountHistoryImportItem>(csvData);
-            List<CreateCycleCountHistory> inserts = new List<CreateCycleCountHistory>();
             List<CycleCountHistoryModel> results = new List<CycleCountHistoryModel>();
-
-            var ids = await _unitOfWork.CycleCountHistory.Query().Select(i => i.Id).ToListAsync();
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.CycleCountImport, EnumPrivilege.CanCreate))
             {
                 throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
             }
-            
+
             foreach (CycleCountHistoryImportItem record in records)
             {
                 var createCycleCountHistoryModel = _mapper.Map<CreateCycleCountHistory>(record);
-                inserts.Add(createCycleCountHistoryModel);
-            }
-
-            foreach (CreateCycleCountHistory model in inserts)
-            {
-                results.Add(await CreateCycleCountHistoryAsync(model));
+                results.Add(await CreateCycleCountHistoryAsync(createCycleCountHistoryModel));
             }
 
             return results;
