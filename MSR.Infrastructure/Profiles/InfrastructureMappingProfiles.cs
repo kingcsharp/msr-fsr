@@ -500,7 +500,11 @@ namespace MSR.Infrastructure.Profiles
             
             CreateMap<CycleCountHistoryImportItem, CycleCountHistoryModel>();
             CreateMap<CycleCountHistoryImportItem, CreateCycleCountHistory>();
-            CreateMap<CreateCycleCountHistory, CycleCountHistory>();            
+            CreateMap<CycleCountHistoryImportItem, UpdateCycleCountHistory>();
+
+            CreateMap<CreateCycleCountHistory, CycleCountHistory>();
+            CreateMap<UpdateCycleCountHistory, CycleCountHistory>();
+            
             CreateMap<CycleCountHistory, CycleCountHistoryModel>();
 
             CreateMap<PartModel, CreatePart>();
