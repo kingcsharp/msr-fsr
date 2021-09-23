@@ -50,12 +50,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             var ids = await _unitOfWork.CycleCountHistory.Query().Select(i => i.Id).ToListAsync();
 
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.CycleCountImport, EnumPrivilege.CanApprove))
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.CycleCountImport, EnumPrivilege.CanCreate))
             {
                 throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
             }
-
-            // First parse the file to ensure valid data
+            
             foreach (CycleCountHistoryImportItem record in records)
             {
                 var createCycleCountHistoryModel = _mapper.Map<CreateCycleCountHistory>(record);
