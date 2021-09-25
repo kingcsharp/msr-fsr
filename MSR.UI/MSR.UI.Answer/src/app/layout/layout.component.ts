@@ -126,6 +126,7 @@ export class Layout {
   }
 
   displayCycleCountImportModal(): void {
+    this.uploadedFiles = [];
     this.cycleCountImportModalDisplayed = true;
   }
 
