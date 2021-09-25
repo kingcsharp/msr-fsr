@@ -87,6 +87,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IEquipmentMaintenanceService, EquipmentMaintenanceService>();
             services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<ICycleCountHistoryService, CycleCountHistoryService>();
             
             services.AddSingleton<IMessageHubClient, MessageHubService>();
 

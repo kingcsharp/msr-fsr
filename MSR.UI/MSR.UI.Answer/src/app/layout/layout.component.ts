@@ -9,9 +9,10 @@ import {
 } from '@angular/router';
 import { Globals } from '../models/lib/globals';
 import { ProductSegregationService } from '../services/product-segregation.service';
-import { EnumSegregationType} from '../services/api.client.generated';
-
-// declare let Raphael: any;
+import { EnumSegregationType, EnumMenuItem, FileService, ImportRequest } from '../services/api.client.generated';
+import { take } from 'rxjs/operators';
+import { responseHandler } from '../utils/responseHandler';
+import { environment as env } from '../../environments/environment';
 
 
 @Component({
@@ -26,11 +27,15 @@ export class Layout {
   currDate: Date = new Date();
   body: string = 'body';
   supportTicketModalDisplayed: boolean = false;
+  cycleCountImportModalDisplayed: boolean = false;
+  menuItems = EnumMenuItem;
   @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
   @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;
   EnumSegregationType = EnumSegregationType;
+  uploadedFiles: any[] = [];
+
   constructor(private el: ElementRef, private renderer: Renderer2, private router: Router,
-    private ngZone: NgZone, private _globals: Globals, public productSegregationService: ProductSegregationService) {
+    private ngZone: NgZone, private _globals: Globals, public productSegregationService: ProductSegregationService, private fileService: FileService) {
     this.globals = this._globals;
 
     router.events.subscribe((event: RouterEvent) => {
@@ -92,7 +97,7 @@ export class Layout {
   }
 
   sidebarDisplay(display): void {
-    if (this.supportTicketModalDisplayed) {
+    if (this.supportTicketModalDisplayed || this.cycleCountImportModalDisplayed) {
       return;
     }
     let _display = display === 'Hide' ? true : false;
@@ -118,6 +123,25 @@ export class Layout {
 
   displaySupportTicketModalDisplay(): void {
     this.supportTicketModalDisplayed = true;
+  }
+
+  displayCycleCountImportModal(): void {
+    this.uploadedFiles = [];
+    this.cycleCountImportModalDisplayed = true;
+  }
+
+  hideCycleCountImportModal(): void {
+    this.cycleCountImportModalDisplayed = false;
+  }
+
+  submitCycleCountImport() {
+    let imporReq = new ImportRequest();
+    imporReq.base64Data = this.uploadedFiles[0].base64String;
+    imporReq.menuItem = this.menuItems.CycleCountImport;
+    this.fileService.import(env.apiVersion, imporReq).pipe(take(1))
+      .subscribe(responseHandler((resp) => {
+        this.hideCycleCountImportModal();
+      }));
   }
 
   mouseEnter() {
