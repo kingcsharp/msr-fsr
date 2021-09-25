@@ -15,7 +15,8 @@ namespace MSR.Domain.Validators
     {
         private readonly IMapper _mapper;
 
-        public CycleCountImportValidator(IMapper mapper) {
+        public CycleCountImportValidator(IMapper mapper)
+        {
             _mapper = mapper;
         }
 
@@ -38,9 +39,9 @@ namespace MSR.Domain.Validators
             }
             catch (Exception e)
             {
-                var ie = new ImportError() { Line = line };
-                ie.Errors.Add(e.Message);
-                errors.Add(ie);
+                var importError = new ImportError() { Line = line };
+                importError.Errors.Add(e.Message);
+                errors.Add(importError);
             }
 
             foreach (CycleCountHistoryImportItem record in records)
