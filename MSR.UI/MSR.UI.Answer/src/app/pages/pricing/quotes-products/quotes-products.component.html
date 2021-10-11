@@ -631,8 +631,8 @@
                       Expected Cycle Time:
                     </label>
                     <div class="col-md-8 input-group input-group-transparent" style="height: min-content;">
-                      <input pInputText type="text" class="form-control input-transparent"
-                        name="General Information / Expected CycleTime" [(ngModel)]="CSRToCreate.ExpectedCycleTime"
+                      <input id="cycleTime" pInputText type="text" class="form-control input-transparent"
+                        name="General Information / Expected CycleTime" [(ngModel)]="CSRToCreate.ExpectedCycleTime" (change)="onChangeCycleTime($event)"
                         data-validate="parsley" data-parsley-trigger="change" data-parsley-type="number"
                         data-cy="csr-input-expectedcycletime">
                       <span class="input-group-addon bg-secondary">
