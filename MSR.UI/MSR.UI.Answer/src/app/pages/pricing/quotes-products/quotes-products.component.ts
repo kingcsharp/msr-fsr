@@ -200,6 +200,18 @@ export class QuotesProductsComponent implements OnInit {
     this.CSRToCreate.customerId = this.CSRCustomer.id;
   }
 
+  onChangeCycleTime($event) {
+    jQuery('#cycleTime').parsley().validate();
+    if (jQuery('#cycleTime').parsley().isValid()) {
+      if ($event.target.value) {
+        const cycleTime = parseInt($event.target.value, 10);
+        this.CSRToCreate.ExpectedCycleTime = cycleTime;
+      } else {
+        this.CSRToCreate.ExpectedCycleTime = undefined;
+      }
+    }
+  }
+
   onCSRSubmit() {
     this.CSRFormValidErrors = [];
     jQuery('.parsleyjs').parsley().validate();

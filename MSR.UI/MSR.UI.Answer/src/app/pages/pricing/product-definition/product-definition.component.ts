@@ -155,6 +155,9 @@ export class ProductDefinitionComponent implements OnInit {
         this.quoteData = response.object[0];
         if (this.quoteData.quoteJson) {
           this.quoteJson = JSON.parse(this.quoteData.quoteJson);
+          if (!this.quoteData.partKitNo && this.quoteJson.quoteItems && this.quoteJson.quoteItems.length > 0) {
+            this.quoteData.partKitNo = this.quoteJson.quoteItems[0].customerPartNo;
+          }
         }
         if (this.quoteData.customerRequirementJson) {
           this.customerRequirementJson = JSON.parse(this.quoteData.customerRequirementJson);
@@ -177,6 +180,7 @@ export class ProductDefinitionComponent implements OnInit {
               price: this.productData.totalSalePrice,
               extension: this.productData.totalSalePrice,
               cycleTime: this.customerRequirementJson.ExpectedCycleTime,
+              customerPartNo: this.customerRequirementJson.PartKitNo,
             }];
           }
         }
@@ -187,6 +191,9 @@ export class ProductDefinitionComponent implements OnInit {
           this.productData = new CreateProductRequest();
           if (this.quoteData.customerRequirementJson) {
             this.productData.name =  this.customerRequirementJson.RequirementName;
+            if (this.customerRequirementJson && this.customerRequirementJson.ExpectedCycleTime) {
+              this.productData.cycleTime = parseInt('' + this.customerRequirementJson.ExpectedCycleTime, 10);
+            }
           }
           this.productData.quoteId = this.quoteData.id;
           this.productData.customerId = this.quoteData.customerId;
@@ -478,7 +485,7 @@ export class ProductDefinitionComponent implements OnInit {
         const cycleTime = parseInt($event.target.value, 10);
         this.productData.cycleTime = cycleTime;
       } else {
-        this.productData.cycleTime = null;
+        this.productData.cycleTime = undefined;
       }
     }
   }
