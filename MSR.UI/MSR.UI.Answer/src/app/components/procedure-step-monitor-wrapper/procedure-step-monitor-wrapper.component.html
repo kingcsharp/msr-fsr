@@ -64,7 +64,12 @@
 </p-dialog>
 <p-dialog header="{{ procedureStepMonitor.id === undefined ?'Create Monitor':'Edit Monitor'}}" [(visible)]="showAddOrEditMonitorDialog" appendTo="body" [baseZIndex]="100001"
     [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
-    <div class="container">
+    <div
+      class="container parsleyjs monitor-form"
+      data-parsley-validate="false"
+      data-parsley-priority-enabled="false"
+      novalidate="novalidate"
+    >
         <div class="row" *ngIf="procedureStepMonitor !== undefined">
             <div class="form-group col-12 d-flex flex-row">
                 <label for="monitortype" class="col-form-label text-left col-3">
@@ -74,6 +79,16 @@
                     <p-dropdown placeholder="Select Monitor Type" name="monitortype" [options]="monitorTypeOptions"
                         [(ngModel)]="procedureStepMonitor.monitorType">
                     </p-dropdown>
+                    <input
+                      [hidden]="true"
+                      class="form-control input-transparent"
+                      name="monitortype"
+                      [value]="procedureStepMonitor.monitorType || ''"
+                      readonly
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-required="true"
+                    >
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.monitorType === 'Number'">
@@ -84,6 +99,16 @@
                     <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptionsWithSensor"
                         showClear="true" [(ngModel)]="procedureStepMonitor.inputType">
                     </p-dropdown>
+                    <input
+                      [hidden]="true"
+                      class="form-control input-transparent"
+                      name="inputType"
+                      [value]="procedureStepMonitor.inputType || ''"
+                      readonly
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-required="true"
+                    >
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.monitorType !== 'Number'">
@@ -94,6 +119,16 @@
                     <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptionsWithoutSensor"
                         showClear="true" [(ngModel)]="procedureStepMonitor.inputType">
                     </p-dropdown>
+                    <input
+                      [hidden]="true"
+                      class="form-control input-transparent"
+                      name="inputType"
+                      [value]="procedureStepMonitor.inputType || ''"
+                      readonly
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-required="true"
+                    >
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.inputType === 'Sensor'">
@@ -104,6 +139,16 @@
                     <p-dropdown placeholder="Select Sensor" name="sensorname" [options]="sensorNamesAvailable"
                         showClear="true" [(ngModel)]="procedureStepMonitor.sensorName">
                     </p-dropdown>
+                    <input
+                      [hidden]="true"
+                      class="form-control input-transparent"
+                      name="sensorname"
+                      [value]="procedureStepMonitor.sensorName || ''"
+                      readonly
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-required="true"
+                    >
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.monitorType === 'Select'">
@@ -114,6 +159,16 @@
                     <p-dropdown placeholder="Select List Source" name="listsource" [options]="listSource"
                         showClear="true" [(ngModel)]="procedureStepMonitor.monitorListId">
                     </p-dropdown>
+                    <input
+                      [hidden]="true"
+                      class="form-control input-transparent"
+                      name="listsource"
+                      [value]="procedureStepMonitor.monitorListId || ''"
+                      readonly
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-required="true"
+                    >
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
@@ -125,6 +180,16 @@
                     <p-dropdown placeholder="Select Should Be" name="shouldbe" [options]="shouldBeOptions"
                         showClear="true" [(ngModel)]="procedureStepMonitor.shouldBe">
                     </p-dropdown>
+                    <input
+                      [hidden]="true"
+                      class="form-control input-transparent"
+                      name="shouldbe"
+                      [value]="procedureStepMonitor.shouldBe || ''"
+                      readonly
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-required="true"
+                    >
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.shouldBe === 'BETWEEN' && procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.monitorType !== 'Yes or No'">
@@ -132,9 +197,17 @@
                     Low Value
                 </label>
                 <div class="col-9 px-0">
-                    <input type="number" name="lowvalue" [(ngModel)]="procedureStepMonitor.lowTarget" data-validate="parsley"
-                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                        class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
+                    <input type="number" name="lowvalue" [(ngModel)]="procedureStepMonitor.lowTarget" class="form-control input-transparent" tooltip="low Value">
+                    <input
+                      [hidden]="true"
+                      class="form-control input-transparent"
+                      name="lowvalue"
+                      [value]="procedureStepMonitor.lowTarget || ''"
+                      readonly
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-required="true"
+                    >
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.shouldBe === 'BETWEEN' && procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.monitorType !== 'Yes or No'">
@@ -142,9 +215,17 @@
                     High Value
                 </label>
                 <div class="col-9 px-0">
-                    <input type="number" name="highValue" [(ngModel)]="procedureStepMonitor.highTarget" data-validate="parsley"
-                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                        class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
+                    <input type="number" name="highValue" [(ngModel)]="procedureStepMonitor.highTarget" class="form-control input-transparent" tooltip="High Value">
+                    <input
+                      [hidden]="true"
+                      class="form-control input-transparent"
+                      name="highValue"
+                      [value]="procedureStepMonitor.highTarget || ''"
+                      readonly
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-required="true"
+                    >
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
@@ -152,13 +233,24 @@
                 <label for="targetvalue" class="col-form-label text-left col-3">
                     Target Value
                 </label>
-                <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Pass or Fail'" placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="procedureStepMonitor.targetValue">
-                </p-dropdown>
-                <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="procedureStepMonitor.targetValue">
-                </p-dropdown>
-                <input type="number" name="targetvalue" [(ngModel)]="procedureStepMonitor.targetValue" data-validate="parsley" *ngIf="procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.monitorType !== 'Yes or No'"
-                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                    class="form-control input-transparent" tooltip="Target Value" data-cy="targetvalue-input">
+                <div class="col-9 px-0">
+                  <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Pass or Fail'"  placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="procedureStepMonitor.targetValue">
+                  </p-dropdown>
+                  <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="procedureStepMonitor.targetValue">
+                  </p-dropdown>
+                  <input *ngIf="procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.monitorType !== 'Yes or No'" type="number" name="targetvalue" [(ngModel)]="procedureStepMonitor.targetValue" class="form-control input-transparent" tooltip="Target Value">
+                  <input
+                    *ngIf="procedureStepMonitor.monitorType !== 'Equipment' && procedureStepMonitor.monitorType !== 'Text'"
+                    [hidden]="true"
+                    class="form-control input-transparent"
+                    name="targetvalue"
+                    [value]="procedureStepMonitor.targetValue || ''"
+                    readonly
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-required="true"
+                  >
+                </div>
             </div>
             <div class="form-group col-12 d-flex flex-row">
                 <label for="faulthandling" class="col-form-label text-left col-3">

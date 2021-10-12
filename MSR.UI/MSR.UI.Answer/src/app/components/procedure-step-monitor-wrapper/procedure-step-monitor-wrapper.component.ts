@@ -10,6 +10,8 @@ import { LookUpItems } from '../../utils/lookup-items';
 import { Globals } from '../../models/lib/globals';
 import { SelectItem } from 'primeng/api';
 
+declare let jQuery: any;
+
 @Component({
   selector: 'procedurestepmonitor-wrapper',
   templateUrl: './procedure-step-monitor-wrapper.component.html',
@@ -153,57 +155,58 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
   }
 
   saveOrUpdateProcedureStepMonitor() {
+    jQuery('.parsleyjs').parsley().validate();
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      if (this.procedureStepMonitor.id === undefined) {
 
-    if (this.procedureStepMonitor.id === undefined) {
+        let createProcedureStepMonitorRequest = new CreateProcedureStepMonitorRequest({
+          monitorType: this.procedureStepMonitor.monitorType,
+          inputType: this.procedureStepMonitor.inputType,
+          shouldBe: this.procedureStepMonitor.shouldBe,
+          targetValue: this.procedureStepMonitor.targetValue?.toString(),
+          faultHandling: this.procedureStepMonitor.faultHandling,
+          description: this.procedureStepMonitor.description,
+          sendEmailNotification: this.procedureStepMonitor.sendEmailNotification,
+          procedureStepId: this.procedureStep.id,
+          lowTarget: this.procedureStepMonitor.lowTarget,
+          highTarget: this.procedureStepMonitor.highTarget,
+          sensorName: this.procedureStepMonitor.sensorName
+        } as ICreateProcedureStepMonitorRequest);
 
-      let createProcedureStepMonitorRequest = new CreateProcedureStepMonitorRequest({
-        monitorType: this.procedureStepMonitor.monitorType,
-        inputType: this.procedureStepMonitor.inputType,
-        shouldBe: this.procedureStepMonitor.shouldBe,
-        targetValue: this.procedureStepMonitor.targetValue?.toString(),
-        faultHandling: this.procedureStepMonitor.faultHandling,
-        description: this.procedureStepMonitor.description,
-        sendEmailNotification: this.procedureStepMonitor.sendEmailNotification,
-        procedureStepId: this.procedureStep.id,
-        lowTarget: this.procedureStepMonitor.lowTarget,
-        highTarget: this.procedureStepMonitor.highTarget,
-        sensorName: this.procedureStepMonitor.sensorName
-      } as ICreateProcedureStepMonitorRequest);
+        this.globals.showLoader(true);
+        this.procedureStepMonitorService.procedureStepMonitorPost(env.apiVersion, createProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 
-      this.globals.showLoader(true);
-      this.procedureStepMonitorService.procedureStepMonitorPost(env.apiVersion, createProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
+          this.procedureStepMonitors.push(response.object);
+          this.showAddOrEditMonitorDialog = !this.showAddOrEditMonitorDialog;
 
-        this.procedureStepMonitors.push(response.object);
-        this.showAddOrEditMonitorDialog = !this.showAddOrEditMonitorDialog;
+        }));
 
-      }));
+      } else {
 
-    } else {
+        let updateProcedureStepMonitorRequest = new UpdateProcedureStepMonitorRequest({
+          monitorType: this.procedureStepMonitor.monitorType,
+          inputType: this.procedureStepMonitor.inputType,
+          shouldBe: this.procedureStepMonitor.shouldBe,
+          description: this.procedureStepMonitor.description,
+          id: this.procedureStepMonitor.id,
+          lowTarget: this.procedureStepMonitor.lowTarget,
+          highTarget: this.procedureStepMonitor.highTarget,
+          sensorName: this.procedureStepMonitor.sensorName,
+          failAction: this.procedureStepMonitor.faultHandling,
+          monitorListId: this.procedureStepMonitor.monitorListId,
+          sendNCREmail: this.procedureStepMonitor.sendEmailNotification,
+          target: Number(this.procedureStepMonitor.targetValue)
+        } as IUpdateProcedureStepMonitorRequest);
 
-      let updateProcedureStepMonitorRequest = new UpdateProcedureStepMonitorRequest({
-        monitorType: this.procedureStepMonitor.monitorType,
-        inputType: this.procedureStepMonitor.inputType,
-        shouldBe: this.procedureStepMonitor.shouldBe,
-        description: this.procedureStepMonitor.description,
-        id: this.procedureStepMonitor.id,
-        lowTarget: this.procedureStepMonitor.lowTarget,
-        highTarget: this.procedureStepMonitor.highTarget,
-        sensorName: this.procedureStepMonitor.sensorName,
-        failAction: this.procedureStepMonitor.faultHandling,
-        monitorListId: this.procedureStepMonitor.monitorListId,
-        sendNCREmail: this.procedureStepMonitor.sendEmailNotification,
-        target: Number(this.procedureStepMonitor.targetValue)
-      } as IUpdateProcedureStepMonitorRequest);
+        this.globals.showLoader(true);
+        this.procedureStepMonitorService.procedureStepMonitorPatch(env.apiVersion, updateProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 
-      this.globals.showLoader(true);
-      this.procedureStepMonitorService.procedureStepMonitorPatch(env.apiVersion, updateProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
+          this.showAddOrEditMonitorDialog = !this.showAddOrEditMonitorDialog;
 
-        this.showAddOrEditMonitorDialog = !this.showAddOrEditMonitorDialog;
+        }));
 
-      }));
-
+      }
     }
-
   }
 
 }
