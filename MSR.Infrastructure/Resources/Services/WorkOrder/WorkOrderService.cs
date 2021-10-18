@@ -433,7 +433,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             {
                                 PartId = partSubPartMapForSubPart.PartId,
                                 ParentId = partSubPartMapForSubPart.ParentPartId,
-                                Qty = partSubPartMapForSubPart.Qty,
+                                Qty = 1,
                                 SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
                             });
                         }
