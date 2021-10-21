@@ -157,8 +157,10 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
   saveOrUpdateProcedureStepMonitor() {
     jQuery('.parsleyjs').parsley().validate();
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      if (this.procedureStepMonitor.id === undefined) {
+      const lowTarget = this.procedureStepMonitor.lowTarget?.toString();
+      const highTarget = this.procedureStepMonitor.highTarget?.toString();
 
+      if (this.procedureStepMonitor.id === undefined) {
         let createProcedureStepMonitorRequest = new CreateProcedureStepMonitorRequest({
           monitorType: this.procedureStepMonitor.monitorType,
           inputType: this.procedureStepMonitor.inputType,
@@ -168,8 +170,8 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
           description: this.procedureStepMonitor.description,
           sendEmailNotification: this.procedureStepMonitor.sendEmailNotification,
           procedureStepId: this.procedureStep.id,
-          lowTarget: this.procedureStepMonitor.lowTarget,
-          highTarget: this.procedureStepMonitor.highTarget,
+          lowTarget: lowTarget ? parseInt(lowTarget, 10) : null,
+          highTarget: highTarget ? parseInt(highTarget, 10) : null,
           sensorName: this.procedureStepMonitor.sensorName
         } as ICreateProcedureStepMonitorRequest);
 
@@ -189,8 +191,8 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
           shouldBe: this.procedureStepMonitor.shouldBe,
           description: this.procedureStepMonitor.description,
           id: this.procedureStepMonitor.id,
-          lowTarget: this.procedureStepMonitor.lowTarget,
-          highTarget: this.procedureStepMonitor.highTarget,
+          lowTarget: lowTarget ? parseInt(lowTarget, 10) : null,
+          highTarget: highTarget ? parseInt(highTarget, 10) : null,
           sensorName: this.procedureStepMonitor.sensorName,
           failAction: this.procedureStepMonitor.faultHandling,
           monitorListId: this.procedureStepMonitor.monitorListId,
