@@ -47,9 +47,16 @@ namespace MSR.Domain.Validators
             foreach (CycleCountHistoryImportItem record in records)
             {
                 line += 1;
+
+                if (String.IsNullOrEmpty(record.PartNumber) && String.IsNullOrEmpty(record.SerialNumber) && String.IsNullOrEmpty(record.CycleCount)) continue;
+                
                 try
                 {
                     var cycleCount = _mapper.Map<CycleCountHistoryModel>(record);
+                    if (int.TryParse(record.CycleCount.ToString(), out var cycleCountValue))
+                    {
+                        cycleCount.CycleCount = cycleCountValue;
+                    }
                     cycleCounts.Add(cycleCount);
                 }
                 catch (Exception e)
