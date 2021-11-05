@@ -498,9 +498,12 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartImportItem, UpdatePart>();
             CreateMap<PartImportItem, CreatePart>();
             
-            CreateMap<CycleCountHistoryImportItem, CycleCountHistoryModel>();
-            CreateMap<CycleCountHistoryImportItem, CreateCycleCountHistory>();
-            CreateMap<CycleCountHistoryImportItem, UpdateCycleCountHistory>();
+            CreateMap<CycleCountHistoryImportItem, CycleCountHistoryModel>()
+                .ForMember(dest => dest.CycleCount, opts => opts.Ignore());
+            CreateMap<CycleCountHistoryImportItem, CreateCycleCountHistory>()
+                .ForMember(dest => dest.CycleCount, opts => opts.Ignore());
+            CreateMap<CycleCountHistoryImportItem, UpdateCycleCountHistory>()
+                .ForMember(dest => dest.CycleCount, opts => opts.Ignore());
 
             CreateMap<CreateCycleCountHistory, CycleCountHistory>();
             CreateMap<UpdateCycleCountHistory, CycleCountHistory>();
