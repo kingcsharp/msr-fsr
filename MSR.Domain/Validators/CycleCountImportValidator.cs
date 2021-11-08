@@ -48,7 +48,7 @@ namespace MSR.Domain.Validators
             {
                 line += 1;
 
-                if (String.IsNullOrEmpty(record.PartNumber) && String.IsNullOrEmpty(record.SerialNumber) && String.IsNullOrEmpty(record.CycleCount)) continue;
+                if (string.IsNullOrWhiteSpace(record.PartNumber) && string.IsNullOrWhiteSpace(record.SerialNumber) && string.IsNullOrWhiteSpace(record.CycleCount)) continue;
                 
                 try
                 {

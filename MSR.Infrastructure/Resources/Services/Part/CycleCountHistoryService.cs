@@ -79,7 +79,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             
             foreach (CycleCountHistoryImportItem record in records)
             {
-                if (String.IsNullOrEmpty(record.PartNumber) && String.IsNullOrEmpty(record.SerialNumber) && String.IsNullOrEmpty(record.CycleCount)) continue;
+                if (string.IsNullOrWhiteSpace(record.PartNumber) && string.IsNullOrWhiteSpace(record.SerialNumber) && string.IsNullOrWhiteSpace(record.CycleCount)) continue;
 
                 var id = cycleCountHistoryEntities.Where(x => x.PartNumber == record.PartNumber && x.SerialNumber == record.SerialNumber).Select(x => x.Id).FirstOrDefault();
 
