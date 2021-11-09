@@ -8,11 +8,11 @@ using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
-using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -79,17 +79,27 @@ namespace MSR.Infrastructure.Resources.Services.Part
             
             foreach (CycleCountHistoryImportItem record in records)
             {
+                if (string.IsNullOrWhiteSpace(record.PartNumber) && string.IsNullOrWhiteSpace(record.SerialNumber) && string.IsNullOrWhiteSpace(record.CycleCount)) continue;
+
                 var id = cycleCountHistoryEntities.Where(x => x.PartNumber == record.PartNumber && x.SerialNumber == record.SerialNumber).Select(x => x.Id).FirstOrDefault();
 
                 if (id != 0)
                 {
                     var updateCycleCountHistoryModel = _mapper.Map<UpdateCycleCountHistory>(record);
+                    if (int.TryParse(record.CycleCount.ToString(), out var cycleCountValue))
+                    {
+                        updateCycleCountHistoryModel.CycleCount = cycleCountValue;
+                    }
                     updateCycleCountHistoryModel.Id = id;
                     updates.Add(updateCycleCountHistoryModel); 
                 }
                 else
                 {
                     var createCycleCountHistoryModel = _mapper.Map<CreateCycleCountHistory>(record);
+                    if (int.TryParse(record.CycleCount.ToString(), out var cycleCountValue))
+                    {
+                        createCycleCountHistoryModel.CycleCount = cycleCountValue;
+                    }
                     inserts.Add(createCycleCountHistoryModel);
                 }
             }
