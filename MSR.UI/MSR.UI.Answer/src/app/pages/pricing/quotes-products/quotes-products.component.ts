@@ -89,6 +89,7 @@ export class QuotesProductsComponent implements OnInit {
       new ColumnsSaved({ id: 'divisionFab', label: 'Division/Fab #', visible: true }),
       new ColumnsSaved({ id: 'partKitNo', label: 'Part/Kit Number', visible: true }),
       new ColumnsSaved({ id: 'segregationType', label: 'Segregation Type', visible: true }),
+      new ColumnsSaved({ id: 'procedureId', label: 'Procedure Id', visible: true }),
       new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true }),
       new ColumnsSaved({ id: 'representative', label: 'Representative', visible: false }),
@@ -96,8 +97,8 @@ export class QuotesProductsComponent implements OnInit {
       new ColumnsSaved({ id: 'equipmentCost', label: 'Equipment Cost', visible: false }),
       new ColumnsSaved({ id: 'materialCost', label: 'Material Cost', visible: false }),
       new ColumnsSaved({ id: 'salesTax', label: 'Sales Tax', visible: false }),
-      new ColumnsSaved({ id: 'totalPrice', label: 'Total Price', visible: false }),
-      new ColumnsSaved({ id: 'cycleTime', label: 'Cycle Time', visible: false }),
+      new ColumnsSaved({ id: 'totalPrice', label: 'Total Price', visible: true }),
+      new ColumnsSaved({ id: 'cycleTime', label: 'Cycle Time', visible: true }),
       new ColumnsSaved({ id: 'lastUpdateOn', label: 'LastUpdateOn', visible: false }),
       new ColumnsSaved({ id: 'lastUpdatedBy', label: 'LastUpdated By', visible: false })
     ];
@@ -235,6 +236,31 @@ export class QuotesProductsComponent implements OnInit {
           this.getQuotesProducts(this.currentEvent);
       }));
     }
+  }
+
+  downloadCSV() {
+    const data = this.data;
+    this.globals.showLoader(true);
+    const replacer = (key, value) => (value === null ? '' : value); // specify how you want to handle null values here
+    const header = Object.keys(data[0]);
+    const csv = data.map((row) =>
+      header
+        .map((fieldName) => JSON.stringify(row[fieldName], replacer))
+        .join(',')
+    );
+    csv.unshift(header.join(','));
+    const csvArray = csv.join('\r\n');
+
+    const a = document.createElement('a');
+    const blob = new Blob([csvArray], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = 'myFile.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+    this.globals.showLoader(false);
   }
 
 }

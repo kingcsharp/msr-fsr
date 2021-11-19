@@ -24,6 +24,9 @@
           data-cy="import-button"
         ></csv-import>
 
+        <button *ngIf="userPrivileges.canRead" class="btn btn-warning width-150 mb-xs sm-mrg" role="button"
+          data-cy="download-button" (click)="downloadCSV()"><i class="fas fa-file-csv mr-1"></i> Download CSV</button>
+
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
           [gridVersion]="gridVersion" data-cy="usergrid-options"></grid-options>
       </div>
@@ -86,6 +89,15 @@
           <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="segregationTypes" filterId="segregationType"
             defaultText="Select Segregation Type" [datatable]="dt">
           </multiselect-wrapper>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('procedureId',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Procedure Id" data-cy="searchbyprocedureid-grid"
+              (input)="dt.filter($event.target.value, 'procedureId', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['procedureId']?.value">
+            <i *ngIf="dt.filters['procedureId']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'procedureId')"></i>
+          </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('procedureName',gridSettings)">
           <div class="position-relative">
@@ -205,6 +217,9 @@
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('segregationType',gridSettings)">
           {{quoteproductmodel.segregationType | segregationType}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('procedureId',gridSettings)">
+          {{quoteproductmodel.procedureId }}
         </td>
         <td [hidden]="!cg.isVisibleCol('procedureName',gridSettings)">
           {{quoteproductmodel.procedureName }}
