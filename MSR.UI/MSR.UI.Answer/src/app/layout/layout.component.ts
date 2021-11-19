@@ -135,6 +135,7 @@ export class Layout {
   }
 
   submitCycleCountImport() {
+    this.globals.showLoader(true);
     let imporReq = new ImportRequest();
     imporReq.base64Data = this.uploadedFiles[0].base64String;
     imporReq.menuItem = this.menuItems.CycleCountImport;

@@ -34,7 +34,7 @@ namespace MSR.Application.ApplicationServices
             var products = await _productService.GetProductsAsync();
 
             // Merged view of Quotes and Products
-            var quotesProductsViewModels= new List<QuotesProductsView>();
+            var quotesProductsViewModels = new List<QuotesProductsView>();
 
             foreach (var product in products)
             {
@@ -53,7 +53,8 @@ namespace MSR.Application.ApplicationServices
 
             foreach (var quote in quotes)
             {
-                if (!productList.Any(p => p.QuoteId == quote.Id)) {
+                if (!productList.Any(p => p.QuoteId == quote.Id))
+                {
                     var qpModel = _mapper.Map<QuotesProductsView>(quote);
                     qpModel.IsProduct = false;
                     qpModel.IsDeletable = true;
@@ -75,7 +76,7 @@ namespace MSR.Application.ApplicationServices
                     qpModel.LastUpdateBy = quote.SubmittedBy.FullName;
                     qpModel.LastUpdateOn = quote.SubmittedDate;
                     quotesProductsViewModels.Add(qpModel);
-                }               
+                }
             }
 
             var totalRows = quotesProductsViewModels.AsQueryable().CreateQuotesProductsQuery(command, true).Count();

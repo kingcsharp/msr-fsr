@@ -55,7 +55,7 @@
       </p-footer>
     </p-dialog>
 
-    <p-dialog header="Import" [(visible)]="cycleCountImportModalDisplayed" [style]="{width: '50vw'}" [dismissableMask]="true" appendTo="body" [baseZIndex]="100002" [modal]='true'>
+    <p-dialog header="Import" [(visible)]="cycleCountImportModalDisplayed" [style]="{width: '50vw'}" [dismissableMask]="true" appendTo="body" [modal]='true'>
       <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
         data-parsley-priority-enabled="false" (ngSubmit)="submitCycleCountImport()" novalidate="novalidate">
         <section class="widget mrg-btm-sm" widget>
@@ -93,7 +93,7 @@
         </section>
         <p-footer>
           <div class="pull-right">
-            <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+            <button type="submit" [disabled]="uploadedFiles.length === 0" class="btn btn-outline-inverse width-100 mb-xs" role="button"
               data-cy="save-import-button">
               Save
             </button>

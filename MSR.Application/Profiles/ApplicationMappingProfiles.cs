@@ -11,6 +11,7 @@ namespace MSR.Application.Profiles
         {
             CreateMap<CreateFile, FileModel>();
             CreateMap<dynamic, InvoiceableWorkOrderView>().ReverseMap();
+            CreateMap<ProductModel,ProductDownloadView>().ReverseMap();
         }
     }
 }
