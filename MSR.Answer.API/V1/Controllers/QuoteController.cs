@@ -13,6 +13,7 @@ using MSR.Answer.API.Filters;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
 using System.Net;
+using MSR.Application.Abstractions;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -22,10 +23,12 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private const string privilegeApiName = "QuotesProducts";
         private readonly ICommandDispatcher _dispatcher;
+        private readonly IProductViewService _productViewService;
 
-        public QuoteController(ICommandDispatcher dispatcher)
+        public QuoteController(ICommandDispatcher dispatcher, IProductViewService productViewService)
         {
             _dispatcher = dispatcher;
+            _productViewService = productViewService;
         }
 
         [HttpGet("Product")]
@@ -79,6 +82,14 @@ namespace MSR.Answer.API.V1.Controllers
             };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<QuoteModel>("Quote was successfully deleted.");
+        }
+
+        [HttpGet("Product/Download")]
+        public async Task<ActionResult> DownLoadFile([FromQuery] GetQuotesProductsRequest request)
+        {
+            var data = await _productViewService.DownloadFile("csv");
+
+            return File(data, "text/csv", "QuoteProduct.csv");
         }
     }
 }
