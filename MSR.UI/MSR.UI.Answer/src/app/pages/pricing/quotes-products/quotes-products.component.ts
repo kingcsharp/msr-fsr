@@ -21,6 +21,7 @@ import {
 import { CSRJsonModel, ProcessModel, PartModel } from '../../../models/csr-json-model';
 import { EnumCRFTabs } from '../../../models/enums/EnumCRFTabs';
 import { LazyLoadEvent } from 'primeng/api';
+import * as moment from 'moment';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -239,28 +240,22 @@ export class QuotesProductsComponent implements OnInit {
   }
 
   downloadCSV() {
-    const data = this.data;
     this.globals.showLoader(true);
-    const replacer = (key, value) => (value === null ? '' : value); // specify how you want to handle null values here
-    const header = Object.keys(data[0]);
-    const csv = data.map((row) =>
-      header
-        .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-        .join(',')
-    );
-    csv.unshift(header.join(','));
-    const csvArray = csv.join('\r\n');
+    this.quoteService.download(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        if (response.data) {
+          const downloadDocument = document.createElement('a');
+          const blob = new Blob([response.data], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
-    const blob = new Blob([csvArray], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-
-    a.href = url;
-    a.download = 'myFile.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
-    a.remove();
-    this.globals.showLoader(false);
+          downloadDocument.href = url;
+          downloadDocument.download = `product_export_${moment.utc().valueOf()}.csv`;
+          downloadDocument.click();
+          window.URL.revokeObjectURL(url);
+          downloadDocument.remove();
+        }
+      }));
   }
 
 }
