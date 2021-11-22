@@ -8,6 +8,7 @@ using System.Linq;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Query;
 using MSR.Answer.API.V1.Models.Paging;
+using MSR.Domain.QueryFilters;
 
 namespace MSR.Answer.API.V1.Extentions
 {
@@ -1065,9 +1066,14 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<AddNCRWorkOrderTask>(request);
         }
 
-        public static GetAssignedWorkOrders ToWorkOrderSelectItem(this GetAssignedWorkOrdersRequest request) {
-
+        public static GetAssignedWorkOrders ToWorkOrderSelectItem(this GetAssignedWorkOrdersRequest request) 
+        {
             return AutoMapperHelper.Mapper.Map<GetAssignedWorkOrders>(request);
+        }
+
+        public static ProductDownloadFilter ToProductDownloadFilter(this GetQuotesProductsRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<ProductDownloadFilter>(request);
         }
     }
 }
