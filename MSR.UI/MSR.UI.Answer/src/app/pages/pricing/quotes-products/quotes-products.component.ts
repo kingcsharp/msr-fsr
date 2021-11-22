@@ -241,7 +241,7 @@ export class QuotesProductsComponent implements OnInit {
 
   downloadCSV() {
     this.globals.showLoader(true);
-    this.quoteService.download(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+    callFunctionWithFilters(this.quoteService, this.quoteService.download, this.currentEvent, this.globals.functionDic)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         if (response.data) {
