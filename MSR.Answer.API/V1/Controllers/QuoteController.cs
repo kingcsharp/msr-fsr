@@ -87,7 +87,8 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("Product/Download")]
         public async Task<ActionResult> DownLoadFile([FromQuery] GetQuotesProductsRequest request)
         {
-            var data = await _productViewService.DownloadFile("csv");
+            var filters = request.ToProductDownloadFilter();
+            var data = await _productViewService.DownloadFile("csv",filters);
 
             return File(data, "text/csv", "QuoteProduct.csv");
         }

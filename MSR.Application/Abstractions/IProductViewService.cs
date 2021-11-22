@@ -1,4 +1,6 @@
-﻿using System;
+
+using MSR.Domain.QueryFilters;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +9,6 @@ namespace MSR.Application.Abstractions
 {
     public interface IProductViewService
     {
-        Task<byte[]> DownloadFile(string format); 
+        Task<byte[]> DownloadFile(string format, ProductDownloadFilter filters); 
     }
 }

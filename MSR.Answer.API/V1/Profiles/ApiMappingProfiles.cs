@@ -4,6 +4,7 @@ using MSR.Answer.API.V1.Models.Paging;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Query;
+using MSR.Domain.QueryFilters;
 using System;
 using System.Linq;
 
@@ -162,6 +163,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<AddNCRWorkOrderTaskRequest, AddNCRWorkOrderTask>();
             CreateMap<GetPurchaseOrderDBRequest, GetPurchaseOrderDBView>();
             CreateMap<GetAssignedWorkOrdersRequest, GetAssignedWorkOrders>();
+            CreateMap<GetQuotesProductsRequest, ProductDownloadFilter>();
         }
     }
 }
