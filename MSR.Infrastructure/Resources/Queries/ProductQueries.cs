@@ -31,6 +31,7 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(filters.SubmittedByFullName, s => s.SubmittedBy != null && s.SubmittedBy.ToLower().Contains(filters.SubmittedByFullName.ToLower()));
             query = query.Where(filters.TotalPrice, s => s.TotalPrice == filters.TotalPrice);
             query = query.Where(filters.SubmittedDate, s => DateTime.Compare(s.SubmittedDate.Date, filters.SubmittedDate.Value.Date) == 0);
+            query = query.Where(filters.ProcedureId, s => s.ProcedureId == filters.ProcedureId);
 
            return query;
         }

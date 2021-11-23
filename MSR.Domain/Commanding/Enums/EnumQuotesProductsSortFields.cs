@@ -40,6 +40,8 @@ namespace MSR.Domain.Commanding.Enums
         [Description("LastUpdateOn")]
         LastUpdateOn,
         [Description("LastUpdatedBy")]
-        LastUpdatedBy
+        LastUpdatedBy,
+        [Description("ProcedureId")]
+        ProcedureId
     }
 }
