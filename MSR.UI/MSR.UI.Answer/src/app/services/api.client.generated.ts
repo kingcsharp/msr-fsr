@@ -5670,7 +5670,7 @@ export class QuoteService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
+    product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureId: number | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
         let url_ = this.baseUrl + "/v{version}/Quote/Product?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5687,6 +5687,8 @@ export class QuoteService {
             url_ += "PartKitNo=" + encodeURIComponent("" + partKitNo) + "&";
         if (segregationType !== undefined && segregationType !== null)
             segregationType && segregationType.forEach(item => { url_ += "SegregationType=" + encodeURIComponent("" + item) + "&"; });
+        if (procedureId !== undefined && procedureId !== null)
+            url_ += "ProcedureId=" + encodeURIComponent("" + procedureId) + "&";
         if (procedureName !== undefined && procedureName !== null)
             url_ += "ProcedureName=" + encodeURIComponent("" + procedureName) + "&";
         if (productName !== undefined && productName !== null)
@@ -5932,7 +5934,7 @@ export class QuoteService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    download(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<FileResponse> {
+    download(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureId: number | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<FileResponse> {
         let url_ = this.baseUrl + "/v{version}/Quote/Product/Download?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5949,6 +5951,8 @@ export class QuoteService {
             url_ += "PartKitNo=" + encodeURIComponent("" + partKitNo) + "&";
         if (segregationType !== undefined && segregationType !== null)
             segregationType && segregationType.forEach(item => { url_ += "SegregationType=" + encodeURIComponent("" + item) + "&"; });
+        if (procedureId !== undefined && procedureId !== null)
+            url_ += "ProcedureId=" + encodeURIComponent("" + procedureId) + "&";
         if (procedureName !== undefined && procedureName !== null)
             url_ += "ProcedureName=" + encodeURIComponent("" + procedureName) + "&";
         if (productName !== undefined && productName !== null)
