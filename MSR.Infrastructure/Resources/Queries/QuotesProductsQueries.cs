@@ -30,6 +30,7 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.SubmittedByFullName, s => s.SubmittedBy != null && s.SubmittedBy.FullName.ToLower().Contains(command.SubmittedByFullName.ToLower()));
             query = query.Where(command.TotalPrice, s => s.TotalPrice == command.TotalPrice);
             query = query.Where(command.SubmittedDate, s => DateTime.Compare(s.SubmittedDate.Date, command.SubmittedDate.Value.Date) == 0);
+            query = query.Where(command.ProcedureId, s => s.ProcedureId == command.ProcedureId);
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
@@ -50,6 +51,7 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.SubmittedByFullName), s => s.SubmittedBy == null ? "" : s.SubmittedBy.FullName);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.SubmittedDate), s => s.SubmittedDate);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.TotalPrice), s => s.TotalPrice);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumQuotesProductsSortFields.ProcedureId), s => s.ProcedureId);
 
             }
 

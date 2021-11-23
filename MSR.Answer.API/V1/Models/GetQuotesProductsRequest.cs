@@ -14,6 +14,7 @@ namespace MSR.Answer.API.V1.Models
         public string DivisionFab { get;set;}
         public string PartKitNo { get;set;}
         public EnumSegregationType[]? SegregationType { get; set; }
+        public int? ProcedureId { get; set; }
         public string ProcedureName { get;set;}
         public string ProductName { get;set;}
         public string Representative { get;set;}
