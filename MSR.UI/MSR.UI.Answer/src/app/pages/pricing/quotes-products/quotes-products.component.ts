@@ -21,6 +21,7 @@ import {
 import { CSRJsonModel, ProcessModel, PartModel } from '../../../models/csr-json-model';
 import { EnumCRFTabs } from '../../../models/enums/EnumCRFTabs';
 import { LazyLoadEvent } from 'primeng/api';
+import * as moment from 'moment';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -89,6 +90,7 @@ export class QuotesProductsComponent implements OnInit {
       new ColumnsSaved({ id: 'divisionFab', label: 'Division/Fab #', visible: true }),
       new ColumnsSaved({ id: 'partKitNo', label: 'Part/Kit Number', visible: true }),
       new ColumnsSaved({ id: 'segregationType', label: 'Segregation Type', visible: true }),
+      new ColumnsSaved({ id: 'procedureId', label: 'Procedure Id', visible: true }),
       new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true }),
       new ColumnsSaved({ id: 'representative', label: 'Representative', visible: false }),
@@ -96,8 +98,8 @@ export class QuotesProductsComponent implements OnInit {
       new ColumnsSaved({ id: 'equipmentCost', label: 'Equipment Cost', visible: false }),
       new ColumnsSaved({ id: 'materialCost', label: 'Material Cost', visible: false }),
       new ColumnsSaved({ id: 'salesTax', label: 'Sales Tax', visible: false }),
-      new ColumnsSaved({ id: 'totalPrice', label: 'Total Price', visible: false }),
-      new ColumnsSaved({ id: 'cycleTime', label: 'Cycle Time', visible: false }),
+      new ColumnsSaved({ id: 'totalPrice', label: 'Total Price', visible: true }),
+      new ColumnsSaved({ id: 'cycleTime', label: 'Cycle Time', visible: true }),
       new ColumnsSaved({ id: 'lastUpdateOn', label: 'LastUpdateOn', visible: false }),
       new ColumnsSaved({ id: 'lastUpdatedBy', label: 'LastUpdated By', visible: false })
     ];
@@ -235,6 +237,25 @@ export class QuotesProductsComponent implements OnInit {
           this.getQuotesProducts(this.currentEvent);
       }));
     }
+  }
+
+  downloadCSV() {
+    this.globals.showLoader(true);
+    callFunctionWithFilters(this.quoteService, this.quoteService.download, this.currentEvent, this.globals.functionDic)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        if (response.data) {
+          const downloadDocument = document.createElement('a');
+          const blob = new Blob([response.data], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+
+          downloadDocument.href = url;
+          downloadDocument.download = `product_export_${moment.utc().valueOf()}.csv`;
+          downloadDocument.click();
+          window.URL.revokeObjectURL(url);
+          downloadDocument.remove();
+        }
+      }));
   }
 
 }
