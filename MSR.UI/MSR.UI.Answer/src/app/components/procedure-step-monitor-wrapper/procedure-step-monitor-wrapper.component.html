@@ -28,7 +28,7 @@
                     <td>{{ procedureStepMonitor.monitorType }}</td>
                     <td  [innerHTML]="procedureStepMonitor.description"></td>
                     <td>{{ procedureStepMonitor.inputType }}</td>
-                    <td>{{ procedureStepMonitor.targetValue }}</td>
+                    <td>{{ procedureStepMonitor.target }}</td>
                     <td>
                         <i *ngIf="canEdit" class="far fa-edit pointer"
                             tooltip="Edit Monitor" data-cy="edit-button"
@@ -236,17 +236,17 @@
                     Target Value
                 </label>
                 <div class="col-9 px-0">
-                  <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Pass or Fail'"  placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="procedureStepMonitor.targetValue">
+                  <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Pass or Fail'"  placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="procedureStepMonitor.target">
                   </p-dropdown>
-                  <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="procedureStepMonitor.targetValue">
+                  <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="procedureStepMonitor.target">
                   </p-dropdown>
-                  <input *ngIf="procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.monitorType !== 'Yes or No'" name="targetvalue" [(ngModel)]="procedureStepMonitor.targetValue" class="form-control input-transparent" tooltip="Target Value">
+                  <input *ngIf="procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.monitorType !== 'Yes or No'" name="targetvalue" [(ngModel)]="procedureStepMonitor.target" class="form-control input-transparent" tooltip="Target Value">
                   <input
                     *ngIf="procedureStepMonitor.monitorType === 'Number'"
                     [hidden]="true"
                     class="form-control input-transparent"
                     name="targetvalue"
-                    [value]="procedureStepMonitor.targetValue || ''"
+                    [value]="procedureStepMonitor.target || ''"
                     readonly
                     data-validate="parsley"
                     data-parsley-trigger="change"
@@ -257,7 +257,7 @@
                     [hidden]="true"
                     class="form-control input-transparent"
                     name="targetvalue"
-                    [value]="procedureStepMonitor.targetValue || ''"
+                    [value]="procedureStepMonitor.target || ''"
                     readonly
                     data-validate="parsley"
                     data-parsley-trigger="change"
@@ -271,7 +271,7 @@
                 </label>
                 <div class="col-9 px-0">
                     <p-dropdown placeholder="Select Fault Handling" name="faulthandling"
-                        [options]="faultHandlingOptions" showClear="true" [(ngModel)]="procedureStepMonitor.faultHandling">
+                        [options]="faultHandlingOptions" showClear="true" [(ngModel)]="procedureStepMonitor.failAction">
                     </p-dropdown>
                 </div>
             </div>
@@ -289,7 +289,7 @@
                 <div class="col-9 px-0 ">
                     <div class="display-inline-block isActive">
                         <label class="form-check-label" for="sendemailnotification" class="switch">
-                            <input class="form-check-input" [(ngModel)]="procedureStepMonitor.sendEmailNotification"
+                            <input class="form-check-input" [(ngModel)]="procedureStepMonitor.sendNCREmail"
                                 name="sendemailnotification" type="checkbox" class="ios" checked
                                 id="sendemailnotification" /><i data-cy="sendemailnotification-checkbox"></i>
                         </label>

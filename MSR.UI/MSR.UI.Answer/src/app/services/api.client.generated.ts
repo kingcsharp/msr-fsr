@@ -15182,10 +15182,10 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
     inputTypeId?: number;
     sensorName?: string | undefined;
     shouldBe?: string | undefined;
-    targetValue?: string | undefined;
-    faultHandling?: string | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
     description?: string | undefined;
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
     monitorListId?: number | undefined;
@@ -15208,10 +15208,10 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
             this.inputTypeId = _data["inputTypeId"];
             this.sensorName = _data["sensorName"];
             this.shouldBe = _data["shouldBe"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
             this.description = _data["description"];
-            this.sendEmailNotification = _data["sendEmailNotification"];
+            this.sendNCREmail = _data["sendNCREmail"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
@@ -15234,10 +15234,10 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
         data["inputTypeId"] = this.inputTypeId;
         data["sensorName"] = this.sensorName;
         data["shouldBe"] = this.shouldBe;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
         data["description"] = this.description;
-        data["sendEmailNotification"] = this.sendEmailNotification;
+        data["sendNCREmail"] = this.sendNCREmail;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
@@ -15253,10 +15253,10 @@ export interface IProcedureStepMonitor {
     inputTypeId?: number;
     sensorName?: string | undefined;
     shouldBe?: string | undefined;
-    targetValue?: string | undefined;
-    faultHandling?: string | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
     description?: string | undefined;
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
     monitorListId?: number | undefined;
@@ -15274,14 +15274,14 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
     procedureStepId?: number;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
-    /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    /** Gets or Sets Target */
+    target?: number | undefined;
+    /** Gets or Sets FailAction */
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    /** Gets or Sets SendNCREmail */
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */
@@ -15305,10 +15305,10 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
             this.monitorType = _data["monitorType"];
             this.procedureStepId = _data["procedureStepId"];
             this.shouldBe = _data["shouldBe"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
             this.description = _data["description"];
-            this.sendEmailNotification = _data["sendEmailNotification"];
+            this.sendNCREmail = _data["sendNCREmail"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
@@ -15329,10 +15329,10 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
         data["monitorType"] = this.monitorType;
         data["procedureStepId"] = this.procedureStepId;
         data["shouldBe"] = this.shouldBe;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
         data["description"] = this.description;
-        data["sendEmailNotification"] = this.sendEmailNotification;
+        data["sendNCREmail"] = this.sendNCREmail;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
@@ -15352,14 +15352,14 @@ export interface ICreateProcedureStepMonitorRequest {
     procedureStepId?: number;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
-    /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    /** Gets or Sets Target */
+    target?: number | undefined;
+    /** Gets or Sets FailAction */
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    /** Gets or Sets SendNCREmail */
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */
@@ -15423,13 +15423,13 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
     monitorType?: string | undefined;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    target?: number;
-    /** Gets or Sets FaultHandling */
+    /** Gets or Sets Target */
+    target?: number | undefined;
+    /** Gets or Sets FailAction */
     failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
+    /** Gets or Sets SendNCREmail */
     sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
@@ -15501,13 +15501,13 @@ export interface IUpdateProcedureStepMonitorRequest {
     monitorType?: string | undefined;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    target?: number;
-    /** Gets or Sets FaultHandling */
+    /** Gets or Sets Target */
+    target?: number | undefined;
+    /** Gets or Sets FailAction */
     failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
+    /** Gets or Sets SendNCREmail */
     sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
@@ -17568,10 +17568,12 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     shouldBe?: string | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
-    targetValue?: string | undefined;
-    faultHandling?: string | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
     monitorTypeId?: number | undefined;
     inputTypeId?: number | undefined;
+    lowNumVal?: number | undefined;
+    highNumVal?: number | undefined;
 
     constructor(data?: IWorkOrderTaskMonitorModel) {
         super(data);
@@ -17597,10 +17599,12 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
             this.shouldBe = _data["shouldBe"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
             this.monitorTypeId = _data["monitorTypeId"];
             this.inputTypeId = _data["inputTypeId"];
+            this.lowNumVal = _data["lowNumVal"];
+            this.highNumVal = _data["highNumVal"];
         }
     }
 
@@ -17630,10 +17634,12 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         data["shouldBe"] = this.shouldBe;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
         data["monitorTypeId"] = this.monitorTypeId;
         data["inputTypeId"] = this.inputTypeId;
+        data["lowNumVal"] = this.lowNumVal;
+        data["highNumVal"] = this.highNumVal;
         super.toJSON(data);
         return data; 
     }
@@ -17657,10 +17663,12 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     shouldBe?: string | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
-    targetValue?: string | undefined;
-    faultHandling?: string | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
     monitorTypeId?: number | undefined;
     inputTypeId?: number | undefined;
+    lowNumVal?: number | undefined;
+    highNumVal?: number | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
@@ -22779,6 +22787,10 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
     comment?: string | undefined;
     /** Gets or Sets Comment */
     sendNCREmail?: string | undefined;
+    /** Gets or Sets NumVal */
+    lowNumVal?: number | undefined;
+    /** Gets or Sets NumVal */
+    highNumVal?: number | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskMonitorRequest) {
         if (data) {
@@ -22798,6 +22810,8 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
             this.sensorValue = _data["sensorValue"];
             this.comment = _data["comment"];
             this.sendNCREmail = _data["sendNCREmail"];
+            this.lowNumVal = _data["lowNumVal"];
+            this.highNumVal = _data["highNumVal"];
         }
     }
 
@@ -22817,6 +22831,8 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
         data["sensorValue"] = this.sensorValue;
         data["comment"] = this.comment;
         data["sendNCREmail"] = this.sendNCREmail;
+        data["lowNumVal"] = this.lowNumVal;
+        data["highNumVal"] = this.highNumVal;
         return data; 
     }
 }
@@ -22837,6 +22853,10 @@ export interface IUpdateWorkOrderTaskMonitorRequest {
     comment?: string | undefined;
     /** Gets or Sets Comment */
     sendNCREmail?: string | undefined;
+    /** Gets or Sets NumVal */
+    lowNumVal?: number | undefined;
+    /** Gets or Sets NumVal */
+    highNumVal?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */

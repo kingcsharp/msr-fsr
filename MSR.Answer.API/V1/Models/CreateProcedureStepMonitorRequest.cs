@@ -55,16 +55,16 @@ namespace MSR.Answer.API.V1.Models
         public string ShouldBe { get; set; }
 
         /// <summary>
-        /// Gets or Sets TargetValue
+        /// Gets or Sets Target
         /// </summary>
-        [DataMember(Name="targetValue")]
-        public string TargetValue { get; set; }
+        [DataMember(Name="target")]
+        public decimal? Target { get; set; }
 
         /// <summary>
-        /// Gets or Sets FaultHandling
+        /// Gets or Sets FailAction
         /// </summary>
-        [DataMember(Name="faultHandling")]
-        public string FaultHandling { get; set; }
+        [DataMember(Name="failAction")]
+        public string FailAction { get; set; }
 
         /// <summary>
         /// Gets or Sets Description
@@ -73,22 +73,22 @@ namespace MSR.Answer.API.V1.Models
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or Sets SendEmailNotification
+        /// Gets or Sets SendNCREmail
         /// </summary>
-        [DataMember(Name="sendEmailNotification")]
-        public bool? SendEmailNotification { get; set; }
+        [DataMember(Name="sendNCREmail")]
+        public bool? SendNCREmail { get; set; }
 
         /// <summary>
         /// HighTarget
         /// </summary>
         [DataMember(Name="highTarget")]
-        public float? HighTarget { get; set; }
+        public decimal? HighTarget { get; set; }
 
         /// <summary>
         /// LowTarget
         /// </summary>
         [DataMember(Name="lowTarget")]
-        public float? LowTarget { get; set; }
+        public decimal? LowTarget { get; set; }
 
         /// <summary>
         /// MonitorListId

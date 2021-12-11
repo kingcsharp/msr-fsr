@@ -54,13 +54,13 @@ namespace MSR.Answer.API.V1.Models
         public string ShouldBe { get; set; }
 
         /// <summary>
-        /// Gets or Sets TargetValue
+        /// Gets or Sets Target
         /// </summary>
         [DataMember(Name="target")]
-        public float Target { get; set; }
+        public decimal? Target { get; set; }
 
         /// <summary>
-        /// Gets or Sets FaultHandling
+        /// Gets or Sets FailAction
         /// </summary>
         [DataMember(Name="failAction")]
         public string FailAction { get; set; }
@@ -72,7 +72,7 @@ namespace MSR.Answer.API.V1.Models
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or Sets SendEmailNotification
+        /// Gets or Sets SendNCREmail
         /// </summary>
         [DataMember(Name= "sendNCREmail")]
         public bool? SendNCREmail { get; set; }
@@ -81,13 +81,13 @@ namespace MSR.Answer.API.V1.Models
         /// HighTarget
         /// </summary>
         [DataMember(Name="highTarget")]
-        public float? HighTarget { get; set; }
+        public decimal? HighTarget { get; set; }
 
         /// <summary>
         /// LowTarget
         /// </summary>
         [DataMember(Name="lowTarget")]
-        public float? LowTarget { get; set; }
+        public decimal? LowTarget { get; set; }
 
         /// <summary>
         /// MonitorListId

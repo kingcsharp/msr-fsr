@@ -83,10 +83,40 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
     Parsley.addValidator('equaltotarget', {
       requirementType: 'number',
       validateString: function (value, requirement) {
-        return Number(value) === Number(requirement);
+        return parseFloat(value) === parseFloat(requirement);
       },
       messages: {
-        en: 'Value must be equal to Target'
+        en: 'Value is not equal to the target value'
+      }
+    });
+
+    Parsley.addValidator('above', {
+      requirementType: 'number',
+      validateString: function (value, min) {
+        return parseFloat(value) >= min;
+      },
+      messages: {
+        en: 'Value is not above or equal to target value'
+      }
+    });
+
+    Parsley.addValidator('below', {
+      requirementType: 'number',
+      validateString: function (value, max) {
+        return parseFloat(value) <= max;
+      },
+      messages: {
+        en: 'Value is not below or equal to target value'
+      }
+    });
+
+    Parsley.addValidator('between', {
+      requirementType: 'number',
+      validateString: function (value, low, high) {
+        return parseFloat(value) >= low && parseFloat(value) <= high;
+      },
+      messages: {
+        en: 'Value is not within acceptable range'
       }
     });
 
@@ -106,22 +136,22 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
     passAndFailAndYesOrNoMonitors.map(monitor => {
 
-      if (monitor.procedureStepMonitor.faultHandling === EnumFailAction.StopUntilFaultCleared || monitor.faultHandling === EnumFailAction.StopUntilFaultCleared) {
+      if (monitor.procedureStepMonitor.failAction === EnumFailAction.StopUntilFaultCleared || monitor.failAction === EnumFailAction.StopUntilFaultCleared) {
 
-        if ((monitor.numVal === undefined || monitor.numVal === null) && (monitor.targetValue === undefined || monitor.targetValue === null)) {
+        if ((monitor.numVal === undefined || monitor.numVal === null) && (monitor.target === undefined || monitor.target === null)) {
           dropDownsAreValid = true;
         } else {
 
-          if (monitor.procedureStepMonitor.targetValue !== monitor.numVal.toString() &&
-           monitor.targetValue !== monitor.numVal.toString() && monitor.targetValue !== null && monitor.procedureStepMonitor.targetValue !== '') {
+          if (monitor.procedureStepMonitor.target !== monitor.numVal &&
+           monitor.target !== monitor.numVal && monitor.target !== null && monitor.procedureStepMonitor.target !== null) {
             dropDownsAreValid = false;
           }
 
         }
 
-      } else if (monitor.procedureStepMonitor.faultHandling === EnumFailAction.RecordAndContinue || monitor.faultHandling === EnumFailAction.RecordAndContinue) {
+      } else if (monitor.procedureStepMonitor.failAction === EnumFailAction.RecordAndContinue || monitor.failAction === EnumFailAction.RecordAndContinue) {
 
-        if (monitor.targetValue == null && monitor.numVal === null) {
+        if (monitor.target == null && monitor.numVal === null) {
           dropDownsAreValid = false;
         }
 
@@ -152,7 +182,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
   updateMonitors(closeTask: boolean = false) {
 
-    let sendAnNcrEmailNotification = this.workOrderMonitorsToView.map(s => s.procedureStepMonitor?.sendEmailNotification).find(m => m === true);
+    let sendAnNcrEmailNotification = this.workOrderMonitorsToView.map(s => s.procedureStepMonitor?.sendNCREmail).find(m => m === true);
     let primaryContactUserEmail = this.workOrderModel.purchase?.purchaseOrder?.customer?.primaryContactUser?.email;
 
     if (sendAnNcrEmailNotification && (primaryContactUserEmail === undefined || primaryContactUserEmail === null || primaryContactUserEmail === '') && !this.monitorsHaveBeenSaved) {
@@ -176,13 +206,14 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
     this.showNcrEmailNotificationDialog = false;
     this.workOrderMonitorsToView.map(monitor => {
+      const numVal = monitor.numVal.toString();
       let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
         comment: monitor.comment === undefined ? '' : monitor.comment,
         multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
         textVal: monitor.textVal === undefined || monitor.textVal === this.monitorValueNotAvailable ? '' : monitor.textVal,
-        numVal: monitor.numVal === undefined ? undefined : monitor.numVal,
+        numVal :numVal ? parseFloat(monitor.numVal) : null,
         workOrderTaskMonitorId: monitor.id,
-        sendNCREmail: monitor.procedureStepMonitor.sendEmailNotification ? this.ncrEmailDestination : undefined
+        sendNCREmail: monitor.procedureStepMonitor.sendNCREmail ? this.ncrEmailDestination : undefined
       } as IUpdateWorkOrderTaskMonitorRequest);
 
       this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest)
@@ -202,7 +233,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
           if (result.object.procedureStepMonitor.monitorTypeId !== EnumMonitorType.Number
             && result.object.procedureStepMonitor.inputTypeId !== EnumMonitorInputType.Sensor
-            && result.object.procedureStepMonitor.faultHandling !== EnumFailAction.StopUntilFaultCleared
+            && result.object.procedureStepMonitor.failAction !== EnumFailAction.StopUntilFaultCleared
             && monitor.textVal !== this.monitorValueNotAvailable) {
             monitor.textVal = result.object.textVal;
           }

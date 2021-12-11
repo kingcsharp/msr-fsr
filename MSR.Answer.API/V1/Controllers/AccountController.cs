@@ -105,6 +105,7 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(System.Net.HttpStatusCode.OK, typeof(void))]
         public async Task<IActionResult> ResetMyPassword([FromBody, Required] ResetMyPasswordRequest request)
         {
+            //doing file change to cause reload.
             var command = request.ToResetMyPasswordCommand();
 
             var result = await _dispatcher.DispatchAsync(command);

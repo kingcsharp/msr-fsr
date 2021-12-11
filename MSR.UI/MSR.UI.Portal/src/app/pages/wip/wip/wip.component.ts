@@ -3,7 +3,7 @@ import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { LazyLoadEvent, SelectItem } from 'primeng/api';
 import {
-  EnumMenuItem, WorkOrderService, ReportModel, CreateWorkOrderMessageRequest, FileService, 
+  EnumMenuItem, WorkOrderService, ReportModel, CreateWorkOrderMessageRequest, FileService,
   FileModel, WorkOrderTaskMonitorModel} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -326,23 +326,23 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
             return false;
           }
 
-          let targetValue;
+          let target;
           if (workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null) {
-            targetValue = Number(workOrderTaskMonitor.procedureStepMonitor?.targetValue);
+            target = workOrderTaskMonitor.procedureStepMonitor?.target;
           } else {
-            targetValue = Number(workOrderTaskMonitor.targetValue);
+            target = workOrderTaskMonitor.target;
           }
 
 
           switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
             case EnumMonitorShouldBe.EQUAL: {
-              return (targetValue === workOrderTaskMonitor.numVal);
+              return (target === workOrderTaskMonitor.numVal);
             }
             case EnumMonitorShouldBe.ABOVE: {
-              return (targetValue <= workOrderTaskMonitor.numVal);
+              return (target <= workOrderTaskMonitor.numVal);
             }
             case EnumMonitorShouldBe.BELOW: {
-              return (workOrderTaskMonitor.numVal <= targetValue);
+              return (workOrderTaskMonitor.numVal <= target);
             }
             case EnumMonitorShouldBe.BETWEEN: {
 

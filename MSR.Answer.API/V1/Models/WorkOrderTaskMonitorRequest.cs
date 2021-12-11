@@ -20,7 +20,7 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         ///
         /// </summary>
-        public int? NumVal { get; set; }
+        public decimal? NumVal { get; set; }
 
         /// <summary>
         ///
@@ -41,5 +41,7 @@ namespace MSR.Answer.API.V1.Models
         ///
         /// </summary>
         public string Comment { get; set; }
+        public decimal? LowNumVal { get; set; }
+        public decimal? HighNumVal { get; set; }
     }
 }

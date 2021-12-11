@@ -15,7 +15,7 @@ namespace MSR.Domain.Models
         /// </summary>
         public int? ProcedureMonitorId { get; set; }
 
-        public int? NumVal { get; set; }
+        public decimal? NumVal { get; set; }
         public string TextVal { get; set; }
         public string MultiVal { get; set; }
         public int SensorMappingId { get; set; }
@@ -43,11 +43,13 @@ namespace MSR.Domain.Models
         public string Description { get; set; }
         public int? MonitorListId { get; set; }
         public string ShouldBe { get; set; }
-        public float? HighTarget { get; set; }
-        public float? LowTarget { get; set; }
-        public string TargetValue { get; set; }
-        public string FaultHandling { get; set; }
+        public decimal? HighTarget { get; set; }
+        public decimal? LowTarget { get; set; }
+        public decimal? Target { get; set; }
+        public string FailAction { get; set; }
         public int? MonitorTypeId { get; set; }
         public int? InputTypeId { get; set; }
+        public decimal? LowNumVal { get; set; }
+        public decimal? HighNumVal { get; set; }
     }
 }

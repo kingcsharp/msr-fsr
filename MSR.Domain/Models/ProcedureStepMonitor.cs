@@ -49,14 +49,14 @@
         public string ShouldBe { get; set; }
 
         /// <summary>
-        /// Gets or Sets TargetValue
+        /// Gets or Sets Target
         /// </summary>
-        public string TargetValue { get; set; }
+        public decimal? Target { get; set; }
 
         /// <summary>
-        /// Gets or Sets FaultHandling
+        /// Gets or Sets FailAction
         /// </summary>
-        public string FaultHandling { get; set; }
+        public string FailAction { get; set; }
 
         /// <summary>
         /// Gets or Sets Description
@@ -64,19 +64,19 @@
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or Sets SendEmailNotification
+        /// Gets or Sets SendNCREmail
         /// </summary>
-        public bool? SendEmailNotification { get; set; }
+        public bool? SendNCREmail { get; set; }
 
         /// <summary>
         /// HighTarget
         /// </summary>
-        public float? HighTarget { get; set; }
+        public decimal? HighTarget { get; set; }
 
         /// <summary>
         /// LowTarget
         /// </summary>
-        public float? LowTarget { get; set; }
+        public decimal? LowTarget { get; set; }
 
         /// <summary>
         /// MonitorListId

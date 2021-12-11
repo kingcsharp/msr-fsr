@@ -142,12 +142,12 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
 
   openAddOrEditMonitorDialog(monitor: ProcedureStepMonitor = new ProcedureStepMonitor()) {
     this.procedureStepMonitor = monitor;
-    this.procedureStepMonitor.faultHandling = this.faultHandlingOptions.find(s => s.value === monitor.faultHandling)?.value;
+    this.procedureStepMonitor.failAction = this.faultHandlingOptions.find(s => s.value === monitor.failAction)?.value;
     this.procedureStepMonitor.monitorType = this.monitorTypeOptions.find(s => s.value === monitor.monitorType)?.value;
     this.procedureStepMonitor.inputType = this.inputTypeOptionsWithSensor.find(s => s.value === monitor.inputType)?.value;
     this.procedureStepMonitor.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe)?.value;
     this.procedureStepMonitor.monitorListId = this.listSource.find(s => s.value === monitor.shouldBe)?.value;
-    this.procedureStepMonitor.sendEmailNotification = monitor.sendEmailNotification;
+    this.procedureStepMonitor.sendNCREmail = monitor.sendNCREmail;
     this.procedureStepMonitor.highTarget = monitor.highTarget;
     this.procedureStepMonitor.lowTarget = monitor.lowTarget;
     this.procedureStepMonitor.description = monitor.description === undefined ? '' : monitor.description;
@@ -159,16 +159,17 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
     if (jQuery('.parsleyjs').parsley().isValid()) {
       const lowTarget = this.procedureStepMonitor.lowTarget?.toString();
       const highTarget = this.procedureStepMonitor.highTarget?.toString();
+      const target = this.procedureStepMonitor.target?.toString();
 
       if (this.procedureStepMonitor.id === undefined) {
         let createProcedureStepMonitorRequest = new CreateProcedureStepMonitorRequest({
           monitorType: this.procedureStepMonitor.monitorType,
           inputType: this.procedureStepMonitor.inputType,
           shouldBe: this.procedureStepMonitor.shouldBe,
-          targetValue: this.procedureStepMonitor.targetValue?.toString(),
-          faultHandling: this.procedureStepMonitor.faultHandling,
+          target: target ? parseFloat(target) : null,
+          failAction: this.procedureStepMonitor.failAction,
           description: this.procedureStepMonitor.description,
-          sendEmailNotification: this.procedureStepMonitor.sendEmailNotification,
+          sendNCREmail: this.procedureStepMonitor.sendNCREmail,
           procedureStepId: this.procedureStep.id,
           lowTarget: lowTarget ? parseFloat(lowTarget) : null,
           highTarget: highTarget ? parseFloat(highTarget) : null,
@@ -194,10 +195,10 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
           lowTarget: lowTarget ? parseFloat(lowTarget) : null,
           highTarget: highTarget ? parseFloat(highTarget) : null,
           sensorName: this.procedureStepMonitor.sensorName,
-          failAction: this.procedureStepMonitor.faultHandling,
+          failAction: this.procedureStepMonitor.failAction,
           monitorListId: this.procedureStepMonitor.monitorListId,
-          sendNCREmail: this.procedureStepMonitor.sendEmailNotification,
-          target: Number(this.procedureStepMonitor.targetValue)
+          sendNCREmail: this.procedureStepMonitor.sendNCREmail,
+          target: target ? parseFloat(target) : null,
         } as IUpdateProcedureStepMonitorRequest);
 
         this.globals.showLoader(true);

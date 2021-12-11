@@ -5670,7 +5670,7 @@ export class QuoteService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
+    product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureId: number | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
         let url_ = this.baseUrl + "/v{version}/Quote/Product?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5687,6 +5687,8 @@ export class QuoteService {
             url_ += "PartKitNo=" + encodeURIComponent("" + partKitNo) + "&";
         if (segregationType !== undefined && segregationType !== null)
             segregationType && segregationType.forEach(item => { url_ += "SegregationType=" + encodeURIComponent("" + item) + "&"; });
+        if (procedureId !== undefined && procedureId !== null)
+            url_ += "ProcedureId=" + encodeURIComponent("" + procedureId) + "&";
         if (procedureName !== undefined && procedureName !== null)
             url_ += "ProcedureName=" + encodeURIComponent("" + procedureName) + "&";
         if (productName !== undefined && productName !== null)
@@ -5930,6 +5932,99 @@ export class QuoteService {
             }));
         }
         return _observableOf<AuditActionResult>(<any>null);
+    }
+
+    download(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureId: number | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/v{version}/Quote/Product/Download?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (submittedDate !== undefined && submittedDate !== null)
+            url_ += "SubmittedDate=" + encodeURIComponent(submittedDate ? "" + submittedDate.toJSON() : "") + "&";
+        if (company !== undefined && company !== null)
+            url_ += "Company=" + encodeURIComponent("" + company) + "&";
+        if (submittedByFullName !== undefined && submittedByFullName !== null)
+            url_ += "SubmittedByFullName=" + encodeURIComponent("" + submittedByFullName) + "&";
+        if (divisionFab !== undefined && divisionFab !== null)
+            url_ += "DivisionFab=" + encodeURIComponent("" + divisionFab) + "&";
+        if (partKitNo !== undefined && partKitNo !== null)
+            url_ += "PartKitNo=" + encodeURIComponent("" + partKitNo) + "&";
+        if (segregationType !== undefined && segregationType !== null)
+            segregationType && segregationType.forEach(item => { url_ += "SegregationType=" + encodeURIComponent("" + item) + "&"; });
+        if (procedureId !== undefined && procedureId !== null)
+            url_ += "ProcedureId=" + encodeURIComponent("" + procedureId) + "&";
+        if (procedureName !== undefined && procedureName !== null)
+            url_ += "ProcedureName=" + encodeURIComponent("" + procedureName) + "&";
+        if (productName !== undefined && productName !== null)
+            url_ += "ProductName=" + encodeURIComponent("" + productName) + "&";
+        if (representative !== undefined && representative !== null)
+            url_ += "Representative=" + encodeURIComponent("" + representative) + "&";
+        if (revision !== undefined && revision !== null)
+            url_ += "Revision=" + encodeURIComponent("" + revision) + "&";
+        if (equipmentCost !== undefined && equipmentCost !== null)
+            url_ += "EquipmentCost=" + encodeURIComponent("" + equipmentCost) + "&";
+        if (materialCost !== undefined && materialCost !== null)
+            url_ += "MaterialCost=" + encodeURIComponent("" + materialCost) + "&";
+        if (salesTax !== undefined && salesTax !== null)
+            url_ += "SalesTax=" + encodeURIComponent("" + salesTax) + "&";
+        if (totalPrice !== undefined && totalPrice !== null)
+            url_ += "TotalPrice=" + encodeURIComponent("" + totalPrice) + "&";
+        if (cycleTime !== undefined && cycleTime !== null)
+            url_ += "CycleTime=" + encodeURIComponent("" + cycleTime) + "&";
+        if (lastUpdateOn !== undefined && lastUpdateOn !== null)
+            url_ += "LastUpdateOn=" + encodeURIComponent(lastUpdateOn ? "" + lastUpdateOn.toJSON() : "") + "&";
+        if (lastUpdatedBy !== undefined && lastUpdatedBy !== null)
+            url_ += "LastUpdatedBy=" + encodeURIComponent("" + lastUpdatedBy) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDownload(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDownload(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDownload(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
     }
 }
 
@@ -10773,6 +10868,7 @@ export enum EnumMenuItem {
     WorkOrderParts = 34,
     WorkOrderTasks = 35,
     ProcedureStep = 36,
+    CycleCountImport = 37,
 }
 
 export class FileModel implements IFileModel {
@@ -15086,10 +15182,10 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
     inputTypeId?: number;
     sensorName?: string | undefined;
     shouldBe?: string | undefined;
-    targetValue?: string | undefined;
-    faultHandling?: string | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
     description?: string | undefined;
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
     monitorListId?: number | undefined;
@@ -15112,10 +15208,10 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
             this.inputTypeId = _data["inputTypeId"];
             this.sensorName = _data["sensorName"];
             this.shouldBe = _data["shouldBe"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
             this.description = _data["description"];
-            this.sendEmailNotification = _data["sendEmailNotification"];
+            this.sendNCREmail = _data["sendNCREmail"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
@@ -15138,10 +15234,10 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
         data["inputTypeId"] = this.inputTypeId;
         data["sensorName"] = this.sensorName;
         data["shouldBe"] = this.shouldBe;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
         data["description"] = this.description;
-        data["sendEmailNotification"] = this.sendEmailNotification;
+        data["sendNCREmail"] = this.sendNCREmail;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
@@ -15157,10 +15253,10 @@ export interface IProcedureStepMonitor {
     inputTypeId?: number;
     sensorName?: string | undefined;
     shouldBe?: string | undefined;
-    targetValue?: string | undefined;
-    faultHandling?: string | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
     description?: string | undefined;
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
     monitorListId?: number | undefined;
@@ -15178,14 +15274,14 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
     procedureStepId?: number;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
-    /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    /** Gets or Sets Target */
+    target?: number | undefined;
+    /** Gets or Sets FailAction */
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    /** Gets or Sets SendNCREmail */
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */
@@ -15209,10 +15305,10 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
             this.monitorType = _data["monitorType"];
             this.procedureStepId = _data["procedureStepId"];
             this.shouldBe = _data["shouldBe"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
             this.description = _data["description"];
-            this.sendEmailNotification = _data["sendEmailNotification"];
+            this.sendNCREmail = _data["sendNCREmail"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
@@ -15233,10 +15329,10 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
         data["monitorType"] = this.monitorType;
         data["procedureStepId"] = this.procedureStepId;
         data["shouldBe"] = this.shouldBe;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
         data["description"] = this.description;
-        data["sendEmailNotification"] = this.sendEmailNotification;
+        data["sendNCREmail"] = this.sendNCREmail;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
@@ -15256,14 +15352,14 @@ export interface ICreateProcedureStepMonitorRequest {
     procedureStepId?: number;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
-    /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    /** Gets or Sets Target */
+    target?: number | undefined;
+    /** Gets or Sets FailAction */
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    /** Gets or Sets SendNCREmail */
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */
@@ -15327,13 +15423,13 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
     monitorType?: string | undefined;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    target?: number;
-    /** Gets or Sets FaultHandling */
+    /** Gets or Sets Target */
+    target?: number | undefined;
+    /** Gets or Sets FailAction */
     failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
+    /** Gets or Sets SendNCREmail */
     sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
@@ -15405,13 +15501,13 @@ export interface IUpdateProcedureStepMonitorRequest {
     monitorType?: string | undefined;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    target?: number;
-    /** Gets or Sets FaultHandling */
+    /** Gets or Sets Target */
+    target?: number | undefined;
+    /** Gets or Sets FailAction */
     failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
+    /** Gets or Sets SendNCREmail */
     sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
@@ -17472,10 +17568,12 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     shouldBe?: string | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
-    targetValue?: string | undefined;
-    faultHandling?: string | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
     monitorTypeId?: number | undefined;
     inputTypeId?: number | undefined;
+    lowNumVal?: number | undefined;
+    highNumVal?: number | undefined;
 
     constructor(data?: IWorkOrderTaskMonitorModel) {
         super(data);
@@ -17501,10 +17599,12 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
             this.shouldBe = _data["shouldBe"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
             this.monitorTypeId = _data["monitorTypeId"];
             this.inputTypeId = _data["inputTypeId"];
+            this.lowNumVal = _data["lowNumVal"];
+            this.highNumVal = _data["highNumVal"];
         }
     }
 
@@ -17534,10 +17634,12 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         data["shouldBe"] = this.shouldBe;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
         data["monitorTypeId"] = this.monitorTypeId;
         data["inputTypeId"] = this.inputTypeId;
+        data["lowNumVal"] = this.lowNumVal;
+        data["highNumVal"] = this.highNumVal;
         super.toJSON(data);
         return data; 
     }
@@ -17561,10 +17663,12 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     shouldBe?: string | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
-    targetValue?: string | undefined;
-    faultHandling?: string | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
     monitorTypeId?: number | undefined;
     inputTypeId?: number | undefined;
+    lowNumVal?: number | undefined;
+    highNumVal?: number | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
@@ -18240,7 +18344,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     /** SerialNumber */
     serialNumbers?: string[] | undefined;
     /** CustomerLineNumbers */
-    customerLineNumbers?: string[] | undefined;
+    customerLineNumbers!: string[];
     /** Quantity */
     qty!: number;
     /** Material Transfer Number (MTTN) */
@@ -18258,6 +18362,9 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.customerLineNumbers = [];
         }
     }
 
@@ -18334,7 +18441,7 @@ export interface ICreatePurchaseRequest {
     /** SerialNumber */
     serialNumbers?: string[] | undefined;
     /** CustomerLineNumbers */
-    customerLineNumbers?: string[] | undefined;
+    customerLineNumbers: string[];
     /** Quantity */
     qty: number;
     /** Material Transfer Number (MTTN) */
@@ -18853,6 +18960,7 @@ export class QuotesProductsView implements IQuotesProductsView {
     submittedById?: number;
     submittedBy?: UserModel | undefined;
     partKitNo?: string | undefined;
+    procedureId?: number;
     procedureName?: string | undefined;
     productName?: string | undefined;
     representative?: string | undefined;
@@ -18886,6 +18994,7 @@ export class QuotesProductsView implements IQuotesProductsView {
             this.submittedById = _data["submittedById"];
             this.submittedBy = _data["submittedBy"] ? UserModel.fromJS(_data["submittedBy"]) : <any>undefined;
             this.partKitNo = _data["partKitNo"];
+            this.procedureId = _data["procedureId"];
             this.procedureName = _data["procedureName"];
             this.productName = _data["productName"];
             this.representative = _data["representative"];
@@ -18919,6 +19028,7 @@ export class QuotesProductsView implements IQuotesProductsView {
         data["submittedById"] = this.submittedById;
         data["submittedBy"] = this.submittedBy ? this.submittedBy.toJSON() : <any>undefined;
         data["partKitNo"] = this.partKitNo;
+        data["procedureId"] = this.procedureId;
         data["procedureName"] = this.procedureName;
         data["productName"] = this.productName;
         data["representative"] = this.representative;
@@ -18945,6 +19055,7 @@ export interface IQuotesProductsView {
     submittedById?: number;
     submittedBy?: UserModel | undefined;
     partKitNo?: string | undefined;
+    procedureId?: number;
     procedureName?: string | undefined;
     productName?: string | undefined;
     representative?: string | undefined;
@@ -22206,15 +22317,14 @@ export interface IAddNCRWorkOrderTaskRequest {
 
 export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
     purchaseId!: number;
-    productId?: number | undefined;
-    price?: number | undefined;
+    productId?: number;
+    purchaseOrderId?: number;
+    price?: number;
     scheduledStartDate?: Date;
     scheduledEndDate?: Date;
-    hasNCR?: boolean | undefined;
-    locationId?: number | undefined;
+    hasNCR?: boolean;
+    locationId?: number;
     serializeIndividually?: boolean;
-    workOrderParts?: WorkOrderPartRequest[] | undefined;
-    workOrderTasks?: WorkOrderTaskRequest[] | undefined;
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
     qty?: number;
@@ -22232,22 +22342,13 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
         if (_data) {
             this.purchaseId = _data["purchaseId"];
             this.productId = _data["productId"];
+            this.purchaseOrderId = _data["purchaseOrderId"];
             this.price = _data["price"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
             this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
             this.hasNCR = _data["hasNCR"];
             this.locationId = _data["locationId"];
             this.serializeIndividually = _data["serializeIndividually"];
-            if (Array.isArray(_data["workOrderParts"])) {
-                this.workOrderParts = [] as any;
-                for (let item of _data["workOrderParts"])
-                    this.workOrderParts!.push(WorkOrderPartRequest.fromJS(item));
-            }
-            if (Array.isArray(_data["workOrderTasks"])) {
-                this.workOrderTasks = [] as any;
-                for (let item of _data["workOrderTasks"])
-                    this.workOrderTasks!.push(WorkOrderTaskRequest.fromJS(item));
-            }
             if (Array.isArray(_data["serialNumbers"])) {
                 this.serialNumbers = [] as any;
                 for (let item of _data["serialNumbers"])
@@ -22273,22 +22374,13 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
         data = typeof data === 'object' ? data : {};
         data["purchaseId"] = this.purchaseId;
         data["productId"] = this.productId;
+        data["purchaseOrderId"] = this.purchaseOrderId;
         data["price"] = this.price;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
         data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
         data["hasNCR"] = this.hasNCR;
         data["locationId"] = this.locationId;
         data["serializeIndividually"] = this.serializeIndividually;
-        if (Array.isArray(this.workOrderParts)) {
-            data["workOrderParts"] = [];
-            for (let item of this.workOrderParts)
-                data["workOrderParts"].push(item.toJSON());
-        }
-        if (Array.isArray(this.workOrderTasks)) {
-            data["workOrderTasks"] = [];
-            for (let item of this.workOrderTasks)
-                data["workOrderTasks"].push(item.toJSON());
-        }
         if (Array.isArray(this.serialNumbers)) {
             data["serialNumbers"] = [];
             for (let item of this.serialNumbers)
@@ -22306,315 +22398,17 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
 
 export interface ICreateWorkOrderRequest {
     purchaseId: number;
-    productId?: number | undefined;
-    price?: number | undefined;
+    productId?: number;
+    purchaseOrderId?: number;
+    price?: number;
     scheduledStartDate?: Date;
     scheduledEndDate?: Date;
-    hasNCR?: boolean | undefined;
-    locationId?: number | undefined;
+    hasNCR?: boolean;
+    locationId?: number;
     serializeIndividually?: boolean;
-    workOrderParts?: WorkOrderPartRequest[] | undefined;
-    workOrderTasks?: WorkOrderTaskRequest[] | undefined;
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
     qty?: number;
-}
-
-export class WorkOrderPartRequest implements IWorkOrderPartRequest {
-    workOrderId?: number;
-    partId?: number;
-    parentId?: number | undefined;
-    serialNumber?: string | undefined;
-    segregationType?: EnumSegregationType | undefined;
-    part?: UpdatePartRequest | undefined;
-    workOrder?: UpdateWorkOrderRequest | undefined;
-    children?: WorkOrderPartRequest[] | undefined;
-    parent?: WorkOrderPartRequest | undefined;
-
-    constructor(data?: IWorkOrderPartRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.workOrderId = _data["workOrderId"];
-            this.partId = _data["partId"];
-            this.parentId = _data["parentId"];
-            this.serialNumber = _data["serialNumber"];
-            this.segregationType = _data["segregationType"];
-            this.part = _data["part"] ? UpdatePartRequest.fromJS(_data["part"]) : <any>undefined;
-            this.workOrder = _data["workOrder"] ? UpdateWorkOrderRequest.fromJS(_data["workOrder"]) : <any>undefined;
-            if (Array.isArray(_data["children"])) {
-                this.children = [] as any;
-                for (let item of _data["children"])
-                    this.children!.push(WorkOrderPartRequest.fromJS(item));
-            }
-            this.parent = _data["parent"] ? WorkOrderPartRequest.fromJS(_data["parent"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): WorkOrderPartRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkOrderPartRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["workOrderId"] = this.workOrderId;
-        data["partId"] = this.partId;
-        data["parentId"] = this.parentId;
-        data["serialNumber"] = this.serialNumber;
-        data["segregationType"] = this.segregationType;
-        data["part"] = this.part ? this.part.toJSON() : <any>undefined;
-        data["workOrder"] = this.workOrder ? this.workOrder.toJSON() : <any>undefined;
-        if (Array.isArray(this.children)) {
-            data["children"] = [];
-            for (let item of this.children)
-                data["children"].push(item.toJSON());
-        }
-        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IWorkOrderPartRequest {
-    workOrderId?: number;
-    partId?: number;
-    parentId?: number | undefined;
-    serialNumber?: string | undefined;
-    segregationType?: EnumSegregationType | undefined;
-    part?: UpdatePartRequest | undefined;
-    workOrder?: UpdateWorkOrderRequest | undefined;
-    children?: WorkOrderPartRequest[] | undefined;
-    parent?: WorkOrderPartRequest | undefined;
-}
-
-export class UpdateWorkOrderRequest extends CreateWorkOrderRequest implements IUpdateWorkOrderRequest {
-    id?: number;
-
-    constructor(data?: IUpdateWorkOrderRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): UpdateWorkOrderRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateWorkOrderRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IUpdateWorkOrderRequest extends ICreateWorkOrderRequest {
-    id?: number;
-}
-
-/**  */
-export class WorkOrderTaskRequest implements IWorkOrderTaskRequest {
-    /**   */
-    workOrderId?: number;
-    /**   */
-    procedureStepId?: number;
-    /**   */
-    procedureStepTypeId?: number;
-    /**   */
-    statusId?: number;
-    /**   */
-    taskStepOrder?: number;
-    /**   */
-    assignedTo?: number | undefined;
-    /**   */
-    userId?: number | undefined;
-    /**   */
-    totalTaskTime?: number | undefined;
-    /**   */
-    taskIsRunning?: boolean | undefined;
-    /**   */
-    taskRunningSince?: Date | undefined;
-    /**   */
-    workOrderTaskMonitors?: WorkOrderTaskMonitorRequest[] | undefined;
-
-    constructor(data?: IWorkOrderTaskRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.workOrderId = _data["workOrderId"];
-            this.procedureStepId = _data["procedureStepId"];
-            this.procedureStepTypeId = _data["procedureStepTypeId"];
-            this.statusId = _data["statusId"];
-            this.taskStepOrder = _data["taskStepOrder"];
-            this.assignedTo = _data["assignedTo"];
-            this.userId = _data["userId"];
-            this.totalTaskTime = _data["totalTaskTime"];
-            this.taskIsRunning = _data["taskIsRunning"];
-            this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
-            if (Array.isArray(_data["workOrderTaskMonitors"])) {
-                this.workOrderTaskMonitors = [] as any;
-                for (let item of _data["workOrderTaskMonitors"])
-                    this.workOrderTaskMonitors!.push(WorkOrderTaskMonitorRequest.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): WorkOrderTaskRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkOrderTaskRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["workOrderId"] = this.workOrderId;
-        data["procedureStepId"] = this.procedureStepId;
-        data["procedureStepTypeId"] = this.procedureStepTypeId;
-        data["statusId"] = this.statusId;
-        data["taskStepOrder"] = this.taskStepOrder;
-        data["assignedTo"] = this.assignedTo;
-        data["userId"] = this.userId;
-        data["totalTaskTime"] = this.totalTaskTime;
-        data["taskIsRunning"] = this.taskIsRunning;
-        data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
-        if (Array.isArray(this.workOrderTaskMonitors)) {
-            data["workOrderTaskMonitors"] = [];
-            for (let item of this.workOrderTaskMonitors)
-                data["workOrderTaskMonitors"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-/**  */
-export interface IWorkOrderTaskRequest {
-    /**   */
-    workOrderId?: number;
-    /**   */
-    procedureStepId?: number;
-    /**   */
-    procedureStepTypeId?: number;
-    /**   */
-    statusId?: number;
-    /**   */
-    taskStepOrder?: number;
-    /**   */
-    assignedTo?: number | undefined;
-    /**   */
-    userId?: number | undefined;
-    /**   */
-    totalTaskTime?: number | undefined;
-    /**   */
-    taskIsRunning?: boolean | undefined;
-    /**   */
-    taskRunningSince?: Date | undefined;
-    /**   */
-    workOrderTaskMonitors?: WorkOrderTaskMonitorRequest[] | undefined;
-}
-
-export class WorkOrderTaskMonitorRequest implements IWorkOrderTaskMonitorRequest {
-    /**   */
-    workOrderTaskId?: number;
-    /**   */
-    workOrderTask?: WorkOrderTaskRequest | undefined;
-    /**   */
-    procedureMonitorId?: number;
-    /**   */
-    numVal?: number | undefined;
-    /**   */
-    textVal?: string | undefined;
-    /**   */
-    multiVal?: string | undefined;
-    /**   */
-    sensorMappingId?: number;
-    /**   */
-    comment?: string | undefined;
-
-    constructor(data?: IWorkOrderTaskMonitorRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.workOrderTaskId = _data["workOrderTaskId"];
-            this.workOrderTask = _data["workOrderTask"] ? WorkOrderTaskRequest.fromJS(_data["workOrderTask"]) : <any>undefined;
-            this.procedureMonitorId = _data["procedureMonitorId"];
-            this.numVal = _data["numVal"];
-            this.textVal = _data["textVal"];
-            this.multiVal = _data["multiVal"];
-            this.sensorMappingId = _data["sensorMappingId"];
-            this.comment = _data["comment"];
-        }
-    }
-
-    static fromJS(data: any): WorkOrderTaskMonitorRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkOrderTaskMonitorRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["workOrderTaskId"] = this.workOrderTaskId;
-        data["workOrderTask"] = this.workOrderTask ? this.workOrderTask.toJSON() : <any>undefined;
-        data["procedureMonitorId"] = this.procedureMonitorId;
-        data["numVal"] = this.numVal;
-        data["textVal"] = this.textVal;
-        data["multiVal"] = this.multiVal;
-        data["sensorMappingId"] = this.sensorMappingId;
-        data["comment"] = this.comment;
-        return data; 
-    }
-}
-
-export interface IWorkOrderTaskMonitorRequest {
-    /**   */
-    workOrderTaskId?: number;
-    /**   */
-    workOrderTask?: WorkOrderTaskRequest | undefined;
-    /**   */
-    procedureMonitorId?: number;
-    /**   */
-    numVal?: number | undefined;
-    /**   */
-    textVal?: string | undefined;
-    /**   */
-    multiVal?: string | undefined;
-    /**   */
-    sensorMappingId?: number;
-    /**   */
-    comment?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -22993,6 +22787,10 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
     comment?: string | undefined;
     /** Gets or Sets Comment */
     sendNCREmail?: string | undefined;
+    /** Gets or Sets NumVal */
+    lowNumVal?: number | undefined;
+    /** Gets or Sets NumVal */
+    highNumVal?: number | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskMonitorRequest) {
         if (data) {
@@ -23012,6 +22810,8 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
             this.sensorValue = _data["sensorValue"];
             this.comment = _data["comment"];
             this.sendNCREmail = _data["sendNCREmail"];
+            this.lowNumVal = _data["lowNumVal"];
+            this.highNumVal = _data["highNumVal"];
         }
     }
 
@@ -23031,6 +22831,8 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
         data["sensorValue"] = this.sensorValue;
         data["comment"] = this.comment;
         data["sendNCREmail"] = this.sendNCREmail;
+        data["lowNumVal"] = this.lowNumVal;
+        data["highNumVal"] = this.highNumVal;
         return data; 
     }
 }
@@ -23051,6 +22853,10 @@ export interface IUpdateWorkOrderTaskMonitorRequest {
     comment?: string | undefined;
     /** Gets or Sets Comment */
     sendNCREmail?: string | undefined;
+    /** Gets or Sets NumVal */
+    lowNumVal?: number | undefined;
+    /** Gets or Sets NumVal */
+    highNumVal?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */

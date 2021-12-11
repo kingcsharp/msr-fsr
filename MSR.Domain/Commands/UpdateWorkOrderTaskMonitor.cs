@@ -7,11 +7,13 @@ namespace MSR.Domain.Commands
     public class UpdateWorkOrderTaskMonitor : Command
     {
         public int Id { get; set; }
-        public int? NumVal { get; set; }
+        public decimal? NumVal { get; set; }
         public string TextVal { get; set; }
         public string MultiVal { get; set; }
         public string SensorValue { get; set; }
         public string Comment { get; set; }
         public string SendNCREmail { get; set; }
+        public decimal? LowNumVal { get; set; }
+        public decimal? HighNumVal { get; set; }
     }
 }

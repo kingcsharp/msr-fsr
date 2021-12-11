@@ -96,8 +96,6 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => EnumUtils.GetDescription<EnumSegregationType>(src.SegregationType.HasValue ? src.SegregationType.Value : EnumSegregationType.NONCU)));
               
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>()
-                .ForMember(dest => dest.FaultHandling, opts => opts.MapFrom(src => src.FailAction))
-                .ForMember(dest => dest.TargetValue, opts => opts.MapFrom(src => src.Target))
                 .ReverseMap();
             CreateMap<UpdateWorkOrderTaskMonitor, WorkOrderTaskMonitor>();
 
@@ -359,10 +357,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ProcedureMonitorId, opts => opts.MapFrom(src => src.Id));
             CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>()
                 .ForMember(dest => dest.InputType, opt => opt.MapFrom(src => src.InputType.Name))
-                .ForMember(dest => dest.MonitorType, opt => opt.MapFrom(src => src.MonitorType.Name))
-                .ForMember(dest => dest.TargetValue, opt => opt.MapFrom(src => src.Target.ToString()))
-                .ForMember(dest => dest.FaultHandling, opt => opt.MapFrom(src => src.FailAction))
-                .ForMember(dest => dest.SendEmailNotification, opt => opt.MapFrom(src => src.SendNCREmail));
+                .ForMember(dest => dest.MonitorType, opt => opt.MapFrom(src => src.MonitorType.Name));
             CreateMap<MonitorInputType, ProcedureStepMonitorInputType>()
                 .ForMember(dest => dest.InputTypeId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.InputTypeName, opt => opt.MapFrom(src => src.Name))

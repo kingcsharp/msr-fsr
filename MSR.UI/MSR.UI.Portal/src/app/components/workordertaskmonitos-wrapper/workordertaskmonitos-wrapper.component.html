@@ -28,7 +28,7 @@
             Equal To:
           </label>
           <div class="col-9 px-0 col-form-label">
-            {{workOrderTaskMonitor.procedureStepMonitor.targetValue}}
+            {{workOrderTaskMonitor.procedureStepMonitor.target}}
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
@@ -37,7 +37,7 @@
             Above:
           </label>
           <div class="col-9 px-0 col-form-label">
-            {{workOrderTaskMonitor.procedureStepMonitor.targetValue}}
+            {{workOrderTaskMonitor.procedureStepMonitor.target}}
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
@@ -46,7 +46,7 @@
             Below:
           </label>
           <div class="col-9 px-0 col-form-label">
-            {{workOrderTaskMonitor.procedureStepMonitor.targetValue}}
+            {{workOrderTaskMonitor.procedureStepMonitor.target}}
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
@@ -74,7 +74,7 @@
             Correct Answer:
           </label>
           <div class="col-9 px-0">
-            {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'No' : 'Yes'}}
+            {{workOrderTaskMonitor.procedureStepMonitor.target === 1 ? 'No' : 'Yes'}}
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
@@ -99,7 +99,7 @@
               <li class="parsley-custom-error-message">You must retrieve the value for the sensor</li>
             </ul>
             <button type="button" class="btn btn-primary m-2"
-              (click)="getSensorValue(i,'equipmentsensorresult' + i,workOrderTaskMonitor.procedureStepMonitor.targetValue)">Get
+              (click)="getSensorValue(i,'equipmentsensorresult' + i,workOrderTaskMonitor.procedureStepMonitor.target)">Get
               Value</button>
           </div>
         </div>
@@ -110,7 +110,7 @@
           </label>
           <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.holdIfFails !== undefined">
             <input type="hidden" id="hiddentargetvalueforparsley{{i}}"
-              value="{{workOrderTaskMonitor.procedureStepMonitor.targetValue}}">
+              value="{{workOrderTaskMonitor.procedureStepMonitor.target}}">
             <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
               data-parsley-trigger="change" data-parsley-equalto="#hiddentargetvalueforparsley{{i}}"
               [attr.data-parsley-required]="workOrderTaskMonitor.holdIfFails" class="form-control input-transparent"
@@ -143,9 +143,9 @@
               placeholder="Select a Response" [showClear]="true" [(ngModel)]="workOrderTaskMonitor.numVal">
             </p-dropdown>
             <ul class="parsley-errors-list filled"
-              *ngIf="workOrderTaskMonitor.numVal !== workOrderTaskMonitor.procedureStepMonitor.targetValue && workOrderTaskMonitor.holdIfFails">
+              *ngIf="workOrderTaskMonitor.numVal !== workOrderTaskMonitor.procedureStepMonitor.target && workOrderTaskMonitor.holdIfFails">
               <li class="parsley-custom-error-message">Value should be equal to
-                {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'Fail' : 'Pass'}}</li>
+                {{workOrderTaskMonitor.procedureStepMonitor.target === 1 ? 'Fail' : 'Pass'}}</li>
             </ul>
           </div>
         </div>
@@ -159,9 +159,9 @@
               placeholder="Select a Response" [showClear]="true" [(ngModel)]="workOrderTaskMonitor.numVal">
             </p-dropdown>
             <ul class="parsley-errors-list filled"
-              *ngIf="workOrderTaskMonitor.numVal !== workOrderTaskMonitor.procedureStepMonitor.targetValue && workOrderTaskMonitor.holdIfFails">
+              *ngIf="workOrderTaskMonitor.numVal !== workOrderTaskMonitor.procedureStepMonitor.target && workOrderTaskMonitor.holdIfFails">
               <li class="parsley-custom-error-message">Value should be equal to
-                {{workOrderTaskMonitor.procedureStepMonitor.targetValue === 1 ? 'No' : 'Yes'}}</li>
+                {{workOrderTaskMonitor.procedureStepMonitor.target === 1 ? 'No' : 'Yes'}}</li>
             </ul>
           </div>
         </div>
@@ -185,9 +185,9 @@
             If Fails:
           </label>
           <div class="col-9 px-0 col-form-label">
-            <span *ngIf="workOrderTaskMonitor?.procedureStepMonitor?.faultHandling === 'RECORD AND CONTINUE'">Continue
+            <span *ngIf="workOrderTaskMonitor?.procedureStepMonitor?.failAction === 'RECORD AND CONTINUE'">Continue
               to next step</span>
-            <span *ngIf="workOrderTaskMonitor?.procedureStepMonitor?.faultHandling === 'STOP UNTIL FAULT CLEARED'">Stay
+            <span *ngIf="workOrderTaskMonitor?.procedureStepMonitor?.failAction === 'STOP UNTIL FAULT CLEARED'">Stay
               at this step until passing result is entered</span>
           </div>
         </div>

@@ -65,7 +65,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
     this.workOrderMonitorsToView.map(monitor => {
 
-      monitor.holdIfFails = monitor.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED' ? true : false;
+      monitor.holdIfFails = monitor.procedureStepMonitor.failAction === 'STOP UNTIL FAULT CLEARED' ? true : false;
 
     });
 
@@ -77,7 +77,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
         if (workOrderMonitor.procedureStepMonitor.monitorType === 'Equipment' && workOrderMonitor.procedureStepMonitor.inputType === 'Sensor') {
 
-          workOrderMonitor.sensorName = this.sensorsAvailable.find(s => s.value === Number(workOrderMonitor.procedureStepMonitor.targetValue)).label;
+          workOrderMonitor.sensorName = this.sensorsAvailable.find(s => s.value === workOrderMonitor.procedureStepMonitor.target).label;
 
         }
 
@@ -94,9 +94,9 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
     this.workOrderMonitorsToView.filter(s => (s.procedureStepMonitor.monitorType === 'Pass or Fail'
       || s.procedureStepMonitor.monitorType === 'Yes or No'
-      || s.procedureStepMonitor.monitorType === 'Select') && s.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED').forEach(m => {
+      || s.procedureStepMonitor.monitorType === 'Select') && s.procedureStepMonitor.failAction === 'STOP UNTIL FAULT CLEARED').forEach(m => {
 
-        if (m.procedureStepMonitor.targetValue !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
+        if (m.procedureStepMonitor.target !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
         || m.procedureStepMonitor.monitorType === 'Yes or No')) {
           dropDownsAreValid = false;
         } else if (m.procedureStepMonitor.monitorType === 'Select' && m.numVal === undefined) {
@@ -114,13 +114,13 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     let updateMonitorsRequests = new Array<any>();
 
       this.workOrderMonitorsToView.forEach(monitor => {
-
+        const numval = monitor.numVal.toString();
         let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
           comment: monitor.comment === undefined ? '' : monitor.comment,
           multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
           sensorValue: monitor.sensorValue === undefined ? '' : monitor.sensorValue,
           textVal: monitor.textVal === undefined ? '' : monitor.textVal,
-          numVal: monitor.numVal === undefined ? undefined : monitor.numVal,
+          numVal: numval ? parseFloat(numval) : null,
           workOrderTaskMonitorId: monitor.id
         } as IUpdateWorkOrderTaskMonitorRequest);
 

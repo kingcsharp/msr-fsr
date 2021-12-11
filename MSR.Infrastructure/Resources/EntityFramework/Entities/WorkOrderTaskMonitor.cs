@@ -10,7 +10,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("ProcedureMonitorId")]
         public virtual ProcedureStepMonitor ProcedureStepMonitor { get; set; }
 
-        public int? NumVal { get; set; }
+        [Column(TypeName = "decimal(10,3)")]
+        public decimal? NumVal { get; set; }
 
         public string TextVal { get; set; }
 
@@ -26,12 +27,25 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Description { get; set; }
         public int? MonitorListId { get; set; }
         public string ShouldBe { get; set; }
-        public float? HighTarget { get; set; }
-        public float? LowTarget { get; set; }
-        public float? Target { get; set; }
+
+        [Column(TypeName = "decimal(10,3)")]
+        public decimal? HighTarget { get; set; }
+
+        [Column(TypeName = "decimal(10,3)")]
+        public decimal? LowTarget { get; set; }
+
+        [Column(TypeName = "decimal(10,3)")]
+        public decimal? Target { get; set; }
+
         public string FailAction { get; set; }
         public string SensorName { get; set; }
         public int? MonitorTypeId { get; set; }
         public int? InputTypeId { get; set; }
+
+        [Column(TypeName = "decimal(10,3)")]
+        public decimal? LowNumVal { get; set; }
+
+        [Column(TypeName = "decimal(10,3)")]
+        public decimal? HighNumVal { get; set; }
     }
 }

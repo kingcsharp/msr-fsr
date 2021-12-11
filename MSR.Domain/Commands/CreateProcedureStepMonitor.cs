@@ -10,9 +10,9 @@ namespace MSR.Domain.Commands
         public string Description { get; set; }
         public int? MonitorListId { get; set; }
         public string ShouldBe { get; set; }
-        public float? HighTarget { get; set; }
-        public float? LowTarget { get; set; }
-        public float? Target { get; set; }
+        public decimal? HighTarget { get; set; }
+        public decimal? LowTarget { get; set; }
+        public decimal? Target { get; set; }
         public string FailAction { get; set; }
         public string SensorName { get; set; }
         public bool? SendNCREmail { get; set; }
