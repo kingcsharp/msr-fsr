@@ -35,6 +35,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 .Query()
                 .Include(x => x.Part)
                 .Include(x => x.Procedure)
+                .Include(x => x.Customer)
                 .Select(p => _mapper.Map<ProductModel>(p))
                 .ToListAsync();
 

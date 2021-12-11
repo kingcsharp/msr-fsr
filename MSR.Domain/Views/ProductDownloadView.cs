@@ -10,8 +10,12 @@ namespace MSR.Domain.Views
         public string Name { get; set; }
         public int Revision { get; set; }
         public int CustomerId { get; set; }
+        public string CustomerName { get; set; }
         public int ProcedureId { get; set; }
+        public string ProcedureName { get; set; }
+
         public int PartId { get; set; }
+        public string PartName { get; set; }
         public decimal? LaborCost { get; set; }
         public decimal? EquipmentCost { get; set; }
         public decimal? MaterialCost { get; set; }

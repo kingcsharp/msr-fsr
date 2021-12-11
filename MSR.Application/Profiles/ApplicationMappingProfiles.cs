@@ -11,7 +11,11 @@ namespace MSR.Application.Profiles
         {
             CreateMap<CreateFile, FileModel>();
             CreateMap<dynamic, InvoiceableWorkOrderView>().ReverseMap();
-            CreateMap<ProductModel,ProductDownloadView>().ReverseMap();
+            CreateMap<ProductModel,ProductDownloadView>()
+                .ForMember(dest => dest.CustomerName, opts => opts.MapFrom(src => src.Customer == null ? null : src.Customer.Name))
+                .ForMember(dest => dest.ProcedureName, opts => opts.MapFrom(src => src.Procedure == null ? null : src.Procedure.Name))
+                .ForMember(dest => dest.PartName, opts => opts.MapFrom(src => src.Part == null ? null : src.Part.Name))
+                .ReverseMap();
         }
     }
 }
