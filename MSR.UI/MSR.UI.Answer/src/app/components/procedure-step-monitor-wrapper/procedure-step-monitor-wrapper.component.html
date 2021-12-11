@@ -270,9 +270,19 @@
                     Fault Handling
                 </label>
                 <div class="col-9 px-0">
-                    <p-dropdown placeholder="Select Fault Handling" name="faulthandling"
-                        [options]="faultHandlingOptions" showClear="true" [(ngModel)]="procedureStepMonitor.failAction">
-                    </p-dropdown>
+                  <p-dropdown placeholder="Select Fault Handling" name="faulthandling"
+                      [options]="faultHandlingOptions" showClear="true" [(ngModel)]="procedureStepMonitor.failAction">
+                  </p-dropdown>
+                  <input
+                    [hidden]="true"
+                    class="form-control input-transparent"
+                    name="faulthandling"
+                    [value]="procedureStepMonitor.failAction || ''"
+                    readonly
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-required="true"
+                  >
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row">
