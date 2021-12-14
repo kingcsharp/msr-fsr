@@ -231,7 +231,7 @@
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="procedureStepMonitor.monitorType !== 'Select' && procedureStepMonitor.inputType !== 'Sensor'">
+                *ngIf="procedureStepMonitor.monitorType !== 'Select' && procedureStepMonitor.inputType !== 'Sensor' && procedureStepMonitor.shouldBe !== 'BETWEEN'">
                 <label for="targetvalue" class="col-form-label text-left col-3">
                     Target Value
                 </label>
