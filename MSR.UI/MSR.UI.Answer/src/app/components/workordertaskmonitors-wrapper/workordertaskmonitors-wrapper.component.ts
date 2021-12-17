@@ -206,7 +206,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
     this.showNcrEmailNotificationDialog = false;
     this.workOrderMonitorsToView.map(monitor => {
-      const numVal = monitor.numVal.toString();
+      const numVal = monitor.numVal?.toString();
       let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
         comment: monitor.comment === undefined ? '' : monitor.comment,
         multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
