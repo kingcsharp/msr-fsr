@@ -24,6 +24,7 @@ namespace MSR.Domain.Views
         public int CycleTime { get; set; }
         public int? QuoteId { get; set; }
         public string DivisionFab { get; set; }
+        public string PartKitNo { get; set; }
         public int CustomerRequirementId { get; set; }
     }
 }
