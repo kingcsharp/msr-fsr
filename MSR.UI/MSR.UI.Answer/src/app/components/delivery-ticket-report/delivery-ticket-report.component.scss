@@ -29,8 +29,6 @@
     }
     div { 
       float: none !important; 
-      position: static !important;
-      display: inline; 
-      box-sizing: content-box !important;
+      position: relative !important;
     }
 }
