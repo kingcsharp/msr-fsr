@@ -5,7 +5,7 @@ import { Layout } from './layout.component';
 const routes: Routes = [
   {
     path: '', component: Layout, children: [
-      { path: '', redirectTo: 'wip', pathMatch: 'full' },
+      { path: '', redirectTo: 'landing', pathMatch: 'full' },
       { path: 'people', loadChildren: () => import('../pages/main/main.module').then(m => m.MainModule) },
       { path: 'workflow', loadChildren: () => import('../pages/workflow/workflow.module').then(m => m.WorkflowModule) },
       { path: 'parts', loadChildren: () => import('../pages/parts/parts.module').then(m => m.PartsModule) },
@@ -26,6 +26,7 @@ const routes: Routes = [
       { path: 'dashboards', loadChildren: () => import('../pages/dashboards/dashboard.module').then(m => m.DashboardModule) },
       { path: 'search', loadChildren: () => import('../pages/search/search.module').then(m => m.SearchModule) },
       { path: 'wip', loadChildren: () =>  import('../pages/wip/wip.module').then(m => m.WipModule) },
+      { path: 'landing', loadChildren: () => import('../pages/landing/landing.module').then(m => m.LandingPageModule) }
     ]
   }
 ];
