@@ -13,7 +13,7 @@
             </selectworkorderdropdown-wrapper>
           </div>
           <div class="row justify-content-end">
-            <button type="button" class="btn btn-sm btn-danger mr-2" *ngIf="!workOrderIsComplete"
+            <button type="button" class="btn btn-sm btn-danger mr-2" *ngIf="this.showButtons && !workOrderIsComplete"
               (click)="toggleCancelRemainingStepsDialog()">
               <i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
             <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel?.workOrderParts?.length > 0">
@@ -67,7 +67,7 @@
             [interval]="false" [startFromIndex]="startSlideIndex" [(activeSlide)]="activeSlideIndex"
             data-ride="carousel">
             <slide id={{index}} *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"
-              (click)="selectTaskForViewing(workOrderTask)" [ngClass]="{ 
+              (click)="selectTaskForViewing(workOrderTask)" [ngClass]="{
                 'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
                 'bg-light': workOrderTask.status?.name === 'In Progress',
                 'text-dark': workOrderTask.status?.name === 'In Progress',
@@ -104,7 +104,7 @@
           *ngIf="workOrderTaskInProgress?.id === workOrderTaskToView?.id && !workOrderIsComplete">
           <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"
             [workOrderModel]="workOrderModel"
-            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo !== globals.getCurrentUser().id">
+            *ngIf="this.showButtons && workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo !== globals.getCurrentUser().id">
           </take-over-task-button-wrapper>
           <empmbutton-wrapper
             *ngIf="hasAccessToTaskBeingViewed && workOrderTaskInProgress !== undefined && !workOrderIsComplete">

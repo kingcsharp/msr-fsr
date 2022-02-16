@@ -282,7 +282,7 @@ export class Globals {
         'sortAscending',
         'version',
       ],
-      
+
       purchaseGet: [
         'id',
         'mttn',
@@ -625,6 +625,10 @@ export class Globals {
         }
 
         return false;
+    }
+
+    hasLocation(locationId) {
+      return this.user.locationId === locationId;
     }
 
     addRequestToIgnore(requestToIgnore: string): void {
