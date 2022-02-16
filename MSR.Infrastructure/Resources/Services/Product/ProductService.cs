@@ -36,10 +36,9 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 .Include(x => x.Part)
                 .Include(x => x.Procedure)
                 .Include(x => x.Customer)
-                .Select(p => _mapper.Map<ProductModel>(p))
                 .ToListAsync();
 
-            return products;
+            return products.Select(p => _mapper.Map<ProductModel>(p)).ToList();
         }
 
         public async Task<ProductModel> CreateProductAsync(CreateProduct command)

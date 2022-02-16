@@ -417,7 +417,11 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.Created))
                 .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.PartNumber));
+                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.PartNumber))
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalSalePrice))
+                .ForMember(dest => dest.EquipmentCost, opt => opt.MapFrom(src => src.EquipmentCost))
+                .ForMember(dest => dest.MaterialCost, opt => opt.MapFrom(src => src.MaterialCost))
+                .ForMember(dest => dest.SalesTax, opt => opt.MapFrom(src => src.SalesTax));
             CreateMap<QuoteModel, QuotesProductsView>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.ProcessName))
