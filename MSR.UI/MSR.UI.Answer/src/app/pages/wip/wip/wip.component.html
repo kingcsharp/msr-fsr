@@ -109,7 +109,7 @@
                             {{model.purchaseId}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)">
-                            <alert type="warning" [ngClass]="{ 'px-0 py-1 my-0 text-center wip-alert':true, 
+                            <alert type="warning" [ngClass]="{ 'px-0 py-1 my-0 text-center wip-alert':true,
                             'cu-color': model.segregationType === EnumSegregationType.CU,
                             'non-cu-color': model.segregationType === EnumSegregationType.NONCU || model.segregationType === null,
                             'deseg-color': model.segregationType === EnumSegregationType.DESEG

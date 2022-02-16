@@ -64,6 +64,7 @@ export class WipdetailsComponent implements OnInit {
   monitorsAreInvalidDialog: boolean = false;
   allUserRoleIds: Array<number>;
   EnumSegregationType = EnumSegregationType;
+  showButtons: boolean = false;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, private customerService: CustomerService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
@@ -87,6 +88,7 @@ export class WipdetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.showButtons = false;
     this.getScreenSize();
 
     this.monitorTypes = [
@@ -117,6 +119,7 @@ export class WipdetailsComponent implements OnInit {
     this.workOrdersService.workOrder(workOrderId, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.workOrderModel = this.cleanData(response.object[0]);
+      this.showButtons = this.globals.hasRole('Administrator') || this.globals.hasRole('GM - General Manager') || this.globals.hasLocation(this.workOrderModel.locationId);
       this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
       this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.title)?.find(m => m?.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
       this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status?.name?.trim() === 'Waiting to Start' || s.status?.name?.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
