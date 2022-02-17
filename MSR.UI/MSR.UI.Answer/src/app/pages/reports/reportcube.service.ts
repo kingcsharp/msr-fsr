@@ -29,7 +29,7 @@ export class ReportCubeService {
         headers.set('timeout', `${5 * 60000}`);
 
         // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
-        // let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
+        //let apiEndPointUrl = reportInfo.apiEndPointURL.replace('https://qa-report-api.cmhworks.com', 'http://localhost');
         let apiEndPointUrl = reportInfo.apiEndPointURL;
 
         apiEndPointUrl = pagingModel.getReportingQueryString(apiEndPointUrl, forReportDownload);
@@ -123,6 +123,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'customername', label: 'Customer', visible: true, type: this.enumColumnType.String, dropdownHeader: true }),
                     new ColumnsSaved({ id: 'specno', label: 'Spec #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'partnumber', label: 'Part #', visible: true, type: this.enumColumnType.String}),
                     new ColumnsSaved({ id: 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number })
