@@ -15,6 +15,10 @@
     .page{
       page-break-inside: avoid;
       min-height: 0;
+      overflow:initial !important
+  }
+    .pagebreak {
+      page-break-before: always
     }
     .break-before {
       page-break-before: always;
