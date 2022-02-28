@@ -22,6 +22,7 @@ export class PrintotherReportComponent implements OnInit {
       { label: 'Work Report', value: 'WorkReport'},
       { label: 'Delivery Ticket', value: 'DeliveryTicket'},
       { label: 'Detailed Packing List', value: 'DetailedPackingList'},
+      { label: 'Cert of Compliance', value: 'CertOfCompliance'},
       { label: 'WIP History Report', value: 'WIPHistoryReport'},
       { label: 'NCR Report', value: 'NCRReport'},
       { label: 'Technical Data Label', value: 'TechnicalDataLabel'},

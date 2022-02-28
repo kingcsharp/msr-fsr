@@ -1,0 +1,29 @@
+.write-line{
+    border-bottom: 2px solid #ccc;
+}
+.header,
+.parts-list {
+    font-size: smaller;
+}
+
+@media print {
+    * {
+        -webkit-transition: none !important;
+        transition: none !important;
+    }
+    @page {
+        size: 8.5in 11in;
+        margin-top: 10%;
+        margin-bottom: 10%;
+    }
+    .page{
+      break-inside: avoid;
+      page-break-inside: avoid;
+      min-height: 0;
+      overflow:initial !important
+  }
+    .pagebreak {
+      break-before: always;
+      page-break-before: always;
+    }
+}
