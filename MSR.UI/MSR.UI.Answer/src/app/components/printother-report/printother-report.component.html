@@ -14,6 +14,7 @@
     <div class="report-viewport d-print-flex">
         <delivery-ticket-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'DeliveryTicket'"></delivery-ticket-report>
         <detailed-packing-list [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'DetailedPackingList'"></detailed-packing-list>
+        <cert-of-compliance [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'CertOfCompliance'"></cert-of-compliance>
         <wip-history-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'WIPHistoryReport'"></wip-history-report>
         <ncr-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'NCRReport'"></ncr-report>
         <technical-data-label [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'TechnicalDataLabel'"></technical-data-label>
