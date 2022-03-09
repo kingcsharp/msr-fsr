@@ -187,7 +187,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var totalLaborTime = (decimal)0.0;
 
             workOrderEntity.HasMonitor = workOrderEntity.WorkOrderTasks.Any(i => i.WorkOrderTaskMonitors.Any());
-            
+            workOrderEntity.HasSubParts = createWorkOrderDto.WorkOrderParts.Any(i => i.Children.Any());
             foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
             {
                 var procedureStep = procedureSteps.FirstOrDefault(s => s.Id == workOrderTask.ProcedureStepId);
@@ -1664,12 +1664,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return dispositionMessage.Trim().Trim('|').Trim();
         }
 
-        public async Task<ICollection<MSR.Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView(GetWorkOrderHistory command) {
+        public async Task<ICollection<Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView(GetWorkOrderHistory command) {
 
             var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().CreateWorkOrderHistoryViewQuery(command).ToListAsync();
-
-            var workOrderHistoryViewModels = _mapper.Map<ICollection<MSR.Domain.Views.WorkOrderHistoryView>>(workOrderHistoryViewEntities);
-
+            var workOrderHistoryViewModels = _mapper.Map<ICollection<Domain.Views.WorkOrderHistoryView>>(workOrderHistoryViewEntities);
             return workOrderHistoryViewModels;
 
         }
@@ -1688,6 +1686,16 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var invoiceableWorkOrdersViewMdoels = _mapper.Map<ICollection<Domain.Views.InvoiceableWorkOrderView>>(invoiceableWorkOrdersViewEntities);
 
             return invoiceableWorkOrdersViewMdoels;
-        } 
+        }
+
+        public async Task<ICollection<SubPartModel>> GetWorkOrderSubParts(List<int> workOrderIds)
+        {
+            if(workOrderIds == null || !workOrderIds.Any())
+            {
+                return null;
+            }
+            var subPartsList = await _unitOfWork.SubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
+            return subPartsList.Select(i => _mapper.Map<SubPartModel>(i)).ToList();
+        }
     }
 }

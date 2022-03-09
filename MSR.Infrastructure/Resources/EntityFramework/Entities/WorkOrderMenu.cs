@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
@@ -33,5 +31,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public decimal? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
         public bool HasNcr { get; set; }
         public string SegregationType { get; set; }
+        public bool? HasSubParts { get; set; }
     }
 }

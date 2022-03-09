@@ -130,9 +130,15 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetWorkOrderHistory command, CancellationToken cancellationToken = default)
         {
-            var ret = await _workOrderService.GetWorkOrderHistoryView(command);
+            var workOrders = await _workOrderService.GetWorkOrderHistoryView(command);
+            var workOrderIds = workOrders.Select(i => i.WorkOrderId.Value).ToList();
+            var subPartList = await _workOrderService.GetWorkOrderSubParts(workOrderIds); 
+            foreach (var summary in workOrders.Where(i => i.HasSubParts))
+            {
+                summary.SubParts = subPartList.Where(i => i.WorkOrderId == summary.WorkOrderId).ToList();
+            }
             int totalRows = await _workOrderService.GetTotalWorkOrderHistoryViewRows(command);
-            return new PagingCommandResponse<ICollection<Domain.Views.WorkOrderHistoryView>>(ret, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
+            return new PagingCommandResponse<ICollection<Domain.Views.WorkOrderHistoryView>>(workOrders, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }
 
         public async Task<ICommandResponse> HandleAsync(TakeOverWorkOrder command, CancellationToken cancellationToken = default)

@@ -1,5 +1,6 @@
 using MSR.Domain.Commanding.Enums;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MSR.Domain.Models
@@ -178,5 +179,7 @@ namespace MSR.Domain.Models
         /// Segregation Type
         /// </summary>
         public EnumSegregationType? SegregationType { get;set;}
+        public bool HasSubParts { get; set; }
+        public ICollection<SubPartModel> SubParts { get; set; }
     }
 }

@@ -87,6 +87,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<CancelledWorkOrderLog> CancelledWorkOrderLog { get; set; }
         public DbSet<InvoiceableWorkOrdersView> InvoiceableWorkOrderView { get; set; }
         public DbSet<PurchaseOrderDBView> PurchaseOrderDBView { get; set; }
+        public DbSet<SubPart> SubParts { get; set; }
 
         public AnswerContext() : base()
         {

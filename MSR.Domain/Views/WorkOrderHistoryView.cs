@@ -1,5 +1,6 @@
 ﻿using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Helpers;
+using MSR.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -36,5 +37,7 @@ namespace MSR.Domain.Views
         {
             get => $"{Customer}-{WorkOrderId}";
         }
+        public bool HasSubParts { get; set; }
+        public ICollection<SubPartModel> SubParts { get; set; }
     }
 }

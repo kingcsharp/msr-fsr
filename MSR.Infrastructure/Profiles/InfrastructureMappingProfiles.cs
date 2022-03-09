@@ -576,12 +576,15 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderHistoryViewDTO, WorkOrderGridSummary>();
             CreateMap<Resources.EntityFramework.Entities.WorkOrderHistoryView, Domain.Views.WorkOrderHistoryView>()
                 .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU))
-                .ForMember(dest => dest.Disposition, opts => opts.MapFrom(src => src.Dispostion));
+                .ForMember(dest => dest.Disposition, opts => opts.MapFrom(src => src.Dispostion))
+                .ForMember(dest => dest.HasSubParts, opts => opts.MapFrom(src => src.HasSubParts.HasValue ? src.HasSubParts : false))
+                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => src.Qty.HasValue ? src.Qty : 1));
 
             CreateMap<PortalWorkOrderMenuDTO, PortalWorkOrderView>()
                 .ForMember(dest => dest.SubParts, opts => opts.Ignore());
             CreateMap<WorkOrderMenu, WorkOrderGridSummary>()
-                .ForMember(dest => dest.SegregationType, opts => opts.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU));
+                .ForMember(dest => dest.SegregationType, opts => opts.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU))
+                .ForMember(dest => dest.HasSubParts, opts => opts.MapFrom(src => src.HasSubParts.HasValue ? src.HasSubParts.Value : false));
             CreateMap<PortalSubPart, PortalSubPartView>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.WorkOrderId));
 

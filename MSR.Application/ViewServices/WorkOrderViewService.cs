@@ -21,10 +21,12 @@ namespace MSR.Application.ViewServices
     public class WorkOrderViewService : IWorkOrderViewService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private IMapper _mapper;
 
-        public WorkOrderViewService(IUnitOfWork unitOfWork)
+        public WorkOrderViewService(IUnitOfWork unitOfWork,IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync()
@@ -34,7 +36,14 @@ namespace MSR.Application.ViewServices
 
         public async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenuAsync(GetWorkOrderMenuQueryModel filters)
         {
-            return await _unitOfWork.Query<WorkOrderMenu>().GetWorkOrderMenu(WorkOrderProjections.WorkOrderMenuView,filters);
+            var workOrders = await _unitOfWork.Query<WorkOrderMenu>().GetWorkOrderMenu(WorkOrderProjections.WorkOrderMenuView,filters);
+            var workOrderIds = workOrders.data.Select(i => i.Id).ToList();
+            var subPartsList = await _unitOfWork.SubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
+            foreach (var summary in workOrders.data.Where(i => i.HasSubParts))
+            { 
+                summary.SubParts = subPartsList.Where(i => i.WorkOrderId == summary.Id).Select(i => _mapper.Map<SubPartModel>(i)).ToList();
+            }
+            return workOrders;
         }
 
         public async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenuAsync(GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)

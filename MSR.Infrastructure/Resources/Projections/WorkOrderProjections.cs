@@ -109,7 +109,8 @@ namespace MSR.Infrastructure.Resources.Projections
             PercentageOfExpectedDurationTimeLoggedNumerator = i.PercentageOfExpectedDurationTimeLoggedNumerator,
             PercentageOfExpectedDurationTimeLoggedDenominator = i.PercentageOfExpectedDurationTimeLoggedDenominator,
             HasNcr = i.HasNcr,
-            SegregationType = i.SegregationType == null ? (EnumSegregationType?)null: EnumUtils.GetValueFromDescription<EnumSegregationType>(i.SegregationType)
+            SegregationType = i.SegregationType == null ? (EnumSegregationType?)null: EnumUtils.GetValueFromDescription<EnumSegregationType>(i.SegregationType),
+            HasSubParts = i.HasSubParts
         };
 
         public static Expression<Func<PortalWorkOrderMenu, dynamic>> PortalWorkOrderMenuView => i => new

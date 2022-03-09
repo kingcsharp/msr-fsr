@@ -73,8 +73,8 @@ namespace MSR.Infrastructure.Resources.Queries
 
             var apagedData = dbSet.AsQueryable().ToFilterView(filters);
             var apagedList = await apagedData.data.ToListAsync();
-            return (apagedList.Select(i => AutoMapperHelper.Mapper.Map<WorkOrderGridSummary>(i)).ToList(), apagedData.totalRows);
-
+            var workOrderGridSummaries = (apagedList.Select(i => AutoMapperHelper.Mapper.Map<WorkOrderGridSummary>(i)).ToList(), apagedData.totalRows);
+            return workOrderGridSummaries;
         }
 
         public static async Task<(ICollection<PortalWorkOrderView> Data, int TotalRows)> GetPortalWorkOrderMenu(this DbSet<PortalWorkOrderMenu> dbSet, Expression<Func<PortalWorkOrderMenu, dynamic>> projection, 

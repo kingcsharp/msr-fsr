@@ -2,6 +2,7 @@
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Application.Profiles
 {
@@ -17,6 +18,8 @@ namespace MSR.Application.Profiles
                 .ForMember(dest => dest.PartName, opts => opts.MapFrom(src => src.Part == null ? null : src.Part.Name))
                 .ForMember(dest => dest.PartKitNo, opts => opts.MapFrom(src => src.Part == null ? null : src.Part.PartNumber))
                 .ReverseMap();
+            CreateMap<SubPart, SubPartModel>()
+                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => src.Qty.HasValue ? src.Qty : 1));
         }
     }
 }
