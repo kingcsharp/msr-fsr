@@ -4,13 +4,15 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, EnumSegregationType, WorkOrderHistoryView } from '../../../services/api.client.generated';
+import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, EnumSegregationType, WorkOrderHistoryView, ReportModel } from '../../../services/api.client.generated';
 import { Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
 import { callFunctionWithFilters } from '../../../models/lib/Utils';
 import { LazyLoadEvent } from 'primeng/api';
+import { GridSaved } from '../../../models/lib/GridSaved';
+import { EnumColumnType } from '../../../models/enums/EnumColumnType';
 
 @Component({
   selector: 'app-wiphistory',
@@ -30,9 +32,30 @@ export class WiphistoryComponent implements OnInit {
   gridVersion: string;
   EnumSegregationType = EnumSegregationType;
   totalRecords: number = 0;
+  gridPartsSaved: GridSaved;
+  reportPartsModel: ReportModel;
   constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private router: Router, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
+
+    this.gridPartsSaved = new GridSaved({
+      columnsSaved: [
+        new ColumnsSaved({ id: 'id', label: 'Id', visible: false, disableSort: true, disableFilter: true, type: EnumColumnType.Number }),
+        new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.String }),
+        new ColumnsSaved({ id: 'partNumber', label: 'Company Part #', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.String }),
+        new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.Number, styles: { 'width': '10rem' } }),
+        new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
+        new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.String, styles: { 'width': '40rem' } }),
+      ],
+      showMyViewsFeature: false,
+      paginator: false,
+      storageId: 'wiphistory_parts' + this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: '1.0.0'
+    });
+
+    this.reportPartsModel = new ReportModel({
+      name: ''
+    });
 
     this.gridStorageId = 'wiphistory' + this.elementReference.nativeElement.tagName.toLowerCase();
 
@@ -74,6 +97,10 @@ export class WiphistoryComponent implements OnInit {
           this.data = response.object;
         }));
     }, 10);
+  }
+
+  getVisibleColumns() {
+    return this.gridSettings.filter(x => x.visible).length;
   }
 
 }

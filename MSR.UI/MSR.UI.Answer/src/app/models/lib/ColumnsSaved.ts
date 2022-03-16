@@ -13,6 +13,8 @@ export interface IColumnsSaved {
     formattingAngular?: string | undefined;
     templateName?: ElementRef | undefined;
     styles?: any | undefined;
+    disableSort?: boolean | undefined;
+    disableFilter?: boolean | undefined;
 }
 export class ColumnsSaved implements IColumnsSaved {
     id?: string | undefined;
@@ -27,6 +29,8 @@ export class ColumnsSaved implements IColumnsSaved {
     templateName?: ElementRef | undefined;
     isRanged?: boolean | undefined;
     styles?: any = {};
+    disableSort?: boolean | undefined;
+    disableFilter?: boolean | undefined;
 
     constructor(data?: IColumnsSaved) {
         if (data) {
@@ -58,6 +62,8 @@ export class ColumnsSaved implements IColumnsSaved {
             this.isRanged = _data['isRanged'];
             this.templateName = _data['templateName'];
             this.styles = _data['styles'];
+            this.disableSort = _data['disableSort'];
+            this.disableFilter = _data['disableFilter'];
         }
     }
 
@@ -74,6 +80,8 @@ export class ColumnsSaved implements IColumnsSaved {
         data['isRanged'] = this.isRanged;
         data['templateName'] = this.templateName;
         data['styles'] = this.styles;
+        data['disableSort'] = this.disableSort;
+        data['disableFilter'] = this.disableFilter;
 
         return data;
     }

@@ -34,9 +34,9 @@
     <ng-template pTemplate="header">
         <tr>
             <th *ngIf="gridSaved.expandRows" style="width: 2rem"></th>
-            <th *ngFor="let col of gridSaved.columnsSaved" [hidden]="!col.visible" [pSortableColumn]="col.id"
+            <th *ngFor="let col of gridSaved.columnsSaved" [hidden]="!col.visible" [pSortableColumn]="col.disableSort ? null : col.id"
                 data-cy="usertable-header" [ngStyle]="col.styles">
-                {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+                {{col.label}} <p-sortIcon *ngIf="!col.disableSort" [field]="col.id"></p-sortIcon>
             </th>
         </tr>
         <tr>
@@ -67,7 +67,7 @@
     <ng-template pTemplate="rowexpansion" let-itemData>
         <tr>
             <td [attr.colspan]="gridSaved.visibleColumns+1">
-                <ng-container [ngTemplateOutlet]="gridSaved.expandRowsTemplate" [ngTemplateOutletContext]="{expandRowData: { 
+                <ng-container [ngTemplateOutlet]="gridSaved.expandRowsTemplate" [ngTemplateOutletContext]="{expandRowData: {
                     rowData:itemData,
                     gridSaved:gridSaved,
                     gridData:gridData
@@ -80,7 +80,7 @@
 
 <ng-template #rowViewData let-colsDataAndSettings='colsDataAndSettings'>
     <td *ngIf="colsDataAndSettings.col.type === enumColumnType.Template">
-        <ng-container [ngTemplateOutlet]="colsDataAndSettings.col.templateName" [ngTemplateOutletContext]="{colsDataAndSettings: { 
+        <ng-container [ngTemplateOutlet]="colsDataAndSettings.col.templateName" [ngTemplateOutletContext]="{colsDataAndSettings: {
                 col: colsDataAndSettings.col,
                 colData:colsDataAndSettings.colData,
                 colsSaved:gridSaved.columnsSaved,

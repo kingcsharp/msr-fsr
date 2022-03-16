@@ -27,12 +27,14 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
+                        <th style="width: 2rem"></th>
                         <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
                             data-cy="grid-header">
                             {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label !== 'Actions'"></p-sortIcon>
                         </th>
                     </tr>
                     <tr>
+                        <th style="width: 2rem"></th>
                         <th grid-input-filter [dt]="dt" searchField="purchaseId"
                             [hidden]="!commonGrid.isVisibleCol('purchaseId',gridSettings)"
                             [gridSettings]="gridSettings">
@@ -103,8 +105,11 @@
                         </th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-model>
+                <ng-template pTemplate="body" let-model let-expanded="expanded">
                     <tr class="ui-selectable-row" data-cy='wipgrid-body'>
+                        <td>
+                          <i *ngIf="model.subParts && model.subParts.length>0" class="fad pointer" [pRowToggler]="model" [ngClass]="{'fa-plus': expanded !== true, 'fa-minus':expanded===true}"></i>
+                        </td>
                         <td [hidden]="!commonGrid.isVisibleCol('purchaseId', gridSettings)">
                             {{model.purchaseId}}
                         </td>
@@ -191,6 +196,20 @@
                     <tr>
                         <td colspan="16" style="text-align:left">No WorkOrders to Display</td>
                     </tr>
+                </ng-template>
+
+                <ng-template pTemplate="rowexpansion" let-itemData>
+                  <tr>
+                    <td [attr.colspan]="getVisibleColumns()+1">
+                      <app-grid
+                        class="innerGrid"
+                        [showReport]="true"
+                        [gridSaved]="gridPartsSaved"
+                        [reportInfo]="reportPartsModel"
+                        [data]="itemData.subParts">
+                      </app-grid>
+                    </td>
+                  </tr>
                 </ng-template>
             </p-table>
         </widget>
