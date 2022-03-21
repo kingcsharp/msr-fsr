@@ -13782,6 +13782,11 @@ export class SubPartModel implements ISubPartModel {
     partId?: number;
     qty?: number;
     workOrderId?: number;
+    workOrderPartId?: number;
+    serialNumber?: string | undefined;
+    partNumber?: string | undefined;
+    cycleCount?: number | undefined;
+    name?: string | undefined;
 
     constructor(data?: ISubPartModel) {
         if (data) {
@@ -13799,6 +13804,11 @@ export class SubPartModel implements ISubPartModel {
             this.partId = _data["partId"];
             this.qty = _data["qty"];
             this.workOrderId = _data["workOrderId"];
+            this.workOrderPartId = _data["workOrderPartId"];
+            this.serialNumber = _data["serialNumber"];
+            this.partNumber = _data["partNumber"];
+            this.cycleCount = _data["cycleCount"];
+            this.name = _data["name"];
         }
     }
 
@@ -13816,6 +13826,11 @@ export class SubPartModel implements ISubPartModel {
         data["partId"] = this.partId;
         data["qty"] = this.qty;
         data["workOrderId"] = this.workOrderId;
+        data["workOrderPartId"] = this.workOrderPartId;
+        data["serialNumber"] = this.serialNumber;
+        data["partNumber"] = this.partNumber;
+        data["cycleCount"] = this.cycleCount;
+        data["name"] = this.name;
         return data; 
     }
 }
@@ -13826,6 +13841,11 @@ export interface ISubPartModel {
     partId?: number;
     qty?: number;
     workOrderId?: number;
+    workOrderPartId?: number;
+    serialNumber?: string | undefined;
+    partNumber?: string | undefined;
+    cycleCount?: number | undefined;
+    name?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -20975,6 +20995,8 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
     disposition?: string | undefined;
     segregationType?: EnumSegregationType;
     workOrderItemNumber?: string | undefined;
+    hasSubParts?: boolean;
+    subParts?: SubPartModel[] | undefined;
 
     constructor(data?: IWorkOrderHistoryView) {
         if (data) {
@@ -21010,6 +21032,12 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
             this.disposition = _data["disposition"];
             this.segregationType = _data["segregationType"];
             this.workOrderItemNumber = _data["workOrderItemNumber"];
+            this.hasSubParts = _data["hasSubParts"];
+            if (Array.isArray(_data["subParts"])) {
+                this.subParts = [] as any;
+                for (let item of _data["subParts"])
+                    this.subParts!.push(SubPartModel.fromJS(item));
+            }
         }
     }
 
@@ -21045,6 +21073,12 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
         data["disposition"] = this.disposition;
         data["segregationType"] = this.segregationType;
         data["workOrderItemNumber"] = this.workOrderItemNumber;
+        data["hasSubParts"] = this.hasSubParts;
+        if (Array.isArray(this.subParts)) {
+            data["subParts"] = [];
+            for (let item of this.subParts)
+                data["subParts"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -21073,6 +21107,8 @@ export interface IWorkOrderHistoryView {
     disposition?: string | undefined;
     segregationType?: EnumSegregationType;
     workOrderItemNumber?: string | undefined;
+    hasSubParts?: boolean;
+    subParts?: SubPartModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -21240,6 +21276,8 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
     segregationType?: EnumSegregationType | undefined;
+    hasSubParts?: boolean;
+    subParts?: SubPartModel[] | undefined;
 
     constructor(data?: IWorkOrderGridSummary) {
         if (data) {
@@ -21278,6 +21316,12 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             this.percentageOfExpectedDurationTimeLoggedDenominator = _data["percentageOfExpectedDurationTimeLoggedDenominator"];
             this.hasNcr = _data["hasNcr"];
             this.segregationType = _data["segregationType"];
+            this.hasSubParts = _data["hasSubParts"];
+            if (Array.isArray(_data["subParts"])) {
+                this.subParts = [] as any;
+                for (let item of _data["subParts"])
+                    this.subParts!.push(SubPartModel.fromJS(item));
+            }
         }
     }
 
@@ -21316,6 +21360,12 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
         data["percentageOfExpectedDurationTimeLoggedDenominator"] = this.percentageOfExpectedDurationTimeLoggedDenominator;
         data["hasNcr"] = this.hasNcr;
         data["segregationType"] = this.segregationType;
+        data["hasSubParts"] = this.hasSubParts;
+        if (Array.isArray(this.subParts)) {
+            data["subParts"] = [];
+            for (let item of this.subParts)
+                data["subParts"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -21347,6 +21397,8 @@ export interface IWorkOrderGridSummary {
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
     segregationType?: EnumSegregationType | undefined;
+    hasSubParts?: boolean;
+    subParts?: SubPartModel[] | undefined;
 }
 
 export class Sort implements ISort {
@@ -21852,7 +21904,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
-    subParts?: PortalSubPartView[] | undefined;
+    subParts?: SubPartModel[] | undefined;
     stepText?: string | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
@@ -21907,7 +21959,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             if (Array.isArray(_data["subParts"])) {
                 this.subParts = [] as any;
                 for (let item of _data["subParts"])
-                    this.subParts!.push(PortalSubPartView.fromJS(item));
+                    this.subParts!.push(SubPartModel.fromJS(item));
             }
             this.stepText = _data["stepText"];
         }
@@ -22005,72 +22057,8 @@ export interface IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
-    subParts?: PortalSubPartView[] | undefined;
+    subParts?: SubPartModel[] | undefined;
     stepText?: string | undefined;
-}
-
-export class PortalSubPartView implements IPortalSubPartView {
-    id?: number;
-    workOrderId?: number;
-    workOrderPartId?: number;
-    serialNumber?: string | undefined;
-    partNumber?: string | undefined;
-    cycleCount?: number | undefined;
-    qty?: number | undefined;
-    name?: string | undefined;
-
-    constructor(data?: IPortalSubPartView) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.workOrderId = _data["workOrderId"];
-            this.workOrderPartId = _data["workOrderPartId"];
-            this.serialNumber = _data["serialNumber"];
-            this.partNumber = _data["partNumber"];
-            this.cycleCount = _data["cycleCount"];
-            this.qty = _data["qty"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): PortalSubPartView {
-        data = typeof data === 'object' ? data : {};
-        let result = new PortalSubPartView();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["workOrderId"] = this.workOrderId;
-        data["workOrderPartId"] = this.workOrderPartId;
-        data["serialNumber"] = this.serialNumber;
-        data["partNumber"] = this.partNumber;
-        data["cycleCount"] = this.cycleCount;
-        data["qty"] = this.qty;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface IPortalSubPartView {
-    id?: number;
-    workOrderId?: number;
-    workOrderPartId?: number;
-    serialNumber?: string | undefined;
-    partNumber?: string | undefined;
-    cycleCount?: number | undefined;
-    qty?: number | undefined;
-    name?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

@@ -48,10 +48,10 @@ namespace MSR.Application.ViewServices
 
         public async Task<(ICollection<PortalWorkOrderView> data, int totalRows)> GetPortalWorkOrderMenuAsync(GetPortalWorkOrderQueryModel portalWorkOrderQueryModel)
         {
-            var portalSubParts = new List<PortalSubPart>();
+            var portalSubParts = new List<SubPart>();
             if (!string.IsNullOrWhiteSpace(portalWorkOrderQueryModel.SubPartName))
             {
-                portalSubParts = await _unitOfWork.PortalSubParts.Query().Where(i => i.Name.Contains(portalWorkOrderQueryModel.SubPartName)).ToListAsync();
+                portalSubParts = await _unitOfWork.SubParts.Query().Where(i => i.Name.Contains(portalWorkOrderQueryModel.SubPartName)).ToListAsync();
             }
 
             var workOrderData = await _unitOfWork.Query<PortalWorkOrderMenu>().GetPortalWorkOrderMenu(WorkOrderProjections.PortalWorkOrderMenuView, portalWorkOrderQueryModel, portalSubParts.Select(i => i.WorkOrderId).ToList());
@@ -59,11 +59,11 @@ namespace MSR.Application.ViewServices
 
             var messages = await _unitOfWork.WorkOrderMessages.Query().Include(i => i.Created).Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
 
-            var allPortalSubParts = await _unitOfWork.PortalSubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
+            var allPortalSubParts = await _unitOfWork.SubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
 
             foreach(var workOrder in workOrderData.Data)
             {
-                workOrder.SubParts = allPortalSubParts.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<PortalSubPartView>(i)).ToList();
+                workOrder.SubParts = allPortalSubParts.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<SubPartModel>(i)).ToList();
                 workOrder.Messages = messages.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<WorkOrderMessageModel>(i)).ToList();
                 if(workOrder.Disposition != null)
                 {

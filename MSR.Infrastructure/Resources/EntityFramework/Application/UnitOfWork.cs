@@ -97,7 +97,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<WorkOrderMenu> _workOrderMenu;
         private IRepository<PortalWorkOrderMenu> _portalWorkOrderMenu;
         private IRepository<WorkOrderStats> _workOrderStats;
-        private IRepository<PortalSubPart> _portalSubParts;
         private IRepository<PurchaseOrderDBView> _purchaseOrderDBView;
         private IRepository<InvoiceableWorkOrdersView> _invoiceableWorkOrdersView;
         private IRepository<SubPart> _subParts;
@@ -187,7 +186,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkOrderMenu> WorkOrderMenus { get { return _workOrderMenu ??= new EFRepository<WorkOrderMenu>(Context); } }
         public IRepository<PortalWorkOrderMenu> PortalWorkOrderMenus { get { return _portalWorkOrderMenu ??= new EFRepository<PortalWorkOrderMenu>(Context); } }
         public IRepository<WorkOrderStats> WorkOrderStats { get { return _workOrderStats ??= new EFRepository<WorkOrderStats>(Context); } }
-        public IRepository<PortalSubPart> PortalSubParts { get { return _portalSubParts ??= new EFRepository<PortalSubPart>(Context); } }
         public IRepository<InvoiceableWorkOrdersView> InvoiceableWorkOrdersViews { get { return _invoiceableWorkOrdersView ??= new EFRepository<InvoiceableWorkOrdersView>(Context); } }
         public IRepository<PurchaseOrderDBView> PurchaseOrderDBViews { get { return _purchaseOrderDBView ??= new EFRepository<PurchaseOrderDBView>(Context); } }
         public IRepository<SubPart> SubParts { get { return _subParts ??= new EFRepository<SubPart>(Context); } }

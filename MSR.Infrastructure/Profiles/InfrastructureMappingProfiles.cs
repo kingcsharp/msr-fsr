@@ -585,8 +585,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderMenu, WorkOrderGridSummary>()
                 .ForMember(dest => dest.SegregationType, opts => opts.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU))
                 .ForMember(dest => dest.HasSubParts, opts => opts.MapFrom(src => src.HasSubParts.HasValue ? src.HasSubParts.Value : false));
-            CreateMap<PortalSubPart, PortalSubPartView>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.WorkOrderId));
 
             CreateMap<Domain.Views.PurchaseOrderDBView, Resources.EntityFramework.Entities.PurchaseOrderDBView>().ReverseMap();
             CreateMap<InvoiceableWorkOrderView, InvoiceableWorkOrdersView>().ReverseMap();
