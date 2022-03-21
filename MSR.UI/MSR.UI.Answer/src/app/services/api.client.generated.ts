@@ -21904,7 +21904,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
-    subParts?: PortalSubPartView[] | undefined;
+    subParts?: SubPartModel[] | undefined;
     stepText?: string | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
@@ -21959,7 +21959,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             if (Array.isArray(_data["subParts"])) {
                 this.subParts = [] as any;
                 for (let item of _data["subParts"])
-                    this.subParts!.push(PortalSubPartView.fromJS(item));
+                    this.subParts!.push(SubPartModel.fromJS(item));
             }
             this.stepText = _data["stepText"];
         }
@@ -22057,72 +22057,8 @@ export interface IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
-    subParts?: PortalSubPartView[] | undefined;
+    subParts?: SubPartModel[] | undefined;
     stepText?: string | undefined;
-}
-
-export class PortalSubPartView implements IPortalSubPartView {
-    id?: number;
-    workOrderId?: number;
-    workOrderPartId?: number;
-    serialNumber?: string | undefined;
-    partNumber?: string | undefined;
-    cycleCount?: number | undefined;
-    qty?: number | undefined;
-    name?: string | undefined;
-
-    constructor(data?: IPortalSubPartView) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.workOrderId = _data["workOrderId"];
-            this.workOrderPartId = _data["workOrderPartId"];
-            this.serialNumber = _data["serialNumber"];
-            this.partNumber = _data["partNumber"];
-            this.cycleCount = _data["cycleCount"];
-            this.qty = _data["qty"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): PortalSubPartView {
-        data = typeof data === 'object' ? data : {};
-        let result = new PortalSubPartView();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["workOrderId"] = this.workOrderId;
-        data["workOrderPartId"] = this.workOrderPartId;
-        data["serialNumber"] = this.serialNumber;
-        data["partNumber"] = this.partNumber;
-        data["cycleCount"] = this.cycleCount;
-        data["qty"] = this.qty;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface IPortalSubPartView {
-    id?: number;
-    workOrderId?: number;
-    workOrderPartId?: number;
-    serialNumber?: string | undefined;
-    partNumber?: string | undefined;
-    cycleCount?: number | undefined;
-    qty?: number | undefined;
-    name?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
