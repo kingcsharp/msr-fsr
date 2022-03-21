@@ -83,7 +83,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<WorkOrderMenu> WorkOrderMenu { get; set; }
         public DbSet<PortalWorkOrderMenu> PortalWorkOrderMenu { get; set; }
         public DbSet<WorkOrderStats> WorkOrderStats { get; set; }
-        public DbSet<PortalSubPart> PortalSubParts { get; set; }
         public DbSet<CancelledWorkOrderLog> CancelledWorkOrderLog { get; set; }
         public DbSet<InvoiceableWorkOrdersView> InvoiceableWorkOrderView { get; set; }
         public DbSet<PurchaseOrderDBView> PurchaseOrderDBView { get; set; }

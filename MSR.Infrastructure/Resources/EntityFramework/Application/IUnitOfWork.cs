@@ -95,7 +95,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<WorkOrderMenu> WorkOrderMenus { get;}
         IRepository<PortalWorkOrderMenu> PortalWorkOrderMenus { get;}
         IRepository<WorkOrderStats> WorkOrderStats { get; }
-        IRepository<PortalSubPart> PortalSubParts { get; }
         IRepository<PurchaseOrderDBView> PurchaseOrderDBViews { get; }
         IRepository<InvoiceableWorkOrdersView> InvoiceableWorkOrdersViews { get; }
         IRepository<SubPart> SubParts { get; }

@@ -118,7 +118,7 @@ namespace MSR.Infrastructure.Resources.Queries
             {
                 Id = view.WorkOrderId,
                 WorkOrderId = view.WorkOrderId,
-                SubParts = new List<PortalSubPartView>(),
+                SubParts = new List<SubPartModel>(),
                 CompanyPartNumber = view.CompanyPartNumber,
                 CustomerId = view.CustomerId,
                 CycleCount = view.CycleCount,
