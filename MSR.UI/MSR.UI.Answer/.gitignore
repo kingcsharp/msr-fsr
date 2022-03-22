@@ -15,7 +15,7 @@ logs
 *.swp
 
 # Yarn #
-# yarn.lock
+yarn.lock
 
 plopfile.js
 plop-templates/
