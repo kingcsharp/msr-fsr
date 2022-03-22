@@ -3,7 +3,7 @@ FROM trion/ng-cli AS build
 
 WORKDIR /app
 COPY package.json ./
-RUN npm install
+RUN yarn install
 
 ARG ENV
 
