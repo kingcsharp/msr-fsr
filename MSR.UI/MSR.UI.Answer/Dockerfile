@@ -4,7 +4,6 @@ FROM trion/ng-cli AS build
 WORKDIR /app
 COPY package.json ./
 COPY yarn.lock ./
-RUN node --version
 RUN yarn install
 
 ARG ENV
