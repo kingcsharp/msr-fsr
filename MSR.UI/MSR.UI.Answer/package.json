@@ -54,6 +54,7 @@
     "core-js": "2.4.1",
     "d3": "3.5.17",
     "dropzone": "5.1.1",
+    "eve": "https://github.com/adobe-webplatform/eve.git#eef80ed",
     "font-awesome": "4.7.0",
     "fullcalendar": "3.4.0",
     "glyphicons-halflings": "https://github.com/inway/glyphicons-halflings#df545d9e4bdae9b5ffa112fcb70b3f8350929875",
@@ -94,7 +95,7 @@
     "select2-bootstrap-theme": "0.1.0-beta.9",
     "shufflejs": "4.2.0",
     "tslib": "^1.10.0",
-    "webpack-raphael": "https://github.com/CMHWorks/raphael.git",
+    "webpack-raphael": "2.1.4",
     "widgster": "1.0.0",
     "zone.js": "~0.10.2"
   },
