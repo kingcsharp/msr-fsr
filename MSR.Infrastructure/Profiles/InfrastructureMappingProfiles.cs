@@ -276,7 +276,8 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<WorkOrder, WorkOrderModel>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => GetCustomerName(src)));
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => GetCustomerName(src)))
+                .ForMember(dest => dest.HasSubParts, opt => opt.MapFrom(src => src.HasSubParts.HasValue ? src.HasSubParts : false));
             CreateMap<CreateWorkOrder, WorkOrder>();
             CreateMap<UpdateWorkOrder, WorkOrder>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>

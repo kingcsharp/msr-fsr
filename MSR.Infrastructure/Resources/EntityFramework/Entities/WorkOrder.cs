@@ -51,6 +51,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ICollection<WorkOrderTask> WorkOrderTasks { get; set; }
 
         public virtual ICollection<WorkOrderMessage> WorkOrderMessages { get; set; }
-        public bool HasSubParts { get; set; }
+        public bool? HasSubParts { get; set; }
     }
 }

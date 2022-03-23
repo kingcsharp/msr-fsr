@@ -33,5 +33,6 @@ namespace MSR.Domain.Models
         public ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
         public ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
         public ICollection<WorkOrderMessageModel> WorkOrderMessages { get; set; }
+        public bool HasSubParts { get; set; }
     }
 }
