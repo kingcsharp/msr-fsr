@@ -41,11 +41,11 @@ export class WiphistoryComponent implements OnInit {
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({ id: 'id', label: 'Id', visible: false, disableSort: true, disableFilter: true, type: EnumColumnType.Number }),
-        new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.String }),
-        new ColumnsSaved({ id: 'partNumber', label: 'Company Part #', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.String }),
-        new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.Number, styles: { 'width': '10rem' } }),
-        new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
-        new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.String, styles: { 'width': '40rem' } }),
+        new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.String, styles: { 'text-align' : 'center' } }),
+        new ColumnsSaved({ id: 'partNumber', label: 'Company Part #', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.String, styles: { 'text-align' : 'center' } }),
+        new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.Number, styles: { 'width': '10rem', 'text-align' : 'center' } }),
+        new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.Number, styles: { 'width': '6rem', 'text-align' : 'center' } }),
+        new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, disableSort: true, disableFilter: true, type: EnumColumnType.String, styles: { 'width': '30rem', 'text-align' : 'center' } }),
       ],
       showMyViewsFeature: false,
       paginator: false,
