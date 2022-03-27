@@ -16991,6 +16991,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
+    hasSubParts?: boolean;
 
     constructor(data?: IWorkOrderModel) {
         if (data) {
@@ -17033,6 +17034,7 @@ export class WorkOrderModel implements IWorkOrderModel {
                 for (let item of _data["workOrderMessages"])
                     this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
             }
+            this.hasSubParts = _data["hasSubParts"];
         }
     }
 
@@ -17075,6 +17077,7 @@ export class WorkOrderModel implements IWorkOrderModel {
             for (let item of this.workOrderMessages)
                 data["workOrderMessages"].push(item.toJSON());
         }
+        data["hasSubParts"] = this.hasSubParts;
         return data; 
     }
 }
@@ -17098,6 +17101,7 @@ export interface IWorkOrderModel {
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
+    hasSubParts?: boolean;
 }
 
 export class PurchaseModel extends CreatableModel implements IPurchaseModel {
