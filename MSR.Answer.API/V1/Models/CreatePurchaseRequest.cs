@@ -59,7 +59,7 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Material Transfer Number (MTTN)
         /// </summary>
-        [StringLength(10)]
+        [StringLength(15)]
         public string MTTN { get; set; }
 
         /// <summary>
