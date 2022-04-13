@@ -29,5 +29,6 @@ namespace MSR.Domain.Models
         public string Title { get; set; }
         public string StepText { get; set; }
         public bool? IsNCRTask { get; set; }
+        public List<NCRHistoryItemModel> NCRHistoryItems {get; set;}
     }
 }

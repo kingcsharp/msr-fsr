@@ -18,5 +18,6 @@ namespace MSR.Domain.Models
         public virtual WorkOrderModel WorkOrder { get; set; }
         public virtual ICollection<WorkOrderPartModel> Children { get; set; }
         public virtual WorkOrderPartModel Parent { get; set; }
+        public List<NCRHistoryItemModel> NCRHistoryItems { get; set; }
     }
 }

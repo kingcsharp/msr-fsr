@@ -592,6 +592,8 @@ namespace MSR.Infrastructure.Profiles
             
             CreateMap<CreateWorkOrderDTO, WorkOrder>().ReverseMap();
 
+            CreateMap<NCRHistoryItem, NCRHistoryItemModel>().ReverseMap();
+
         }
 
         private static bool ignoreNullOrZero(object srcMember)

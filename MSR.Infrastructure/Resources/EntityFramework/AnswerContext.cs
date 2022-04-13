@@ -87,6 +87,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<InvoiceableWorkOrdersView> InvoiceableWorkOrderView { get; set; }
         public DbSet<PurchaseOrderDBView> PurchaseOrderDBView { get; set; }
         public DbSet<SubPart> SubParts { get; set; }
+        public DbSet<NCRHistoryItem> NCRHistory { get; set; }
 
         public AnswerContext() : base()
         {

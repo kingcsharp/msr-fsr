@@ -100,6 +100,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<PurchaseOrderDBView> _purchaseOrderDBView;
         private IRepository<InvoiceableWorkOrdersView> _invoiceableWorkOrdersView;
         private IRepository<SubPart> _subParts;
+        private IRepository<NCRHistoryItem> _ncrHistory;
 
         public IRepository<CycleCountHistory> CycleCountHistory { get { return _cycleCountHistory ?? (_cycleCountHistory = new EFRepository<CycleCountHistory>(Context)); } }
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
@@ -189,6 +190,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<InvoiceableWorkOrdersView> InvoiceableWorkOrdersViews { get { return _invoiceableWorkOrdersView ??= new EFRepository<InvoiceableWorkOrdersView>(Context); } }
         public IRepository<PurchaseOrderDBView> PurchaseOrderDBViews { get { return _purchaseOrderDBView ??= new EFRepository<PurchaseOrderDBView>(Context); } }
         public IRepository<SubPart> SubParts { get { return _subParts ??= new EFRepository<SubPart>(Context); } }
+        public IRepository<NCRHistoryItem> NCRHistory { get { return _ncrHistory ??= new EFRepository<NCRHistoryItem>(Context); } }
 
         #endregion Repositories
 

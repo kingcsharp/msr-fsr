@@ -136,12 +136,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderModel = _mapper.Map<WorkOrderModel>(workOrderEntity);
 
             workOrderModel.Status = TranslateWOStatusToViewModel(workOrderModel.WorkOrderTasks);
+            var workOrderSerialNumbers = workOrderModel.WorkOrderParts.Select(i => i.SerialNumber).ToList();
+            var ncrHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => workOrderPartIds.Contains(i.PartId) && workOrderSerialNumbers.Contains(i.SerialNumber)).ToListAsync();
+
+            foreach(var workOrderPart in workOrderModel.WorkOrderParts)
+            {
+                workOrderPart.NCRHistoryItems = ncrHistoryItems?.Where(i => i.PartId == workOrderPart.PartId && i.SerialNumber == workOrderPart.SerialNumber)?.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
+            }
 
             foreach(var workOrderTaskModel in workOrderModel.WorkOrderTasks)
             {
                 // enforce sane data by limiting the status IDs returned by the API
                 workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
-
                 var workOrderTaskMonitorModels = new List<WorkOrderTaskMonitorModel>();
                 var i = 1; // Monitor Number starts at 1
                 foreach(var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
@@ -469,11 +475,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderParts = await query.ToListAsync();
             _ = await _unitOfWork.Parts.Query().Where(s => workOrderParts.Select(m => m.PartId).ToList().Contains(s.Id)).ToListAsync();
             var workOrderPartModels = _mapper.Map<ICollection<WorkOrderPartModel>>(workOrderParts);
-
+            var workOrderPartIds = workOrderParts.Select(i => i.Id).ToList();
+            var ncrHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => workOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
+            
             // We have to null out the array of children for WorkOrderParts or else the depth of the data structure is too deep for the return object
             // TODO: Since we track if WorkOrderPart is child based on parentId and parent property, the child property is not needed and should be removed
             foreach (var workOrderPartModel in workOrderPartModels)
             {
+                workOrderPartModel.NCRHistoryItems = ncrHistoryItems.Where(i => i.WorkOrderPartId == workOrderPartModel.Id && i.SerialNumber == workOrderPartModel.SerialNumber).Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
                 workOrderPartModel.Children = null;
             }
 
@@ -504,7 +513,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _ = _mapper.Map(command, workOrderPartEntity);
 
             _unitOfWork.WorkOrderParts.Update(workOrderPartEntity);
-
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(workOrderPartEntity, workOrderPartEntity.Id);
 
@@ -512,10 +520,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _unitOfWork.WorkOrders.LoadReference(workOrderPartEntity.WorkOrder, x => x.Purchase);
 
             // On update, we don't need a pointer back to the work order
-            var ret = _mapper.Map<WorkOrderPartModel>(workOrderPartEntity);
-            ret.WorkOrder = null;
-
-            return ret;
+            var workOrderPartModel = _mapper.Map<WorkOrderPartModel>(workOrderPartEntity);
+            workOrderPartModel.WorkOrder = null;
+            var partId = workOrderPartModel.PartId;
+            var NCRHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => i.PartId == partId && i.SerialNumber == command.SerialNumber).ToListAsync();
+            workOrderPartModel.NCRHistoryItems = NCRHistoryItems.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
+            return workOrderPartModel;
         }
         public async Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command)
         {
