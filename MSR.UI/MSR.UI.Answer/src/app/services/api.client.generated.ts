@@ -17356,6 +17356,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
     parent?: WorkOrderPartModel | undefined;
+    ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
 
     constructor(data?: IWorkOrderPartModel) {
         if (data) {
@@ -17385,6 +17386,11 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
                     this.children!.push(WorkOrderPartModel.fromJS(item));
             }
             this.parent = _data["parent"] ? WorkOrderPartModel.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["ncrHistoryItems"])) {
+                this.ncrHistoryItems = [] as any;
+                for (let item of _data["ncrHistoryItems"])
+                    this.ncrHistoryItems!.push(NCRHistoryItemModel.fromJS(item));
+            }
         }
     }
 
@@ -17414,6 +17420,11 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
                 data["children"].push(item.toJSON());
         }
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.ncrHistoryItems)) {
+            data["ncrHistoryItems"] = [];
+            for (let item of this.ncrHistoryItems)
+                data["ncrHistoryItems"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -17432,6 +17443,63 @@ export interface IWorkOrderPartModel {
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
     parent?: WorkOrderPartModel | undefined;
+    ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
+}
+
+export class NCRHistoryItemModel implements INCRHistoryItemModel {
+    workOrderId?: number;
+    workOrderTaskId?: number;
+    title?: string | undefined;
+    workOrderPartId?: number;
+    partId?: number;
+    serialNumber?: string | undefined;
+
+    constructor(data?: INCRHistoryItemModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.workOrderTaskId = _data["workOrderTaskId"];
+            this.title = _data["title"];
+            this.workOrderPartId = _data["workOrderPartId"];
+            this.partId = _data["partId"];
+            this.serialNumber = _data["serialNumber"];
+        }
+    }
+
+    static fromJS(data: any): NCRHistoryItemModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new NCRHistoryItemModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["workOrderTaskId"] = this.workOrderTaskId;
+        data["title"] = this.title;
+        data["workOrderPartId"] = this.workOrderPartId;
+        data["partId"] = this.partId;
+        data["serialNumber"] = this.serialNumber;
+        return data; 
+    }
+}
+
+export interface INCRHistoryItemModel {
+    workOrderId?: number;
+    workOrderTaskId?: number;
+    title?: string | undefined;
+    workOrderPartId?: number;
+    partId?: number;
+    serialNumber?: string | undefined;
 }
 
 export class WorkOrderTaskModel implements IWorkOrderTaskModel {
@@ -17458,6 +17526,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     title?: string | undefined;
     stepText?: string | undefined;
     isNCRTask?: boolean | undefined;
+    ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
 
     constructor(data?: IWorkOrderTaskModel) {
         if (data) {
@@ -17501,6 +17570,11 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             this.title = _data["title"];
             this.stepText = _data["stepText"];
             this.isNCRTask = _data["isNCRTask"];
+            if (Array.isArray(_data["ncrHistoryItems"])) {
+                this.ncrHistoryItems = [] as any;
+                for (let item of _data["ncrHistoryItems"])
+                    this.ncrHistoryItems!.push(NCRHistoryItemModel.fromJS(item));
+            }
         }
     }
 
@@ -17544,6 +17618,11 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
         data["title"] = this.title;
         data["stepText"] = this.stepText;
         data["isNCRTask"] = this.isNCRTask;
+        if (Array.isArray(this.ncrHistoryItems)) {
+            data["ncrHistoryItems"] = [];
+            for (let item of this.ncrHistoryItems)
+                data["ncrHistoryItems"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -17572,6 +17651,7 @@ export interface IWorkOrderTaskModel {
     title?: string | undefined;
     stepText?: string | undefined;
     isNCRTask?: boolean | undefined;
+    ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
 }
 
 export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOrderTaskMonitorModel {
@@ -22618,27 +22698,16 @@ export interface ICreateWorkOrderTaskRequest {
     taskStepOrder?: number | undefined;
 }
 
-/**  */
 export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
-    /** Gets or Sets WorkOrderTaskId */
     workOrderTaskId?: number | undefined;
-    /** Gets or Sets TaskStepOrder */
     taskStepOrder?: number | undefined;
-    /** Gets or Sets AssignedUserId */
     assignedUserId?: number | undefined;
-    /** Gets or Sets TaskIsRunning */
     taskIsRunning?: boolean | undefined;
-    /** Gets or Sets TaskRunningSince */
     taskRunningSince?: Date;
-    /** Gets or Sets StartedOn */
     startedOn?: Date;
-    /** Gets or Sets Status */
     status?: string | undefined;
-    /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
-    /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
-    /** List of files to UPLOAD and attach to this work order task */
     referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
@@ -22704,27 +22773,16 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     }
 }
 
-/**  */
 export interface IUpdateWorkOrderTaskRequest {
-    /** Gets or Sets WorkOrderTaskId */
     workOrderTaskId?: number | undefined;
-    /** Gets or Sets TaskStepOrder */
     taskStepOrder?: number | undefined;
-    /** Gets or Sets AssignedUserId */
     assignedUserId?: number | undefined;
-    /** Gets or Sets TaskIsRunning */
     taskIsRunning?: boolean | undefined;
-    /** Gets or Sets TaskRunningSince */
     taskRunningSince?: Date;
-    /** Gets or Sets StartedOn */
     startedOn?: Date;
-    /** Gets or Sets Status */
     status?: string | undefined;
-    /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
-    /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
-    /** List of files to UPLOAD and attach to this work order task */
     referenceFiles?: FileModel[] | undefined;
 }
 

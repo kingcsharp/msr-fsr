@@ -153,25 +153,29 @@
                 <table class="table">
                   <thead class="thead-dark">
                     <tr>
-                      <th>Part</th>
-                      <th>Cycle Count</th>
-                      <th>Serial Number</th>
+                      <th class="part-td">Part</th>
+                      <th class="count-td text-center">Cycle Count</th>
+                      <th class="serial-td">Serial Number</th>
+                      <th class="history-td">NCR History</th>
                     </tr>
                   </thead>
                   <tbody
                     *ngIf="workOrderModel.workOrderParts !== undefined && workOrderModel.workOrderParts.length !== 0">
                     <tr *ngFor="let workOrderPart of workOrderModel.workOrderParts; let index=index">
-                      <td>{{workOrderPart.part?.name}}</td>
-                      <td>{{workOrderPart.cycleCount}}</td>
-                      <td class="d-flex serialinput-td" *ngIf="hasAccessToTaskBeingViewed">
+                      <td class="part-td">{{workOrderPart.part?.name}}</td>
+                      <td class="count-td text-center">{{workOrderPart.cycleCount}}</td>
+                      <td class="d-flex serial-td" *ngIf="hasAccessToTaskBeingViewed">
                         <input type="text" id="serialnumber{{index}}" [(ngModel)]="workOrderPart.serialNumber"
-                          class="form-control input-transparent m-2" tooltip="Serial Number" disabled>
+                          class="form-control input-transparent serial-number m-2" tooltip="Serial Number" disabled>
                         <button id="changebutton{{index}}" class="btn btn-warning m-2" *ngIf="!workOrderIsComplete"
                           (click)="changeSerialNumber(index, workOrderPart.serialNumber, workOrderPart.id)">Change</button>
                         <button id="submitbutton{{index}}" class="btn btn-success d-none m-2"
                           (click)="submitSerialNumber(index, workOrderPart.id)">Submit</button>
                         <button id="cancelbutton{{index}}" class="btn btn-danger d-none m-2"
                           (click)="cancelSerialNumber(index, workOrderPart.id)">Cancel</button>
+                      </td>
+                      <td class="history-td">
+                        <button *ngFor="let ncrHistoryItem of workOrderPart.ncrHistoryItems" (click)="showNCRReportByPart(workOrderPart)" class="btn btn-sm btn-danger m-2">{{ncrHistoryItem.title}}</button>
                       </td>
                     </tr>
                   </tbody>
@@ -252,6 +256,88 @@
   <p-footer>
     <div class="pull-right">
       <button type="button" (click)="closeDialog()" class="btn btn-danger mb-xs" role="button">
+        <i class="fas fa-times-circle mx-1"></i>Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="showNCRReportByPartDialog" (onHide)="hideNCRReportByPart()" appendTo="body" styleClass="report" [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  <p-header>
+    Part NCR Details
+  </p-header>
+  <div class="report-viewport m-4 d-print-flex">
+    <div class="row m-4" *ngIf="ncrWorkOrderPart !== undefined">
+      <div class="col-12">Part Non Conformance Report - Work Order {{workOrderModel.id}}</div>
+      <div class="col-12 border mb-2">
+        <div class="row">
+          <div class="col-2">MSR-FSR</div>
+          <div class="col-10">Customer Part # {{ncrWorkOrderPart?.part?.partNumber}}, (Serial #: {{ncrWorkOrderPart?.serialNumber}}), {{ncrWorkOrderPart?.part?.name}}</div>
+        </div>
+      </div>
+      <div class="col-12 border mb-2">
+        <div class="row">
+          <div class="col-3 text-right">Date Report Prepared:</div><div class="col-9">{{date | userTimezone }}</div>
+          <div class="col-3 text-right">Work Order #:</div><div class="col-9">{{workOrderModel.id}}</div>
+          <div class="col-3 text-right">Customer:</div><div class="col-9">{{workOrderModel.purchase?.purchaseOrder?.customer?.name}}</div>
+          <div class="col-3 text-right">Technician:</div><div class="col-9">{{technicianFullName}}</div>
+        </div>
+      </div>
+      <div class="col-12 border mb-2">
+        <div class="row">
+          <div class="col-4 font-weight-bold">Part #</div>
+          <div class="col-4 font-weight-bold">Part Name</div>
+          <div class="col-4 font-weight-bold">Serial Number</div>
+          <div class="col-4">{{ncrWorkOrderPart.part?.partNumber}}</div>
+          <div class="col-4">{{ncrWorkOrderPart.part?.name}}</div>
+          <div class="col-4">{{ncrWorkOrderPart.serialNumber}}</div>
+        </div>
+      </div>
+      <div class="col-12 border mb-2">
+        <div class="row">
+          <div class="col-3 font-weight-bold text-right">Associated Documents:</div>
+          <div class="col-9">
+            <grid-file-viewer [menuItem]="menuItems.WorkOrderTasks" [files]="ncrAssociatedDocuments" class="m-2"></grid-file-viewer>
+          </div>
+          <div class="col-3 font-weight-bold text-right">Associated Digital Pictures:</div>
+          <div class="col-9">
+            <div class="row">
+              <div class="col-4 mt-4" *ngFor="let fileModel of ncrAssociatedDigitalPictures">
+                <a *ngIf="fileModel.fileId !== undefined" href="{{fileModel.fileURL}}" target="_blank">
+                  <img class="card-img-top" src="{{fileModel.fileURL}}" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
+                </a>
+                <a *ngIf="fileModel.fileId === undefined || fileModel.fileId === null">
+                  <img class="card-img-top" [src]="fileModel.base64String" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-3 font-weight-bold text-right">Comments:</div><div class="col-9"></div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="row" *ngFor="let taskSummary of ncrTaskSummaries">
+          <div class="col-12 border bg-dark p-2">{{taskSummary.taskName}}</div>
+          <div class="col-6 border bg-secondary p-2">Monitor {{taskSummary.taskId}}</div>
+          <div class="col-3 border bg-secondary p-2">Result</div>
+          <div class="col-3 border bg-secondary p-2">Comment</div>
+          <div class="col-12">
+            <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
+              <div class="col-6 border p-2" [innerHTML]="monitorSummary.monitorTitle"></div>
+              <div class="col-3 border p-2">{{monitorSummary.result | monitorResult}}</div>
+              <div class="col-3 border p-2">{{monitorSummary.comment}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="print()" class="btn btn-primary mb-xs" role="button">
+        <i class="fas fa-print mx-1"></i>Print
+      </button>
+      <button type="submit" (click)="hideNCRReportByPart()" class="btn btn-warning mb-xs" role="button">
         <i class="fas fa-times-circle mx-1"></i>Close
       </button>
     </div>

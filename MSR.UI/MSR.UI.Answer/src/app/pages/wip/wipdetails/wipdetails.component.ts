@@ -6,7 +6,7 @@ import {
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
-  ProcedureStepModel, UserModel, EnumSegregationType, CancelWorkOrderRequest, ICancelWorkOrderRequest,
+  ProcedureStepModel, UserModel, EnumSegregationType, CancelWorkOrderRequest, ICancelWorkOrderRequest, WorkOrderTaskMonitorModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -20,6 +20,7 @@ import { take } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 import { ProductSegregationService } from '../../../services/product-segregation.service';
 import { EnumStatusSteps } from '../../../models/enums/EnumStatusSteps';
+import { EnumProcedureType } from '../../../models/enums/EnumProcedureType';
 
 @Component({
   selector: 'app-wipdetails',
@@ -65,6 +66,15 @@ export class WipdetailsComponent implements OnInit {
   allUserRoleIds: Array<number>;
   EnumSegregationType = EnumSegregationType;
   showButtons: boolean = false;
+  showNCRReportByPartDialog: boolean = false;
+  technicianFullName: string;
+  ncrWorkOrderPart: WorkOrderPartModel;
+  ncrTaskSummaries: Array<any> = new Array<any>();
+  ncrAssociatedDigitalPictures: Array<FileModel> = new Array<FileModel>();
+  ncrAssociatedDocuments: Array<FileModel> = new Array<FileModel>();
+  showImagePreview: boolean = false;
+  imagePreview: FileModel = new FileModel();
+  date: Date;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, private customerService: CustomerService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
@@ -88,6 +98,7 @@ export class WipdetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.technicianFullName = this.globals.getCurrentUser().fullName;
     this.showButtons = false;
     this.getScreenSize();
 
@@ -566,5 +577,92 @@ export class WipdetailsComponent implements OnInit {
   closeDialog() {
     this.monitorsAreInvalidDialog = false;
     this.globals.showLoader(false);
+  }
+
+  showNCRReportByPart(workOrderPart: WorkOrderPartModel) {
+    this.date = new Date();
+    this.ncrWorkOrderPart = workOrderPart;
+    this.generateMonitorSummaries();
+  }
+
+  hideNCRReportByPart() {
+    this.showNCRReportByPartDialog = false;
+  }
+
+  print() {
+    window.print();
+  }
+
+  generateMonitorSummaries() {
+    this.workOrderModel.workOrderTasks.map(s => {
+      if (s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined) {
+        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>();
+      }
+    });
+
+    this.workOrderModel.workOrderTasks.filter(s => (s.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR)
+    || s.isNCRTask).map(workOrderTask => {
+
+      let taskSummary = {
+        taskName: workOrderTask.procedureStep === undefined ? workOrderTask.title : workOrderTask.procedureStep.title,
+        taskId: workOrderTask.id,
+        monitors: new Array<any>(),
+        taskStepOrder: workOrderTask.taskStepOrder
+      };
+
+      workOrderTask.workOrderTaskMonitors.map(workOrderTaskMonitor => {
+        taskSummary.monitors.push({
+          monitorTitle: workOrderTask.procedureStep === undefined  !== null ? workOrderTaskMonitor.procedureStepMonitor?.description : workOrderTaskMonitor.description,
+          result: workOrderTaskMonitor,
+          comment: workOrderTaskMonitor.comment
+        });
+      });
+
+      this.ncrTaskSummaries.push(taskSummary);
+      if (typeof workOrderTask.referenceFiles !== 'undefined' &&
+        workOrderTask.referenceFiles !== null) {
+        workOrderTask.referenceFiles.map(referenceFile => {
+          if (this.getViewerType(referenceFile.contentType) === 'img') {
+            this.ncrAssociatedDigitalPictures.push(referenceFile);
+          } else {
+            this.ncrAssociatedDocuments.push(referenceFile);
+          }
+        });
+      }
+    });
+
+    this.ncrTaskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
+    this.showNCRReportByPartDialog = true;
+  }
+
+  getViewerType(contentType) {
+    switch (contentType) {
+      case 'application/msword':
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      case 'application/vnd.ms-excel':
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+        return 'office';
+      case 'text/plain':
+      case 'text/html':
+      case 'text/csv':
+        return 'google';
+      case 'application/pdf':
+        return 'pdf';
+      case 'image/gif':
+      case 'image/tiff':
+      case 'image/webp':
+      case 'image/jpeg':
+      case 'image/png':
+        return 'img';
+      case 'text/plain':
+      default:
+        return 'url';
+    }
+  }
+
+  showImagePreviewDialog(fileModel: FileModel) {
+    this.imagePreview = fileModel;
+    this.showImagePreview = !this.showImagePreview;
   }
 }

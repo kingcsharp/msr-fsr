@@ -59,12 +59,22 @@ a.carousel-control{
     border-color: #32383e;
 }
 
-.serialinput-td{
-    min-width: 400px;
+.part-td {
+  width: 20%
 }
-
-.serialinput-td > input{
-    max-width: 300px;
+.count-td {
+  width:10%;
+  margin: 0 auto;
+}
+.serial-td {
+  width:25%
+}
+.serial-number {
+  width: 200px;
+  max-width: 200px;
+}
+.history-td {
+  width:35%
 }
 
 ol{
@@ -127,7 +137,7 @@ ol{
     }
 
     .ui-dialog-mask{
-      position: absolute;      
+      position: absolute;
     }
 
     body .ui-dialog-mask{
