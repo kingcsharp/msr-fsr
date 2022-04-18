@@ -25,6 +25,7 @@ namespace MSR.Infrastructure.Profiles
 {
     public class InfrastructureMappingProfiles : Profile
     {
+        const string FirstNCRTaskTitle = "Describe Non-Conformity";
         public InfrastructureMappingProfiles()
         {
             #region User

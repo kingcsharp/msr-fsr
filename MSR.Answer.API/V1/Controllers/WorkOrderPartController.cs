@@ -16,9 +16,11 @@ using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Application.Abstractions;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using Newtonsoft.Json;
 using NSwag.Annotations;
 
@@ -32,14 +34,17 @@ namespace MSR.Answer.API.V1.Controllers
     public class WorkOrderPartController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
+        private IWorkOrderPartViewService _viewService;
 
         /// <summary>
         /// WorkOrderPartController Constructor
         /// </summary>
         /// <param name="dispatcher"></param>
-        public WorkOrderPartController(ICommandDispatcher dispatcher)
+        /// <param name="viewService"></param>
+        public WorkOrderPartController(ICommandDispatcher dispatcher, IWorkOrderPartViewService viewService)
         {
             _dispatcher = dispatcher;
+            _viewService = viewService;
         }
 
         [HttpGet]
@@ -64,6 +69,17 @@ namespace MSR.Answer.API.V1.Controllers
             UpdateWorkOrderPart command = body.ToUpdateWorkOrderPartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<WorkOrderPartModel>("Work Order Part Updated");
+        }
+
+        [HttpGet("Detail/{id}")]
+        [SwaggerResponse(typeof(AuditActionResult<NCRPartWODetailView>))]
+        public async Task<IActionResult> GetWorkOrderPartDetails([FromRoute]int id)
+        {
+            var ret = await _viewService.GetNCRPartWODetail(id);
+            return Ok(new AuditActionResult<NCRPartWODetailView>()
+            {
+                Object = ret
+            });
         }
     }
 }

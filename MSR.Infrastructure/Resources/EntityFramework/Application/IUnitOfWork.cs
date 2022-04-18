@@ -99,6 +99,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<InvoiceableWorkOrdersView> InvoiceableWorkOrdersViews { get; }
         IRepository<SubPart> SubParts { get; }
         IRepository<NCRHistoryItem> NCRHistory { get; }
+        IRepository<WorkOrderPartNCRMapItem> WorkOrderPartNCRMap { get; }
+        AnswerContext Context { get; }
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;

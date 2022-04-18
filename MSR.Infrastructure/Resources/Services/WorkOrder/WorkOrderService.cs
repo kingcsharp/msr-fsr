@@ -756,6 +756,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     TaskIsRunning = false,
                     TaskRunningSince = null,
                     TotalTaskTime = 0,
+                    NCNumber = $"{workOrderEntity.Id}-{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds()}"
                 };
 
                 if (procedureStepEntity.ProcedureStepTypeId.HasValue)
@@ -905,6 +906,22 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 throw new DomainException(
                     $"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}",
                     DomainError.BadRequest);
+            }
+
+            if(command.MappedWorkOrderParts != null && command.MappedWorkOrderParts.Any())
+            {
+                foreach(var partId in command.MappedWorkOrderParts)
+                {
+                    var mappedItem = new WorkOrderPartNCRMapItem()
+                    {
+                        CreatedBy = CurrentUser.GetId(),
+                        WorkOrderPartId = partId,
+                        WorkOrderTaskId = command.Id
+                    };
+
+                    await _unitOfWork.WorkOrderPartNCRMap.AddAsync(mappedItem);
+                }
+                await _unitOfWork.SaveChangesAsync();
             }
 
             int[] completed = { 3, 4, 6, 8 };

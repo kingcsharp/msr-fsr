@@ -287,5 +287,6 @@ namespace MSR.Infrastructure.Resources.Services.Document
             var totalRows = await _unitOfWork.Documents.Query().CreateDocumentQuery(command,true).CountAsync();
             return totalRows;
         }
+
     }
 }
