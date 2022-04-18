@@ -734,8 +734,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var workOrderTaskEntities = new List<WorkOrderTask>();
             var waitingToStartStatusEntity = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)EnumStatusSteps.WaitingtoStart);
+            var ncNumber = $"{workOrderEntity.Id}-{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds()}";
 
-            foreach(var procedureStepEntity in procedureEntity.ProcedureSteps)
+            foreach (var procedureStepEntity in procedureEntity.ProcedureSteps)
             {
                 if (!workOrderEntity.HasNCR)
                 {
@@ -756,7 +757,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     TaskIsRunning = false,
                     TaskRunningSince = null,
                     TotalTaskTime = 0,
-                    NCNumber = $"{workOrderEntity.Id}-{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds()}"
+                    NCNumber = ncNumber
                 };
 
                 if (procedureStepEntity.ProcedureStepTypeId.HasValue)
