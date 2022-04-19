@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel } from '../../services/api.client.generated';
+import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel, AuditActionResultOfWorkOrderTaskMonitorModel, WorkOrderTaskModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { take } from 'rxjs/operators';
 import { EnumMonitorType } from '../../models/enums/EnumMonitorType';
@@ -9,6 +9,7 @@ import { EnumMonitorInputType } from '../../models/enums/EnumMonitorInputType';
 import { EnumMonitorShouldBe } from '../../models/enums/EnumMonitorShouldBe';
 import { Globals } from '../../models/lib/globals';
 import { EnumStatusSteps } from '../../models/enums/EnumStatusSteps';
+import * as _ from 'lodash';
 
 declare let jQuery: any;
 declare let Parsley: any;
@@ -17,15 +18,20 @@ declare let Parsley: any;
   selector: 'workordertaskmonitors-wrapper',
   templateUrl: './workordertaskmonitors-wrapper.component.html',
   styleUrls: ['./workordertaskmonitors-wrapper.component.scss'],
-  providers: [SensorService, WorkOrderTaskMonitorService]
+  providers: [SensorService, WorkOrderTaskMonitorService],
+  encapsulation: ViewEncapsulation.Emulated,
 })
 export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
   @Input() workOrderMonitorsToView: Array<any>;
+  @Input() showNCParts: boolean = false;
   @Input() locationId: number;
   @Input() doNotAllowEditing: boolean = true;
   @Input() workOrderModel: WorkOrderModel;
+  @Input() workOrderTaskToView: WorkOrderTaskModel;
+  @Input() ncrParts: Array<any>;
   @Output() closeCurrentTaskInProgress = new EventEmitter();
+  @Output() updateNCRPartsMap = new EventEmitter();
   workOrderMonitorYesOrNoOptions: Array<SelectItem>;
   monitorListItemOptions: Array<SelectItem>;
   sensorsAvailable: Array<SelectItem>;
@@ -241,6 +247,10 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
         });
     });
 
+    if (this.showNCParts) {
+      this.updateNCRPartsMap.emit();
+    }
+
   }
 
   areMonitorsInValidStateToCloseTask(): boolean {
@@ -287,6 +297,10 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
   public get WorkOrderIsComplete(): boolean {
     return this.workOrderModel.workOrderTasks.find(s => s.status?.id === EnumStatusSteps.WaitingtoStart || s.status?.id === EnumStatusSteps.InProgress || s.status.id === EnumStatusSteps.Approved) === undefined;
+  }
+
+  toggleSelectNCRParts($event, index: number) {
+    this.ncrParts[index].selected = $event.target.checked;
   }
 
 }

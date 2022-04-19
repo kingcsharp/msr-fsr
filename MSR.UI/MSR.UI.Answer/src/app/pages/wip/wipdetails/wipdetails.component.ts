@@ -6,7 +6,7 @@ import {
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
-  ProcedureStepModel, UserModel, EnumSegregationType, CancelWorkOrderRequest, ICancelWorkOrderRequest, WorkOrderTaskMonitorModel
+  ProcedureStepModel, UserModel, EnumSegregationType, CancelWorkOrderRequest, ICancelWorkOrderRequest, WorkOrderTaskMonitorModel, NCRPartWODetailView, INCRPartWODetailView
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -20,7 +20,7 @@ import { take } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 import { ProductSegregationService } from '../../../services/product-segregation.service';
 import { EnumStatusSteps } from '../../../models/enums/EnumStatusSteps';
-import { EnumProcedureType } from '../../../models/enums/EnumProcedureType';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-wipdetails',
@@ -68,13 +68,14 @@ export class WipdetailsComponent implements OnInit {
   showButtons: boolean = false;
   showNCRReportByPartDialog: boolean = false;
   technicianFullName: string;
-  ncrWorkOrderPart: WorkOrderPartModel;
-  ncrTaskSummaries: Array<any> = new Array<any>();
   ncrAssociatedDigitalPictures: Array<FileModel> = new Array<FileModel>();
   ncrAssociatedDocuments: Array<FileModel> = new Array<FileModel>();
   showImagePreview: boolean = false;
   imagePreview: FileModel = new FileModel();
-  date: Date;
+  ncrPartDetail: NCRPartWODetailView;
+  ncrParts: Array<any>;
+  ncrTaskIds: Array<any>;
+  showNCParts: boolean = false;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, private customerService: CustomerService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
@@ -140,6 +141,11 @@ export class WipdetailsComponent implements OnInit {
       this.customer = this.workOrderModel.product.customer;
       this.product = this.workOrderModel.product;
       this.purchase = this.workOrderModel.purchase;
+      this.showNCParts = false;
+
+      this.ncrTaskIds = _.map(_.groupBy(_.filter(this.workOrderModel.workOrderTasks || [], task => !!task.ncNumber), 'ncNumber'), tasks => {
+        return _.orderBy(tasks, ['taskStepOrder'], ['asc'])[0].id;
+      });
 
       for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
         const status = this.workOrderModel.workOrderTasks[index].status;
@@ -253,6 +259,8 @@ export class WipdetailsComponent implements OnInit {
       this.rolesRequiredMessage = undefined;
     }
 
+    this.getNCRParts();
+
   }
 
   cleanData(workOrderModel: WorkOrderModel): WorkOrderModel {
@@ -353,6 +361,8 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskInProgress = workOrderTask;
     }
 
+    this.getNCRParts();
+
   }
 
   generateRolesRequiredMessage(roles: Array<string>) {
@@ -439,6 +449,7 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderTaskInProgress = workOrderTaskModel;
     this.workOrderTaskToView = workOrderTaskModel;
     this.workOrderIsComplete = this.isWorkOrderComplete();
+    this.getNCRParts();
   }
 
   closeCurrentTask() {
@@ -553,6 +564,23 @@ export class WipdetailsComponent implements OnInit {
 
   }
 
+  updateNCRPartsMap() {
+    let updatedWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+      assignedUserId: this.workOrderTaskToView.assignedTo,
+      status: this.workOrderTaskToView.status.name,
+      taskIsRunning: this.workOrderTaskToView.taskIsRunning,
+      taskRunningSince: this.workOrderTaskToView.taskRunningSince,
+      taskStepOrder: this.workOrderTaskToView.taskStepOrder,
+      totalTaskTime: this.workOrderTaskToView.totalTaskTime,
+      workOrderTaskId: this.workOrderTaskToView.id,
+      mappedWorkOrderParts: this.ncrParts.filter(part => part.selected).map(part => part.id),
+    } as IUpdateWorkOrderTaskRequest);
+
+    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updatedWorkOrderTaskRequest).pipe(take(1)).subscribe(response => {
+      this.getWorkOrder(this.workOrderModel.id);
+    });
+  }
+
   areMonitorsValidCheck(areValid) {
     this.areMonitorsValid = this.workordertaskmonitors.areMonitorsInValidStateToCloseTask();
 
@@ -580,9 +608,16 @@ export class WipdetailsComponent implements OnInit {
   }
 
   showNCRReportByPart(workOrderPart: WorkOrderPartModel) {
-    this.date = new Date();
-    this.ncrWorkOrderPart = workOrderPart;
-    this.generateMonitorSummaries();
+    this.ncrPartDetail = null;
+    this.globals.showLoader(true);
+    this.workOrderPartService.detail(workOrderPart.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((response) => {
+      const ncrPartDetail = response.object;
+      if (ncrPartDetail) {
+        this.ncrPartDetail = new NCRPartWODetailView(ncrPartDetail as INCRPartWODetailView);
+        this.generateMonitorSummaries();
+      }
+    }));
+
   }
 
   hideNCRReportByPart() {
@@ -594,34 +629,19 @@ export class WipdetailsComponent implements OnInit {
   }
 
   generateMonitorSummaries() {
-    this.workOrderModel.workOrderTasks.map(s => {
-      if (s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined) {
-        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>();
-      }
-    });
-
-    this.workOrderModel.workOrderTasks.filter(s => (s.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR)
-    || s.isNCRTask).map(workOrderTask => {
-
-      let taskSummary = {
-        taskName: workOrderTask.procedureStep === undefined ? workOrderTask.title : workOrderTask.procedureStep.title,
-        taskId: workOrderTask.id,
-        monitors: new Array<any>(),
-        taskStepOrder: workOrderTask.taskStepOrder
-      };
-
-      workOrderTask.workOrderTaskMonitors.map(workOrderTaskMonitor => {
-        taskSummary.monitors.push({
-          monitorTitle: workOrderTask.procedureStep === undefined  !== null ? workOrderTaskMonitor.procedureStepMonitor?.description : workOrderTaskMonitor.description,
-          result: workOrderTaskMonitor,
-          comment: workOrderTaskMonitor.comment
+    this.ncrPartDetail.workOrderTasks.map(workOrderTask => {
+      if (workOrderTask.files) {
+        workOrderTask.files.map(referenceFile => {
+          if (this.getViewerType(referenceFile.contentType) === 'img') {
+            this.ncrAssociatedDigitalPictures.push(referenceFile);
+          } else {
+            this.ncrAssociatedDocuments.push(referenceFile);
+          }
         });
-      });
+      }
 
-      this.ncrTaskSummaries.push(taskSummary);
-      if (typeof workOrderTask.referenceFiles !== 'undefined' &&
-        workOrderTask.referenceFiles !== null) {
-        workOrderTask.referenceFiles.map(referenceFile => {
+      if (workOrderTask.documents) {
+        workOrderTask.files.map(referenceFile => {
           if (this.getViewerType(referenceFile.contentType) === 'img') {
             this.ncrAssociatedDigitalPictures.push(referenceFile);
           } else {
@@ -631,7 +651,6 @@ export class WipdetailsComponent implements OnInit {
       }
     });
 
-    this.ncrTaskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
     this.showNCRReportByPartDialog = true;
   }
 
@@ -664,5 +683,16 @@ export class WipdetailsComponent implements OnInit {
   showImagePreviewDialog(fileModel: FileModel) {
     this.imagePreview = fileModel;
     this.showImagePreview = !this.showImagePreview;
+  }
+
+  getNCRParts() {
+    this.showNCParts = _.some(this.ncrTaskIds, id => id === this.workOrderTaskToView.id);
+    this.ncrParts = _.map(this.workOrderModel.workOrderParts, part => {
+      return {
+        id: part.id,
+        serialNumber: part.serialNumber,
+        selected: _.some(part.ncrHistoryItems, s => s.workOrderTaskId === this.workOrderTaskToView.id),
+      }
+    });
   }
 }

@@ -8528,6 +8528,60 @@ export class WorkOrderPartService {
         }
         return _observableOf<AuditActionResultOfWorkOrderPartModel>(<any>null);
     }
+
+    detail(id: number, version: string): Observable<AuditActionResultOfNCRPartWODetailView> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrderPart/Detail/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDetail(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfNCRPartWODetailView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfNCRPartWODetailView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDetail(response: HttpResponseBase): Observable<AuditActionResultOfNCRPartWODetailView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfNCRPartWODetailView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfNCRPartWODetailView>(<any>null);
+    }
 }
 
 @Injectable()
@@ -17526,6 +17580,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     title?: string | undefined;
     stepText?: string | undefined;
     isNCRTask?: boolean | undefined;
+    ncNumber?: string | undefined;
     ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
 
     constructor(data?: IWorkOrderTaskModel) {
@@ -17570,6 +17625,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             this.title = _data["title"];
             this.stepText = _data["stepText"];
             this.isNCRTask = _data["isNCRTask"];
+            this.ncNumber = _data["ncNumber"];
             if (Array.isArray(_data["ncrHistoryItems"])) {
                 this.ncrHistoryItems = [] as any;
                 for (let item of _data["ncrHistoryItems"])
@@ -17618,6 +17674,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
         data["title"] = this.title;
         data["stepText"] = this.stepText;
         data["isNCRTask"] = this.isNCRTask;
+        data["ncNumber"] = this.ncNumber;
         if (Array.isArray(this.ncrHistoryItems)) {
             data["ncrHistoryItems"] = [];
             for (let item of this.ncrHistoryItems)
@@ -17651,6 +17708,7 @@ export interface IWorkOrderTaskModel {
     title?: string | undefined;
     stepText?: string | undefined;
     isNCRTask?: boolean | undefined;
+    ncNumber?: string | undefined;
     ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
 }
 
@@ -22606,6 +22664,233 @@ export interface IUpdateWorkOrderPartRequest {
 }
 
 /** Base class for an API call with a typed result */
+export class AuditActionResultOfNCRPartWODetailView extends AuditActionResult implements IAuditActionResultOfNCRPartWODetailView {
+    object?: NCRPartWODetailView | undefined;
+
+    constructor(data?: IAuditActionResultOfNCRPartWODetailView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? NCRPartWODetailView.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfNCRPartWODetailView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfNCRPartWODetailView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfNCRPartWODetailView extends IAuditActionResult {
+    object?: NCRPartWODetailView | undefined;
+}
+
+export class NCRPartWODetailView implements INCRPartWODetailView {
+    workOrderId?: number;
+    workOrderCompletedDate?: Date | undefined;
+    workOrderPartId?: number;
+    partNumber?: string | undefined;
+    partName?: string | undefined;
+    serialNumber?: string | undefined;
+    workOrderTasks?: NCRPartWOTaskView[] | undefined;
+
+    constructor(data?: INCRPartWODetailView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.workOrderCompletedDate = _data["workOrderCompletedDate"] ? new Date(_data["workOrderCompletedDate"].toString()) : <any>undefined;
+            this.workOrderPartId = _data["workOrderPartId"];
+            this.partNumber = _data["partNumber"];
+            this.partName = _data["partName"];
+            this.serialNumber = _data["serialNumber"];
+            if (Array.isArray(_data["workOrderTasks"])) {
+                this.workOrderTasks = [] as any;
+                for (let item of _data["workOrderTasks"])
+                    this.workOrderTasks!.push(NCRPartWOTaskView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): NCRPartWODetailView {
+        data = typeof data === 'object' ? data : {};
+        let result = new NCRPartWODetailView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["workOrderCompletedDate"] = this.workOrderCompletedDate ? this.workOrderCompletedDate.toISOString() : <any>undefined;
+        data["workOrderPartId"] = this.workOrderPartId;
+        data["partNumber"] = this.partNumber;
+        data["partName"] = this.partName;
+        data["serialNumber"] = this.serialNumber;
+        if (Array.isArray(this.workOrderTasks)) {
+            data["workOrderTasks"] = [];
+            for (let item of this.workOrderTasks)
+                data["workOrderTasks"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface INCRPartWODetailView {
+    workOrderId?: number;
+    workOrderCompletedDate?: Date | undefined;
+    workOrderPartId?: number;
+    partNumber?: string | undefined;
+    partName?: string | undefined;
+    serialNumber?: string | undefined;
+    workOrderTasks?: NCRPartWOTaskView[] | undefined;
+}
+
+export class NCRPartWOTaskView implements INCRPartWOTaskView {
+    workOrderTaskTitle?: string | undefined;
+    workOrderTaskId?: number;
+    workOrderTaskMonitors?: WorkOrderPartMonitorView[] | undefined;
+    files?: FileModel[] | undefined;
+    documents?: DocumentView[] | undefined;
+
+    constructor(data?: INCRPartWOTaskView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderTaskTitle = _data["workOrderTaskTitle"];
+            this.workOrderTaskId = _data["workOrderTaskId"];
+            if (Array.isArray(_data["workOrderTaskMonitors"])) {
+                this.workOrderTaskMonitors = [] as any;
+                for (let item of _data["workOrderTaskMonitors"])
+                    this.workOrderTaskMonitors!.push(WorkOrderPartMonitorView.fromJS(item));
+            }
+            if (Array.isArray(_data["files"])) {
+                this.files = [] as any;
+                for (let item of _data["files"])
+                    this.files!.push(FileModel.fromJS(item));
+            }
+            if (Array.isArray(_data["documents"])) {
+                this.documents = [] as any;
+                for (let item of _data["documents"])
+                    this.documents!.push(DocumentView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): NCRPartWOTaskView {
+        data = typeof data === 'object' ? data : {};
+        let result = new NCRPartWOTaskView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderTaskTitle"] = this.workOrderTaskTitle;
+        data["workOrderTaskId"] = this.workOrderTaskId;
+        if (Array.isArray(this.workOrderTaskMonitors)) {
+            data["workOrderTaskMonitors"] = [];
+            for (let item of this.workOrderTaskMonitors)
+                data["workOrderTaskMonitors"].push(item.toJSON());
+        }
+        if (Array.isArray(this.files)) {
+            data["files"] = [];
+            for (let item of this.files)
+                data["files"].push(item.toJSON());
+        }
+        if (Array.isArray(this.documents)) {
+            data["documents"] = [];
+            for (let item of this.documents)
+                data["documents"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface INCRPartWOTaskView {
+    workOrderTaskTitle?: string | undefined;
+    workOrderTaskId?: number;
+    workOrderTaskMonitors?: WorkOrderPartMonitorView[] | undefined;
+    files?: FileModel[] | undefined;
+    documents?: DocumentView[] | undefined;
+}
+
+export class WorkOrderPartMonitorView implements IWorkOrderPartMonitorView {
+    workOrderTaskMonitorId?: number;
+    workOrderTaskMonitorDescription?: string | undefined;
+    result?: string | undefined;
+    comment?: string | undefined;
+
+    constructor(data?: IWorkOrderPartMonitorView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderTaskMonitorId = _data["workOrderTaskMonitorId"];
+            this.workOrderTaskMonitorDescription = _data["workOrderTaskMonitorDescription"];
+            this.result = _data["result"];
+            this.comment = _data["comment"];
+        }
+    }
+
+    static fromJS(data: any): WorkOrderPartMonitorView {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderPartMonitorView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderTaskMonitorId"] = this.workOrderTaskMonitorId;
+        data["workOrderTaskMonitorDescription"] = this.workOrderTaskMonitorDescription;
+        data["result"] = this.result;
+        data["comment"] = this.comment;
+        return data; 
+    }
+}
+
+export interface IWorkOrderPartMonitorView {
+    workOrderTaskMonitorId?: number;
+    workOrderTaskMonitorDescription?: string | undefined;
+    result?: string | undefined;
+    comment?: string | undefined;
+}
+
+/** Base class for an API call with a typed result */
 export class AuditActionResultOfWorkOrderTaskModel extends AuditActionResult implements IAuditActionResultOfWorkOrderTaskModel {
     object?: WorkOrderTaskModel | undefined;
 
@@ -22709,6 +22994,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     referenceFilesIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
+    mappedWorkOrderParts?: number[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -22738,6 +23024,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileModel.fromJS(item));
+            }
+            if (Array.isArray(_data["mappedWorkOrderParts"])) {
+                this.mappedWorkOrderParts = [] as any;
+                for (let item of _data["mappedWorkOrderParts"])
+                    this.mappedWorkOrderParts!.push(item);
             }
         }
     }
@@ -22769,6 +23060,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
+        if (Array.isArray(this.mappedWorkOrderParts)) {
+            data["mappedWorkOrderParts"] = [];
+            for (let item of this.mappedWorkOrderParts)
+                data["mappedWorkOrderParts"].push(item);
+        }
         return data; 
     }
 }
@@ -22784,6 +23080,7 @@ export interface IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     referenceFilesIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
+    mappedWorkOrderParts?: number[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

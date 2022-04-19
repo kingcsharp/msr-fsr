@@ -1,7 +1,26 @@
 <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" data-parsley-priority-enabled="false"
   novalidate="novalidate">
   <div class="d-flex flex-wrap">
-    <div class="col-4" *ngFor="let workOrderTaskMonitor of  workOrderMonitorsToView; let i = index">
+    <div *ngIf="showNCParts" class="col-2"><div class="card my-2 border shadow ncr-parts">
+      <div class="card-header p-0 part-select-header"><p class="m-2">Select NC Part&nbsp;</p></div>
+      <div class="card-body part-selector pt-1">
+        <ng-container *ngFor="let workOrderPart of ncrParts let index=index">
+          <input
+            type="checkbox"
+            class="part-radio"
+            name="ncrParts"
+            id="wo-part-id-{{workOrderPart.id}}"
+            [value]="workOrderPart.id"
+            [checked]="workOrderPart.selected"
+            (change)="toggleSelectNCRParts($event, index)"
+          >
+          <label for="wo-part-id-{{workOrderPart.id}}" class="box first">
+            <div class="selector"> <span class="circle"></span> <span class="subject"> Part #: {{workOrderPart.id}} S/N: {{workOrderPart.serialNumber}}</span> </div>
+          </label>
+        </ng-container>
+      </div>
+    </div></div>
+    <div class="col-3" *ngFor="let workOrderTaskMonitor of  workOrderMonitorsToView; let i = index">
       <div class="card my-2 border shadow">
         <div class="card-header" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description">
         </div>

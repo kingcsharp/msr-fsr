@@ -187,7 +187,7 @@
             <span
               *ngIf="hasAccessToTaskBeingViewed && workOrderTaskToView.workOrderTaskMonitors !== undefined && workOrderModel !== undefined">
               <workordertaskmonitors-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
-                [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id"
+                [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id" [showNCParts]="showNCParts" [workOrderTaskToView]="workOrderTaskToView" [(ncrParts)]="ncrParts" (updateNCRPartsMap)="updateNCRPartsMap()"
                 [workOrderModel]="workOrderModel" (closeCurrentTaskInProgress)="closeCurrentTask()" #workordertaskmonitors>
               </workordertaskmonitors-wrapper>
             </span>
@@ -267,20 +267,11 @@
     Part NCR Details
   </p-header>
   <div class="report-viewport m-4 d-print-flex">
-    <div class="row m-4" *ngIf="ncrWorkOrderPart !== undefined">
-      <div class="col-12">Part Non Conformance Report - Work Order {{workOrderModel.id}}</div>
+    <div class="row m-4" *ngIf="!!ncrPartDetail">
+      <div class="col-12">Part Non Conformance Report - Work Order {{ncrPartDetail.workOrderId}}</div>
       <div class="col-12 border mb-2">
         <div class="row">
-          <div class="col-2">MSR-FSR</div>
-          <div class="col-10">Customer Part # {{ncrWorkOrderPart?.part?.partNumber}}, (Serial #: {{ncrWorkOrderPart?.serialNumber}}), {{ncrWorkOrderPart?.part?.name}}</div>
-        </div>
-      </div>
-      <div class="col-12 border mb-2">
-        <div class="row">
-          <div class="col-3 text-right">Date Report Prepared:</div><div class="col-9">{{date | userTimezone }}</div>
-          <div class="col-3 text-right">Work Order #:</div><div class="col-9">{{workOrderModel.id}}</div>
-          <div class="col-3 text-right">Customer:</div><div class="col-9">{{workOrderModel.purchase?.purchaseOrder?.customer?.name}}</div>
-          <div class="col-3 text-right">Technician:</div><div class="col-9">{{technicianFullName}}</div>
+          <div class="col-3 text-right">WorkOrder Completed Date:</div><div class="col-9">{{ncrPartDetail.workOrderCompletedDate | userTimezone }}</div>
         </div>
       </div>
       <div class="col-12 border mb-2">
@@ -288,9 +279,9 @@
           <div class="col-4 font-weight-bold">Part #</div>
           <div class="col-4 font-weight-bold">Part Name</div>
           <div class="col-4 font-weight-bold">Serial Number</div>
-          <div class="col-4">{{ncrWorkOrderPart.part?.partNumber}}</div>
-          <div class="col-4">{{ncrWorkOrderPart.part?.name}}</div>
-          <div class="col-4">{{ncrWorkOrderPart.serialNumber}}</div>
+          <div class="col-4">{{ncrPartDetail.partNumber}}</div>
+          <div class="col-4">{{ncrPartDetail.partName}}</div>
+          <div class="col-4">{{ncrPartDetail.serialNumber}}</div>
         </div>
       </div>
       <div class="col-12 border mb-2">
@@ -306,9 +297,6 @@
                 <a *ngIf="fileModel.fileId !== undefined" href="{{fileModel.fileURL}}" target="_blank">
                   <img class="card-img-top" src="{{fileModel.fileURL}}" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
                 </a>
-                <a *ngIf="fileModel.fileId === undefined || fileModel.fileId === null">
-                  <img class="card-img-top" [src]="fileModel.base64String" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
-                </a>
               </div>
             </div>
           </div>
@@ -316,15 +304,15 @@
         </div>
       </div>
       <div class="col-12">
-        <div class="row" *ngFor="let taskSummary of ncrTaskSummaries">
-          <div class="col-12 border bg-dark p-2">{{taskSummary.taskName}}</div>
-          <div class="col-6 border bg-secondary p-2">Monitor {{taskSummary.taskId}}</div>
+        <div class="row" *ngFor="let taskSummary of ncrPartDetail.workOrderTasks">
+          <div class="col-12 border bg-dark p-2">{{taskSummary.workOrderTaskTitle}}</div>
+          <div class="col-6 border bg-secondary p-2">Monitor {{taskSummary.workOrderTaskId}}</div>
           <div class="col-3 border bg-secondary p-2">Result</div>
           <div class="col-3 border bg-secondary p-2">Comment</div>
           <div class="col-12">
-            <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
-              <div class="col-6 border p-2" [innerHTML]="monitorSummary.monitorTitle"></div>
-              <div class="col-3 border p-2">{{monitorSummary.result | monitorResult}}</div>
+            <div class="row" *ngFor="let monitorSummary of taskSummary.workOrderTaskMonitors">
+              <div class="col-6 border p-2" [innerHTML]="monitorSummary.workOrderTaskMonitorDescription"></div>
+              <div class="col-3 border p-2">{{monitorSummary.result}}</div>
               <div class="col-3 border p-2">{{monitorSummary.comment}}</div>
             </div>
           </div>
