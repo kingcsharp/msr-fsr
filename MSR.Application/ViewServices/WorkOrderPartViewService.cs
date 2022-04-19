@@ -34,6 +34,10 @@ namespace MSR.Application.ViewServices
         public async Task<NCRPartWODetailView> GetNCRPartWODetail(int workOrderPartId)
         {
             var data = _unitOfWork.Context.SqlQuery<NCRPartWODetail>("dbo.sNCRPartWODetail @WorkOrderPartId", new SqlParameter("@WorkOrderPartId", workOrderPartId));
+            if(data == null || !data.Any())
+            {
+                return new NCRPartWODetailView();
+            }
             var curTask = data[0].WorkOrderTaskId;
             var ncrPartWODetailView = new NCRPartWODetailView()
             {
@@ -83,10 +87,6 @@ namespace MSR.Application.ViewServices
                 
             }
             ncrPartWODetailView.WorkOrderTasks.Add(workOrderTask);
-
-
-
-
             return ncrPartWODetailView;
         }
 
