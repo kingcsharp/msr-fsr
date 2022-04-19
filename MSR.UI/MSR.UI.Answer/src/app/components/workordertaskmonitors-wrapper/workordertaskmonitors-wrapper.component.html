@@ -1,8 +1,8 @@
 <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" data-parsley-priority-enabled="false"
   novalidate="novalidate">
-  <div class="d-flex flex-wrap">
-    <div *ngIf="showNCParts" class="col-2"><div class="card my-2 border shadow ncr-parts">
-      <div class="card-header p-0 part-select-header"><p class="m-2">Select NC Part&nbsp;</p></div>
+  <div class="d-flex flex-wrap row no-gutters">
+    <div *ngIf="showNCParts" class="col-2"><div class="card my-2 ncr-parts">
+      <div class="card-header p-1 part-select-header"><p class="m-2">Select NC Part&nbsp;</p></div>
       <div class="card-body part-selector pt-1">
         <ng-container *ngFor="let workOrderPart of ncrParts let index=index">
           <input
@@ -20,121 +20,120 @@
         </ng-container>
       </div>
     </div></div>
-    <div class="col-3" *ngFor="let workOrderTaskMonitor of  workOrderMonitorsToView; let i = index">
-      <div class="card my-2 border shadow">
+    <div class="col-3 ml-2" *ngFor="let workOrderTaskMonitor of  workOrderMonitorsToView; let i = index">
+      <div class="card my-2">
         <div class="card-header" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description">
         </div>
         <div class="card-body">
-          <div class="form-group col-12 d-flex flex-row">
-            <label for="monitorNumber" class="col-form-label text-left col-3">
+          <div class="form-group row d-flex flex-row">
+            <label for="monitorNumber" class="col-form-label text-right col-4">
               Monitor #:
             </label>
-            <div class="col-9 px-0 col-form-label">
+            <div class="col-8 px-0 col-form-label monitor-value">
               {{ i + 1 }}
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row">
-            <label for="monitorType" class="col-form-label text-left col-3">
+          <div class="form-group row d-flex flex-row mb-1">
+            <label for="monitorType" class="col-form-label text-right col-4">
               Monitor Type:
             </label>
-            <div class="col-9 px-0 col-form-label">
+            <div class="col-8 px-0 col-form-label monitor-value">
               {{workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.monitorTypeId : false : false : true}}
             </div>
           </div>
           <div
-            class="form-group col-12 d-flex flex-row"
+            class="form-group row d-flex flex-row"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.EQUAL
               && workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number)
               || (workOrderTaskMonitor.shouldBe === monitorShouldBe.EQUAL
               && workOrderTaskMonitor.monitorTypeId === monitorTypes.Number)"
             >
-            <label for="equal" class="col-form-label text-left col-3">
+            <label for="equal" class="col-form-label text-right col-4">
               Equal To:
             </label>
-            <div class="col-9 px-0 col-form-label">
+            <div class="col-8 px-0 col-form-label monitor-value">
               {{workOrderTaskMonitor.procedureStepMonitor?.target | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target}}
             </div>
           </div>
           <div
-            class="form-group col-12 d-flex flex-row"
+            class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.ABOVE
               && workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number)
               || (workOrderTaskMonitor.shouldBe === monitorShouldBe.ABOVE
               && workOrderTaskMonitor.monitorTypeId === monitorTypes.Number)"
             >
-            <label for="equal" class="col-form-label text-left col-3">
+            <label for="equal" class="col-form-label text-right col-4">
               Above:
             </label>
-            <div class="col-9 px-0 col-form-label">
+            <div class="col-8 px-0 col-form-label monitor-value">
               {{workOrderTaskMonitor.procedureStepMonitor?.target| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target}}
             </div>
           </div>
           <div
-            class="form-group col-12 d-flex flex-row"
+            class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.BELOW
               && workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number)
               || (workOrderTaskMonitor.shouldBe === monitorShouldBe.BELOW
               && workOrderTaskMonitor.monitorTypeId === monitorTypes.Number)"
             >
-            <label for="equal" class="col-form-label text-left col-3">
+            <label for="equal" class="col-form-label text-right col-4">
               Below:
             </label>
-            <div class="col-9 px-0 col-form-label">
+            <div class="col-8 px-0 col-form-label monitor-value">
               {{workOrderTaskMonitor.procedureStepMonitor?.target| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target}}
             </div>
           </div>
           <div
-            class="form-group col-12 d-flex flex-row"
+            class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.shouldBe === monitorShouldBe.BETWEEN
               && workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number)
               || (workOrderTaskMonitor.shouldBe === monitorShouldBe.BETWEEN
               && workOrderTaskMonitor.monitorTypeId === monitorTypes.Number)"
             >
-            <label for="equal" class="col-form-label text-left col-3">
+            <label for="equal" class="col-form-label text-right col-4">
               Between:
             </label>
-            <div class="col-9 px-0 col-form-label">
+            <div class="col-8 px-0 col-form-label monitor-value">
               {{workOrderTaskMonitor.procedureStepMonitor?.lowTarget | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.lowTarget}} and
               {{workOrderTaskMonitor.procedureStepMonitor?.highTarget | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.lowTarget}}
             </div>
           </div>
           <div
-            class="form-group col-12 d-flex flex-row"
+            class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number
               && workOrderTaskMonitor.procedureStepMonitor?.inputType === 'Sensor')
               || (workOrderTaskMonitor.monitorTypeId === monitorTypes.Number
               && workOrderTaskMonitor.inputType === 'Sensor')"
             >
-            <label for="equipmentsensorresult" class="col-form-label text-left col-3">
+            <label for="equipmentsensorresult" class="col-form-label text-right col-4">
               Sensor:
             </label>
-            <div class="col-9 px-0">
+            <div class="col-8 px-0">
               {{workOrderTaskMonitor.procedureStepMonitor?.sensorName | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.sensorName}}
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row"
+          <div class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.YesOrNo) || (workOrderTaskMonitor.monitorTypeId === monitorTypes.YesOrNo)">
-            <label class="col-form-label text-left col-3">
+            <label class="col-form-label text-right col-4">
               Correct Answer:
             </label>
-            <div class="col-9 px-0">
+            <div class="col-8 px-0 monitor-value">
               {{workOrderTaskMonitor.procedureStepMonitor?.target | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target : false : true }}
             </div>
           </div>
           <div
-            class="form-group col-12 d-flex flex-row"
+            class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.PassOrFail)
               || (workOrderTaskMonitor.monitorTypeId === monitorTypes.PassOrFail)"
             >
-            <label class="col-form-label text-left col-3">
+            <label class="col-form-label text-right col-4">
               Correct Answer:
             </label>
-            <div class="col-9 px-0">
+            <div class="col-8 px-0 monitor-value">
               {{workOrderTaskMonitor.procedureStepMonitor?.target | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target : true : false }}
             </div>
           </div>
-          <div
-            class="form-group col-12 d-flex flex-row"
+          <div class="form-group row d-flex flex-row mb-1"
             *ngIf="((workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Equipment
               && workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === monitorInputTypes.SensorManual)
               || workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Text)
@@ -142,10 +141,10 @@
               && workOrderTaskMonitor.inputTypeId === monitorInputTypes.SensorManual)
               || workOrderTaskMonitor.monitorTypeId === monitorTypes.Text)"
             >
-            <label for="result" class="col-form-label text-left col-3">
+            <label for="result" class="col-form-label text-right col-4">
               Result:
             </label>
-            <div class="col-9 px-0">
+            <div class="col-8 pl-0 pr-3">
               <input
                 type="text"
                 name="textresult{{i}}"
@@ -159,16 +158,16 @@
             </div>
           </div>
           <div
-            class="form-group col-12 d-flex flex-row"
+            class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number
               && workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === monitorInputTypes.Sensor)
               || (workOrderTaskMonitor.monitorTypeId === monitorTypes.Number
               && workOrderTaskMonitor.inputTypeId === monitorInputTypes.Sensor)"
             >
-            <label for="equipmentsensorresult" class="col-form-label text-left col-3">
+            <label for="equipmentsensorresult" class="col-form-label text-right col-4">
               Result:
             </label>
-            <div class="col-9 px-0">
+            <div class="col-8 pl-0 pr-3">
               <input
                 type="text"
                 id="equipmentsensorresult{{i}}"
@@ -191,17 +190,17 @@
             </div>
           </div>
           <div
-            class="form-group col-12 d-flex flex-row"
+            class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Number
               && workOrderTaskMonitor.procedureStepMonitor?.inputTypeId !== monitorInputTypes.Sensor)
               || (workOrderTaskMonitor.monitorTypeId === monitorTypes.Number
               && workOrderTaskMonitor.inputTypeId !== monitorInputTypes.Sensor)"
             >
-            <label for="result" class="col-form-label text-left col-3">
+            <label for="result" class="col-form-label text-right col-4">
               Result:
             </label>
             <div
-              class="col-9 px-0"
+              class="col-8 pl-0 pr-3"
               *ngIf="workOrderTaskMonitor.procedureMonitorId !== null
                 && workOrderTaskMonitor.procedureStepMonitor?.failAction === failActions.StopUntilFaultCleared"
             >
@@ -255,7 +254,7 @@
               >
             </div>
             <div
-              class="col-9 px-0"
+              class="col-8 pl-0 pr-3"
               *ngIf="workOrderTaskMonitor.procedureMonitorId === null
                 && workOrderTaskMonitor.failAction === failActions.StopUntilFaultCleared"
             >
@@ -309,7 +308,7 @@
               >
             </div>
             <div
-              class="col-9 px-0"
+              class="col-8 pl-0 pr-3"
               *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.failAction === failActions.RecordAndContinue) || (workOrderTaskMonitor.failAction === failActions.RecordAndContinue)"
             >
               <input
@@ -323,12 +322,12 @@
               >
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row"
+          <div class="form-group row d-flex flex-row mb-0"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.PassOrFail) || (workOrderTaskMonitor.monitorTypeId === monitorTypes.PassOrFail)">
-            <label for="result" class="col-form-label text-left col-3">
+            <label for="result" class="col-form-label text-right col-4">
               Result:
             </label>
-            <div class="col-9 px-0">
+            <div class="col-8 pl-0 pr-3">
               <p-dropdown name="passorfailresult{{i}}" [options]="workOrderMonitorPassOrFailOptions"
                 [disabled]="!doNotAllowEditing" placeholder="Select a Response" [showClear]="true"
                 [(ngModel)]="workOrderTaskMonitor.numVal">
@@ -356,12 +355,12 @@
               </ul>
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row"
+          <div class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.YesOrNo) || (workOrderTaskMonitor.monitorTypeId === monitorTypes.YesOrNo)">
             <label for="yourAnswer" class="col-form-label text-left col-3">
               Your Answer:
             </label>
-            <div class="col-9 px-0">
+            <div class="col-8 pl-0 pr-3">
               <p-dropdown name="yourAnswer{{i}}" [options]="workOrderMonitorYesOrNoOptions"
                 [disabled]="!doNotAllowEditing" placeholder="Select a Response" [showClear]="true"
                 [(ngModel)]="workOrderTaskMonitor.numVal">
@@ -383,12 +382,12 @@
               </ul>
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row"
+          <div class="form-group row d-flex flex-row mb-1"
             *ngIf="(workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId === monitorTypes.Select) || (workOrderTaskMonitor.monitorTypeId === monitorTypes.Select)">
-            <label for="selectresult" class="col-form-label text-left col-3">
+            <label for="selectresult" class="col-form-label text-right col-4">
               Result:
             </label>
-            <div class="col-9 px-0">
+            <div class="col-8 pl-0 pr-3">
               <p-dropdown name="selectresult{{i}}" [options]="monitorListItemOptions" placeholder="Select a Response"
                 [disabled]="!doNotAllowEditing" [showClear]="true" [(ngModel)]="workOrderTaskMonitor.multiVal">
               </p-dropdown>
@@ -400,11 +399,11 @@
               </ul>
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row">
-            <label for="monitorType" class="col-form-label text-left col-3">
+          <div class="form-group row d-flex flex-row mb-1">
+            <label for="monitorType" class="col-form-label text-right col-4">
               If Fails:
             </label>
-            <div class="col-9 px-0 col-form-label">
+            <div class="col-8 col-form-label monitor-value pl-0 pr-3">
               <span *ngIf="(workOrderTaskMonitor?.procedureStepMonitor?.failAction === failActions.RecordAndContinue) || (workOrderTaskMonitor?.failAction === failActions.RecordAndContinue)">
                 Continue to next step</span>
               <span
@@ -412,11 +411,11 @@
                 Stay at this step until passing result is entered</span>
             </div>
           </div>
-          <div class="form-group col-12 d-flex flex-row">
-            <label for="monitorType" class="col-form-label text-left col-3">
+          <div class="form-group row d-flex flex-row mb-1">
+            <label for="monitorType" class="col-form-label text-right col-4">
               Comments:
             </label>
-            <div class="col-9 px-0">
+            <div class="col-8 pl-0 pr-3">
               <textarea type="text" name="comment{{i}}" [(ngModel)]="workOrderTaskMonitor.comment"
                 class="form-control input-transparent" tooltip="Comments">
               </textarea>
