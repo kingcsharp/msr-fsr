@@ -1,7 +1,7 @@
 <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" data-parsley-priority-enabled="false"
   novalidate="novalidate">
   <div class="d-flex flex-wrap row no-gutters">
-    <div *ngIf="showNCParts" class="col-2"><div class="card my-2 ncr-parts">
+    <div *ngIf="showNCParts" class="col-2"><div class="card border shadow my-2 ncr-parts">
       <div class="card-header p-1 part-select-header"><p class="m-2">Select NC Part&nbsp;</p></div>
       <div class="card-body part-selector pt-1">
         <ng-container *ngFor="let workOrderPart of ncrParts let index=index">
@@ -21,7 +21,7 @@
       </div>
     </div></div>
     <div class="col-3 ml-2" *ngFor="let workOrderTaskMonitor of  workOrderMonitorsToView; let i = index">
-      <div class="card my-2">
+      <div class="card border shadow my-2">
         <div class="card-header" tooltip="{{workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description}}"
         >
           <div class="title" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description">
