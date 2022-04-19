@@ -22,9 +22,9 @@
     </div></div>
     <div class="col-3 ml-2" *ngFor="let workOrderTaskMonitor of  workOrderMonitorsToView; let i = index">
       <div class="card my-2">
-        <div class="card-header" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description"
-         tooltip="{{workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description}}"
+        <div class="card-header" tooltip="{{workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description}}"
         >
+          <div class="title" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description">
         </div>
         <div class="card-body">
           <div class="form-group row d-flex flex-row">
