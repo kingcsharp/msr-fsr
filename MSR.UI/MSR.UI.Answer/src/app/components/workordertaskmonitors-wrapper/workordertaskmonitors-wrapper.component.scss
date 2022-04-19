@@ -1,7 +1,6 @@
 .nomonitors-message{
     min-height: 30vh;
 }
-
 .card {
   min-height:310px;
   max-height:310px;
@@ -12,17 +11,17 @@
   color:#fff;
   margin-bottom: 0;
   border-bottom: 1px solid rgba(0,0,0,.125);
+}
+.card-header > div.title {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 92.5%;
 }
-
 .card-body {
   font-size:12px;
   font-weight:300;
 }
-
 label.box {
   display: flex;
   border-radius: 5px;
@@ -31,26 +30,21 @@ label.box {
   background: #fff;
   color: #000;
 }
-
 .part-radio:checked+label {
   border-color: #b83d0f;
 }
-
 .part-radio:checked+label .circle {
   border: 6px solid #b83d0f;
   background-color: #fff;
 }
-
 label.box:hover {
   background: #f0f0f0;
 }
-
 label.box .selector {
   display: flex;
   align-items: center;
   width: 100%;
 }
-
 label.box .circle {
   height: 22px;
   width: 22px;
@@ -59,14 +53,12 @@ label.box .circle {
   border: 1px solid #ddd;
   display: inline-block;
 }
-
 input.part-radio[type="checkbox"] {
   display: none;
 }
 .part-selector {
   overflow-y:scroll;
 }
-
 .part-select-header {
   background-color:#323c48
 }
