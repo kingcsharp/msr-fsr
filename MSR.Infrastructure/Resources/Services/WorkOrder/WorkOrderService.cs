@@ -793,11 +793,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     }
                 }
 
-                workOrderStatEntity.TotalTasks += 1;
-                workOrderStatEntity.TotalTaskTime += procedureStepEntity?.LaborTime == null ? 0 : (decimal)procedureStepEntity?.LaborTime.Value;
-                _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
+                if (workOrderStatEntity != null)
+                {
+                    workOrderStatEntity.TotalTasks += 1;
+                    workOrderStatEntity.TotalTaskTime += procedureStepEntity?.LaborTime == null ? 0 : (decimal)procedureStepEntity?.LaborTime.Value;
+                    _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
 
-                await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
+                    await _unitOfWork.WorkOrderTasks.AddAsync(workOrderTaskEntity);
+                }
                 await _unitOfWork.SaveChangesAsync();
 
                 workOrderTaskEntities.Add(workOrderTaskEntity);
