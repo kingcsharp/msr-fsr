@@ -14,8 +14,8 @@
             [checked]="workOrderPart.selected"
             (change)="toggleSelectNCRParts($event, index)"
           >
-          <label for="wo-part-id-{{workOrderPart.id}}" class="box first">
-            <div class="selector"> <span class="circle"></span> <span class="subject"> Part #: {{workOrderPart.id}} S/N: {{workOrderPart.serialNumber}}</span> </div>
+          <label for="wo-part-id-{{workOrderPart.id}}" class="box my-2 my-2 mx-1 p-2">
+            <div class="selector"> <span class="circle"></span> <span class="subject text-left ml-2"> Part #: {{workOrderPart.id}} <br/> S/N: {{workOrderPart.serialNumber}}</span> </div>
           </label>
         </ng-container>
       </div>
@@ -29,7 +29,7 @@
             <label for="monitorNumber" class="col-form-label text-right col-4">
               Monitor #:
             </label>
-            <div class="col-8 px-0 col-form-label monitor-value">
+            <div class="col-8 px-0 col-form-label font-weight-bold">
               {{ i + 1 }}
             </div>
           </div>
@@ -37,7 +37,7 @@
             <label for="monitorType" class="col-form-label text-right col-4">
               Monitor Type:
             </label>
-            <div class="col-8 px-0 col-form-label monitor-value">
+            <div class="col-8 px-0 col-form-label font-weight-bold">
               {{workOrderTaskMonitor.procedureStepMonitor?.monitorTypeId | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.monitorTypeId : false : false : true}}
             </div>
           </div>
@@ -51,7 +51,7 @@
             <label for="equal" class="col-form-label text-right col-4">
               Equal To:
             </label>
-            <div class="col-8 px-0 col-form-label monitor-value">
+            <div class="col-8 px-0 col-form-label font-weight-bold">
               {{workOrderTaskMonitor.procedureStepMonitor?.target | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target}}
             </div>
           </div>
@@ -65,7 +65,7 @@
             <label for="equal" class="col-form-label text-right col-4">
               Above:
             </label>
-            <div class="col-8 px-0 col-form-label monitor-value">
+            <div class="col-8 px-0 col-form-label font-weight-bold">
               {{workOrderTaskMonitor.procedureStepMonitor?.target| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target}}
             </div>
           </div>
@@ -79,7 +79,7 @@
             <label for="equal" class="col-form-label text-right col-4">
               Below:
             </label>
-            <div class="col-8 px-0 col-form-label monitor-value">
+            <div class="col-8 px-0 col-form-label font-weight-bold">
               {{workOrderTaskMonitor.procedureStepMonitor?.target| workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target}}
             </div>
           </div>
@@ -93,7 +93,7 @@
             <label for="equal" class="col-form-label text-right col-4">
               Between:
             </label>
-            <div class="col-8 px-0 col-form-label monitor-value">
+            <div class="col-8 px-0 col-form-label font-weight-bold">
               {{workOrderTaskMonitor.procedureStepMonitor?.lowTarget | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.lowTarget}} and
               {{workOrderTaskMonitor.procedureStepMonitor?.highTarget | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.lowTarget}}
             </div>
@@ -117,7 +117,7 @@
             <label class="col-form-label text-right col-4">
               Correct Answer:
             </label>
-            <div class="col-8 px-0 monitor-value">
+            <div class="col-8 px-0 font-weight-bold">
               {{workOrderTaskMonitor.procedureStepMonitor?.target | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target : false : true }}
             </div>
           </div>
@@ -129,7 +129,7 @@
             <label class="col-form-label text-right col-4">
               Correct Answer:
             </label>
-            <div class="col-8 px-0 monitor-value">
+            <div class="col-8 px-0 font-weight-bold">
               {{workOrderTaskMonitor.procedureStepMonitor?.target | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.target : true : false }}
             </div>
           </div>
@@ -403,7 +403,7 @@
             <label for="monitorType" class="col-form-label text-right col-4">
               If Fails:
             </label>
-            <div class="col-8 col-form-label monitor-value pl-0 pr-3">
+            <div class="col-8 col-form-label font-weight-bold pl-0 pr-3">
               <span *ngIf="(workOrderTaskMonitor?.procedureStepMonitor?.failAction === failActions.RecordAndContinue) || (workOrderTaskMonitor?.failAction === failActions.RecordAndContinue)">
                 Continue to next step</span>
               <span
