@@ -5,6 +5,7 @@
 .card {
   min-height:310px;
   max-height:310px;
+  min-width: unset !important;
 }
 .card-header {
    background-color: #116fbf;
@@ -21,8 +22,6 @@
 
 label.box {
   display: flex;
-  margin-top: 10px;
-  padding: 10px 12px;
   border-radius: 5px;
   cursor: pointer;
   border: 1px solid #ddd;
@@ -31,11 +30,11 @@ label.box {
 }
 
 .part-radio:checked+label {
-  border-color: #116fbf;
+  border-color: #b83d0f;
 }
 
 .part-radio:checked+label .circle {
-  border: 6px solid #116fbf;
+  border: 6px solid #b83d0f;
   background-color: #fff;
 }
 
