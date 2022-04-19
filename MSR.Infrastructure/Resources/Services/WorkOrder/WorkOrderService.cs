@@ -909,9 +909,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            if(command.MappedWorkOrderParts != null && command.MappedWorkOrderParts.Any())
+            var currentMappedParts = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => i.WorkOrderTaskId == command.Id).Select(i => i.WorkOrderPartId).ToListAsync();
+            var PartIdsToAdd = command.MappedWorkOrderParts == null ? new List<int>() : command.MappedWorkOrderParts.Where(i => !currentMappedParts.Contains(i));
+            var partIdsToRemove = command.MappedWorkOrderParts == null || !command.MappedWorkOrderParts.Any() ? currentMappedParts : currentMappedParts.Where(i => !command.MappedWorkOrderParts.Contains(i));
+            var partsToRemove = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => partIdsToRemove.Contains(i.WorkOrderPartId)).ToListAsync();
+  
+            if (PartIdsToAdd.Any())
             {
-                foreach(var partId in command.MappedWorkOrderParts)
+                foreach (var partId in PartIdsToAdd)
                 {
                     var mappedItem = new WorkOrderPartNCRMapItem()
                     {
@@ -921,6 +926,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     };
 
                     await _unitOfWork.WorkOrderPartNCRMap.AddAsync(mappedItem);
+                }
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            if (partsToRemove.Any())
+            {
+                foreach(var part in partsToRemove)
+                {
+                    _unitOfWork.WorkOrderPartNCRMap.Delete(false, part);
                 }
                 await _unitOfWork.SaveChangesAsync();
             }
