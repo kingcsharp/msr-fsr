@@ -121,8 +121,6 @@ export class WipdetailsComponent implements OnInit {
 
     });
 
-
-
   }
 
   getWorkOrder(workOrderId: number) {
@@ -143,9 +141,7 @@ export class WipdetailsComponent implements OnInit {
       this.purchase = this.workOrderModel.purchase;
       this.showNCParts = false;
 
-      this.ncrTaskIds = _.map(_.groupBy(_.filter(this.workOrderModel.workOrderTasks || [], task => !!task.ncNumber), 'ncNumber'), tasks => {
-        return _.orderBy(tasks, ['taskStepOrder'], ['asc'])[0].id;
-      });
+      this.getNCRTaskIds();
 
       for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
         const status = this.workOrderModel.workOrderTasks[index].status;
@@ -528,6 +524,7 @@ export class WipdetailsComponent implements OnInit {
     this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
 
     this.changeDetectorRef.detectChanges();
+    this.getNCRTaskIds();
     this.showCarousel = true;
   }
 
@@ -693,6 +690,12 @@ export class WipdetailsComponent implements OnInit {
         serialNumber: part.serialNumber,
         selected: _.some(part.ncrHistoryItems, s => s.workOrderTaskId === this.workOrderTaskToView.id),
       }
+    });
+  }
+
+  getNCRTaskIds() {
+    this.ncrTaskIds = _.map(_.groupBy(_.filter(this.workOrderModel.workOrderTasks || [], task => !!task.ncNumber), 'ncNumber'), tasks => {
+      return _.orderBy(tasks, ['taskStepOrder'], ['asc'])[0].id;
     });
   }
 }
