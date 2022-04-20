@@ -175,7 +175,9 @@
                           (click)="cancelSerialNumber(index, workOrderPart.id)">Cancel</button>
                       </td>
                       <td class="history-td">
-                        <button *ngFor="let ncrHistoryItem of workOrderPart.ncrHistoryItems" (click)="showNCRReportByPart(workOrderPart)" class="btn btn-sm btn-danger m-2">{{ncrHistoryItem.title}}</button>
+                        <ng-container *ngFor="let ncrHistoryItem of workOrderPart.ncrHistoryItems">
+                          <button *ngIf="workOrderPart.cycleCount > 0 && workOrderPart.serialNumber && workOrderPart.serialNumber === ncrHistoryItem.serialNumber" (click)="showNCRReportByPart(workOrderPart)" class="btn btn-sm btn-danger m-2">{{ncrHistoryItem.title}}</button>
+                        </ng-container>
                       </td>
                     </tr>
                   </tbody>
