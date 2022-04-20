@@ -141,7 +141,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             foreach(var workOrderPart in workOrderModel.WorkOrderParts)
             {
-                workOrderPart.NCRHistoryItems = ncrHistoryItems?.Where(i => i.PartId == workOrderPart.PartId && i.SerialNumber == workOrderPart.SerialNumber)?.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
+                workOrderPart.NCRHistoryItems = ncrHistoryItems?.Where(i => i.PartId == workOrderPart.PartId && (i.SerialNumber != null && workOrderPart.SerialNumber != null && i.SerialNumber == workOrderPart.SerialNumber))?.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
             }
 
             foreach(var workOrderTaskModel in workOrderModel.WorkOrderTasks)
@@ -482,7 +482,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             // TODO: Since we track if WorkOrderPart is child based on parentId and parent property, the child property is not needed and should be removed
             foreach (var workOrderPartModel in workOrderPartModels)
             {
-                workOrderPartModel.NCRHistoryItems = ncrHistoryItems.Where(i => i.WorkOrderPartId == workOrderPartModel.Id && i.SerialNumber == workOrderPartModel.SerialNumber).Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
+                workOrderPartModel.NCRHistoryItems = ncrHistoryItems.Where(i => i.WorkOrderPartId == workOrderPartModel.Id &&(i.SerialNumber != null && workOrderPartModel.SerialNumber != null && i.SerialNumber == workOrderPartModel.SerialNumber)).Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
                 workOrderPartModel.Children = null;
             }
 
@@ -523,7 +523,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderPartModel = _mapper.Map<WorkOrderPartModel>(workOrderPartEntity);
             workOrderPartModel.WorkOrder = null;
             var partId = workOrderPartModel.PartId;
-            var NCRHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => i.PartId == partId && i.SerialNumber == command.SerialNumber).ToListAsync();
+            var NCRHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => i.PartId == partId && (i.SerialNumber != null && command.SerialNumber != null && i.SerialNumber == command.SerialNumber)).ToListAsync();
             workOrderPartModel.NCRHistoryItems = NCRHistoryItems.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
             return workOrderPartModel;
         }
