@@ -1406,31 +1406,26 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var secondaryContactUserModel = await _unitOfWork.Users.FirstOrDefaultAsync(false,s => s.Id == customerEntity.SecondaryContactUserId);
             var workOrderTaskAssignedUserModel = workOrderTaskEntity.AssignedToUser;
 
-            if ((primaryContactUserModel == null || primaryContactUserModel.IsAnswerUser == true) && string.IsNullOrWhiteSpace(ncrEmail))
+            if ((primaryContactUserModel != null && !primaryContactUserModel.IsAnswerUser.Value) || !string.IsNullOrWhiteSpace(ncrEmail))
             {
-                throw new DomainException(
-                    "There is no Portal User set as Primary Contact associated with this Work Order",
-                    DomainError.NotFound);
-            }
+                if (workOrderTaskAssignedUserModel == null)
+                {
+                    throw new DomainException("The Work Order Task must have an assigned user",
+                        DomainError.InternalServerError);
+                }
 
-            if (workOrderTaskAssignedUserModel == null)
-            {
-                throw new DomainException("The Work Order Task must have an assigned user",
-                    DomainError.InternalServerError);
-            }
+                var to = string.IsNullOrWhiteSpace(ncrEmail) ? primaryContactUserModel.Email : ncrEmail;
+                var from = workOrderTaskAssignedUserModel.Email;
+                var carbonCopyList = new List<string>() { workOrderTaskAssignedUserModel.Email };
 
-            var to = string.IsNullOrWhiteSpace(ncrEmail) ? primaryContactUserModel.Email : ncrEmail;
-            var from = workOrderTaskAssignedUserModel.Email;
-            var carbonCopyList = new List<string>() {workOrderTaskAssignedUserModel.Email};
+                if (secondaryContactUserModel != null && secondaryContactUserModel.IsAnswerUser == false)
+                {
+                    carbonCopyList.Add(secondaryContactUserModel?.Email);
+                }
 
-            if (secondaryContactUserModel != null && secondaryContactUserModel.IsAnswerUser == false)
-            {
-                carbonCopyList.Add(secondaryContactUserModel?.Email);
-            }
+                var serialNumber = string.IsNullOrWhiteSpace(parentPartEntity?.SerialNumber) ? "N/A" : parentPartEntity?.SerialNumber;
 
-            var serialNumber = string.IsNullOrWhiteSpace(parentPartEntity?.SerialNumber) ? "N/A" : parentPartEntity?.SerialNumber;
-
-            StringBuilder body = new StringBuilder($@"
+                StringBuilder body = new StringBuilder($@"
                         Dear MSR-FSR Customer,<br>
                         <br>
                         A product non-conformance has been reported on a part for which you are listed as the NC contact.<br>
@@ -1447,112 +1442,112 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                         <br>
                         Alternatively you can email your local MSR-FSR Production Manager or call MSR-FSR at the numbers below:<br>");
 
-            var parentLocationEntities = _unitOfWork.Locations.Query().Where(s => s.ParentId.HasValue == false && s.IsActive == true);
+                var parentLocationEntities = _unitOfWork.Locations.Query().Where(s => s.ParentId.HasValue == false && s.IsActive == true);
 
-            await parentLocationEntities.ForEachAsync(parentLocationEntity =>
-            {
-                body.Append($"{parentLocationEntity.Name}, {parentLocationEntity.State} {parentLocationEntity.Country} {parentLocationEntity.Phone}<br>");
-            });
-
-            var subject = $"Non-Conformity Reported on {workOrderEntity.Id}";
-
-            var attachments =  new List<Attachment>();
-
-            License.LicenseKey = _generalInformation.IronPDFLicense;
-            var workOrderPartEntity = workOrderEntity.WorkOrderParts.First();
-            var ncrReport = $@"
-            <style>
-                .text-right {{
-                    text-align: right;
-                }}
-                .mb-10 {{
-                    margin-bottom: 10px;
-                }}
-                .border {{
-                    border: 1px solid #000;
-                    border-collapse: collapse;
-                }}
-                .bg-dark {{
-                    background-color: #495057;
-                }}
-                .bg-secondary {{
-                    background-color: #868e96;
-                }}
-                .p-2 {{
-                    padding: .5rem;
-                }}
-                .w-100 {{
-                    width: 100%;
-                }}
-                .font-weight-bold {{
-                    font-weight: 700;
-                }}
-                .container {{
-                    width: 100%;
-                    font-family: arial, sans-serif;
-                }}
-            </style>
-            <div class=""container"">
-                <div class=""w-100 mb-10 p-2"">Part Non Conformance Report - Work Order {workOrderEntity.Id}</div>
-                <table class=""w-100 border mb-10"">
-                    <tr>
-                        <td width=""20%"" class=""p-2"">MSR-FSR</td>
-                        <td width=""10%""></td>
-                        <td class=""p-2"">Customer Part # {workOrderPartEntity?.Part?.PartNumber}, (Serial #: {workOrderPartEntity?.SerialNumber}), {workOrderPartEntity?.Part?.Name}</td>
-                    </tr>
-                </table>
-                <table class=""w-100 border mb-10"">
-                    <tr>
-                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Date Report Prepared: </td>
-                        <td width=""10%""></td>
-                        <td class=""p-2"">{workOrderTaskMonitorEntity.LastUpdatedOn}</td>
-                    </tr>
-                    <tr>
-                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Work Order #: </td>
-                        <td width=""10%""></td>
-                        <td class=""p-2"">{workOrderEntity.Id}</td>
-                    </tr>
-                    <tr>
-                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Customer: </td>
-                        <td width=""10%""></td>
-                        <td class=""p-2"">{customerEntity.Name}</td>
-                    </tr>
-                    <tr>
-                        <td class=""p-2"" width=""30%"" style=""text-align: right;"">Technician: </td>
-                        <td width=""10%""></td>
-                        <td class=""p-2"">{workOrderTaskAssignedUserModel.FirstName} {workOrderTaskAssignedUserModel.LastName}</td>
-                    </tr>
-                </table>
-                <table class=""w-100 border mb-10"">
-                    <tr>
-                        <td class=""font-weight-bold p-2"" width=""30%"">Part #</td>
-                        <td class=""font-weight-bold p-2"" width=""10%""></td>
-                        <td class=""font-weight-bold p-2"" width=""30%"">Part Name</td>
-                        <td class=""font-weight-bold p-2"" width=""10%""></td>
-                        <td class=""font-weight-bold p-2"" width=""30%"">Serial Number</td>
-                    </tr>
-                    <tr>
-                        <td class=""p-2"" width=""30%"">{workOrderPartEntity.Part?.PartNumber}</td>
-                        <td width=""10%""></td>
-                        <td class=""p-2"" width=""30%"">{workOrderPartEntity.Part?.Name}</td>
-                        <td width=""10%""></td>
-                        <td class=""p-2"" width=""30%"">{workOrderPartEntity.SerialNumber}</td>
-                    </tr>
-                </table>
-            ";
-
-            List<FileModel> referenceFiles = new List<FileModel>();
-            var taskMonitorReport = "";
-
-            foreach(var woTaskEntity in workOrderEntity.WorkOrderTasks)
-            {
-                var isNCRTask = woTaskEntity.IsNCRTask.HasValue ? woTaskEntity.IsNCRTask.Value : false;
-                if ((woTaskEntity.ProcedureStep != null && woTaskEntity.ProcedureStep.ProcedureStepTypeId == 6) || isNCRTask)
+                await parentLocationEntities.ForEachAsync(parentLocationEntity =>
                 {
-                    referenceFiles.AddRange(_fileService.ListFiles(nameof(WorkOrderTask), woTaskEntity.Id).ToList());
-                    var procedureStepEntity = await _unitOfWork.ProcedureSteps.Query().FirstOrDefaultAsync(s => s.Id == woTaskEntity.ProcedureStepId);
-                    var taskName = woTaskEntity.ProcedureStepId == null ? woTaskEntity.Title :procedureStepEntity.Title;
-                    taskMonitorReport += $@"
+                    body.Append($"{parentLocationEntity.Name}, {parentLocationEntity.State} {parentLocationEntity.Country} {parentLocationEntity.Phone}<br>");
+                });
+
+                var subject = $"Non-Conformity Reported on {workOrderEntity.Id}";
+
+                var attachments = new List<Attachment>();
+
+                License.LicenseKey = _generalInformation.IronPDFLicense;
+                var workOrderPartEntity = workOrderEntity.WorkOrderParts.First();
+                var ncrReport = $@"
+                <style>
+                    .text-right {{
+                        text-align: right;
+                    }}
+                    .mb-10 {{
+                        margin-bottom: 10px;
+                    }}
+                    .border {{
+                        border: 1px solid #000;
+                        border-collapse: collapse;
+                    }}
+                    .bg-dark {{
+                        background-color: #495057;
+                    }}
+                    .bg-secondary {{
+                        background-color: #868e96;
+                    }}
+                    .p-2 {{
+                        padding: .5rem;
+                    }}
+                    .w-100 {{
+                        width: 100%;
+                    }}
+                    .font-weight-bold {{
+                        font-weight: 700;
+                    }}
+                    .container {{
+                        width: 100%;
+                        font-family: arial, sans-serif;
+                    }}
+                </style>
+                <div class=""container"">
+                    <div class=""w-100 mb-10 p-2"">Part Non Conformance Report - Work Order {workOrderEntity.Id}</div>
+                    <table class=""w-100 border mb-10"">
+                        <tr>
+                            <td width=""20%"" class=""p-2"">MSR-FSR</td>
+                            <td width=""10%""></td>
+                            <td class=""p-2"">Customer Part # {workOrderPartEntity?.Part?.PartNumber}, (Serial #: {workOrderPartEntity?.SerialNumber}), {workOrderPartEntity?.Part?.Name}</td>
+                        </tr>
+                    </table>
+                    <table class=""w-100 border mb-10"">
+                        <tr>
+                            <td class=""p-2"" width=""30%"" style=""text-align: right;"">Date Report Prepared: </td>
+                            <td width=""10%""></td>
+                            <td class=""p-2"">{workOrderTaskMonitorEntity.LastUpdatedOn}</td>
+                        </tr>
+                        <tr>
+                            <td class=""p-2"" width=""30%"" style=""text-align: right;"">Work Order #: </td>
+                            <td width=""10%""></td>
+                            <td class=""p-2"">{workOrderEntity.Id}</td>
+                        </tr>
+                        <tr>
+                            <td class=""p-2"" width=""30%"" style=""text-align: right;"">Customer: </td>
+                            <td width=""10%""></td>
+                            <td class=""p-2"">{customerEntity.Name}</td>
+                        </tr>
+                        <tr>
+                            <td class=""p-2"" width=""30%"" style=""text-align: right;"">Technician: </td>
+                            <td width=""10%""></td>
+                            <td class=""p-2"">{workOrderTaskAssignedUserModel.FirstName} {workOrderTaskAssignedUserModel.LastName}</td>
+                        </tr>
+                    </table>
+                    <table class=""w-100 border mb-10"">
+                        <tr>
+                            <td class=""font-weight-bold p-2"" width=""30%"">Part #</td>
+                            <td class=""font-weight-bold p-2"" width=""10%""></td>
+                            <td class=""font-weight-bold p-2"" width=""30%"">Part Name</td>
+                            <td class=""font-weight-bold p-2"" width=""10%""></td>
+                            <td class=""font-weight-bold p-2"" width=""30%"">Serial Number</td>
+                        </tr>
+                        <tr>
+                            <td class=""p-2"" width=""30%"">{workOrderPartEntity.Part?.PartNumber}</td>
+                            <td width=""10%""></td>
+                            <td class=""p-2"" width=""30%"">{workOrderPartEntity.Part?.Name}</td>
+                            <td width=""10%""></td>
+                            <td class=""p-2"" width=""30%"">{workOrderPartEntity.SerialNumber}</td>
+                        </tr>
+                    </table>
+                ";
+
+                List<FileModel> referenceFiles = new List<FileModel>();
+                var taskMonitorReport = "";
+
+                foreach (var woTaskEntity in workOrderEntity.WorkOrderTasks)
+                {
+                    var isNCRTask = woTaskEntity.IsNCRTask.HasValue ? woTaskEntity.IsNCRTask.Value : false;
+                    if ((woTaskEntity.ProcedureStep != null && woTaskEntity.ProcedureStep.ProcedureStepTypeId == 6) || isNCRTask)
+                    {
+                        referenceFiles.AddRange(_fileService.ListFiles(nameof(WorkOrderTask), woTaskEntity.Id).ToList());
+                        var procedureStepEntity = await _unitOfWork.ProcedureSteps.Query().FirstOrDefaultAsync(s => s.Id == woTaskEntity.ProcedureStepId);
+                        var taskName = woTaskEntity.ProcedureStepId == null ? woTaskEntity.Title : procedureStepEntity.Title;
+                        taskMonitorReport += $@"
                     <tr>
                         <td class=""border bg-dark p-2"" colspan=""3"">{taskName}</td>
                     </tr>
@@ -1563,10 +1558,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     </tr>
                     ";
 
-                    foreach(var woTaskMonitorEntity in woTaskEntity.WorkOrderTaskMonitors)
-                    {
-                        var desc = woTaskMonitorEntity.ProcedureMonitorId != null ? woTaskMonitorEntity.ProcedureStepMonitor?.Description : woTaskMonitorEntity.Description;
-                        taskMonitorReport += $@"
+                        foreach (var woTaskMonitorEntity in woTaskEntity.WorkOrderTaskMonitors)
+                        {
+                            var desc = woTaskMonitorEntity.ProcedureMonitorId != null ? woTaskMonitorEntity.ProcedureStepMonitor?.Description : woTaskMonitorEntity.Description;
+                            taskMonitorReport += $@"
                             <tr>
                                 <td class=""border p-2"" width=""50%"">
                                     {desc}
@@ -1575,29 +1570,29 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                 <td class=""border p-2"" width=""25%"">{woTaskMonitorEntity.Comment}</td>
                             </tr>
                         ";
-                    };
+                        };
+                    }
                 }
-            }
 
-            var associatedPictures = "";
-            var associatedDocuments = "";
-            foreach(var referenceFileModel in referenceFiles)
-            {
-                if (referenceFileModel.ContentType.Contains("image"))
+                var associatedPictures = "";
+                var associatedDocuments = "";
+                foreach (var referenceFileModel in referenceFiles)
                 {
-                    associatedPictures += $@"
+                    if (referenceFileModel.ContentType.Contains("image"))
+                    {
+                        associatedPictures += $@"
                     <a href=""{referenceFileModel.FileURL}"" target=""_blank"">
                         <img style=""width: 33%"" src=""{referenceFileModel.FileURL}"" alt=""{referenceFileModel.Name}"">
                     </a>
                 ";
+                    }
+                    else
+                    {
+                        associatedDocuments += $@"{referenceFileModel.Name} ";
+                    }
                 }
-                else
-                {
-                    associatedDocuments += $@"{referenceFileModel.Name} ";
-                }
-            }
 
-            ncrReport += $@"
+                ncrReport += $@"
                 <table class=""w-100 border mb-10 p-2"">
                     <tr>
                         <td class=""font-weight-bold text-right p-2"" width=""30%"">Associated Documents:</td>
@@ -1616,13 +1611,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 <table class=""w-100 border mb-10"">
                 {taskMonitorReport}
                 </table></div>
-            ";
+                ";
 
-            var renderer = new IronPdf.HtmlToPdf();
-            var pdf = renderer.RenderHtmlAsPdf(ncrReport);
-            attachments.Add(new Attachment(pdf.Stream, "ncr-report.pdf", "application/pdf"));
+                var renderer = new IronPdf.HtmlToPdf();
+                var pdf = renderer.RenderHtmlAsPdf(ncrReport);
+                attachments.Add(new Attachment(pdf.Stream, "ncr-report.pdf", "application/pdf"));
 
-            await _emailService.SendEmailAsync(from, to, subject, body.ToString(), carbonCopyList, true, attachments);
+                await _emailService.SendEmailAsync(from, to, subject, body.ToString(), carbonCopyList, true, attachments);
+            }
         }
 
         private string getResultFromMonitor(WorkOrderTaskMonitor workOrderTaskMonitor)
