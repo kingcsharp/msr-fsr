@@ -191,7 +191,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
     let sendAnNcrEmailNotification = this.workOrderMonitorsToView.map(s => s.procedureStepMonitor?.sendNCREmail).find(m => m === true);
     let primaryContactUserEmail = this.workOrderModel.purchase?.purchaseOrder?.customer?.primaryContactUser?.email;
 
-    if (sendAnNcrEmailNotification && (primaryContactUserEmail === undefined || primaryContactUserEmail === null || primaryContactUserEmail === '') && !this.monitorsHaveBeenSaved) {
+    if (sendAnNcrEmailNotification && (primaryContactUserEmail === undefined || primaryContactUserEmail === null || primaryContactUserEmail === '') && closeTask) {
       this.showNcrEmailNotificationDialog = true;
     } else {
       this.createEndSendMonitorRequests(closeTask);
@@ -203,11 +203,15 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
     jQuery('.ncremail-form').parsley().validate();
 
     if (jQuery('.ncremail-form').parsley().isValid()) {
-      this.createEndSendMonitorRequests(false);
+      this.createEndSendMonitorRequests(true, true);
     }
   }
 
-  createEndSendMonitorRequests(closeTask: boolean = false) {
+  cancelSendNcrEmail() {
+    this.createEndSendMonitorRequests(true);
+  }
+
+  createEndSendMonitorRequests(closeTask: boolean = false, sendNCREmail: boolean = false) {
     let toatlRequests = this.workOrderMonitorsToView.length;
 
     this.showNcrEmailNotificationDialog = false;
@@ -219,7 +223,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
         textVal: monitor.textVal === undefined || monitor.textVal === this.monitorValueNotAvailable ? '' : monitor.textVal,
         numVal :numVal ? parseFloat(monitor.numVal) : null,
         workOrderTaskMonitorId: monitor.id,
-        sendNCREmail: monitor.procedureStepMonitor.sendNCREmail ? this.ncrEmailDestination : undefined
+        sendNCREmail: monitor.procedureStepMonitor.sendNCREmail && sendNCREmail ? this.ncrEmailDestination : undefined
       } as IUpdateWorkOrderTaskMonitorRequest);
 
       this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest)
@@ -230,10 +234,6 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
             this.monitorsHaveBeenSaved = true;
           }
 
-          if (closeTask && toatlRequests === 0) {
-            this.wasValidationCalled = false;
-            this.monitorsHaveBeenSaved = false;
-          }
           monitor.lastUpdated = result.object.lastUpdated;
           monitor.lastUpdatedBy = result.object.lastUpdatedBy;
 
@@ -244,10 +244,15 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
             monitor.textVal = result.object.textVal;
           }
 
+          if (closeTask && toatlRequests === 0) {
+            this.wasValidationCalled = false;
+            this.monitorsHaveBeenSaved = false;
+            this.closeCurrentTaskInProgress.emit();
+          }
         });
     });
 
-    if (this.showNCParts) {
+    if (this.showNCParts && !closeTask) {
       this.updateNCRPartsMap.emit();
     }
 
@@ -266,9 +271,9 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
     return (jQuery('.parsleyjs').parsley().isValid() && this.areDropDownsValid());
   }
 
-  saveMonitors() {
+  saveMonitors(closeTask: boolean = false) {
     if (this.areMonitorsInValidStateToCloseTask()) {
-      this.updateMonitors(true);
+      this.updateMonitors(closeTask);
     }
   }
 

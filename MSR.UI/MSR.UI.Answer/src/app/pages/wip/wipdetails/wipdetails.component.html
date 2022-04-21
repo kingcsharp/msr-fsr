@@ -82,12 +82,20 @@
       </div>
       <div class="row wip-controller">
         <div class="d-flex col-4 justify-content-start pl-0">
-          <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks"
-            [hasAccessToTaskBeingViewed]="hasAccessToTaskBeingViewed" [workOrderIsComplete]="workOrderIsComplete"
-            [(workOrderTaskInProgress)]="workOrderTaskInProgress" (setStartDate)="setStartDate($event)"
-            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id" [areMonitorsValid]="areMonitorsValid"
-            (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)" (areMonitorsValidCheck)="areMonitorsValidCheck($event.areValid)"
-            [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
+          <workordertasktimer-wrapper
+            [(workOrderTasks)]="workOrderModel.workOrderTasks"
+            [hasAccessToTaskBeingViewed]="hasAccessToTaskBeingViewed"
+            [workOrderIsComplete]="workOrderIsComplete"
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress"
+            (setStartDate)="setStartDate($event)"
+            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id"
+            [areMonitorsValid]="areMonitorsValid"
+            (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
+            (areMonitorsValidCheck)="areMonitorsValidCheck()"
+            [ncrParts]="ncrParts"
+            [showNCParts]="showNCParts"
+            [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer
+          >
           </workordertasktimer-wrapper>
         </div>
         <div class="col-4 text-center ng-star-inserted">
@@ -188,9 +196,17 @@
           <p-tabPanel class="content-tabs" header="Monitors">
             <span
               *ngIf="hasAccessToTaskBeingViewed && workOrderTaskToView.workOrderTaskMonitors !== undefined && workOrderModel !== undefined">
-              <workordertaskmonitors-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
-                [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id" [showNCParts]="showNCParts" [workOrderTaskToView]="workOrderTaskToView" [(ncrParts)]="ncrParts" (updateNCRPartsMap)="updateNCRPartsMap()"
-                [workOrderModel]="workOrderModel" (closeCurrentTaskInProgress)="closeCurrentTask()" #workordertaskmonitors>
+              <workordertaskmonitors-wrapper
+                [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
+                [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id"
+                [showNCParts]="showNCParts"
+                [workOrderTaskToView]="workOrderTaskToView"
+                [(ncrParts)]="ncrParts"
+                (updateNCRPartsMap)="updateNCRPartsMap()"
+                [workOrderModel]="workOrderModel"
+                (closeCurrentTaskInProgress)="closeCurrentTask()"
+                #workordertaskmonitors
+              >
               </workordertaskmonitors-wrapper>
             </span>
           </p-tabPanel>

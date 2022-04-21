@@ -578,12 +578,11 @@ export class WipdetailsComponent implements OnInit {
     });
   }
 
-  areMonitorsValidCheck(areValid) {
+  areMonitorsValidCheck() {
     this.areMonitorsValid = this.workordertaskmonitors.areMonitorsInValidStateToCloseTask();
 
     if (this.areMonitorsValid) {
-      this.workordertaskmonitors.saveMonitors();
-      areValid(this.areMonitorsValid);
+      this.workordertaskmonitors.saveMonitors(true);
     } else {
       this.monitorsAreInvalidDialog = true;
     }
