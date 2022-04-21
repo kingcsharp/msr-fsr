@@ -25,11 +25,13 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Input() workOrderIsComplete: boolean = false;
   @Input() hasAccessToTaskBeingViewed: boolean = true;
   @Input() areMonitorsValid: boolean = false;
+  @Input() showNCParts: boolean = false;
+  @Input() ncrParts: Array<any>;
   @Output() workOrderTasksChange = new EventEmitter<any>();
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   @Output() workOrderTaskToViewChange = new EventEmitter<any>();
   @Output() updateWorkOrderTaskToViewAndInProgress = new EventEmitter<any>();
-  @Output() areMonitorsValidCheck = new EventEmitter<{ areValid: Function }>();
+  @Output() areMonitorsValidCheck = new EventEmitter<any>();
   @Output() setStartDate = new EventEmitter<any>();
 
   stepTimer;
@@ -54,19 +56,13 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   }
 
   completeTask() {
-
-    this.areMonitorsValidCheck.emit({
-      areValid: (result) => {
-
-        this.stopTimer();
-        this.setTaskToCompleted();
-        this.updateTotalTaskTime();
-        this.workOrderTaskInProgress.taskIsRunning = false;
-        this.workOrderTaskInProgress.taskRunningSince = null;
-        this.saveTaskTimerState(true);
-
-      }
-    });
+    this.globals.showLoader(true);
+    this.stopTimer();
+    this.setTaskToCompleted();
+    this.updateTotalTaskTime();
+    this.workOrderTaskInProgress.taskIsRunning = false;
+    this.workOrderTaskInProgress.taskRunningSince = null;
+    this.saveTaskTimerState(true);
   }
 
   saveTaskTimerState(closeStep: boolean) {
@@ -79,7 +75,8 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
       taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
       workOrderTaskId: this.workOrderTaskInProgress.id,
-      startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.workOrderTaskInProgress.startedOn
+      startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.workOrderTaskInProgress.startedOn,
+      mappedWorkOrderParts: this.showNCParts ? this.ncrParts.filter(part => part.selected).map(part => part.id) : null,
     } as IUpdateWorkOrderTaskRequest);
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
@@ -155,7 +152,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   done() {
     this.globals.showLoader(true);
-    this.completeTask();
+    this.areMonitorsValidCheck.emit();
   }
 
   startTimer() {

@@ -25,7 +25,7 @@
         <div class="card-header" tooltip="{{workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description}}"
         >
           <div class="title" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description">
-          </div>  
+          </div>
         </div>
         <div class="card-body">
           <div class="form-group row d-flex flex-row">
@@ -430,7 +430,7 @@
 
   </div>
   <div *ngIf="workOrderMonitorsToView !== undefined && workOrderMonitorsToView.length > 0">
-    <button type="button" class="btn btn-primary m-2" (click)="saveMonitors()"
+    <button type="button" class="btn btn-primary m-2" (click)="saveMonitors(false)"
       [disabled]="!doNotAllowEditing || WorkOrderIsComplete">Save</button>
   </div>
 </form>
@@ -462,7 +462,7 @@
         role="button">
         Send
       </button>
-      <button type="button" (click)="showNcrEmailNotificationDialog = false"
+      <button type="button" (click)="cancelSendNcrEmail()"
         class="btn btn-outline-inverse width-100 mb-xs" role="button">
         Cancel
       </button>
