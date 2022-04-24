@@ -184,7 +184,14 @@
                       </td>
                       <td class="history-td">
                         <ng-container *ngFor="let ncrHistoryItem of workOrderPart.ncrHistoryItems">
-                          <button *ngIf="workOrderPart.cycleCount > 0 && workOrderPart.serialNumber && workOrderPart.serialNumber === ncrHistoryItem.serialNumber" (click)="showNCRReportByPart(workOrderPart)" class="btn btn-sm btn-danger m-2">{{ncrHistoryItem.title}}</button>
+                          <button
+                            *ngIf="workOrderPart.cycleCount > 0 &&
+                            workOrderPart.serialNumber &&
+                            ncrHistoryItem.serialNumber &&
+                            workOrderPart.serialNumber.toLowerCase() === ncrHistoryItem.serialNumber.toLowerCase()"
+                            (click)="showNCRReportByPart(workOrderPart)"
+                            class="btn btn-sm btn-danger m-2"
+                          >{{ncrHistoryItem.title}}</button>
                         </ng-container>
                       </td>
                     </tr>
