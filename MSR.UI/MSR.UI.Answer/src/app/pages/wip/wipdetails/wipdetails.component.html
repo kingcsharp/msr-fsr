@@ -188,6 +188,7 @@
                             *ngIf="workOrderPart.cycleCount > 0 &&
                             workOrderPart.serialNumber &&
                             ncrHistoryItem.serialNumber &&
+                            ncrHistoryItem.workOrderId === workOrderModel.id &&
                             workOrderPart.serialNumber.toLowerCase() === ncrHistoryItem.serialNumber.toLowerCase()"
                             (click)="showNCRReportByPart(workOrderPart)"
                             class="btn btn-sm btn-danger m-2"
