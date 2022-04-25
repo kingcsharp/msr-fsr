@@ -603,10 +603,10 @@ export class WipdetailsComponent implements OnInit {
     this.globals.showLoader(false);
   }
 
-  showNCRReportByPart(workOrderPart: WorkOrderPartModel) {
+  showNCRReportByPart(workOrderPartId: any) {
     this.ncrPartDetail = null;
     this.globals.showLoader(true);
-    this.workOrderPartService.detail(workOrderPart.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((response) => {
+    this.workOrderPartService.detail(workOrderPartId, env.apiVersion).pipe(take(1)).subscribe(responseHandler((response) => {
       const ncrPartDetail = response.object;
       if (ncrPartDetail) {
         this.ncrPartDetail = new NCRPartWODetailView(ncrPartDetail as INCRPartWODetailView);
