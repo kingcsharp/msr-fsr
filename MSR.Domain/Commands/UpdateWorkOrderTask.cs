@@ -1,4 +1,5 @@
 ﻿
+using MSR.Domain.Models;
 using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
@@ -7,6 +8,6 @@ namespace MSR.Domain.Commands
     {
         public int Id { get; set; }
         public string Status { get; set; }
-        public ICollection<int> MappedWorkOrderParts { get; set; }
+        public ICollection<MappedWorkOrderPart> MappedWorkOrderParts { get; set; }
     }
 }

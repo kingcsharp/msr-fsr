@@ -17,6 +17,6 @@ namespace MSR.Answer.API.V1.Models
         public decimal? TotalTaskTime { get; set; }
         public ICollection<int> ReferenceFilesIds { get; set; }
         public ICollection<FileModel> ReferenceFiles { get; set; }
-        public ICollection<int> MappedWorkOrderParts { get; set; }
+        public ICollection<MappedWorkOrderPart> MappedWorkOrderParts { get; set; }
     }
 }

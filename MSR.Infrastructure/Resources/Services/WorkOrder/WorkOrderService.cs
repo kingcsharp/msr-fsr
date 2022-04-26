@@ -927,10 +927,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var currentMappedParts = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => i.WorkOrderTaskId == command.Id).Select(i => i.WorkOrderPartId).ToListAsync();
-            var PartIdsToAdd = command.MappedWorkOrderParts == null ? new List<int>() : command.MappedWorkOrderParts.Where(i => !currentMappedParts.Contains(i));
-            var partIdsToRemove = command.MappedWorkOrderParts == null || !command.MappedWorkOrderParts.Any() ? currentMappedParts : currentMappedParts.Where(i => !command.MappedWorkOrderParts.Contains(i));
+            var incomingMappedParts = command.MappedWorkOrderParts.Select(i => i.Id).ToList();
+            var PartIdsToAdd = command.MappedWorkOrderParts == null ? new List<int>() : incomingMappedParts.Where(i => !currentMappedParts.Contains(i)).ToList();
+            var partIdsToRemove = command.MappedWorkOrderParts == null || !incomingMappedParts.Any() ? currentMappedParts : currentMappedParts.Where(i => !incomingMappedParts.Contains(i)).ToList();
             var partsToRemove = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => partIdsToRemove.Contains(i.WorkOrderPartId)).ToListAsync();
-  
+            var partsToUpdate = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => incomingMappedParts.Contains(i.WorkOrderPartId) && !partIdsToRemove.Contains(i.Id)).ToListAsync();
+            
             if (PartIdsToAdd.Any())
             {
                 foreach (var partId in PartIdsToAdd)
@@ -939,7 +941,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     {
                         CreatedBy = CurrentUser.GetId(),
                         WorkOrderPartId = partId,
-                        WorkOrderTaskId = command.Id
+                        WorkOrderTaskId = command.Id,
+                        TagType = command?.MappedWorkOrderParts?.FirstOrDefault(i => i.Id == partId)?.TagType
+
                     };
 
                     await _unitOfWork.WorkOrderPartNCRMap.AddAsync(mappedItem);
@@ -952,6 +956,22 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 foreach(var part in partsToRemove)
                 {
                     _unitOfWork.WorkOrderPartNCRMap.Delete(false, part);
+                }
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            if (partsToUpdate.Any())
+            {
+                foreach(var part in partsToUpdate)
+                {
+                    var incomingPart = command.MappedWorkOrderParts.FirstOrDefault(i => part.WorkOrderPartId == i.Id && part.TagType != i.TagType);
+                    if(incomingPart == null)
+                    {
+                        continue;
+                    }
+
+                    part.TagType = incomingPart.TagType;
+                    _unitOfWork.WorkOrderPartNCRMap.Update(part);
                 }
                 await _unitOfWork.SaveChangesAsync();
             }

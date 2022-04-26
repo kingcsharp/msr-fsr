@@ -122,6 +122,7 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.AssignedTo, opts => opts.MapFrom(src => src.AssignedUserId))
                 .ForMember(dest => dest.TaskRunningSince, opts => opts.MapFrom(src =>
                     (src.TaskRunningSince.Ticks > 0) ? src.TaskRunningSince : (DateTime?)null));
+            CreateMap<Models.MappedWorkOrderPart, MSR.Domain.Models.MappedWorkOrderPart>().ReverseMap();
             CreateMap<UpdateWorkOrderTaskMonitorRequest, UpdateWorkOrderTaskMonitor>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderTaskMonitorId));
 
