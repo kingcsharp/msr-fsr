@@ -1,7 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-  IStatusModel, IUpdateWorkOrderTaskRequest, StatusModel, UpdateWorkOrderTaskRequest,
-  WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel, WorkOrderModel
+  IStatusModel,
+  IUpdateWorkOrderTaskRequest,
+  StatusModel,
+  UpdateWorkOrderTaskRequest,
+  WorkOrderTaskModel,
+  WorkOrderTaskService,
+  UserService,
+  UserModel,
+  MappedWorkOrderPart,
+  IMappedWorkOrderPart,
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
@@ -76,7 +84,13 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
       workOrderTaskId: this.workOrderTaskInProgress.id,
       startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.workOrderTaskInProgress.startedOn,
-      mappedWorkOrderParts: this.showNCParts ? this.ncrParts.filter(part => part.selected).map(part => part.id) : null,
+      mappedWorkOrderParts: this.showNCParts
+        ? this.ncrParts.filter(part => part.selected).map(part => {
+          return new MappedWorkOrderPart({
+            id: part.id,
+          } as IMappedWorkOrderPart);
+        })
+        : null,
     } as IUpdateWorkOrderTaskRequest);
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {

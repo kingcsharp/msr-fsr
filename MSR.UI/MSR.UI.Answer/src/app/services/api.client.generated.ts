@@ -22994,7 +22994,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     referenceFilesIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
-    mappedWorkOrderParts?: number[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -23028,7 +23028,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             if (Array.isArray(_data["mappedWorkOrderParts"])) {
                 this.mappedWorkOrderParts = [] as any;
                 for (let item of _data["mappedWorkOrderParts"])
-                    this.mappedWorkOrderParts!.push(item);
+                    this.mappedWorkOrderParts!.push(MappedWorkOrderPart.fromJS(item));
             }
         }
     }
@@ -23063,7 +23063,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
         if (Array.isArray(this.mappedWorkOrderParts)) {
             data["mappedWorkOrderParts"] = [];
             for (let item of this.mappedWorkOrderParts)
-                data["mappedWorkOrderParts"].push(item);
+                data["mappedWorkOrderParts"].push(item.toJSON());
         }
         return data; 
     }
@@ -23080,7 +23080,47 @@ export interface IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     referenceFilesIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
-    mappedWorkOrderParts?: number[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart[] | undefined;
+}
+
+export class MappedWorkOrderPart implements IMappedWorkOrderPart {
+    id?: number;
+    tagType?: string | undefined;
+
+    constructor(data?: IMappedWorkOrderPart) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.tagType = _data["tagType"];
+        }
+    }
+
+    static fromJS(data: any): MappedWorkOrderPart {
+        data = typeof data === 'object' ? data : {};
+        let result = new MappedWorkOrderPart();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["tagType"] = this.tagType;
+        return data; 
+    }
+}
+
+export interface IMappedWorkOrderPart {
+    id?: number;
+    tagType?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

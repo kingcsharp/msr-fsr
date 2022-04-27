@@ -6,7 +6,7 @@ import {
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel,
-  ProcedureStepModel, UserModel, EnumSegregationType, CancelWorkOrderRequest, ICancelWorkOrderRequest, WorkOrderTaskMonitorModel, NCRPartWODetailView, INCRPartWODetailView
+  ProcedureStepModel, UserModel, EnumSegregationType, CancelWorkOrderRequest, ICancelWorkOrderRequest, WorkOrderTaskMonitorModel, NCRPartWODetailView, INCRPartWODetailView, MappedWorkOrderPart, IMappedWorkOrderPart,
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -570,7 +570,11 @@ export class WipdetailsComponent implements OnInit {
       taskStepOrder: this.workOrderTaskToView.taskStepOrder,
       totalTaskTime: this.workOrderTaskToView.totalTaskTime,
       workOrderTaskId: this.workOrderTaskToView.id,
-      mappedWorkOrderParts: this.ncrParts.filter(part => part.selected).map(part => part.id),
+      mappedWorkOrderParts: this.ncrParts.filter(part => part.selected).map(part => {
+        return new MappedWorkOrderPart({
+          id: part.id,
+        } as IMappedWorkOrderPart);
+      }),
     } as IUpdateWorkOrderTaskRequest);
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updatedWorkOrderTaskRequest).pipe(take(1)).subscribe(response => {
