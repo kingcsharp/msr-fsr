@@ -76,6 +76,7 @@ export class WipdetailsComponent implements OnInit {
   ncrParts: Array<any>;
   ncrTaskIds: Array<any>;
   showNCParts: boolean = false;
+  tagTypeOptions: Array<SelectItem>;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, private customerService: CustomerService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
@@ -110,6 +111,11 @@ export class WipdetailsComponent implements OnInit {
       { label: 'Text', value: 4 },
       { label: 'Pass or Fail', value: 5 },
       { label: 'Select', value: 6 },
+    ];
+
+    this.tagTypeOptions = [
+      { label: 'Yellow Tag', value: 'Yellow Tag', styleClass: 'tag-type-yellow' },
+      { label: 'Red Tag', value: 'Red Tag', styleClass: 'tag-type-red' }
     ];
 
     this.globals.showLoader(true);
@@ -692,6 +698,7 @@ export class WipdetailsComponent implements OnInit {
         id: part.id,
         serialNumber: part.serialNumber,
         selected: _.some(part.ncrHistoryItems, s => s.workOrderTaskId === this.workOrderTaskToView.id),
+        tagType: null,
       }
     });
   }
