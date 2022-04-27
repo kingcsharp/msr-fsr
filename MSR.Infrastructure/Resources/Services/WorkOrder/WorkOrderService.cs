@@ -927,7 +927,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var currentMappedParts = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => i.WorkOrderTaskId == command.Id).Select(i => i.WorkOrderPartId).ToListAsync();
-            var incomingMappedParts = command.MappedWorkOrderParts.Select(i => i.Id).ToList();
+            var incomingMappedParts = command.MappedWorkOrderParts == null ? new List<int>() : command.MappedWorkOrderParts.Select(i => i.Id).ToList();
             var PartIdsToAdd = command.MappedWorkOrderParts == null ? new List<int>() : incomingMappedParts.Where(i => !currentMappedParts.Contains(i)).ToList();
             var partIdsToRemove = command.MappedWorkOrderParts == null || !incomingMappedParts.Any() ? currentMappedParts : currentMappedParts.Where(i => !incomingMappedParts.Contains(i)).ToList();
             var partsToRemove = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => partIdsToRemove.Contains(i.WorkOrderPartId)).ToListAsync();
