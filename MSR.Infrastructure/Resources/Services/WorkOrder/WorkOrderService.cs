@@ -86,6 +86,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var workOrderTaskIds = workOrderEntity.WorkOrderTasks.Select(i => i.Id).ToList();
             var workOrderPartIds = workOrderEntity.WorkOrderParts.Select(s => s.PartId).ToList();
+            var workOrderWorkOrderPartIds = workOrderEntity.WorkOrderParts.Select(s => s.Id).ToList();
 
             _ = await _unitOfWork.Parts.Query().Where(s => workOrderPartIds.Contains(s.Id)).ToListAsync();
             _ = await _unitOfWork.Products.Query().FirstOrDefaultAsync(s => workOrderEntity.ProductId == s.Id);
@@ -149,7 +150,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                        )?.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
             }
 
-            foreach(var workOrderTaskModel in workOrderModel.WorkOrderTasks)
+
+            var mappedParts = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => workOrderWorkOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
+
+            foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
             {
                 // enforce sane data by limiting the status IDs returned by the API
                 workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
@@ -168,6 +172,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 {
                     workOrderTaskModel.ReferenceFiles.ForEach(s => s.FileURL = _fileDownloader.GetURL(s.FileURL, 86400));
                 }
+                var workOrderMappedParts = mappedParts.Where(i => i.WorkOrderTaskId == workOrderTaskModel.Id);
+                workOrderTaskModel.MappedWorkOrderParts = workOrderMappedParts != null && workOrderMappedParts.Any() 
+                                                                ? workOrderMappedParts.Select(i => new MappedWorkOrderPart()
+                                                                                                    {
+                                                                                                            Id = i.WorkOrderPartId,
+                                                                                                            TagType = i.TagType
+                                                                                                    }).ToList() 
+                                                                : new List<MappedWorkOrderPart>();
             }
 
             return new List<WorkOrderModel>() { DetachBackPointers(workOrderModel) };
