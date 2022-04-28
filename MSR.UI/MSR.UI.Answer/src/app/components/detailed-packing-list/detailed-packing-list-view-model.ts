@@ -9,8 +9,6 @@ interface PackingListPartViewModel {
     part: WorkOrderPartModel;
     subparts?: Array<WorkOrderPartModel>;
     poLineLabel: string;
-    ncNumber: string;
-    tagType: string;
 }
 
 export class PackingListViewModel {
@@ -75,8 +73,6 @@ export class PackingListViewModel {
                     part,
                     poLineLabel: '',
                     subparts: null,
-                    ncNumber: _.join(_.map(_.filter(workOrder.workOrderTasks, task => _.some(task.mappedWorkOrderParts, s => s.id === part.id)), s => s.ncNumber), '\n'),
-                    tagType: _.join(_.map(_.filter(workOrder.workOrderTasks, task => _.some(task.mappedWorkOrderParts, s => s.id === part.id && !!s.tagType)), task => _.find(task.mappedWorkOrderParts, s => s.id === part.id)?.tagType), '\n'),
                 };
 
                 // parent is index 0, children are the rest

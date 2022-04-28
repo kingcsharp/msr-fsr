@@ -17411,6 +17411,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     children?: WorkOrderPartModel[] | undefined;
     parent?: WorkOrderPartModel | undefined;
     ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
+    tagType?: string | undefined;
+    ncNumber?: string | undefined;
 
     constructor(data?: IWorkOrderPartModel) {
         if (data) {
@@ -17445,6 +17447,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
                 for (let item of _data["ncrHistoryItems"])
                     this.ncrHistoryItems!.push(NCRHistoryItemModel.fromJS(item));
             }
+            this.tagType = _data["tagType"];
+            this.ncNumber = _data["ncNumber"];
         }
     }
 
@@ -17479,6 +17483,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             for (let item of this.ncrHistoryItems)
                 data["ncrHistoryItems"].push(item.toJSON());
         }
+        data["tagType"] = this.tagType;
+        data["ncNumber"] = this.ncNumber;
         return data; 
     }
 }
@@ -17498,6 +17504,8 @@ export interface IWorkOrderPartModel {
     children?: WorkOrderPartModel[] | undefined;
     parent?: WorkOrderPartModel | undefined;
     ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
+    tagType?: string | undefined;
+    ncNumber?: string | undefined;
 }
 
 export class NCRHistoryItemModel implements INCRHistoryItemModel {
