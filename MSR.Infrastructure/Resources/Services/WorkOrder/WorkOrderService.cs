@@ -140,8 +140,20 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderSerialNumbers = workOrderModel.WorkOrderParts.Select(i => i.SerialNumber).ToList();
             var ncrHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => workOrderPartIds.Contains(i.PartId) && workOrderSerialNumbers.Contains(i.SerialNumber)).ToListAsync();
 
-            foreach(var workOrderPart in workOrderModel.WorkOrderParts)
+            var mappedParts = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => workOrderWorkOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
+            foreach (var workOrderPart in workOrderModel.WorkOrderParts)
             {
+                var workOrderPartMappedPart = mappedParts.FirstOrDefault(i => i.WorkOrderPartId == workOrderPart.Id);
+                if(workOrderPartMappedPart != null)
+                {
+                    workOrderPart.TagType = workOrderPartMappedPart.TagType;
+                    var associatedWorkOrderTask = workOrderModel.WorkOrderTasks.FirstOrDefault(i => i.Id == workOrderPartMappedPart.WorkOrderTaskId);
+                    if(associatedWorkOrderTask != null)
+                    {
+                        workOrderPart.NCNumber = associatedWorkOrderTask.NCNumber;
+                    }
+                }
+
                 workOrderPart.NCRHistoryItems = ncrHistoryItems?.Where(i => i.PartId == workOrderPart.PartId 
                                                                         && (i.SerialNumber != null 
                                                                             && workOrderPart.SerialNumber != null 
@@ -149,9 +161,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                         && i.WorkOrderId != workOrderPart.WorkOrderId
                                                                        )?.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
             }
-
-
-            var mappedParts = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => workOrderWorkOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
 
             foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
             {
@@ -1097,7 +1106,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             WorkOrderTaskModel workOrderTaskModel = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workOrderTaskEntity);
 
             workOrderTaskModel.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), workOrderTaskModel.Id).ToList();
+            
+            //Get a list of mapped work order parts
+            var mappedWorkOrderNCRMaps = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => i.WorkOrderTaskId == workOrderTaskModel.Id).ToListAsync();
 
+            workOrderTaskModel.MappedWorkOrderParts = mappedWorkOrderNCRMaps.Select(i => new MappedWorkOrderPart()
+            {
+                Id = i.WorkOrderPartId,
+                TagType = i.TagType
+            }).ToList();
             // Update the work order datetimes, if needed
             // IMPORTANT: the return object cannot be remapped after this
             // point because it will cause a backreference and break things.
