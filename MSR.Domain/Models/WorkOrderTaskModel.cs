@@ -31,5 +31,6 @@ namespace MSR.Domain.Models
         public bool? IsNCRTask { get; set; }
         public string NCNumber { get; set; }
         public List<NCRHistoryItemModel> NCRHistoryItems {get; set;}
+        public List<MappedWorkOrderPart> MappedWorkOrderParts { get; set; }
     }
 }
