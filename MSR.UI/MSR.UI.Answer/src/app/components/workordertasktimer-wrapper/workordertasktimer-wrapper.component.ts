@@ -106,7 +106,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     } as IUpdateWorkOrderTaskRequest);
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
-      // TODO: replace with api response
       this.workOrderTaskInProgress.mappedWorkOrderParts = mappedWorkOrderParts;
 
       if (closeStep) {

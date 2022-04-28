@@ -1,6 +1,5 @@
 import { WorkOrderModel, WorkOrderPartModel, PurchaseModel, WorkOrderTaskMonitorModel} from '../../services/api.client.generated';
 import { MonitorStatusPipe } from '../../pipes/monitorstatus'
-import * as _ from 'lodash';
 export class NumberHashMap<T> {
     [key: number]: T
 }
