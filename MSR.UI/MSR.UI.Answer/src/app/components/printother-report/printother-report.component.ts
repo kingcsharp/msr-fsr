@@ -1,11 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { WorkOrderModel } from '../../services/api.client.generated';
 
 @Component({
   selector: 'printother-report',
   templateUrl: './printother-report.component.html',
-  styleUrls: ['./printother-report.component.scss']
+  styleUrls: ['./printother-report.component.scss'],
+  encapsulation: ViewEncapsulation.Emulated,
 })
 export class PrintotherReportComponent implements OnInit {
 

@@ -200,6 +200,60 @@
                 </table>
               </div>
             </div>
+            <div class="row" *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStepTypeId === enumProcedureStepType.NCR">
+              <div class="container-fluid product-container m-2">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th class="part-td">Part</th>
+                      <th class="serial-td">Serial Number</th>
+                      <th class="history-td">Tag Type</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    *ngIf="workOrderModel.workOrderParts !== undefined && workOrderModel.workOrderParts.length !== 0">
+                    <tr *ngFor="let workOrderPart of workOrderModel.workOrderParts; let index=index">
+                      <td class="part-td">{{workOrderPart.part?.name}}</td>
+                      <td class="serial-td" *ngIf="hasAccessToTaskBeingViewed">
+                        {{workOrderPart.serialNumber}}
+                      </td>
+                      <td class="tagtype-td">
+                        <p-dropdown
+                          *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id"
+                          name="tagType{{i}}"
+                          [options]="tagTypeOptions"
+                          placeholder="Select Tag"
+                          [showClear]="true"
+                          [(ngModel)]="ncrParts[index].tagType"
+                        >
+                          <ng-template pTemplate="selectedItem">
+                            <div
+                              *ngIf="ncrParts[index].tagType"
+                              [ngClass]="{
+                                'tag-type-yellow': ncrParts[index].tagType === 'Yellow Tag',
+                                'tag-type-red': ncrParts[index].tagType === 'Red Tag'
+                              }"
+                            >{{ncrParts[index].tagType}}</div>
+                          </ng-template>
+                          <ng-template let-type pTemplate="item">
+                            <div class="{{type.styleClass}}">{{type.value}}</div>
+                          </ng-template>
+                        </p-dropdown>
+                        <ul class="parsley-errors-list filled" *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id && !tagTypesValid">
+                          <li class="parsley-custom-error-message"
+                            *ngIf="ncrParts[index].tagType === undefined || ncrParts[index].tagType === null">
+                            This value is required.
+                          </li>
+                        </ul>
+                        <div
+                          *ngIf="workOrderTaskToView.id !== workOrderTaskInProgress.id"
+                        >{{ncrParts[index].tagType}}</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </p-tabPanel>
           <p-tabPanel class="content-tabs" header="Monitors">
             <span
