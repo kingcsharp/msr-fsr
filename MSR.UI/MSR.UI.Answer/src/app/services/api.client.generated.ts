@@ -17582,6 +17582,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     isNCRTask?: boolean | undefined;
     ncNumber?: string | undefined;
     ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart[] | undefined;
 
     constructor(data?: IWorkOrderTaskModel) {
         if (data) {
@@ -17630,6 +17631,11 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
                 this.ncrHistoryItems = [] as any;
                 for (let item of _data["ncrHistoryItems"])
                     this.ncrHistoryItems!.push(NCRHistoryItemModel.fromJS(item));
+            }
+            if (Array.isArray(_data["mappedWorkOrderParts"])) {
+                this.mappedWorkOrderParts = [] as any;
+                for (let item of _data["mappedWorkOrderParts"])
+                    this.mappedWorkOrderParts!.push(MappedWorkOrderPart.fromJS(item));
             }
         }
     }
@@ -17680,6 +17686,11 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             for (let item of this.ncrHistoryItems)
                 data["ncrHistoryItems"].push(item.toJSON());
         }
+        if (Array.isArray(this.mappedWorkOrderParts)) {
+            data["mappedWorkOrderParts"] = [];
+            for (let item of this.mappedWorkOrderParts)
+                data["mappedWorkOrderParts"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -17710,6 +17721,7 @@ export interface IWorkOrderTaskModel {
     isNCRTask?: boolean | undefined;
     ncNumber?: string | undefined;
     ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart[] | undefined;
 }
 
 export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOrderTaskMonitorModel {
@@ -17831,6 +17843,46 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     inputTypeId?: number | undefined;
     lowNumVal?: number | undefined;
     highNumVal?: number | undefined;
+}
+
+export class MappedWorkOrderPart implements IMappedWorkOrderPart {
+    id?: number;
+    tagType?: string | undefined;
+
+    constructor(data?: IMappedWorkOrderPart) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.tagType = _data["tagType"];
+        }
+    }
+
+    static fromJS(data: any): MappedWorkOrderPart {
+        data = typeof data === 'object' ? data : {};
+        let result = new MappedWorkOrderPart();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["tagType"] = this.tagType;
+        return data; 
+    }
+}
+
+export interface IMappedWorkOrderPart {
+    id?: number;
+    tagType?: string | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
@@ -22994,7 +23046,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     referenceFilesIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
-    mappedWorkOrderParts?: MappedWorkOrderPart[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart2[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -23028,7 +23080,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             if (Array.isArray(_data["mappedWorkOrderParts"])) {
                 this.mappedWorkOrderParts = [] as any;
                 for (let item of _data["mappedWorkOrderParts"])
-                    this.mappedWorkOrderParts!.push(MappedWorkOrderPart.fromJS(item));
+                    this.mappedWorkOrderParts!.push(MappedWorkOrderPart2.fromJS(item));
             }
         }
     }
@@ -23080,14 +23132,14 @@ export interface IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     referenceFilesIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
-    mappedWorkOrderParts?: MappedWorkOrderPart[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart2[] | undefined;
 }
 
-export class MappedWorkOrderPart implements IMappedWorkOrderPart {
+export class MappedWorkOrderPart2 implements IMappedWorkOrderPart2 {
     id?: number;
     tagType?: string | undefined;
 
-    constructor(data?: IMappedWorkOrderPart) {
+    constructor(data?: IMappedWorkOrderPart2) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -23103,9 +23155,9 @@ export class MappedWorkOrderPart implements IMappedWorkOrderPart {
         }
     }
 
-    static fromJS(data: any): MappedWorkOrderPart {
+    static fromJS(data: any): MappedWorkOrderPart2 {
         data = typeof data === 'object' ? data : {};
-        let result = new MappedWorkOrderPart();
+        let result = new MappedWorkOrderPart2();
         result.init(data);
         return result;
     }
@@ -23118,7 +23170,7 @@ export class MappedWorkOrderPart implements IMappedWorkOrderPart {
     }
 }
 
-export interface IMappedWorkOrderPart {
+export interface IMappedWorkOrderPart2 {
     id?: number;
     tagType?: string | undefined;
 }

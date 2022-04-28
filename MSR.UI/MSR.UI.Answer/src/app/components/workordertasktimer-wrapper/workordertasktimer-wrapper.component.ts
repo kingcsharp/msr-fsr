@@ -16,7 +16,7 @@ import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
-
+import { ProcedureStepType } from '../../models/enums/ProcedureStepType';
 
 @Component({
   selector: 'workordertasktimer-wrapper',
@@ -74,6 +74,24 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   }
 
   saveTaskTimerState(closeStep: boolean) {
+    let mappedWorkOrderParts = null;
+    if (this.showNCParts) {
+      mappedWorkOrderParts = this.ncrParts.filter(part => part.selected).map(part => {
+        return new MappedWorkOrderPart({
+          id: part.id,
+          tagType: part.tagType,
+        } as IMappedWorkOrderPart);
+      });
+    }
+
+    if (this.workOrderTaskInProgress.procedureStepTypeId === ProcedureStepType.NCR) {
+      mappedWorkOrderParts = this.ncrParts.map(part => {
+        return new MappedWorkOrderPart({
+          id: part.id,
+          tagType: part.tagType,
+        } as IMappedWorkOrderPart);
+      });
+    }
 
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
       assignedUserId: this.globals.getCurrentUser().id,
@@ -84,16 +102,12 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
       workOrderTaskId: this.workOrderTaskInProgress.id,
       startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.workOrderTaskInProgress.startedOn,
-      mappedWorkOrderParts: this.showNCParts
-        ? this.ncrParts.filter(part => part.selected).map(part => {
-          return new MappedWorkOrderPart({
-            id: part.id,
-          } as IMappedWorkOrderPart);
-        })
-        : null,
+      mappedWorkOrderParts: mappedWorkOrderParts,
     } as IUpdateWorkOrderTaskRequest);
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
+      // TODO: replace with api response
+      this.workOrderTaskInProgress.mappedWorkOrderParts = mappedWorkOrderParts;
 
       if (closeStep) {
         let indexOfNextTask = this.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);

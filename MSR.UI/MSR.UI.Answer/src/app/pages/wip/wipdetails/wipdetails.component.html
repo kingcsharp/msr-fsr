@@ -200,7 +200,7 @@
                 </table>
               </div>
             </div>
-            <div class="row" *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStepTypeId === 3">
+            <div class="row" *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStepTypeId === enumProcedureStepType.NCR">
               <div class="container-fluid product-container m-2">
                 <table class="table">
                   <thead class="thead-dark">
@@ -219,9 +219,9 @@
                       </td>
                       <td class="tagtype-td">
                         <p-dropdown
+                          *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id"
                           name="tagType{{i}}"
                           [options]="tagTypeOptions"
-                          [disabled]="workOrderTaskToView.id !== workOrderTaskInProgress.id"
                           placeholder="Select Tag"
                           [showClear]="true"
                           [(ngModel)]="ncrParts[index].tagType"
@@ -239,6 +239,15 @@
                             <div class="{{type.styleClass}}">{{type.value}}</div>
                           </ng-template>
                         </p-dropdown>
+                        <ul class="parsley-errors-list filled" *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id && !tagTypesValid">
+                          <li class="parsley-custom-error-message"
+                            *ngIf="ncrParts[index].tagType === undefined || ncrParts[index].tagType === null">
+                            This value is required.
+                          </li>
+                        </ul>
+                        <div
+                          *ngIf="workOrderTaskToView.id !== workOrderTaskInProgress.id"
+                        >{{ncrParts[index].tagType}}</div>
                       </td>
                     </tr>
                   </tbody>

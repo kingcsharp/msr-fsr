@@ -20,6 +20,7 @@ import { take } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 import { ProductSegregationService } from '../../../services/product-segregation.service';
 import { EnumStatusSteps } from '../../../models/enums/EnumStatusSteps';
+import { ProcedureStepType } from '../../../models/enums/ProcedureStepType';
 import * as _ from 'lodash';
 
 @Component({
@@ -77,6 +78,8 @@ export class WipdetailsComponent implements OnInit {
   ncrTaskIds: Array<any>;
   showNCParts: boolean = false;
   tagTypeOptions: Array<SelectItem>;
+  enumProcedureStepType = ProcedureStepType;
+  tagTypesValid: boolean = true;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, private customerService: CustomerService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
@@ -579,6 +582,7 @@ export class WipdetailsComponent implements OnInit {
       mappedWorkOrderParts: this.ncrParts.filter(part => part.selected).map(part => {
         return new MappedWorkOrderPart({
           id: part.id,
+          tagType: part.tagType,
         } as IMappedWorkOrderPart);
       }),
     } as IUpdateWorkOrderTaskRequest);
@@ -590,8 +594,13 @@ export class WipdetailsComponent implements OnInit {
 
   areMonitorsValidCheck() {
     this.areMonitorsValid = this.workordertaskmonitors.areMonitorsInValidStateToCloseTask();
+    this.tagTypesValid = true;
 
-    if (this.areMonitorsValid) {
+    if (this.workOrderTaskInProgress.procedureStepTypeId === ProcedureStepType.NCR) {
+      this.tagTypesValid = !_.some(this.ncrParts, part => !part.tagType)
+    }
+
+    if (this.areMonitorsValid && this.tagTypesValid) {
       this.workordertaskmonitors.saveMonitors(true);
     } else {
       this.monitorsAreInvalidDialog = true;
@@ -694,11 +703,12 @@ export class WipdetailsComponent implements OnInit {
   getNCRParts() {
     this.showNCParts = _.some(this.ncrTaskIds, id => id === this.workOrderTaskToView.id);
     this.ncrParts = _.map(this.workOrderModel.workOrderParts, part => {
+      const mappedWorkOrderParts = _.find(this.workOrderTaskToView.mappedWorkOrderParts, s => s.id === part.id)
       return {
         id: part.id,
         serialNumber: part.serialNumber,
-        selected: _.some(part.ncrHistoryItems, s => s.workOrderTaskId === this.workOrderTaskToView.id),
-        tagType: null,
+        selected: !!mappedWorkOrderParts,
+        tagType: mappedWorkOrderParts?.tagType || null,
       }
     });
   }
