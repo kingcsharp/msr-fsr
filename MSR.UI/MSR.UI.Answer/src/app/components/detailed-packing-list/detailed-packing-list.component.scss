@@ -6,6 +6,11 @@
     font-size: smaller;
 }
 
+.col-text {
+  white-space: pre-wrap;
+  line-break: anywhere;
+}
+
 @media print {
     * {
         -webkit-transition: none !important;

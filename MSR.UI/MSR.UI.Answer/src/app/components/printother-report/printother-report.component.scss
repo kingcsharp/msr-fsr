@@ -1,0 +1,13 @@
+// Large devices (desktops, 992px and up)
+@media (min-width: 1199.99px)  {
+  .report.ui-dialog {
+    width: 80vw !important;
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1439.99px) {
+  .report.ui-dialog {
+    width: 75vw !important;
+  }
+}
