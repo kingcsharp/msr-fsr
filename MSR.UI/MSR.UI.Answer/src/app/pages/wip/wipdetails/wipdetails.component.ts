@@ -571,14 +571,19 @@ export class WipdetailsComponent implements OnInit {
   }
 
   updateNCRPartsMap() {
+    let workOrderTask = this.workOrderTaskToView;
+    if (this.workOrderTaskToView.procedureStepTypeId === ProcedureStepType.NCR) {
+      workOrderTask = _.find(this.workOrderModel.workOrderTasks,
+        task => _.some(this.ncrTaskIds, id => id === task.id) && task.ncNumber === this.workOrderTaskToView.ncNumber);
+    }
     let updatedWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-      assignedUserId: this.workOrderTaskToView.assignedTo,
-      status: this.workOrderTaskToView.status.name,
-      taskIsRunning: this.workOrderTaskToView.taskIsRunning,
-      taskRunningSince: this.workOrderTaskToView.taskRunningSince,
-      taskStepOrder: this.workOrderTaskToView.taskStepOrder,
-      totalTaskTime: this.workOrderTaskToView.totalTaskTime,
-      workOrderTaskId: this.workOrderTaskToView.id,
+      assignedUserId: workOrderTask.assignedTo,
+      status: workOrderTask.status.name,
+      taskIsRunning: workOrderTask.taskIsRunning,
+      taskRunningSince: workOrderTask.taskRunningSince,
+      taskStepOrder: workOrderTask.taskStepOrder,
+      totalTaskTime: workOrderTask.totalTaskTime,
+      workOrderTaskId: workOrderTask.id,
       mappedWorkOrderParts: this.ncrParts.filter(part => part.selected).map(part => {
         return new MappedWorkOrderPart({
           id: part.id,
@@ -588,6 +593,7 @@ export class WipdetailsComponent implements OnInit {
     } as IUpdateWorkOrderTaskRequest);
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updatedWorkOrderTaskRequest).pipe(take(1)).subscribe(response => {
+      workOrderTask.mappedWorkOrderParts = response.object?.mappedWorkOrderParts || [];
       this.getWorkOrder(this.workOrderModel.id);
     });
   }
@@ -597,7 +603,7 @@ export class WipdetailsComponent implements OnInit {
     this.tagTypesValid = true;
 
     if (this.workOrderTaskInProgress.procedureStepTypeId === ProcedureStepType.NCR) {
-      this.tagTypesValid = !_.some(this.ncrParts, part => !part.tagType)
+      this.tagTypesValid = !_.some(this.ncrParts, part => part.selected && !part.tagType)
     }
 
     if (this.areMonitorsValid && this.tagTypesValid) {
@@ -702,15 +708,20 @@ export class WipdetailsComponent implements OnInit {
 
   getNCRParts() {
     this.showNCParts = _.some(this.ncrTaskIds, id => id === this.workOrderTaskToView.id);
-    this.ncrParts = _.map(this.workOrderModel.workOrderParts, part => {
-      const mappedWorkOrderParts = _.find(this.workOrderTaskToView.mappedWorkOrderParts, s => s.id === part.id)
+    let workOrderTask = this.workOrderTaskToView;
+    if (this.workOrderTaskToView.procedureStepTypeId === ProcedureStepType.NCR) {
+      workOrderTask = _.find(this.workOrderModel.workOrderTasks,
+        task => _.some(this.ncrTaskIds, id => id === task.id) && task.ncNumber === this.workOrderTaskToView.ncNumber);
+    }
+    this.ncrParts = workOrderTask ? _.map(this.workOrderModel.workOrderParts, part => {
+      const mappedWorkOrderParts = _.find(workOrderTask.mappedWorkOrderParts, s => s.id === part.id)
       return {
         id: part.id,
         serialNumber: part.serialNumber,
         selected: !!mappedWorkOrderParts,
         tagType: mappedWorkOrderParts?.tagType || null,
       }
-    });
+    }) : [];
   }
 
   getNCRTaskIds() {

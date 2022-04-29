@@ -94,7 +94,9 @@
             (areMonitorsValidCheck)="areMonitorsValidCheck()"
             [ncrParts]="ncrParts"
             [showNCParts]="showNCParts"
-            [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer
+            [(workOrderTaskToView)]="workOrderTaskToView"
+            (updateNCRPartsMap)="updateNCRPartsMap()"
+            #workordertasktimer
           >
           </workordertasktimer-wrapper>
         </div>
@@ -185,7 +187,7 @@
                       <td class="history-td">
                         <ng-container *ngFor="let ncrHistoryItem of workOrderPart.ncrHistoryItems">
                           <button
-                            *ngIf="workOrderPart.cycleCount > 2 &&
+                            *ngIf="workOrderPart.cycleCount > 1 &&
                             workOrderPart.serialNumber &&
                             ncrHistoryItem.serialNumber &&
                             ncrHistoryItem.workOrderId !== workOrderModel.id &&
@@ -219,7 +221,7 @@
                       </td>
                       <td class="tagtype-td">
                         <p-dropdown
-                          *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id"
+                          *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id && ncrParts[index].selected"
                           name="tagType{{i}}"
                           [options]="tagTypeOptions"
                           placeholder="Select Tag"
@@ -239,7 +241,7 @@
                             <div class="{{type.styleClass}}">{{type.value}}</div>
                           </ng-template>
                         </p-dropdown>
-                        <ul class="parsley-errors-list filled" *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id && !tagTypesValid">
+                        <ul class="parsley-errors-list filled" *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id && ncrParts[index].selected && !tagTypesValid">
                           <li class="parsley-custom-error-message"
                             *ngIf="ncrParts[index].tagType === undefined || ncrParts[index].tagType === null">
                             This value is required.

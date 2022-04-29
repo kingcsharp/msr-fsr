@@ -41,6 +41,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Output() updateWorkOrderTaskToViewAndInProgress = new EventEmitter<any>();
   @Output() areMonitorsValidCheck = new EventEmitter<any>();
   @Output() setStartDate = new EventEmitter<any>();
+  @Output() updateNCRPartsMap = new EventEmitter<any>();
 
   stepTimer;
   stepSeconds: number = 0;
@@ -84,13 +85,8 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       });
     }
 
-    if (this.workOrderTaskInProgress.procedureStepTypeId === ProcedureStepType.NCR) {
-      mappedWorkOrderParts = this.ncrParts.map(part => {
-        return new MappedWorkOrderPart({
-          id: part.id,
-          tagType: part.tagType,
-        } as IMappedWorkOrderPart);
-      });
+    if (this.workOrderTaskInProgress.procedureStepTypeId === ProcedureStepType.NCR && closeStep) {
+      this.updateNCRPartsMap.emit();
     }
 
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
@@ -106,7 +102,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     } as IUpdateWorkOrderTaskRequest);
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
-      this.workOrderTaskInProgress.mappedWorkOrderParts = mappedWorkOrderParts;
+      this.workOrderTaskInProgress.mappedWorkOrderParts = workOrderTaskPatchResponse.object?.mappedWorkOrderParts || [];
 
       if (closeStep) {
         let indexOfNextTask = this.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
