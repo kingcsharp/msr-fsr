@@ -418,7 +418,8 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderPartService.workOrderPartPatch(env.apiVersion, updateWorkOrderRequest).pipe(take(1)).subscribe(response => {
 
       let workOrderPart = this.workOrderModel.workOrderParts.find(s => s.id === partId);
-      workOrderPart.cycleCount = response.object.cycleCount;
+      workOrderPart.cycleCount = response.object?.cycleCount || 0;
+      workOrderPart.ncrHistoryItems = response.object?.ncrHistoryItems || [];
       this.originalSerialNumbers.find(s => s.id === partId).serialNumber = workOrderPart.serialNumber;
 
       let changebuttonElement = <HTMLInputElement>document.getElementById('changebutton' + index);
