@@ -213,6 +213,11 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
 
   createEndSendMonitorRequests(closeTask: boolean = false, sendNCREmail: boolean = false) {
     let toatlRequests = this.workOrderMonitorsToView.length;
+    if (closeTask && toatlRequests === 0) {
+      this.wasValidationCalled = false;
+      this.monitorsHaveBeenSaved = false;
+      this.closeCurrentTaskInProgress.emit();
+    }
 
     this.showNcrEmailNotificationDialog = false;
     this.workOrderMonitorsToView.map(monitor => {
