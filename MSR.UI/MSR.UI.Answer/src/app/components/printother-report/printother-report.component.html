@@ -20,6 +20,7 @@
         <technical-data-label [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'TechnicalDataLabel'"></technical-data-label>
         <part-label-roll [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'PartLabelRoll4in'"></part-label-roll>
         <work-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'WorkReport'"></work-report>
+        <ncr-label [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'NCRLabel'"></ncr-label>
     </div>
     <p-footer>
         <div class="pull-right">

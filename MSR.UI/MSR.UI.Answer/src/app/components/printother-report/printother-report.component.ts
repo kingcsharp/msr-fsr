@@ -26,8 +26,9 @@ export class PrintotherReportComponent implements OnInit {
       { label: 'Cert of Compliance', value: 'CertOfCompliance'},
       { label: 'WIP History Report', value: 'WIPHistoryReport'},
       { label: 'NCR Report', value: 'NCRReport'},
+      { label: 'NCR Label', value: 'NCRLabel'},
       { label: 'Technical Data Label', value: 'TechnicalDataLabel'},
-      { label: 'Part Label Roll 4in', value: 'PartLabelRoll4in'}
+      { label: 'Part Label Roll 4in', value: 'PartLabelRoll4in'},
     ];
 
   }

@@ -35,6 +35,7 @@ import { NgxBarcodeModule } from 'ngx-barcode';
 import { WipHistoryReportComponent } from '../../components/wip-history-report/wip-history-report.component';
 import { NcrReportComponent } from '../../components/ncr-report/ncr-report.component';
 import { PartLabelRollComponent } from '../../components/part-label-roll/part-label-roll.component';
+import { NcrLabelComponent } from '../../components/ncr-label/ncr-label.component';
 import { TechnicalDataLabelComponent } from '../../components/technical-data-label/technical-data-label.component';
 import { WorkReportComponent } from '../../components/work-report/work-report.component';
 
@@ -51,7 +52,7 @@ export const routes = [
   declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent,
     WorkordertasktimerWrapperComponent, WorkordertaskmonitorsWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
     WipListButtonWrapperComponent, SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent, PrintotherReportComponent,
-    DeliveryTicketReportComponent, WipHistoryReportComponent, NcrReportComponent, PartLabelRollComponent, TechnicalDataLabelComponent,
+    DeliveryTicketReportComponent, WipHistoryReportComponent, NcrReportComponent, PartLabelRollComponent, TechnicalDataLabelComponent, NcrLabelComponent,
     WorkReportComponent, TakeOverTaskButtonWrapperComponent, DetailedPackingListComponent, CertOfComplianceComponent],
   imports: [
     CommonModule,
