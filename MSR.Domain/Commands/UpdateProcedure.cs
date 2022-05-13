@@ -25,5 +25,6 @@ namespace MSR.Domain.Commands
         public ICollection<int> ReferenceFileIds { get; set; }
         
         public ICollection<FileModel> ReferenceFiles { get; set; }
+        public string TagType { get; set; }
     }
 }

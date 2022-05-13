@@ -44,5 +44,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         // this entity ID OF ANY TYPE, and must be further filtered in the
         // query to get the real list.
         public ICollection<FileEntityMap> ReferenceFiles { get; set; }
+        public string TagType { get; set; }
     }
 }
