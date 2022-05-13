@@ -40,3 +40,4 @@ docker-compose.override.yml.OLD
 # *.lock
 *.patch
 /scripts
+/UpgradeLog.htm
