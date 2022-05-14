@@ -14144,7 +14144,6 @@ export interface IAuditActionResultOfProcedure extends IAuditActionResult {
 }
 
 export class Procedure extends TrackableModel implements IProcedure {
-    approvalStatus?: string | undefined;
     name?: string | undefined;
     procedureTypeId?: number;
     isRelatedToAProduct?: boolean;
@@ -14156,6 +14155,8 @@ export class Procedure extends TrackableModel implements IProcedure {
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
+    approvalStatus?: string | undefined;
+    tagType?: string | undefined;
 
     constructor(data?: IProcedure) {
         super(data);
@@ -14164,7 +14165,6 @@ export class Procedure extends TrackableModel implements IProcedure {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.approvalStatus = _data["approvalStatus"];
             this.name = _data["name"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.isRelatedToAProduct = _data["isRelatedToAProduct"];
@@ -14180,6 +14180,8 @@ export class Procedure extends TrackableModel implements IProcedure {
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileModel.fromJS(item));
             }
+            this.approvalStatus = _data["approvalStatus"];
+            this.tagType = _data["tagType"];
         }
     }
 
@@ -14192,7 +14194,6 @@ export class Procedure extends TrackableModel implements IProcedure {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["approvalStatus"] = this.approvalStatus;
         data["name"] = this.name;
         data["procedureTypeId"] = this.procedureTypeId;
         data["isRelatedToAProduct"] = this.isRelatedToAProduct;
@@ -14208,13 +14209,14 @@ export class Procedure extends TrackableModel implements IProcedure {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
+        data["approvalStatus"] = this.approvalStatus;
+        data["tagType"] = this.tagType;
         super.toJSON(data);
         return data; 
     }
 }
 
 export interface IProcedure extends ITrackableModel {
-    approvalStatus?: string | undefined;
     name?: string | undefined;
     procedureTypeId?: number;
     isRelatedToAProduct?: boolean;
@@ -14226,6 +14228,8 @@ export interface IProcedure extends ITrackableModel {
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
+    approvalStatus?: string | undefined;
+    tagType?: string | undefined;
 }
 
 export class ProcedureType implements IProcedureType {
@@ -14290,6 +14294,7 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
     durationType!: string;
     referenceFiles?: FileRequest[] | undefined;
     referenceFileIds?: number[] | undefined;
+    tagType?: string | undefined;
 
     constructor(data?: ICreateProcedureRequest) {
         if (data) {
@@ -14318,6 +14323,7 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
                 for (let item of _data["referenceFileIds"])
                     this.referenceFileIds!.push(item);
             }
+            this.tagType = _data["tagType"];
         }
     }
 
@@ -14346,6 +14352,7 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
             for (let item of this.referenceFileIds)
                 data["referenceFileIds"].push(item);
         }
+        data["tagType"] = this.tagType;
         return data; 
     }
 }
@@ -14360,6 +14367,7 @@ export interface ICreateProcedureRequest {
     durationType: string;
     referenceFiles?: FileRequest[] | undefined;
     referenceFileIds?: number[] | undefined;
+    tagType?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -14965,6 +14973,7 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
     durationType!: string;
     referenceFiles?: FileRequest[] | undefined;
     referenceFileIds?: number[] | undefined;
+    tagType?: string | undefined;
 
     constructor(data?: IUpdateProcedureRequest) {
         if (data) {
@@ -14994,6 +15003,7 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
                 for (let item of _data["referenceFileIds"])
                     this.referenceFileIds!.push(item);
             }
+            this.tagType = _data["tagType"];
         }
     }
 
@@ -15023,6 +15033,7 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
             for (let item of this.referenceFileIds)
                 data["referenceFileIds"].push(item);
         }
+        data["tagType"] = this.tagType;
         return data; 
     }
 }
@@ -15037,6 +15048,7 @@ export interface IUpdateProcedureRequest {
     durationType: string;
     referenceFiles?: FileRequest[] | undefined;
     referenceFileIds?: number[] | undefined;
+    tagType?: string | undefined;
 }
 
 /**  */
