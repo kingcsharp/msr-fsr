@@ -19,6 +19,16 @@
                     </p-dropdown>
                 </div>
             </div>
+            <div *ngIf="selectedProcedureType === ncrProcedureType?.id" class="form-group">
+              <label for="tagtype" class="col-form-label text-left">
+                Tag Type
+              </label>
+              <div class="col-12">
+                  <p-dropdown placeholder="Select Tag Type" name="tagtype" [options]="tagTypes"
+                      showClear="true" [(ngModel)]="procedure.tagType" data-cy="tagtype-dropdown">
+                  </p-dropdown>
+              </div>
+            </div>
             <div class="form-group">
                 <label for="name" class="col-form-label text-left">
                     Name
