@@ -38,6 +38,10 @@ export class NcrLabelComponent implements OnInit {
           ? _.filter(this.WorkOrder.workOrderTasks, task => task.ncNumber === associatedFirstNCRTask.ncNumber)
           : null
       )
+      return {
+        ...workOrderPart,
+        tagType: _.find(associatedFirstNCRTask.mappedWorkOrderParts, part => part.id === workOrderPart.id)?.tagType,
+      }
     });
   }
 

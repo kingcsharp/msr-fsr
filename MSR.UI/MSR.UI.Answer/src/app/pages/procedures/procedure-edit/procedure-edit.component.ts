@@ -6,7 +6,7 @@ import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
   RoleService, Procedure, ProcedureStepModel, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService, SensorService,
   ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, UpdateProcedureStepRequest, DocumentService,
-  RoleRequest, CreateProcedureStepRequest, Role, FileModel, ICreateProcedureStepRequest, IUpdateProcedureStepRequest, ProcedureStepTemplateModel, IRoleRequest, FileRequest
+  RoleRequest, CreateProcedureStepRequest, Role, FileModel, ICreateProcedureStepRequest, IUpdateProcedureStepRequest, ProcedureStepTemplateModel, IRoleRequest, FileRequest, ProcedureType
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -39,6 +39,11 @@ export class ProcedureEditComponent implements OnInit {
   selectedProcedureStepTemplate: number;
   lastSavedProcedureStepOrder: Array<number>;
   documentsAvailable: Array<SelectItem>;
+  ncrProcedureType: ProcedureType;
+  tagTypes: Array<SelectItem> = [
+    {label: 'Yellow Tag', value: 'Yellow Tag'},
+    {label: 'Red Tag', value: 'Red Tag'}
+  ];
 
 
   constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef, private documentService: DocumentService,
@@ -64,7 +69,10 @@ export class ProcedureEditComponent implements OnInit {
         this.globals.showLoader(true);
         this.procedureTypeService.procedureTypeGet(null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe((procedureTypeGetResponse) => {
 
-          this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
+          this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => {
+            if (s.name === 'Conformance Action (NCR)') this.ncrProcedureType = s;
+            return { label: s.name, value: s.id };
+          });
 
           this.globals.showLoader(true);
           this.procedureStepTypeService.procedureStepType(null, env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedureStepTypeResponse) => {
@@ -291,6 +299,8 @@ export class ProcedureEditComponent implements OnInit {
   }
 
   updateProcedure(procedure: Procedure) {
+    procedure.tagType = procedure.procedureTypeId === this.ncrProcedureType?.id?
+      procedure.tagType : undefined;
     const referenceFiles = new Array<FileRequest>();
     const referenceFileIds = new Array<number>();
 
@@ -309,6 +319,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureRequest.durationType = procedure.durationType;
     updateProcedureRequest.name = procedure.name;
     updateProcedureRequest.procedureTypeId = procedure.procedureTypeId;
+    updateProcedureRequest.tagType = procedure.tagType,
     updateProcedureRequest.referenceFiles = referenceFiles;
     updateProcedureRequest.referenceFileIds = referenceFileIds;
     this.globals.showLoader(true);
