@@ -225,6 +225,23 @@ export class ReportCubeService {
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String, dropdownHeader: true }),
                 new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Number, styles: { 'width': '6rem' } })
                 ];
+            case 'NCRReportByPart':
+              return [
+                  new ColumnsSaved({ id: 'workorderid', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
+                  new ColumnsSaved({ id: 'ponumber', label: 'PO#', visible: true, type: this.enumColumnType.String }),
+                  new ColumnsSaved({ id: 'partnumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
+                  new ColumnsSaved({ id: 'serialnumber', label: 'SN', visible: true, type: this.enumColumnType.String }),
+                  new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: this.enumColumnType.Number }),
+                  new ColumnsSaved({ id: 'procedure', label: 'Procedure', visible: true, type: this.enumColumnType.String }),
+                  new ColumnsSaved({ id: 'product', label: 'Product', visible: true, type: this.enumColumnType.String }),
+                  new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count (at time of NC)', visible: true, type: this.enumColumnType.Number }),
+                  new ColumnsSaved({ id: 'ncnumber', label: 'NC Number', visible: true, type: this.enumColumnType.String }),
+                  new ColumnsSaved({ id: 'nctype', label: 'Type of NC', visible: true, type: this.enumColumnType.String }),
+                  new ColumnsSaved({ id: 'description', label: 'NC Desc', visible: true, type: this.enumColumnType.String }),
+                  new ColumnsSaved({ id: 'ncdate', label: 'NC Date', visible: true, type: this.enumColumnType.Date, styles: { 'width': '8rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
+                  new ColumnsSaved({ id: 'disposition', label: 'Customer Disposition', visible: true, type: this.enumColumnType.String }),
+                  new ColumnsSaved({ id: 'tagtype', label: 'Yellow / Red tag', visible: true, type: this.enumColumnType.String })
+              ];
             default:
                 break;
         }
