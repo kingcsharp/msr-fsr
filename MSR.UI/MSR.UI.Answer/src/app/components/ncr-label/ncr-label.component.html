@@ -21,14 +21,24 @@
           <td width="100%">
             <table class="table-bordered" width="100%">
               <ng-container *ngFor="let workOrderTask of workOrderTasks[index]">
-                <tr *ngFor="let workOrderTaskMonitor of workOrderTask?.workOrderTaskMonitors">
-                  <td width="50%" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description">
-                  </td>
-                  <td width="50%">
-                    {{workOrderTaskMonitor.textVal}}
-                  </td>
-                </tr>
+                <ng-container *ngFor="let workOrderTaskMonitor of workOrderTask?.workOrderTaskMonitors">
+                  <tr *ngIf="workOrderTaskMonitor.monitorListId">
+                    <td width="50%" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor?.description | workOrderTaskAndMonitor: workOrderTaskMonitor.procedureMonitorId : workOrderTaskMonitor.description">
+                    </td>
+                    <td width="50%">
+                      {{workOrderTaskMonitor.textVal}}
+                    </td>
+                  </tr>
+                </ng-container>
               </ng-container>
+              <tr>
+                <td width="50%">
+                  Yellow Or Red Tag
+                </td>
+                <td width="50%">
+                  {{workOrderPart.tagType}}
+                </td>
+              </tr>
             </table>
           </td>
         </tr>
