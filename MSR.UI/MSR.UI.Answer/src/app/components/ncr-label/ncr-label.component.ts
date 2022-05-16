@@ -40,7 +40,7 @@ export class NcrLabelComponent implements OnInit {
       )
       return {
         ...workOrderPart,
-        tagType: _.find(associatedFirstNCRTask.mappedWorkOrderParts, part => part.id === workOrderPart.id)?.tagType,
+        tagType: _.find(associatedFirstNCRTask?.mappedWorkOrderParts, part => part.id === workOrderPart.id)?.tagType,
       }
     });
   }
