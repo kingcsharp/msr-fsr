@@ -14,6 +14,8 @@ import * as _ from 'lodash';
 })
 export class NcrLabelComponent implements OnInit {
 
+
+  todayDate : Date = new Date();
   @Input() WorkOrder: WorkOrderModel;
   workOrderParts: Array<WorkOrderPartModel>;
   workOrderTasks: Array<any>;
