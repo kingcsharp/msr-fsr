@@ -16,6 +16,10 @@
          stateKey="{{gridStorageId}}">
         <ng-template pTemplate="caption">
           <div class="text-right">
+            <button
+              class="btn btn-warning  mb-xs sm-mrg" role="button" data-cy="add-button" (click)="procedureCSV()">
+              Download Filtered Procedures
+            </button>
             <button *ngIf="procedurePrivileges.canCreate" [routerLink]="['../procedure-create']"
               class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
               + Add

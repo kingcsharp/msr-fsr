@@ -10,7 +10,7 @@ import { AllowedActions } from '../../../models/lib/AllowedActions';
 import { callFunctionWithFilters } from '../../../models/lib/Utils';
 import { LazyLoadEvent } from 'primeng/api';
 import { take } from 'rxjs/operators';
-
+import { CSVConverterService } from '../../../services/csvconverter.service'
 @Component({
   selector: 'app-procedures',
   templateUrl: './procedures.component.html',
@@ -37,7 +37,8 @@ export class ProceduresComponent implements OnInit {
     private procedureService: ProcedureService,
     public commonGrid: CommonGrid,
     private elementReference: ElementRef,
-    public globals: Globals
+    public globals: Globals,
+    private csvService: CSVConverterService
   ) { }
 
   ngOnInit(): void {
@@ -109,5 +110,8 @@ export class ProceduresComponent implements OnInit {
       this.data.length = 0;
       this.getProcedures(this.currentEvent);
     }));
+  }
+  procedureCSV(){
+    this.csvService.downloadFile(this.data,this.gridSettings,'Filtered Procedures');
   }
 }
