@@ -21,3 +21,13 @@
 alert {
     cursor: pointer;
 }
+
+.invalid-value {
+  color: #db4912;
+  font-weight: 700;
+  margin-top: 3px;
+}
+
+p-celleditor > * {
+  width: 90% !important;
+}
