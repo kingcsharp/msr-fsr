@@ -280,7 +280,10 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => GetCustomerName(src)))
                 .ForMember(dest => dest.HasSubParts, opt => opt.MapFrom(src => src.HasSubParts.HasValue ? src.HasSubParts : false));
             CreateMap<CreateWorkOrder, WorkOrder>();
-            CreateMap<UpdateWorkOrder, WorkOrder>()
+            CreateMap<UpdateWorkOrderPrice, WorkOrder>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderId))
+                .ForMember(dest => dest.Price, opts => opts.Condition(src => src.Price > 0));
+            CreateMap<UpdateWorkOrderPrice, WorkOrder>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedure, ProcedureApproval>().ReverseMap();

@@ -8403,6 +8403,61 @@ export class WorkOrderService {
         }
         return _observableOf<AuditActionResultOfString>(<any>null);
     }
+
+    updatePrice(version: string, request: UpdateWorkOrderPriceRequest): Observable<AuditActionResultOfWorkOrderModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/UpdatePrice";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePrice(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePrice(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdatePrice(response: HttpResponseBase): Observable<AuditActionResultOfWorkOrderModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfWorkOrderModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfWorkOrderModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -22615,6 +22670,81 @@ export interface ICreateWorkOrderRequest {
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
     qty?: number;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfWorkOrderModel extends AuditActionResult implements IAuditActionResultOfWorkOrderModel {
+    object?: WorkOrderModel | undefined;
+
+    constructor(data?: IAuditActionResultOfWorkOrderModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? WorkOrderModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfWorkOrderModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfWorkOrderModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfWorkOrderModel extends IAuditActionResult {
+    object?: WorkOrderModel | undefined;
+}
+
+export class UpdateWorkOrderPriceRequest implements IUpdateWorkOrderPriceRequest {
+    workOrderId?: number;
+    price?: number;
+
+    constructor(data?: IUpdateWorkOrderPriceRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.price = _data["price"];
+        }
+    }
+
+    static fromJS(data: any): UpdateWorkOrderPriceRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateWorkOrderPriceRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["price"] = this.price;
+        return data; 
+    }
+}
+
+export interface IUpdateWorkOrderPriceRequest {
+    workOrderId?: number;
+    price?: number;
 }
 
 /** Base class for an API call with a typed result */

@@ -1801,5 +1801,33 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var subPartsList = await _unitOfWork.SubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
             return subPartsList.Select(i => _mapper.Map<SubPartModel>(i)).ToList();
         }
+
+        public async Task<WorkOrderModel> UpdateWorkOrderPriceAsync(UpdateWorkOrderPrice command)
+        {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
+            {
+                throw new DomainException(
+                    $"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
+            }
+
+            var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.WorkOrderId);
+
+            if (current is null)
+            {
+                throw new DomainException($"{nameof(WorkOrder)} not found with ID: {command.WorkOrderId}", DomainError.NotFound);
+            }
+
+            WorkOrderModel ret;
+            var workorder = _mapper.Map(command, current);
+            _unitOfWork.WorkOrders.Update(workorder);
+
+            // This will call SaveChangesAsync
+            await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
+
+            ret = _mapper.Map<WorkOrderModel>(workorder);
+
+            return ret;
+        }
     }
 }
