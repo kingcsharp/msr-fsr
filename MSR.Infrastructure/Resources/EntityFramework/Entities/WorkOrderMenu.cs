@@ -32,5 +32,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public bool HasNcr { get; set; }
         public string SegregationType { get; set; }
         public bool? HasSubParts { get; set; }
+        [Column(TypeName = "money")]
+        public decimal Price { get; set; }
     }
 }

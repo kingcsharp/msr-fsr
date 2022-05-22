@@ -181,5 +181,6 @@ namespace MSR.Domain.Models
         public EnumSegregationType? SegregationType { get;set;}
         public bool HasSubParts { get; set; }
         public ICollection<SubPartModel> SubParts { get; set; }
+        public decimal? Price { get; set;}
     }
 }

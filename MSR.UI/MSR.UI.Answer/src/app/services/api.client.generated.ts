@@ -21492,6 +21492,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     segregationType?: EnumSegregationType | undefined;
     hasSubParts?: boolean;
     subParts?: SubPartModel[] | undefined;
+    price?: number | undefined;
 
     constructor(data?: IWorkOrderGridSummary) {
         if (data) {
@@ -21536,6 +21537,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
                 for (let item of _data["subParts"])
                     this.subParts!.push(SubPartModel.fromJS(item));
             }
+            this.price = _data["price"];
         }
     }
 
@@ -21580,6 +21582,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             for (let item of this.subParts)
                 data["subParts"].push(item.toJSON());
         }
+        data["price"] = this.price;
         return data; 
     }
 }
@@ -21613,6 +21616,7 @@ export interface IWorkOrderGridSummary {
     segregationType?: EnumSegregationType | undefined;
     hasSubParts?: boolean;
     subParts?: SubPartModel[] | undefined;
+    price?: number | undefined;
 }
 
 export class Sort implements ISort {
