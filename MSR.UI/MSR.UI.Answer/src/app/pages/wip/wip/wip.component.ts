@@ -3,7 +3,7 @@ import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-import { WorkOrderService, EnumSegregationType, ReportModel } from '../../../services/api.client.generated';
+import { WorkOrderService, EnumSegregationType, ReportModel, UpdateWorkOrderPriceRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
@@ -106,6 +106,21 @@ export class WipComponent implements OnInit {
     }, 10);
   }
 
+  updateWorkOrderPrice(rowIndex: number) {
+    this.globals.showLoader(true);
+    const currentWorkOrder = this.data[rowIndex];
+    const updatePriceRequest = new UpdateWorkOrderPriceRequest({
+      workOrderId: currentWorkOrder.id,
+      price: currentWorkOrder.price,
+    });
+    this.workOrderService.updatePrice(env.apiVersion, updatePriceRequest)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.data[rowIndex].price = response.object?.price;
+        this.prices[rowIndex] = response.object?.price;
+      }));
+  }
+
   setElementStyle(elem) {
     elem.timeLoggedType = 'danger';
     if (elem.percentageOfExpectedDurationTimeLogged > .25) {
@@ -151,6 +166,8 @@ export class WipComponent implements OnInit {
       } else {
         const newPrice = parseFloat(Number(this.data[this.currentRowIndex].price).toFixed(2));
         this.data[this.currentRowIndex].price = newPrice;
+        if (newPrice !== this.prices[this.currentRowIndex])
+          this.updateWorkOrderPrice(this.currentRowIndex);
       }
     }
   }
