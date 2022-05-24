@@ -56,6 +56,7 @@ export class GridComponent implements OnInit {
   totalRows: number = 0;
   completedOrCancelledStatuses: Array<any>;
   waitingToStartOrInProgressStatuses: Array<any>;
+  mainSub: Array<any>;
   partOptions: Array<any> = new Array<any>();
   constructor(public globals: Globals, public cg: CommonGrid, private reportCubeService: ReportCubeService,
     private cSVConverterService: CSVConverterService,
@@ -79,9 +80,17 @@ export class GridComponent implements OnInit {
       { status: 'In Progress' }
     ];
 
+    this.mainSub = [
+      { mainsub: 'Part/Kit'},
+      { mainsub: 'Subpart' }
+    ];
+
     if (this.reportInfo.name === 'Work In Process') {
       this.waitingToStartOrInProgressStatuses.map(status => {
         this.staticOptions.push(status);
+      });
+      this.mainSub.map(mainsub => {
+          this.staticOptions.push(mainsub);
       });
     } else if (this.reportInfo.name === 'Combined Financial Data') {
       this.completedOrCancelledStatuses.map(status => {
