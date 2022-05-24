@@ -167,5 +167,14 @@ namespace MSR.Answer.API.V1.Controllers
             var returnValue = await _dispatcher.DispatchAsync(command);
             return returnValue.ToOkObjectResponse<string>("WorkOrder Created Successfully");
         }
+
+        [HttpPatch("UpdatePrice")]
+        [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
+        public async Task<IActionResult> UpdateWorkOrderPrice([FromBody] UpdateWorkOrderPriceRequest request)
+        {
+            var command = request.ToUpdateWorkOrderPriceCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<WorkOrderModel>("Work Order Price has been updated!");
+        }
     }
 }

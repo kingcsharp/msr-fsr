@@ -31,6 +31,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetWorkOrderHistory>,
         ICommandHandler<TakeOverWorkOrder>,
         ICommandHandler<CancelWorkOrder>,
+        ICommandHandler<UpdateWorkOrderPrice>,
         ICommandHandler<AddNCRWorkOrderTask>,
         ICommandHandler<CreateWorkOrder>,
         ICommandHandler<GetAssignedWorkOrders>,
@@ -153,6 +154,12 @@ namespace MSR.Application.ApplicationServices
             var workOrderTaskModels = await _workOrderService.CancelWorkOrderTasksAsync(command);
             
             return new CommandResponse<ICollection<WorkOrderTaskModel>>(workOrderTaskModels);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderPrice command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.UpdateWorkOrderPriceAsync(command);
+            return new CommandResponse<WorkOrderModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(AddNCRWorkOrderTask command, CancellationToken cancellationToken = default)

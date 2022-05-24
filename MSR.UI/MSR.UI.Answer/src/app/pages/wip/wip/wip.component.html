@@ -13,7 +13,7 @@
                 [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
                 [rowsPerPageOptions]="[10,25,50,100]"  [paginator]="true"  [filterDelay]="0" stateStorage="local"
                 [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getWorkOrders($event)" [totalRecords]="totalRecords"
-                 stateKey="{{gridStorageId}}">
+                 stateKey="{{gridStorageId}}" (onEditInit)="onEditInit()" (onEditCancel)="onEditCancel()" (onEditComplete)="onEditComplete()">
                 <ng-template pTemplate="caption">
                     <div class="text-right">
                         <button *ngIf="false" [routerLink]="['../proceduretype-create']"
@@ -103,9 +103,13 @@
                             [hidden]="!commonGrid.isVisibleCol('disposition',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
+                        <th *ngIf="adminOrManager" grid-input-filter [dt]="dt" searchField="price"
+                            [hidden]="!commonGrid.isVisibleCol('price',gridSettings)"
+                            [gridSettings]="gridSettings">
+                        </th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-model let-expanded="expanded">
+                <ng-template pTemplate="body" let-model let-expanded="expanded" let-rowIndex="rowIndex">
                     <tr class="ui-selectable-row" data-cy='wipgrid-body'>
                         <td>
                           <i *ngIf="model.subParts && model.subParts.length>0" class="fad pointer" [pRowToggler]="model" [ngClass]="{'fa-plus': expanded !== true, 'fa-minus':expanded===true}"></i>
@@ -190,6 +194,17 @@
                         <td [hidden]="!commonGrid.isVisibleCol('disposition', gridSettings)">
                             {{model.disposition}}
                         </td>
+                        <td *ngIf="adminOrManager" pEditableColumn [hidden]="!commonGrid.isVisibleCol('price', gridSettings)" (onEditComplete)="onEditComplete($event)">
+                          <p-cellEditor>
+                            <ng-template pTemplate="input">
+                              <input pInputText type="text" [(ngModel)]="model.price" (ngModelChange)="onChangePrice(rowIndex)">
+                              <div *ngIf="invalidPriceError && rowIndex === this.currentRowIndex" class="invalid-value">Invalid Price</div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                              {{model.price | currency: 'USD'}}
+                            </ng-template>
+                          </p-cellEditor>
+                      </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">

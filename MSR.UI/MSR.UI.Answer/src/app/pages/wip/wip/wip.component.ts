@@ -1,9 +1,9 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewEncapsulation } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-import { WorkOrderService, EnumSegregationType, ReportModel } from '../../../services/api.client.generated';
+import { WorkOrderService, EnumSegregationType, ReportModel, UpdateWorkOrderPriceRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
@@ -16,7 +16,8 @@ import { GridSaved } from '../../../models/lib/GridSaved';
   selector: 'app-wip',
   templateUrl: './wip.component.html',
   styleUrls: ['./wip.component.scss'],
-  providers: [WorkOrderService]
+  providers: [WorkOrderService],
+  encapsulation: ViewEncapsulation.Emulated,
 })
 export class WipComponent implements OnInit {
 
@@ -30,10 +31,15 @@ export class WipComponent implements OnInit {
   totalRecords: number = 0;
   gridPartsSaved: GridSaved;
   reportPartsModel: ReportModel;
+  prices: Array<number> = [];
+  currentRowIndex: number = -1;
+  invalidPriceError: boolean = false;
+  adminOrManager: boolean = false;
 
   constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
+    this.adminOrManager = this.globals.getCurrentUser().roles.some(role => role.name === 'Administrator' || role.name === 'Production Manager')
 
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
@@ -70,8 +76,11 @@ export class WipComponent implements OnInit {
       new ColumnsSaved({ id: 'productName', label: 'Product', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.StringArray }),
-      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String })
+      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String }),
     ];
+
+    if (this.adminOrManager)
+      this.gridSettings.push(new ColumnsSaved({ id: 'price', label: 'Price', visible: true, type: EnumColumnType.Number }));
 
     this.statusOptions = [
       { label: 'In Progress', value: 'In Progress' },
@@ -89,9 +98,27 @@ export class WipComponent implements OnInit {
         .subscribe(responseHandler(response => {
           this.totalRecords = response.totalNumberOfRecords;
           this.data = response.object;
+          this.prices = this.data.map((workorderMenu) => workorderMenu.price);
+          this.currentRowIndex = -1;
+          this.invalidPriceError = false;
           this.data.map((elem) => this.setElementStyle(elem));
         }));
     }, 10);
+  }
+
+  updateWorkOrderPrice(rowIndex: number) {
+    this.globals.showLoader(true);
+    const currentWorkOrder = this.data[rowIndex];
+    const updatePriceRequest = new UpdateWorkOrderPriceRequest({
+      workOrderId: currentWorkOrder.id,
+      price: currentWorkOrder.price,
+    });
+    this.workOrderService.updatePrice(env.apiVersion, updatePriceRequest)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.data[rowIndex].price = response.object?.price;
+        this.prices[rowIndex] = response.object?.price;
+      }));
   }
 
   setElementStyle(elem) {
@@ -119,6 +146,39 @@ export class WipComponent implements OnInit {
 
   getVisibleColumns() {
     return this.gridSettings.filter(x => x.visible).length;
+  }
+
+  onEditInit(): void {
+    this.currentRowIndex = -1;
+    this.invalidPriceError = false;
+  }
+
+  onEditCancel(): void {
+    if (this.currentRowIndex !== -1) {
+      this.data[this.currentRowIndex].price = this.prices[this.currentRowIndex];
+    }
+  }
+
+  onEditComplete(): void {
+    if (this.currentRowIndex !== -1) {
+      if (this.invalidPriceError) {
+        this.data[this.currentRowIndex].price = this.prices[this.currentRowIndex];
+      } else {
+        const newPrice = parseFloat(Number(this.data[this.currentRowIndex].price).toFixed(2));
+        this.data[this.currentRowIndex].price = newPrice;
+        if (newPrice !== this.prices[this.currentRowIndex])
+          this.updateWorkOrderPrice(this.currentRowIndex);
+      }
+    }
+  }
+
+  onChangePrice(rowIndex: number) {
+    this.currentRowIndex = rowIndex;
+    let invalidPriceError = false;
+    if (!Number(this.data[this.currentRowIndex].price)) {
+      invalidPriceError = true;
+    }
+    this.invalidPriceError = invalidPriceError;
   }
 
 }

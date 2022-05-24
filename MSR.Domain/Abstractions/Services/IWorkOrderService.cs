@@ -30,5 +30,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<WorkOrderSelectItem>> GetWorkOrderSelectItems(GetAssignedWorkOrders command);
         Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersView();
         Task<ICollection<SubPartModel>> GetWorkOrderSubParts(List<int> workOrderIds);
+        Task<WorkOrderModel> UpdateWorkOrderPriceAsync(UpdateWorkOrderPrice command);
     }
 }
