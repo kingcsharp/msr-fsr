@@ -6,7 +6,8 @@
           <div class="img-responsive" style="margin-top: 16px;width:185px;">
             <img src="assets/img/msr-label-logo.png" alt="Logo">
           </div>
-          <p class="date">Date: <strong>{{todayDate | date: 'short'}}</strong></p>
+          <p class="date">Date: <strong>{{todayDate | date: 'shortDate'}}</strong></p>
+         <!-- {{todayDate}} -->
           <p>Site: <strong>MSR-FSR {{WorkOrder.location?.name}}</strong></p>
           <p>WO: <strong>{{WorkOrder.product?.customer?.name}}-{{ WorkOrder.id}}</strong></p>
           <div class="coded" style="max-width:175px">
