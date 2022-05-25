@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { WorkOrderModel } from '../../services/api.client.generated';
 import { PackingListViewModel } from './detailed-packing-list-view-model';
 import { formatDate } from '@angular/common';
@@ -6,7 +6,8 @@ import { formatDate } from '@angular/common';
 @Component({
   selector: 'detailed-packing-list',
   templateUrl: './detailed-packing-list.component.html',
-  styleUrls: ['./detailed-packing-list.component.scss']
+  styleUrls: ['./detailed-packing-list.component.scss'],
+  encapsulation: ViewEncapsulation.Emulated,
 })
 export class DetailedPackingListComponent implements OnInit {
 

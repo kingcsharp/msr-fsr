@@ -40,22 +40,22 @@
         <div class="col-1 border text-center"><b>NC#</b></div>
         <div class="col-1 border text-center"><b>Tag</b></div>
       </div>
-      <div *ngFor="let workOrderPart of packingList.sortedParts">
+      <div class="packing-list-row" *ngFor="let workOrderPart of packingList.sortedParts">
         <div class="row mx-2">
-          <div class="col-2 border">
+          <div class="col-2 border col-text">
             {{ workOrderPart.poLineLabel }}<br />
             <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.poLineLabel"
               [bc-display-value]="false" [bc-height]="40">
             </ngx-barcode>
           </div>
-          <div class="col-2 border">
+          <div class="col-2 border col-text">
             {{ workOrderPart.part.part?.partNumber }}<br />
             <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
               [bc-value]="workOrderPart.part.part?.partNumber" [bc-display-value]="false" [bc-height]="40">
             </ngx-barcode>
           </div>
           <div class="col-2 border col-text">{{ workOrderPart.part.part?.name }}</div>
-          <div class="col-2 border">
+          <div class="col-2 border col-text">
             {{ workOrderPart.part.serialNumber }}<br />
             <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.part.serialNumber"
               [bc-display-value]="false" [bc-height]="40">
