@@ -74,7 +74,7 @@ namespace MSR.Infrastructure.Resources.Queries
         public static (IQueryable<T> data, int totalRows) ToFilterView<T>(
             this IQueryable<T> query, QueryBase filter)
         {
-            query = Filter(query, filter.Filters);
+            query = query.Filter(filter.Filters);
             var totalRows = query.Count();
             //sort
             if (filter.Sort != null)
@@ -88,8 +88,7 @@ namespace MSR.Infrastructure.Resources.Queries
 
         }
 
-        private static IQueryable<T> Filter<T>(
-            IQueryable<T> queryable, IEnumerable<QueryFilter> filterList)
+        public static IQueryable<T> Filter<T>(this IQueryable<T> queryable, IEnumerable<QueryFilter> filterList)
         {
             if ((filterList != null) && (filterList.Any()))
             {

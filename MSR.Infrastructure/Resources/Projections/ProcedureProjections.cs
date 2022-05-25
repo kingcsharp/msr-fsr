@@ -25,5 +25,18 @@ namespace MSR.Infrastructure.Resources.Projections
             CreatedByLastName = x.Created.LastName,
             CreatedOn = x.CreatedOn
         };
+
+        public static Expression<Func<Procedure, dynamic>> ProcedureExport => x => new
+        {
+            Id = x.Id,
+            Name = x.Name,
+            ProcedureTypeId = x.ProcedureTypeId,
+            Revision = x.Revision,
+            Duration = x.Duration,
+            DurationType = x.DurationType,
+            Comments = x.Comments
+        };
     }
+
+
 }

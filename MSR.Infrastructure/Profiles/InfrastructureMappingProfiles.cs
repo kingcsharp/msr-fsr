@@ -264,6 +264,14 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.StatusId, opts => opts.MapFrom(src => 1))
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<ProcedureStepType, ProcedureStepTypeModel>().ReverseMap();
+            CreateMap<ProcedureImportItem, UpdateProcedure>()
+                .ForMember(dest => dest.ProcedureTypeId, opts => opts.MapFrom(src => src.ProcedureType));
+            CreateMap<ProcedureImportItem, CreateProcedure>()
+                .ForMember(dest => dest.ProcedureTypeId, opts => opts.MapFrom(src => src.ProcedureType));
+            CreateMap<ProcedureStepImportItem, CreateProcedureStep>()
+                .ForMember(dest => dest.ProcedureStepTypeId, opts => opts.MapFrom(src => src.ProcedureStepTypeId));
+            CreateMap<ProcedureStepImportItem, UpdateProcedureStep>()
+                .ForMember(dest => dest.procedureStepId, opts => opts.MapFrom(src => src.Id));
 
             // This mapping is correct according to the requirements
             // https://cmhworks.testlodge.com/projects/30813/requirements/32475

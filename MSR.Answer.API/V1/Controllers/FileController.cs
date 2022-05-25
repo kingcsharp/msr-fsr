@@ -9,6 +9,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using NSwag.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

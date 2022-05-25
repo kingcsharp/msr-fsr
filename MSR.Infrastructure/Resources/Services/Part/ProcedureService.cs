@@ -44,10 +44,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
     class ParsedProcedureImport
     {
-        public Dictionary<string, CreateProcedure> procedures;
-        public Dictionary<string, CreateProcedureImport> procedureExtras;
-        public Dictionary<string, List<CreateProcedureStep>> procedureSteps;
-        public Dictionary<string, List<CreateProcedureStepImport>> procedureStepExtras;
+        public Dictionary<string, CreateProcedure> Procedures { get; set; }
+        public Dictionary<string, CreateProcedureImport> ProcedureExtras { get; set; }
+        public Dictionary<string, List<CreateProcedureStep>> ProcedureSteps { get; set; }
+        public Dictionary<string, List<CreateProcedureStepImport>> ProcedureStepExtras { get; set; }
     }
 
     public class ProcedureService : IProcedureService
@@ -57,13 +57,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
         private readonly IFileService _fileService;
         private readonly ProcedureValidator _validator;
         private readonly IMessageHubClient _messageHub;
-
-        const int IMPORT_TABLE_COUNT = 2;
-        const string PROC_STEP_EXPORT = "PROC_STEP_EXPORT";
-        const string PROCEDURE_NAME_EXPORT = "PROCEDURE_NAME_EXPORT";
-        const int PROCEDURESTEPS_COLUMNS_COUNT = 13;
-        const int PROCEDURES_COLUMNS_COUNT = 4;
-
 
         public ProcedureService(IUnitOfWork unitOfWork,
             IMapper mapper, IFileService fileService, ProcedureValidator validator,
@@ -78,19 +71,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
         {
-            if (command.Id.HasValue) {
+            if (command.Id.HasValue)
+            {
                 return await GetSingleProcedureAsync(command);
-            } else {
+            }
+            else
+            {
                 return await GetAllProceduresAsync();
             }
         }
 
-        public async Task<Domain.Models.Procedure> CreateProcedureAsync(CreateProcedure command)
+        public async Task<Domain.Models.Procedure> CreateProcedureAsync(CreateProcedure command, bool isImport = false)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.Procedure procedureModel;
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval) || isImport)
             {
                 var procedureEntity = _mapper.Map<EntityFramework.Entities.Procedure>(command);
                 procedureEntity.Revision = 1;
@@ -130,7 +126,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var approval = _mapper.Map<ProcedureApproval>(command);
                 approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
                 approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
-                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int) ApprovalStatusEnum.Pending);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -227,10 +223,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
             newProcedure.ProcedureSteps
                 .Where(x => x.OldId.HasValue && documents.ContainsKey(x.OldId.Value))
                 .ToList()
-                .ForEach(step => {
+                .ForEach(step =>
+                {
                     List<DocumentEntityMap> stepDocuments =
                         documents.GetValueOrDefault(step.OldId.Value);
-                    stepDocuments.ForEach(stepDocument => {
+                    stepDocuments.ForEach(stepDocument =>
+                    {
                         stepDocument.EntityId = step.Id;
                         stepDocument.Id = 0;
                         stepDocument.Created = null;
@@ -243,7 +241,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return _mapper.Map<Domain.Models.Procedure>(newProcedure);
         }
 
-        public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command)
+        public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command, bool isImport = false)
         {
             var current = await _unitOfWork.Procedures
                 .Query()
@@ -259,7 +257,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.Procedure procedureModel;
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval) || isImport)
             {
                 int revision = current.Revision;
                 var procedure = _mapper.Map(command, current);
@@ -328,7 +326,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var approval = _mapper.Map<ProcedureApproval>(command);
                 approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
                 approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
-                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int) ApprovalStatusEnum.Pending);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -339,9 +337,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return procedureModel;
 
         }
-        public async Task<ICollection<Domain.Models.ProcedureStepModel>> GetProcedureStepAsync(GetProcedureStep command)
+
+        public async Task<ICollection<ProcedureStepModel>> GetProcedureStepAsync(GetProcedureStep command)
         {
-            List<EntityFramework.Entities.ProcedureStep> steps;
+            List<ProcedureStep> steps;
 
             var query = _unitOfWork.ProcedureSteps
                 .Query()
@@ -369,7 +368,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var procedureStepModels = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
 
             var procedureStepIds = procedureStepModels.Select(m => m.Id).ToList();
-            
+
             var documentEntityMaps = await _unitOfWork.DocumentEntityMap.Query().Where(s =>
                 procedureStepIds.Contains(s.EntityId) &&
                 s.EntityTableName == nameof(EntityFramework.Entities.ProcedureStep)).ToListAsync();
@@ -390,10 +389,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return procedureStepModels;
         }
 
-        public async Task<Domain.Models.ProcedureStepModel> CreateProcedureStepAsync(CreateProcedureStep command)
+        public async Task<ProcedureStepModel> CreateProcedureStepAsync(CreateProcedureStep command, bool isImport = false)
         {
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval) || isImport)
             {
                 var procedureStepEntity = _mapper.Map<ProcedureStep>(command);
                 await _unitOfWork.ProcedureSteps.AddAsync(procedureStepEntity);
@@ -451,7 +450,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         .Select(x => x.DocumentId)
                         .ToListAsync();
                 }
-                
+
 
                 var procedureStepModel = _mapper.Map<ProcedureStepModel>(procedureStepEntity);
                 procedureStepModel.Roles = roleModels;
@@ -475,7 +474,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepApprovalEntity);
         }
 
-        public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command, bool incRevision = true)
+        public async Task<ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command, bool incRevision = true, bool isImport = false)
         {
             ProcedureStep originalProcedureStepEntity = await _unitOfWork.ProcedureSteps
                 .Query()
@@ -517,7 +516,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval) || isImport)
             {
                 if (command.Roles != null &&
                     command.Roles.Count > 0 &&
@@ -608,8 +607,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             string json = JsonConvert.SerializeObject(new
             {
                 roleIds = command.Roles.Select(x => x.Id).ToList(),
-                    fileIds = idsOfFilesToBeMappedAndSaved,
-                    documentIds = command.ReferenceDocumentIds,
+                fileIds = idsOfFilesToBeMappedAndSaved,
+                documentIds = command.ReferenceDocumentIds,
             });
             approval.ApprovalJSON = json;
 
@@ -637,7 +636,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .Where(x => procedureStepIds.Contains(x.ProcedureStepId))
                     .Select(x => x.Id)
                     .ToList()
-                    .ForEach(id => {
+                    .ForEach(id =>
+                    {
                         _unitOfWork.ProcedureStepRoleMaps.Delete(false, id);
                     });
 
@@ -646,11 +646,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .Where(x => procedureStepIds.Contains(x.ProcedureStepId.Value))
                     .Select(x => x.Id)
                     .ToList()
-                    .ForEach(id => {
+                    .ForEach(id =>
+                    {
                         _unitOfWork.ProcedureStepMonitors.Delete(false, id);
                     });
-                
-                procedureStepIds.ForEach(id => {
+
+                procedureStepIds.ForEach(id =>
+                {
                     _unitOfWork.ProcedureSteps.Delete(false, id);
                 });
 
@@ -659,7 +661,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .Where(x => procedureStepIds.Contains(x.EntityId) && x.EntityTableName.Equals(nameof(ProcedureStep)))
                     .Select(x => x.Id)
                     .ToList()
-                    .ForEach(id => {
+                    .ForEach(id =>
+                    {
                         _unitOfWork.FileEntityMap.Delete(false, id);
                     });
 
@@ -668,13 +671,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .Where(x => procedureStepIds.Contains(x.ProcedureStepId))
                     .Select(x => x.Id)
                     .ToList()
-                    .ForEach(id => {
+                    .ForEach(id =>
+                    {
                         _unitOfWork.ProcedureStepRoleMaps.Delete(false, id);
                     });
 
-                procedureStepIds.ForEach(id => {
-                        _unitOfWork.ProcedureSteps.Delete(false, id);
-                    });
+                procedureStepIds.ForEach(id =>
+                {
+                    _unitOfWork.ProcedureSteps.Delete(false, id);
+                });
 
                 _unitOfWork.CascadeDelete(current);
                 await _unitOfWork.LogApprovalTransaction(current, current.Id, "Deleted");
@@ -756,7 +761,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var approval = _mapper.Map<ProcedureApproval>(currentProcedure);
                 approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
                 approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
-                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int) ApprovalStatusEnum.Pending);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
 
                 await _unitOfWork.ProcedureApprovals.AddAsync(approval);
                 await _unitOfWork.SaveChangesAsync();
@@ -777,10 +782,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
             IEnumerable<ImportError> importErrors;
             List<Domain.Models.Procedure> createdProcs = new List<Domain.Models.Procedure>();
 
-            ParsedProcedureImport import = ParseData(xlsData, out importErrors);
+            var import = ParseData(xlsData, out importErrors);
             if (importErrors.Any() || import == null)
             {
-                string allErrors = string.Join("\n", importErrors.Select(x => {
+                string allErrors = string.Join("\n", importErrors.Select(x =>
+                {
                     string errMsg = string.Join(", ", x.Errors);
                     return $"Line {x.Line}: {errMsg}";
                 }));
@@ -789,322 +795,210 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             // Iterate through each procedure and add it, adding
             // each procedure's step along the way.
-            foreach (string procid in import.procedures.Keys)
+            foreach (var procedure in import)
             {
-                CreateProcedure newProc = import.procedures[procid];
-
-                // set defaults not included in import
-                if (newProc.DurationType == null)
+                var proc = new Domain.Models.Procedure();
+                var currentSteps = new List<ProcedureStep>();
+                var currentStepIds = new List<int>();
+                try
                 {
-                    newProc.DurationType = "hours";
-                }
-
-                Domain.Models.Procedure createdProcedure =
-                    await CreateProcedureAsync(newProc);
-
-                if (import.procedureSteps.ContainsKey(procid))
-                {
-                    List<CreateProcedureStep> steps = import.procedureSteps[procid];
-                    foreach (var step in steps)
+                    
+                    if (procedure.Id.HasValue)
                     {
-                        step.procedureId = createdProcedure.Id;
-                        var procedureStepEntity = _mapper.Map<ProcedureStep>(step);
-                        await _unitOfWork.ProcedureSteps.AddAsync(procedureStepEntity);
-                        await _unitOfWork.SaveChangesAsync();
-                        if (step.ReferenceDocumentIds != null)
+                        //It's existing update it.
+                        var updatedProcedureCommand = _mapper.Map<UpdateProcedure>(procedure);
+                        proc = await UpdateProcedureAsync(updatedProcedureCommand, true);
+                        currentSteps = await _unitOfWork.ProcedureSteps.Query().Where(i => i.ProcedureId == proc.Id).ToListAsync();
+                        currentStepIds = currentSteps.Select(i => i.Id).ToList();
+                    }
+                    else
+                    {
+                        //It doesn't exist so create it
+                        var createProcedureCommand = _mapper.Map<CreateProcedure>(procedure);
+                        if(createProcedureCommand.DurationType == null)
                         {
-                            foreach (int newDocId in step.ReferenceDocumentIds)
-                            {
-                                var documentEntityMap = new DocumentEntityMap()
-                                {
-                                    EntityId = procedureStepEntity.Id,
-                                    EntityTableName = nameof(ProcedureStep),
-                                    DocumentId = newDocId
-                                };
-                                _unitOfWork.DocumentEntityMap.Add(documentEntityMap);
-                            }
-                            await _unitOfWork.SaveChangesAsync();
+                            createProcedureCommand.DurationType = "hours";
+                        }
+                        proc = await CreateProcedureAsync(createProcedureCommand, true);
+                    }
+
+                    if (procedure.ProcedureSteps != null && procedure.ProcedureSteps.Any())
+                    {
+                        var incomingStepIds = procedure.ProcedureSteps.Where(i => i.Id.HasValue).Select(i => i.Id.Value).ToList();
+                        var stepsToAdd = procedure.ProcedureSteps.Where(i => (i.Id.HasValue && i.Id.Value == 0) || !i.Id.HasValue).ToList();
+                        var stepsToRemoveIds = currentStepIds.Where(i => !incomingStepIds.Contains(i)).ToList();
+                        var stepsToUpdateIds = incomingStepIds.Where(i => !stepsToRemoveIds.Contains(i)).ToList();
+
+                        var stepsToRemove = currentSteps.Where(i => stepsToRemoveIds.Contains(i.Id));
+                        var stepsToUpdate = procedure.ProcedureSteps.Where(i => i.Id.HasValue && stepsToUpdateIds.Contains(i.Id.Value));
+
+                        foreach(var step in stepsToAdd)
+                        {
+                            var stepToAdd = _mapper.Map<CreateProcedureStep>(step);
+                            stepToAdd.procedureId = proc.Id;
+                            await CreateProcedureStepAsync(stepToAdd, true);
+                        }
+
+                        foreach(var step in stepsToRemove)
+                        {
+                            await DeleteProcedureStepsAsync(step.Id);
+                        }
+
+                        foreach(var step in stepsToUpdate)
+                        {
+                            var stepToUpdate = _mapper.Map<UpdateProcedureStep>(step);
+                            await UpdateProcedureStepAsync(stepToUpdate, isImport: true);
                         }
                     }
+                   
+                    createdProcs.Add(proc);
                 }
-
-                createdProcs.Add(createdProcedure);
+                catch (Exception)
+                { }
             }
 
             return createdProcs;
         }
 
-        private ParsedProcedureImport ParseData(byte[] binData, out IEnumerable<ImportError> importErrors)
+        private List<ProcedureImportItem> ParseData(byte[] binData, out IEnumerable<ImportError> importErrors)
         {
-            var errors = new List<ImportError>();
-            List<string> errorStrings = new List<string>();
             var result = XLSHelper.ParseRecords(binData);
+            var returnedProcedureData = ConvertProcedureData(result.Tables);
 
-            DataTableCollection tables = result.Tables;
-
-            if (tables.Count != IMPORT_TABLE_COUNT)
-            {
-                errorStrings.Add($"Invalid table count {tables.Count} != 2");
-                errors.Add(new ImportError() { Errors = errorStrings });
-                importErrors = errors;
-                return null;
-            }
-
-            DataTable procedureSteps = tables[0];
-            DataTable procedures = tables[1];
-
-            if (!procedureSteps.TableName.ToUpper().Equals(PROC_STEP_EXPORT))
-            {
-                errorStrings.Add($"Invalid table name: {procedureSteps.TableName} != {PROC_STEP_EXPORT}");
-                errors.Add(new ImportError() { Errors = errorStrings });
-                importErrors = errors;
-                return null;
-            }
-
-            if (!procedures.TableName.ToUpper().Equals(PROCEDURE_NAME_EXPORT))
-            {
-                errorStrings.Add($"Invalid table name: {procedureSteps.TableName} != {PROCEDURE_NAME_EXPORT}");
-                errors.Add(new ImportError() { Errors = errorStrings });
-                importErrors = errors;
-                return null;
-            }
-
-            if (procedureSteps.Columns.Count != PROCEDURESTEPS_COLUMNS_COUNT)
-            {
-                errorStrings.Add(
-                    $"Invalid {PROC_STEP_EXPORT} row count " +
-                    $"{procedureSteps.Columns.Count} != " +
-                    PROCEDURESTEPS_COLUMNS_COUNT.ToString()
-                );
-                errors.Add(new ImportError() { Errors = errorStrings });
-                importErrors = errors;
-                return null;
-            }
-
-            if (procedures.Columns.Count != PROCEDURES_COLUMNS_COUNT)
-            {
-                errorStrings.Add(
-                    $"Invalid {PROC_STEP_EXPORT} row " +
-                    $"count {procedures.Columns.Count} != " +
-                    PROCEDURES_COLUMNS_COUNT.ToString()
-                );
-                errors.Add(new ImportError() { Errors = errorStrings });
-                importErrors = errors;
-                return null;
-            }
-
-            ParsedProcedureImport parsedData = new ParsedProcedureImport();
-            //
-            // procedure import
-            //
-            errors = ImportProcedureData(procedures, parsedData);
-
-            //
-            // procedure step import
-            //
-            errors.AddRange(ImportProcedureStepData(procedureSteps, parsedData));
-
-            importErrors = errors;
-            return parsedData;
+            importErrors = returnedProcedureData.errors;
+            return returnedProcedureData.importItems;
         }
 
-        private List<ImportError> ImportProcedureData(DataTable procedures,
-            ParsedProcedureImport parsedData)
+        private (List<ImportError> errors, List<ProcedureImportItem> importItems) ConvertProcedureData(DataTableCollection importData)
         {
-            bool isHeader = true;
-            Dictionary<string, int> fieldMap = new Dictionary<string, int>();
             int lineNumber = 1;
             var errors = new List<ImportError>();
 
-            Dictionary<string, CreateProcedure> newProcs =
-                new Dictionary<string, CreateProcedure>();
-            Dictionary<string, CreateProcedureImport> newProcsExtra =
-                new Dictionary<string, CreateProcedureImport>();
-            
             var procedureTypeIds = _unitOfWork.ProcedureTypes.Query().Select(i => i.Id).ToList();
+            var procedureIds = _unitOfWork.Procedures.Query().Select(i => i.Id).ToList();
 
-            foreach (DataRow proc in procedures.Rows)
+            var procedures = importData[0];
+            var procedureSteps = importData[1];
+            var procedureImportItems = procedures.ToList<ProcedureImportItem>();
+            var procedureStepImportItems = procedureSteps.ToList<ProcedureStepImportItem>();
+            var validImportItems = new List<ProcedureImportItem>();
+
+            foreach (var procedureImportItem in procedureImportItems)
             {
-                string procedureIdString = "";
                 try
                 {
-                    if (isHeader)
+                    if (procedureImportItem.Id.HasValue && procedureImportItem.Id.Value > 0
+                        && !procedureIds.Contains(procedureImportItem.Id.Value))
                     {
-                        int i = 0;
-                        foreach (string item in proc.ItemArray)
+                        errors.Add(new ImportError()
                         {
-                            fieldMap.Add(item, i);
-                            i += 1;
-                        }
-                        isHeader = false;
-                        lineNumber += 1;
-                        continue;
+                            Errors = new List<string>()
+                            {
+                                $"Procedure with Id: {procedureImportItem.Id} Does Not Exist"
+                            },
+                            Line = lineNumber
+                        });
                     }
 
-                    CreateProcedure newProc = new CreateProcedure();
-                    CreateProcedureImport newProcExtra =
-                        new CreateProcedureImport();
-                    procedureIdString = proc.ItemArray[fieldMap["PROCEDURE_ID"]].ToString();
-                    newProc.Name = proc.ItemArray[fieldMap["PROCEDURE_NAME"]].ToString();
-                    newProcExtra.ANS_ID = proc.ItemArray[fieldMap["ANS_ID"]].ToString();
-
-                    if (int.TryParse(proc.ItemArray[fieldMap["PROC_TYPE_ID"]].ToString(), out var procedureTypeId))
+                    if (string.IsNullOrWhiteSpace(procedureImportItem.Name))
                     {
-                        if (procedureTypeIds.Contains(procedureTypeId))
+                        errors.Add(new ImportError()
                         {
-                            newProc.ProcedureTypeId = procedureTypeId;
-                        }
+                            Errors = new List<string>
+                            {
+                                $"Procedure with Id: {procedureImportItem.Id} and Name: {procedureImportItem.Name} is missing Required Procedure Name"
+                            },
+                            Line = lineNumber
+                        });
                     }
 
-                    // Store the new procedure data in memory.
-                    if (newProcs.ContainsKey(procedureIdString))
+                    if (!procedureTypeIds.Contains(procedureImportItem.ProcedureType))
                     {
-                        List<string> errorStrings = new List<string>();
-                        errorStrings.Add($"Import ERROR: duplicate key '{procedureIdString}'");
-                        errors.Add(new ImportError() { Errors = errorStrings });
+                        errors.Add(new ImportError()
+                        {
+                            Errors = new List<string>()
+                            {
+                                $"Procedure with Id: {procedureImportItem.Id} and Name: {procedureImportItem.Name} has an Invalid ProcedureType Id: {procedureImportItem.ProcedureType}"
+                            },
+                            Line = lineNumber
+                        });
                     }
-                    newProcs.Add(procedureIdString, newProc);
-                    newProcsExtra.Add(procedureIdString, newProcExtra);
+
+                    var procedureStepItems = procedureStepImportItems.Where(i => i.ProcedureId == procedureImportItem.Id || i.ProcedureName == procedureImportItem.Name).ToList();
+                    if (procedureStepItems.Any())
+                    {
+                        var returnedProcedureStepData = ValidateProcedureStepData(procedureStepItems);
+                        if (returnedProcedureStepData.Any())
+                        {
+                            var importError = new ImportError()
+                            {
+                                Errors = new List<string>() { $"Procedure with Id: {procedureImportItem.Id} and Name: {procedureImportItem.Name} has {returnedProcedureStepData.Count()} Step Errors." },
+                                Line = lineNumber
+                            };
+                            importError.Errors.AddRange(returnedProcedureStepData.SelectMany(i => i.Errors.Select(j => $"Line: {i.Line}: Error: {j}")));
+                            errors.Add(importError);
+                        }
+                        procedureImportItem.ProcedureSteps = procedureStepItems;
+                    }
+                    if (!errors.Any())
+                    {
+                        validImportItems.Add(procedureImportItem);
+                    }
                 }
                 catch (InvalidCastException e)
                 {
-                    List<string> errorStrings = new List<string>();
-                    errorStrings.Add($"PROC({procedureIdString}) Parse Error: {e.Message}");
+                    List<string> errorStrings = new List<string>
+                    {
+                        $"Procedure with Id: {procedureImportItem.Id} and Name: {procedureImportItem.Name} has a Parse Error: {e.Message}"
+                    };
                     errors.Add(new ImportError()
                     {
                         Errors = errorStrings,
-                            Line = lineNumber
+                        Line = lineNumber
                     });
                 }
                 lineNumber += 1;
             }
-            parsedData.procedures = newProcs;
-            parsedData.procedureExtras = newProcsExtra;
-            return errors;
+            return (errors, validImportItems);
         }
 
-        private List<ImportError> ImportProcedureStepData(DataTable procedureSteps,
-            ParsedProcedureImport parsedData)
+        private List<ImportError> ValidateProcedureStepData(List<ProcedureStepImportItem> procedureSteps)
         {
-            bool isHeader = true;
-            Dictionary<string, int> fieldMap = new Dictionary<string, int>();
             int lineNumber = 1;
             var errors = new List<ImportError>();
-
-            Dictionary<string, List<CreateProcedureStep>> newSteps =
-                new Dictionary<string, List<CreateProcedureStep>>();
-            Dictionary<string, List<CreateProcedureStepImport>> newStepsExtra =
-                new Dictionary<string, List<CreateProcedureStepImport>>();
+            const int DEFAULTROLE = 7; //Technician
 
             var roleIds = _unitOfWork.Roles.Query().Select(i => i.Id).ToList();
-            var documentIds = _unitOfWork.Documents.Query().Select(i => i.Id).ToList();
+            var procedureStepIds = _unitOfWork.ProcedureSteps.Query().Select(i => i.Id).ToList();
 
-            foreach (DataRow step in procedureSteps.Rows)
+            foreach (var step in procedureSteps)
             {
-                string procedureIdString = "";
                 try
                 {
-                    if (isHeader)
+                    if (step.Id.HasValue && step.Id.Value > 0 && !procedureStepIds.Contains(step.Id.Value))
                     {
-                        int i = 0;
-                        foreach (string item in step.ItemArray)
+                        errors.Add(new ImportError()
                         {
-                            fieldMap.Add(item, i);
-                            i += 1;
-                        }
-                        isHeader = false;
-                        lineNumber += 1;
-                        continue;
+                            Errors = new List<string>()
+                            {
+                                $"Step on line: {lineNumber} with Id: {step.Id.Value} Does not exist"
+                            },
+                            Line = lineNumber
+                        });
                     }
-
-                    CreateProcedureStep newStep = new CreateProcedureStep();
-                    CreateProcedureStepImport newStepExtra =
-                        new CreateProcedureStepImport();
-
-                    procedureIdString = step.ItemArray[fieldMap["PROCEDURE_ID"]].ToString();
-                    newStep.StepText = step.ItemArray[fieldMap["STEP_TEXT"]].ToString();
-
-                    if (int.TryParse(step.ItemArray[fieldMap["PRINT_ORDER"]].ToString(), out var printOrder))
-                    {
-                        newStep.PrintOrder = printOrder;
-                    }
-
-                    newStepExtra.COMMENT = step.ItemArray[fieldMap["COMMENT"]].ToString();
-
-                    if (int.TryParse(step.ItemArray[fieldMap["STEP_TIME"]].ToString(), out var laborTime))
-                    {
-                        newStep.LaborTime = laborTime;
-                    }
-                    
-                    newStepExtra.EXTRA_NOTE1 = step.ItemArray[fieldMap["EXTRA_NOTE1"]].ToString();
-
-                    if (int.TryParse(step.ItemArray[fieldMap["DEFAULT_ROLE_ID"]].ToString(), out var defaultRoleId))
-                    {
-                        if (roleIds.Contains(defaultRoleId))
-                        {
-                            var defaultRoleModel = new Domain.Models.Role() { Id = defaultRoleId };
-                            newStep.Roles = new List<Domain.Models.Role>() { defaultRoleModel };
-                        }
-                    }
-                    
-                    newStepExtra.SERIALIZE = step.ItemArray[fieldMap["SERIALIZE"]].ToString();
-                    newStepExtra.SUCCESS_MONITOR = step.ItemArray[fieldMap["SUCCESS_MONITOR"]].ToString();
-                    newStepExtra.INTERNAL_LOCATION = step.ItemArray[fieldMap["INTERNAL_LOCATION"]].ToString();
-                    newStepExtra.LOC_TYPE = step.ItemArray[fieldMap["LOC_TYPE"]].ToString();
-                    newStep.Title = step.ItemArray[fieldMap["Title"]].ToString();
-
-                    // Reference documents are stored by string.  The IDs will need
-                    // to be fetched from database later
-                    newStepExtra.REF_DOC_ID = step.ItemArray[fieldMap["REF_DOC_ID"]].ToString();
-
-                    if (int.TryParse(step.ItemArray[fieldMap["REF_DOC_ID"]].ToString(), out var refDocId))
-                    {
-                        if (documentIds.Contains(refDocId))
-                        {
-                            newStep.ReferenceDocumentIds = new List<int>() { refDocId };
-                        }
-                    }
-
-                    // The IDs used in the spreadsheet will need to be collated at creation
-                    // time, so for now we just store a separate mapping.
-                    List<CreateProcedureStep> psmImport;
-                    if (newSteps.ContainsKey(procedureIdString))
-                    {
-                        psmImport = newSteps[procedureIdString];
-                    }
-                    else
-                    {
-                        psmImport = new List<CreateProcedureStep>();
-                        newSteps.Add(procedureIdString, psmImport);
-                    }
-                    psmImport.Add(newStep);
-
-                    List<CreateProcedureStepImport> psmiImport;
-                    if (newStepsExtra.ContainsKey(procedureIdString))
-                    {
-                        psmiImport = newStepsExtra[procedureIdString];
-                    }
-                    else
-                    {
-                        psmiImport = new List<CreateProcedureStepImport>();
-                        newStepsExtra.Add(procedureIdString, psmiImport);
-                    }
-                    psmiImport.Add(newStepExtra);
                 }
                 catch (InvalidCastException e)
                 {
                     List<string> errorStrings = new List<string>();
-                    errorStrings.Add($"STEP({procedureIdString}) Parse Error: {e.Message}");
+                    errorStrings.Add($"Step on Line: {lineNumber} has a Parse Error: {e.Message}");
                     errors.Add(new ImportError()
                     {
                         Errors = errorStrings,
-                            Line = lineNumber
+                        Line = lineNumber
                     });
                 }
                 lineNumber += 1;
             }
-            parsedData.procedureSteps = newSteps;
-            parsedData.procedureStepExtras = newStepsExtra;
             return errors;
         }
 
@@ -1156,7 +1050,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var procedureStepMonitorIdsToDelete = await _unitOfWork.ProcedureStepMonitors.Query()
                 .Where(s => s.ProcedureStepId.Value == procedureStepId).Select(m => m.Id).ToListAsync();
 
-            var workOrderTaskMonitorEntities =  await _unitOfWork.WorkOrderTaskMonitors.Query()
+            var workOrderTaskMonitorEntities = await _unitOfWork.WorkOrderTaskMonitors.Query()
                 .Where(s => procedureStepMonitorIdsToDelete.Contains(s.ProcedureMonitorId.Value)).ToListAsync();
 
             workOrderTaskMonitorEntities.ForEach(workOrderTaskMonitorEntity =>

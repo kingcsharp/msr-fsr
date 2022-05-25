@@ -3,6 +3,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
+using MSR.Domain.Models.Query;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using Newtonsoft.Json;
@@ -87,6 +88,21 @@ namespace MSR.Infrastructure.Resources.Queries
             }
 
             return query;
+        }
+
+        public static async Task<ICollection<Domain.Models.Procedure>> ExportProcedures(this DbSet<Procedure> dbSet, Expression<Func<Procedure, dynamic>> projection, QueryBase filters)
+        {
+            try
+            {
+                var dynamicData = await dbSet.Filter(filters.Filters).Select(projection).ToListAsync();
+                var procedureViews = JsonConvert.DeserializeObject<ICollection<Domain.Models.Procedure>>(JsonConvert.SerializeObject(dynamicData));
+                return procedureViews;
+            }
+            catch (Exception ex)
+            {
+                throw new DomainException(ex.Message, DomainError.InternalServerError);
+            }
+
         }
     }
 }

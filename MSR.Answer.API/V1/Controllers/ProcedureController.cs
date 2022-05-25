@@ -14,6 +14,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Views;
+using MSR.Answer.API.V1.Models.Paging;
+using MSR.Application.Abstractions;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -25,13 +28,15 @@ namespace MSR.Answer.API.V1.Controllers
     public class ProcedureController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
+        private IProcedureViewService _procedureViewService;
 
         /// <summary>
         /// Procedure Controller
         /// </summary>
-        public ProcedureController(ICommandDispatcher dispatcher)
+        public ProcedureController(ICommandDispatcher dispatcher, IProcedureViewService procedureViewService)
         {
             _dispatcher = dispatcher;
+            _procedureViewService = procedureViewService;
         }
 
         /// <summary>
@@ -186,6 +191,13 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ProcedureStepModel>(
                 DetermineResponseMessage<ProcedureStepModel>(ret, "update", "Procedure Step")
             );
+        }
+
+        [HttpGet("export")]
+        public async Task<ActionResult> ExportFile([FromQuery] ProcedureExportRequest filters)
+        {
+            var ret = await _procedureViewService.ExportProcedures(filters.ToQueryBase());
+            return File(ret.data, "application/octet-stream", ret.FileName);
         }
     }
 }
