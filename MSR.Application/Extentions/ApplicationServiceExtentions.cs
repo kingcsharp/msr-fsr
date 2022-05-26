@@ -39,6 +39,7 @@ namespace MSR.Application.Extentions
             services.AddTransient<IWorkOrderViewService, WorkOrderViewService>();
             services.AddTransient<IProductViewService, ProductViewService>();
             services.AddTransient<IWorkOrderPartViewService, WorkOrderPartViewService>();
+            services.AddTransient<IProcedureViewService, ProcedureViewService>();
 
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

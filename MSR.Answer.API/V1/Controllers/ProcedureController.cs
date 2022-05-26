@@ -194,6 +194,8 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("export")]
+
+        [SwaggerResponse(typeof(FileContentResult))]
         public async Task<ActionResult> ExportFile([FromQuery] ProcedureExportRequest filters)
         {
             var ret = await _procedureViewService.ExportProcedures(filters.ToQueryBase());
