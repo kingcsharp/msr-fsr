@@ -3832,6 +3832,77 @@ export class ProcedureService {
         }
         return _observableOf<AuditActionResult>(<any>null);
     }
+
+    export(pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/v{version}/Procedure/export?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sort !== undefined && sort !== null)
+            sort && sort.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
+        if (filters !== undefined && filters !== null)
+            filters && filters.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processExport(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processExport(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processExport(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
 }
 
 @Injectable()
@@ -15280,6 +15351,94 @@ export interface IUpdateProcedureStepRequest {
     referenceDocumentIds?: number[] | undefined;
 }
 
+export class Sort implements ISort {
+    field?: string | undefined;
+    dir?: string | undefined;
+
+    constructor(data?: ISort) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.field = _data["field"];
+            this.dir = _data["dir"];
+        }
+    }
+
+    static fromJS(data: any): Sort {
+        data = typeof data === 'object' ? data : {};
+        let result = new Sort();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["field"] = this.field;
+        data["dir"] = this.dir;
+        return data; 
+    }
+}
+
+export interface ISort {
+    field?: string | undefined;
+    dir?: string | undefined;
+}
+
+export class Filter implements IFilter {
+    field?: string | undefined;
+    operator?: string | undefined;
+    value?: string | undefined;
+    logic?: string | undefined;
+
+    constructor(data?: IFilter) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.field = _data["field"];
+            this.operator = _data["operator"];
+            this.value = _data["value"];
+            this.logic = _data["logic"];
+        }
+    }
+
+    static fromJS(data: any): Filter {
+        data = typeof data === 'object' ? data : {};
+        let result = new Filter();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["field"] = this.field;
+        data["operator"] = this.operator;
+        data["value"] = this.value;
+        data["logic"] = this.logic;
+        return data; 
+    }
+}
+
+export interface IFilter {
+    field?: string | undefined;
+    operator?: string | undefined;
+    value?: string | undefined;
+    logic?: string | undefined;
+}
+
 /** Base class for an API call with a typed result */
 export class AuditActionResultOfProcedureStepMonitor extends AuditActionResult implements IAuditActionResultOfProcedureStepMonitor {
     object?: ProcedureStepMonitor | undefined;
@@ -21672,94 +21831,6 @@ export interface IWorkOrderGridSummary {
     hasSubParts?: boolean;
     subParts?: SubPartModel[] | undefined;
     price?: number | undefined;
-}
-
-export class Sort implements ISort {
-    field?: string | undefined;
-    dir?: string | undefined;
-
-    constructor(data?: ISort) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.field = _data["field"];
-            this.dir = _data["dir"];
-        }
-    }
-
-    static fromJS(data: any): Sort {
-        data = typeof data === 'object' ? data : {};
-        let result = new Sort();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["field"] = this.field;
-        data["dir"] = this.dir;
-        return data; 
-    }
-}
-
-export interface ISort {
-    field?: string | undefined;
-    dir?: string | undefined;
-}
-
-export class Filter implements IFilter {
-    field?: string | undefined;
-    operator?: string | undefined;
-    value?: string | undefined;
-    logic?: string | undefined;
-
-    constructor(data?: IFilter) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.field = _data["field"];
-            this.operator = _data["operator"];
-            this.value = _data["value"];
-            this.logic = _data["logic"];
-        }
-    }
-
-    static fromJS(data: any): Filter {
-        data = typeof data === 'object' ? data : {};
-        let result = new Filter();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["field"] = this.field;
-        data["operator"] = this.operator;
-        data["value"] = this.value;
-        data["logic"] = this.logic;
-        return data; 
-    }
-}
-
-export interface IFilter {
-    field?: string | undefined;
-    operator?: string | undefined;
-    value?: string | undefined;
-    logic?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
