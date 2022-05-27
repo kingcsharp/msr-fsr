@@ -3832,6 +3832,77 @@ export class ProcedureService {
         }
         return _observableOf<AuditActionResult>(<any>null);
     }
+
+    export(pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/v{version}/Procedure/export?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sort !== undefined && sort !== null)
+            sort && sort.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
+        if (filters !== undefined && filters !== null)
+            filters && filters.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processExport(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processExport(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processExport(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
 }
 
 @Injectable()
@@ -8403,6 +8474,61 @@ export class WorkOrderService {
         }
         return _observableOf<AuditActionResultOfString>(<any>null);
     }
+
+    updatePrice(version: string, request: UpdateWorkOrderPriceRequest): Observable<AuditActionResultOfWorkOrderModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/UpdatePrice";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePrice(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePrice(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdatePrice(response: HttpResponseBase): Observable<AuditActionResultOfWorkOrderModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfWorkOrderModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfWorkOrderModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -8527,6 +8653,60 @@ export class WorkOrderPartService {
             }));
         }
         return _observableOf<AuditActionResultOfWorkOrderPartModel>(<any>null);
+    }
+
+    detail(id: number, version: string): Observable<AuditActionResultOfNCRPartWODetailView> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrderPart/Detail/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDetail(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfNCRPartWODetailView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfNCRPartWODetailView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDetail(response: HttpResponseBase): Observable<AuditActionResultOfNCRPartWODetailView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfNCRPartWODetailView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfNCRPartWODetailView>(<any>null);
     }
 }
 
@@ -14090,7 +14270,6 @@ export interface IAuditActionResultOfProcedure extends IAuditActionResult {
 }
 
 export class Procedure extends TrackableModel implements IProcedure {
-    approvalStatus?: string | undefined;
     name?: string | undefined;
     procedureTypeId?: number;
     isRelatedToAProduct?: boolean;
@@ -14102,6 +14281,8 @@ export class Procedure extends TrackableModel implements IProcedure {
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
+    approvalStatus?: string | undefined;
+    tagType?: string | undefined;
 
     constructor(data?: IProcedure) {
         super(data);
@@ -14110,7 +14291,6 @@ export class Procedure extends TrackableModel implements IProcedure {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.approvalStatus = _data["approvalStatus"];
             this.name = _data["name"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.isRelatedToAProduct = _data["isRelatedToAProduct"];
@@ -14126,6 +14306,8 @@ export class Procedure extends TrackableModel implements IProcedure {
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileModel.fromJS(item));
             }
+            this.approvalStatus = _data["approvalStatus"];
+            this.tagType = _data["tagType"];
         }
     }
 
@@ -14138,7 +14320,6 @@ export class Procedure extends TrackableModel implements IProcedure {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["approvalStatus"] = this.approvalStatus;
         data["name"] = this.name;
         data["procedureTypeId"] = this.procedureTypeId;
         data["isRelatedToAProduct"] = this.isRelatedToAProduct;
@@ -14154,13 +14335,14 @@ export class Procedure extends TrackableModel implements IProcedure {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
+        data["approvalStatus"] = this.approvalStatus;
+        data["tagType"] = this.tagType;
         super.toJSON(data);
         return data; 
     }
 }
 
 export interface IProcedure extends ITrackableModel {
-    approvalStatus?: string | undefined;
     name?: string | undefined;
     procedureTypeId?: number;
     isRelatedToAProduct?: boolean;
@@ -14172,6 +14354,8 @@ export interface IProcedure extends ITrackableModel {
     durationType?: string | undefined;
     procedureType?: ProcedureType | undefined;
     referenceFiles?: FileModel[] | undefined;
+    approvalStatus?: string | undefined;
+    tagType?: string | undefined;
 }
 
 export class ProcedureType implements IProcedureType {
@@ -14236,6 +14420,7 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
     durationType!: string;
     referenceFiles?: FileRequest[] | undefined;
     referenceFileIds?: number[] | undefined;
+    tagType?: string | undefined;
 
     constructor(data?: ICreateProcedureRequest) {
         if (data) {
@@ -14264,6 +14449,7 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
                 for (let item of _data["referenceFileIds"])
                     this.referenceFileIds!.push(item);
             }
+            this.tagType = _data["tagType"];
         }
     }
 
@@ -14292,6 +14478,7 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
             for (let item of this.referenceFileIds)
                 data["referenceFileIds"].push(item);
         }
+        data["tagType"] = this.tagType;
         return data; 
     }
 }
@@ -14306,6 +14493,7 @@ export interface ICreateProcedureRequest {
     durationType: string;
     referenceFiles?: FileRequest[] | undefined;
     referenceFileIds?: number[] | undefined;
+    tagType?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -14911,6 +15099,7 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
     durationType!: string;
     referenceFiles?: FileRequest[] | undefined;
     referenceFileIds?: number[] | undefined;
+    tagType?: string | undefined;
 
     constructor(data?: IUpdateProcedureRequest) {
         if (data) {
@@ -14940,6 +15129,7 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
                 for (let item of _data["referenceFileIds"])
                     this.referenceFileIds!.push(item);
             }
+            this.tagType = _data["tagType"];
         }
     }
 
@@ -14969,6 +15159,7 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
             for (let item of this.referenceFileIds)
                 data["referenceFileIds"].push(item);
         }
+        data["tagType"] = this.tagType;
         return data; 
     }
 }
@@ -14983,6 +15174,7 @@ export interface IUpdateProcedureRequest {
     durationType: string;
     referenceFiles?: FileRequest[] | undefined;
     referenceFileIds?: number[] | undefined;
+    tagType?: string | undefined;
 }
 
 /**  */
@@ -15157,6 +15349,94 @@ export interface IUpdateProcedureStepRequest {
     roles?: RoleRequest[] | undefined;
     /** Gets or Sets Documents */
     referenceDocumentIds?: number[] | undefined;
+}
+
+export class Sort implements ISort {
+    field?: string | undefined;
+    dir?: string | undefined;
+
+    constructor(data?: ISort) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.field = _data["field"];
+            this.dir = _data["dir"];
+        }
+    }
+
+    static fromJS(data: any): Sort {
+        data = typeof data === 'object' ? data : {};
+        let result = new Sort();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["field"] = this.field;
+        data["dir"] = this.dir;
+        return data; 
+    }
+}
+
+export interface ISort {
+    field?: string | undefined;
+    dir?: string | undefined;
+}
+
+export class Filter implements IFilter {
+    field?: string | undefined;
+    operator?: string | undefined;
+    value?: string | undefined;
+    logic?: string | undefined;
+
+    constructor(data?: IFilter) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.field = _data["field"];
+            this.operator = _data["operator"];
+            this.value = _data["value"];
+            this.logic = _data["logic"];
+        }
+    }
+
+    static fromJS(data: any): Filter {
+        data = typeof data === 'object' ? data : {};
+        let result = new Filter();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["field"] = this.field;
+        data["operator"] = this.operator;
+        data["value"] = this.value;
+        data["logic"] = this.logic;
+        return data; 
+    }
+}
+
+export interface IFilter {
+    field?: string | undefined;
+    operator?: string | undefined;
+    value?: string | undefined;
+    logic?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -17356,6 +17636,9 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
     parent?: WorkOrderPartModel | undefined;
+    ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
+    tagType?: string | undefined;
+    ncNumber?: string | undefined;
 
     constructor(data?: IWorkOrderPartModel) {
         if (data) {
@@ -17385,6 +17668,13 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
                     this.children!.push(WorkOrderPartModel.fromJS(item));
             }
             this.parent = _data["parent"] ? WorkOrderPartModel.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["ncrHistoryItems"])) {
+                this.ncrHistoryItems = [] as any;
+                for (let item of _data["ncrHistoryItems"])
+                    this.ncrHistoryItems!.push(NCRHistoryItemModel.fromJS(item));
+            }
+            this.tagType = _data["tagType"];
+            this.ncNumber = _data["ncNumber"];
         }
     }
 
@@ -17414,6 +17704,13 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
                 data["children"].push(item.toJSON());
         }
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.ncrHistoryItems)) {
+            data["ncrHistoryItems"] = [];
+            for (let item of this.ncrHistoryItems)
+                data["ncrHistoryItems"].push(item.toJSON());
+        }
+        data["tagType"] = this.tagType;
+        data["ncNumber"] = this.ncNumber;
         return data; 
     }
 }
@@ -17432,6 +17729,65 @@ export interface IWorkOrderPartModel {
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
     parent?: WorkOrderPartModel | undefined;
+    ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
+    tagType?: string | undefined;
+    ncNumber?: string | undefined;
+}
+
+export class NCRHistoryItemModel implements INCRHistoryItemModel {
+    workOrderId?: number;
+    workOrderTaskId?: number;
+    title?: string | undefined;
+    workOrderPartId?: number;
+    partId?: number;
+    serialNumber?: string | undefined;
+
+    constructor(data?: INCRHistoryItemModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.workOrderTaskId = _data["workOrderTaskId"];
+            this.title = _data["title"];
+            this.workOrderPartId = _data["workOrderPartId"];
+            this.partId = _data["partId"];
+            this.serialNumber = _data["serialNumber"];
+        }
+    }
+
+    static fromJS(data: any): NCRHistoryItemModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new NCRHistoryItemModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["workOrderTaskId"] = this.workOrderTaskId;
+        data["title"] = this.title;
+        data["workOrderPartId"] = this.workOrderPartId;
+        data["partId"] = this.partId;
+        data["serialNumber"] = this.serialNumber;
+        return data; 
+    }
+}
+
+export interface INCRHistoryItemModel {
+    workOrderId?: number;
+    workOrderTaskId?: number;
+    title?: string | undefined;
+    workOrderPartId?: number;
+    partId?: number;
+    serialNumber?: string | undefined;
 }
 
 export class WorkOrderTaskModel implements IWorkOrderTaskModel {
@@ -17458,6 +17814,9 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     title?: string | undefined;
     stepText?: string | undefined;
     isNCRTask?: boolean | undefined;
+    ncNumber?: string | undefined;
+    ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart[] | undefined;
 
     constructor(data?: IWorkOrderTaskModel) {
         if (data) {
@@ -17501,6 +17860,17 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             this.title = _data["title"];
             this.stepText = _data["stepText"];
             this.isNCRTask = _data["isNCRTask"];
+            this.ncNumber = _data["ncNumber"];
+            if (Array.isArray(_data["ncrHistoryItems"])) {
+                this.ncrHistoryItems = [] as any;
+                for (let item of _data["ncrHistoryItems"])
+                    this.ncrHistoryItems!.push(NCRHistoryItemModel.fromJS(item));
+            }
+            if (Array.isArray(_data["mappedWorkOrderParts"])) {
+                this.mappedWorkOrderParts = [] as any;
+                for (let item of _data["mappedWorkOrderParts"])
+                    this.mappedWorkOrderParts!.push(MappedWorkOrderPart.fromJS(item));
+            }
         }
     }
 
@@ -17544,6 +17914,17 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
         data["title"] = this.title;
         data["stepText"] = this.stepText;
         data["isNCRTask"] = this.isNCRTask;
+        data["ncNumber"] = this.ncNumber;
+        if (Array.isArray(this.ncrHistoryItems)) {
+            data["ncrHistoryItems"] = [];
+            for (let item of this.ncrHistoryItems)
+                data["ncrHistoryItems"].push(item.toJSON());
+        }
+        if (Array.isArray(this.mappedWorkOrderParts)) {
+            data["mappedWorkOrderParts"] = [];
+            for (let item of this.mappedWorkOrderParts)
+                data["mappedWorkOrderParts"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -17572,6 +17953,9 @@ export interface IWorkOrderTaskModel {
     title?: string | undefined;
     stepText?: string | undefined;
     isNCRTask?: boolean | undefined;
+    ncNumber?: string | undefined;
+    ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart[] | undefined;
 }
 
 export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOrderTaskMonitorModel {
@@ -17693,6 +18077,46 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     inputTypeId?: number | undefined;
     lowNumVal?: number | undefined;
     highNumVal?: number | undefined;
+}
+
+export class MappedWorkOrderPart implements IMappedWorkOrderPart {
+    id?: number;
+    tagType?: string | undefined;
+
+    constructor(data?: IMappedWorkOrderPart) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.tagType = _data["tagType"];
+        }
+    }
+
+    static fromJS(data: any): MappedWorkOrderPart {
+        data = typeof data === 'object' ? data : {};
+        let result = new MappedWorkOrderPart();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["tagType"] = this.tagType;
+        return data; 
+    }
+}
+
+export interface IMappedWorkOrderPart {
+    id?: number;
+    tagType?: string | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
@@ -21282,6 +21706,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     segregationType?: EnumSegregationType | undefined;
     hasSubParts?: boolean;
     subParts?: SubPartModel[] | undefined;
+    price?: number | undefined;
 
     constructor(data?: IWorkOrderGridSummary) {
         if (data) {
@@ -21326,6 +21751,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
                 for (let item of _data["subParts"])
                     this.subParts!.push(SubPartModel.fromJS(item));
             }
+            this.price = _data["price"];
         }
     }
 
@@ -21370,6 +21796,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             for (let item of this.subParts)
                 data["subParts"].push(item.toJSON());
         }
+        data["price"] = this.price;
         return data; 
     }
 }
@@ -21403,94 +21830,7 @@ export interface IWorkOrderGridSummary {
     segregationType?: EnumSegregationType | undefined;
     hasSubParts?: boolean;
     subParts?: SubPartModel[] | undefined;
-}
-
-export class Sort implements ISort {
-    field?: string | undefined;
-    dir?: string | undefined;
-
-    constructor(data?: ISort) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.field = _data["field"];
-            this.dir = _data["dir"];
-        }
-    }
-
-    static fromJS(data: any): Sort {
-        data = typeof data === 'object' ? data : {};
-        let result = new Sort();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["field"] = this.field;
-        data["dir"] = this.dir;
-        return data; 
-    }
-}
-
-export interface ISort {
-    field?: string | undefined;
-    dir?: string | undefined;
-}
-
-export class Filter implements IFilter {
-    field?: string | undefined;
-    operator?: string | undefined;
-    value?: string | undefined;
-    logic?: string | undefined;
-
-    constructor(data?: IFilter) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.field = _data["field"];
-            this.operator = _data["operator"];
-            this.value = _data["value"];
-            this.logic = _data["logic"];
-        }
-    }
-
-    static fromJS(data: any): Filter {
-        data = typeof data === 'object' ? data : {};
-        let result = new Filter();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["field"] = this.field;
-        data["operator"] = this.operator;
-        data["value"] = this.value;
-        data["logic"] = this.logic;
-        return data; 
-    }
-}
-
-export interface IFilter {
-    field?: string | undefined;
-    operator?: string | undefined;
-    value?: string | undefined;
-    logic?: string | undefined;
+    price?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -22404,6 +22744,81 @@ export interface ICreateWorkOrderRequest {
 }
 
 /** Base class for an API call with a typed result */
+export class AuditActionResultOfWorkOrderModel extends AuditActionResult implements IAuditActionResultOfWorkOrderModel {
+    object?: WorkOrderModel | undefined;
+
+    constructor(data?: IAuditActionResultOfWorkOrderModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? WorkOrderModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfWorkOrderModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfWorkOrderModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfWorkOrderModel extends IAuditActionResult {
+    object?: WorkOrderModel | undefined;
+}
+
+export class UpdateWorkOrderPriceRequest implements IUpdateWorkOrderPriceRequest {
+    workOrderId?: number;
+    price?: number;
+
+    constructor(data?: IUpdateWorkOrderPriceRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.price = _data["price"];
+        }
+    }
+
+    static fromJS(data: any): UpdateWorkOrderPriceRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateWorkOrderPriceRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["price"] = this.price;
+        return data; 
+    }
+}
+
+export interface IUpdateWorkOrderPriceRequest {
+    workOrderId?: number;
+    price?: number;
+}
+
+/** Base class for an API call with a typed result */
 export class AuditActionResultOfICollectionOfWorkOrderPartModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderPartModel {
     object?: WorkOrderPartModel[] | undefined;
 
@@ -22526,6 +22941,233 @@ export interface IUpdateWorkOrderPartRequest {
 }
 
 /** Base class for an API call with a typed result */
+export class AuditActionResultOfNCRPartWODetailView extends AuditActionResult implements IAuditActionResultOfNCRPartWODetailView {
+    object?: NCRPartWODetailView | undefined;
+
+    constructor(data?: IAuditActionResultOfNCRPartWODetailView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? NCRPartWODetailView.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfNCRPartWODetailView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfNCRPartWODetailView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfNCRPartWODetailView extends IAuditActionResult {
+    object?: NCRPartWODetailView | undefined;
+}
+
+export class NCRPartWODetailView implements INCRPartWODetailView {
+    workOrderId?: number;
+    workOrderCompletedDate?: Date | undefined;
+    workOrderPartId?: number;
+    partNumber?: string | undefined;
+    partName?: string | undefined;
+    serialNumber?: string | undefined;
+    workOrderTasks?: NCRPartWOTaskView[] | undefined;
+
+    constructor(data?: INCRPartWODetailView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.workOrderCompletedDate = _data["workOrderCompletedDate"] ? new Date(_data["workOrderCompletedDate"].toString()) : <any>undefined;
+            this.workOrderPartId = _data["workOrderPartId"];
+            this.partNumber = _data["partNumber"];
+            this.partName = _data["partName"];
+            this.serialNumber = _data["serialNumber"];
+            if (Array.isArray(_data["workOrderTasks"])) {
+                this.workOrderTasks = [] as any;
+                for (let item of _data["workOrderTasks"])
+                    this.workOrderTasks!.push(NCRPartWOTaskView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): NCRPartWODetailView {
+        data = typeof data === 'object' ? data : {};
+        let result = new NCRPartWODetailView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["workOrderCompletedDate"] = this.workOrderCompletedDate ? this.workOrderCompletedDate.toISOString() : <any>undefined;
+        data["workOrderPartId"] = this.workOrderPartId;
+        data["partNumber"] = this.partNumber;
+        data["partName"] = this.partName;
+        data["serialNumber"] = this.serialNumber;
+        if (Array.isArray(this.workOrderTasks)) {
+            data["workOrderTasks"] = [];
+            for (let item of this.workOrderTasks)
+                data["workOrderTasks"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface INCRPartWODetailView {
+    workOrderId?: number;
+    workOrderCompletedDate?: Date | undefined;
+    workOrderPartId?: number;
+    partNumber?: string | undefined;
+    partName?: string | undefined;
+    serialNumber?: string | undefined;
+    workOrderTasks?: NCRPartWOTaskView[] | undefined;
+}
+
+export class NCRPartWOTaskView implements INCRPartWOTaskView {
+    workOrderTaskTitle?: string | undefined;
+    workOrderTaskId?: number;
+    workOrderTaskMonitors?: WorkOrderPartMonitorView[] | undefined;
+    files?: FileModel[] | undefined;
+    documents?: DocumentView[] | undefined;
+
+    constructor(data?: INCRPartWOTaskView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderTaskTitle = _data["workOrderTaskTitle"];
+            this.workOrderTaskId = _data["workOrderTaskId"];
+            if (Array.isArray(_data["workOrderTaskMonitors"])) {
+                this.workOrderTaskMonitors = [] as any;
+                for (let item of _data["workOrderTaskMonitors"])
+                    this.workOrderTaskMonitors!.push(WorkOrderPartMonitorView.fromJS(item));
+            }
+            if (Array.isArray(_data["files"])) {
+                this.files = [] as any;
+                for (let item of _data["files"])
+                    this.files!.push(FileModel.fromJS(item));
+            }
+            if (Array.isArray(_data["documents"])) {
+                this.documents = [] as any;
+                for (let item of _data["documents"])
+                    this.documents!.push(DocumentView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): NCRPartWOTaskView {
+        data = typeof data === 'object' ? data : {};
+        let result = new NCRPartWOTaskView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderTaskTitle"] = this.workOrderTaskTitle;
+        data["workOrderTaskId"] = this.workOrderTaskId;
+        if (Array.isArray(this.workOrderTaskMonitors)) {
+            data["workOrderTaskMonitors"] = [];
+            for (let item of this.workOrderTaskMonitors)
+                data["workOrderTaskMonitors"].push(item.toJSON());
+        }
+        if (Array.isArray(this.files)) {
+            data["files"] = [];
+            for (let item of this.files)
+                data["files"].push(item.toJSON());
+        }
+        if (Array.isArray(this.documents)) {
+            data["documents"] = [];
+            for (let item of this.documents)
+                data["documents"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface INCRPartWOTaskView {
+    workOrderTaskTitle?: string | undefined;
+    workOrderTaskId?: number;
+    workOrderTaskMonitors?: WorkOrderPartMonitorView[] | undefined;
+    files?: FileModel[] | undefined;
+    documents?: DocumentView[] | undefined;
+}
+
+export class WorkOrderPartMonitorView implements IWorkOrderPartMonitorView {
+    workOrderTaskMonitorId?: number;
+    workOrderTaskMonitorDescription?: string | undefined;
+    result?: string | undefined;
+    comment?: string | undefined;
+
+    constructor(data?: IWorkOrderPartMonitorView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderTaskMonitorId = _data["workOrderTaskMonitorId"];
+            this.workOrderTaskMonitorDescription = _data["workOrderTaskMonitorDescription"];
+            this.result = _data["result"];
+            this.comment = _data["comment"];
+        }
+    }
+
+    static fromJS(data: any): WorkOrderPartMonitorView {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderPartMonitorView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderTaskMonitorId"] = this.workOrderTaskMonitorId;
+        data["workOrderTaskMonitorDescription"] = this.workOrderTaskMonitorDescription;
+        data["result"] = this.result;
+        data["comment"] = this.comment;
+        return data; 
+    }
+}
+
+export interface IWorkOrderPartMonitorView {
+    workOrderTaskMonitorId?: number;
+    workOrderTaskMonitorDescription?: string | undefined;
+    result?: string | undefined;
+    comment?: string | undefined;
+}
+
+/** Base class for an API call with a typed result */
 export class AuditActionResultOfWorkOrderTaskModel extends AuditActionResult implements IAuditActionResultOfWorkOrderTaskModel {
     object?: WorkOrderTaskModel | undefined;
 
@@ -22618,28 +23260,18 @@ export interface ICreateWorkOrderTaskRequest {
     taskStepOrder?: number | undefined;
 }
 
-/**  */
 export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
-    /** Gets or Sets WorkOrderTaskId */
     workOrderTaskId?: number | undefined;
-    /** Gets or Sets TaskStepOrder */
     taskStepOrder?: number | undefined;
-    /** Gets or Sets AssignedUserId */
     assignedUserId?: number | undefined;
-    /** Gets or Sets TaskIsRunning */
     taskIsRunning?: boolean | undefined;
-    /** Gets or Sets TaskRunningSince */
     taskRunningSince?: Date;
-    /** Gets or Sets StartedOn */
     startedOn?: Date;
-    /** Gets or Sets Status */
     status?: string | undefined;
-    /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
-    /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
-    /** List of files to UPLOAD and attach to this work order task */
     referenceFiles?: FileModel[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart2[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -22669,6 +23301,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileModel.fromJS(item));
+            }
+            if (Array.isArray(_data["mappedWorkOrderParts"])) {
+                this.mappedWorkOrderParts = [] as any;
+                for (let item of _data["mappedWorkOrderParts"])
+                    this.mappedWorkOrderParts!.push(MappedWorkOrderPart2.fromJS(item));
             }
         }
     }
@@ -22700,32 +23337,67 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
+        if (Array.isArray(this.mappedWorkOrderParts)) {
+            data["mappedWorkOrderParts"] = [];
+            for (let item of this.mappedWorkOrderParts)
+                data["mappedWorkOrderParts"].push(item.toJSON());
+        }
         return data; 
     }
 }
 
-/**  */
 export interface IUpdateWorkOrderTaskRequest {
-    /** Gets or Sets WorkOrderTaskId */
     workOrderTaskId?: number | undefined;
-    /** Gets or Sets TaskStepOrder */
     taskStepOrder?: number | undefined;
-    /** Gets or Sets AssignedUserId */
     assignedUserId?: number | undefined;
-    /** Gets or Sets TaskIsRunning */
     taskIsRunning?: boolean | undefined;
-    /** Gets or Sets TaskRunningSince */
     taskRunningSince?: Date;
-    /** Gets or Sets StartedOn */
     startedOn?: Date;
-    /** Gets or Sets Status */
     status?: string | undefined;
-    /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
-    /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
-    /** List of files to UPLOAD and attach to this work order task */
     referenceFiles?: FileModel[] | undefined;
+    mappedWorkOrderParts?: MappedWorkOrderPart2[] | undefined;
+}
+
+export class MappedWorkOrderPart2 implements IMappedWorkOrderPart2 {
+    id?: number;
+    tagType?: string | undefined;
+
+    constructor(data?: IMappedWorkOrderPart2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.tagType = _data["tagType"];
+        }
+    }
+
+    static fromJS(data: any): MappedWorkOrderPart2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new MappedWorkOrderPart2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["tagType"] = this.tagType;
+        return data; 
+    }
+}
+
+export interface IMappedWorkOrderPart2 {
+    id?: number;
+    tagType?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

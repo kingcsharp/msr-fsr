@@ -49,11 +49,11 @@ export class ReportComponent implements OnInit {
     const reportColumns = this.reportCubeService.getReportColumns(reportInfo);
     this.globals.showLoader(true);
     this.reportCubeService.getAllReportData(reportInfo).then((resp) => {
-      
+
       this.cSVConverterService.downloadFile(resp, reportColumns, reportInfo.name);
 
       this.globals.showLoader(false);
-      
+
     });
 
   }

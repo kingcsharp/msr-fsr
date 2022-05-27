@@ -39,7 +39,7 @@ export class WipComponent implements OnInit {
   constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
-    this.adminOrManager = this.globals.getCurrentUser().roles.some(role => role.name === 'Administrator' || role.name === 'Production Manager')
+    this.adminOrManager = this.globals.getCurrentUser().roles.some(role => role.name === 'Administrator' || role.name === 'Production Manager');
 
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
@@ -79,8 +79,9 @@ export class WipComponent implements OnInit {
       new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String }),
     ];
 
-    if (this.adminOrManager)
+    if (this.adminOrManager) {
       this.gridSettings.push(new ColumnsSaved({ id: 'price', label: 'Price', visible: true, type: EnumColumnType.Number }));
+    }
 
     this.statusOptions = [
       { label: 'In Progress', value: 'In Progress' },
@@ -166,8 +167,9 @@ export class WipComponent implements OnInit {
       } else {
         const newPrice = parseFloat(Number(this.data[this.currentRowIndex].price).toFixed(2));
         this.data[this.currentRowIndex].price = newPrice;
-        if (newPrice !== this.prices[this.currentRowIndex])
+        if (newPrice !== this.prices[this.currentRowIndex]) {
           this.updateWorkOrderPrice(this.currentRowIndex);
+        }
       }
     }
   }

@@ -604,7 +604,7 @@ export class WipdetailsComponent implements OnInit {
     this.tagTypesValid = true;
 
     if (this.workOrderTaskInProgress.procedureStepTypeId === ProcedureStepType.NCR) {
-      this.tagTypesValid = !_.some(this.ncrParts, part => part.selected && !part.tagType)
+      this.tagTypesValid = !_.some(this.ncrParts, part => part.selected && !part.tagType);
     }
 
     if (this.areMonitorsValid && this.tagTypesValid) {
@@ -715,14 +715,14 @@ export class WipdetailsComponent implements OnInit {
         task => _.some(this.ncrTaskIds, id => id === task.id) && task.ncNumber === this.workOrderTaskToView.ncNumber);
     }
     this.ncrParts = workOrderTask ? _.map(this.workOrderModel.workOrderParts, part => {
-      const mappedWorkOrderParts = _.find(workOrderTask.mappedWorkOrderParts, s => s.id === part.id)
+      const mappedWorkOrderParts = _.find(workOrderTask.mappedWorkOrderParts, s => s.id === part.id);
       return {
         id: part.id,
         serialNumber: part.serialNumber,
         partNumber: part.part?.partNumber || '',
         selected: !!mappedWorkOrderParts,
         tagType: mappedWorkOrderParts?.tagType || null,
-      }
+      };
     }) : [];
   }
 

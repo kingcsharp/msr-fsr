@@ -139,13 +139,13 @@ export class UserComponent implements OnInit {
         }));
     }, 10);
 
-    if(this.allUsers.length === 0) {
+    if (this.allUsers.length === 0) {
       setTimeout(() => {
         this.userService.userGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
-          this.updateUsersData(response.object)
-        }))
+          this.updateUsersData(response.object);
+        }));
       }, 10);
     }
   }

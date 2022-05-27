@@ -11,7 +11,7 @@ import { take } from 'rxjs/operators';
   providers: [WorkOrderPartService]
 })
 export class PartLabelRollComponent implements OnInit {
-  todayDate : Date = new Date();
+  todayDate: Date = new Date();
 
   @Input() WorkOrder: WorkOrderModel;
   workOrderParts: Array<WorkOrderPartModel>;

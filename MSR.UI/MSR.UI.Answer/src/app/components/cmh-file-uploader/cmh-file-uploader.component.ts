@@ -44,12 +44,12 @@ export class CmhFileUploaderComponent implements OnInit {
     }
 
     if (this.files.length > 0) {
-      if(this.useLoader){
+      if (this.useLoader) {
         this.globals.showLoader(true);
       } else {
         this.globals.showLoader(false);
       }
-      
+
       this.fileService.fileGet(this.globals.getSingularMenuName(this.menuItem), this.files[0].entityId, null, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           if (resp.object.length > 0) {
@@ -68,8 +68,8 @@ export class CmhFileUploaderComponent implements OnInit {
     }
 
     if (this.showSelectButton) {
-      
-      if(this.useLoader){
+
+      if (this.useLoader) {
         this.globals.showLoader(true);
       } else {
         this.globals.showLoader(false);

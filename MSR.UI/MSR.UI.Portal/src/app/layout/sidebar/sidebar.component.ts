@@ -1,12 +1,8 @@
-import { Component, ElementRef, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
   QuoteService,
-  QuotesProductsView,
-  EnumMenuItem,
-  CustomerService,
-  CustomerModel,
   CreateQuoteRequest,
 } from '../../services/api.client.generated';
 import { CSRJsonModel, ProcessModel, PartModel } from '../../models/csr-json-model';

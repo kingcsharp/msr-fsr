@@ -1,7 +1,7 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { LandingPageComponent } from "./landing.component";
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { LandingPageComponent } from './landing.component';
 
 export const routes = [
     { path: '', redirectTo: 'landingPage', pathMatch: 'full' },
@@ -12,6 +12,6 @@ export const routes = [
     declarations: [LandingPageComponent],
     imports: [
         CommonModule,
-        RouterModule.forChild(routes),]
+        RouterModule.forChild(routes), ]
   })
   export class LandingPageModule { static routes = routes; }

@@ -8,7 +8,7 @@ import { Globals } from '../../models/lib/globals';
     encapsulation: ViewEncapsulation.None
 })
 export class LandingPageComponent implements OnInit {
-    userName:string;
+    userName: string;
 
     constructor(public globals: Globals) { }
 

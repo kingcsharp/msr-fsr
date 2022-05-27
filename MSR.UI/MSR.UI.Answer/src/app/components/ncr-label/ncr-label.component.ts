@@ -15,7 +15,7 @@ import * as _ from 'lodash';
 export class NcrLabelComponent implements OnInit {
 
 
-  todayDate : Date = new Date();
+  todayDate: Date = new Date();
   @Input() WorkOrder: WorkOrderModel;
   workOrderParts: Array<WorkOrderPartModel>;
   workOrderTasks: Array<any>;
@@ -34,16 +34,16 @@ export class NcrLabelComponent implements OnInit {
           ),
           ['ncNumber'],
           ['desc']
-        )[0]
+        )[0];
       this.workOrderTasks.push(
         associatedFirstNCRTask
           ? _.filter(this.WorkOrder.workOrderTasks, task => task.ncNumber === associatedFirstNCRTask.ncNumber)
           : null
-      )
+      );
       return {
         ...workOrderPart,
         tagType: _.find(associatedFirstNCRTask?.mappedWorkOrderParts, part => part.id === workOrderPart.id)?.tagType,
-      }
+      };
     });
   }
 

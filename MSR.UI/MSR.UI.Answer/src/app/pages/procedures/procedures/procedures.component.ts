@@ -10,7 +10,7 @@ import { AllowedActions } from '../../../models/lib/AllowedActions';
 import { callFunctionWithFilters } from '../../../models/lib/Utils';
 import { LazyLoadEvent } from 'primeng/api';
 import { take } from 'rxjs/operators';
-import { CSVConverterService } from '../../../services/csvconverter.service'
+import { CSVConverterService } from '../../../services/csvconverter.service';
 @Component({
   selector: 'app-procedures',
   templateUrl: './procedures.component.html',
@@ -111,7 +111,7 @@ export class ProceduresComponent implements OnInit {
       this.getProcedures(this.currentEvent);
     }));
   }
-  procedureCSV(){
-    this.csvService.downloadFile(this.data,this.gridSettings,'Filtered Procedures');
+  procedureCSV() {
+    this.csvService.downloadFile(this.data, this.gridSettings, 'Filtered Procedures');
   }
 }

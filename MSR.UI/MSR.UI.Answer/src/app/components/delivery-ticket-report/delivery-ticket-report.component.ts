@@ -10,7 +10,7 @@ import { PackingListViewModel } from '../detailed-packing-list/detailed-packing-
 export class DeliveryTicketReportComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
-  
+
   packingList: PackingListViewModel;
 
   constructor() {  this.packingList = new PackingListViewModel(); }

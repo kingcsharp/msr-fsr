@@ -26,9 +26,9 @@ export class PrinttravelerReportComponent implements OnInit {
   ngOnInit(): void {
     this.router.events.pipe(
       filter.call(
-        this.router.events, 
-        (event:Event) => event instanceof NavigationEnd
-      )).subscribe(x => {this.urlToWipDetailsPage = window.location.href});
+        this.router.events,
+        (event: Event) => event instanceof NavigationEnd
+      )).subscribe(x => {this.urlToWipDetailsPage = window.location.href; });
 
       this.urlToWipDetailsPage = window.location.href;
 

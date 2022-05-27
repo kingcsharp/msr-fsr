@@ -70,7 +70,7 @@ export class ProcedureEditComponent implements OnInit {
         this.procedureTypeService.procedureTypeGet(null, null, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe((procedureTypeGetResponse) => {
 
           this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => {
-            if (s.name === 'Conformance Action (NCR)') this.ncrProcedureType = s;
+            if (s.name === 'Conformance Action (NCR)') { this.ncrProcedureType = s; }
             return { label: s.name, value: s.id };
           });
 
@@ -299,7 +299,7 @@ export class ProcedureEditComponent implements OnInit {
   }
 
   updateProcedure(procedure: Procedure) {
-    procedure.tagType = procedure.procedureTypeId === this.ncrProcedureType?.id?
+    procedure.tagType = procedure.procedureTypeId === this.ncrProcedureType?.id ?
       procedure.tagType : undefined;
     const referenceFiles = new Array<FileRequest>();
     const referenceFileIds = new Array<number>();

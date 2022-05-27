@@ -226,7 +226,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
         comment: monitor.comment === undefined ? '' : monitor.comment,
         multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
         textVal: monitor.textVal === undefined || monitor.textVal === this.monitorValueNotAvailable ? '' : monitor.textVal,
-        numVal :numVal ? parseFloat(monitor.numVal) : null,
+        numVal : numVal ? parseFloat(monitor.numVal) : null,
         workOrderTaskMonitorId: monitor.id,
         sendNCREmail: monitor.procedureStepMonitor.sendNCREmail && sendNCREmail ? this.ncrEmailDestination : undefined
       } as IUpdateWorkOrderTaskMonitorRequest);

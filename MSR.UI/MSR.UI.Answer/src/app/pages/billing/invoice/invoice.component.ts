@@ -374,7 +374,7 @@ export class InvoiceComponent implements OnInit {
       return null;
     }
 
-    if(item.value instanceof Array && moment(item.value[0]).isValid() ){
+    if (item.value instanceof Array && moment(item.value[0]).isValid() ) {
 
       return item.value.filter(s => s !== null).map(m => new Date(m));
 

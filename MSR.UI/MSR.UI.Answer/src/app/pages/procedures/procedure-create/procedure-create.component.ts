@@ -35,7 +35,7 @@ export class ProcedureCreateComponent implements OnInit {
     this.durationTypeOptions = new LookUpItems().DurationType();
     this.procedureTypeService.procedureTypeGet(null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((procedureTypeGetResponse) => {
       this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => {
-        if (s.name === 'Conformance Action (NCR)') this.ncrProcedureType = s;
+        if (s.name === 'Conformance Action (NCR)') { this.ncrProcedureType = s; }
         return { label: s.name, value: s.id };
       });
     }));
@@ -62,7 +62,7 @@ export class ProcedureCreateComponent implements OnInit {
     createProcedureRequest.durationType = this.procedure.durationType;
     createProcedureRequest.name = this.procedure.name;
     createProcedureRequest.procedureTypeId = this.selectedProcedureType === undefined ? undefined : Number(this.selectedProcedureType);
-    createProcedureRequest.tagType = createProcedureRequest.procedureTypeId === this.ncrProcedureType?.id?
+    createProcedureRequest.tagType = createProcedureRequest.procedureTypeId === this.ncrProcedureType?.id ?
     this.procedure.tagType : undefined;
     createProcedureRequest.referenceFiles = referenceFiles;
     createProcedureRequest.referenceFileIds = referenceFileIds;

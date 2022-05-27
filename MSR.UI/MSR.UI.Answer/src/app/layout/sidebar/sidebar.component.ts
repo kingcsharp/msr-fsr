@@ -103,7 +103,7 @@ export class Sidebar {
   }
 
   toggleModal(name) {
-    switch(name) {
+    switch (name) {
       case 'Support Ticket':
         this.toggleSupportTicketModal();
         break;

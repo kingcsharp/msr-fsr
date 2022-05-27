@@ -63,14 +63,14 @@ export class PcalendarWrapperComponent implements OnInit {
         const restoredVal = elem.filters[ctrl.filterId].value;
 
         if (Array.isArray(restoredVal)) {
-          if(this.selectedDate !== undefined){
+          if (this.selectedDate !== undefined) {
             this.selectedDate.length = 0;
           } else {
             this.selectedDate = new Array();
           }
 
           restoredVal.filter(s => s !== null).map(m => this.selectedDate.push(moment(m).toDate()));
-          
+
         } else {
           this.selectedDate = moment(restoredVal).toDate();
         }
@@ -105,14 +105,13 @@ export class PcalendarWrapperComponent implements OnInit {
   }
 
   filterGrid() {
-    if(this.selectedDate[1] === null && this.colsAndSettings.col.formattingMoment === "MM-YYYY") {
+    if (this.selectedDate[1] === null && this.colsAndSettings.col.formattingMoment === 'MM-YYYY') {
       this.selectedDate.push(moment(this.selectedDate[0]).endOf('month').toDate());
-    }
-    else if (Array.isArray(this.selectedDate) && this.colsAndSettings.col.formattingMoment === "MM-YYYY") {
+    } else if (Array.isArray(this.selectedDate) && this.colsAndSettings.col.formattingMoment === 'MM-YYYY') {
       this.selectedDate.push(moment(this.selectedDate[1]).endOf('month').toDate());
-      this.selectedDate.splice(1, 1)
+      this.selectedDate.splice(1, 1);
     }
-    
+
     this.datatable.filter(this.selectedDate, this.filterId, 'dateRangeFilter');
   }
 }

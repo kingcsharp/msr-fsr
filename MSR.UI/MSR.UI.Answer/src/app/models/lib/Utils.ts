@@ -125,8 +125,8 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent, glo
                     }
                 } else {
                     if (typeof (filterObj.value[0]) === 'object') {
-                        
-                        if(filterObj.value[0] instanceof Date){
+
+                        if (filterObj.value[0] instanceof Date) {
 
                             const parentRoles = filterObj.value.filter(s => s !== null).map(m => new Date(m));
                             argsToCallFn.push(parentRoles);
@@ -136,14 +136,14 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent, glo
                             argsToCallFn.push(parentRoles);
                         }
 
-                        
+
                     } else {
 
-                        if(filterObj.value instanceof Array && moment(filterObj.value[0]).isValid() ){
+                        if (filterObj.value instanceof Array && moment(filterObj.value[0]).isValid() ) {
 
                             argsToCallFn.push(filterObj.value.filter(s => s !== null).map(m => new Date(m)));
-                      
-                      
+
+
                         } else {
                             argsToCallFn.push(filterObj.value);
                         }
