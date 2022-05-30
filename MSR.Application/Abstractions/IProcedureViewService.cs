@@ -9,6 +9,6 @@ namespace MSR.Application.Abstractions
 {
     public interface IProcedureViewService
     {
-        Task<FileContentView> ExportProcedures(QueryBase filters);
+        Task<FileContentView> ExportProcedures(ProcedureExportQueryFilters filters);
     }
 }

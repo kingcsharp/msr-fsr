@@ -1080,5 +1080,11 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateWorkOrderPrice>(request);
         }
+
+        public static ProcedureExportQueryFilters ToProcedureExportQueryFilters(this ProcedureExportRequest request)
+        {
+            return new ProcedureExportQueryFilters(request.Id, request.Name, request.ProcedureTypeName, request.Duration, request.DurationType, request.Revision
+                                                    , request.CreatedFullName, request.CreatedOn, request.LastUpdatedFullName, request.LastUpdatedOn);
+        }
     }
 }

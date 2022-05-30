@@ -29,7 +29,7 @@ namespace MSR.Application.ViewServices
             _mapper = mapper;
         }
 
-        public async Task<FileContentView> ExportProcedures(QueryBase filters)
+        public async Task<FileContentView> ExportProcedures(ProcedureExportQueryFilters filters)
         {
             var procedures = (await _unitOfWork.Query<Procedure>().ExportProcedures(ProcedureProjections.ProcedureExport, filters)).Select(i => new ProcedureExportView()
             {

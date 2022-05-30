@@ -90,11 +90,24 @@ namespace MSR.Infrastructure.Resources.Queries
             return query;
         }
 
-        public static async Task<ICollection<Domain.Models.Procedure>> ExportProcedures(this DbSet<Procedure> dbSet, Expression<Func<Procedure, dynamic>> projection, QueryBase filters)
+        public static async Task<ICollection<Domain.Models.Procedure>> ExportProcedures(this DbSet<Procedure> dbSet, Expression<Func<Procedure, dynamic>> projection, ProcedureExportQueryFilters filters)
         {
             try
             {
-                var dynamicData = await dbSet.Filter(filters.Filters).Select(projection).ToListAsync();
+                var query = dbSet.AsQueryable();
+                query = query.Where(filters.Id, s => s.Id == filters.Id);
+                query = query.Where(filters.Name, s => s.Name.ToLower().Contains(filters.Name.ToLower()));
+                query = query.Where(filters.ProcedureTypeName, s => s.ProcedureType.Name.ToLower().Contains(filters.ProcedureTypeName.ToLower()));
+                query = query.Where(filters.Duration, s => s.Duration == filters.Duration);
+                query = query.Where(filters.DurationType, s => s.DurationType.ToLower().Contains(filters.DurationType.ToLower()));
+                query = query.Where(filters.Revision, s => s.Revision == filters.Revision);
+                query = query.Where(filters.CreatedFullName, s => s.Created.FullName.ToLower().Contains(filters.CreatedFullName.ToLower()));
+                query = query.Where(filters.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date, filters.CreatedOn.Value.Date) == 0);
+                query = query.Where(filters.LastUpdatedFullName, s => s.LastUpdated.FullName.ToLower().Contains(filters.LastUpdatedFullName.ToLower()));
+                query = query.Where(filters.LastUpdatedOn, s => DateTime.Compare(s.LastUpdatedOn.Value.Date, filters.LastUpdatedOn.Value.Date) == 0);
+
+
+                var dynamicData = await query.Select(projection).ToListAsync();
                 var procedureViews = JsonConvert.DeserializeObject<ICollection<Domain.Models.Procedure>>(JsonConvert.SerializeObject(dynamicData));
                 return procedureViews;
             }

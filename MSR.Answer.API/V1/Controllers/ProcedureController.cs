@@ -198,7 +198,7 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(FileContentResult))]
         public async Task<ActionResult> ExportFile([FromQuery] ProcedureExportRequest filters)
         {
-            var ret = await _procedureViewService.ExportProcedures(filters.ToQueryBase());
+            var ret = await _procedureViewService.ExportProcedures(filters.ToProcedureExportQueryFilters());
             return File(ret.data, "application/octet-stream", ret.FileName);
         }
     }
