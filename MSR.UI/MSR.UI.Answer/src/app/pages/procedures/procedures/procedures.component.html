@@ -17,7 +17,7 @@
         <ng-template pTemplate="caption">
           <div class="text-right">
             <button
-              class="btn btn-warning  mb-xs sm-mrg" role="button" data-cy="add-button" (click)="procedureCSV()">
+              class="btn btn-warning  mb-xs sm-mrg" role="button" data-cy="add-button" (click)="procedureXlsx()">
               Download Filtered Procedures
             </button>
             <button *ngIf="procedurePrivileges.canCreate" [routerLink]="['../procedure-create']"

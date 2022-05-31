@@ -3265,6 +3265,73 @@ export class ProcedureService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
+
+
+    ExportXlsx(id: number | null | undefined, name: string | null | undefined, procedureTypeName: string | null | undefined, duration: number | null | undefined, durationType: string | null | undefined, revision: number | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, lastUpdatedFullName: string | null | undefined, lastUpdatedOn: Date | null | undefined, version: string) {
+        let url_ = this.baseUrl + "/v{version}/Procedure/export?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (procedureTypeName !== undefined && procedureTypeName !== null)
+            url_ += "ProcedureTypeName=" + encodeURIComponent("" + procedureTypeName) + "&";
+        if (duration !== undefined && duration !== null)
+            url_ += "Duration=" + encodeURIComponent("" + duration) + "&";
+        if (durationType !== undefined && durationType !== null)
+            url_ += "DurationType=" + encodeURIComponent("" + durationType) + "&";
+        if (revision !== undefined && revision !== null)
+            url_ += "Revision=" + encodeURIComponent("" + revision) + "&";
+        if (createdFullName !== undefined && createdFullName !== null)
+            url_ += "CreatedFullName=" + encodeURIComponent("" + createdFullName) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toJSON() : "") + "&";
+        if (lastUpdatedFullName !== undefined && lastUpdatedFullName !== null)
+            url_ += "LastUpdatedFullName=" + encodeURIComponent("" + lastUpdatedFullName) + "&";
+        if (lastUpdatedOn !== undefined && lastUpdatedOn !== null)
+            url_ += "LastUpdatedOn=" + encodeURIComponent(lastUpdatedOn ? "" + lastUpdatedOn.toJSON() : "") + "&";
+        // if (term !== undefined && term !== null)
+        //     url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        // if (pageNumber !== undefined && pageNumber !== null)
+        //     url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        // if (pageSize !== undefined && pageSize !== null)
+        //     url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        // if (sortAscending !== undefined && sortAscending !== null)
+        //     url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("get", url_,options_).pipe().subscribe((res) => {
+            console.log("response getting",res);
+            let Data = res;
+            let blob = new Blob([Data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            let dwldLink = document.createElement('a');
+            let url = URL.createObjectURL(blob);
+            let isSafariBrowser = navigator.userAgent.indexOf('Safari') !== -1 && navigator.userAgent.indexOf('Chrome') === -1;
+            if (isSafariBrowser) {  // if Safari open in new window to save file with random filename.
+                dwldLink.setAttribute('target', '_blank');
+            }
+            let filename = 'data'
+            dwldLink.setAttribute('href', url);
+            dwldLink.setAttribute('download', `${filename}${moment().format('MM_DD_YYYY')}.xlsx`);
+            dwldLink.style.visibility = 'hidden';
+            document.body.appendChild(dwldLink);
+            dwldLink.click();
+            document.body.removeChild(dwldLink);
+            })
+
+     
+    }
+
     /**
      * Add Procedure
      */
