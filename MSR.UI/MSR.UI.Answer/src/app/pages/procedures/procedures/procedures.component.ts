@@ -112,6 +112,15 @@ export class ProceduresComponent implements OnInit {
     }));
   }
   procedureXlsx() {
-    this.procedureService.ExportXlsx(this.data.id,this.data.name,this.data.procedureTypeName,this.data.duration,this.data.durationType,this.data.revision,this.data.createdFullName,this.data.createdOn,this.data.lastUpdatedFullName,this.data.lastUpdatedOn,env.apiVersion);
+    this.globals.showLoader(true);
+    setTimeout(() => {
+      callFunctionWithFilters(this.procedureService, this.procedureService.export, this.currentEvent, this.globals.functionDic)
+        .pipe(take(1))
+        .subscribe(responseHandler((response) => {
+          if (response.data) {
+            this.csvService.downloadFile(response.data, null, 'procedure_export', 'xlsx');
+          }
+        }));
+    }, 10);
   }
 }
