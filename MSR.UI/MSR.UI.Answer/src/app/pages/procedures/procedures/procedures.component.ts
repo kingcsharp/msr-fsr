@@ -111,7 +111,16 @@ export class ProceduresComponent implements OnInit {
       this.getProcedures(this.currentEvent);
     }));
   }
-  procedureCSV() {
-    this.csvService.downloadFile(this.data, this.gridSettings, 'Filtered Procedures');
+  procedureXlsx() {
+    this.globals.showLoader(true);
+    setTimeout(() => {
+      callFunctionWithFilters(this.procedureService, this.procedureService.export, this.currentEvent, this.globals.functionDic)
+        .pipe(take(1))
+        .subscribe(responseHandler((response) => {
+          if (response.data) {
+            this.csvService.downloadFile(response.data, null, 'procedure_export', 'xlsx');
+          }
+        }));
+    }, 10);
   }
 }

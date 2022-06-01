@@ -5,10 +5,16 @@ import { ColumnsSaved } from '../models/lib/ColumnsSaved';
 
 @Injectable()
 export class CSVConverterService {
-    // downloadFile(data: any, columns: string[], headerTitles: string[], filename = 'data') {
-    downloadFile(data: any, columns: ColumnsSaved[], filename = 'data') {
-        let csvData = this.ConvertToCSV(data, columns);
-        let blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
+    downloadFile(data: any, columns: ColumnsSaved[], filename: string = 'data', type: string = 'csv') {
+        let blob;
+
+        if (type === 'xlsx') {
+          blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;' })
+        } else {
+          const csvData = this.ConvertToCSV(data, columns);
+          blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
+        }
+
         let dwldLink = document.createElement('a');
         let url = URL.createObjectURL(blob);
         let isSafariBrowser = navigator.userAgent.indexOf('Safari') !== -1 && navigator.userAgent.indexOf('Chrome') === -1;
@@ -16,10 +22,11 @@ export class CSVConverterService {
             dwldLink.setAttribute('target', '_blank');
         }
         dwldLink.setAttribute('href', url);
-        dwldLink.setAttribute('download', `${filename}${moment().format('MM_DD_YYYY')}.csv`);
+        dwldLink.setAttribute('download', `${filename}_${moment().format('MM_DD_YYYY')}.${type}`);
         dwldLink.style.visibility = 'hidden';
         document.body.appendChild(dwldLink);
         dwldLink.click();
+        URL.revokeObjectURL(url)
         document.body.removeChild(dwldLink);
     }
 
