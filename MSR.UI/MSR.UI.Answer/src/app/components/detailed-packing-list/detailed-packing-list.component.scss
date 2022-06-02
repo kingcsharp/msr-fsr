@@ -12,6 +12,37 @@
   line-break: anywhere;
 }
 
+.packing-list-header .width-08,
+.packing-list-row .width-08 {
+  width: 8%;
+}
+
+.packing-list-header .width-12,
+.packing-list-row .width-12 {
+  width: 12%;
+}
+
+.packing-list-header .width-15,
+.packing-list-row .width-15 {
+  width: 15%;
+}
+
+.packing-list-row .width-08,
+.packing-list-row .width-12,
+.packing-list-row .width-15 {
+  font-size: 11px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.packing-list-header .width-08,
+.packing-list-header .width-12,
+.packing-list-header .width-15 {
+  font-size: 12px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
 @media print {
   * {
     -webkit-transition: none !important;

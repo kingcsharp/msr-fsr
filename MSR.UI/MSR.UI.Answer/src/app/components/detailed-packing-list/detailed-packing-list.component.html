@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div class="col-12 mb-4">
+    <div class="col-12 mb-4 px-2">
       <div class="row mb-3 mx-2">
         <div class="col-4">
           <u>Ship From</u><br />
@@ -30,41 +30,41 @@
           <b>MTTN</b>: {{ WorkOrder.purchase?.mttn }}<br />
         </div>
       </div>
-      <div class="row mx-2">
-        <div class="col-2 border"><b>PO / Line</b></div>
-        <div class="col-2 border"><b>Part Number</b></div>
-        <div class="col-2 border"><b>Part Name</b></div>
-        <div class="col-2 border"><b>Serial</b></div>
-        <div class="col-1 border text-center"><b>Cycle Count</b></div>
-        <div class="col-1 border text-center"><b>Qty</b></div>
-        <div class="col-1 border text-center"><b>NC#</b></div>
-        <div class="col-1 border text-center"><b>Tag</b></div>
+      <div class="packing-list-header row mx-2">
+        <div class="width-15 border"><b>PO / Line</b></div>
+        <div class="width-15 border"><b>Part Number</b></div>
+        <div class="width-15 border"><b>Part Name</b></div>
+        <div class="width-15 border"><b>Serial</b></div>
+        <div class="width-08 border text-center"><b>Cycle Count</b></div>
+        <div class="width-08 border text-center"><b>Qty</b></div>
+        <div class="width-12 border text-center"><b>NC#</b></div>
+        <div class="width-12 border text-center"><b>Tag</b></div>
       </div>
       <div class="packing-list-row" *ngFor="let workOrderPart of packingList.sortedParts">
         <div class="row mx-2">
-          <div class="col-2 border col-text">
+          <div class="width-15 border col-text">
             {{ workOrderPart.poLineLabel }}<br />
             <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.poLineLabel"
               [bc-display-value]="false" [bc-height]="40">
             </ngx-barcode>
           </div>
-          <div class="col-2 border col-text">
+          <div class="width-15 border col-text">
             {{ workOrderPart.part.part?.partNumber }}<br />
             <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
               [bc-value]="workOrderPart.part.part?.partNumber" [bc-display-value]="false" [bc-height]="40">
             </ngx-barcode>
           </div>
-          <div class="col-2 border col-text">{{ workOrderPart.part.part?.name }}</div>
-          <div class="col-2 border col-text">
+          <div class="width-15 border col-text">{{ workOrderPart.part.part?.name }}</div>
+          <div class="width-15 border col-text">
             {{ workOrderPart.part.serialNumber }}<br />
             <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.part.serialNumber"
               [bc-display-value]="false" [bc-height]="40">
             </ngx-barcode>
           </div>
-          <div class="col-1 border text-center">{{ workOrderPart.part.cycleCount }}</div>
-          <div class="col-1 border text-center">{{ workOrderPart.part.qty }}</div>
-          <div class="col-1 border text-center col-text">{{ workOrderPart.part.ncNumber }}</div>
-          <div class="col-1 border text-center col-text">{{ workOrderPart.part.tagType }}</div>
+          <div class="width-08 border text-center">{{ workOrderPart.part.cycleCount }}</div>
+          <div class="width-08 border text-center">{{ workOrderPart.part.qty }}</div>
+          <div class="width-12 border text-center col-text">{{ workOrderPart.part.ncNumber }}</div>
+          <div class="width-12 border text-center col-text">{{ workOrderPart.part.tagType }}</div>
         </div>
       </div>
     </div>
