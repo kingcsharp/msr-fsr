@@ -41,7 +41,7 @@ namespace MSR.Domain.Helpers
             T item = new T();
             foreach (var property in properties)
             {
-                if(!row.Table.Columns.Contains(property.Name))
+                if (!row.Table.Columns.Contains(property.Name))
                 {
                     continue;
                 }
@@ -71,9 +71,19 @@ namespace MSR.Domain.Helpers
                             }
                             property.SetValue(item, convertedValue, null);
                         }
-                        else if(property.PropertyType == typeof(int) && row[property.Name].GetType() == typeof(double))
+                        else if (property.PropertyType == typeof(int) && row[property.Name].GetType() == typeof(double))
                         {
                             property.SetValue(item, Convert.ToInt32(row[property.Name]), null);
+                        }
+                        else if (property.PropertyType == typeof(int) && row[property.Name].GetType() == typeof(string))
+                        {
+                            Int32.TryParse(row[property.Name].ToString(), out var throwAwayNumber);
+                            property.SetValue(item, throwAwayNumber, null);
+                        }
+                        else if (property.PropertyType == typeof(double) && row[property.Name].GetType() == typeof(string))
+                        {
+                            Double.TryParse(row[property.Name].ToString(), out var throwAwayNumber);
+                            property.SetValue(item, throwAwayNumber, null);
                         }
                         else
                         {
@@ -81,8 +91,9 @@ namespace MSR.Domain.Helpers
                         }
                     }
                 }
+
+                return item;
             }
-            return item;
         }
     }
 }
