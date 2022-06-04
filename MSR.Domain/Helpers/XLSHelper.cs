@@ -91,9 +91,8 @@ namespace MSR.Domain.Helpers
                         }
                     }
                 }
-
-                return item;
             }
+            return item;
         }
     }
 }
