@@ -285,7 +285,8 @@
                       [showUploadButton]="false" [useLoader]="false"
                       *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
                       [menuItem]="menuItems.Templates" multiple="multiple"
-                      [(files)]="workOrderTaskToView.referenceFiles">
+                      [(files)]="workOrderTaskToView.referenceFiles"
+                      [showDescrition]="true">
                     </cmh-file-uploader>
                   </div>
                 </div>

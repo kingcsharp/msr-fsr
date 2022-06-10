@@ -26,6 +26,7 @@ export class CmhFileUploaderComponent implements OnInit {
   @Input() chooseLabel: string;
   @Input() selectLabel: string;
   @Input() useLoader: boolean = true;
+  @Input() showDescription: boolean = false;
   uploadedFiles: FileModel[] = [];
   showLi: boolean = false;
   showSelectModal: boolean = false;
