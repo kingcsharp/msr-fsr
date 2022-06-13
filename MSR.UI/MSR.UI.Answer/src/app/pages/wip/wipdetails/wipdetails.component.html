@@ -286,7 +286,8 @@
                       *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
                       [menuItem]="menuItems.Templates" multiple="multiple"
                       [(files)]="workOrderTaskToView.referenceFiles"
-                      [showDescrition]="true">
+                      [showDescription]="true"
+                      [editDescription]="workOrderTaskToView.assignedTo === globals.getCurrentUser().id">
                     </cmh-file-uploader>
                   </div>
                 </div>

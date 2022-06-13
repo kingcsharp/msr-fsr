@@ -7,6 +7,7 @@ import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { emptyArray } from '../../models/lib/Utils';
 import { CommonGrid } from '../../models/lib/CommonGrid';
+declare let jQuery: any;
 
 @Component({
   selector: 'cmh-file-uploader',
@@ -27,12 +28,14 @@ export class CmhFileUploaderComponent implements OnInit {
   @Input() selectLabel: string;
   @Input() useLoader: boolean = true;
   @Input() showDescription: boolean = false;
+  @Input() editDescription: boolean = false;
   uploadedFiles: FileModel[] = [];
   showLi: boolean = false;
   showSelectModal: boolean = false;
   fileTypes: any[] = [];
   selectAll: boolean = false;
   selectedFiles: FileModel[] = [];
+  fileDescriptions: string[] = [];
 
   constructor(private fileService: FileService, private globals: Globals, public cg: CommonGrid, ) {
 
@@ -45,6 +48,7 @@ export class CmhFileUploaderComponent implements OnInit {
     }
 
     if (this.files.length > 0) {
+      this.fileDescriptions = this.files.map(() => '')
       if (this.useLoader) {
         this.globals.showLoader(true);
       } else {
@@ -133,6 +137,15 @@ export class CmhFileUploaderComponent implements OnInit {
       }
     }
     this.closeSelectModal();
+  }
+
+  saveFileDescription(index) {
+
+    jQuery(`.file-list-${index}`).parsley().validate();
+
+    if (jQuery(`.file-list-${index}`).parsley().isValid()) {
+      // this.files[index].decription = this.fileDescriptions[index];
+    }
   }
 
   selectAllFiles($event) {
