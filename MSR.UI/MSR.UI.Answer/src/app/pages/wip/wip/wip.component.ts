@@ -35,6 +35,7 @@ export class WipComponent implements OnInit {
   currentRowIndex: number = -1;
   invalidPriceError: boolean = false;
   adminOrManager: boolean = false;
+  showDispositionDialog: boolean = false;
 
   constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 
@@ -76,7 +77,7 @@ export class WipComponent implements OnInit {
       new ColumnsSaved({ id: 'productName', label: 'Product', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.StringArray }),
-      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String, styles: { 'width': '10rem', 'text-align' : 'center' } }),
     ];
 
     if (this.adminOrManager) {
@@ -181,6 +182,14 @@ export class WipComponent implements OnInit {
       invalidPriceError = true;
     }
     this.invalidPriceError = invalidPriceError;
+  }
+
+  viewDispositionHistory() {
+    this.showDispositionDialog = true;
+  }
+
+  closeDispositionDialog() {
+    this.showDispositionDialog = false;
   }
 
 }

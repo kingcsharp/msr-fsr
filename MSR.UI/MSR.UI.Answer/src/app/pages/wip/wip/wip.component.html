@@ -101,7 +101,7 @@
                         </th>
                         <th grid-input-filter [dt]="dt" searchField="disposition"
                             [hidden]="!commonGrid.isVisibleCol('disposition',gridSettings)"
-                            [gridSettings]="gridSettings">
+                            [gridSettings]="gridSettings" class="column-disposition">
                         </th>
                         <th *ngIf="adminOrManager" grid-input-filter [dt]="dt" searchField="price"
                             [hidden]="!commonGrid.isVisibleCol('price',gridSettings)"
@@ -191,8 +191,16 @@
                                 </div>
                             </div>
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('disposition', gridSettings)">
-                            {{model.disposition}}
+                        <td [hidden]="!commonGrid.isVisibleCol('disposition', gridSettings)" class="column-disposition">
+                            <!-- {{model.disposition}} -->
+                            <!-- <button type="button" class="btn btn-danger">
+                              <i class="fa fa-solid fa-clock"></i>
+                              Review
+                            </button> -->
+                            <button type="button" class="btn btn-warning" (click)="viewDispositionHistory()">
+                              <i class="fa fa-solid fa-eye"></i>
+                              View
+                            </button>
                         </td>
                         <td *ngIf="adminOrManager" pEditableColumn [hidden]="!commonGrid.isVisibleCol('price', gridSettings)" (onEditComplete)="onEditComplete($event)">
                           <p-cellEditor>
@@ -230,3 +238,42 @@
         </widget>
     </div>
 </div>
+
+<p-dialog header="Disposition History" [(visible)]="showDispositionDialog" appendTo="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}">
+  <div class="container">
+    <div class="row my-3 mx-0">
+      <div class="col-12">
+        <table class="table table-bordered table-condensed w-100">
+          <thead>
+            <tr>
+              <th class="text-center" width="15%">
+                DateTime
+              </th>
+              <th class="text-center" width="5%">
+                UserName
+              </th>
+              <th class="text-center">
+                Message
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1293</td>
+              <td>Tester</td>
+              <td>Message</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="button" (click)="closeDispositionDialog()" class="btn btn-outline-inverse width-100 mb-xs">
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
