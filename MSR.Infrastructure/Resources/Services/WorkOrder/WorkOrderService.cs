@@ -1772,6 +1772,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().CreateWorkOrderHistoryViewQuery(command).ToListAsync();
             var workOrderHistoryViewModels = _mapper.Map<ICollection<Domain.Views.WorkOrderHistoryView>>(workOrderHistoryViewEntities);
+            var workOrderIds = workOrderHistoryViewModels.Select(i => i.WorkOrderId).ToList();
+
+            var workOrderMessages = await _unitOfWork.WorkOrderMessages.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
+
+            foreach(var workOrderHistoryViewModel in workOrderHistoryViewModels)
+            {
+                workOrderHistoryViewModel.WorkOrderMessages = workOrderMessages.Where(i => i.WorkOrderId == workOrderHistoryViewModel.WorkOrderId).Select(i => _mapper.Map<WorkOrderMessageModel>(i)).ToList();
+            }
             return workOrderHistoryViewModels;
 
         }

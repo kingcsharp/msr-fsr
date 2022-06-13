@@ -1,7 +1,6 @@
 using MSR.Domain.Commanding.Enums;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace MSR.Domain.Models
 {
@@ -182,5 +181,7 @@ namespace MSR.Domain.Models
         public bool HasSubParts { get; set; }
         public ICollection<SubPartModel> SubParts { get; set; }
         public decimal? Price { get; set;}
+        public bool CustomerLastRespondent { get; set; }
+        public ICollection<WorkOrderMessageModel> WorkOrderMessages { get; set; }
     }
 }

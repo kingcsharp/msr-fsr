@@ -89,7 +89,8 @@ namespace MSR.Infrastructure.Resources.Services
                     Base64String = "",
                     ContentType = x.ContentType,
                     Name = x.Name,
-                    FileURL = fileURL
+                    FileURL = fileURL,
+                    Description = x.Description
                 });
             }
 
@@ -130,7 +131,8 @@ namespace MSR.Infrastructure.Resources.Services
             {
                 ContentType = file.ContentType,
                 FileURL = $"{tableName}-{entityId}-{file.Name}",
-                Name = file.Name
+                Name = file.Name,
+                Description = file.Description
             };
 
             _unitOfWork.Files.Add(efFile);
@@ -159,7 +161,8 @@ namespace MSR.Infrastructure.Resources.Services
                 Name = file.Name,
                 Base64String = "",
                 ContentType = file.ContentType,
-                FileURL = url
+                FileURL = url,
+                Description = file.Description
             };
         }
 
@@ -194,7 +197,8 @@ namespace MSR.Infrastructure.Resources.Services
                                         Name = x.Name,
                                         Base64String = "",
                                         ContentType = x.ContentType,
-                                        FileURL = _fileDownloader.GetURL(x.FileURL, 6000)
+                                        FileURL = _fileDownloader.GetURL(x.FileURL, 6000),
+                                        Description = x.Description
                                     })
                                     .SingleOrDefaultAsync();
 

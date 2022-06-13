@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
@@ -13,7 +11,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Location { get;set;}
         public string SerialNumber { get; set; }
         public int PurchaseId { get; set; }
-        public string? PurchaseOrderNumber { get; set; }
+        public string PurchaseOrderNumber { get; set; }
         public int? Qty { get; set; }
         public DateTime? ScheduledStartDate { get; set; }
         public DateTime? ScheduledEndDate { get; set; }
@@ -27,8 +25,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int LastUpdatedBy { get; set; }
         public DateTime? LastUpdatedOn { get; set; }
         public string SegregationType { get; set; }
-        public string? Dispostion { get; set; }
+        public string Disposition { get; set; }
         public bool? HasSubParts { get; set; }
+        public bool? CustomerLastRespondent { get; set; }
 
     }
 }

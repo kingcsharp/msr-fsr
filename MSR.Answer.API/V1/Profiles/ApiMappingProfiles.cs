@@ -102,16 +102,14 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
             CreateMap<WorkOrderModel, WorkOrderGridSummary>()
-                // SerialNumber
                 .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => (src.WorkOrderParts != null && src.WorkOrderParts.Count > 0) ? src.WorkOrderParts.First().SerialNumber : ""))
-                // PurchaseOrderNumber
                 .ForMember(dest => dest.PurchaseOrderNumber, opts => opts.MapFrom(src =>
                     src.Purchase != null ?
                         src.Purchase.PurchaseOrder != null ?
                             src.Purchase.PurchaseOrder.Id : 0
                         : 0))
-                // Quantity
-                .ForMember(dest => dest.Quantity, opts => opts.MapFrom(src => src.Purchase != null ? src.Purchase.Qty : 0));
+                .ForMember(dest => dest.Quantity, opts => opts.MapFrom(src => src.Purchase != null ? src.Purchase.Qty : 0))
+                .ForMember(dest => dest.CustomerLastRespondent, opts => opts.MapFrom(src => src.CustomerLastRespondent.GetValueOrDefault(false))); ;
             CreateMap<WorkOrderModel, WorkOrderStatus>()
                 .ForMember(dest => dest.ProductName, opts => opts.MapFrom(src => src.Product.Name))
                 .ForMember(dest => dest.LocationName, opts => opts.MapFrom(src => src.Location.Name));

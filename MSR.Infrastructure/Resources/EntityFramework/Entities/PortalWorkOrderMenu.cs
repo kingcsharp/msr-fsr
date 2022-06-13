@@ -39,5 +39,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int WorkOrderId { get; set; }
         public DateTime CreatedOn { get; set; }
         public string Disposition { get; set; }
+        public bool CustomerLastRespondent { get; set; }
     }
 }

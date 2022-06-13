@@ -14,5 +14,6 @@ namespace MSR.Answer.API.V1.Models
         public string Base64String { get; set; }
         [Required]
         public string ContentType { get; set; }
+        public string Description { get; set; }
     }
 }

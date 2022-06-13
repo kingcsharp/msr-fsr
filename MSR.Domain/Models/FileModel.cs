@@ -9,5 +9,6 @@
         public byte[] FileContents { get; set; }
         public string ContentType { get; set; }
         public string FileURL { get; set; }
+        public string Description { get; set; }
     }
 }

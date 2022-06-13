@@ -43,6 +43,11 @@ namespace MSR.Application.ViewServices
             { 
                 summary.SubParts = subPartsList.Where(i => i.WorkOrderId == summary.Id).Select(i => _mapper.Map<SubPartModel>(i)).ToList();
             }
+            var workOrderMessages = await _unitOfWork.WorkOrderMessages.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
+            foreach (var workOrderGridSummary in workOrders.data)
+            {
+                workOrderGridSummary.WorkOrderMessages = workOrderMessages.Where(i => i.WorkOrderId == workOrderGridSummary.Id).Select(i => _mapper.Map<WorkOrderMessageModel>(i)).ToList();
+            }
             return workOrders;
         }
 

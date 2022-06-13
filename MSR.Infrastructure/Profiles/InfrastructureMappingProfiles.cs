@@ -502,7 +502,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.FileId, opts => opts.MapFrom(src => src.FileObject.Id))
                 .ForMember(dest => dest.ContentType, opts => opts.MapFrom(src => src.FileObject.ContentType))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileObject.Name))
-                .ForMember(dest => dest.FileURL, opts => opts.MapFrom(src => src.FileObject.FileURL));
+                .ForMember(dest => dest.FileURL, opts => opts.MapFrom(src => src.FileObject.FileURL))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.FileObject.Description));
 
             CreateMap<AdminCostSetting, AdminCostSettingsModel>().ReverseMap();
 
@@ -589,9 +590,10 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderHistoryViewDTO, WorkOrderGridSummary>();
             CreateMap<Resources.EntityFramework.Entities.WorkOrderHistoryView, Domain.Views.WorkOrderHistoryView>()
                 .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU))
-                .ForMember(dest => dest.Disposition, opts => opts.MapFrom(src => src.Dispostion))
+                .ForMember(dest => dest.Disposition, opts => opts.MapFrom(src => src.Disposition))
                 .ForMember(dest => dest.HasSubParts, opts => opts.MapFrom(src => src.HasSubParts.HasValue ? src.HasSubParts : false))
-                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => src.Qty.HasValue ? src.Qty : 1));
+                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => src.Qty.HasValue ? src.Qty : 1))
+                .ForMember(dest => dest.CustomerLastRespondent, opts => opts.MapFrom(src => src.CustomerLastRespondent.GetValueOrDefault(false)));
 
             CreateMap<PortalWorkOrderMenuDTO, PortalWorkOrderView>()
                 .ForMember(dest => dest.SubParts, opts => opts.Ignore());

@@ -22,5 +22,6 @@ namespace MSR.Domain.DTOs
         public ICollection<WorkOrderMessageDTO> WorkOrderMessages { get; set; }
         public  WorkOrderPartDTO WorkOrderPart { get; set; }
         public bool HasNcr { get; set; }
+        public bool CustomerLastRespondent { get; set; }
     }
 }

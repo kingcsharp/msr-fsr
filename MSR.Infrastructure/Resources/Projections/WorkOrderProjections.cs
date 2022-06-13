@@ -111,7 +111,8 @@ namespace MSR.Infrastructure.Resources.Projections
             HasNcr = i.HasNcr,
             SegregationType = i.SegregationType == null ? (EnumSegregationType?)null: EnumUtils.GetValueFromDescription<EnumSegregationType>(i.SegregationType),
             HasSubParts = i.HasSubParts,
-            Price = i.Price
+            Price = i.Price,
+            CustomerLastRespondent = i.CustomerLastRespondent
         };
 
         public static Expression<Func<PortalWorkOrderMenu, dynamic>> PortalWorkOrderMenuView => i => new

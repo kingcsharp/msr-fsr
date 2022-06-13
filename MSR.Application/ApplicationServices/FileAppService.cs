@@ -74,12 +74,9 @@ namespace MSR.Application.ApplicationServices
 
         public Task<ICommandResponse> HandleAsync(GetFiles command, CancellationToken cancellationToken = default)
         {
-            ICollection<FileModel> files = _fileService.ListFiles(
-                command.entityName, command.entityId, command.fileId
-            );
-
-            ICommandResponse ret = new CommandResponse<ICollection<FileModel>>(files);
-            return Task.FromResult(ret);
+            var files = _fileService.ListFiles(command.entityName, command.entityId, command.fileId);
+            ICommandResponse commandResponse = new CommandResponse<ICollection<FileModel>>(files);
+            return Task.FromResult(commandResponse);
         }
         public async Task<ICommandResponse> HandleAsync(CreateFile command, CancellationToken cancellationToken = default)
         {

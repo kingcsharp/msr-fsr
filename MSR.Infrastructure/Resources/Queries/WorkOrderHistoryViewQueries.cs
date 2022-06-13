@@ -30,7 +30,7 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where(command.Product, s => s.Product.Contains(command.Product));
             query = query.Where(command.Procedure, s => s.Procedure.Contains(command.Procedure));
             query = query.Where(command.Status, s => command.Status.Contains(s.Status));
-            query = query.Where(command.Disposition, s => s.Dispostion.Contains(command.Disposition));
+            query = query.Where(command.Disposition, s => s.Disposition.Contains(command.Disposition));
 
             if (command.SortAscending.HasValue && !string.IsNullOrEmpty(command.Term))
             {
@@ -48,7 +48,7 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkOrderHistoryViewSortFields.Product), s => s.Product);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkOrderHistoryViewSortFields.Procedure), s => s.Procedure);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkOrderHistoryViewSortFields.Status), s => s.Status);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkOrderHistoryViewSortFields.Disposition), s => s.Dispostion);
+                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumWorkOrderHistoryViewSortFields.Disposition), s => s.Disposition);
             }
 
 

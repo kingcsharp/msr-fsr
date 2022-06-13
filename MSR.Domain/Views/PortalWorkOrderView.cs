@@ -43,5 +43,6 @@ namespace MSR.Domain.Views
         public ICollection<WorkOrderMessageModel> Messages { get; set; }
         public ICollection<SubPartModel> SubParts { get; set; }
         public string StepText { get; set; }
+        public bool CustomerLastRespondent { get; set; }
     }
 }

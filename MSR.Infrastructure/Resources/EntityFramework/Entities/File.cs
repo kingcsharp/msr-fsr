@@ -16,5 +16,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         [StringLength(100)]
         public string ContentType { get; set; }
+        [StringLength(100)]
+        public string Description { get; set; }
     }
 }

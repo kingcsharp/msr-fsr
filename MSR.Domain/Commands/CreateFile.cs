@@ -9,5 +9,6 @@ namespace MSR.Domain.Commands
         public string Name { get; set; }
         public string Base64String { get; set; }
         public string ContentType { get; set; }
+        public string Description { get; set; }
     }
 }

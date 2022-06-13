@@ -34,5 +34,6 @@ namespace MSR.Domain.Models
         public ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
         public ICollection<WorkOrderMessageModel> WorkOrderMessages { get; set; }
         public bool HasSubParts { get; set; }
+        public bool? CustomerLastRespondent { get; set; }
     }
 }
