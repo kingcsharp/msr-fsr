@@ -23,6 +23,7 @@ export class GridFileViewerComponent implements OnInit {
   @Input() files: FileModel[];
   @Input() menuItem: EnumMenuItem;
   @Input() showDeleteButton: Boolean;
+  @Input() showDescription: Boolean = false;
 
   constructor(private fileService: FileService, private globals: Globals) {
 

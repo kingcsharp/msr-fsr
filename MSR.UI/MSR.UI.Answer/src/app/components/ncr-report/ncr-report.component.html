@@ -29,7 +29,12 @@
         <div class="row">
             <div class="col-3 font-weight-bold text-right">Associated Documents:</div>
             <div class="col-9">
-                <grid-file-viewer [menuItem]="menuItems.WorkOrderTasks" [files]="associatedDocuments" class="m-2"></grid-file-viewer>
+                <grid-file-viewer
+                  [menuItem]="menuItems.WorkOrderTasks"
+                  [files]="associatedDocuments"
+                  [showDescription]="true"
+                  class="m-2"
+                ></grid-file-viewer>
             </div>
             <div class="col-3 font-weight-bold text-right">Associated Digital Pictures:</div>
             <div class="col-9">
@@ -40,7 +45,8 @@
                         </a>
                         <a *ngIf="fileModel.fileId === undefined || fileModel.fileId === null">
                           <img class="card-img-top" [src]="fileModel.base64String" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
-                      </a>
+                        </a>
+                        <div *ngIf="fileModel.description" class="file-desc px-2">{{fileModel.description}}</div>
                     </div>
                 </div>
             </div>
