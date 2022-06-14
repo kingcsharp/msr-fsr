@@ -25,6 +25,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MSR.Domain.DTOs;
 using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions;
+using DataMatrix.NetCore;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -503,7 +506,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderPartModels = _mapper.Map<ICollection<WorkOrderPartModel>>(workOrderParts);
             var workOrderPartIds = workOrderParts.Select(i => i.Id).ToList();
             var ncrHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => workOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
-            
+            var DataMatrixItems = await _unitOfWork.WorkOrderPartDataMatrixViews.Query().Where(i => workOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
+
+
             // We have to null out the array of children for WorkOrderParts or else the depth of the data structure is too deep for the return object
             // TODO: Since we track if WorkOrderPart is child based on parentId and parent property, the child property is not needed and should be removed
             foreach (var workOrderPartModel in workOrderPartModels)
@@ -514,11 +519,55 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                                 && i.SerialNumber == workOrderPartModel.SerialNumber)
                                                                             && i.WorkOrderId != workOrderPartModel.WorkOrderId
                                                                             ).Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
+                workOrderPartModel.DataMatrix = ConvertItemToDataMatrix(DataMatrixItems.FirstOrDefault(i => i.WorkOrderPartId == workOrderPartModel.Id));
                 workOrderPartModel.Children = null;
             }
 
             return workOrderPartModels;
 
+        }
+
+        private byte[] ConvertItemToDataMatrix(WorkOrderPartDataMatrixView workOrderPartDataMatrixView)
+        {
+            if(workOrderPartDataMatrixView == null)
+            {
+                return null;
+            }
+            /*
+             * P == Part Number
+             * 1P == SerialNumber
+             * 6 == Part.Name
+             * 20P == Cycle Count
+             * 16D == Date of Printing Sticker
+             * 14D == Six Months from 16D
+             * 30P == N
+             * Z == 1
+             * V1 == We do not have currently.  Will need to add
+             * 3S == Work Order Part SerialNumber
+             * Q == Work Order Part Quantity
+             * 3Q == "PCE"
+             * 2T == Procedure.Id
+             * K == PurchaseOrder.ReferencePO up to the /
+             * 4k == PurchaseOrder.ReferencePO after the /
+             * 2S == MTTN
+             */
+            var recordSeparator = ((char)30).ToString();
+            var groupSeparator = ((char)29).ToString();
+            var endTransmission = ((char)4).ToString();
+            var data = $"[)>{recordSeparator}06{groupSeparator}P{workOrderPartDataMatrixView.P}{groupSeparator}1P{workOrderPartDataMatrixView.OneP}{groupSeparator}20P{workOrderPartDataMatrixView.TwentyP}" +
+                       $"{groupSeparator}16D{workOrderPartDataMatrixView.SixteenD}{groupSeparator}14D{workOrderPartDataMatrixView.FourteenD}{groupSeparator}30P{workOrderPartDataMatrixView.ThirtyP}" +
+                       $"{groupSeparator}Z{workOrderPartDataMatrixView.Z}{groupSeparator}V1{workOrderPartDataMatrixView.V1}{groupSeparator}3S{workOrderPartDataMatrixView.ThreeS}{groupSeparator}" +
+                       $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
+                       $"K{workOrderPartDataMatrixView.K}{groupSeparator}4k{workOrderPartDataMatrixView.FourK}{groupSeparator}2S{workOrderPartDataMatrixView.TwoS}{recordSeparator}{endTransmission}";
+            DmtxImageEncoder encoder = new DmtxImageEncoder();
+            var image = encoder.EncodeImage(data, new DmtxImageEncoderOptions()
+            {
+                Encoding = Encoding.ASCII
+            });
+
+            using var ms = new MemoryStream();
+            image.Save(ms, ImageFormat.Jpeg);
+            return ms.ToArray();
         }
 
         public async Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command)

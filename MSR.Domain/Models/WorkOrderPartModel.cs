@@ -21,5 +21,6 @@ namespace MSR.Domain.Models
         public List<NCRHistoryItemModel> NCRHistoryItems { get; set; }
         public string TagType { get; set; }
         public string NCNumber { get; set; }
+        public byte[] DataMatrix { get; set; }
     }
 }

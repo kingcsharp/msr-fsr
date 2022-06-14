@@ -100,6 +100,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<SubPart> SubParts { get; }
         IRepository<NCRHistoryItem> NCRHistory { get; }
         IRepository<WorkOrderPartNCRMapItem> WorkOrderPartNCRMap { get; }
+        IRepository<WorkOrderPartDataMatrixView> WorkOrderPartDataMatrixViews { get; }
+
         AnswerContext Context { get; }
         void SaveChanges();
         Task SaveChangesAsync();

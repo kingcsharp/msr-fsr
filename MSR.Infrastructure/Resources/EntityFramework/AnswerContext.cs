@@ -91,6 +91,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<SubPart> SubParts { get; set; }
         public DbSet<NCRHistoryItem> NCRHistory { get; set; }
         public DbSet<WorkOrderPartNCRMapItem> WorkOrderPartNCRMapItems { get; set; }
+        public DbSet<WorkOrderPartDataMatrixView> WorkOrderPartDataMatrixViews { get; set; }
 
         public AnswerContext() : base()
         {
@@ -201,6 +202,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework
             {
                 d.HasKey("WorkOrderId");
                 d.ToView("WorkOrder_History");
+            });
+
+            modelBuilder.Entity<WorkOrderPartDataMatrixView>(d =>
+            {
+                d.HasKey("WorkOrderPartId");
+                d.ToView("WorkOrderPart_DataMatrix");
             });
 
             modelBuilder.Entity<InvoiceableWorkOrdersView>(s =>
