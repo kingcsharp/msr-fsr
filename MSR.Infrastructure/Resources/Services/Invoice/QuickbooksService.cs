@@ -154,7 +154,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             foreach (var item in invoice.InvoiceItems ?? new List<EntityFramework.Entities.InvoiceItem>())
             {
                 var purchaseName = await GetPurchaseName(item);
-                var qnty = (decimal)item.WorkOrder?.Purchase?.Qty * item.WorkOrder?.Purchase?.PurchasePrice;
+                var qnty = item.WorkOrder.Price;
+                var perItem = (decimal)qnty / item.WorkOrder.Purchase.Qty;
 
                 invoiceFileText.AppendFormat("SPL{0}", invoiceDelimiter); //SPL
                 invoiceFileText.AppendFormat("{0}{1}", invoiceNumber, invoiceDelimiter); //SPLID
@@ -163,7 +164,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 invoiceFileText.AppendFormat("{0}{1}", "1100", invoiceDelimiter); //ACCNT
                 invoiceFileText.AppendFormat("{0}{1}", purchaseName /*item.Purchaser*/ , invoiceDelimiter); //NAME
                 invoiceFileText.AppendFormat("{0}{1}", item.WorkOrder.Purchase.Location.InvoiceClass /*invoice.InvoiceClass*/, invoiceDelimiter); //CLASS
-                invoiceFileText.AppendFormat("{0}{1}", item.WorkOrder.Purchase.PurchasePrice /*item.Amount*/ , invoiceDelimiter); //AMOUNT
+                invoiceFileText.AppendFormat("{0}{1}", perItem /*item.Amount*/ , invoiceDelimiter); //AMOUNT
                 invoiceFileText.AppendFormat("{0}{1}", "", invoiceDelimiter); //DOCNUM
                 invoiceFileText.AppendFormat("{0}{1}", "", invoiceDelimiter); //MEMO
                 invoiceFileText.AppendFormat("{0}{1}", item.WorkOrder.Purchase.Qty /*item.FillQty*/ , invoiceDelimiter); //MEMO
