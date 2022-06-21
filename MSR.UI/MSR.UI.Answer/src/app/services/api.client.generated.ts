@@ -11065,6 +11065,7 @@ export class FileModel implements IFileModel {
     fileContents?: string | undefined;
     contentType?: string | undefined;
     fileURL?: string | undefined;
+    description?: string | undefined;
 
     constructor(data?: IFileModel) {
         if (data) {
@@ -11084,6 +11085,7 @@ export class FileModel implements IFileModel {
             this.fileContents = _data["fileContents"];
             this.contentType = _data["contentType"];
             this.fileURL = _data["fileURL"];
+            this.description = _data["description"];
         }
     }
 
@@ -11103,6 +11105,7 @@ export class FileModel implements IFileModel {
         data["fileContents"] = this.fileContents;
         data["contentType"] = this.contentType;
         data["fileURL"] = this.fileURL;
+        data["description"] = this.description;
         return data; 
     }
 }
@@ -11115,6 +11118,7 @@ export interface IFileModel {
     fileContents?: string | undefined;
     contentType?: string | undefined;
     fileURL?: string | undefined;
+    description?: string | undefined;
 }
 
 export class DeletableModel extends TrackableModel implements IDeletableModel {
@@ -12245,6 +12249,7 @@ export class CreateFileRequest implements ICreateFileRequest {
     name!: string;
     base64String!: string;
     contentType!: string;
+    description?: string | undefined;
 
     constructor(data?: ICreateFileRequest) {
         if (data) {
@@ -12262,6 +12267,7 @@ export class CreateFileRequest implements ICreateFileRequest {
             this.name = _data["name"];
             this.base64String = _data["base64String"];
             this.contentType = _data["contentType"];
+            this.description = _data["description"];
         }
     }
 
@@ -12279,6 +12285,7 @@ export class CreateFileRequest implements ICreateFileRequest {
         data["name"] = this.name;
         data["base64String"] = this.base64String;
         data["contentType"] = this.contentType;
+        data["description"] = this.description;
         return data; 
     }
 }
@@ -12289,6 +12296,7 @@ export interface ICreateFileRequest {
     name: string;
     base64String: string;
     contentType: string;
+    description?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -17190,6 +17198,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
     hasSubParts?: boolean;
+    customerLastRespondent?: boolean | undefined;
 
     constructor(data?: IWorkOrderModel) {
         if (data) {
@@ -17233,6 +17242,7 @@ export class WorkOrderModel implements IWorkOrderModel {
                     this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
             }
             this.hasSubParts = _data["hasSubParts"];
+            this.customerLastRespondent = _data["customerLastRespondent"];
         }
     }
 
@@ -17276,6 +17286,7 @@ export class WorkOrderModel implements IWorkOrderModel {
                 data["workOrderMessages"].push(item.toJSON());
         }
         data["hasSubParts"] = this.hasSubParts;
+        data["customerLastRespondent"] = this.customerLastRespondent;
         return data; 
     }
 }
@@ -17300,6 +17311,7 @@ export interface IWorkOrderModel {
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
     hasSubParts?: boolean;
+    customerLastRespondent?: boolean | undefined;
 }
 
 export class PurchaseModel extends CreatableModel implements IPurchaseModel {
@@ -17557,6 +17569,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
     tagType?: string | undefined;
     ncNumber?: string | undefined;
+    dataMatrix?: string | undefined;
 
     constructor(data?: IWorkOrderPartModel) {
         if (data) {
@@ -17593,6 +17606,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             }
             this.tagType = _data["tagType"];
             this.ncNumber = _data["ncNumber"];
+            this.dataMatrix = _data["dataMatrix"];
         }
     }
 
@@ -17629,6 +17643,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         }
         data["tagType"] = this.tagType;
         data["ncNumber"] = this.ncNumber;
+        data["dataMatrix"] = this.dataMatrix;
         return data; 
     }
 }
@@ -17650,6 +17665,7 @@ export interface IWorkOrderPartModel {
     ncrHistoryItems?: NCRHistoryItemModel[] | undefined;
     tagType?: string | undefined;
     ncNumber?: string | undefined;
+    dataMatrix?: string | undefined;
 }
 
 export class NCRHistoryItemModel implements INCRHistoryItemModel {
@@ -21343,6 +21359,8 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
     workOrderItemNumber?: string | undefined;
     hasSubParts?: boolean;
     subParts?: SubPartModel[] | undefined;
+    customerLastRespondent?: boolean;
+    workOrderMessages?: WorkOrderMessageModel[] | undefined;
 
     constructor(data?: IWorkOrderHistoryView) {
         if (data) {
@@ -21383,6 +21401,12 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
                 this.subParts = [] as any;
                 for (let item of _data["subParts"])
                     this.subParts!.push(SubPartModel.fromJS(item));
+            }
+            this.customerLastRespondent = _data["customerLastRespondent"];
+            if (Array.isArray(_data["workOrderMessages"])) {
+                this.workOrderMessages = [] as any;
+                for (let item of _data["workOrderMessages"])
+                    this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
             }
         }
     }
@@ -21425,6 +21449,12 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
             for (let item of this.subParts)
                 data["subParts"].push(item.toJSON());
         }
+        data["customerLastRespondent"] = this.customerLastRespondent;
+        if (Array.isArray(this.workOrderMessages)) {
+            data["workOrderMessages"] = [];
+            for (let item of this.workOrderMessages)
+                data["workOrderMessages"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -21455,6 +21485,8 @@ export interface IWorkOrderHistoryView {
     workOrderItemNumber?: string | undefined;
     hasSubParts?: boolean;
     subParts?: SubPartModel[] | undefined;
+    customerLastRespondent?: boolean;
+    workOrderMessages?: WorkOrderMessageModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -21625,6 +21657,8 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     hasSubParts?: boolean;
     subParts?: SubPartModel[] | undefined;
     price?: number | undefined;
+    customerLastRespondent?: boolean;
+    workOrderMessages?: WorkOrderMessageModel[] | undefined;
 
     constructor(data?: IWorkOrderGridSummary) {
         if (data) {
@@ -21670,6 +21704,12 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
                     this.subParts!.push(SubPartModel.fromJS(item));
             }
             this.price = _data["price"];
+            this.customerLastRespondent = _data["customerLastRespondent"];
+            if (Array.isArray(_data["workOrderMessages"])) {
+                this.workOrderMessages = [] as any;
+                for (let item of _data["workOrderMessages"])
+                    this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
+            }
         }
     }
 
@@ -21715,6 +21755,12 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
                 data["subParts"].push(item.toJSON());
         }
         data["price"] = this.price;
+        data["customerLastRespondent"] = this.customerLastRespondent;
+        if (Array.isArray(this.workOrderMessages)) {
+            data["workOrderMessages"] = [];
+            for (let item of this.workOrderMessages)
+                data["workOrderMessages"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -21749,6 +21795,8 @@ export interface IWorkOrderGridSummary {
     hasSubParts?: boolean;
     subParts?: SubPartModel[] | undefined;
     price?: number | undefined;
+    customerLastRespondent?: boolean;
+    workOrderMessages?: WorkOrderMessageModel[] | undefined;
 }
 
 export class Sort implements ISort {
@@ -22256,6 +22304,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     messages?: WorkOrderMessageModel[] | undefined;
     subParts?: SubPartModel[] | undefined;
     stepText?: string | undefined;
+    customerLastRespondent?: boolean;
 
     constructor(data?: IPortalWorkOrderView) {
         if (data) {
@@ -22312,6 +22361,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
                     this.subParts!.push(SubPartModel.fromJS(item));
             }
             this.stepText = _data["stepText"];
+            this.customerLastRespondent = _data["customerLastRespondent"];
         }
     }
 
@@ -22368,6 +22418,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
                 data["subParts"].push(item.toJSON());
         }
         data["stepText"] = this.stepText;
+        data["customerLastRespondent"] = this.customerLastRespondent;
         return data; 
     }
 }
@@ -22409,6 +22460,7 @@ export interface IPortalWorkOrderView {
     messages?: WorkOrderMessageModel[] | undefined;
     subParts?: SubPartModel[] | undefined;
     stepText?: string | undefined;
+    customerLastRespondent?: boolean;
 }
 
 /** Base class for an API call with a typed result */
