@@ -1,95 +1,182 @@
-<p-fileUpload class="col-md-10" name="fileUpload" url="./upload.php"  (onSelect)="myUploader($event)"
-    (onRemove)="removeuploadFile($event)" [showUploadButton]="showUploadButton" [showCancelButton]="showCancelButton" [multiple]="multiple"
-    [accept]="accept" [chooseLabel]="chooseLabel" [maxFileSize]="maxFileSize">
-    <ng-template pTemplate="toolbar" *ngIf="showSelectButton">
-      <p-button [label]="selectLabel" icon="pi pi-bars" (click)="openSelectModal()"></p-button>
-    </ng-template>
-    <ng-template pTemplate="content">
-        <ul *ngIf="showLi && files !==undefined && files.length>0">
-            <li class="row fileLi py-2" *ngFor="let file of files; let index=index">
-                <div class="col-sm-2 col-md-2 col-lg-2 text-center d-flex align-items-center justify-content-center">
-                    <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'"
-                        class="fad fa-file-word"></i>
-                    <i tooltip="{{file.name}}"
-                        *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
-                        class="fad fa-file-word"></i>
-                    <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'" class="fad fa-file-alt"></i>
-                    <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'" class="fad fa-file-alt"></i>
-                    <i tooltip="{{file.name}}"
-                        *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.presentationml.presentation'"
-                        class="fad fa-file-powerpoint"></i>
-                    <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/csv'" class="fad fa-file-csv"></i>
-                    <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/pdf'"
-                        class="fad fa-file-pdf"></i>
-                    <i tooltip="{{file.name}}"
-                        *ngIf="file.contentType == 'application/vnd.ms-excel' || file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
-                        class="fad fa-file-excel"></i>
-                    <img [src]="file.fileURL"
-                        *ngIf="file.fileId !== undefined && (file.contentType == 'image/gif' || file.contentType == 'image/png' ||file.contentType == 'image/webp'||file.contentType == 'image/jpeg' || file.contentType == 'image/tiff')"
-                        width="50" class="ng-star-inserted" />
-                    <img [src]="file.base64String"
-                        *ngIf="file.fileId === undefined && (file.contentType == 'image/gif' || file.contentType == 'image/png' ||file.contentType == 'image/webp'||file.contentType == 'image/jpeg' || file.contentType == 'image/tiff')"
-                        width="50" class="ng-star-inserted" />
-                </div>
-                <ng-container *ngIf="!showDescription">
-                  <div class="col-sm-9 col-md-9 col-lg-9 text-break line-height-sm d-flex align-items-center justify-content-center">{{file.name}}</div>
-                </ng-container>
-                <ng-container *ngIf="showDescription">
-                  <div class="col-sm-3  col-md-3 col-lg-3 text-break line-height-sm d-flex align-items-center justify-content-center">{{file.name}}</div>
-                  <div class="col-sm-6  col-md-6 col-lg-6 text-break d-flex align-items-center">
-                    <table class="table m-0" width="100%">
-                      <tbody>
-                        <tr
-                          class="file-list-{{index}}"
-                          data-parsley-validate="false"
-                        >
-                          <td class="text-right py-0 px-2 align-middle line-height-sm">Description</td>
-                          <td class="p-1 align-middle">
-                            <input
-                              pInputText
-                              [disabled]="!editDescription"
-                              class="form-control"
-                              name="fileDescription_{{index}}"
-                              [(ngModel)]="fileDescriptions[index]"
-                              data-cy="file-description"
-                              data-validate="parsley"
-                              data-parsley-trigger="change"
-                              data-parsley-maxlength="5"
-                              data-parsley-maxlength-message="Description must be 100 characters or less."
-                              data-parsley-required="false"
-                            >
-                          </td>
-                          <td *ngIf="editDescription" class="p-0 text-center align-middle">
-                            <button
-                              type="button"
-                              class="btn btn-success width-100 mb-xs"
-                              [disabled]="file.description !== fileDescriptions[index]"
-                              (click)="saveFileDescription(index)"
-                              role="button" data-cy="btn-select"
-                            >
-                              Save
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </ng-container>
-                <div class="col-sm-1 col-md-1 d-flex align-items-center">
-                    <i class="far fa-trash-alt pointer" tooltip="Remove File" data-cy="removeSubPart"
-                        (click)="removeFile(file)"></i>
-                </div>
-            </li>
-        </ul>
-    </ng-template>
+<p-fileUpload
+  class="col-md-10"
+  name="fileUpload"
+  url="./upload.php"
+  (onSelect)="myUploader($event)"
+  (onRemove)="removeuploadFile($event)"
+  [showUploadButton]="showUploadButton"
+  [showCancelButton]="showCancelButton"
+  [multiple]="multiple"
+  [accept]="accept"
+  [chooseLabel]="chooseLabel"
+  [maxFileSize]="maxFileSize"
+>
+  <ng-template pTemplate="toolbar" *ngIf="showSelectButton">
+    <p-button
+      [label]="selectLabel"
+      icon="pi pi-bars"
+      (click)="openSelectModal()"
+    ></p-button>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <ul *ngIf="showLi && files !== undefined && files.length > 0">
+      <li class="row fileLi py-2" *ngFor="let file of files; let index = index">
+        <div
+          class="col-sm-2 col-md-2 col-lg-2 text-center d-flex align-items-center justify-content-center"
+        >
+          <i
+            tooltip="{{ file.name }}"
+            *ngIf="file.contentType == 'application/msword'"
+            class="fad fa-file-word"
+          ></i>
+          <i
+            tooltip="{{ file.name }}"
+            *ngIf="
+              file.contentType ==
+              'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            "
+            class="fad fa-file-word"
+          ></i>
+          <i
+            tooltip="{{ file.name }}"
+            *ngIf="file.contentType == 'text/plain'"
+            class="fad fa-file-alt"
+          ></i>
+          <i
+            tooltip="{{ file.name }}"
+            *ngIf="file.contentType == 'text/html'"
+            class="fad fa-file-alt"
+          ></i>
+          <i
+            tooltip="{{ file.name }}"
+            *ngIf="
+              file.contentType ==
+              'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            "
+            class="fad fa-file-powerpoint"
+          ></i>
+          <i
+            tooltip="{{ file.name }}"
+            *ngIf="file.contentType == 'text/csv'"
+            class="fad fa-file-csv"
+          ></i>
+          <i
+            tooltip="{{ file.name }}"
+            *ngIf="file.contentType == 'application/pdf'"
+            class="fad fa-file-pdf"
+          ></i>
+          <i
+            tooltip="{{ file.name }}"
+            *ngIf="
+              file.contentType == 'application/vnd.ms-excel' ||
+              file.contentType ==
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            "
+            class="fad fa-file-excel"
+          ></i>
+          <img
+            [src]="file.fileURL"
+            *ngIf="
+              file.fileId !== undefined &&
+              (file.contentType == 'image/gif' ||
+                file.contentType == 'image/png' ||
+                file.contentType == 'image/webp' ||
+                file.contentType == 'image/jpeg' ||
+                file.contentType == 'image/tiff')
+            "
+            width="50"
+            class="ng-star-inserted"
+          />
+          <img
+            [src]="file.base64String"
+            *ngIf="
+              file.fileId === undefined &&
+              (file.contentType == 'image/gif' ||
+                file.contentType == 'image/png' ||
+                file.contentType == 'image/webp' ||
+                file.contentType == 'image/jpeg' ||
+                file.contentType == 'image/tiff')
+            "
+            width="50"
+            class="ng-star-inserted"
+          />
+        </div>
+        <ng-container *ngIf="!showDescription">
+          <div
+            class="col-sm-9 col-md-9 col-lg-9 text-break line-height-sm d-flex align-items-center justify-content-center"
+          >
+            {{ file.name }}
+          </div>
+        </ng-container>
+        <ng-container *ngIf="showDescription">
+          <div
+            class="col-sm-3 col-md-3 col-lg-3 text-break line-height-sm d-flex align-items-center justify-content-center"
+          >
+            {{ file.name }}
+          </div>
+          <div
+            class="col-sm-6 col-md-6 col-lg-6 text-break d-flex align-items-center"
+          >
+            <table class="table m-0" width="100%">
+              <tbody>
+                <tr class="file-list-{{ index }}" data-parsley-validate="false">
+                  <td class="text-right py-0 px-2 align-middle line-height-sm">
+                    Description
+                  </td>
+                  <td class="p-1 align-middle">
+                    <input
+                      pInputText
+                      [disabled]="!editDescription || file.fileId"
+                      class="form-control"
+                      name="fileDescription_{{ index }}"
+                      [(ngModel)]="file.description"
+                      data-cy="file-description"
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-maxlength="100"
+                      data-parsley-maxlength-message="Description must be 100 characters or less."
+                      data-parsley-required="false"
+                    />
+                  </td>
+                  <td
+                    *ngIf="editDescription && !file.fileId"
+                    class="p-0 text-center align-middle"
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-success width-100 mb-xs"
+                      [disabled]="!file.description"
+                      (click)="saveFileDescription(index)"
+                      role="button"
+                      data-cy="btn-select"
+                    >
+                      Save
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+        <div class="col-sm-1 col-md-1 d-flex align-items-center">
+          <i
+            class="far fa-trash-alt pointer"
+            tooltip="Remove File"
+            data-cy="removeSubPart"
+            (click)="removeFile(file)"
+          ></i>
+        </div>
+      </li>
+    </ul>
+  </ng-template>
 </p-fileUpload>
 
 <p-dialog
   header="Files"
   [(visible)]="showSelectModal"
   [baseZIndex]="100001"
-  [modal]='true'
-  [style]="{width: '70vw'}"
+  [modal]="true"
+  [style]="{ width: '70vw' }"
   data-cy="user-header"
 >
   <div class="container">
@@ -104,12 +191,19 @@
           [rows]="10"
           [showCurrentPageReport]="true"
           [paginator]="true"
-          currentPageReportTemplate="Showing {first}-{last} of {{uploadedFiles.length}}" [filterDelay]="0"
+          currentPageReportTemplate="Showing {first}-{last} of {{
+            uploadedFiles.length
+          }}"
+          [filterDelay]="0"
         >
           <ng-template pTemplate="header">
             <tr>
               <th data-cy="usertable-header">
-                <p-checkbox [(ngModel)]="selectAll" binary="true" (onChange)="selectAllFiles($event)"></p-checkbox>
+                <p-checkbox
+                  [(ngModel)]="selectAll"
+                  binary="true"
+                  (onChange)="selectAllFiles($event)"
+                ></p-checkbox>
               </th>
               <th [pSortableColumn]="'fileId'" data-cy="usertable-header">
                 # <p-sortIcon [field]="'fileId'"></p-sortIcon>
@@ -117,8 +211,7 @@
               <th [pSortableColumn]="'name'" data-cy="usertable-header">
                 Name <p-sortIcon [field]="'name'"></p-sortIcon>
               </th>
-              <th [pSortableColumn]="'contentType'"
-                data-cy="usertable-header">
+              <th [pSortableColumn]="'contentType'" data-cy="usertable-header">
                 File Type <p-sortIcon [field]="'contentType'"></p-sortIcon>
               </th>
               <th [class.hide]="true"></th>
@@ -128,27 +221,49 @@
               <th>
                 <div class="position-relative">
                   <input
-                    pInputText type="text"
+                    pInputText
+                    type="text"
                     tooltip="Search by File Id"
-                    (input)="dt.filter($event.target.value, 'fileId', 'contains')"
+                    (input)="
+                      dt.filter($event.target.value, 'fileId', 'contains')
+                    "
                     data-cy="searchbyid-grid"
                     class="ui-column-filter"
                     [value]="dt.filters['fileId']?.value"
-                  >
-                  <i *ngIf="dt.filters['fileId']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'fileId')"></i>
+                  />
+                  <i
+                    *ngIf="dt.filters['fileId']?.value"
+                    class="fclear pi pi-times pointer"
+                    (click)="cg.filter(dt, 'fileId')"
+                  ></i>
                 </div>
               </th>
               <th>
                 <div class="position-relative">
-                  <input pInputText type="text" tooltip="Search by Name" data-cy="searchbyname-grid"
-                    (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
-                    [value]="dt.filters['name']?.value">
-                  <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
+                  <input
+                    pInputText
+                    type="text"
+                    tooltip="Search by Name"
+                    data-cy="searchbyname-grid"
+                    (input)="dt.filter($event.target.value, 'name', 'contains')"
+                    class="ui-column-filter"
+                    [value]="dt.filters['name']?.value"
+                  />
+                  <i
+                    *ngIf="dt.filters['name']?.value"
+                    class="fclear pi pi-times pointer"
+                    (click)="cg.filter(dt, 'name')"
+                  ></i>
                 </div>
               </th>
               <th>
-                <multiselect-wrapper [options]="fileTypes" filterId="contentType"
-                  defaultText="Select File Type" defaultTextTooltip="" [datatable]="dt">
+                <multiselect-wrapper
+                  [options]="fileTypes"
+                  filterId="contentType"
+                  defaultText="Select File Type"
+                  defaultTextTooltip=""
+                  [datatable]="dt"
+                >
                 </multiselect-wrapper>
               </th>
               <th [class.hide]="true"></th>
@@ -157,23 +272,27 @@
           <ng-template pTemplate="body" let-filemodel>
             <tr class="ui-selectable-row" data-cy="row">
               <td>
-                <p-checkbox [value]="filemodel"  [(ngModel)]="selectedFiles" [inputId]="'file_'+filemodel.fileId"></p-checkbox>
+                <p-checkbox
+                  [value]="filemodel"
+                  [(ngModel)]="selectedFiles"
+                  [inputId]="'file_' + filemodel.fileId"
+                ></p-checkbox>
               </td>
               <td>
-                {{filemodel.fileId}}
+                {{ filemodel.fileId }}
               </td>
               <td>
-                {{filemodel.name}}
+                {{ filemodel.name }}
               </td>
               <td>
-                {{filemodel.contentType}}
+                {{ filemodel.contentType }}
               </td>
               <td [class.hide]="true"></td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="4" style="text-align:left">No Data found.</td>
+              <td colspan="4" style="text-align: left">No Data found.</td>
             </tr>
           </ng-template>
         </p-table>
@@ -186,7 +305,8 @@
         type="button"
         class="btn btn-outline-inverse width-100 mb-xs"
         (click)="selectUploadedFiles()"
-        role="button" data-cy="btn-select"
+        role="button"
+        data-cy="btn-select"
       >
         Select
       </button>

@@ -1,23 +1,28 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Globals } from '../../models/lib/globals';
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Globals } from "../../models/lib/globals";
 import {
-  FileService, FileModel, EnumMenuItem} from '../../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { environment as env } from '../../../environments/environment';
-import { responseHandler } from '../../utils/responseHandler';
-import { emptyArray } from '../../models/lib/Utils';
-import { CommonGrid } from '../../models/lib/CommonGrid';
+  FileService,
+  FileModel,
+  EnumMenuItem,
+} from "../../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { environment as env } from "../../../environments/environment";
+import { responseHandler } from "../../utils/responseHandler";
+import { emptyArray } from "../../models/lib/Utils";
+import { CommonGrid } from "../../models/lib/CommonGrid";
 declare let jQuery: any;
 
 @Component({
-  selector: 'cmh-file-uploader',
-  templateUrl: './cmh-file-uploader.component.html',
-  styleUrls: ['./cmh-file-uploader.component.scss']
+  selector: "cmh-file-uploader",
+  templateUrl: "./cmh-file-uploader.component.html",
+  styleUrls: ["./cmh-file-uploader.component.scss"],
 })
 export class CmhFileUploaderComponent implements OnInit {
   @Input() files: FileModel[];
   @Input() menuItem: EnumMenuItem; // Need to pick which view you are trying to get the files from
-  @Output() filesChange: EventEmitter<Array<FileModel>> = new EventEmitter<Array<FileModel>>();
+  @Output() filesChange: EventEmitter<Array<FileModel>> = new EventEmitter<
+    Array<FileModel>
+  >();
   @Input() showUploadButton: boolean;
   @Input() showCancelButton: boolean;
   @Input() showSelectButton: boolean;
@@ -35,79 +40,93 @@ export class CmhFileUploaderComponent implements OnInit {
   fileTypes: any[] = [];
   selectAll: boolean = false;
   selectedFiles: FileModel[] = [];
-  fileDescriptions: string[] = [];
 
-  constructor(private fileService: FileService, private globals: Globals, public cg: CommonGrid, ) {
-
-  }
-
+  constructor(
+    private fileService: FileService,
+    private globals: Globals,
+    public cg: CommonGrid
+  ) {}
 
   ngOnInit(): void {
-    if (this.chooseLabel === '' || this.chooseLabel === undefined) {
-      this.chooseLabel = 'Select Files';
+    if (this.chooseLabel === "" || this.chooseLabel === undefined) {
+      this.chooseLabel = "Select Files";
     }
 
     if (this.files.length > 0) {
-      this.fileDescriptions = this.files.map(() => '')
       if (this.useLoader) {
         this.globals.showLoader(true);
       } else {
         this.globals.showLoader(false);
       }
 
-      this.fileService.fileGet(this.globals.getSingularMenuName(this.menuItem), this.files[0].entityId, null, env.apiVersion)
-        .pipe(take(1)).subscribe(responseHandler((resp) => {
-          if (resp.object.length > 0) {
-            this.files.forEach((currFile: FileModel) => {
-              resp.object.forEach((getFile: FileModel) => {
-                if (currFile.fileId === getFile.fileId) {
-                  currFile.fileURL = getFile.fileURL;
-                }
+      this.fileService
+        .fileGet(
+          this.globals.getSingularMenuName(this.menuItem),
+          this.files[0].entityId,
+          null,
+          env.apiVersion
+        )
+        .pipe(take(1))
+        .subscribe(
+          responseHandler((resp) => {
+            if (resp.object.length > 0) {
+              this.files.forEach((currFile: FileModel) => {
+                resp.object.forEach((getFile: FileModel) => {
+                  if (currFile.fileId === getFile.fileId) {
+                    currFile.fileURL = getFile.fileURL;
+                  }
+                });
               });
-            });
-          }
-          this.showLi = true;
-        }));
+            }
+            this.showLi = true;
+          })
+        );
     } else {
       this.showLi = true;
     }
 
     if (this.showSelectButton) {
-
       if (this.useLoader) {
         this.globals.showLoader(true);
       } else {
         this.globals.showLoader(false);
       }
 
-      this.fileService.fileGet(null, null, null, env.apiVersion)
-        .pipe(take(1)).subscribe(responseHandler((resp) => {
-          this.uploadedFiles = resp.object;
-          this.fileTypes = this.uploadedFiles.filter(
-            (thing, i, arr) => arr.findIndex(t => t.contentType === thing.contentType) === i
-          ).map(x => ({ label: x.contentType, value: x.contentType }));
-
-        }));
+      this.fileService
+        .fileGet(null, null, null, env.apiVersion)
+        .pipe(take(1))
+        .subscribe(
+          responseHandler((resp) => {
+            this.uploadedFiles = resp.object;
+            this.fileTypes = this.uploadedFiles
+              .filter(
+                (thing, i, arr) =>
+                  arr.findIndex((t) => t.contentType === thing.contentType) ===
+                  i
+              )
+              .map((x) => ({ label: x.contentType, value: x.contentType }));
+          })
+        );
     }
   }
 
   removeFile(file) {
-    const currIndex = this.files.findIndex(x => x.fileId === file.fileId);
+    const currIndex = this.files.findIndex((x) => x.fileId === file.fileId);
     this.files.splice(currIndex, 1);
   }
 
   removeuploadFile(event) {
-    const index = this.files.findIndex(x => x.name === event.file.name);
+    const index = this.files.findIndex((x) => x.name === event.file.name);
     this.files.splice(index, 1);
   }
 
   myUploader(event) {
     const ctrl = this;
-    if (ctrl.multiple !== 'multiple') {
+    if (ctrl.multiple !== "multiple") {
       emptyArray(ctrl.files);
     }
     for (let file of event.files) {
-      if (ctrl.files.findIndex(x => x.name === file.name) === -1) {
+      if (ctrl.files.findIndex((x) => x.name === file.name) === -1) {
         let fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = function () {
@@ -115,6 +134,7 @@ export class CmhFileUploaderComponent implements OnInit {
           fileModel.name = file.name;
           fileModel.base64String = fileReader.result.toString();
           fileModel.contentType = file.type;
+          fileModel.description = null;
           ctrl.files.unshift(fileModel);
         };
       }
@@ -132,7 +152,7 @@ export class CmhFileUploaderComponent implements OnInit {
 
   selectUploadedFiles() {
     for (let file of this.selectedFiles) {
-      if (this.files.findIndex(x => x.fileId === file.fileId) === -1) {
+      if (this.files.findIndex((x) => x.fileId === file.fileId) === -1) {
         this.files.unshift(file);
       }
     }
@@ -140,11 +160,9 @@ export class CmhFileUploaderComponent implements OnInit {
   }
 
   saveFileDescription(index) {
-
     jQuery(`.file-list-${index}`).parsley().validate();
 
     if (jQuery(`.file-list-${index}`).parsley().isValid()) {
-      // this.files[index].decription = this.fileDescriptions[index];
     }
   }
 
