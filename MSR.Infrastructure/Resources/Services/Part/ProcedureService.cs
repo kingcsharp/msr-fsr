@@ -924,7 +924,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         });
                     }
 
-                    var procedureStepItems = procedureStepImportItems.Where(i => i.ProcedureId == procedureImportItem.Id || i.ProcedureName == procedureImportItem.Name).ToList();
+                    //Now that we're adding in the Name to all we want to only check the name if the Id isn't present so that we don't accidently pull wrong steps.
+                    var procedureStepItems = procedureStepImportItems.Where(i => i.ProcedureId == procedureImportItem.Id || (i.ProcedureId == 0 && i.ProcedureName == procedureImportItem.Name)).ToList();
                     if (procedureStepItems.Any())
                     {
                         var returnedProcedureStepData = ValidateProcedureStepData(procedureStepItems);
