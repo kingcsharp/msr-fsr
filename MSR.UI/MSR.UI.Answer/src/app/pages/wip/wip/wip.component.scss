@@ -1,25 +1,25 @@
-.progress{
-    margin-bottom:0px;
-    position: relative;
-    top: 0px;
+.progress {
+  margin-bottom: 0px;
+  position: relative;
+  top: 0px;
 }
 
-.percentage{
-    position: relative;
-    top: -1.35em;
-    text-align: center;
+.percentage {
+  position: relative;
+  top: -1.35em;
+  text-align: center;
 }
 
-.progressbar-container{
-    max-height: 1.75em;
+.progressbar-container {
+  max-height: 1.75em;
 }
 
-.activetask-container{
-    text-align: center;
+.activetask-container {
+  text-align: center;
 }
 
 alert {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .invalid-value {
@@ -30,4 +30,14 @@ alert {
 
 p-celleditor > * {
   width: 90% !important;
+}
+
+.width-85 {
+  width: 85px !important;
+}
+
+p-table {
+  tr > th.disposition {
+    width: 10em;
+  }
 }
