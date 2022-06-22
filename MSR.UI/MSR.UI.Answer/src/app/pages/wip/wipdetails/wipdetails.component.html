@@ -3,9 +3,11 @@
     <div class="container-fluid">
       <div class="row justify-content-center wip-detail-top mb-2">
         <div class="col-6">
-          <div class="row ">
+          <div class="row">
             <div class="col-12 mb-2 mr-0 pr-0 justify-content-end align-middle">
-              <wiplistbutton-wrapper class="d-flex justify-content-end"></wiplistbutton-wrapper>
+              <wiplistbutton-wrapper
+                class="d-flex justify-content-end"
+              ></wiplistbutton-wrapper>
             </div>
           </div>
           <div class="row mb-2">
@@ -13,72 +15,131 @@
             </selectworkorderdropdown-wrapper>
           </div>
           <div class="row justify-content-end">
-            <button type="button" class="btn btn-sm btn-danger mr-2" *ngIf="this.showButtons && !workOrderIsComplete"
-              (click)="toggleCancelRemainingStepsDialog()">
-              <i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
-            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel?.workOrderParts?.length > 0">
+            <button
+              type="button"
+              class="btn btn-sm btn-danger mr-2"
+              *ngIf="this.showButtons && !workOrderIsComplete"
+              (click)="toggleCancelRemainingStepsDialog()"
+            >
+              <i class="fas fa-times mx-1"></i>Cancel Remaining Steps
+            </button>
+            <printtraveler-report
+              [WorkOrder]="workOrderModel"
+              *ngIf="workOrderModel?.workOrderParts?.length > 0"
+            >
             </printtraveler-report>
-            <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined" #printotherreport></printother-report>
+            <printother-report
+              [WorkOrder]="workOrderModel"
+              *ngIf="workOrderModel !== undefined"
+              #printotherreport
+            ></printother-report>
           </div>
         </div>
-        <div [ngClass]="{'col-6':true, 'tab-area':true, 'tab-area-withncr':workOrderModel.hasNCR }">
-          <div class="d-flex justify-content-end ncr-badge" *ngIf="workOrderModel.hasNCR">
-            <span class="badge badge-pill badge-danger" (click)="showNcrReport()"><i class="fas fa-exclamation-triangle"></i> NCR</span>
+        <div
+          [ngClass]="{
+            'col-6': true,
+            'tab-area': true,
+            'tab-area-withncr': workOrderModel.hasNCR
+          }"
+        >
+          <div
+            class="d-flex justify-content-end ncr-badge"
+            *ngIf="workOrderModel.hasNCR"
+          >
+            <span
+              class="badge badge-pill badge-danger"
+              (click)="showNcrReport()"
+              ><i class="fas fa-exclamation-triangle"></i> NCR</span
+            >
           </div>
           <p-tabView class="mt-0">
             <p-tabPanel header="Parts" class="ui-tabview-top-panel">
               <div class="ui-tabview-top-right">
-              <ul>
-                <li *ngFor="let part of workOrderParts">
-                  <span *ngIf="part.serialNumber; else noSerial">
-                  Part # {{part.part?.partNumber}}, {{part.part?.name}}, S/N: ({{part.serialNumber}}), (CycleCount: {{part.cycleCount}})
-                  (Qty: {{part.qty}})
-                  </span>
-                  <ng-template #noSerial>
-                    <span>
-                      Part # {{part.part?.partNumber}}, {{part.part?.name}}, S/N: (N/A), (CycleCount: {{part.cycleCount}})
-                    (Qty: {{part.qty}})
+                <ul>
+                  <li *ngFor="let part of workOrderParts">
+                    <span *ngIf="part.serialNumber; else noSerial">
+                      Part # {{ part.part?.partNumber }}, {{ part.part?.name }},
+                      S/N: ({{ part.serialNumber }}), (CycleCount:
+                      {{ part.cycleCount }}) (Qty: {{ part.qty }})
                     </span>
-                  </ng-template>
-                </li>
-              </ul>
+                    <ng-template #noSerial>
+                      <span>
+                        Part # {{ part.part?.partNumber }},
+                        {{ part.part?.name }}, S/N: (N/A), (CycleCount:
+                        {{ part.cycleCount }}) (Qty: {{ part.qty }})
+                      </span>
+                    </ng-template>
+                  </li>
+                </ul>
               </div>
             </p-tabPanel>
             <p-tabPanel header="Purchase" class="ui-tabview-top-panel">
               <div class="container-fluid ui-tabview-top-right">
                 <div class="row">
                   <div class="col-4 text-right">Customer:</div>
-                  <div class="col-8 text-left">{{ customer.name}}</div>
+                  <div class="col-8 text-left">{{ customer.name }}</div>
                   <div class="col-4 text-right">Product:</div>
-                  <div class="col-8">{{ product.name}}</div>
+                  <div class="col-8">{{ product.name }}</div>
                   <div class="col-4 text-right">Procedure:</div>
-                  <div class="col-8">{{ procedure.name}}</div>
+                  <div class="col-8">{{ procedure.name }}</div>
                   <div class="col-4 text-right">Purchase Item #:</div>
-                  <div class="col-8">{{ purchase.customerPurchaseNumber}}</div>
+                  <div class="col-8">{{ purchase.customerPurchaseNumber }}</div>
                 </div>
               </div>
             </p-tabPanel>
           </p-tabView>
         </div>
       </div>
-      <div class="row mb-3 v-25 wipstep-selector" *ngIf="workOrderModel.workOrderTasks !== undefined && showCarousel && workOrderTaskToView !== undefined">
-          <carousel id="step-carousel" #stepCarousel class="col-12 align-items-center" style="margin-left:25px"
-            [itemsPerSlide]="itemsPerASlide" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="false"
-            [interval]="false" [startFromIndex]="startSlideIndex" [(activeSlide)]="activeSlideIndex"
-            data-ride="carousel">
-            <slide id={{index}} *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"
-              (click)="selectTaskForViewing(workOrderTask)" [ngClass]="{
-                'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
-                'bg-light': workOrderTask.status?.name === 'In Progress',
-                'text-dark': workOrderTask.status?.name === 'In Progress',
-                'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'
-                || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled',
-                'step-viewed': workOrderTaskToView?.id === workOrderTask.id}">
-              <div class="h-100 d-flex">
-                <div class="carousel-step-title m-auto">{{ workOrderTask | tasktitle }}</div>
+      <div
+        class="row mb-3 v-25 wipstep-selector"
+        *ngIf="
+          workOrderModel.workOrderTasks !== undefined &&
+          showCarousel &&
+          workOrderTaskToView !== undefined
+        "
+      >
+        <carousel
+          id="step-carousel"
+          #stepCarousel
+          class="col-12 align-items-center"
+          style="margin-left: 25px"
+          [itemsPerSlide]="itemsPerASlide"
+          [singleSlideOffset]="false"
+          [noWrap]="true"
+          [showIndicators]="false"
+          [interval]="false"
+          [startFromIndex]="startSlideIndex"
+          [(activeSlide)]="activeSlideIndex"
+          data-ride="carousel"
+        >
+          <slide
+            id="{{ index }}"
+            *ngFor="
+              let workOrderTask of workOrderModel.workOrderTasks;
+              let index = index
+            "
+            (click)="selectTaskForViewing(workOrderTask)"
+            [ngClass]="{
+              'step-waiting':
+                workOrderTask.status?.name === 'Waiting to Start' ||
+                workOrderTask.status?.name === 'Approved',
+              'bg-light': workOrderTask.status?.name === 'In Progress',
+              'text-dark': workOrderTask.status?.name === 'In Progress',
+              'step-complete':
+                workOrderTask.status?.name === 'Complete' ||
+                workOrderTask.status?.name === 'Completed' ||
+                workOrderTask.status?.name === 'Closed' ||
+                workOrderTask.status?.name === 'Cancelled',
+              'step-viewed': workOrderTaskToView?.id === workOrderTask.id
+            }"
+          >
+            <div class="h-100 d-flex">
+              <div class="carousel-step-title m-auto">
+                {{ workOrderTask | tasktitle }}
               </div>
-            </slide>
-          </carousel>
+            </div>
+          </slide>
+        </carousel>
       </div>
       <div class="row wip-controller">
         <div class="d-flex col-4 justify-content-start pl-0">
@@ -88,9 +149,14 @@
             [workOrderIsComplete]="workOrderIsComplete"
             [(workOrderTaskInProgress)]="workOrderTaskInProgress"
             (setStartDate)="setStartDate($event)"
-            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id"
+            *ngIf="
+              workOrderTaskInProgress !== undefined &&
+              workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id
+            "
             [areMonitorsValid]="areMonitorsValid"
-            (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
+            (updateWorkOrderTaskToViewAndInProgress)="
+              updateWorkOrderTaskToViewAndInProgress($event)
+            "
             (areMonitorsValidCheck)="areMonitorsValidCheck()"
             [ncrParts]="ncrParts"
             [showNCParts]="showNCParts"
@@ -101,27 +167,66 @@
           </workordertasktimer-wrapper>
         </div>
         <div class="col-4 text-center ng-star-inserted">
-          <div class="alert alert-dismissable alert-warning"
-            *ngIf="workOrderTaskInProgress !== undefined && !hasAccessToTaskBeingViewed">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <i class="fas fa-exclamation-triangle"></i> You do not have the proper role to access
-            <span class="font-weight-bold">{{nameOfTaskThatIsRestricted}}</span><br>
-            <span *ngIf="rolesRequiredMessage !== undefined">The <strong>{{rolesRequiredMessage}}</strong> role is Required</span>
-            <span *ngIf="rolesRequiredMessage === undefined">No roles have been assigned to this Step</span>
+          <div
+            class="alert alert-dismissable alert-warning"
+            *ngIf="
+              workOrderTaskInProgress !== undefined &&
+              !hasAccessToTaskBeingViewed
+            "
+          >
+            <a href="#" class="close" data-dismiss="alert" aria-label="close"
+              >&times;</a
+            >
+            <i class="fas fa-exclamation-triangle"></i> You do not have the
+            proper role to access
+            <span class="font-weight-bold">{{
+              nameOfTaskThatIsRestricted
+            }}</span
+            ><br />
+            <span *ngIf="rolesRequiredMessage !== undefined"
+              >The <strong>{{ rolesRequiredMessage }}</strong> role is
+              Required</span
+            >
+            <span *ngIf="rolesRequiredMessage === undefined"
+              >No roles have been assigned to this Step</span
+            >
           </div>
         </div>
-        <div class="d-flex col-4 justify-content-end pr-0"
-          *ngIf="workOrderTaskInProgress?.id === workOrderTaskToView?.id && !workOrderIsComplete">
-          <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"
+        <div
+          class="d-flex col-4 justify-content-end pr-0"
+          *ngIf="
+            workOrderTaskInProgress?.id === workOrderTaskToView?.id &&
+            !workOrderIsComplete
+          "
+        >
+          <take-over-task-button-wrapper
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress"
             [workOrderModel]="workOrderModel"
-            *ngIf="this.showButtons && workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo !== globals.getCurrentUser().id">
+            *ngIf="
+              this.showButtons &&
+              workOrderTaskInProgress !== undefined &&
+              workOrderTaskInProgress.assignedTo !== globals.getCurrentUser().id
+            "
+          >
           </take-over-task-button-wrapper>
           <empmbutton-wrapper
-            *ngIf="hasAccessToTaskBeingViewed && workOrderTaskInProgress !== undefined && !workOrderIsComplete">
+            *ngIf="
+              hasAccessToTaskBeingViewed &&
+              workOrderTaskInProgress !== undefined &&
+              !workOrderIsComplete
+            "
+          >
           </empmbutton-wrapper>
-          <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" (addNcrTasks)="addNcrTasks($event)"
+          <addncrbutton-wrapper
+            [(workOrderModel)]="workOrderModel"
+            (addNcrTasks)="addNcrTasks($event)"
             [(workOrderTaskInProgress)]="workOrderTaskInProgress"
-            *ngIf="hasAccessToTaskBeingViewed && workOrderTaskInProgress !== undefined && !workOrderIsComplete">
+            *ngIf="
+              hasAccessToTaskBeingViewed &&
+              workOrderTaskInProgress !== undefined &&
+              !workOrderIsComplete
+            "
+          >
           </addncrbutton-wrapper>
         </div>
       </div>
@@ -129,36 +234,81 @@
         <p-tabView class="w-100" *ngIf="workOrderTaskToView !== undefined">
           <p-tabPanel class="content-tabs" header="Task Description">
             <div class="row">
-              <div class="container-fluid description-container m-2 wip-details-bottom">
+              <div
+                class="container-fluid description-container m-2 wip-details-bottom"
+              >
                 <div class="row">
                   <div class="text-right col-2 p-2" colspan="1">Assignee:</div>
-                  <div class="col-10 p-2">{{ workOrderTaskToView?.assignedToUser?.fullName }}</div>
-                </div>
-                <div class="row">
-                  <div class="text-right col-2 p-2" colspan="1">Task:</div>
-                  <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.title | workOrderTaskAndMonitor: workOrderTaskToView.procedureStepId : workOrderTaskToView.title}}</div>
-                </div>
-                <div class="row">
-                  <div class="text-right col-2 p-2" colspan="1">Description:</div>
-                  <div class="col-10 p-2" [innerHTML]="workOrderTaskToView?.procedureStep?.stepText | workOrderTaskAndMonitor: workOrderTaskToView.procedureStepId : workOrderTaskToView.stepText"></div>
-                </div>
-                <div class="row">
-                  <div class="text-right col-2 p-2" colspan="1">Related Documents:</div>
                   <div class="col-10 p-2">
-                    <grid-file-viewer [menuItem]="menuItems.Documents" [files]="workOrderTaskToView?.procedureStep?.referenceDocument"></grid-file-viewer>
+                    {{ workOrderTaskToView?.assignedToUser?.fullName }}
                   </div>
                 </div>
                 <div class="row">
-                  <div class="text-right col-2 p-2" colspan="1">Reference Files:</div>
+                  <div class="text-right col-2 p-2" colspan="1">Task:</div>
                   <div class="col-10 p-2">
-                    <grid-file-viewer [menuItem]="menuItems.ProcedureStep" [files]="workOrderTaskToView?.procedureStep?.referenceFiles"></grid-file-viewer>
+                    {{
+                      workOrderTaskToView?.procedureStep?.title
+                        | workOrderTaskAndMonitor
+                          : workOrderTaskToView.procedureStepId
+                          : workOrderTaskToView.title
+                    }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="text-right col-2 p-2" colspan="1">
+                    Description:
+                  </div>
+                  <div
+                    class="col-10 p-2"
+                    [innerHTML]="
+                      workOrderTaskToView?.procedureStep?.stepText
+                        | workOrderTaskAndMonitor
+                          : workOrderTaskToView.procedureStepId
+                          : workOrderTaskToView.stepText
+                    "
+                  ></div>
+                </div>
+                <div class="row">
+                  <div class="text-right col-2 p-2" colspan="1">
+                    Related Documents:
+                  </div>
+                  <div class="col-10 p-2">
+                    <grid-file-viewer
+                      [menuItem]="menuItems.Documents"
+                      [files]="
+                        workOrderTaskToView?.procedureStep?.referenceDocument
+                      "
+                    ></grid-file-viewer>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="text-right col-2 p-2" colspan="1">
+                    Reference Files:
+                  </div>
+                  <div class="col-10 p-2">
+                    <grid-file-viewer
+                      [menuItem]="menuItems.ProcedureStep"
+                      [files]="
+                        workOrderTaskToView?.procedureStep?.referenceFiles
+                      "
+                    ></grid-file-viewer>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="workOrderTaskToView !== undefined && parentPart?.serialNumber !== 'N/A'
-            && (workOrderTaskToView.procedureStep?.procedureStepType?.trim().toLocaleUpperCase() === 'SERIALIZATION'
-            || workOrderTaskToView.procedureStepType?.name?.trim().toLocaleUpperCase() === 'SERIALIZATION')">
+            <div
+              class="row"
+              *ngIf="
+                workOrderTaskToView !== undefined &&
+                parentPart?.serialNumber !== 'N/A' &&
+                (workOrderTaskToView.procedureStep?.procedureStepType
+                  ?.trim()
+                  .toLocaleUpperCase() === 'SERIALIZATION' ||
+                  workOrderTaskToView.procedureStepType?.name
+                    ?.trim()
+                    .toLocaleUpperCase() === 'SERIALIZATION')
+              "
+            >
               <div class="container-fluid product-container m-2">
                 <table class="table">
                   <thead class="thead-dark">
@@ -170,31 +320,87 @@
                     </tr>
                   </thead>
                   <tbody
-                    *ngIf="workOrderModel.workOrderParts !== undefined && workOrderModel.workOrderParts.length !== 0">
-                    <tr *ngFor="let workOrderPart of workOrderModel.workOrderParts; let index=index">
-                      <td class="part-td">{{workOrderPart.part?.name}}</td>
-                      <td class="count-td text-center">{{workOrderPart.cycleCount}}</td>
-                      <td class="d-flex serial-td" *ngIf="hasAccessToTaskBeingViewed">
-                        <input type="text" id="serialnumber{{index}}" [(ngModel)]="workOrderPart.serialNumber"
-                          class="form-control input-transparent serial-number m-2" tooltip="Serial Number" disabled>
-                        <button id="changebutton{{index}}" class="btn btn-warning m-2" *ngIf="!workOrderIsComplete"
-                          (click)="changeSerialNumber(index, workOrderPart.serialNumber, workOrderPart.id)">Change</button>
-                        <button id="submitbutton{{index}}" class="btn btn-success d-none m-2"
-                          (click)="submitSerialNumber(index, workOrderPart.id)">Submit</button>
-                        <button id="cancelbutton{{index}}" class="btn btn-danger d-none m-2"
-                          (click)="cancelSerialNumber(index, workOrderPart.id)">Cancel</button>
+                    *ngIf="
+                      workOrderModel.workOrderParts !== undefined &&
+                      workOrderModel.workOrderParts.length !== 0
+                    "
+                  >
+                    <tr
+                      *ngFor="
+                        let workOrderPart of workOrderModel.workOrderParts;
+                        let index = index
+                      "
+                    >
+                      <td class="part-td">{{ workOrderPart.part?.name }}</td>
+                      <td class="count-td text-center">
+                        {{ workOrderPart.cycleCount }}
+                      </td>
+                      <td
+                        class="d-flex serial-td"
+                        *ngIf="hasAccessToTaskBeingViewed"
+                      >
+                        <input
+                          type="text"
+                          id="serialnumber{{ index }}"
+                          [(ngModel)]="workOrderPart.serialNumber"
+                          class="form-control input-transparent serial-number m-2"
+                          tooltip="Serial Number"
+                          disabled
+                        />
+                        <button
+                          id="changebutton{{ index }}"
+                          class="btn btn-warning m-2"
+                          *ngIf="!workOrderIsComplete"
+                          (click)="
+                            changeSerialNumber(
+                              index,
+                              workOrderPart.serialNumber,
+                              workOrderPart.id
+                            )
+                          "
+                        >
+                          Change
+                        </button>
+                        <button
+                          id="submitbutton{{ index }}"
+                          class="btn btn-success d-none m-2"
+                          (click)="submitSerialNumber(index, workOrderPart.id)"
+                        >
+                          Submit
+                        </button>
+                        <button
+                          id="cancelbutton{{ index }}"
+                          class="btn btn-danger d-none m-2"
+                          (click)="cancelSerialNumber(index, workOrderPart.id)"
+                        >
+                          Cancel
+                        </button>
                       </td>
                       <td class="history-td">
-                        <ng-container *ngFor="let ncrHistoryItem of workOrderPart.ncrHistoryItems">
+                        <ng-container
+                          *ngFor="
+                            let ncrHistoryItem of workOrderPart.ncrHistoryItems
+                          "
+                        >
                           <button
-                            *ngIf="workOrderPart.cycleCount > 1 &&
-                            workOrderPart.serialNumber &&
-                            ncrHistoryItem.serialNumber &&
-                            ncrHistoryItem.workOrderId !== workOrderModel.id &&
-                            workOrderPart.serialNumber.toLowerCase() === ncrHistoryItem.serialNumber.toLowerCase()"
-                            (click)="showNCRReportByPart(ncrHistoryItem.workOrderPartId)"
+                            *ngIf="
+                              workOrderPart.cycleCount > 1 &&
+                              workOrderPart.serialNumber &&
+                              ncrHistoryItem.serialNumber &&
+                              ncrHistoryItem.workOrderId !==
+                                workOrderModel.id &&
+                              workOrderPart.serialNumber.toLowerCase() ===
+                                ncrHistoryItem.serialNumber.toLowerCase()
+                            "
+                            (click)="
+                              showNCRReportByPart(
+                                ncrHistoryItem.workOrderPartId
+                              )
+                            "
                             class="btn btn-sm btn-danger m-2"
-                          >{{ncrHistoryItem.title}}</button>
+                          >
+                            {{ ncrHistoryItem.title }}
+                          </button>
                         </ng-container>
                       </td>
                     </tr>
@@ -202,7 +408,14 @@
                 </table>
               </div>
             </div>
-            <div class="row" *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStepTypeId === enumProcedureStepType.NCR">
+            <div
+              class="row"
+              *ngIf="
+                workOrderTaskToView !== undefined &&
+                workOrderTaskToView.procedureStepTypeId ===
+                  enumProcedureStepType.NCR
+              "
+            >
               <div class="container-fluid product-container m-2">
                 <table class="table">
                   <thead class="thead-dark">
@@ -213,16 +426,29 @@
                     </tr>
                   </thead>
                   <tbody
-                    *ngIf="workOrderModel.workOrderParts !== undefined && workOrderModel.workOrderParts.length !== 0">
-                    <tr *ngFor="let workOrderPart of workOrderModel.workOrderParts; let index=index">
-                      <td class="part-td">{{workOrderPart.part?.name}}</td>
+                    *ngIf="
+                      workOrderModel.workOrderParts !== undefined &&
+                      workOrderModel.workOrderParts.length !== 0
+                    "
+                  >
+                    <tr
+                      *ngFor="
+                        let workOrderPart of workOrderModel.workOrderParts;
+                        let index = index
+                      "
+                    >
+                      <td class="part-td">{{ workOrderPart.part?.name }}</td>
                       <td class="serial-td" *ngIf="hasAccessToTaskBeingViewed">
-                        {{workOrderPart.serialNumber}}
+                        {{ workOrderPart.serialNumber }}
                       </td>
                       <td class="tagtype-td">
                         <p-dropdown
-                          *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id && ncrParts[index].selected"
-                          name="tagType{{i}}"
+                          *ngIf="
+                            workOrderTaskToView.id ===
+                              workOrderTaskInProgress.id &&
+                            ncrParts[index].selected
+                          "
+                          name="tagType{{ i }}"
                           [options]="tagTypeOptions"
                           placeholder="Select Tag"
                           [showClear]="true"
@@ -232,24 +458,48 @@
                             <div
                               *ngIf="ncrParts[index].tagType"
                               [ngClass]="{
-                                'tag-type-yellow': ncrParts[index].tagType === 'Yellow Tag',
-                                'tag-type-red': ncrParts[index].tagType === 'Red Tag'
+                                'tag-type-yellow':
+                                  ncrParts[index].tagType === 'Yellow Tag',
+                                'tag-type-red':
+                                  ncrParts[index].tagType === 'Red Tag'
                               }"
-                            >{{ncrParts[index].tagType}}</div>
+                            >
+                              {{ ncrParts[index].tagType }}
+                            </div>
                           </ng-template>
                           <ng-template let-type pTemplate="item">
-                            <div class="{{type.styleClass}}">{{type.value}}</div>
+                            <div class="{{ type.styleClass }}">
+                              {{ type.value }}
+                            </div>
                           </ng-template>
                         </p-dropdown>
-                        <ul class="parsley-errors-list filled" *ngIf="workOrderTaskToView.id === workOrderTaskInProgress.id && ncrParts[index].selected && !tagTypesValid">
-                          <li class="parsley-custom-error-message"
-                            *ngIf="ncrParts[index].tagType === undefined || ncrParts[index].tagType === null">
+                        <ul
+                          class="parsley-errors-list filled"
+                          *ngIf="
+                            workOrderTaskToView.id ===
+                              workOrderTaskInProgress.id &&
+                            ncrParts[index].selected &&
+                            !tagTypesValid
+                          "
+                        >
+                          <li
+                            class="parsley-custom-error-message"
+                            *ngIf="
+                              ncrParts[index].tagType === undefined ||
+                              ncrParts[index].tagType === null
+                            "
+                          >
                             This value is required.
                           </li>
                         </ul>
                         <div
-                          *ngIf="workOrderTaskToView.id !== workOrderTaskInProgress.id"
-                        >{{ncrParts[index].tagType}}</div>
+                          *ngIf="
+                            workOrderTaskToView.id !==
+                            workOrderTaskInProgress.id
+                          "
+                        >
+                          {{ ncrParts[index].tagType }}
+                        </div>
                       </td>
                     </tr>
                   </tbody>
@@ -259,10 +509,19 @@
           </p-tabPanel>
           <p-tabPanel class="content-tabs" header="Monitors">
             <span
-              *ngIf="hasAccessToTaskBeingViewed && workOrderTaskToView.workOrderTaskMonitors !== undefined && workOrderModel !== undefined">
+              *ngIf="
+                hasAccessToTaskBeingViewed &&
+                workOrderTaskToView.workOrderTaskMonitors !== undefined &&
+                workOrderModel !== undefined
+              "
+            >
               <workordertaskmonitors-wrapper
-                [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
-                [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id"
+                [workOrderMonitorsToView]="
+                  workOrderTaskToView.workOrderTaskMonitors
+                "
+                [doNotAllowEditing]="
+                  workOrderTaskToView.id === workOrderTaskInProgress.id
+                "
                 [showNCParts]="showNCParts"
                 [workOrderTaskToView]="workOrderTaskToView"
                 [(ncrParts)]="ncrParts"
@@ -276,18 +535,39 @@
           </p-tabPanel>
           <p-tabPanel class="content-tabs" header="Files">
             <div class="row">
-              <div class="container-fluid file-container m-2 wip-details-bottom" *ngIf="hasAccessToTaskBeingViewed">
+              <div
+                class="container-fluid file-container m-2 wip-details-bottom"
+                *ngIf="hasAccessToTaskBeingViewed"
+              >
                 <div class="row">
                   <div class="col">
-                    <button id="workordertaskfiles" class="btn btn-primary mb-2"
-                      (click)="uploadFilesAndDocumentsForTask()">Submit</button>
-                    <cmh-file-uploader name="referencefiles" class="col-12" [showSelectButton]="true"
-                      [showUploadButton]="false" [useLoader]="false"
-                      *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
-                      [menuItem]="menuItems.Templates" multiple="multiple"
+                    <button
+                      id="workordertaskfiles"
+                      class="btn btn-primary mb-2"
+                      (click)="uploadFilesAndDocumentsForTask()"
+                    >
+                      Submit
+                    </button>
+                    <cmh-file-uploader
+                      name="referencefiles"
+                      class="col-12"
+                      [showSelectButton]="true"
+                      [showUploadButton]="false"
+                      [useLoader]="false"
+                      *ngIf="
+                        workOrderTaskToView !== undefined &&
+                        workOrderTaskToView?.referenceFiles !== undefined
+                      "
+                      [menuItem]="menuItems.Templates"
+                      multiple="multiple"
                       [(files)]="workOrderTaskToView.referenceFiles"
                       [showDescription]="true"
-                      [editDescription]="workOrderTaskToView.assignedTo === globals.getCurrentUser().id">
+                      (descriptionChange)="uploadFilesAndDocumentsForTask()"
+                      [editDescription]="
+                        workOrderTaskToView.assignedTo ===
+                        globals.getCurrentUser().id
+                      "
+                    >
                     </cmh-file-uploader>
                   </div>
                 </div>
@@ -299,39 +579,78 @@
     </div>
   </div>
 </div>
-<p-dialog header="Cancel Remaining Steps Confirmation" [(visible)]="showCancelRemainingStepsDialog" appendTo="body"
-  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+<p-dialog
+  header="Cancel Remaining Steps Confirmation"
+  [(visible)]="showCancelRemainingStepsDialog"
+  appendTo="body"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  data-cy="user-header"
+>
   <div class="container">
     <div class="row">
-      <div class="col-12 p-0 mb-2">Are you sure you want to cancel the remaining steps?</div>
+      <div class="col-12 p-0 mb-2">
+        Are you sure you want to cancel the remaining steps?
+      </div>
       <div class="alert alert-primary col-12" role="alert">
-        <i class="fas fa-info-circle"></i> When Cancelling remaing steps you have <b>two options</b>:
+        <i class="fas fa-info-circle"></i> When Cancelling remaing steps you
+        have <b>two options</b>:
         <ol>
-          <li>If you wish close and invoice for this Work Order, click the Yes - And Invoice button below.</li>
-          <li>If you do not want to invoice for this Work Order click the Yes - But Do Not Invoice button below.</li>
+          <li>
+            If you wish close and invoice for this Work Order, click the Yes -
+            And Invoice button below.
+          </li>
+          <li>
+            If you do not want to invoice for this Work Order click the Yes -
+            But Do Not Invoice button below.
+          </li>
         </ol>
-        Other wise click the <b>Cancel</b> button to continue with this Work Order.
+        Other wise click the <b>Cancel</b> button to continue with this Work
+        Order.
       </div>
     </div>
   </div>
   <p-footer>
     <div class="pull-right">
-      <button type="submit" (click)="cancelRemainingStepsAndInvoice(true)" class="btn btn-success mb-xs" role="button"
-        data-cy="confirmdelete-button">
+      <button
+        type="submit"
+        (click)="cancelRemainingStepsAndInvoice(true)"
+        class="btn btn-success mb-xs"
+        role="button"
+        data-cy="confirmdelete-button"
+      >
         <i class="fas fa-dollar-sign mx-1"></i>Yes - And Invoice
       </button>
-      <button type="submit" (click)="cancelRemainingStepsAndInvoice(false)" class="btn btn-warning mb-xs" role="button"
-        data-cy="confirmdelete-button">
+      <button
+        type="submit"
+        (click)="cancelRemainingStepsAndInvoice(false)"
+        class="btn btn-warning mb-xs"
+        role="button"
+        data-cy="confirmdelete-button"
+      >
         <i class="fas fa-times mx-1"></i>Yes - But Do Not Invoice
       </button>
-      <button type="button" (click)="toggleCancelRemainingStepsDialog()" class="btn btn-danger mb-xs" role="button">
+      <button
+        type="button"
+        (click)="toggleCancelRemainingStepsDialog()"
+        class="btn btn-danger mb-xs"
+        role="button"
+      >
         <i class="fas fa-times-circle mx-1"></i>Cancel
       </button>
     </div>
   </p-footer>
 </p-dialog>
-<p-dialog header="Error" [(visible)]="monitorsAreInvalidDialog" appendTo="body"
-  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+<p-dialog
+  header="Error"
+  [(visible)]="monitorsAreInvalidDialog"
+  appendTo="body"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  data-cy="user-header"
+>
   <div class="container">
     <div class="row">
       Cannot close step until monitors that require passing results are fixed
@@ -339,23 +658,40 @@
   </div>
   <p-footer>
     <div class="pull-right">
-      <button type="button" (click)="closeDialog()" class="btn btn-danger mb-xs" role="button">
+      <button
+        type="button"
+        (click)="closeDialog()"
+        class="btn btn-danger mb-xs"
+        role="button"
+      >
         <i class="fas fa-times-circle mx-1"></i>Close
       </button>
     </div>
   </p-footer>
 </p-dialog>
 
-<p-dialog [(visible)]="showNCRReportByPartDialog" (onHide)="hideNCRReportByPart()" appendTo="body" styleClass="report" [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
-  <p-header>
-    Part NCR Details
-  </p-header>
+<p-dialog
+  [(visible)]="showNCRReportByPartDialog"
+  (onHide)="hideNCRReportByPart()"
+  appendTo="body"
+  styleClass="report"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  data-cy="user-header"
+>
+  <p-header> Part NCR Details </p-header>
   <div class="report-viewport m-4 d-print-flex">
     <div class="row m-4" *ngIf="!!ncrPartDetail">
-      <div class="col-12">Part Non Conformance Report - Work Order {{ncrPartDetail.workOrderId}}</div>
+      <div class="col-12">
+        Part Non Conformance Report - Work Order {{ ncrPartDetail.workOrderId }}
+      </div>
       <div class="col-12 border mb-2">
         <div class="row">
-          <div class="col-3 text-right">WorkOrder Completed Date:</div><div class="col-9">{{ncrPartDetail.workOrderCompletedDate | userTimezone }}</div>
+          <div class="col-3 text-right">WorkOrder Completed Date:</div>
+          <div class="col-9">
+            {{ ncrPartDetail.workOrderCompletedDate | userTimezone }}
+          </div>
         </div>
       </div>
       <div class="col-12 border mb-2">
@@ -363,41 +699,75 @@
           <div class="col-4 font-weight-bold">Part #</div>
           <div class="col-4 font-weight-bold">Part Name</div>
           <div class="col-4 font-weight-bold">Serial Number</div>
-          <div class="col-4">{{ncrPartDetail.partNumber}}</div>
-          <div class="col-4">{{ncrPartDetail.partName}}</div>
-          <div class="col-4">{{ncrPartDetail.serialNumber}}</div>
+          <div class="col-4">{{ ncrPartDetail.partNumber }}</div>
+          <div class="col-4">{{ ncrPartDetail.partName }}</div>
+          <div class="col-4">{{ ncrPartDetail.serialNumber }}</div>
         </div>
       </div>
       <div class="col-12 border mb-2">
         <div class="row">
-          <div class="col-3 font-weight-bold text-right">Associated Documents:</div>
-          <div class="col-9">
-            <grid-file-viewer [menuItem]="menuItems.WorkOrderTasks" [files]="ncrAssociatedDocuments" class="m-2"></grid-file-viewer>
+          <div class="col-3 font-weight-bold text-right">
+            Associated Documents:
           </div>
-          <div class="col-3 font-weight-bold text-right">Associated Digital Pictures:</div>
+          <div class="col-9">
+            <grid-file-viewer
+              [menuItem]="menuItems.WorkOrderTasks"
+              [files]="ncrAssociatedDocuments"
+              class="m-2"
+            ></grid-file-viewer>
+          </div>
+          <div class="col-3 font-weight-bold text-right">
+            Associated Digital Pictures:
+          </div>
           <div class="col-9">
             <div class="row">
-              <div class="col-4 mt-4" *ngFor="let fileModel of ncrAssociatedDigitalPictures">
-                <a *ngIf="fileModel.fileId !== undefined" href="{{fileModel.fileURL}}" target="_blank">
-                  <img class="card-img-top" src="{{fileModel.fileURL}}" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
+              <div
+                class="col-4 mt-4"
+                *ngFor="let fileModel of ncrAssociatedDigitalPictures"
+              >
+                <a
+                  *ngIf="fileModel.fileId !== undefined"
+                  href="{{ fileModel.fileURL }}"
+                  target="_blank"
+                >
+                  <img
+                    class="card-img-top"
+                    src="{{ fileModel.fileURL }}"
+                    alt="{{ fileModel.name }}"
+                    (click)="showImagePreviewDialog(fileModel)"
+                  />
                 </a>
               </div>
             </div>
           </div>
-          <div class="col-3 font-weight-bold text-right">Comments:</div><div class="col-9"></div>
+          <div class="col-3 font-weight-bold text-right">Comments:</div>
+          <div class="col-9"></div>
         </div>
       </div>
       <div class="col-12">
-        <div class="row" *ngFor="let taskSummary of ncrPartDetail.workOrderTasks">
-          <div class="col-12 border bg-dark p-2">{{taskSummary.workOrderTaskTitle}}</div>
-          <div class="col-6 border bg-secondary p-2">Monitor {{taskSummary.workOrderTaskId}}</div>
+        <div
+          class="row"
+          *ngFor="let taskSummary of ncrPartDetail.workOrderTasks"
+        >
+          <div class="col-12 border bg-dark p-2">
+            {{ taskSummary.workOrderTaskTitle }}
+          </div>
+          <div class="col-6 border bg-secondary p-2">
+            Monitor {{ taskSummary.workOrderTaskId }}
+          </div>
           <div class="col-3 border bg-secondary p-2">Result</div>
           <div class="col-3 border bg-secondary p-2">Comment</div>
           <div class="col-12">
-            <div class="row" *ngFor="let monitorSummary of taskSummary.workOrderTaskMonitors">
-              <div class="col-6 border p-2" [innerHTML]="monitorSummary.workOrderTaskMonitorDescription"></div>
-              <div class="col-3 border p-2">{{monitorSummary.result}}</div>
-              <div class="col-3 border p-2">{{monitorSummary.comment}}</div>
+            <div
+              class="row"
+              *ngFor="let monitorSummary of taskSummary.workOrderTaskMonitors"
+            >
+              <div
+                class="col-6 border p-2"
+                [innerHTML]="monitorSummary.workOrderTaskMonitorDescription"
+              ></div>
+              <div class="col-3 border p-2">{{ monitorSummary.result }}</div>
+              <div class="col-3 border p-2">{{ monitorSummary.comment }}</div>
             </div>
           </div>
         </div>
@@ -406,10 +776,20 @@
   </div>
   <p-footer>
     <div class="pull-right">
-      <button type="submit" (click)="print()" class="btn btn-primary mb-xs" role="button">
+      <button
+        type="submit"
+        (click)="print()"
+        class="btn btn-primary mb-xs"
+        role="button"
+      >
         <i class="fas fa-print mx-1"></i>Print
       </button>
-      <button type="submit" (click)="hideNCRReportByPart()" class="btn btn-warning mb-xs" role="button">
+      <button
+        type="submit"
+        (click)="hideNCRReportByPart()"
+        class="btn btn-warning mb-xs"
+        role="button"
+      >
         <i class="fas fa-times-circle mx-1"></i>Close
       </button>
     </div>

@@ -21,6 +21,8 @@ import { callFunctionWithFilters } from "../../../models/lib/Utils";
 import { LazyLoadEvent } from "primeng/api";
 import { GridSaved } from "../../../models/lib/GridSaved";
 import { EnumColumnType } from "../../../models/enums/EnumColumnType";
+import * as moment from "moment";
+import * as _ from "lodash";
 
 @Component({
   selector: "app-wiphistory",
@@ -219,6 +221,17 @@ export class WiphistoryComponent implements OnInit {
 
   viewDispositionHistory(model: any) {
     this.selectedItem = model;
+    this.selectedItem.workOrderMessages = _.sortBy(
+      model.workOrderMessages,
+      (message) => moment(message.date).valueOf()
+    )
+      .reverse()
+      .map((message) => {
+        return {
+          ...message,
+          date: moment(message.date).format("MMM DD, YYYY HH:mm"),
+        };
+      });
     this.showDispositionDialog = true;
   }
 

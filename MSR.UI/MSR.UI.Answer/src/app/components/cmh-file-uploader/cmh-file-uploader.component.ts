@@ -23,6 +23,7 @@ export class CmhFileUploaderComponent implements OnInit {
   @Output() filesChange: EventEmitter<Array<FileModel>> = new EventEmitter<
     Array<FileModel>
   >();
+  @Output() descriptionChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() showUploadButton: boolean;
   @Input() showCancelButton: boolean;
   @Input() showSelectButton: boolean;
@@ -163,6 +164,7 @@ export class CmhFileUploaderComponent implements OnInit {
     jQuery(`.file-list-${index}`).parsley().validate();
 
     if (jQuery(`.file-list-${index}`).parsley().isValid()) {
+      this.descriptionChange.emit();
     }
   }
 
