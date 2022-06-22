@@ -1,3 +1,13 @@
 alert {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+.width-85 {
+  width: 85px !important;
+}
+
+p-table {
+  tr > th.disposition {
+    width: 10em;
+  }
 }

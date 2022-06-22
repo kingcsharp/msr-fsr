@@ -1,193 +1,423 @@
 <div class="container-flex">
-    <div class="row">
-        <div class="col-6">
-            <h1 class="page-title">
-                <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
-                {{globals.activeMenu.name}}
-            </h1>
-        </div>
+  <div class="row">
+    <div class="col-6">
+      <h1 class="page-title">
+        <i [ngClass]="'fas ' + globals.activeMenu.icon"></i>
+        {{ globals.activeMenu.name }}
+      </h1>
     </div>
-    <div class="row">
-        <widget>
-            <p-table #dt [value]="data" dataKey="purchaseId" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
-                [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-                [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"  [filterDelay]="0" stateStorage="local"
-                [filterDelay]="1300" [lazy]="true" (onLazyLoad)="getWorkOrdersHistory($event)"
-                [totalRecords]="totalRecords"  stateKey="{{gridStorageId}}">
-                <ng-template pTemplate="caption">
-                    <div class="text-right">
-                        <button *ngIf="false" [routerLink]="['../proceduretype-create']"
-                            class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
-                            + Add
-                        </button>
-                        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
-                            [gridVersion]="gridVersion"  data-cy="usergrid-options"  [hidden]="false">
-                        </grid-options>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th style="width: 2rem"></th>
-                        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
-                            data-cy="grid-header">
-                            {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label !== 'Actions'"></p-sortIcon>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style="width: 2rem"></th>
-                        <th grid-input-filter [dt]="dt" searchField="purchaseId"
-                            [hidden]="!commonGrid.isVisibleCol('purchaseId',gridSettings)"
-                            [gridSettings]="gridSettings">
-                        </th>
-                        <th grid-input-filter [dt]="dt" searchField="workOrderItemNumber"
-                            [hidden]="!commonGrid.isVisibleCol('workOrderItemNumber',gridSettings)"
-                            [gridSettings]="gridSettings">
-                        </th>
-                        <th grid-input-filter [dt]="dt" searchField="customer"
-                            [hidden]="!commonGrid.isVisibleCol('customer',gridSettings)" [gridSettings]="gridSettings">
-                        </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('location',gridSettings)">
-                            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="locationOptions"
-                                [filterId]="'location'" [defaultText]="'Select Location'" [defaultTextTooltip]="''"
-                                [datatable]="dt" data-cy="locationname-input">
-                            </multiselect-wrapper>
-                        </th>
-                        <th grid-input-filter [dt]="dt" searchField="serialNumber"
-                            [hidden]="!commonGrid.isVisibleCol('serialNumber',gridSettings)"
-                            [gridSettings]="gridSettings">
-                        </th>
-                        <th grid-input-filter [dt]="dt" searchField="purchaseOrderNumber"
-                            [hidden]="!commonGrid.isVisibleCol('purchaseOrderNumber',gridSettings)"
-                            [gridSettings]="gridSettings">
-                        </th>
-                        <th grid-input-filter [dt]="dt" searchField="qty"
-                            [hidden]="!commonGrid.isVisibleCol('qty',gridSettings)" [gridSettings]="gridSettings">
-                        </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('scheduledStartDate',gridSettings)">
-                            <div class="position-relative" tooltip="Search by Scheduled Start Date">
-                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="scheduledStartDate"
-                                    [datatable]="dt">
-                                </pcalendar-wrapper>
-                            </div>
-                        </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('scheduledEndDate',gridSettings)">
-                            <div class="position-relative" tooltip="SSearch by Scheduled End Date">
-                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="scheduledEndDate"
-                                    [datatable]="dt">
-                                </pcalendar-wrapper>
-                            </div>
-                        </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('actualStartDate',gridSettings)">
-                            <div class="position-relative" tooltip="Search by Created On">
-                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="actualStartDate"
-                                    [datatable]="dt">
-                                </pcalendar-wrapper>
-                            </div>
-                        </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('actualEndDate',gridSettings)">
-                            <div class="position-relative" tooltip="Search by Created On">
-                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="actualEndDate"
-                                    [datatable]="dt">
-                                </pcalendar-wrapper>
-                            </div>
-                        </th>
-                        <th grid-input-filter [dt]="dt" searchField="product"
-                            [hidden]="!commonGrid.isVisibleCol('product',gridSettings)" [gridSettings]="gridSettings">
-                        </th>
-                        <th grid-input-filter [dt]="dt" searchField="procedure"
-                            [hidden]="!commonGrid.isVisibleCol('procedure',gridSettings)" [gridSettings]="gridSettings">
-                        </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
-                            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
-                                [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
-                                [datatable]="dt">
-                            </multiselect-wrapper>
-                        </th>
-                        <th grid-input-filter [dt]="dt" searchField="disposition"
-                            [hidden]="!commonGrid.isVisibleCol('disposition',gridSettings)"
-                            [gridSettings]="gridSettings">
-                        </th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-model let-expanded="expanded">
-                    <tr class="ui-selectable-row">
-                        <td>
-                          <i *ngIf="model.subParts && model.subParts.length>0" class="fad pointer" [pRowToggler]="model" [ngClass]="{'fa-plus': expanded !== true, 'fa-minus':expanded===true}"></i>
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('purchaseId', gridSettings)">
-                            {{model.purchaseId}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)">
-                            <alert type="warning" [ngClass]="{ 'px-0 py-1 my-0 text-center wip-alert':true,
-                            'cu-color': model.segregationType === EnumSegregationType.CU,
-                            'non-cu-color': model.segregationType === EnumSegregationType.NONCU || model.segregationType === null,
-                            'deseg-color': model.segregationType === EnumSegregationType.DESEG
-                            }" [routerLink]="['../details',model.workOrderId]">
-                                {{model.workOrderItemNumber}}
-                                <span class="badge badge-danger wip-badge" *ngIf="model.hasNcr">NC</span>
-                            </alert>
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('customer', gridSettings)">
-                            {{model.customer}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)">
-                            {{model.location}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)">
-                            {{model.serialNumber}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('purchaseOrderNumber', gridSettings)">
-                            {{model.purchaseOrderNumber}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('qty', gridSettings)">
-                            {{model.qty}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('scheduledStartDate', gridSettings)">
-                            {{model.scheduledStartDate | userTimezone }}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('scheduledEndDate', gridSettings)">
-                            {{model.scheduledEndDate | userTimezone }}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('actualStartDate', gridSettings)">
-                            {{model.actualStartDate | userTimezone }}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('actualEndDate', gridSettings)">
-                            {{model.actualEndDate | userTimezone }}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('product', gridSettings)">
-                            {{model.product}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('procedure', gridSettings)">
-                            {{model.procedure}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
-                            {{model.status}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('disposition', gridSettings)">
-                            {{model.disposition}}
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                    <tr>
-                        <td colspan="16" style="text-align:left">No WorkOrders to Display</td>
-                    </tr>
-                </ng-template>
+  </div>
+  <div class="row">
+    <widget>
+      <p-table
+        #dt
+        [value]="data"
+        dataKey="purchaseId"
+        styleClass="ui-table-customers"
+        [rowHover]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
+        [rowsPerPageOptions]="[10, 25, 50, 100]"
+        [paginator]="true"
+        [filterDelay]="0"
+        stateStorage="local"
+        [filterDelay]="1300"
+        [lazy]="true"
+        (onLazyLoad)="getWorkOrdersHistory($event)"
+        [totalRecords]="totalRecords"
+        stateKey="{{ gridStorageId }}"
+      >
+        <ng-template pTemplate="caption">
+          <div class="text-right">
+            <button
+              *ngIf="false"
+              [routerLink]="['../proceduretype-create']"
+              class="btn btn-success width-100 mb-xs sm-mrg"
+              role="button"
+              data-cy="add-button"
+            >
+              + Add
+            </button>
+            <grid-options
+              [(defaultColumns)]="gridSettings"
+              [gridStorageId]="gridStorageId"
+              [ptable]="dt"
+              [gridVersion]="gridVersion"
+              data-cy="usergrid-options"
+              [hidden]="false"
+            >
+            </grid-options>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 2rem"></th>
+            <th
+              *ngFor="let col of gridSettings"
+              [hidden]="!col.visible"
+              [pSortableColumn]="col.id"
+              data-cy="grid-header"
+              [class.disposition]="col.id === 'disposition'"
+            >
+              {{ col.label }}
+              <p-sortIcon
+                [field]="col.id"
+                *ngIf="col.label !== 'Actions'"
+              ></p-sortIcon>
+            </th>
+          </tr>
+          <tr>
+            <th style="width: 2rem"></th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="purchaseId"
+              [hidden]="!commonGrid.isVisibleCol('purchaseId', gridSettings)"
+              [gridSettings]="gridSettings"
+            ></th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="workOrderItemNumber"
+              [hidden]="
+                !commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)
+              "
+              [gridSettings]="gridSettings"
+            ></th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="customer"
+              [hidden]="!commonGrid.isVisibleCol('customer', gridSettings)"
+              [gridSettings]="gridSettings"
+            ></th>
+            <th [hidden]="!commonGrid.isVisibleCol('location', gridSettings)">
+              <multiselect-wrapper
+                [gridStorageId]="gridStorageId"
+                [options]="locationOptions"
+                [filterId]="'location'"
+                [defaultText]="'Select Location'"
+                [defaultTextTooltip]="''"
+                [datatable]="dt"
+                data-cy="locationname-input"
+              >
+              </multiselect-wrapper>
+            </th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="serialNumber"
+              [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)"
+              [gridSettings]="gridSettings"
+            ></th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="purchaseOrderNumber"
+              [hidden]="
+                !commonGrid.isVisibleCol('purchaseOrderNumber', gridSettings)
+              "
+              [gridSettings]="gridSettings"
+            ></th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="qty"
+              [hidden]="!commonGrid.isVisibleCol('qty', gridSettings)"
+              [gridSettings]="gridSettings"
+            ></th>
+            <th
+              [hidden]="
+                !commonGrid.isVisibleCol('scheduledStartDate', gridSettings)
+              "
+            >
+              <div
+                class="position-relative"
+                tooltip="Search by Scheduled Start Date"
+              >
+                <pcalendar-wrapper
+                  [gridStorageId]="gridStorageId"
+                  filterId="scheduledStartDate"
+                  [datatable]="dt"
+                >
+                </pcalendar-wrapper>
+              </div>
+            </th>
+            <th
+              [hidden]="
+                !commonGrid.isVisibleCol('scheduledEndDate', gridSettings)
+              "
+            >
+              <div
+                class="position-relative"
+                tooltip="SSearch by Scheduled End Date"
+              >
+                <pcalendar-wrapper
+                  [gridStorageId]="gridStorageId"
+                  filterId="scheduledEndDate"
+                  [datatable]="dt"
+                >
+                </pcalendar-wrapper>
+              </div>
+            </th>
+            <th
+              [hidden]="
+                !commonGrid.isVisibleCol('actualStartDate', gridSettings)
+              "
+            >
+              <div class="position-relative" tooltip="Search by Created On">
+                <pcalendar-wrapper
+                  [gridStorageId]="gridStorageId"
+                  filterId="actualStartDate"
+                  [datatable]="dt"
+                >
+                </pcalendar-wrapper>
+              </div>
+            </th>
+            <th
+              [hidden]="!commonGrid.isVisibleCol('actualEndDate', gridSettings)"
+            >
+              <div class="position-relative" tooltip="Search by Created On">
+                <pcalendar-wrapper
+                  [gridStorageId]="gridStorageId"
+                  filterId="actualEndDate"
+                  [datatable]="dt"
+                >
+                </pcalendar-wrapper>
+              </div>
+            </th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="product"
+              [hidden]="!commonGrid.isVisibleCol('product', gridSettings)"
+              [gridSettings]="gridSettings"
+            ></th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="procedure"
+              [hidden]="!commonGrid.isVisibleCol('procedure', gridSettings)"
+              [gridSettings]="gridSettings"
+            ></th>
+            <th [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
+              <multiselect-wrapper
+                [gridStorageId]="gridStorageId"
+                [options]="statusOptions"
+                [filterId]="'status'"
+                [defaultText]="'Select Status'"
+                [defaultTextTooltip]="''"
+                [datatable]="dt"
+              >
+              </multiselect-wrapper>
+            </th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="disposition"
+              [hidden]="!commonGrid.isVisibleCol('disposition', gridSettings)"
+              [gridSettings]="gridSettings"
+            ></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-model let-expanded="expanded">
+          <tr class="ui-selectable-row">
+            <td>
+              <i
+                *ngIf="model.subParts && model.subParts.length > 0"
+                class="fad pointer"
+                [pRowToggler]="model"
+                [ngClass]="{
+                  'fa-plus': expanded !== true,
+                  'fa-minus': expanded === true
+                }"
+              ></i>
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('purchaseId', gridSettings)">
+              {{ model.purchaseId }}
+            </td>
+            <td
+              [hidden]="
+                !commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)
+              "
+            >
+              <alert
+                type="warning"
+                [ngClass]="{
+                  'px-0 py-1 my-0 text-center wip-alert': true,
+                  'cu-color': model.segregationType === EnumSegregationType.CU,
+                  'non-cu-color':
+                    model.segregationType === EnumSegregationType.NONCU ||
+                    model.segregationType === null,
+                  'deseg-color':
+                    model.segregationType === EnumSegregationType.DESEG
+                }"
+                [routerLink]="['../details', model.workOrderId]"
+              >
+                {{ model.workOrderItemNumber }}
+                <span class="badge badge-danger wip-badge" *ngIf="model.hasNcr"
+                  >NC</span
+                >
+              </alert>
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('customer', gridSettings)">
+              {{ model.customer }}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)">
+              {{ model.location }}
+            </td>
+            <td
+              [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)"
+            >
+              {{ model.serialNumber }}
+            </td>
+            <td
+              [hidden]="
+                !commonGrid.isVisibleCol('purchaseOrderNumber', gridSettings)
+              "
+            >
+              {{ model.purchaseOrderNumber }}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('qty', gridSettings)">
+              {{ model.qty }}
+            </td>
+            <td
+              [hidden]="
+                !commonGrid.isVisibleCol('scheduledStartDate', gridSettings)
+              "
+            >
+              {{ model.scheduledStartDate | userTimezone }}
+            </td>
+            <td
+              [hidden]="
+                !commonGrid.isVisibleCol('scheduledEndDate', gridSettings)
+              "
+            >
+              {{ model.scheduledEndDate | userTimezone }}
+            </td>
+            <td
+              [hidden]="
+                !commonGrid.isVisibleCol('actualStartDate', gridSettings)
+              "
+            >
+              {{ model.actualStartDate | userTimezone }}
+            </td>
+            <td
+              [hidden]="!commonGrid.isVisibleCol('actualEndDate', gridSettings)"
+            >
+              {{ model.actualEndDate | userTimezone }}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('product', gridSettings)">
+              {{ model.product }}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('procedure', gridSettings)">
+              {{ model.procedure }}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
+              {{ model.status }}
+            </td>
+            <td
+              [hidden]="!commonGrid.isVisibleCol('disposition', gridSettings)"
+              class="text-center"
+            >
+              <button
+                *ngIf="model.customerLastRespondent"
+                type="button"
+                class="btn btn-danger width-85"
+                (click)="viewDispositionHistory(model)"
+              >
+                <i class="fa fa-solid fa-clock"></i>
+                Review
+              </button>
+              <button
+                *ngIf="!model.customerLastRespondent"
+                type="button"
+                class="btn btn-warning width-85"
+                (click)="viewDispositionHistory(model)"
+              >
+                <i class="fa fa-solid fa-eye"></i>
+                View
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="16" style="text-align: left">
+              No WorkOrders to Display
+            </td>
+          </tr>
+        </ng-template>
 
-                <ng-template pTemplate="rowexpansion" let-itemData>
-                  <tr>
-                      <td [attr.colspan]="getVisibleColumns()+1">
-                          <app-grid
-                            class="innerGrid"
-                            [showReport]="true"
-                            [gridSaved]="gridPartsSaved"
-                            [reportInfo]="reportPartsModel"
-                            [data]="itemData.subParts">
-                          </app-grid>
-                      </td>
-                  </tr>
-              </ng-template>
-            </p-table>
-        </widget>
-    </div>
+        <ng-template pTemplate="rowexpansion" let-itemData>
+          <tr>
+            <td [attr.colspan]="getVisibleColumns() + 1">
+              <app-grid
+                class="innerGrid"
+                [showReport]="true"
+                [gridSaved]="gridPartsSaved"
+                [reportInfo]="reportPartsModel"
+                [data]="itemData.subParts"
+              >
+              </app-grid>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </widget>
+  </div>
 </div>
+
+<p-dialog
+  header="Disposition History"
+  [(visible)]="showDispositionDialog"
+  appendTo="body"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+>
+  <div class="container">
+    <div class="row my-3 mx-0">
+      <div class="col-12">
+        <table
+          *ngIf="selectedItem?.workOrderMessages?.length > 0"
+          class="table table-bordered table-condensed w-100"
+        >
+          <thead>
+            <tr>
+              <th class="text-center" width="15%">DateTime</th>
+              <th class="text-center" width="5%">UserName</th>
+              <th class="text-center">Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of selectedItem?.workOrderMessages">
+              <td>{{ item.date }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.message }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <span
+          *ngIf="
+            !selectedItem?.workOrderMessages ||
+            selectedItem?.workOrderMessages.length === 0
+          "
+          >No messages</span
+        >
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button
+        type="button"
+        (click)="closeDispositionDialog()"
+        class="btn btn-outline-inverse width-100 mb-xs"
+      >
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

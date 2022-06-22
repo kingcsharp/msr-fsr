@@ -1,215 +1,509 @@
 <h1 class="page-title" data-cy="page-title">
-    <div class="form-group col-12 d-flex flex-row headerSearch" *ngIf="globals.selectedCustomer !== undefined">
-        <div>
-            <i class="fas fa-desktop"></i>
-            {{title}}
-        </div>
-        <div class="calendarSearch">
-            From Date: <p-calendar [(ngModel)]="fromDate" [maxDate]="toDate" appendTo="body" [locale]="en"></p-calendar>
-            To Date: <p-calendar [(ngModel)]="toDate" [minDate]="fromDate" appendTo="body" [locale]="en"></p-calendar>
-        </div>
-        <div class="searchinput">
-            <!-- tooltip="By company part #, By part name, By serial #"  -->
-            <input type="text" name="searchsubpart" placeholder="Search Sub Parts" [(ngModel)]="subpartTextSearch"
-                class="form-control">
-        </div>
-        <div>
-            <button type="submit" (click)="getGridData(undefined)" class="btn btn-primary" role="button"
-                data-cy="confirmdelete-button">
-                <i class="fas fa-search"></i>Search
-            </button>
-        </div>
+  <div
+    class="form-group col-12 d-flex flex-row headerSearch"
+    *ngIf="globals.selectedCustomer !== undefined"
+  >
+    <div>
+      <i class="fas fa-desktop"></i>
+      {{ title }}
     </div>
+    <div class="calendarSearch">
+      From Date:
+      <p-calendar
+        [(ngModel)]="fromDate"
+        [maxDate]="toDate"
+        appendTo="body"
+        [locale]="en"
+      ></p-calendar>
+      To Date:
+      <p-calendar
+        [(ngModel)]="toDate"
+        [minDate]="fromDate"
+        appendTo="body"
+        [locale]="en"
+      ></p-calendar>
+    </div>
+    <div class="searchinput">
+      <!-- tooltip="By company part #, By part name, By serial #"  -->
+      <input
+        type="text"
+        name="searchsubpart"
+        placeholder="Search Sub Parts"
+        [(ngModel)]="subpartTextSearch"
+        class="form-control"
+      />
+    </div>
+    <div>
+      <button
+        type="submit"
+        (click)="getGridData(undefined)"
+        class="btn btn-primary"
+        role="button"
+        data-cy="confirmdelete-button"
+      >
+        <i class="fas fa-search"></i>Search
+      </button>
+    </div>
+  </div>
 </h1>
 
-<ng-template #statusCol let-colsDataAndSettings='colsDataAndSettings'>
-    <span *ngIf="colsDataAndSettings.colData.status !== 'In Progress'">
-        {{colsDataAndSettings.colData.status}}
-    </span>
-    <div *ngIf="colsDataAndSettings.colData.status === 'In Progress'">
-        <div class="activetask-container">{{colsDataAndSettings.colData.stepText}}</div>
-        <div class="progressbar-container">
-            <progressbar [value]="colsDataAndSettings.colData.percentageOfTasksCompleted"
-                [type]="colsDataAndSettings.colData.tasksCompletedType" [striped]="true" [animate]="true"></progressbar>
-            <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">
-              {{colsDataAndSettings.colData.percentageOfTasksCompleted/100 | percent:'2.2-2'}}
-            </div>
-            <ng-template #percentOfTaskCompletedTemplate>
-              {{colsDataAndSettings.colData.percentageOfTasksCompleted/100 | percent:'2.2-2'}}
-              {{colsDataAndSettings.colData.percentageOfTasksCompletedNumerator}}/{{colsDataAndSettings.colData.percentageOfTasksCompletedDenominator}}
-              steps completed
-            </ng-template>
-        </div>
-        <div class="progressbar-container">
-            <progressbar [value]="colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged"
-                [type]="colsDataAndSettings.colData.timeLoggedType" [striped]="true" [animate]="true"></progressbar>
-            <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
-              {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged/100 | percent:'2.2-2'}}
-            </div>
-            <ng-template #percentageOfExpectedDurationTimeLogged>
-                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged/100 | percent:'2.2-2'}}
-                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedNumerator/60 |
-                number:'1.1-1'}}/{{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedDenominator/60 |
-                number:'1.1-1'}}
-                hours completed
-            </ng-template>
-        </div>
+<ng-template #statusCol let-colsDataAndSettings="colsDataAndSettings">
+  <span *ngIf="colsDataAndSettings.colData.status !== 'In Progress'">
+    {{ colsDataAndSettings.colData.status }}
+  </span>
+  <div *ngIf="colsDataAndSettings.colData.status === 'In Progress'">
+    <div class="activetask-container">
+      {{ colsDataAndSettings.colData.stepText }}
     </div>
+    <div class="progressbar-container">
+      <progressbar
+        [value]="colsDataAndSettings.colData.percentageOfTasksCompleted"
+        [type]="colsDataAndSettings.colData.tasksCompletedType"
+        [striped]="true"
+        [animate]="true"
+      ></progressbar>
+      <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">
+        {{
+          colsDataAndSettings.colData.percentageOfTasksCompleted / 100
+            | percent: "2.2-2"
+        }}
+      </div>
+      <ng-template #percentOfTaskCompletedTemplate>
+        {{
+          colsDataAndSettings.colData.percentageOfTasksCompleted / 100
+            | percent: "2.2-2"
+        }}
+        {{ colsDataAndSettings.colData.percentageOfTasksCompletedNumerator }}/{{
+          colsDataAndSettings.colData.percentageOfTasksCompletedDenominator
+        }}
+        steps completed
+      </ng-template>
+    </div>
+    <div class="progressbar-container">
+      <progressbar
+        [value]="
+          colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged
+        "
+        [type]="colsDataAndSettings.colData.timeLoggedType"
+        [striped]="true"
+        [animate]="true"
+      ></progressbar>
+      <div
+        class="percentage"
+        [tooltip]="percentageOfExpectedDurationTimeLogged"
+      >
+        {{
+          colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged /
+            100 | percent: "2.2-2"
+        }}
+      </div>
+      <ng-template #percentageOfExpectedDurationTimeLogged>
+        {{
+          colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged /
+            100 | percent: "2.2-2"
+        }}
+        {{
+          colsDataAndSettings.colData
+            .percentageOfExpectedDurationTimeLoggedNumerator / 60
+            | number: "1.1-1"
+        }}/{{
+          colsDataAndSettings.colData
+            .percentageOfExpectedDurationTimeLoggedDenominator / 60
+            | number: "1.1-1"
+        }}
+        hours completed
+      </ng-template>
+    </div>
+  </div>
 </ng-template>
 
 <widget *ngIf="globals.selectedCustomer !== undefined">
-    <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [isLazyLoad]="true" [reportInfo]="reportModel"
-        (getData)="getGridData($event)" [totalRecords]="totalRecords" (expandRowClick)="expandRow($event)"
-        [data]="data">
-    </app-grid>
+  <app-grid
+    *ngIf="showReport"
+    [gridSaved]="gridSaved"
+    [showReport]="showReport"
+    [isLazyLoad]="true"
+    [reportInfo]="reportModel"
+    (getData)="getGridData($event)"
+    [totalRecords]="totalRecords"
+    (expandRowClick)="expandRow($event)"
+    [data]="data"
+  >
+  </app-grid>
 </widget>
-<ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
-    <span *ngIf="colsDataAndSettings.colData.hasNCRs" class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth"
-        tooltip="Show NCR reports" (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
-        <i class="fas fa-print mx-1"></i> NCR </span>
-    <span *ngIf="colsDataAndSettings.colData.hasMonitors"
-        class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
-        (click)="showReportInfo(enumReportTypes.PortalMonitorReport,colsDataAndSettings)">
-        <i class="fas fa-chart-bar"></i> Monitors </span>
+<ng-template #ncrItem let-colsDataAndSettings="colsDataAndSettings">
+  <span
+    *ngIf="colsDataAndSettings.colData.hasNCRs"
+    class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth"
+    tooltip="Show NCR reports"
+    (click)="showReportInfo(enumReportTypes.NCRReport, colsDataAndSettings)"
+  >
+    <i class="fas fa-print mx-1"></i> NCR
+  </span>
+  <span
+    *ngIf="colsDataAndSettings.colData.hasMonitors"
+    class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth"
+    tooltip="Show Monitors reports"
+    (click)="
+      showReportInfo(enumReportTypes.PortalMonitorReport, colsDataAndSettings)
+    "
+  >
+    <i class="fas fa-chart-bar"></i> Monitors
+  </span>
 
-    <span *ngIf="colsDataAndSettings.colData.hasPhotos" (click)="showPhotos(colsDataAndSettings.colData)"
-        class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
-        <i class="fas fa-images"></i> Photos </span>
-    <span *ngIf="colsDataAndSettings.colData.hasFiles" (click)="showFiles(colsDataAndSettings.colData)"
-        class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
-        <i class="fal fa-file-alt"></i> Files </span>
+  <span
+    *ngIf="colsDataAndSettings.colData.hasPhotos"
+    (click)="showPhotos(colsDataAndSettings.colData)"
+    class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth"
+    tooltip="Show photos"
+  >
+    <i class="fas fa-images"></i> Photos
+  </span>
+  <span
+    *ngIf="colsDataAndSettings.colData.hasFiles"
+    (click)="showFiles(colsDataAndSettings.colData)"
+    class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth"
+    tooltip="Show files"
+  >
+    <i class="fal fa-file-alt"></i> Files
+  </span>
 </ng-template>
 
-<ng-template #fileItem let-colsDataAndSettings='colsDataAndSettings'>
-    <grid-file-viewer [menuItem]="menuItems.WorkOrderTasks" [files]="[colsDataAndSettings.colData]"></grid-file-viewer>
-    <a href="{{colsDataAndSettings.colData.fileUrl}}" style="color:#fff" download tooltip="Download File">
-        <i class="fas fa-download"></i>
-    </a>
+<ng-template #fileItem let-colsDataAndSettings="colsDataAndSettings">
+  <grid-file-viewer
+    [menuItem]="menuItems.WorkOrderTasks"
+    [files]="[colsDataAndSettings.colData]"
+  ></grid-file-viewer>
+  <a
+    href="{{ colsDataAndSettings.colData.fileUrl }}"
+    style="color: #fff"
+    download
+    tooltip="Download File"
+  >
+    <i class="fas fa-download"></i>
+  </a>
 </ng-template>
 
-
-
-<p-dialog [(visible)]="displayBasic2" *ngIf="displayBasic2" appendTo="body" styleClass="report" [baseZIndex]="100001"
-    [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
-    <p-header>
-        Images
-    </p-header>
-    <div class="report-viewport m-4 d-print-flex">
-        <p-galleria [value]="images" [(visible)]="displayBasic2" [responsiveOptions]="responsiveOptions"
-            [containerStyle]="{'max-width': '850px'}" [numVisible]="7" [circular]="true" [fullScreen]="false"
-            [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000">
-            <ng-template pTemplate="item" let-item>
-                <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
-            </ng-template>
-            <ng-template pTemplate="thumbnail" let-item>
-                <div class="p-grid p-nogutter p-justify-center">
-                    <img [src]="item.thumbnailImageSrc" style="display: block;" />
-                </div>
-            </ng-template>
-        </p-galleria>
-    </div>
-    <p-footer>
-        <div class="pull-right">
-            <button type="submit" (click)="displayBasic2 = false" class="btn btn-warning mb-xs" role="button"
-                data-cy="confirmdelete-button">
-                <i class="fas fa-times-circle mx-1"></i>Close
-            </button>
+<p-dialog
+  [(visible)]="displayBasic2"
+  *ngIf="displayBasic2"
+  appendTo="body"
+  styleClass="report"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  data-cy="user-header"
+>
+  <p-header> Images </p-header>
+  <div class="report-viewport m-4 d-print-flex">
+    <p-galleria
+      [value]="images"
+      [(visible)]="displayBasic2"
+      [responsiveOptions]="responsiveOptions"
+      [containerStyle]="{ 'max-width': '850px' }"
+      [numVisible]="7"
+      [circular]="true"
+      [fullScreen]="false"
+      [showItemNavigators]="true"
+      [showThumbnails]="false"
+      [baseZIndex]="100000"
+    >
+      <ng-template pTemplate="item" let-item>
+        <div style="width: 100%; display: block">
+          <img
+            [src]="item.previewImageSrc"
+            style="width: 100%; display: block"
+          />
+          <div style="width: 100%; text-align: center; padding-top: 15px">
+            {{ item.description }}
+          </div>
         </div>
-    </p-footer>
+      </ng-template>
+      <ng-template pTemplate="thumbnail" let-item>
+        <div class="p-grid p-nogutter p-justify-center">
+          <img [src]="item.thumbnailImageSrc" style="display: block" />
+        </div>
+      </ng-template>
+    </p-galleria>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button
+        type="submit"
+        (click)="displayBasic2 = false"
+        class="btn btn-warning mb-xs"
+        role="button"
+        data-cy="confirmdelete-button"
+      >
+        <i class="fas fa-times-circle mx-1"></i>Close
+      </button>
+    </div>
+  </p-footer>
 </p-dialog>
 
-<ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
-    <div *ngFor="let item of colsDataAndSettings.colData.messages; last as isLast">
+<ng-template #disposition let-colsDataAndSettings="colsDataAndSettings">
+  <button
+    *ngIf="colsDataAndSettings.colData.customerLastRespondent"
+    type="button"
+    class="btn btn-danger width-85"
+    (click)="viewDispositionHistory(colsDataAndSettings.colData)"
+  >
+    <i class="fa fa-solid fa-clock"></i>
+    Review
+  </button>
+  <button
+    *ngIf="!colsDataAndSettings.colData.customerLastRespondent"
+    type="button"
+    class="btn btn-warning width-85"
+    (click)="viewDispositionHistory(colsDataAndSettings.colData)"
+  >
+    <i class="fa fa-solid fa-eye"></i>
+    View
+  </button>
+  <!-- <div *ngFor="let item of colsDataAndSettings.colData.messages; last as isLast">
         <div>
-            <span class="disp-label">{{item.name}} {{item.date | userTimezone}} </span> 
+            <span class="disp-label">{{item.name}} {{item.date | userTimezone}} </span>
             <span class="disp-instruction">{{item.message}}</span>
         </div>
         <hr *ngIf="!isLast" style="border-bottom: 1px solid;" />
     </div>
     <span *ngIf="!globals.user.isAnswerUser" class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
         (click)="addInstructions(colsDataAndSettings.colData)">
-        Add Instructions </span>
+        Add Instructions </span> -->
 </ng-template>
 
-<ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
-    <app-grid class="innerGrid" [showReport]="true" [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel"
-        [data]="expandRowData.rowData.subParts">
-    </app-grid>
+<ng-template #expandedRowTemplate let-expandRowData="expandRowData">
+  <app-grid
+    class="innerGrid"
+    [showReport]="true"
+    [gridSaved]="gridPartsSaved"
+    [reportInfo]="reportPartsModel"
+    [data]="expandRowData.rowData.subParts"
+  >
+  </app-grid>
 </ng-template>
 
-<p-dialog [(visible)]="showNcrModal" *ngIf="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001"
-    [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
-    <p-header>
-        {{selectedReport === enumReportTypes.NCRReport?'NCR Report':'Monitor History'}}
-    </p-header>
-    <div class="report-viewport m-4 d-print-flex">
-        <ncr-report [WorkOrder]="ncrWorkOrder" *ngIf="selectedReport === enumReportTypes.NCRReport"></ncr-report>
-        <portal-monitor-report [workOrder]="ncrWorkOrder"
-            *ngIf="selectedReport === enumReportTypes.PortalMonitorReport">
-        </portal-monitor-report>
+<p-dialog
+  [(visible)]="showNcrModal"
+  *ngIf="showNcrModal"
+  appendTo="body"
+  styleClass="report"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  data-cy="user-header"
+>
+  <p-header>
+    {{
+      selectedReport === enumReportTypes.NCRReport
+        ? "NCR Report"
+        : "Monitor History"
+    }}
+  </p-header>
+  <div class="report-viewport m-4 d-print-flex">
+    <ncr-report
+      [WorkOrder]="ncrWorkOrder"
+      *ngIf="selectedReport === enumReportTypes.NCRReport"
+    ></ncr-report>
+    <portal-monitor-report
+      [workOrder]="ncrWorkOrder"
+      *ngIf="selectedReport === enumReportTypes.PortalMonitorReport"
+    >
+    </portal-monitor-report>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button
+        type="submit"
+        (click)="print()"
+        class="btn btn-primary mb-xs"
+        role="button"
+        data-cy="confirmdelete-button"
+      >
+        <i class="fas fa-print mx-1"></i>Print
+      </button>
+      <button
+        type="submit"
+        (click)="showNcrModal = false"
+        class="btn btn-warning mb-xs"
+        role="button"
+        data-cy="confirmdelete-button"
+      >
+        <i class="fas fa-times-circle mx-1"></i>Close
+      </button>
     </div>
-    <p-footer>
-        <div class="pull-right">
-            <button type="submit" (click)="print()" class="btn btn-primary mb-xs" role="button"
-                data-cy="confirmdelete-button">
-                <i class="fas fa-print mx-1"></i>Print
-            </button>
-            <button type="submit" (click)="showNcrModal = false" class="btn btn-warning mb-xs" role="button"
-                data-cy="confirmdelete-button">
-                <i class="fas fa-times-circle mx-1"></i>Close
-            </button>
-        </div>
-    </p-footer>
+  </p-footer>
 </p-dialog>
 
-<p-dialog header="Add Instruction" [(visible)]="showInstructionDialog" appendTo="body" [baseZIndex]="100001"
-    [modal]='true' [style]="{width: '50vw'}">
-    <section class="widget mrg-btm-sm" widget>
-        <header>
-        </header>
-        <div class="widget-body">
-            <fieldset>
-                <div class="form-group row">
-                    <div class="col-md-12">
-                        <textarea rows="6" cols="150" type="text" id="instructions" name="instructions"
-                            [(ngModel)]="instructions" data-validate="parsley" data-parsley-trigger="change"
-                            data-parsley-minlength="3" data-parsley-required="true"
-                            class="form-control input-transparent" tooltip="Min length 3 characters"
-                            placeholder="Instructions" data-cy="instructions-input"></textarea>
-                    </div>
-                </div>
-            </fieldset>
+<p-dialog
+  header="Add Instruction"
+  [(visible)]="showInstructionDialog"
+  appendTo="body"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+>
+  <section class="widget mrg-btm-sm" widget>
+    <header></header>
+    <div class="widget-body">
+      <fieldset>
+        <div class="form-group row">
+          <div class="col-md-12">
+            <textarea
+              rows="6"
+              cols="150"
+              type="text"
+              id="instructions"
+              name="instructions"
+              [(ngModel)]="instructions"
+              data-validate="parsley"
+              data-parsley-trigger="change"
+              data-parsley-minlength="3"
+              data-parsley-required="true"
+              class="form-control input-transparent"
+              tooltip="Min length 3 characters"
+              placeholder="Instructions"
+              data-cy="instructions-input"
+            ></textarea>
+          </div>
         </div>
-    </section>
-    <p-footer>
-        <div class="pull-right">
-            <button type="submit" (click)="saveInstructions()" class="btn btn-outline-inverse width-100 mb-xs"
-                role="button" data-cy="wipcomponent-save-button">
-                Save
-            </button>
-            <button type="button" (click)="showInstructionDialog = false"
-                class="btn btn-outline-inverse width-100 mb-xs" role="button">
-                Close
-            </button>
-        </div>
-    </p-footer>
+      </fieldset>
+    </div>
+  </section>
+  <p-footer>
+    <div class="pull-right">
+      <button
+        type="submit"
+        (click)="saveInstructions()"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        role="button"
+        data-cy="wipcomponent-save-button"
+      >
+        Save
+      </button>
+      <button
+        type="button"
+        (click)="showInstructionDialog = false"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        role="button"
+      >
+        Close
+      </button>
+    </div>
+  </p-footer>
 </p-dialog>
 
-<p-dialog header="Files" *ngIf="showFilesDialog" [(visible)]="showFilesDialog" appendTo="body" [baseZIndex]="100001"
-    [modal]='true' [style]="{width: '50vw'}">
-    <section>
-        <widget>
-            <app-grid [gridSaved]="gridFilesSaved" [showReport]="showFilesDialog" [reportInfo]="reportFilesModel"
-                [data]="files">
-            </app-grid>
-        </widget>
-    </section>
-    <p-footer>
-        <div class="pull-right">
-            <button type="button" (click)="showFilesDialog = false" class="btn btn-outline-inverse width-100 mb-xs"
-                role="button">
-                Close
-            </button>
-        </div>
-    </p-footer>
+<p-dialog
+  header="Files"
+  *ngIf="showFilesDialog"
+  [(visible)]="showFilesDialog"
+  appendTo="body"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+>
+  <section>
+    <widget>
+      <app-grid
+        [gridSaved]="gridFilesSaved"
+        [showReport]="showFilesDialog"
+        [reportInfo]="reportFilesModel"
+        [data]="files"
+      >
+      </app-grid>
+    </widget>
+  </section>
+  <p-footer>
+    <div class="pull-right">
+      <button
+        type="button"
+        (click)="showFilesDialog = false"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        role="button"
+      >
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog
+  header="Disposition History"
+  [(visible)]="showDispositionDialog"
+  appendTo="body"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+>
+  <div class="container">
+    <div class="row my-3 mx-0">
+      <div class="col-12">
+        <table
+          *ngIf="selectedColData?.messages?.length > 0"
+          class="table table-bordered table-condensed w-100"
+        >
+          <thead>
+            <tr>
+              <th class="text-center" width="15%">DateTime</th>
+              <th class="text-center" width="5%">UserName</th>
+              <th class="text-center">Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of selectedColData?.messages">
+              <td>{{ item.date }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.message }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <span
+          *ngIf="
+            !selectedColData?.messages || selectedColData?.messages.length === 0
+          "
+          >No messages</span
+        >
+      </div>
+      <div class="col-12 mt-3">
+        <textarea
+          rows="6"
+          cols="150"
+          type="text"
+          id="instructions"
+          name="instructions"
+          [(ngModel)]="instructions"
+          data-validate="parsley"
+          data-parsley-trigger="change"
+          data-parsley-minlength="3"
+          data-parsley-required="true"
+          class="form-control input-transparent"
+          tooltip="Min length 3 characters"
+          placeholder="Add Instructions"
+          data-cy="instructions-input"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button
+        type="submit"
+        [disabled]="!instructions"
+        (click)="saveInstructions()"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        role="button"
+        data-cy="wipcomponent-save-button"
+      >
+        Save
+      </button>
+      <button
+        type="button"
+        (click)="closeDispositionDialog()"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        role="button"
+      >
+        Close
+      </button>
+    </div>
+  </p-footer>
 </p-dialog>
