@@ -57,8 +57,19 @@ namespace MSR.Application.ViewServices
                 StepText = j.StepText,
                 Title = j.Title,
                 UsefulLife = j.UsefulLife,
-                Utilization = j.Utilization
+                Utilization = j.Utilization                
             }).ToList();
+
+            foreach(var step in procedureSteps)
+            {
+                var procedure = procedures.FirstOrDefault(i => i.Id == step.ProcedureId);
+                if(procedure == null)
+                {
+                    continue;
+                }
+
+                step.ProcedureName = procedure.Name;
+            }
 
             var procedureDataTable = procedures.ToDataTable("Procedures");
             var procedureStepDataTable = procedureSteps.ToDataTable("ProcedureSteps");
