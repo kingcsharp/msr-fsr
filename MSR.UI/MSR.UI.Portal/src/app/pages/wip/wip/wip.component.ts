@@ -1,31 +1,48 @@
-import { Component, OnInit, ElementRef, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { Globals } from '../../../models/lib/globals';
-import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { LazyLoadEvent, SelectItem } from 'primeng/api';
 import {
-  EnumMenuItem, WorkOrderService, ReportModel, CreateWorkOrderMessageRequest, FileService,
-  FileModel, WorkOrderTaskMonitorModel} from '../../../services/api.client.generated';
-import { environment as env } from '../../../../environments/environment';
-import { responseHandler } from '../../../utils/responseHandler';
-import { take } from 'rxjs/operators';
-import { GridSaved } from '../../../../app/models/lib/GridSaved';
-import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
-import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
-import { callFunctionWithFiltersViews, emptyArray } from '../../../models/lib/Utils';
-import { EnumReport } from '../../../../app/models/enums/ReportType';
-import { ToastrService } from 'ngx-toastr';
-import * as moment from 'moment';
-import { EnumMonitorInputType } from '../../../models/enums/EnumMonitorInputType';
-import { EnumMonitorShouldBe } from '../../../models/enums/EnumMonitorShouldBe';
-import { EnumMonitorType } from '../../../models/enums/EnumMonitorType';
-import { EnumMonitorPassFailStatus } from '../../../models/enums/EnumMonitorPassFailStatus';
-import { Subscription } from 'rxjs';
+  Component,
+  OnInit,
+  ElementRef,
+  AfterViewInit,
+  ViewChild,
+  OnDestroy,
+} from "@angular/core";
+import { Globals } from "../../../models/lib/globals";
+import { ColumnsSaved } from "../../../models/lib/ColumnsSaved";
+import { LazyLoadEvent, SelectItem } from "primeng/api";
+import {
+  EnumMenuItem,
+  WorkOrderService,
+  ReportModel,
+  CreateWorkOrderMessageRequest,
+  FileService,
+  FileModel,
+  WorkOrderTaskMonitorModel,
+} from "../../../services/api.client.generated";
+import { environment as env } from "../../../../environments/environment";
+import { responseHandler } from "../../../utils/responseHandler";
+import { take } from "rxjs/operators";
+import { GridSaved } from "../../../../app/models/lib/GridSaved";
+import { EnumColumnType } from "../../../../app/models/enums/EnumColumnType";
+import { PortalWorkOrderPartsView } from "../../../models/lib/PortalWorkOrderPartsView";
+import {
+  callFunctionWithFiltersViews,
+  emptyArray,
+} from "../../../models/lib/Utils";
+import { EnumReport } from "../../../../app/models/enums/ReportType";
+import { ToastrService } from "ngx-toastr";
+import * as moment from "moment";
+import { EnumMonitorInputType } from "../../../models/enums/EnumMonitorInputType";
+import { EnumMonitorShouldBe } from "../../../models/enums/EnumMonitorShouldBe";
+import { EnumMonitorType } from "../../../models/enums/EnumMonitorType";
+import { EnumMonitorPassFailStatus } from "../../../models/enums/EnumMonitorPassFailStatus";
+import { Subscription } from "rxjs";
+import * as _ from "lodash";
 
 @Component({
-  selector: 'app-wip',
-  templateUrl: './wip.component.html',
-  styleUrls: ['./wip.component.scss'],
-  providers: [WorkOrderService]
+  selector: "app-wip",
+  templateUrl: "./wip.component.html",
+  styleUrls: ["./wip.component.scss"],
+  providers: [WorkOrderService],
 })
 export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   menuItems = EnumMenuItem;
@@ -57,71 +74,144 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   images: any[];
   files: any[];
   showFilesDialog: boolean = false;
-  fromDate: Date = moment().subtract(6, 'weeks').toDate();
+  fromDate: Date = moment().subtract(6, "weeks").toDate();
   toDate: Date = moment().toDate();
   en = {
     firstDayOfWeek: 0,
-    dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-    dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    today: 'Today',
-    clear: 'Clear',
-    dateFormat: 'yyy-mm-dd'
+    dayNames: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ],
+    dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+    monthNames: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+    monthNamesShort: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    today: "Today",
+    clear: "Clear",
+    dateFormat: "yyy-mm-dd",
   };
   subscriptions: Subscription[] = [];
 
   responsiveOptions: any[] = [
     {
-      breakpoint: '1024px',
-      numVisible: 5
+      breakpoint: "1024px",
+      numVisible: 5,
     },
     {
-      breakpoint: '768px',
-      numVisible: 3
+      breakpoint: "768px",
+      numVisible: 3,
     },
     {
-      breakpoint: '560px',
-      numVisible: 1
-    }
+      breakpoint: "560px",
+      numVisible: 1,
+    },
   ];
   currentEvent: any;
   totalRecords: number = 0;
+  showDispositionDialog: boolean = false;
 
+  @ViewChild("fileItem") fileItem: ElementRef;
+  @ViewChild("statusCol") statusCol: ElementRef;
+  @ViewChild("ncrItem") ncrItem: ElementRef;
+  @ViewChild("disposition") disposition: ElementRef;
+  @ViewChild("expandedRowTemplate") expandedRowTemplate: ElementRef;
 
-  @ViewChild('fileItem') fileItem: ElementRef;
-  @ViewChild('statusCol') statusCol: ElementRef;
-  @ViewChild('ncrItem') ncrItem: ElementRef;
-  @ViewChild('disposition') disposition: ElementRef;
-  @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
-
-  constructor(private elementReference: ElementRef, public globals: Globals,
-    private workOrderService: WorkOrderService, public fileService: FileService,
-    private toastr: ToastrService) {
-
-  }
+  constructor(
+    private elementReference: ElementRef,
+    public globals: Globals,
+    private workOrderService: WorkOrderService,
+    public fileService: FileService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.setCustomerName();
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
-        new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
-        new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String, styles: { 'text-align' : 'center' } }),
-        new ColumnsSaved({ id: 'partNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String, styles: { 'text-align' : 'center' } }),
-        new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '10rem', 'text-align' : 'center' } }),
-        new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem', 'text-align' : 'center' } }),
-        new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, type: EnumColumnType.String, styles: { 'width': '30rem', 'text-align' : 'center' } }),
+        new ColumnsSaved({
+          id: "id",
+          label: "Id",
+          visible: false,
+          type: EnumColumnType.Number,
+        }),
+        new ColumnsSaved({
+          id: "serialNumber",
+          label: "Serial #",
+          visible: true,
+          type: EnumColumnType.String,
+          styles: { "text-align": "center" },
+        }),
+        new ColumnsSaved({
+          id: "partNumber",
+          label: "Company Part #",
+          visible: true,
+          type: EnumColumnType.String,
+          styles: { "text-align": "center" },
+        }),
+        new ColumnsSaved({
+          id: "cycleCount",
+          label: "Cycle Count",
+          visible: true,
+          type: EnumColumnType.Number,
+          styles: { width: "10rem", "text-align": "center" },
+        }),
+        new ColumnsSaved({
+          id: "qty",
+          label: "Qty",
+          visible: true,
+          type: EnumColumnType.Number,
+          styles: { width: "6rem", "text-align": "center" },
+        }),
+        new ColumnsSaved({
+          id: "name",
+          label: "Part Name",
+          visible: true,
+          type: EnumColumnType.String,
+          styles: { width: "30rem", "text-align": "center" },
+        }),
       ],
       showMyViewsFeature: false,
       paginator: false,
-      storageId: 'wip_engineering_parts' + this.elementReference.nativeElement.tagName.toLowerCase(),
-      version: '1.0.0'
+      storageId:
+        "wip_engineering_parts" +
+        this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: "1.0.0",
     });
     this.setGridColumnsSaved();
 
     this.reportPartsModel = new ReportModel({
-      name: ''
+      name: "",
     });
   }
 
@@ -131,96 +221,157 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showPhotos(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.globals.showLoader(true);
-        this.images = [];
-        let count = response.object[0].workOrderTasks.length - 1;
-        response.object[0].workOrderTasks.map(element => {
+    this.workOrderService
+      .workOrder(rowData.workOrderId, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
           this.globals.showLoader(true);
-          this.fileService.fileGet(this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
-            element.id, null, env.apiVersion)
-            .pipe(take(1)).subscribe(responseHandler((resp) => {
-              if (resp.object.length > 0) {
-                resp.object.forEach((file: FileModel) => {
-                  if (file.contentType === 'image/gif' || file.contentType === 'image/tiff' ||
-                    file.contentType === 'image/webp' || file.contentType === 'image/jpeg'
-                    || file.contentType === 'image/png') {
-                    this.images.push({
-                      id: file.entityId,
-                      previewImageSrc: file.fileURL,
-                      thumbnailImageSrc: file.fileURL,
-                      alt: '',
-                      title: ''
+          this.images = [];
+          let count = response.object[0].workOrderTasks.length - 1;
+          response.object[0].workOrderTasks.map((element) => {
+            this.globals.showLoader(true);
+            this.fileService
+              .fileGet(
+                this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
+                element.id,
+                null,
+                env.apiVersion
+              )
+              .pipe(take(1))
+              .subscribe(
+                responseHandler((resp) => {
+                  if (resp.object.length > 0) {
+                    resp.object.forEach((file: FileModel) => {
+                      if (
+                        file.contentType === "image/gif" ||
+                        file.contentType === "image/tiff" ||
+                        file.contentType === "image/webp" ||
+                        file.contentType === "image/jpeg" ||
+                        file.contentType === "image/png"
+                      ) {
+                        this.images.push({
+                          id: file.entityId,
+                          previewImageSrc: file.fileURL,
+                          thumbnailImageSrc: file.fileURL,
+                          alt: "",
+                          title: "",
+                        });
+                      }
                     });
                   }
-                });
-              }
-              if (count === 0) {
-                this.globals.showLoader(false);
-                if (this.images.length > 0) {
-                  this.displayBasic2 = true;
-                } else {
-                  this.toastr.error('Sorry, there are no pictures for the selected Work Order');
-                }
-              }
-              count--;
-            }));
-        });
-      }));
+                  if (count === 0) {
+                    this.globals.showLoader(false);
+                    if (this.images.length > 0) {
+                      this.displayBasic2 = true;
+                    } else {
+                      this.toastr.error(
+                        "Sorry, there are no pictures for the selected Work Order"
+                      );
+                    }
+                  }
+                  count--;
+                })
+              );
+          });
+        })
+      );
   }
 
   showFiles(rowData) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(rowData.workOrderId, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.globals.showLoader(true);
-        this.files = [];
-        let count = response.object[0].workOrderTasks.length - 1;
-        this.gridFilesSaved = new GridSaved({
-          columnsSaved: [
-            new ColumnsSaved({ id: 'fileId', label: 'Id', type: EnumColumnType.Number, visible: false }),
-            new ColumnsSaved({ id: 'fileURL', label: 'fileURL', type: EnumColumnType.Number, visible: false }),
-            new ColumnsSaved({ id: 'name', label: 'Name', type: EnumColumnType.String, visible: true }),
-            new ColumnsSaved({ id: 'supportingInfo', label: 'Actions', visible: true, type: EnumColumnType.Template, templateName: this.fileItem }),
-          ],
-          gridClass: 'formTbl',
-          showMyViewsFeature: false,
-          storageId: 'wip_engineering_filesGr' + this.elementReference.nativeElement.tagName.toLowerCase(),
-          version: '1.0.0'
-        });
-
-        this.reportFilesModel = new ReportModel({
-          // name: 'Work Orders' + custNameAdd
-          name: ''
-        });
-
-        response.object[0].workOrderTasks.map(element => {
+    this.workOrderService
+      .workOrder(rowData.workOrderId, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
           this.globals.showLoader(true);
-          this.fileService.fileGet(this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
-            element.id, null, env.apiVersion)
-            .pipe(take(1)).subscribe(responseHandler((resp) => {
-              if (resp.object.length > 0) {
-                resp.object.forEach((file: FileModel) => {
-                  if (!(file.contentType === 'image/gif' || file.contentType === 'image/tiff' ||
-                    file.contentType === 'image/webp' || file.contentType === 'image/jpeg'
-                    || file.contentType === 'image/png')) {
-                    this.files.push(file);
+          this.files = [];
+          let count = response.object[0].workOrderTasks.length - 1;
+          this.gridFilesSaved = new GridSaved({
+            columnsSaved: [
+              new ColumnsSaved({
+                id: "fileId",
+                label: "Id",
+                type: EnumColumnType.Number,
+                visible: false,
+              }),
+              new ColumnsSaved({
+                id: "fileURL",
+                label: "fileURL",
+                type: EnumColumnType.Number,
+                visible: false,
+              }),
+              new ColumnsSaved({
+                id: "name",
+                label: "Name",
+                type: EnumColumnType.String,
+                visible: true,
+              }),
+              new ColumnsSaved({
+                id: "supportingInfo",
+                label: "Actions",
+                visible: true,
+                type: EnumColumnType.Template,
+                templateName: this.fileItem,
+              }),
+            ],
+            gridClass: "formTbl",
+            showMyViewsFeature: false,
+            storageId:
+              "wip_engineering_filesGr" +
+              this.elementReference.nativeElement.tagName.toLowerCase(),
+            version: "1.0.0",
+          });
+
+          this.reportFilesModel = new ReportModel({
+            // name: 'Work Orders' + custNameAdd
+            name: "",
+          });
+
+          response.object[0].workOrderTasks.map((element) => {
+            this.globals.showLoader(true);
+            this.fileService
+              .fileGet(
+                this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
+                element.id,
+                null,
+                env.apiVersion
+              )
+              .pipe(take(1))
+              .subscribe(
+                responseHandler((resp) => {
+                  if (resp.object.length > 0) {
+                    resp.object.forEach((file: FileModel) => {
+                      if (
+                        !(
+                          file.contentType === "image/gif" ||
+                          file.contentType === "image/tiff" ||
+                          file.contentType === "image/webp" ||
+                          file.contentType === "image/jpeg" ||
+                          file.contentType === "image/png"
+                        )
+                      ) {
+                        this.files.push(file);
+                      }
+                    });
                   }
-                });
-              }
-              if (count === 0) {
-                this.globals.showLoader(false);
-                if (this.files.length > 0) {
-                  this.showFilesDialog = true;
-                } else {
-                  this.toastr.error('Sorry, there are no files for the selected Work Order');
-                }
-              }
-              count--;
-            }));
-        });
-      }));
+                  if (count === 0) {
+                    this.globals.showLoader(false);
+                    if (this.files.length > 0) {
+                      this.showFilesDialog = true;
+                    } else {
+                      this.toastr.error(
+                        "Sorry, there are no files for the selected Work Order"
+                      );
+                    }
+                  }
+                  count--;
+                })
+              );
+          });
+        })
+      );
   }
 
   imageClick(index: number) {
@@ -239,28 +390,29 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    let isBuyerObservableSubscription = this.globals.isBuyerObservable.subscribe(response => {
-      if (this.globals.selectedCustomer !== undefined) {
-        this.setCustomerName();
-      }
-    });
+    let isBuyerObservableSubscription =
+      this.globals.isBuyerObservable.subscribe((response) => {
+        if (this.globals.selectedCustomer !== undefined) {
+          this.setCustomerName();
+        }
+      });
     this.subscriptions.push(isBuyerObservableSubscription);
 
-    let selectCustomerObservableSubscription = this.globals.selectCustomerObservable.subscribe(response => {
-      if (response !== null && response !== undefined) {
-        setTimeout(() => {
-          this.setCustomerName();
-          this.setGridColumnsSaved();
-          if (this.showReport) {
-            this.getGridData(undefined);
-          } else {
-            this.showReport = true;
-          }
-        }, 10);
-      }
-    });
+    let selectCustomerObservableSubscription =
+      this.globals.selectCustomerObservable.subscribe((response) => {
+        if (response !== null && response !== undefined) {
+          setTimeout(() => {
+            this.setCustomerName();
+            this.setGridColumnsSaved();
+            if (this.showReport) {
+              this.getGridData(undefined);
+            } else {
+              this.showReport = true;
+            }
+          }, 10);
+        }
+      });
     this.subscriptions.push(selectCustomerObservableSubscription);
-
   }
 
   expandRow(data: PortalWorkOrderPartsView) {
@@ -268,109 +420,159 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addInstructions(coldata) {
-    this.instructions = '';
+    this.instructions = "";
     this.selectedColData = coldata;
     this.showInstructionDialog = true;
   }
 
   saveInstructions() {
-    const request = new CreateWorkOrderMessageRequest({ id: this.selectedColData.workOrderId, message: this.instructions });
-    this.workOrderService.message(env.apiVersion, request).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.selectedColData.messages.push(request);
-        this.showInstructionDialog = false;
-      }));
+    const request = new CreateWorkOrderMessageRequest({
+      id: this.selectedColData.workOrderId,
+      message: this.instructions,
+    });
+    this.workOrderService
+      .message(env.apiVersion, request)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.selectedColData.messages.splice(0, 0, {
+            message: request.message,
+            name: this.globals.getCurrentUser().fullName,
+            date: moment().format("MMM DD, YYYY HH:mm"),
+          });
+          this.instructions = "";
+        })
+      );
   }
-
 
   showReportInfo(reportType: EnumReport, row: any) {
     this.globals.showLoader(true);
     this.selectedReport = reportType;
     if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId) {
-      this.workOrderService.workOrder(row.colData.workOrderId, env.apiVersion).pipe(take(1))
-        .subscribe(responseHandler(response => {
-          response.object[0].workOrderTasks.forEach(workOrderTask => {
-            workOrderTask.workOrderTaskMonitors.forEach((workOrderTaskMonitor: any) => {
-
-              workOrderTaskMonitor.pass = this.isMonitorPassing(workOrderTaskMonitor);
-
-
+      this.workOrderService
+        .workOrder(row.colData.workOrderId, env.apiVersion)
+        .pipe(take(1))
+        .subscribe(
+          responseHandler((response) => {
+            response.object[0].workOrderTasks.forEach((workOrderTask) => {
+              workOrderTask.workOrderTaskMonitors.forEach(
+                (workOrderTaskMonitor: any) => {
+                  workOrderTaskMonitor.pass =
+                    this.isMonitorPassing(workOrderTaskMonitor);
+                }
+              );
             });
-          });
 
-          this.ncrWorkOrder = response.object[0];
-          this.showNcrModal = true;
-        }));
+            this.ncrWorkOrder = response.object[0];
+            this.showNcrModal = true;
+          })
+        );
     }
   }
 
   isMonitorPassing(workOrderTaskMonitor: WorkOrderTaskMonitorModel) {
-
-    const monitorType = workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null
-      ? workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId : workOrderTaskMonitor?.monitorTypeId;
+    const monitorType =
+      workOrderTaskMonitor?.procedureMonitorId !== undefined &&
+      workOrderTaskMonitor?.procedureMonitorId !== null
+        ? workOrderTaskMonitor?.procedureStepMonitor?.monitorTypeId
+        : workOrderTaskMonitor?.monitorTypeId;
 
     switch (monitorType) {
       case EnumMonitorType.Equipment:
-        return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
+        return (
+          workOrderTaskMonitor.textVal !== undefined &&
+          workOrderTaskMonitor.textVal !== null &&
+          workOrderTaskMonitor.textVal !== ""
+        );
       case EnumMonitorType.Number:
-
-        if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Sensor || workOrderTaskMonitor?.inputTypeId === EnumMonitorInputType.Sensor) {
-          return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null
-            && workOrderTaskMonitor.textVal !== '' && workOrderTaskMonitor.textVal !== 'No Sensor Value Available');
+        if (
+          workOrderTaskMonitor.procedureStepMonitor?.inputTypeId ===
+            EnumMonitorInputType.Sensor ||
+          workOrderTaskMonitor?.inputTypeId === EnumMonitorInputType.Sensor
+        ) {
+          return (
+            workOrderTaskMonitor.textVal !== undefined &&
+            workOrderTaskMonitor.textVal !== null &&
+            workOrderTaskMonitor.textVal !== "" &&
+            workOrderTaskMonitor.textVal !== "No Sensor Value Available"
+          );
         }
 
-        if (workOrderTaskMonitor.procedureStepMonitor?.inputTypeId === EnumMonitorInputType.Manual) {
-
-          if (workOrderTaskMonitor.numVal === null ||
-            workOrderTaskMonitor.numVal === undefined) {
+        if (
+          workOrderTaskMonitor.procedureStepMonitor?.inputTypeId ===
+          EnumMonitorInputType.Manual
+        ) {
+          if (
+            workOrderTaskMonitor.numVal === null ||
+            workOrderTaskMonitor.numVal === undefined
+          ) {
             return false;
           }
 
           let target;
-          if (workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null) {
+          if (
+            workOrderTaskMonitor?.procedureMonitorId !== undefined &&
+            workOrderTaskMonitor?.procedureMonitorId !== null
+          ) {
             target = workOrderTaskMonitor.procedureStepMonitor?.target;
           } else {
             target = workOrderTaskMonitor.target;
           }
 
-
           switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
             case EnumMonitorShouldBe.EQUAL: {
-              return (target === workOrderTaskMonitor.numVal);
+              return target === workOrderTaskMonitor.numVal;
             }
             case EnumMonitorShouldBe.ABOVE: {
-              return (target <= workOrderTaskMonitor.numVal);
+              return target <= workOrderTaskMonitor.numVal;
             }
             case EnumMonitorShouldBe.BELOW: {
-              return (workOrderTaskMonitor.numVal <= target);
+              return workOrderTaskMonitor.numVal <= target;
             }
             case EnumMonitorShouldBe.BETWEEN: {
-
-              if (workOrderTaskMonitor?.procedureMonitorId !== undefined && workOrderTaskMonitor?.procedureMonitorId !== null) {
-                return (workOrderTaskMonitor.procedureStepMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
-                  workOrderTaskMonitor.procedureStepMonitor.highTarget >= workOrderTaskMonitor.numVal);
+              if (
+                workOrderTaskMonitor?.procedureMonitorId !== undefined &&
+                workOrderTaskMonitor?.procedureMonitorId !== null
+              ) {
+                return (
+                  workOrderTaskMonitor.procedureStepMonitor.lowTarget <=
+                    workOrderTaskMonitor.numVal &&
+                  workOrderTaskMonitor.procedureStepMonitor.highTarget >=
+                    workOrderTaskMonitor.numVal
+                );
               } else {
-                return (workOrderTaskMonitor.lowTarget <= workOrderTaskMonitor.numVal &&
-                  workOrderTaskMonitor.highTarget >= workOrderTaskMonitor.numVal);
-
+                return (
+                  workOrderTaskMonitor.lowTarget <=
+                    workOrderTaskMonitor.numVal &&
+                  workOrderTaskMonitor.highTarget >= workOrderTaskMonitor.numVal
+                );
               }
-
             }
             default:
               return false;
           }
-
         }
 
         return workOrderTaskMonitor.numVal;
       case EnumMonitorType.YesOrNo:
-        return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;
+        return (
+          workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes
+        );
       case EnumMonitorType.Text:
-        return (workOrderTaskMonitor.textVal !== undefined && workOrderTaskMonitor.textVal !== null && workOrderTaskMonitor.textVal !== '');
+        return (
+          workOrderTaskMonitor.textVal !== undefined &&
+          workOrderTaskMonitor.textVal !== null &&
+          workOrderTaskMonitor.textVal !== ""
+        );
       case EnumMonitorType.Select:
-        return (workOrderTaskMonitor.multiVal !== undefined && workOrderTaskMonitor.multiVal !== null);
+        return (
+          workOrderTaskMonitor.multiVal !== undefined &&
+          workOrderTaskMonitor.multiVal !== null
+        );
       case EnumMonitorType.PassOrFail:
-        return workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes;
+        return (
+          workOrderTaskMonitor.numVal === EnumMonitorPassFailStatus.PassOrYes
+        );
       default:
         break;
     }
@@ -383,100 +585,295 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setCustomerName() {
-    this.title = 'Work Orders';
+    this.title = "Work Orders";
     if (this.globals.selectedCustomer?.name !== undefined) {
-      this.title += ' - ' + this.globals.selectedCustomer.name;
+      this.title += " - " + this.globals.selectedCustomer.name;
     }
   }
 
   setSubPartsProperties(subpart: any) {
-    subpart.partNumber = subpart.partNumber || 'N/A';
-    subpart.name = subpart.name || 'N/A';
+    subpart.partNumber = subpart.partNumber || "N/A";
+    subpart.name = subpart.name || "N/A";
   }
 
   setSubpartspropertiesToWoSubparts(workOrder: PortalWorkOrderPartsView) {
-    workOrder.subParts.map(x => this.setSubPartsProperties(x));
+    workOrder.subParts.map((x) => this.setSubPartsProperties(x));
   }
 
   setGridColumnsSaved() {
-    const columnsSaved = this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns();
+    const columnsSaved = this.globals.isBuyer
+      ? this.getBuyerColumns()
+      : this.getEngineerColumns();
     this.gridSaved = new GridSaved({
       columnsSaved: columnsSaved,
-      storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
-      version: '1.0.0',
+      storageId:
+        "wip_engineering" +
+        this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: "1.0.0",
       expandRows: true,
-      expandRowProperty: 'subParts',
+      expandRowProperty: "subParts",
       expandRowsTemplate: this.expandedRowTemplate,
-      paginator: true
+      paginator: true,
     });
 
     this.reportModel = new ReportModel({
-      name: ''
+      name: "",
     });
   }
 
   getGridData(event: LazyLoadEvent) {
-    const columnsSaved = this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns();
+    const columnsSaved = this.globals.isBuyer
+      ? this.getBuyerColumns()
+      : this.getEngineerColumns();
     this.globals.showLoader(true);
     if (event !== undefined) {
       this.currentEvent = event;
     }
 
-    const pageFilters = { customerId: this.globals.selectedCustomer.id, fromDate: this.fromDate, toDate: this.toDate, subPartName: this.subpartTextSearch };
+    const pageFilters = {
+      customerId: this.globals.selectedCustomer.id,
+      fromDate: this.fromDate,
+      toDate: this.toDate,
+      subPartName: this.subpartTextSearch,
+    };
     setTimeout(() => {
-      callFunctionWithFiltersViews(this.workOrderService, this.workOrderService.portal, pageFilters, columnsSaved, this.currentEvent, this.globals.functionDic)
+      callFunctionWithFiltersViews(
+        this.workOrderService,
+        this.workOrderService.portal,
+        pageFilters,
+        columnsSaved,
+        this.currentEvent,
+        this.globals.functionDic
+      )
         .pipe(take(1))
-        .subscribe(responseHandler(response => {
-          const responseData = response.object.map((x: any) => {
-            x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
-            let ret = new PortalWorkOrderPartsView(x);
-            this.setSubpartspropertiesToWoSubparts(ret);
-            return ret;
-          });
+        .subscribe(
+          responseHandler((response) => {
+            const responseData = response.object.map((x: any) => {
+              x.serialNumber = x.serialNumber === null ? "N/A" : x.serialNumber;
+              let ret = new PortalWorkOrderPartsView(x);
+              this.setSubpartspropertiesToWoSubparts(ret);
+              return ret;
+            });
 
-          this.totalRecords = response.totalNumberOfRecords;
-          emptyArray(this.data);
-          setTimeout(() => {
-            this.data.push(...responseData);
-          }, 100);
-        }));
+            this.totalRecords = response.totalNumberOfRecords;
+            emptyArray(this.data);
+            setTimeout(() => {
+              this.data.push(...responseData);
+            }, 100);
+          })
+        );
     }, 10);
   }
 
   getEngineerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.Number, visible: true }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
-      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
-      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
-      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
-      new ColumnsSaved({ id: 'partName', label: 'Part Name', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.Template, templateName: this.statusCol }),
-      new ColumnsSaved({ id: 'supportingInfo', label: 'Supporting Info', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem }),
-      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.Template, templateName: this.disposition }),
+      new ColumnsSaved({
+        id: "workOrderId",
+        label: "Work Order Id",
+        type: EnumColumnType.Number,
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "serialNumber",
+        label: "Serial #",
+        visible: true,
+        type: EnumColumnType.String,
+      }),
+      new ColumnsSaved({
+        id: "companyPartNumber",
+        label: "Company Part #",
+        visible: true,
+        type: EnumColumnType.String,
+      }),
+      new ColumnsSaved({
+        id: "cycleCount",
+        label: "Cycle Count",
+        visible: true,
+        type: EnumColumnType.Number,
+        styles: { width: "6rem" },
+      }),
+      new ColumnsSaved({
+        id: "purchaseOrderNumber",
+        label: "PO #",
+        visible: true,
+        type: EnumColumnType.String,
+      }),
+      new ColumnsSaved({
+        id: "qty",
+        label: "Qty",
+        visible: true,
+        type: EnumColumnType.Number,
+        styles: { width: "6rem" },
+      }),
+      new ColumnsSaved({
+        id: "startDate",
+        label: "Start Date",
+        visible: true,
+        type: EnumColumnType.Date,
+        formattingAngular: "MM-dd-yyyy",
+        formattingMoment: "MM-DD-YYYY",
+      }),
+      new ColumnsSaved({
+        id: "dueDate",
+        label: "Due Date",
+        visible: true,
+        type: EnumColumnType.Date,
+        formattingAngular: "MM-dd-yyyy",
+        formattingMoment: "MM-DD-YYYY",
+      }),
+      new ColumnsSaved({
+        id: "partName",
+        label: "Part Name",
+        visible: true,
+        type: EnumColumnType.String,
+      }),
+      new ColumnsSaved({
+        id: "productName",
+        label: "Product Name",
+        visible: true,
+        type: EnumColumnType.String,
+      }),
+      new ColumnsSaved({
+        id: "procedureName",
+        label: "Procedure Name",
+        visible: true,
+        type: EnumColumnType.String,
+      }),
+      new ColumnsSaved({
+        id: "status",
+        label: "Status",
+        visible: true,
+        type: EnumColumnType.Template,
+        templateName: this.statusCol,
+      }),
+      new ColumnsSaved({
+        id: "supportingInfo",
+        label: "Supporting Info",
+        visible: true,
+        type: EnumColumnType.Template,
+        templateName: this.ncrItem,
+      }),
+      new ColumnsSaved({
+        id: "disposition",
+        label: "Disposition",
+        visible: true,
+        type: EnumColumnType.Template,
+        templateName: this.disposition,
+        styles: { width: "10em" },
+      }),
     ];
   }
 
   getBuyerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.Number, visible: true }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', type: EnumColumnType.Number, visible: true }),
-      new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
-      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
-      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
-      new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'supportingInfo', label: 'Supporting Info', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem }),
-      new ColumnsSaved({ id: 'invoiceName', label: 'Invoice #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'price', label: 'Price', visible: true, type: EnumColumnType.Money }),
-      new ColumnsSaved({ id: 'invoiceAmount', label: 'Amount', visible: true, type: EnumColumnType.Money }),
-      new ColumnsSaved({ id: 'invoiceDate', label: 'Invoice Date', visible: true, type: EnumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-DD-YYYY' }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.Template, templateName: this.statusCol }),
+      new ColumnsSaved({
+        id: "workOrderId",
+        label: "Work Order Id",
+        type: EnumColumnType.Number,
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "serialNumber",
+        label: "Serial #",
+        visible: true,
+        type: EnumColumnType.String,
+      }),
+      new ColumnsSaved({
+        id: "purchaseOrderNumber",
+        label: "PO #",
+        type: EnumColumnType.Number,
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "qty",
+        label: "Qty",
+        visible: true,
+        type: EnumColumnType.Number,
+        styles: { width: "6rem" },
+      }),
+      new ColumnsSaved({
+        id: "startDate",
+        label: "Start Date",
+        visible: true,
+        type: EnumColumnType.Date,
+        formattingAngular: "MM-dd-yyyy",
+        formattingMoment: "MM-DD-YYYY",
+      }),
+      new ColumnsSaved({
+        id: "dueDate",
+        label: "Due Date",
+        visible: true,
+        type: EnumColumnType.Date,
+        formattingAngular: "MM-dd-yyyy",
+        formattingMoment: "MM-DD-YYYY",
+      }),
+      new ColumnsSaved({
+        id: "productName",
+        label: "Product Name",
+        visible: true,
+        type: EnumColumnType.String,
+      }),
+      new ColumnsSaved({
+        id: "supportingInfo",
+        label: "Supporting Info",
+        visible: true,
+        type: EnumColumnType.Template,
+        templateName: this.ncrItem,
+      }),
+      new ColumnsSaved({
+        id: "invoiceName",
+        label: "Invoice #",
+        visible: true,
+        type: EnumColumnType.String,
+      }),
+      new ColumnsSaved({
+        id: "price",
+        label: "Price",
+        visible: true,
+        type: EnumColumnType.Money,
+      }),
+      new ColumnsSaved({
+        id: "invoiceAmount",
+        label: "Amount",
+        visible: true,
+        type: EnumColumnType.Money,
+      }),
+      new ColumnsSaved({
+        id: "invoiceDate",
+        label: "Invoice Date",
+        visible: true,
+        type: EnumColumnType.Date,
+        formattingAngular: "MM-dd-yyyy",
+        formattingMoment: "MM-DD-YYYY",
+      }),
+      new ColumnsSaved({
+        id: "status",
+        label: "Status",
+        visible: true,
+        type: EnumColumnType.Template,
+        templateName: this.statusCol,
+      }),
     ];
+  }
+
+  viewDispositionHistory(coldata: any) {
+    this.instructions = "";
+    this.selectedColData = coldata;
+    this.selectedColData.messages = _.sortBy(coldata.messages, (message) =>
+      moment(message.date).valueOf()
+    )
+      .reverse()
+      .map((message) => {
+        return {
+          ...message,
+          date: moment(message.date).format("MMM DD, YYYY HH:mm"),
+        };
+      });
+    this.showDispositionDialog = true;
+  }
+
+  closeDispositionDialog() {
+    this.showDispositionDialog = false;
+    this.selectedColData = null;
   }
 }
