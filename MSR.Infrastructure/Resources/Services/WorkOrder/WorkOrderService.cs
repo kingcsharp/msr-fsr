@@ -21,13 +21,12 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using MSR.Infrastructure.Resources.Queries;
 using IronPdf;
 using System.Net.Mail;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MSR.Domain.DTOs;
 using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions;
-using DataMatrix.NetCore;
 using System.IO;
-using System.Drawing.Imaging;
+using Barcoder.DataMatrix;
+using Barcoder.Renderer.Image;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -519,7 +518,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                                 && i.SerialNumber == workOrderPartModel.SerialNumber)
                                                                             && i.WorkOrderId != workOrderPartModel.WorkOrderId
                                                                             ).Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
-                //workOrderPartModel.DataMatrix = ConvertItemToDataMatrix(DataMatrixItems.FirstOrDefault(i => i.WorkOrderPartId == workOrderPartModel.Id));
+                workOrderPartModel.DataMatrix = ConvertItemToDataMatrix(DataMatrixItems.FirstOrDefault(i => i.WorkOrderPartId == workOrderPartModel.Id));
                 workOrderPartModel.Children = null;
             }
 
@@ -527,48 +526,46 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         }
 
-        //private byte[] ConvertItemToDataMatrix(WorkOrderPartDataMatrixView workOrderPartDataMatrixView)
-        //{
-        //    if(workOrderPartDataMatrixView == null)
-        //    {
-        //        return null;
-        //    }
-        //    /*
-        //     * P == Part Number
-        //     * 1P == SerialNumber
-        //     * 6 == Part.Name
-        //     * 20P == Cycle Count
-        //     * 16D == Date of Printing Sticker
-        //     * 14D == Six Months from 16D
-        //     * 30P == N
-        //     * Z == 1
-        //     * V1 == We do not have currently.  Will need to add
-        //     * 3S == Work Order Part SerialNumber
-        //     * Q == Work Order Part Quantity
-        //     * 3Q == "PCE"
-        //     * 2T == Procedure.Id
-        //     * K == PurchaseOrder.ReferencePO up to the /
-        //     * 4k == PurchaseOrder.ReferencePO after the /
-        //     * 2S == MTTN
-        //     */
-        //    var recordSeparator = ((char)30).ToString();
-        //    var groupSeparator = ((char)29).ToString();
-        //    var endTransmission = ((char)4).ToString();
-        //    var data = $"[)>{recordSeparator}06{groupSeparator}P{workOrderPartDataMatrixView.P}{groupSeparator}1P{workOrderPartDataMatrixView.OneP}{groupSeparator}20P{workOrderPartDataMatrixView.TwentyP}" +
-        //               $"{groupSeparator}16D{workOrderPartDataMatrixView.SixteenD}{groupSeparator}14D{workOrderPartDataMatrixView.FourteenD}{groupSeparator}30P{workOrderPartDataMatrixView.ThirtyP}" +
-        //               $"{groupSeparator}Z{workOrderPartDataMatrixView.Z}{groupSeparator}V1{workOrderPartDataMatrixView.V1}{groupSeparator}3S{workOrderPartDataMatrixView.ThreeS}{groupSeparator}" +
-        //               $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
-        //               $"K{workOrderPartDataMatrixView.K}{groupSeparator}4k{workOrderPartDataMatrixView.FourK}{groupSeparator}2S{workOrderPartDataMatrixView.TwoS}{recordSeparator}{endTransmission}";
-        //    DmtxImageEncoder encoder = new DmtxImageEncoder();
-        //    var image = encoder.EncodeImage(data, new DmtxImageEncoderOptions()
-        //    {
-        //        Encoding = Encoding.ASCII
-        //    });
+        private byte[] ConvertItemToDataMatrix(WorkOrderPartDataMatrixView workOrderPartDataMatrixView)
+        {
+            if (workOrderPartDataMatrixView == null)
+            {
+                return null;
+            }
+            /*
+             * P == Part Number
+             * 1P == SerialNumber
+             * 6 == Part.Name
+             * 20P == Cycle Count
+             * 16D == Date of Printing Sticker
+             * 14D == Six Months from 16D
+             * 30P == N
+             * Z == 1
+             * V1 == We do not have currently.  Will need to add
+             * 3S == Work Order Part SerialNumber
+             * Q == Work Order Part Quantity
+             * 3Q == "PCE"
+             * 2T == Procedure.Id
+             * K == PurchaseOrder.ReferencePO up to the /
+             * 4k == PurchaseOrder.ReferencePO after the /
+             * 2S == MTTN
+             */
+            var recordSeparator = ((char)30).ToString();
+            var groupSeparator = ((char)29).ToString();
+            var endTransmission = ((char)4).ToString();
+            var data = $"[)>{recordSeparator}06{groupSeparator}P{workOrderPartDataMatrixView.P}{groupSeparator}1P{workOrderPartDataMatrixView.OneP}{groupSeparator}20P{workOrderPartDataMatrixView.TwentyP}" +
+                       $"{groupSeparator}16D{workOrderPartDataMatrixView.SixteenD}{groupSeparator}14D{workOrderPartDataMatrixView.FourteenD}{groupSeparator}30P{workOrderPartDataMatrixView.ThirtyP}" +
+                       $"{groupSeparator}Z{workOrderPartDataMatrixView.Z}{groupSeparator}V1{workOrderPartDataMatrixView.V1}{groupSeparator}3S{workOrderPartDataMatrixView.ThreeS}{groupSeparator}" +
+                       $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
+                       $"K{workOrderPartDataMatrixView.K}{groupSeparator}4k{workOrderPartDataMatrixView.FourK}{groupSeparator}2S{workOrderPartDataMatrixView.TwoS}{recordSeparator}{endTransmission}";
 
-        //    using var ms = new MemoryStream();
-        //    image.Save(ms, ImageFormat.Jpeg);
-        //    return ms.ToArray();
-        //}
+            var barcode = DataMatrixEncoder.Encode(data);
+            var renderer = new ImageRenderer(imageFormat: ImageFormat.Png);
+
+            using var stream = new MemoryStream();
+            renderer.Render(barcode, stream);            
+            return stream.ToArray();
+        }
 
         public async Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command)
         {
