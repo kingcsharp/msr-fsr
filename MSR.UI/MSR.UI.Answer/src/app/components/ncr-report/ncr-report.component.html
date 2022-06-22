@@ -1,71 +1,114 @@
 <div class="row m-4" *ngIf="workOrderPart !== undefined">
-    <div class="col-12">Part Non Conformance Report - Work Order {{WorkOrder.id}}</div>
-    <div class="col-12 border mb-2">
-        <div class="row">
-            <div class="col-2">MSR-FSR</div>
-            <div class="col-10">Customer Part # {{workOrderPart?.part?.partNumber}}, (Serial #: {{workOrderPart?.serialNumber}}),
-                {{workOrderPart?.part?.name}}</div>
-        </div>
+  <div class="col-12">
+    Part Non Conformance Report - Work Order {{ WorkOrder.id }}
+  </div>
+  <div class="col-12 border mb-2">
+    <div class="row">
+      <div class="col-2">MSR-FSR</div>
+      <div class="col-10">
+        Customer Part # {{ workOrderPart?.part?.partNumber }}, (Serial #:
+        {{ workOrderPart?.serialNumber }}), {{ workOrderPart?.part?.name }}
+      </div>
     </div>
-    <div class="col-12 border mb-2">
-        <div class="row">
-            <div class="col-3 text-right">Date Report Prepared:</div><div class="col-9">{{date | userTimezone }}</div>
-            <div class="col-3 text-right">Work Order #:</div><div class="col-9">{{WorkOrder.id}}</div>
-            <div class="col-3 text-right">Customer:</div><div class="col-9">{{WorkOrder.purchase?.purchaseOrder?.customer?.name}}</div>
-            <div class="col-3 text-right">Technician:</div><div class="col-9">{{technicianFullName}}</div>
-        </div>
+  </div>
+  <div class="col-12 border mb-2">
+    <div class="row">
+      <div class="col-3 text-right">Date Report Prepared:</div>
+      <div class="col-9">{{ date | userTimezone }}</div>
+      <div class="col-3 text-right">Work Order #:</div>
+      <div class="col-9">{{ WorkOrder.id }}</div>
+      <div class="col-3 text-right">Customer:</div>
+      <div class="col-9">
+        {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}
+      </div>
+      <div class="col-3 text-right">Technician:</div>
+      <div class="col-9">{{ technicianFullName }}</div>
     </div>
-    <div class="col-12 border mb-2">
-        <div class="row">
-            <div class="col-4 font-weight-bold">Part #</div>
-            <div class="col-4 font-weight-bold">Part Name</div>
-            <div class="col-4 font-weight-bold">Serial Number</div>
-            <div class="col-4">{{workOrderPart.part?.partNumber}}</div>
-            <div class="col-4">{{workOrderPart.part?.name}}</div>
-            <div class="col-4">{{workOrderPart.serialNumber}}</div>
-        </div>
+  </div>
+  <div class="col-12 border mb-2">
+    <div class="row">
+      <div class="col-4 font-weight-bold">Part #</div>
+      <div class="col-4 font-weight-bold">Part Name</div>
+      <div class="col-4 font-weight-bold">Serial Number</div>
+      <div class="col-4">{{ workOrderPart.part?.partNumber }}</div>
+      <div class="col-4">{{ workOrderPart.part?.name }}</div>
+      <div class="col-4">{{ workOrderPart.serialNumber }}</div>
     </div>
-    <div class="col-12 border mb-2">
+  </div>
+  <div class="col-12 border mb-2">
+    <div class="row">
+      <div class="col-3 font-weight-bold text-right">Associated Documents:</div>
+      <div class="col-9">
+        <grid-file-viewer
+          [menuItem]="menuItems.WorkOrderTasks"
+          [files]="associatedDocuments"
+          [showDescription]="true"
+          class="m-2"
+        ></grid-file-viewer>
+      </div>
+      <div class="col-3 font-weight-bold text-right">
+        Associated Digital Pictures:
+      </div>
+      <div class="col-9">
         <div class="row">
-            <div class="col-3 font-weight-bold text-right">Associated Documents:</div>
-            <div class="col-9">
-                <grid-file-viewer
-                  [menuItem]="menuItems.WorkOrderTasks"
-                  [files]="associatedDocuments"
-                  [showDescription]="true"
-                  class="m-2"
-                ></grid-file-viewer>
+          <div
+            class="col-4 mt-4"
+            *ngFor="let fileModel of associatedDigitalPictures"
+          >
+            <a
+              *ngIf="fileModel.fileId !== undefined"
+              href="{{ fileModel.fileURL }}"
+              target="_blank"
+            >
+              <img
+                class="card-img-top"
+                src="{{ fileModel.fileURL }}"
+                alt="{{ fileModel.name }}"
+                (click)="showImagePreviewDialog(fileModel)"
+              />
+            </a>
+            <a
+              *ngIf="
+                fileModel.fileId === undefined || fileModel.fileId === null
+              "
+            >
+              <img
+                class="card-img-top"
+                [src]="fileModel.base64String"
+                alt="{{ fileModel.name }}"
+                (click)="showImagePreviewDialog(fileModel)"
+              />
+            </a>
+            <div *ngIf="fileModel.description" class="file-desc px-2">
+              {{ fileModel.description }}
             </div>
-            <div class="col-3 font-weight-bold text-right">Associated Digital Pictures:</div>
-            <div class="col-9">
-                <div class="row">
-                    <div class="col-4 mt-4" *ngFor="let fileModel of associatedDigitalPictures">
-                        <a *ngIf="fileModel.fileId !== undefined" href="{{fileModel.fileURL}}" target="_blank">
-                            <img class="card-img-top" src="{{fileModel.fileURL}}" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
-                        </a>
-                        <a *ngIf="fileModel.fileId === undefined || fileModel.fileId === null">
-                          <img class="card-img-top" [src]="fileModel.base64String" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
-                        </a>
-                        <div *ngIf="fileModel.description" class="file-desc px-2">{{fileModel.description}}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3 font-weight-bold text-right">Comments:</div><div class="col-9"></div>
+          </div>
         </div>
+      </div>
+      <div class="col-3 font-weight-bold text-right">Comments:</div>
+      <div class="col-9"></div>
     </div>
-    <div class="col-12">
-        <div class="row" *ngFor="let taskSummary of taskSummaries">
-            <div class="col-12 border bg-dark p-2">{{taskSummary.taskName}}</div>
-            <div class="col-6 border bg-secondary p-2">Monitor {{taskSummary.taskId}}</div>
-            <div class="col-3 border bg-secondary p-2">Result</div>
-            <div class="col-3 border bg-secondary p-2">Comment</div>
-            <div class="col-12">
-                <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
-                    <div class="col-6 border p-2" [innerHTML]="monitorSummary.monitorTitle"></div>
-                    <div class="col-3 border p-2">{{monitorSummary.result | monitorResult}}</div>
-                    <div class="col-3 border p-2">{{monitorSummary.comment}}</div>
-                </div>
-            </div>
+  </div>
+  <div class="col-12">
+    <div class="row" *ngFor="let taskSummary of taskSummaries">
+      <div class="col-12 border bg-dark p-2">{{ taskSummary.taskName }}</div>
+      <div class="col-6 border bg-secondary p-2">
+        Monitor {{ taskSummary.taskId }}
+      </div>
+      <div class="col-3 border bg-secondary p-2">Result</div>
+      <div class="col-3 border bg-secondary p-2">Comment</div>
+      <div class="col-12">
+        <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
+          <div
+            class="col-6 border p-2"
+            [innerHTML]="monitorSummary.monitorTitle"
+          ></div>
+          <div class="col-3 border p-2">
+            {{ monitorSummary.result | monitorResult }}
+          </div>
+          <div class="col-3 border p-2">{{ monitorSummary.comment }}</div>
         </div>
+      </div>
     </div>
+  </div>
 </div>

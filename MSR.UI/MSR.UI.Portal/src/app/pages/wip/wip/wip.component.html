@@ -209,7 +209,15 @@
       [baseZIndex]="100000"
     >
       <ng-template pTemplate="item" let-item>
-        <img [src]="item.previewImageSrc" style="width: 100%; display: block" />
+        <div style="width: 100%; display: block">
+          <img
+            [src]="item.previewImageSrc"
+            style="width: 100%; display: block"
+          />
+          <div style="width: 100%; text-align: center; padding-top: 15px">
+            {{ item.description }}
+          </div>
+        </div>
       </ng-template>
       <ng-template pTemplate="thumbnail" let-item>
         <div class="p-grid p-nogutter p-justify-center">

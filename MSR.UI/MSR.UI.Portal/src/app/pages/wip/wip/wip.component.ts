@@ -256,6 +256,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
                           thumbnailImageSrc: file.fileURL,
                           alt: "",
                           title: "",
+                          description: file.description,
                         });
                       }
                     });
@@ -305,6 +306,12 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
               new ColumnsSaved({
                 id: "name",
                 label: "Name",
+                type: EnumColumnType.String,
+                visible: true,
+              }),
+              new ColumnsSaved({
+                id: "description",
+                label: "Description",
                 type: EnumColumnType.String,
                 visible: true,
               }),
