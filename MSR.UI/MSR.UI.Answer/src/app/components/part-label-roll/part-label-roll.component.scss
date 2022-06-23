@@ -1,10 +1,10 @@
 @media print {
   @page {
-      size: 4.125in auto;
+    size: 4.125in auto;
   }
   body {
-      margin-top: .0625in;
-      margin-left: .0625in;
+    margin-top: 0.0625in;
+    margin-left: 0.0625in;
   }
 
   .roll-label {
@@ -16,8 +16,8 @@
 .roll-container {
   display: table-cell;
   vertical-align: middle;
-  margin-top: .0625in;
-  margin-left: .0625in;
+  margin-top: 0.0625in;
+  margin-left: 0.0625in;
   width: 4.125in;
 }
 table.tight {
@@ -35,11 +35,11 @@ table.tight td {
   padding: 4px;
 }
 .roll-label {
-  height: 4in;
+  height: 4.6in;
   width: 4in;
   margin-top: 0.125in;
   margin-bottom: 0.125in;
-  padding: 0 .1in;
+  padding: 0 0.1in;
   left: 0in;
   top: 0in;
   border: 1px dashed #ccc;
@@ -60,7 +60,13 @@ p {
   text-align: center;
 }
 .part-image img {
-    max-width: 1.25in;
-    max-height: 2in;
+  max-width: 1.25in;
+  max-height: 2in;
 }
 
+.data-matrix-label {
+  text-align: right !important;
+  img {
+    width: 90% !important;
+  }
+}

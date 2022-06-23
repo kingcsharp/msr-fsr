@@ -3,25 +3,52 @@
     <tbody>
       <tr>
         <td width="60%">
-          <div class="img-responsive" style="margin-top: 16px;width:185px;">
-            <img src="assets/img/msr-label-logo.png" alt="Logo">
+          <div class="img-responsive" style="margin-top: 16px; width: 185px">
+            <img src="assets/img/msr-label-logo.png" alt="Logo" />
           </div>
-          <p class="date">Date: <strong>{{todayDate | date: 'shortDate'}}</strong></p>
-         <!-- {{todayDate}} -->
-          <p>Site: <strong>MSR-FSR {{WorkOrder.location?.name}}</strong></p>
-          <p>WO: <strong>{{WorkOrder.product?.customer?.name}}-{{ WorkOrder.id}}</strong></p>
-          <div class="coded" style="max-width:175px">
-            PO #: <strong>{{WorkOrder.purchase?.purchaseOrder?.referencePO}}</strong><br />
-            <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
-              [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO" [bc-display-value]="false" [bc-height]="20">
+          <p class="date">
+            Date: <strong>{{ todayDate | date: "shortDate" }}</strong>
+          </p>
+          <!-- {{todayDate}} -->
+          <p>
+            Site: <strong>MSR-FSR {{ WorkOrder.location?.name }}</strong>
+          </p>
+          <p>
+            WO:
+            <strong
+              >{{ WorkOrder.product?.customer?.name }}-{{
+                WorkOrder.id
+              }}</strong
+            >
+          </p>
+          <div class="coded" style="max-width: 175px">
+            PO #:
+            <strong>{{ WorkOrder.purchase?.purchaseOrder?.referencePO }}</strong
+            ><br />
+            <ngx-barcode
+              [bc-format]="'CODE128'"
+              [bc-background]="'none'"
+              [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"
+              [bc-display-value]="false"
+              [bc-height]="20"
+            >
             </ngx-barcode>
           </div>
         </td>
         <td width="40%">
-          <div class="image-container img-fluid part-image" *ngIf="workOrderPart.part.files[0] !== undefined">
-            <img src="{{workOrderPart.part.files[0].fileURL}}" alt="Product Image">
+          <div
+            class="image-container img-fluid part-image"
+            *ngIf="workOrderPart.part.files[0] !== undefined"
+          >
+            <img
+              src="{{ workOrderPart.part.files[0].fileURL }}"
+              alt="Product Image"
+            />
           </div>
-          <div class="col-12  justify-content-center d-flex" *ngIf="workOrderPart.part.files[0] === undefined">
+          <div
+            class="col-12 justify-content-center d-flex"
+            *ngIf="workOrderPart.part.files[0] === undefined"
+          >
             No Image Available
           </div>
         </td>
@@ -29,21 +56,40 @@
       <tr>
         <td colspan="2">
           <div class="coded">
-            Part Desc: <strong>{{workOrderPart?.part?.name}}</strong><br />
+            Part Desc: <strong>{{ workOrderPart?.part?.name }}</strong
+            ><br />
             <table class="tight">
               <tr>
                 <td width="50%">
-                  Customer Part #: <strong>{{workOrderPart?.part?.partNumber}}</strong><br />
-                  <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
-                    [bc-value]="workOrderPart?.part?.partNumber" [bc-display-value]="false" [bc-height]="20">
+                  Customer Part #:
+                  <strong>{{ workOrderPart?.part?.partNumber }}</strong
+                  ><br />
+                  <ngx-barcode
+                    [bc-format]="'CODE128'"
+                    [bc-background]="'none'"
+                    [bc-value]="workOrderPart?.part?.partNumber"
+                    [bc-display-value]="false"
+                    [bc-height]="20"
+                  >
                   </ngx-barcode>
                 </td>
                 <td width="50%">
                   OEM Part #:
-                  <span *ngIf="workOrderPart?.part?.oemPartNumber !== null; else OEMNotAvailable">
-                    <strong>{{workOrderPart?.part?.oemPartNumber}}</strong><br />
-                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
-                      [bc-value]="workOrderPart?.part?.oemPartNumber" [bc-display-value]="false" [bc-height]="20">
+                  <span
+                    *ngIf="
+                      workOrderPart?.part?.oemPartNumber !== null;
+                      else OEMNotAvailable
+                    "
+                  >
+                    <strong>{{ workOrderPart?.part?.oemPartNumber }}</strong
+                    ><br />
+                    <ngx-barcode
+                      [bc-format]="'CODE128'"
+                      [bc-background]="'none'"
+                      [bc-value]="workOrderPart?.part?.oemPartNumber"
+                      [bc-display-value]="false"
+                      [bc-height]="20"
+                    >
                     </ngx-barcode>
                   </span>
                   <ng-template #OEMNotAvailable>
@@ -58,14 +104,29 @@
       <tr>
         <td width="40%">
           <div class="coded">
-            Serial #: <strong>{{workOrderPart.serialNumber}}</strong><br />
-            <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.serialNumber"
-              [bc-display-value]="false" [bc-height]="20">
+            Serial #: <strong>{{ workOrderPart.serialNumber }}</strong
+            ><br />
+            <ngx-barcode
+              [bc-format]="'CODE128'"
+              [bc-background]="'none'"
+              [bc-value]="workOrderPart.serialNumber"
+              [bc-display-value]="false"
+              [bc-height]="20"
+            >
             </ngx-barcode>
-            This part processed <strong>{{workOrderPart.cycleCount}}</strong> time(s)
+            This part processed
+            <strong>{{ workOrderPart.cycleCount }}</strong> time(s)
+          </div>
+          <div class="text-left mt-3">
+            ONLY OPEN IN CLASS 100 <br />CLEANROOM OR BETTER
           </div>
         </td>
-        <td style="text-align:center">ONLY OPEN IN <br />CLASS 100 CLEANROOM <br />OR BETTER</td>
+        <td *ngIf="workOrderPart.dataMatrix" class="data-matrix-label">
+          <img
+            [src]="'data:image/png;base64,' + workOrderPart.dataMatrix"
+            alt="dataMatrix Label"
+          />
+        </td>
       </tr>
     </tbody>
   </table>
