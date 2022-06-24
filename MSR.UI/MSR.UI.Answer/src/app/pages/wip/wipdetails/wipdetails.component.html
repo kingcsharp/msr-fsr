@@ -544,6 +544,7 @@
                     <button
                       id="workordertaskfiles"
                       class="btn btn-primary mb-2"
+                      [disabled]="!filesReadyToSubmit"
                       (click)="uploadFilesAndDocumentsForTask()"
                     >
                       Submit
@@ -562,7 +563,9 @@
                       multiple="multiple"
                       [(files)]="workOrderTaskToView.referenceFiles"
                       [showDescription]="true"
-                      (descriptionChange)="uploadFilesAndDocumentsForTask()"
+                      (onChangeFileStatus)="
+                        uploadFilesAndDocumentsReady($event)
+                      "
                       [editDescription]="
                         workOrderTaskToView.assignedTo ===
                         globals.getCurrentUser().id
