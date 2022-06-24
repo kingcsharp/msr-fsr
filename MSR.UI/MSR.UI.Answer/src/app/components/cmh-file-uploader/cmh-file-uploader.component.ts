@@ -23,7 +23,8 @@ export class CmhFileUploaderComponent implements OnInit {
   @Output() filesChange: EventEmitter<Array<FileModel>> = new EventEmitter<
     Array<FileModel>
   >();
-  @Output() descriptionChange: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onChangeFileStatus: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
   @Input() showUploadButton: boolean;
   @Input() showCancelButton: boolean;
   @Input() showSelectButton: boolean;
@@ -41,6 +42,7 @@ export class CmhFileUploaderComponent implements OnInit {
   fileTypes: any[] = [];
   selectAll: boolean = false;
   selectedFiles: FileModel[] = [];
+  fileDescriptions: boolean[] = [];
 
   constructor(
     private fileService: FileService,
@@ -79,6 +81,7 @@ export class CmhFileUploaderComponent implements OnInit {
                 });
               });
             }
+            this.fileDescriptions = this.files.map((file) => true);
             this.showLi = true;
           })
         );
@@ -114,11 +117,15 @@ export class CmhFileUploaderComponent implements OnInit {
   removeFile(file) {
     const currIndex = this.files.findIndex((x) => x.fileId === file.fileId);
     this.files.splice(currIndex, 1);
+    this.fileDescriptions.splice(currIndex, 1);
+    this.isReadyToSubmit();
   }
 
   removeuploadFile(event) {
     const index = this.files.findIndex((x) => x.name === event.file.name);
     this.files.splice(index, 1);
+    this.fileDescriptions.splice(index, 1);
+    this.isReadyToSubmit();
   }
 
   myUploader(event) {
@@ -137,6 +144,8 @@ export class CmhFileUploaderComponent implements OnInit {
           fileModel.contentType = file.type;
           fileModel.description = null;
           ctrl.files.unshift(fileModel);
+          ctrl.fileDescriptions.unshift(false);
+          ctrl.isReadyToSubmit();
         };
       }
     }
@@ -155,6 +164,8 @@ export class CmhFileUploaderComponent implements OnInit {
     for (let file of this.selectedFiles) {
       if (this.files.findIndex((x) => x.fileId === file.fileId) === -1) {
         this.files.unshift(file);
+        this.fileDescriptions.unshift(true);
+        this.isReadyToSubmit();
       }
     }
     this.closeSelectModal();
@@ -164,11 +175,25 @@ export class CmhFileUploaderComponent implements OnInit {
     jQuery(`.file-list-${index}`).parsley().validate();
 
     if (jQuery(`.file-list-${index}`).parsley().isValid()) {
-      this.descriptionChange.emit();
+      this.fileDescriptions[index] = true;
+      this.isReadyToSubmit();
     }
   }
 
   selectAllFiles($event) {
     this.selectedFiles = this.selectAll ? this.uploadedFiles : [];
+  }
+
+  isReadyToSubmit() {
+    const valid = !this.files.some(
+      (file, index) =>
+        !file.fileId && (!file.description || !this.fileDescriptions[index])
+    );
+    this.onChangeFileStatus.emit(valid);
+  }
+
+  onChangeFileDescription(index) {
+    this.fileDescriptions[index] = false;
+    this.onChangeFileStatus.emit(false);
   }
 }

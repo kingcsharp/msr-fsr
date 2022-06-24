@@ -433,6 +433,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   saveInstructions() {
+    this.globals.showLoader(true);
     const request = new CreateWorkOrderMessageRequest({
       id: this.selectedColData.workOrderId,
       message: this.instructions,
@@ -448,6 +449,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
             date: moment().format("MMM DD, YYYY HH:mm"),
           });
           this.instructions = "";
+          this.getGridData(undefined);
         })
       );
   }

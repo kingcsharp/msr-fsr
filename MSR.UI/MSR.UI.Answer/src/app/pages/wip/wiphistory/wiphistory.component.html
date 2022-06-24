@@ -407,10 +407,39 @@
           >No messages</span
         >
       </div>
+      <div *ngIf="globals.user.isAnswerUser" class="col-12 mt-3">
+        <textarea
+          rows="6"
+          cols="150"
+          type="text"
+          id="instructions"
+          name="instructions"
+          [(ngModel)]="instructions"
+          data-validate="parsley"
+          data-parsley-trigger="change"
+          data-parsley-minlength="3"
+          data-parsley-required="true"
+          class="form-control input-transparent"
+          tooltip="Min length 3 characters"
+          placeholder="Add Instructions"
+          data-cy="instructions-input"
+        ></textarea>
+      </div>
     </div>
   </div>
   <p-footer>
     <div class="pull-right">
+      <button
+        *ngIf="globals.user.isAnswerUser"
+        type="submit"
+        [disabled]="!instructions"
+        (click)="saveInstructions()"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        role="button"
+        data-cy="wipcomponent-save-button"
+      >
+        Save
+      </button>
       <button
         type="button"
         (click)="closeDispositionDialog()"

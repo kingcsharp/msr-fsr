@@ -130,6 +130,7 @@
                       class="form-control"
                       name="fileDescription_{{ index }}"
                       [(ngModel)]="file.description"
+                      (change)="onChangeFileDescription(index)"
                       data-cy="file-description"
                       data-validate="parsley"
                       data-parsley-trigger="change"
@@ -145,7 +146,7 @@
                     <button
                       type="button"
                       class="btn btn-success width-100 mb-xs"
-                      [disabled]="!file.description"
+                      [disabled]="!file.description || fileDescriptions[index]"
                       (click)="saveFileDescription(index)"
                       role="button"
                       data-cy="btn-select"

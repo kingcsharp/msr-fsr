@@ -130,6 +130,7 @@ export class WipdetailsComponent implements OnInit {
   tagTypeOptions: Array<SelectItem>;
   enumProcedureStepType = ProcedureStepType;
   tagTypesValid: boolean = true;
+  filesReadyToSubmit: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -263,6 +264,8 @@ export class WipdetailsComponent implements OnInit {
           } else {
             this.productSegregationService.PartTitle += `, (Serial #: ${this.parentPart?.serialNumber}), ${this.parentPart?.part?.name}`;
           }
+
+          this.filesReadyToSubmit = false;
 
           this.globals.showLoader(false);
         })
@@ -508,6 +511,8 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskInProgress = workOrderTask;
     }
 
+    this.filesReadyToSubmit = false;
+
     this.getNCRParts();
   }
 
@@ -726,6 +731,10 @@ export class WipdetailsComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.getNCRTaskIds();
     this.showCarousel = true;
+  }
+
+  uploadFilesAndDocumentsReady(ready: boolean = false) {
+    this.filesReadyToSubmit = ready;
   }
 
   uploadFilesAndDocumentsForTask() {
