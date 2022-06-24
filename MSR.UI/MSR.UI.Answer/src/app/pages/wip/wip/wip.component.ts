@@ -13,6 +13,7 @@ import {
   EnumSegregationType,
   ReportModel,
   UpdateWorkOrderPriceRequest,
+  CreateWorkOrderMessageRequest,
 } from "../../../services/api.client.generated";
 import { environment as env } from "../../../../environments/environment";
 import { responseHandler } from "../../../utils/responseHandler";
@@ -48,6 +49,8 @@ export class WipComponent implements OnInit {
   adminOrManager: boolean = false;
   showDispositionDialog: boolean = false;
   selectedItem: any = null;
+  instructions: string;
+  currentEvent: any;
 
   constructor(
     public commonGrid: CommonGrid,
@@ -242,6 +245,9 @@ export class WipComponent implements OnInit {
   }
 
   getWorkOrders(event: LazyLoadEvent) {
+    if (event !== undefined) {
+      this.currentEvent = event;
+    }
     this.globals.showLoader(true);
     setTimeout(() => {
       // this.workOrderService.menu(0, 100, null, null, env.apiVersion)
@@ -250,7 +256,7 @@ export class WipComponent implements OnInit {
         this.workOrderService.menu,
         {},
         this.gridSettings,
-        event,
+        this.currentEvent,
         this.globals.functionDic
       )
         .pipe(take(1))
@@ -350,6 +356,7 @@ export class WipComponent implements OnInit {
   }
 
   viewDispositionHistory(model: any) {
+    this.instructions = "";
     this.selectedItem = model;
     this.selectedItem.workOrderMessages = _.sortBy(
       model.workOrderMessages,
@@ -368,5 +375,27 @@ export class WipComponent implements OnInit {
   closeDispositionDialog() {
     this.showDispositionDialog = false;
     this.selectedItem = null;
+  }
+
+  saveInstructions() {
+    this.globals.showLoader(true);
+    const request = new CreateWorkOrderMessageRequest({
+      id: this.selectedItem.id,
+      message: this.instructions,
+    });
+    this.workOrderService
+      .message(env.apiVersion, request)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.selectedItem.workOrderMessages.splice(0, 0, {
+            message: request.message,
+            name: this.globals.getCurrentUser().fullName,
+            date: moment().format("MMM DD, YYYY HH:mm"),
+          });
+          this.instructions = "";
+          this.getWorkOrders(undefined);
+        })
+      );
   }
 }

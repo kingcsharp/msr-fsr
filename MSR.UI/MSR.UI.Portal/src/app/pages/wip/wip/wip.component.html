@@ -464,7 +464,7 @@
           >No messages</span
         >
       </div>
-      <div class="col-12 mt-3">
+      <div *ngIf="!globals.user.isAnswerUser" class="col-12 mt-3">
         <textarea
           rows="6"
           cols="150"
@@ -487,6 +487,7 @@
   <p-footer>
     <div class="pull-right">
       <button
+        *ngIf="!globals.user.isAnswerUser"
         type="submit"
         [disabled]="!instructions"
         (click)="saveInstructions()"

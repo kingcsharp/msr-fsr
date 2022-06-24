@@ -12,6 +12,7 @@ import {
   EnumSegregationType,
   WorkOrderHistoryView,
   ReportModel,
+  CreateWorkOrderMessageRequest,
 } from "../../../services/api.client.generated";
 import { Router } from "@angular/router";
 import { environment as env } from "../../../../environments/environment";
@@ -45,6 +46,8 @@ export class WiphistoryComponent implements OnInit {
   reportPartsModel: ReportModel;
   showDispositionDialog: boolean = false;
   selectedItem: any = null;
+  instructions: string;
+  currentEvent: any;
 
   constructor(
     public commonGrid: CommonGrid,
@@ -197,12 +200,15 @@ export class WiphistoryComponent implements OnInit {
   }
 
   getWorkOrdersHistory(event: LazyLoadEvent) {
+    if (event !== undefined) {
+      this.currentEvent = event;
+    }
     this.globals.showLoader(true);
     setTimeout(() => {
       callFunctionWithFilters(
         this.workOrderService,
         this.workOrderService.history,
-        event,
+        this.currentEvent,
         this.globals.functionDic
       )
         .pipe(take(1))
@@ -220,6 +226,7 @@ export class WiphistoryComponent implements OnInit {
   }
 
   viewDispositionHistory(model: any) {
+    this.instructions = "";
     this.selectedItem = model;
     this.selectedItem.workOrderMessages = _.sortBy(
       model.workOrderMessages,
@@ -238,5 +245,27 @@ export class WiphistoryComponent implements OnInit {
   closeDispositionDialog() {
     this.showDispositionDialog = false;
     this.selectedItem = null;
+  }
+
+  saveInstructions() {
+    this.globals.showLoader(true);
+    const request = new CreateWorkOrderMessageRequest({
+      id: this.selectedItem.id,
+      message: this.instructions,
+    });
+    this.workOrderService
+      .message(env.apiVersion, request)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.selectedItem.workOrderMessages.splice(0, 0, {
+            message: request.message,
+            name: this.globals.getCurrentUser().fullName,
+            date: moment().format("MMM DD, YYYY HH:mm"),
+          });
+          this.instructions = "";
+          this.getWorkOrdersHistory(undefined);
+        })
+      );
   }
 }
