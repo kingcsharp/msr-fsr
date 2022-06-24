@@ -243,7 +243,7 @@
 
 <ng-template #disposition let-colsDataAndSettings="colsDataAndSettings">
   <button
-    *ngIf="colsDataAndSettings.colData.customerLastRespondent"
+    *ngIf="!colsDataAndSettings.colData.customerLastRespondent"
     type="button"
     class="btn btn-danger width-85"
     (click)="viewDispositionHistory(colsDataAndSettings.colData)"
@@ -252,9 +252,9 @@
     Review
   </button>
   <button
-    *ngIf="!colsDataAndSettings.colData.customerLastRespondent"
+    *ngIf="colsDataAndSettings.colData.customerLastRespondent"
     type="button"
-    class="btn btn-warning width-85"
+    class="btn btn-success width-85"
     (click)="viewDispositionHistory(colsDataAndSettings.colData)"
   >
     <i class="fa fa-solid fa-eye"></i>
