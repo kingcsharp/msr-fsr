@@ -1861,7 +1861,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
                 throw new DomainException(
-                    $"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {CurrentUser.GetId()}",
+                    $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
                     DomainError.BadRequest);
             }
 
@@ -1873,13 +1873,13 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             WorkOrderModel ret;
-            var workorder = _mapper.Map(command, current);
-            _unitOfWork.WorkOrders.Update(workorder);
+            current.Price = command.Price;
+            _unitOfWork.WorkOrders.Update(current);
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
+            await _unitOfWork.LogApprovalTransaction(current, current.Id);
 
-            ret = _mapper.Map<WorkOrderModel>(workorder);
+            ret = _mapper.Map<WorkOrderModel>(current);
 
             return ret;
         }
