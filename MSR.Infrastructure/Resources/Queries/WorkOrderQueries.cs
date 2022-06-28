@@ -147,7 +147,8 @@ namespace MSR.Infrastructure.Resources.Queries
                 SerialNumber = view.SerialNumber,
                 StartDate = view.StartDate,
                 Status = view.Status,
-                Disposition = view.Disposition
+                Disposition = view.Disposition,
+                CustomerLastRespondent = view.CustomerLastRespondent
             }).ToList(), pagedData.totalRows);
         }
 
