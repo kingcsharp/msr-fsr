@@ -44,4 +44,23 @@ export class PartLabelRollComponent implements OnInit {
         })
       );
   }
+
+  getWidth(value) {
+    let width = 2;
+
+    if (!value) return width;
+    if (value.length <= 5) {
+      width = 5;
+    } else if (value.length <= 10) {
+      width = 4;
+    } else if (value.length <= 15) {
+      width = 3;
+    } else if (value.length <= 20) {
+      width = 2;
+    } else if (value.length > 20) {
+      width = 1;
+    }
+
+    return width;
+  }
 }

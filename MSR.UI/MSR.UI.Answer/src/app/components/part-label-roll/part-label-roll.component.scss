@@ -22,7 +22,7 @@
 }
 table.tight {
   font: small Arial, Helvetica, sans-serif !important;
-  font-size: 12px !important;
+  font-size: 11px !important;
   table-layout: fixed;
   width: 100%;
 }
@@ -35,7 +35,7 @@ table.tight td {
   padding: 4px;
 }
 .roll-label {
-  height: 4.6in;
+  height: 4in;
   width: 4in;
   margin-top: 0.125in;
   margin-bottom: 0.125in;
@@ -67,6 +67,6 @@ p {
 .data-matrix-label {
   text-align: right !important;
   img {
-    width: 90% !important;
+    width: 120px !important;
   }
 }
