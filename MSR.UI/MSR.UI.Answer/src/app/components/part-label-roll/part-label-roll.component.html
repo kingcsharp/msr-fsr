@@ -3,7 +3,7 @@
     <tbody>
       <tr>
         <td width="60%">
-          <div class="img-responsive" style="margin-top: 16px; width: 185px">
+          <div class="img-responsive" style="margin-top: 5px; width: 185px">
             <img src="assets/img/msr-label-logo.png" alt="Logo" />
           </div>
           <p class="date">
@@ -30,7 +30,10 @@
               [bc-background]="'none'"
               [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"
               [bc-display-value]="false"
-              [bc-height]="20"
+              [bc-width]="
+                getWidth(WorkOrder.purchase?.purchaseOrder?.referencePO)
+              "
+              [bc-height]="30"
             >
             </ngx-barcode>
           </div>
@@ -69,7 +72,8 @@
                     [bc-background]="'none'"
                     [bc-value]="workOrderPart?.part?.partNumber"
                     [bc-display-value]="false"
-                    [bc-height]="20"
+                    [bc-width]="getWidth(workOrderPart?.part?.partNumber)"
+                    [bc-height]="30"
                   >
                   </ngx-barcode>
                 </td>
@@ -88,7 +92,8 @@
                       [bc-background]="'none'"
                       [bc-value]="workOrderPart?.part?.oemPartNumber"
                       [bc-display-value]="false"
-                      [bc-height]="20"
+                      [bc-width]="getWidth(wworkOrderPart?.part?.oemPartNumber)"
+                      [bc-height]="30"
                     >
                     </ngx-barcode>
                   </span>
@@ -102,7 +107,7 @@
         </td>
       </tr>
       <tr>
-        <td width="40%">
+        <td width="40%" style="vertical-align: top">
           <div class="coded">
             Serial #: <strong>{{ workOrderPart.serialNumber }}</strong
             ><br />
@@ -111,7 +116,8 @@
               [bc-background]="'none'"
               [bc-value]="workOrderPart.serialNumber"
               [bc-display-value]="false"
-              [bc-height]="20"
+              [bc-width]="getWidth(workOrderPart.serialNumber)"
+              [bc-height]="30"
             >
             </ngx-barcode>
             This part processed
