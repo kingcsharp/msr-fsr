@@ -11,5 +11,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int WorkOrderTaskId { get; set; }
         public int WorkOrderPartId { get; set; }
         public string TagType { get; set; }
+        public string Detail { get; set; }
     }
 }

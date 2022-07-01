@@ -154,6 +154,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     {
                         workOrderPart.NCNumber = associatedWorkOrderTask.NCNumber;
                     }
+                    workOrderPart.Detail = workOrderPartMappedPart.Detail;
                 }
 
                 workOrderPart.NCRHistoryItems = ncrHistoryItems?.Where(i => i.PartId == workOrderPart.PartId 

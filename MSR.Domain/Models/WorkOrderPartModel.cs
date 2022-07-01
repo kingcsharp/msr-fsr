@@ -22,5 +22,6 @@ namespace MSR.Domain.Models
         public string TagType { get; set; }
         public string NCNumber { get; set; }
         public byte[] DataMatrix { get; set; }
+        public string Detail { get; set; }
     }
 }
