@@ -60,8 +60,8 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<PurchaseModel>))]
         public async Task<IActionResult> CreatePurchase([FromBody, Required] CreatePurchaseRequest request)
         {
-            var createOnePurchase = request.ToCreateOnePurchaseCommand();
-            var ret = await _dispatcher.DispatchAsync(createOnePurchase);
+            var createPurchase = request.ToCreatePurchaseCommand();
+            var ret = await _dispatcher.DispatchAsync(createPurchase);
             return ret.ToOkObjectResponse<PurchaseModel>("Purchase has been successfully created.");
         }
 
