@@ -11,6 +11,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public Purchase()
         {
             WorkOrders = new HashSet<WorkOrder>();
+            PurchaseProducts = new HashSet<PurchaseProductMap>();
         }
 
         public int PurchaseOrderId { get; set; }
@@ -53,7 +54,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("PurchaseOrderId")]
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 
-        [ForeignKey("PurchaseOrderProductId")]
-        public virtual PurchaseOrderProduct PurchaseOrderProduct { get; set; }
+        public virtual ICollection<PurchaseProductMap> PurchaseProducts { get; set; }
     }
 }

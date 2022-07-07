@@ -849,7 +849,7 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static CreatePurchase ToCreateOnePurchaseCommand(this CreatePurchaseRequest request) =>
+        public static CreatePurchase ToCreatePurchaseCommand(this CreatePurchaseRequest request) =>
             AutoMapperHelper.Mapper.Map<CreatePurchase>(request);
 
         /// <summary>

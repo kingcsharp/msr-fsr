@@ -101,6 +101,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<NCRHistoryItem> NCRHistory { get; }
         IRepository<WorkOrderPartNCRMapItem> WorkOrderPartNCRMap { get; }
         IRepository<WorkOrderPartDataMatrixView> WorkOrderPartDataMatrixViews { get; }
+        IRepository<PurchaseProductMap> PurchaseProductMaps { get; }
 
         AnswerContext Context { get; }
         void SaveChanges();
