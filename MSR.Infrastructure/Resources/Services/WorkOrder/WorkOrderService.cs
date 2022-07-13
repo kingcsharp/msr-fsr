@@ -1032,7 +1032,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             {
                 foreach(var part in partsToUpdate)
                 {
-                    var incomingPart = command.MappedWorkOrderParts.FirstOrDefault(i => part.WorkOrderPartId == i.Id && part.TagType != i.TagType);
+                    var incomingPart = command.MappedWorkOrderParts.FirstOrDefault(i => part.WorkOrderPartId == i.Id && (part.TagType != i.TagType || part.Detail != i.Detail));
                     if(incomingPart == null)
                     {
                         continue;
