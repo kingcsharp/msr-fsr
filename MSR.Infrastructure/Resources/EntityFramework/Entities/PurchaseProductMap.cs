@@ -9,8 +9,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     {
         [ForeignKey("PurchaseId")]
         public virtual Purchase Purchase { get; set; }
+        public int PurchaseId { get; set; }
 
         [ForeignKey("PurchaseOrderProductId")]
         public virtual PurchaseOrderProduct PurchaseOrderProduct { get; set; }
+        public int PurchaseOrderProductId { get; set; }
     }
 }
