@@ -55,6 +55,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
+        [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<ProductModel>>))]
         public async Task<IActionResult> GetProduct([FromQuery] GetProductRequest filters)
         {
@@ -92,6 +93,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ProductModel>(
                 DetermineResponseMessage<ProductModel>(ret, "Update", "Product")
             );
+        }
+
+        [HttpPost("ByWorkOrder")]
+        public async Task<IActionResult> GetProductsForWorkOrder(int workOrderId)
+        {
         }
     }
 }

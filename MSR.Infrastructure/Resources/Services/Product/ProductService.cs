@@ -300,5 +300,22 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 }
             }
         }
+
+        public async Task<ICollection<ProductModel>> GetProductsByWorkOrder(int workOrderId)
+        {
+            var workOrder = _unitOfWork.WorkOrders.FirstOrDefault(false, i => i.Id == workOrderId);
+            if (workOrder == null) 
+            {
+                throw new DomainException($"WorkOrder with Id {workOrderId} not found", DomainError.NotFound);
+            }
+            var productIds = await _unitOfWork.PurchaseProductMaps.Query().Where(i => i.PurchaseId == workOrder.PurchaseId).Select(i => i.PurchaseOrderProduct.ProductId).ToListAsync();
+            if (productIds == null || !productIds.Any()) 
+            {
+                return new List<ProductModel>();
+            }
+            var products = await _unitOfWork.Products.Query().Where(i => productIds.Contains(i.Id)).ToListAsync();
+
+            return products.Select(i => _mapper.Map<ProductModel>(i)).ToList();
+        }
     }
 }
