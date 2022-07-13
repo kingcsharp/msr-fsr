@@ -961,7 +961,7 @@ export class WipdetailsComponent implements OnInit {
             partNumber: part.part?.partNumber || "",
             selected: !!mappedWorkOrderParts,
             tagType: part?.tagType || null,
-            detail: part?.detail || "",
+            detail: part?.detail || null,
           };
         })
       : [];

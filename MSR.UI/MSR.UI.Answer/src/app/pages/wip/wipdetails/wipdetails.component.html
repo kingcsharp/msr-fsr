@@ -504,6 +504,11 @@
                       </td>
                       <td class="history-td">
                         <input
+                          *ngIf="
+                            workOrderTaskToView.id ===
+                              workOrderTaskInProgress.id &&
+                            ncrParts[index].selected
+                          "
                           type="text"
                           id="detail-{{ index }}"
                           [(ngModel)]="ncrParts[index].detail"
@@ -511,6 +516,14 @@
                           maxlength="50"
                           tooltip="Detail"
                         />
+                        <div
+                          *ngIf="
+                            workOrderTaskToView.id !==
+                            workOrderTaskInProgress.id
+                          "
+                        >
+                          {{ ncrParts[index].detail }}
+                        </div>
                       </td>
                     </tr>
                   </tbody>
