@@ -422,7 +422,8 @@
                     <tr>
                       <th class="part-td">Part</th>
                       <th class="serial-td">Serial Number</th>
-                      <th class="history-td">Tag Type</th>
+                      <th class="tagtype-td">Tag Type</th>
+                      <th class="history-td">Detail</th>
                     </tr>
                   </thead>
                   <tbody
@@ -500,6 +501,16 @@
                         >
                           {{ ncrParts[index].tagType }}
                         </div>
+                      </td>
+                      <td class="history-td">
+                        <input
+                          type="text"
+                          id="detail-{{ index }}"
+                          [(ngModel)]="ncrParts[index].detail"
+                          class="form-control input-transparent"
+                          maxlength="50"
+                          tooltip="Detail"
+                        />
                       </td>
                     </tr>
                   </tbody>
