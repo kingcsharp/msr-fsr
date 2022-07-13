@@ -17570,6 +17570,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     tagType?: string | undefined;
     ncNumber?: string | undefined;
     dataMatrix?: string | undefined;
+    detail?: string | undefined;
 
     constructor(data?: IWorkOrderPartModel) {
         if (data) {
@@ -17607,6 +17608,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             this.tagType = _data["tagType"];
             this.ncNumber = _data["ncNumber"];
             this.dataMatrix = _data["dataMatrix"];
+            this.detail = _data["detail"];
         }
     }
 
@@ -17644,6 +17646,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         data["tagType"] = this.tagType;
         data["ncNumber"] = this.ncNumber;
         data["dataMatrix"] = this.dataMatrix;
+        data["detail"] = this.detail;
         return data; 
     }
 }
@@ -17666,6 +17669,7 @@ export interface IWorkOrderPartModel {
     tagType?: string | undefined;
     ncNumber?: string | undefined;
     dataMatrix?: string | undefined;
+    detail?: string | undefined;
 }
 
 export class NCRHistoryItemModel implements INCRHistoryItemModel {
@@ -18016,6 +18020,7 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
 export class MappedWorkOrderPart implements IMappedWorkOrderPart {
     id?: number;
     tagType?: string | undefined;
+    detail?: string | undefined;
 
     constructor(data?: IMappedWorkOrderPart) {
         if (data) {
@@ -18030,6 +18035,7 @@ export class MappedWorkOrderPart implements IMappedWorkOrderPart {
         if (_data) {
             this.id = _data["id"];
             this.tagType = _data["tagType"];
+            this.detail = _data["detail"];
         }
     }
 
@@ -18044,6 +18050,7 @@ export class MappedWorkOrderPart implements IMappedWorkOrderPart {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tagType"] = this.tagType;
+        data["detail"] = this.detail;
         return data; 
     }
 }
@@ -18051,6 +18058,7 @@ export class MappedWorkOrderPart implements IMappedWorkOrderPart {
 export interface IMappedWorkOrderPart {
     id?: number;
     tagType?: string | undefined;
+    detail?: string | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
@@ -23421,6 +23429,7 @@ export interface IUpdateWorkOrderTaskRequest {
 export class MappedWorkOrderPart2 implements IMappedWorkOrderPart2 {
     id?: number;
     tagType?: string | undefined;
+    detail?: string | undefined;
 
     constructor(data?: IMappedWorkOrderPart2) {
         if (data) {
@@ -23435,6 +23444,7 @@ export class MappedWorkOrderPart2 implements IMappedWorkOrderPart2 {
         if (_data) {
             this.id = _data["id"];
             this.tagType = _data["tagType"];
+            this.detail = _data["detail"];
         }
     }
 
@@ -23449,6 +23459,7 @@ export class MappedWorkOrderPart2 implements IMappedWorkOrderPart2 {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tagType"] = this.tagType;
+        data["detail"] = this.detail;
         return data; 
     }
 }
@@ -23456,6 +23467,7 @@ export class MappedWorkOrderPart2 implements IMappedWorkOrderPart2 {
 export interface IMappedWorkOrderPart2 {
     id?: number;
     tagType?: string | undefined;
+    detail?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
