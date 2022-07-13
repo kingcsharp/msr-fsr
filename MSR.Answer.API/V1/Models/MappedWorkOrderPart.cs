@@ -9,5 +9,6 @@ namespace MSR.Answer.API.V1.Models
     {
         public int Id { get; set; }
         public string TagType { get; set; }
+        public string Detail { get; set; }
     }
 }

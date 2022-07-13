@@ -8,5 +8,6 @@ namespace MSR.Domain.Models
     {
         public int Id { get; set; }
         public string TagType { get; set; }
+        public string Detail { get; set; }
     }
 }

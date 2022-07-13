@@ -1010,8 +1010,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                         CreatedBy = CurrentUser.GetId(),
                         WorkOrderPartId = partId,
                         WorkOrderTaskId = command.Id,
-                        TagType = command?.MappedWorkOrderParts?.FirstOrDefault(i => i.Id == partId)?.TagType
-
+                        TagType = command?.MappedWorkOrderParts?.FirstOrDefault(i => i.Id == partId)?.TagType,
+                        Detail = command?.MappedWorkOrderParts?.FirstOrDefault(i => i.Id == partId)?.Detail
                     };
 
                     await _unitOfWork.WorkOrderPartNCRMap.AddAsync(mappedItem);
@@ -1039,6 +1039,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     }
 
                     part.TagType = incomingPart.TagType;
+                    part.Detail = incomingPart.Detail;
                     _unitOfWork.WorkOrderPartNCRMap.Update(part);
                 }
                 await _unitOfWork.SaveChangesAsync();
@@ -1160,7 +1161,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             workOrderTaskModel.MappedWorkOrderParts = mappedWorkOrderNCRMaps.Select(i => new MappedWorkOrderPart()
             {
                 Id = i.WorkOrderPartId,
-                TagType = i.TagType
+                TagType = i.TagType,
+                Detail = i.Detail
             }).ToList();
             // Update the work order datetimes, if needed
             // IMPORTANT: the return object cannot be remapped after this
