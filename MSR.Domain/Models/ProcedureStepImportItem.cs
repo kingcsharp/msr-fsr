@@ -19,5 +19,6 @@ namespace MSR.Domain.Models
         public Single? Utilization { get; set; }
         public int? UsefulLife { get; set; }
         public string RoleIds { get; set; }
+        public List<Role> Roles { get; set; } = new List<Role>();
     }
 }
