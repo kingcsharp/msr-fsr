@@ -214,13 +214,20 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 createWorkOrderDto.ScheduledStartDate = DateTime.UtcNow;
             }
 
+            var purchase = _unitOfWork.Purchases.FirstOrDefault(false, i => i.Id == createWorkOrderDto.PurchaseId);
+
+
             var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(createWorkOrderDto);
+
+            if(purchase != null)
+            {
+                workOrderEntity.Price = purchase.PurchasePrice * purchase.Qty;
+            }
 
             var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
             var procedureSteps = await _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id)).ToListAsync();
             var procedureStepMonitors = await _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId)).ToListAsync();
             var totalLaborTime = (decimal)0.0;
-
             workOrderEntity.HasMonitor = workOrderEntity.WorkOrderTasks.Any(i => i.WorkOrderTaskMonitors.Any());
             workOrderEntity.HasSubParts = createWorkOrderDto.WorkOrderParts.Any(i => i.Children.Any());
             foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
