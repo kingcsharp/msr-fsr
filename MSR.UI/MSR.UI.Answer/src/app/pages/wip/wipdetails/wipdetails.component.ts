@@ -783,6 +783,7 @@ export class WipdetailsComponent implements OnInit {
           task.ncNumber === this.workOrderTaskToView.ncNumber
       );
     }
+
     let updatedWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
       assignedUserId: workOrderTask.assignedTo,
       status: workOrderTask.status.name,
@@ -797,6 +798,7 @@ export class WipdetailsComponent implements OnInit {
           return new MappedWorkOrderPart({
             id: part.id,
             tagType: part.tagType,
+            detail: part.detail,
           } as IMappedWorkOrderPart);
         }),
     } as IUpdateWorkOrderTaskRequest);
@@ -952,12 +954,14 @@ export class WipdetailsComponent implements OnInit {
             workOrderTask.mappedWorkOrderParts,
             (s) => s.id === part.id
           );
+
           return {
             id: part.id,
             serialNumber: part.serialNumber,
             partNumber: part.part?.partNumber || "",
             selected: !!mappedWorkOrderParts,
-            tagType: mappedWorkOrderParts?.tagType || null,
+            tagType: part?.tagType || null,
+            detail: part?.detail || null,
           };
         })
       : [];

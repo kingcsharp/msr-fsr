@@ -1,6 +1,6 @@
 .ui-tabview .ui-tabview-panels {
   background-color: #ffffff;
-  padding: .5em;
+  padding: 0.5em;
   border: 1px solid #c8c8c8;
   color: #333333;
 }
@@ -14,163 +14,167 @@
 }
 
 slide {
-    width: 200px !important;
-    height: 80px !important;
-    border: solid 1px #FFFFFF;
-    cursor: pointer;
+  width: 200px !important;
+  height: 80px !important;
+  border: solid 1px #ffffff;
+  cursor: pointer;
 }
 
-a.carousel-control{
-    width:3% !important;
+a.carousel-control {
+  width: 3% !important;
 }
-.card{
-    min-width: 500px;
-    min-height: 300px;
+.card {
+  min-width: 500px;
+  min-height: 300px;
 }
 
 .card.ncr-parts {
   min-width: 350px !important;
 }
 
-.card-header{
-    background-color: #116fbf;
+.card-header {
+  background-color: #116fbf;
 }
 
-.card-body{
-    background-color: #FFFFFF;
-    color: #000000;
+.card-body {
+  background-color: #ffffff;
+  color: #000000;
 }
 
-.ui-tabview{
-    padding: 0px !important;
+.ui-tabview {
+  padding: 0px !important;
 }
 
 .description-container > .row > div {
-    border-width: 1px 1px 0px 1px;
-    border-color: #eaeaea;
-    border-style: solid;
+  border-width: 1px 1px 0px 1px;
+  border-color: #eaeaea;
+  border-style: solid;
 }
 
-.description-container > .row:last-child > div{
-    border-width: 1px 1px 1px 1px;
-    border-color: #eaeaea;
-    border-style: solid;
+.description-container > .row:last-child > div {
+  border-width: 1px 1px 1px 1px;
+  border-color: #eaeaea;
+  border-style: solid;
 }
 
-.table > .thead-dark > tr > th{
-    color: #fff;
-    background-color: #353D48;
-    border-color: #32383e;
+.table > .thead-dark > tr > th {
+  color: #fff;
+  background-color: #353d48;
+  border-color: #32383e;
 }
 
 .part-td {
-  width: 20%
+  width: 20%;
 }
 .count-td {
-  width:10%;
+  width: 10%;
   margin: 0 auto;
 }
 .serial-td {
-  width:25%
+  width: 25%;
 }
 .serial-number {
   width: 200px;
   max-width: 200px;
 }
 .history-td {
-  width:35%
+  width: 35%;
+}
+.tagtype-td {
+  width: 20%;
 }
 
-ol{
-    display: block;
-    list-style-type: decimal;
-    padding-inline-start: 40px;
+ol {
+  display: block;
+  list-style-type: decimal;
+  padding-inline-start: 40px;
 }
 
-.report.ui-dialog .ui-dialog-content{
-    min-height: 300px;
+.report.ui-dialog .ui-dialog-content {
+  min-height: 300px;
 }
 
 .content-tabs > .ui-tabview-panel {
-  min-height:30vh;
-  overflow-y:auto
+  min-height: 30vh;
+  overflow-y: auto;
 }
 
-
 .carousel-inner {
-
   margin-left: 15px;
 }
 
-.workordertask-title{
+.workordertask-title {
   background-color: #1d232a !important;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
   font-weight: bold;
 }
 
-.workordertask-steptext{
+.workordertask-steptext {
   background-color: white !important;
   color: black !important;
 }
 
+p-dropdown .ui-dropdown {
+  width: 100%;
+}
+
 @media print {
-    .workreport-control{
-        display: none;
-    }
-    .printotherreport-dropdown{
-        display:none;
-    }
-    .report.ui-dialog{
-        max-width: none;
-        width: 100% !important;
-        height:100% !important;
-        max-height: unset !important;
-    }
-    .report.ui-dialog .ui-dialog-titlebar {
-        display: none !important;
-    }
-    .report.ui-dialog .ui-dialog-content{
-        background-color: transparent;
-        border:none;
-        height: 100% !important;
-        overflow: visible;
-        padding: 0px;
-    }
-    .report.ui-dialog .ui-dialog-footer{
-        display: none !important;
-    }
+  .workreport-control {
+    display: none;
+  }
+  .printotherreport-dropdown {
+    display: none;
+  }
+  .report.ui-dialog {
+    max-width: none;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: unset !important;
+  }
+  .report.ui-dialog .ui-dialog-titlebar {
+    display: none !important;
+  }
+  .report.ui-dialog .ui-dialog-content {
+    background-color: transparent;
+    border: none;
+    height: 100% !important;
+    overflow: visible;
+    padding: 0px;
+  }
+  .report.ui-dialog .ui-dialog-footer {
+    display: none !important;
+  }
 
-    .ui-dialog-mask{
-      position: absolute;
-    }
+  .ui-dialog-mask {
+    position: absolute;
+  }
 
-    body .ui-dialog-mask{
-      background-color: unset !important;
-    }
+  body .ui-dialog-mask {
+    background-color: unset !important;
+  }
 
-    #sidebar {
-      display: none !important;
-    }
+  #sidebar {
+    display: none !important;
+  }
 
-    app-wipdetails{
-      display: none !important;
-    }
+  app-wipdetails {
+    display: none !important;
+  }
 
-    body{
-      background: none;
-    }
+  body {
+    background: none;
+  }
 
-    footer.content-footer{
-      display: none !important;
-    }
+  footer.content-footer {
+    display: none !important;
+  }
 
-    .workordertask-container{
-      border: 1px solid #000000;
-    }
-
+  .workordertask-container {
+    border: 1px solid #000000;
+  }
 }
 .carousel-caption {
-  color:#000
+  color: #000;
 }
 
 .carousel .item {
@@ -178,25 +182,25 @@ ol{
 }
 .carousel-step-title {
   font-size: 14px;
-  font-weight:500;
+  font-weight: 500;
   margin: 0 auto;
   display: table-cell;
   vertical-align: middle;
   text-align: center;
 }
 .step-complete {
-  color:#000;
-  background-color: #cfc!important;
+  color: #000;
+  background-color: #cfc !important;
 }
 .step-waiting {
-  color:#000;
-  background-color: #ffc!important;
+  color: #000;
+  background-color: #ffc !important;
 }
 .wip-details-bottom {
-  min-height:30vh;
-  max-height:30vh;
-  height:30vh;
-  overflow-y:auto
+  min-height: 30vh;
+  max-height: 30vh;
+  height: 30vh;
+  overflow-y: auto;
 }
 .carousel-inner {
   position: relative;
@@ -208,52 +212,53 @@ ol{
   min-height: 150px;
 }
 .ui-tabview-top-right {
-  min-height:85px;
-  height:85px;
-  overflow-y:auto;
+  min-height: 85px;
+  height: 85px;
+  overflow-y: auto;
 }
 .ui-tabview-top-panel {
-  font-family:'Roboto Condensed';
+  font-family: "Roboto Condensed";
   font-size: 1rem;
-  font-weight:700;
+  font-weight: 700;
 }
 
-.carousel-control.left, .carousel-control.right {
-  background: rgba(0,0,0,.25);
+.carousel-control.left,
+.carousel-control.right {
+  background: rgba(0, 0, 0, 0.25);
 }
 .carousel-control.left {
   left: -40px;
 }
-.carousel-control.right{
+.carousel-control.right {
   right: 9px;
 }
 /* updates for tablets */
 
-.wip-detail-header{
+.wip-detail-header {
   min-height: 45px;
 }
 
 @media (max-width: 1024px) {
   .wip-detail-header h1 {
-    font-size:1.5rem
+    font-size: 1.5rem;
   }
   .wip-detail-top {
     min-height: 150px;
   }
   .ui-tabview-top-right {
-    min-height:85px;
-    height:85px;
-    overflow-y:auto;
+    min-height: 85px;
+    height: 85px;
+    overflow-y: auto;
   }
   .ui-tabview-top-panel {
-    font-family:'Roboto Condensed';
-    font-size: .8rem;
-    font-weight:700;
+    font-family: "Roboto Condensed";
+    font-size: 0.8rem;
+    font-weight: 700;
   }
   .carousel-control.left {
     left: -40px;
   }
-  .carousel-control.right{
+  .carousel-control.right {
     right: 9px;
   }
   .carousel-inner {
@@ -263,30 +268,30 @@ ol{
     margin-left: -12px;
   }
   .content .content-footer {
-    margin-bottom: 10px
+    margin-bottom: 10px;
   }
 }
 
-.wip-controller{
+.wip-controller {
   min-height: 50px;
 }
 
-.step-viewed{
+.step-viewed {
   border: 2px solid #000000;
 }
 
-.ncr-badge{
+.ncr-badge {
   position: relative;
   top: 1.5em;
   cursor: pointer;
 }
 
-.tab-area{
-  margin-right:-25px;
-  padding-right:12px;
+.tab-area {
+  margin-right: -25px;
+  padding-right: 12px;
 }
 
-.tab-area-withncr{
+.tab-area-withncr {
   margin-top: -1.5em;
 }
 

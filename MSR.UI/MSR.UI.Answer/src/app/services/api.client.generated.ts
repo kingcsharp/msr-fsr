@@ -699,15 +699,15 @@ export class DocumentService {
 
     /**
      * Gets a list of Documents or a single Document matching the Id.
-     * @param id (optional) 
-     * @param name (optional) 
-     * @param revision (optional) 
-     * @param lastUpdatedOn (optional) 
-     * @param lastUpdatedFullName (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param id (optional)
+     * @param name (optional)
+     * @param revision (optional)
+     * @param lastUpdatedOn (optional)
+     * @param lastUpdatedFullName (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     documentGet(id: number | null | undefined, name: string | null | undefined, revision: number | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedFullName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfDocumentView> {
         let url_ = this.baseUrl + "/v{version}/Document?";
@@ -953,7 +953,7 @@ export class DocumentService {
 
     /**
      * Gets list of files from a folder
-     * @param folder (optional) 
+     * @param folder (optional)
      */
     archive(folder: EnumAwsFolders | undefined, version: string): Observable<AuditActionResultOfICollectionOfArchiveDocumentView> {
         let url_ = this.baseUrl + "/v{version}/Document/Archive?";
@@ -1024,21 +1024,21 @@ export class EquipmentMaintenanceService {
 
     /**
      * Gets EM/PM items. Filter the item using Id.
-     * @param id (optional) 
-     * @param locationName (optional) 
-     * @param createdOn (optional) 
-     * @param createdFullName (optional) 
-     * @param assignedToFullName (optional) 
-     * @param troubleState (optional) 
-     * @param maintenanceTask (optional) 
-     * @param pemLastCompletedDate (optional) 
-     * @param frequencyField (optional) 
-     * @param comments (optional) 
-     * @param statusName (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param id (optional)
+     * @param locationName (optional)
+     * @param createdOn (optional)
+     * @param createdFullName (optional)
+     * @param assignedToFullName (optional)
+     * @param troubleState (optional)
+     * @param maintenanceTask (optional)
+     * @param pemLastCompletedDate (optional)
+     * @param frequencyField (optional)
+     * @param comments (optional)
+     * @param statusName (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     equipmentMaintenanceGet(id: number | null | undefined, locationName: string | null | undefined, createdOn: Date | null | undefined, createdFullName: string | null | undefined, assignedToFullName: string | null | undefined, troubleState: boolean | null | undefined, maintenanceTask: string | null | undefined, pemLastCompletedDate: Date | null | undefined, frequencyField: number | null | undefined, comments: string | null | undefined, statusName: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
         let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance?";
@@ -1302,9 +1302,9 @@ export class FileService {
 
     /**
      * GetFiles
-     * @param entityName (optional) 
-     * @param entityId (optional) 
-     * @param fileId (optional) 
+     * @param entityName (optional)
+     * @param entityId (optional)
+     * @param fileId (optional)
      */
     fileGet(entityName: string | null | undefined, entityId: number | null | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfFileModel> {
         let url_ = this.baseUrl + "/v{version}/File?";
@@ -1423,9 +1423,9 @@ export class FileService {
 
     /**
      * Detach a file from an entity.
-     * @param entityName (optional) 
-     * @param entityId (optional) 
-     * @param fileId (optional) 
+     * @param entityName (optional)
+     * @param entityId (optional)
+     * @param fileId (optional)
      */
     fileDelete(entityName: string | null | undefined, entityId: number | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/File?";
@@ -2980,22 +2980,22 @@ export class PartService {
 
     /**
      * Get part by Id
-     * @param id (optional) 
-     * @param name (optional) 
-     * @param segregationType (optional) 
-     * @param partNumber (optional) 
-     * @param oemPartNumber (optional) 
-     * @param isKit (optional) 
-     * @param isActive (optional) 
-     * @param maximumCycles (optional) 
-     * @param createdOn (optional) 
-     * @param createdByName (optional) 
-     * @param lastUpdatedOn (optional) 
-     * @param lastUpdatedByName (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param id (optional)
+     * @param name (optional)
+     * @param segregationType (optional)
+     * @param partNumber (optional)
+     * @param oemPartNumber (optional)
+     * @param isKit (optional)
+     * @param isActive (optional)
+     * @param maximumCycles (optional)
+     * @param createdOn (optional)
+     * @param createdByName (optional)
+     * @param lastUpdatedOn (optional)
+     * @param lastUpdatedByName (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     partGet(id: number | null | undefined, name: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, partNumber: string | null | undefined, oemPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
@@ -3325,20 +3325,20 @@ export class ProcedureService {
 
     /**
      * Get one of all Procedures
-     * @param id (optional) 
-     * @param name (optional) 
-     * @param procedureTypeName (optional) 
-     * @param duration (optional) 
-     * @param durationType (optional) 
-     * @param revision (optional) 
-     * @param createdFullName (optional) 
-     * @param createdOn (optional) 
-     * @param lastUpdatedFullName (optional) 
-     * @param lastUpdatedOn (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param id (optional)
+     * @param name (optional)
+     * @param procedureTypeName (optional)
+     * @param duration (optional)
+     * @param durationType (optional)
+     * @param revision (optional)
+     * @param createdFullName (optional)
+     * @param createdOn (optional)
+     * @param lastUpdatedFullName (optional)
+     * @param lastUpdatedOn (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     procedureGet(id: number | null | undefined, name: string | null | undefined, procedureTypeName: string | null | undefined, duration: number | null | undefined, durationType: string | null | undefined, revision: number | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, lastUpdatedFullName: string | null | undefined, lastUpdatedOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedure> {
         let url_ = this.baseUrl + "/v{version}/Procedure?";
@@ -3597,7 +3597,7 @@ export class ProcedureService {
 
     /**
      * Get Procedure Step
-     * @param stepid (optional) 
+     * @param stepid (optional)
      */
     stepGet(id: number, stepid: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepModel> {
         let url_ = this.baseUrl + "/v{version}/Procedure/{id}/step?";
@@ -4097,7 +4097,7 @@ export class ProcedureStepMonitorService {
 
     /**
      * Get monitors for a procedure step
-     * @param monitorId (optional) 
+     * @param monitorId (optional)
      */
     procedurestep(stepId: number, monitorId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepMonitor> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor/procedurestep/{stepId}?";
@@ -4169,13 +4169,13 @@ export class ProcedureStepTemplateService {
 
     /**
      * Get procedure step template by Id
-     * @param id (optional) 
-     * @param title (optional) 
-     * @param text (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param id (optional)
+     * @param title (optional)
+     * @param text (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     procedureStepTemplateGet(id: number | null | undefined, title: string | null | undefined, text: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate?";
@@ -4429,7 +4429,7 @@ export class ProcedureStepTypeService {
 
     /**
      * Get procedure step type
-     * @param id (optional) 
+     * @param id (optional)
      */
     procedureStepType(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTypeModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepType?";
@@ -4556,7 +4556,7 @@ export class ProcedureTemplateService {
 
     /**
      * Get a procedure template
-     * @param id (optional) 
+     * @param id (optional)
      */
     procedureTemplateGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureTemplate?";
@@ -4798,12 +4798,12 @@ export class ProcedureTypeService {
 
     /**
      * Get one or all procedure types
-     * @param id (optional) 
-     * @param name (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param id (optional)
+     * @param name (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     procedureTypeGet(id: number | null | undefined, name: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureType> {
         let url_ = this.baseUrl + "/v{version}/ProcedureType?";
@@ -5057,7 +5057,7 @@ export class ProductService {
     /**
      * GetProduct
      * @param id (optional) Get product by Id
-     * @param customerId (optional) 
+     * @param customerId (optional)
      */
     productGet(id: number | null | undefined, customerId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfProductModel> {
         let url_ = this.baseUrl + "/v{version}/Product?";
@@ -5175,7 +5175,7 @@ export class ProductService {
     /**
      * GetPurchaseOrderProduct
      * @param id (optional) Get product by Id
-     * @param customerId (optional) 
+     * @param customerId (optional)
      */
     getPurchaseOrderProduct(id: number | null | undefined, customerId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderProductModel> {
         let url_ = this.baseUrl + "/v{version}/Product/GetPurchaseOrderProduct?";
@@ -5246,15 +5246,15 @@ export class PurchaseService {
 
     /**
      * Get Purchase by id
-     * @param id (optional) 
-     * @param mttn (optional) 
-     * @param purchaseOrderProductName (optional) 
-     * @param statusId (optional) 
-     * @param createdOn (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param id (optional)
+     * @param mttn (optional)
+     * @param purchaseOrderProductName (optional)
+     * @param statusId (optional)
+     * @param createdOn (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     purchaseGet(id: number | null | undefined, mttn: string | null | undefined, purchaseOrderProductName: string | null | undefined, statusId: string[] | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
         let url_ = this.baseUrl + "/v{version}/Purchase?";
@@ -6846,23 +6846,23 @@ export class UserService {
 
     /**
      * Get Users
-     * @param id (optional) 
-     * @param firstName (optional) 
-     * @param lastName (optional) 
-     * @param userName (optional) 
-     * @param title (optional) 
-     * @param supervisorName (optional) 
-     * @param primaryPhone (optional) 
-     * @param email (optional) 
-     * @param roles (optional) 
-     * @param isActive (optional) 
-     * @param isAnswerUser (optional) 
-     * @param createdOn (optional) 
-     * @param locationName (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param id (optional)
+     * @param firstName (optional)
+     * @param lastName (optional)
+     * @param userName (optional)
+     * @param title (optional)
+     * @param supervisorName (optional)
+     * @param primaryPhone (optional)
+     * @param email (optional)
+     * @param roles (optional)
+     * @param isActive (optional)
+     * @param isAnswerUser (optional)
+     * @param createdOn (optional)
+     * @param locationName (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisorName: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, roles: number[] | null | undefined, isActive: boolean | null | undefined, isAnswerUser: boolean | null | undefined, createdOn: Date | null | undefined, locationName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User?";
@@ -7121,16 +7121,16 @@ export class UserService {
 
     /**
      * Get training certificates
-     * @param userId (optional) 
-     * @param employeeName (optional) 
-     * @param certificationName (optional) 
-     * @param certificationFromDate (optional) 
-     * @param certificationToDate (optional) 
-     * @param status (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param userId (optional)
+     * @param employeeName (optional)
+     * @param certificationName (optional)
+     * @param certificationFromDate (optional)
+     * @param certificationToDate (optional)
+     * @param status (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     trainingCertification(userId: number | null | undefined, employeeName: string | null | undefined, certificationName: string | null | undefined, certificationFromDate: Date | null | undefined, certificationToDate: Date | null | undefined, status: boolean | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
         let url_ = this.baseUrl + "/v{version}/User/TrainingCertification?";
@@ -7702,25 +7702,25 @@ export class WorkOrderService {
 
     /**
      * Returns a summary of COMPLETED or CANCELLED WorkOrders
-     * @param purchaseId (optional) 
-     * @param workOrderItemNumber (optional) 
-     * @param customer (optional) 
-     * @param location (optional) 
-     * @param serialNumber (optional) 
-     * @param purchaseOrderNumber (optional) 
-     * @param qty (optional) 
-     * @param scheduledStartDate (optional) 
-     * @param scheduledEndDate (optional) 
-     * @param actualStartDate (optional) 
-     * @param actualEndDate (optional) 
-     * @param product (optional) 
-     * @param procedure (optional) 
-     * @param status (optional) 
-     * @param disposition (optional) 
-     * @param term (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sortAscending (optional) 
+     * @param purchaseId (optional)
+     * @param workOrderItemNumber (optional)
+     * @param customer (optional)
+     * @param location (optional)
+     * @param serialNumber (optional)
+     * @param purchaseOrderNumber (optional)
+     * @param qty (optional)
+     * @param scheduledStartDate (optional)
+     * @param scheduledEndDate (optional)
+     * @param actualStartDate (optional)
+     * @param actualEndDate (optional)
+     * @param product (optional)
+     * @param procedure (optional)
+     * @param status (optional)
+     * @param disposition (optional)
+     * @param term (optional)
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sortAscending (optional)
      */
     history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string[] | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string[] | null | undefined, disposition: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History?";
@@ -7813,7 +7813,7 @@ export class WorkOrderService {
 
     /**
      * Returns WorkOrder SelectItems
-     * @param assignedUserId (optional) 
+     * @param assignedUserId (optional)
      */
     selectItems(assignedUserId: number | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderSelectItem> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/SelectItems?";
@@ -7872,10 +7872,10 @@ export class WorkOrderService {
 
     /**
      * Returns a summary of WorkOrders IN PROGRESS or WAITING
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param sort (optional) 
-     * @param filters (optional) 
+     * @param pageNumber (optional)
+     * @param pageSize (optional)
+     * @param sort (optional)
+     * @param filters (optional)
      */
     menu(pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu?";
@@ -9832,7 +9832,7 @@ export class AuditActionResult implements IAuditActionResult {
         data["sortAscending"] = this.sortAscending;
         data["hasErrors"] = this.hasErrors;
         data["hasValidationErrors"] = this.hasValidationErrors;
-        return data; 
+        return data;
     }
 }
 
@@ -9881,7 +9881,7 @@ export class AuditActionResultOfString extends AuditActionResult implements IAud
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -9931,7 +9931,7 @@ export class ErrorMessage implements IErrorMessage {
         data["message"] = this.message;
         data["isValidationMessage"] = this.isValidationMessage;
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -9983,7 +9983,7 @@ export class Exception implements IException {
         data["Message"] = this.message;
         data["InnerException"] = this.innerException ? this.innerException.toJSON() : <any>undefined;
         data["Source"] = this.source;
-        return data; 
+        return data;
     }
 }
 
@@ -10027,7 +10027,7 @@ export class SystemLoginRequest implements ISystemLoginRequest {
         data = typeof data === 'object' ? data : {};
         data["userName"] = this.userName;
         data["password"] = this.password;
-        return data; 
+        return data;
     }
 }
 
@@ -10066,7 +10066,7 @@ export class ForgotPasswordRequest implements IForgotPasswordRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["userName"] = this.userName;
-        return data; 
+        return data;
     }
 }
 
@@ -10102,7 +10102,7 @@ export class ForgotUserNameRequest implements IForgotUserNameRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["email"] = this.email;
-        return data; 
+        return data;
     }
 }
 
@@ -10141,7 +10141,7 @@ export class ResetPasswordRequest implements IResetPasswordRequest {
         data = typeof data === 'object' ? data : {};
         data["token"] = this.token;
         data["newPassword"] = this.newPassword;
-        return data; 
+        return data;
     }
 }
 
@@ -10181,7 +10181,7 @@ export class ResetMyPasswordRequest implements IResetMyPasswordRequest {
         data = typeof data === 'object' ? data : {};
         data["newPassword"] = this.newPassword;
         data["oldPassword"] = this.oldPassword;
-        return data; 
+        return data;
     }
 }
 
@@ -10216,7 +10216,7 @@ export class AuditActionResultOfAdminCostSettingsModel extends AuditActionResult
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -10262,7 +10262,7 @@ export class AdminCostSettingsModel implements IAdminCostSettingsModel {
         data["laborRateMinute"] = this.laborRateMinute;
         data["yearsHours"] = this.yearsHours;
         data["hourMinutes"] = this.hourMinutes;
-        return data; 
+        return data;
     }
 }
 
@@ -10310,7 +10310,7 @@ export class UpdateAdminCostSettingRequest implements IUpdateAdminCostSettingReq
         data["laborRateMinute"] = this.laborRateMinute;
         data["yearsHours"] = this.yearsHours;
         data["hourMinutes"] = this.hourMinutes;
-        return data; 
+        return data;
     }
 }
 
@@ -10355,7 +10355,7 @@ export class AuditActionResultOfIEnumerableOfCustomerModel extends AuditActionRe
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -10390,7 +10390,7 @@ export abstract class EntityModel implements IEntityModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        return data; 
+        return data;
     }
 }
 
@@ -10429,7 +10429,7 @@ export class CreatableModel extends EntityModel implements ICreatableModel {
         data["createdBy"] = this.createdBy;
         data["created"] = this.created ? this.created.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -10468,7 +10468,7 @@ export abstract class TrackableModel extends CreatableModel implements ITrackabl
         data["lastUpdatedBy"] = this.lastUpdatedBy;
         data["lastUpdated"] = this.lastUpdated ? this.lastUpdated.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -10530,7 +10530,7 @@ export class CustomerModel extends TrackableModel implements ICustomerModel {
         data["isActive"] = this.isActive;
         data["customerNumber"] = this.customerNumber;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -10664,7 +10664,7 @@ export class UserModel implements IUserModel {
                 data["roles"].push(item.toJSON());
         }
         data["fileModel"] = this.fileModel ? this.fileModel.toJSON() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -10739,7 +10739,7 @@ export class TimeZoneModel implements ITimeZoneModel {
         data["offset"] = this.offset;
         data["number"] = this.number;
         data["useDalightSavings"] = this.useDalightSavings;
-        return data; 
+        return data;
     }
 }
 
@@ -10810,7 +10810,7 @@ export class Role extends TrackableModel implements IRole {
         }
         data["hasAssignedUsers"] = this.hasAssignedUsers;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -10890,7 +10890,7 @@ export class MenuItem implements IMenuItem {
                 data["roles"].push(item.toJSON());
         }
         data["enumMenuItem"] = this.enumMenuItem;
-        return data; 
+        return data;
     }
 }
 
@@ -10948,7 +10948,7 @@ export class MenuGroup implements IMenuGroup {
         data["info"] = this.info;
         data["icon"] = this.icon;
         data["orderNumber"] = this.orderNumber;
-        return data; 
+        return data;
     }
 }
 
@@ -11003,7 +11003,7 @@ export class Permission implements IPermission {
         data["canActivate"] = this.canActivate;
         data["canApprove"] = this.canApprove;
         data["canDelete"] = this.canDelete;
-        return data; 
+        return data;
     }
 }
 
@@ -11106,7 +11106,7 @@ export class FileModel implements IFileModel {
         data["contentType"] = this.contentType;
         data["fileURL"] = this.fileURL;
         data["description"] = this.description;
-        return data; 
+        return data;
     }
 }
 
@@ -11146,7 +11146,7 @@ export class DeletableModel extends TrackableModel implements IDeletableModel {
         data = typeof data === 'object' ? data : {};
         data["isActive"] = this.isActive;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -11224,7 +11224,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
         data["status"] = this.status;
         data["site"] = this.site;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -11273,7 +11273,7 @@ export class AuditActionResultOfCustomerModel extends AuditActionResult implemen
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -11328,7 +11328,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
         data["primaryContactUserId"] = this.primaryContactUserId;
         data["secondaryContactUserId"] = this.secondaryContactUserId;
         data["customerNumber"] = this.customerNumber;
-        return data; 
+        return data;
     }
 }
 
@@ -11403,7 +11403,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
         data["customerId"] = this.customerId;
         data["isActive"] = this.isActive;
         data["customerNumber"] = this.customerNumber;
-        return data; 
+        return data;
     }
 }
 
@@ -11462,7 +11462,7 @@ export class AuditActionResultOfICollectionOfDocumentView extends AuditActionRes
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -11535,7 +11535,7 @@ export class DocumentView extends TrackableModel implements IDocumentView {
                 data["referenceFileIds"].push(item);
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -11574,7 +11574,7 @@ export class AuditActionResultOfDocumentView extends AuditActionResult implement
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -11650,7 +11650,7 @@ export class CreateDocumentRequest implements ICreateDocumentRequest {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -11733,7 +11733,7 @@ export class UpdateDocumentRequest implements IUpdateDocumentRequest {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -11781,7 +11781,7 @@ export class AuditActionResultOfICollectionOfArchiveDocumentView extends AuditAc
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -11827,7 +11827,7 @@ export class ArchiveDocumentView implements IArchiveDocumentView {
         data["downloadURL"] = this.downloadURL;
         data["fileSize"] = this.fileSize;
         data["createDate"] = this.createDate ? this.createDate.toISOString() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -11876,7 +11876,7 @@ export class AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel extends A
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -11940,7 +11940,7 @@ export class EquipmentMaintenanceModel extends TrackableModel implements IEquipm
         data["assignedTo"] = this.assignedTo ? this.assignedTo.toJSON() : <any>undefined;
         data["status"] = this.status ? this.status.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -11989,7 +11989,7 @@ export class StatusModel implements IStatusModel {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data; 
+        return data;
     }
 }
 
@@ -12024,7 +12024,7 @@ export class AuditActionResultOfEquipmentMaintenanceModel extends AuditActionRes
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -12082,7 +12082,7 @@ export class CreateEquipmentMaintenanceRequest implements ICreateEquipmentMainte
         data["pemLastCompletedDate"] = this.pemLastCompletedDate ? this.pemLastCompletedDate.toISOString() : <any>undefined;
         data["frequencyField"] = this.frequencyField;
         data["comments"] = this.comments;
-        return data; 
+        return data;
     }
 }
 
@@ -12149,7 +12149,7 @@ export class UpdateEquipmentMaintenanceRequest implements IUpdateEquipmentMainte
         data["pemLastCompletedDate"] = this.pemLastCompletedDate ? this.pemLastCompletedDate.toISOString() : <any>undefined;
         data["frequencyField"] = this.frequencyField;
         data["comments"] = this.comments;
-        return data; 
+        return data;
     }
 }
 
@@ -12199,7 +12199,7 @@ export class AuditActionResultOfICollectionOfFileModel extends AuditActionResult
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -12234,7 +12234,7 @@ export class AuditActionResultOfFileModel extends AuditActionResult implements I
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -12286,7 +12286,7 @@ export class CreateFileRequest implements ICreateFileRequest {
         data["base64String"] = this.base64String;
         data["contentType"] = this.contentType;
         data["description"] = this.description;
-        return data; 
+        return data;
     }
 }
 
@@ -12333,7 +12333,7 @@ export class AuditActionResultOfIEnumerableOfImportError extends AuditActionResu
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -12375,7 +12375,7 @@ export class ImportAuditActionResultOfIEnumerableOfImportError extends AuditActi
                 data["importErrors"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -12422,7 +12422,7 @@ export class ImportError implements IImportError {
             for (let item of this.errors)
                 data["errors"].push(item);
         }
-        return data; 
+        return data;
     }
 }
 
@@ -12462,7 +12462,7 @@ export class ImportRequest implements IImportRequest {
         data = typeof data === 'object' ? data : {};
         data["base64Data"] = this.base64Data;
         data["menuItem"] = this.menuItem;
-        return data; 
+        return data;
     }
 }
 
@@ -12505,7 +12505,7 @@ export class AuditActionResultOfIEnumerableOfHelpPage extends AuditActionResult 
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -12562,7 +12562,7 @@ export class HelpPage implements IHelpPage {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -12600,7 +12600,7 @@ export class AuditActionResultOfHelpPage extends AuditActionResult implements IA
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -12654,7 +12654,7 @@ export class CreateHelpPageRequest implements ICreateHelpPageRequest {
             for (let item of this.roleIds)
                 data["roleIds"].push(item);
         }
-        return data; 
+        return data;
     }
 }
 
@@ -12696,7 +12696,7 @@ export class CreateHelpPageRoleRequest implements ICreateHelpPageRoleRequest {
         data = typeof data === 'object' ? data : {};
         data["helpPageId"] = this.helpPageId;
         data["roleId"] = this.roleId;
-        return data; 
+        return data;
     }
 }
 
@@ -12753,7 +12753,7 @@ export class UpdateHelpPageRequest implements IUpdateHelpPageRequest {
             for (let item of this.roleIds)
                 data["roleIds"].push(item);
         }
-        return data; 
+        return data;
     }
 }
 
@@ -12799,7 +12799,7 @@ export class AuditActionResultOfIEnumerableOfInvoiceView extends AuditActionResu
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -12886,7 +12886,7 @@ export class InvoiceView implements IInvoiceView {
             for (let item of this.invoiceItems)
                 data["invoiceItems"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -12945,7 +12945,7 @@ export class InvoiceItemView implements IInvoiceItemView {
         data["purchaseOrderId"] = this.purchaseOrderId;
         data["purchaseNumber"] = this.purchaseNumber;
         data["workOrderId"] = this.workOrderId;
-        return data; 
+        return data;
     }
 }
 
@@ -12982,7 +12982,7 @@ export class AuditActionResultOfInvoiceView extends AuditActionResult implements
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -13045,7 +13045,7 @@ export class CreateInvoiceRequest implements ICreateInvoiceRequest {
             for (let item of this.invoiceItems)
                 data["invoiceItems"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -13089,7 +13089,7 @@ export class CreateInvoiceItemRequest implements ICreateInvoiceItemRequest {
         data = typeof data === 'object' ? data : {};
         data["workOrderId"] = this.workOrderId;
         data["purchaseOrderId"] = this.purchaseOrderId;
-        return data; 
+        return data;
     }
 }
 
@@ -13151,7 +13151,7 @@ export class UpdateInvoiceRequest implements IUpdateInvoiceRequest {
             for (let item of this.invoiceItems)
                 data["invoiceItems"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -13196,7 +13196,7 @@ export class UpdateInvoiceItemRequest implements IUpdateInvoiceItemRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        return data; 
+        return data;
     }
 }
 
@@ -13238,7 +13238,7 @@ export class AuditActionResultOfICollectionOfLocationModel extends AuditActionRe
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -13281,7 +13281,7 @@ export class AuditActionResultOfIEnumerableOfSensorModel extends AuditActionResu
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -13321,7 +13321,7 @@ export class SensorModel extends CreatableModel implements ISensorModel {
         data["site"] = this.site ? this.site.toJSON() : <any>undefined;
         data["assignedLocation"] = this.assignedLocation ? this.assignedLocation.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -13357,7 +13357,7 @@ export class AuditActionResultOfLocationModel extends AuditActionResult implemen
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -13427,7 +13427,7 @@ export class CreateLocationRequest implements ICreateLocationRequest {
         data["internalAddress"] = this.internalAddress;
         data["invoiceClass"] = this.invoiceClass;
         data["timeZoneId"] = this.timeZoneId;
-        return data; 
+        return data;
     }
 }
 
@@ -13524,7 +13524,7 @@ export class UpdateLocationRequest implements IUpdateLocationRequest {
         data["internalAddress"] = this.internalAddress;
         data["invoiceClass"] = this.invoiceClass;
         data["timeZoneId"] = this.timeZoneId;
-        return data; 
+        return data;
     }
 }
 
@@ -13592,7 +13592,7 @@ export class AuditActionResultOfIEnumerableOfMenuItem extends AuditActionResult 
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -13632,7 +13632,7 @@ export class CreateMenuRoleMapRequest implements ICreateMenuRoleMapRequest {
         data = typeof data === 'object' ? data : {};
         data["menuId"] = this.menuId;
         data["roleId"] = this.roleId;
-        return data; 
+        return data;
     }
 }
 
@@ -13690,7 +13690,7 @@ export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
         data["canDelete"] = this.canDelete;
         data["canActivate"] = this.canActivate;
         data["canApprove"] = this.canApprove;
-        return data; 
+        return data;
     }
 }
 
@@ -13739,7 +13739,7 @@ export class AuditActionResultOfICollectionOfMonitorModel extends AuditActionRes
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -13806,7 +13806,7 @@ export class MonitorModel implements IMonitorModel {
         data["workerName"] = this.workerName ? this.workerName.toJSON() : <any>undefined;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
-        return data; 
+        return data;
     }
 }
 
@@ -13858,7 +13858,7 @@ export class AuditActionResultOfICollectionOfPartModel extends AuditActionResult
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -13944,7 +13944,7 @@ export class PartModel extends TrackableModel implements IPartModel {
         }
         data["isActive"] = this.isActive;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -14025,7 +14025,7 @@ export class SubPartModel implements ISubPartModel {
         data["partNumber"] = this.partNumber;
         data["cycleCount"] = this.cycleCount;
         data["name"] = this.name;
-        return data; 
+        return data;
     }
 }
 
@@ -14068,7 +14068,7 @@ export class AuditActionResultOfPartModel extends AuditActionResult implements I
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -14148,7 +14148,7 @@ export class CreatePartRequest implements ICreatePartRequest {
             for (let item of this.files)
                 data["files"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -14202,7 +14202,7 @@ export class FileRequest implements IFileRequest {
         data["name"] = this.name;
         data["base64String"] = this.base64String;
         data["contentType"] = this.contentType;
-        return data; 
+        return data;
     }
 }
 
@@ -14240,7 +14240,7 @@ export class UpdatePartRequest extends CreatePartRequest implements IUpdatePartR
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -14274,7 +14274,7 @@ export class AuditActionResultOfProcedure extends AuditActionResult implements I
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -14352,7 +14352,7 @@ export class Procedure extends TrackableModel implements IProcedure {
         data["approvalStatus"] = this.approvalStatus;
         data["tagType"] = this.tagType;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -14412,7 +14412,7 @@ export class ProcedureType implements IProcedureType {
         data["type"] = this.type;
         data["revision"] = this.revision;
         data["status"] = this.status;
-        return data; 
+        return data;
     }
 }
 
@@ -14493,7 +14493,7 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
                 data["referenceFileIds"].push(item);
         }
         data["tagType"] = this.tagType;
-        return data; 
+        return data;
     }
 }
 
@@ -14536,7 +14536,7 @@ export class AuditActionResultOfProcedureStepModel extends AuditActionResult imp
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -14668,7 +14668,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
                 data["referenceDocument"].push(item.toJSON());
         }
         data["isUsed"] = this.isUsed;
-        return data; 
+        return data;
     }
 }
 
@@ -14805,7 +14805,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
             for (let item of this.referenceDocumentIds)
                 data["referenceDocumentIds"].push(item);
         }
-        return data; 
+        return data;
     }
 }
 
@@ -14879,7 +14879,7 @@ export class RoleRequest implements IRoleRequest {
             for (let item of this.menus)
                 data["menus"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -14961,7 +14961,7 @@ export class MenuItemRequest implements IMenuItemRequest {
                 data["permissions"].push(item);
         }
         data["enumMenuItem"] = this.enumMenuItem;
-        return data; 
+        return data;
     }
 }
 
@@ -15009,7 +15009,7 @@ export class OneOfMenuItemMenuGroup implements IOneOfMenuItemMenuGroup {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        return data; 
+        return data;
     }
 }
 
@@ -15051,7 +15051,7 @@ export class AuditActionResultOfICollectionOfProcedure extends AuditActionResult
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -15094,7 +15094,7 @@ export class AuditActionResultOfICollectionOfProcedureStepModel extends AuditAct
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -15174,7 +15174,7 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
                 data["referenceFileIds"].push(item);
         }
         data["tagType"] = this.tagType;
-        return data; 
+        return data;
     }
 }
 
@@ -15321,7 +15321,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
             for (let item of this.referenceDocumentIds)
                 data["referenceDocumentIds"].push(item);
         }
-        return data; 
+        return data;
     }
 }
 
@@ -15391,7 +15391,7 @@ export class AuditActionResultOfProcedureStepMonitor extends AuditActionResult i
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -15467,7 +15467,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
-        return data; 
+        return data;
     }
 }
 
@@ -15562,7 +15562,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
-        return data; 
+        return data;
     }
 }
 
@@ -15628,7 +15628,7 @@ export class AuditActionResultOfICollectionOfProcedureStepMonitor extends AuditA
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -15711,7 +15711,7 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
-        return data; 
+        return data;
     }
 }
 
@@ -15777,7 +15777,7 @@ export class AuditActionResultOfICollectionOfProcedureStepTemplateModel extends 
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -15888,7 +15888,7 @@ export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
         }
         data["comments"] = this.comments;
         data["revision"] = this.revision;
-        return data; 
+        return data;
     }
 }
 
@@ -15936,7 +15936,7 @@ export class AuditActionResultOfProcedureStepTemplateModel extends AuditActionRe
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -16067,7 +16067,7 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -16229,7 +16229,7 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -16301,7 +16301,7 @@ export class AuditActionResultOfICollectionOfProcedureStepTypeModel extends Audi
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -16341,7 +16341,7 @@ export class ProcedureStepTypeModel implements IProcedureStepTypeModel {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data; 
+        return data;
     }
 }
 
@@ -16464,7 +16464,7 @@ export class CreateProcedureTemplateRequest implements ICreateProcedureTemplateR
             for (let item of this.roles)
                 data["roles"].push(item);
         }
-        return data; 
+        return data;
     }
 }
 
@@ -16606,7 +16606,7 @@ export class UpdateProcedureTemplateRequest implements IUpdateProcedureTemplateR
             for (let item of this.roles)
                 data["roles"].push(item);
         }
-        return data; 
+        return data;
     }
 }
 
@@ -16668,7 +16668,7 @@ export class AuditActionResultOfProcedureType extends AuditActionResult implemen
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -16707,7 +16707,7 @@ export class CreateProcedureTypeRequest implements ICreateProcedureTypeRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        return data; 
+        return data;
     }
 }
 
@@ -16751,7 +16751,7 @@ export class AuditActionResultOfICollectionOfProcedureType extends AuditActionRe
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -16794,7 +16794,7 @@ export class UpdateProcedureTypeRequest implements IUpdateProcedureTypeRequest {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data; 
+        return data;
     }
 }
 
@@ -16832,7 +16832,7 @@ export class AuditActionResultOfProductModel extends AuditActionResult implement
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -16945,7 +16945,7 @@ export class ProductModel extends TrackableModel implements IProductModel {
                 data["productSteps"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -17081,7 +17081,7 @@ export class QuoteModel implements IQuoteModel {
             for (let item of this.quoteItems)
                 data["quoteItems"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -17162,7 +17162,7 @@ export class QuoteItemModel implements IQuoteItemModel {
         data["customerPartNo"] = this.customerPartNo;
         data["price"] = this.price;
         data["extension"] = this.extension;
-        return data; 
+        return data;
     }
 }
 
@@ -17287,7 +17287,7 @@ export class WorkOrderModel implements IWorkOrderModel {
         }
         data["hasSubParts"] = this.hasSubParts;
         data["customerLastRespondent"] = this.customerLastRespondent;
-        return data; 
+        return data;
     }
 }
 
@@ -17392,7 +17392,7 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
         data["purchaseOrder"] = this.purchaseOrder ? this.purchaseOrder.toJSON() : <any>undefined;
         data["purchaseOrderProduct"] = this.purchaseOrderProduct ? this.purchaseOrderProduct.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -17470,7 +17470,7 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
         data["locationId"] = this.locationId;
         data["location"] = this.location ? this.location.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -17537,7 +17537,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
         data["procedureName"] = this.procedureName;
         data["cycleTime"] = this.cycleTime;
         data["totalSalePrice"] = this.totalSalePrice;
-        return data; 
+        return data;
     }
 }
 
@@ -17570,6 +17570,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     tagType?: string | undefined;
     ncNumber?: string | undefined;
     dataMatrix?: string | undefined;
+    detail?: string | undefined;
 
     constructor(data?: IWorkOrderPartModel) {
         if (data) {
@@ -17607,6 +17608,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             this.tagType = _data["tagType"];
             this.ncNumber = _data["ncNumber"];
             this.dataMatrix = _data["dataMatrix"];
+            this.detail = _data["detail"];
         }
     }
 
@@ -17644,7 +17646,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         data["tagType"] = this.tagType;
         data["ncNumber"] = this.ncNumber;
         data["dataMatrix"] = this.dataMatrix;
-        return data; 
+        data["detail"] = this.detail;
+        return data;
     }
 }
 
@@ -17666,6 +17669,7 @@ export interface IWorkOrderPartModel {
     tagType?: string | undefined;
     ncNumber?: string | undefined;
     dataMatrix?: string | undefined;
+    detail?: string | undefined;
 }
 
 export class NCRHistoryItemModel implements INCRHistoryItemModel {
@@ -17711,7 +17715,7 @@ export class NCRHistoryItemModel implements INCRHistoryItemModel {
         data["workOrderPartId"] = this.workOrderPartId;
         data["partId"] = this.partId;
         data["serialNumber"] = this.serialNumber;
-        return data; 
+        return data;
     }
 }
 
@@ -17859,7 +17863,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             for (let item of this.mappedWorkOrderParts)
                 data["mappedWorkOrderParts"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -17983,7 +17987,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         data["lowNumVal"] = this.lowNumVal;
         data["highNumVal"] = this.highNumVal;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -18016,6 +18020,7 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
 export class MappedWorkOrderPart implements IMappedWorkOrderPart {
     id?: number;
     tagType?: string | undefined;
+    detail?: string | undefined;
 
     constructor(data?: IMappedWorkOrderPart) {
         if (data) {
@@ -18030,6 +18035,7 @@ export class MappedWorkOrderPart implements IMappedWorkOrderPart {
         if (_data) {
             this.id = _data["id"];
             this.tagType = _data["tagType"];
+            this.detail = _data["detail"];
         }
     }
 
@@ -18044,13 +18050,15 @@ export class MappedWorkOrderPart implements IMappedWorkOrderPart {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tagType"] = this.tagType;
-        return data; 
+        data["detail"] = this.detail;
+        return data;
     }
 }
 
 export interface IMappedWorkOrderPart {
     id?: number;
     tagType?: string | undefined;
+    detail?: string | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
@@ -18087,7 +18095,7 @@ export class WorkOrderMessageModel implements IWorkOrderMessageModel {
         data["name"] = this.name;
         data["message"] = this.message;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -18167,7 +18175,7 @@ export class ProductStepModel implements IProductStepModel {
         data["printOrder"] = this.printOrder;
         data["product"] = this.product ? this.product.toJSON() : <any>undefined;
         data["procedureStep"] = this.procedureStep ? this.procedureStep.toJSON() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -18267,7 +18275,7 @@ export class CreateProductRequest implements ICreateProductRequest {
             for (let item of this.productSteps)
                 data["productSteps"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -18366,7 +18374,7 @@ export class ProductStep implements IProductStep {
         data["rmPerMinuteRate"] = this.rmPerMinuteRate;
         data["title"] = this.title;
         data["printOrder"] = this.printOrder;
-        return data; 
+        return data;
     }
 }
 
@@ -18433,7 +18441,7 @@ export class AuditActionResultOfIEnumerableOfProductModel extends AuditActionRes
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -18476,7 +18484,7 @@ export class AuditActionResultOfIEnumerableOfPurchaseOrderProductModel extends A
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -18519,7 +18527,7 @@ export class PurchaseOrderProductModel implements IPurchaseOrderProductModel {
         data["id"] = this.id;
         data["name"] = this.name;
         data["revision"] = this.revision;
-        return data; 
+        return data;
     }
 }
 
@@ -18610,7 +18618,7 @@ export class UpdateProductRequest implements IUpdateProductRequest {
             for (let item of this.productSteps)
                 data["productSteps"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -18667,7 +18675,7 @@ export class AuditActionResultOfICollectionOfPurchaseModel extends AuditActionRe
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -18702,7 +18710,7 @@ export class AuditActionResultOfPurchaseModel extends AuditActionResult implemen
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -18804,7 +18812,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
         data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["purchasePrice"] = this.purchasePrice;
         data["serializeIndividually"] = this.serializeIndividually;
-        return data; 
+        return data;
     }
 }
 
@@ -18870,7 +18878,7 @@ export class AuditActionResultOfIEnumerableOfPurchaseOrderView extends AuditActi
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -18963,7 +18971,7 @@ export class PurchaseOrderView extends CreatableModel implements IPurchaseOrderV
         data["revision"] = this.revision;
         data["unusedAmount"] = this.unusedAmount;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -19014,7 +19022,7 @@ export class AuditActionResultOfPurchaseOrderView extends AuditActionResult impl
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -19089,7 +19097,7 @@ export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
         data["customerReferenceNo"] = this.customerReferenceNo;
         data["totalPurchaseLimit"] = this.totalPurchaseLimit;
         data["tax"] = this.tax;
-        return data; 
+        return data;
     }
 }
 
@@ -19134,7 +19142,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
         data["id"] = this.id;
         data["closePurchaseOrder"] = this.closePurchaseOrder;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -19177,7 +19185,7 @@ export class AuditActionResultOfIEnumerableOfPurchaseOrderDBView extends AuditAc
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -19265,7 +19273,7 @@ export class PurchaseOrderDBView implements IPurchaseOrderDBView {
         data["status"] = this.status;
         data["revision"] = this.revision;
         data["unusedAmount"] = this.unusedAmount;
-        return data; 
+        return data;
     }
 }
 
@@ -19324,7 +19332,7 @@ export class AuditActionResultOfIEnumerableOfQuotesProductsView extends AuditAct
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -19424,7 +19432,7 @@ export class QuotesProductsView implements IQuotesProductsView {
         data["segregationType"] = this.segregationType;
         data["lastUpdateOn"] = this.lastUpdateOn ? this.lastUpdateOn.toISOString() : <any>undefined;
         data["lastUpdateBy"] = this.lastUpdateBy;
-        return data; 
+        return data;
     }
 }
 
@@ -19479,7 +19487,7 @@ export class AuditActionResultOfQuoteModel extends AuditActionResult implements 
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -19585,7 +19593,7 @@ export class CreateQuoteRequest implements ICreateQuoteRequest {
             for (let item of this.quoteItems)
                 data["quoteItems"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -19669,7 +19677,7 @@ export class CreateQuoteItemRequest implements ICreateQuoteItemRequest {
         data["customerPartNo"] = this.customerPartNo;
         data["price"] = this.price;
         data["extension"] = this.extension;
-        return data; 
+        return data;
     }
 }
 
@@ -19717,7 +19725,7 @@ export class AuditActionResultOfIEnumerableOfQuoteModel extends AuditActionResul
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -19760,7 +19768,7 @@ export class AuditActionResultOfICollectionOfReportModel extends AuditActionResu
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -19823,7 +19831,7 @@ export class ReportModel implements IReportModel {
             for (let item of this.categories)
                 data["categories"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -19868,7 +19876,7 @@ export class ReportCategoryModel implements IReportCategoryModel {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data; 
+        return data;
     }
 }
 
@@ -19903,7 +19911,7 @@ export class AuditActionResultOfReportDashboardModel extends AuditActionResult i
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -19963,7 +19971,7 @@ export class ReportDashboardModel implements IReportDashboardModel {
             for (let item of this.reports)
                 data["reports"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -20010,7 +20018,7 @@ export class AuditActionResultOfICollectionOfRole extends AuditActionResult impl
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20053,7 +20061,7 @@ export class AuditActionResultOfICollectionOfRolesUsersView extends AuditActionR
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20105,7 +20113,7 @@ export class RolesUsersView implements IRolesUsersView {
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
         data["userId"] = this.userId;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -20144,7 +20152,7 @@ export class AuditActionResultOfRole extends AuditActionResult implements IAudit
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20206,7 +20214,7 @@ export class CreateRoleRequest implements ICreateRoleRequest {
             for (let item of this.userRoles)
                 data["userRoles"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -20257,7 +20265,7 @@ export class UserRoleModel implements IUserRoleModel {
         data["roleId"] = this.roleId;
         data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -20294,7 +20302,7 @@ export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleR
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20336,7 +20344,7 @@ export class AuditActionResultOfICollectionOfSearchView extends AuditActionResul
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20388,7 +20396,7 @@ export class SearchView implements ISearchView {
         data["description"] = this.description;
         data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
         data["lastUpdatedBy"] = this.lastUpdatedBy;
-        return data; 
+        return data;
     }
 }
 
@@ -20435,7 +20443,7 @@ export class AuditActionResultOfIEnumerableOfString extends AuditActionResult im
                 data["object"].push(item);
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20470,7 +20478,7 @@ export class AuditActionResultOfSensorValueModel extends AuditActionResult imple
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20513,7 +20521,7 @@ export class SensorValueModel extends CreatableModel implements ISensorValueMode
         data["alarmDescription"] = this.alarmDescription;
         data["isAlarm"] = this.isAlarm;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20558,7 +20566,7 @@ export class AuditActionResultOfICollectionOfTimeZoneModel extends AuditActionRe
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20601,7 +20609,7 @@ export class AuditActionResultOfICollectionOfUserModel extends AuditActionResult
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20636,7 +20644,7 @@ export class AuditActionResultOfUserModel extends AuditActionResult implements I
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20679,7 +20687,7 @@ export class AuditActionResultOfIEnumerableOfTrainingCertificationView extends A
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20734,7 +20742,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
         data["status"] = this.status;
         data["certificationName"] = this.certificationName;
-        return data; 
+        return data;
     }
 }
 
@@ -20835,7 +20843,7 @@ export class CreateUserRequest implements ICreateUserRequest {
                 data["roles"].push(item.toJSON());
         }
         data["file"] = this.file ? this.file.toJSON() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -20885,7 +20893,7 @@ export class UpdateUserRequest extends CreateUserRequest implements IUpdateUserR
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -20930,7 +20938,7 @@ export class CreateUserRoleRequest implements ICreateUserRoleRequest {
         data["roleId"] = this.roleId;
         data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -20981,7 +20989,7 @@ export class UpdateUserRoleRequest implements IUpdateUserRoleRequest {
         data["roleId"] = this.roleId;
         data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -21027,7 +21035,7 @@ export class AuditActionResultOfICollectionOfPendingApprovalModel extends AuditA
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -21100,7 +21108,7 @@ export class PendingApprovalModel implements IPendingApprovalModel {
         data["statusId"] = this.statusId;
         data["createdByName"] = this.createdByName;
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -21158,7 +21166,7 @@ export class AuditActionResultOfPendingApprovalPopoverModel extends AuditActionR
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -21203,7 +21211,7 @@ export class PendingApprovalPopoverModel implements IPendingApprovalPopoverModel
             for (let item of this.rows)
                 data["rows"].push(item);
         }
-        return data; 
+        return data;
     }
 }
 
@@ -21237,7 +21245,7 @@ export class AuditActionResultOfPendingApprovalModel extends AuditActionResult i
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -21280,7 +21288,7 @@ export class PostPendingApprovalRequest implements IPostPendingApprovalRequest {
         data["table"] = this.table;
         data["id"] = this.id;
         data["comments"] = this.comments;
-        return data; 
+        return data;
     }
 }
 
@@ -21324,7 +21332,7 @@ export class AuditActionResultOfICollectionOfWorkOrderHistoryView extends AuditA
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -21455,7 +21463,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
             for (let item of this.workOrderMessages)
                 data["workOrderMessages"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -21523,7 +21531,7 @@ export class AuditActionResultOfICollectionOfWorkOrderSelectItem extends AuditAc
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -21572,7 +21580,7 @@ export class WorkOrderSelectItem implements IWorkOrderSelectItem {
         data["procedureName"] = this.procedureName;
         data["purchaseSerialNumber"] = this.purchaseSerialNumber;
         data["workOrderStatusId"] = this.workOrderStatusId;
-        return data; 
+        return data;
     }
 }
 
@@ -21618,7 +21626,7 @@ export class AuditActionResultOfICollectionOfWorkOrderGridSummary extends AuditA
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -21761,7 +21769,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             for (let item of this.workOrderMessages)
                 data["workOrderMessages"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -21830,7 +21838,7 @@ export class Sort implements ISort {
         data = typeof data === 'object' ? data : {};
         data["field"] = this.field;
         data["dir"] = this.dir;
-        return data; 
+        return data;
     }
 }
 
@@ -21876,7 +21884,7 @@ export class Filter implements IFilter {
         data["operator"] = this.operator;
         data["value"] = this.value;
         data["logic"] = this.logic;
-        return data; 
+        return data;
     }
 }
 
@@ -21921,7 +21929,7 @@ export class AuditActionResultOfICollectionOfWorkOrderStatus extends AuditAction
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -21970,7 +21978,7 @@ export class WorkOrderStatus implements IWorkOrderStatus {
         data["procedureName"] = this.procedureName;
         data["locationName"] = this.locationName;
         data["workOrderSummary"] = this.workOrderSummary ? this.workOrderSummary.toJSON() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -22034,7 +22042,7 @@ export class WorkOrderSummary implements IWorkOrderSummary {
         data["assignedTo"] = this.assignedTo;
         data["workOrderHasNcr"] = this.workOrderHasNcr;
         data["workOrderScheduledEndDate"] = this.workOrderScheduledEndDate ? this.workOrderScheduledEndDate.toISOString() : <any>undefined;
-        return data; 
+        return data;
     }
 }
 
@@ -22084,7 +22092,7 @@ export class AuditActionResultOfICollectionOfWorkOrderModel extends AuditActionR
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -22127,7 +22135,7 @@ export class AuditActionResultOfICollectionOfInvoiceableWorkOrderView extends Au
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -22203,7 +22211,7 @@ export class InvoiceableWorkOrderView implements IInvoiceableWorkOrderView {
         data["actualEndDate"] = this.actualEndDate ? this.actualEndDate.toISOString() : <any>undefined;
         data["totalSalePrice"] = this.totalSalePrice;
         data["customerLineNumber"] = this.customerLineNumber;
-        return data; 
+        return data;
     }
 }
 
@@ -22258,7 +22266,7 @@ export class AuditActionResultOfICollectionOfPortalWorkOrderView extends AuditAc
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -22419,7 +22427,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
         }
         data["stepText"] = this.stepText;
         data["customerLastRespondent"] = this.customerLastRespondent;
-        return data; 
+        return data;
     }
 }
 
@@ -22489,7 +22497,7 @@ export class AuditActionResultOfWorkOrderMessageModel extends AuditActionResult 
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -22529,7 +22537,7 @@ export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageReq
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["message"] = this.message;
-        return data; 
+        return data;
     }
 }
 
@@ -22572,7 +22580,7 @@ export class AuditActionResultOfICollectionOfWorkOrderTaskModel extends AuditAct
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -22612,7 +22620,7 @@ export class TakeOverWorkOrderRequest implements ITakeOverWorkOrderRequest {
         data = typeof data === 'object' ? data : {};
         data["workOrderId"] = this.workOrderId;
         data["userId"] = this.userId;
-        return data; 
+        return data;
     }
 }
 
@@ -22652,7 +22660,7 @@ export class CancelWorkOrderRequest implements ICancelWorkOrderRequest {
         data = typeof data === 'object' ? data : {};
         data["workOrderId"] = this.workOrderId;
         data["invoiceable"] = this.invoiceable;
-        return data; 
+        return data;
     }
 }
 
@@ -22695,7 +22703,7 @@ export class AddNCRWorkOrderTaskRequest implements IAddNCRWorkOrderTaskRequest {
         data["workOrderId"] = this.workOrderId;
         data["procedureId"] = this.procedureId;
         data["userId"] = this.userId;
-        return data; 
+        return data;
     }
 }
 
@@ -22782,7 +22790,7 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
                 data["customerLineNumbers"].push(item);
         }
         data["qty"] = this.qty;
-        return data; 
+        return data;
     }
 }
 
@@ -22827,7 +22835,7 @@ export class AuditActionResultOfWorkOrderModel extends AuditActionResult impleme
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -22867,7 +22875,7 @@ export class UpdateWorkOrderPriceRequest implements IUpdateWorkOrderPriceRequest
         data = typeof data === 'object' ? data : {};
         data["workOrderId"] = this.workOrderId;
         data["price"] = this.price;
-        return data; 
+        return data;
     }
 }
 
@@ -22910,7 +22918,7 @@ export class AuditActionResultOfICollectionOfWorkOrderPartModel extends AuditAct
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -22945,7 +22953,7 @@ export class AuditActionResultOfWorkOrderPartModel extends AuditActionResult imp
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -22988,7 +22996,7 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
         data["workOrderPartId"] = this.workOrderPartId;
         data["serialNumber"] = this.serialNumber;
         data["segregationType"] = this.segregationType;
-        return data; 
+        return data;
     }
 }
 
@@ -23024,7 +23032,7 @@ export class AuditActionResultOfNCRPartWODetailView extends AuditActionResult im
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -23087,7 +23095,7 @@ export class NCRPartWODetailView implements INCRPartWODetailView {
             for (let item of this.workOrderTasks)
                 data["workOrderTasks"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -23165,7 +23173,7 @@ export class NCRPartWOTaskView implements INCRPartWOTaskView {
             for (let item of this.documents)
                 data["documents"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -23214,7 +23222,7 @@ export class WorkOrderPartMonitorView implements IWorkOrderPartMonitorView {
         data["workOrderTaskMonitorDescription"] = this.workOrderTaskMonitorDescription;
         data["result"] = this.result;
         data["comment"] = this.comment;
-        return data; 
+        return data;
     }
 }
 
@@ -23251,7 +23259,7 @@ export class AuditActionResultOfWorkOrderTaskModel extends AuditActionResult imp
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -23302,7 +23310,7 @@ export class CreateWorkOrderTaskRequest implements ICreateWorkOrderTaskRequest {
         data["procedureId"] = this.procedureId;
         data["procedureStepId"] = this.procedureStepId;
         data["taskStepOrder"] = this.taskStepOrder;
-        return data; 
+        return data;
     }
 }
 
@@ -23400,7 +23408,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             for (let item of this.mappedWorkOrderParts)
                 data["mappedWorkOrderParts"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -23421,6 +23429,7 @@ export interface IUpdateWorkOrderTaskRequest {
 export class MappedWorkOrderPart2 implements IMappedWorkOrderPart2 {
     id?: number;
     tagType?: string | undefined;
+    detail?: string | undefined;
 
     constructor(data?: IMappedWorkOrderPart2) {
         if (data) {
@@ -23435,6 +23444,7 @@ export class MappedWorkOrderPart2 implements IMappedWorkOrderPart2 {
         if (_data) {
             this.id = _data["id"];
             this.tagType = _data["tagType"];
+            this.detail = _data["detail"];
         }
     }
 
@@ -23449,13 +23459,15 @@ export class MappedWorkOrderPart2 implements IMappedWorkOrderPart2 {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tagType"] = this.tagType;
-        return data; 
+        data["detail"] = this.detail;
+        return data;
     }
 }
 
 export interface IMappedWorkOrderPart2 {
     id?: number;
     tagType?: string | undefined;
+    detail?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -23484,7 +23496,7 @@ export class AuditActionResultOfWorkOrderTaskMonitorModel extends AuditActionRes
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -23555,7 +23567,7 @@ export class UpdateWorkOrderTaskMonitorRequest implements IUpdateWorkOrderTaskMo
         data["sendNCREmail"] = this.sendNCREmail;
         data["lowNumVal"] = this.lowNumVal;
         data["highNumVal"] = this.highNumVal;
-        return data; 
+        return data;
     }
 }
 
@@ -23607,7 +23619,7 @@ export class AuditActionResultOfPendingApprovalNotification extends AuditActionR
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -23652,7 +23664,7 @@ export class PendingApprovalNotification implements IPendingApprovalNotification
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -23694,7 +23706,7 @@ export class PendingNotificationItem implements IPendingNotificationItem {
         data["name"] = this.name;
         data["count"] = this.count;
         data["table"] = this.table;
-        return data; 
+        return data;
     }
 }
 
@@ -23738,7 +23750,7 @@ export class AuditActionResultOfICollectionOfWorkflowActivityModel extends Audit
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -23778,7 +23790,7 @@ export class WorkflowActivityModel extends DeletableModel implements IWorkflowAc
         data["approvalTableName"] = this.approvalTableName;
         data["createRevision"] = this.createRevision;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -23822,7 +23834,7 @@ export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionRe
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -23884,7 +23896,7 @@ export class WorkflowModel extends DeletableModel implements IWorkflowModel {
                 data["activityMaps"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -23930,7 +23942,7 @@ export class WorkflowStageMapModel implements IWorkflowStageMapModel {
         data["workflowStageName"] = this.workflowStageName;
         data["workflowId"] = this.workflowId;
         data["workflowStageId"] = this.workflowStageId;
-        return data; 
+        return data;
     }
 }
 
@@ -23974,7 +23986,7 @@ export class WorkflowActivityMapModel implements IWorkflowActivityMapModel {
         data["workflowActivityName"] = this.workflowActivityName;
         data["workflowId"] = this.workflowId;
         data["workflowActivityId"] = this.workflowActivityId;
-        return data; 
+        return data;
     }
 }
 
@@ -24010,7 +24022,7 @@ export class AuditActionResultOfWorkflowModel extends AuditActionResult implemen
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -24072,7 +24084,7 @@ export class CreateWorkflowRequest implements ICreateWorkflowRequest {
             for (let item of this.activityMaps)
                 data["activityMaps"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -24108,7 +24120,7 @@ export class UpdateWorkflowRequest extends CreateWorkflowRequest implements IUpd
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -24150,7 +24162,7 @@ export class AuditActionResultOfICollectionOfWorkflowGroupModel extends AuditAct
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -24233,7 +24245,7 @@ export class WorkflowGroupModel implements IWorkflowGroupModel {
             for (let item of this.groupUsers)
                 data["groupUsers"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -24285,7 +24297,7 @@ export class WorkflowGroupRoleMapModel implements IWorkflowGroupRoleMapModel {
         data["roleId"] = this.roleId;
         data["name"] = this.name;
         data["workflowGroupId"] = this.workflowGroupId;
-        return data; 
+        return data;
     }
 }
 
@@ -24326,7 +24338,7 @@ export class WorkflowGroupUserMapModel implements IWorkflowGroupUserMapModel {
         data = typeof data === 'object' ? data : {};
         data["userId"] = this.userId;
         data["workflowGroupId"] = this.workflowGroupId;
-        return data; 
+        return data;
     }
 }
 
@@ -24361,7 +24373,7 @@ export class AuditActionResultOfWorkflowGroupModel extends AuditActionResult imp
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -24423,7 +24435,7 @@ export class CreateWorkflowGroupRequest implements ICreateWorkflowGroupRequest {
             for (let item of this.users)
                 data["users"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -24459,7 +24471,7 @@ export class UpdateWorkflowGroupRequest extends CreateWorkflowGroupRequest imple
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -24501,7 +24513,7 @@ export class AuditActionResultOfICollectionOfWorkflowStageModel extends AuditAct
                 data["object"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -24552,7 +24564,7 @@ export class WorkflowStageModel extends DeletableModel implements IWorkflowStage
                 data["groups"].push(item.toJSON());
         }
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -24594,7 +24606,7 @@ export class WorkflowGroupStageMapModel implements IWorkflowGroupStageMapModel {
         data = typeof data === 'object' ? data : {};
         data["workflowStageId"] = this.workflowStageId;
         data["workflowGroupId"] = this.workflowGroupId;
-        return data; 
+        return data;
     }
 }
 
@@ -24629,7 +24641,7 @@ export class AuditActionResultOfWorkflowStageModel extends AuditActionResult imp
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
@@ -24680,7 +24692,7 @@ export class CreateWorkflowStageRequest implements ICreateWorkflowStageRequest {
             for (let item of this.workflowGroupStageMapModel)
                 data["workflowGroupStageMapModel"].push(item.toJSON());
         }
-        return data; 
+        return data;
     }
 }
 
@@ -24715,7 +24727,7 @@ export class UpdateWorkflowStageRequest extends CreateWorkflowStageRequest imple
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         super.toJSON(data);
-        return data; 
+        return data;
     }
 }
 
