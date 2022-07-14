@@ -57,18 +57,29 @@ namespace MSR.Application.ViewServices
                 StepText = j.StepText,
                 Title = j.Title,
                 UsefulLife = j.UsefulLife,
-                Utilization = j.Utilization                
+                Utilization = j.Utilization,
+                RoleIds = null
+            }).ToList();
+
+            var procedureStepIds = procedureSteps.Select(i => i.Id).ToList();
+
+            var procedureStepRoleMaps = _unitOfWork.ProcedureStepRoleMaps.Query().Where(i => procedureStepIds.Contains(i.ProcedureStepId)).Select(j => new ProcedureStepRoleMapView(){
+                Id = j.Id,
+                ProcedureStepId = j.ProcedureStepId,
+                RoleId = j.RoleId
             }).ToList();
 
             foreach(var step in procedureSteps)
             {
                 var procedure = procedures.FirstOrDefault(i => i.Id == step.ProcedureId);
+                var roleIds = procedureStepRoleMaps.Where(i => step.Id == i.ProcedureStepId).Select(i => i.RoleId).ToList();
                 if(procedure == null)
                 {
                     continue;
                 }
 
                 step.ProcedureName = procedure.Name;
+                step.RoleIds = String.Join(", ", roleIds);
             }
 
             var procedureDataTable = procedures.ToDataTable("Procedures");

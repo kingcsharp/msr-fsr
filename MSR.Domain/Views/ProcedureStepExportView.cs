@@ -18,5 +18,6 @@ namespace MSR.Domain.Views
         public decimal? RepacementCost { get; set; }
         public Single? Utilization { get; set; }
         public int? UsefulLife { get; set; }
+        public string RoleIds { get; set; }
     }
 }
