@@ -9,6 +9,7 @@ namespace MSR.Domain.Models
         public ProductModel ()
         {
             ProductSteps = new List<ProductStepModel>();
+            WorkOrders = new List<WorkOrderModel>();
         }
 
         public string Name { get; set; }

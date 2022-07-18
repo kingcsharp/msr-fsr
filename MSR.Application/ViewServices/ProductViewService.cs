@@ -82,7 +82,7 @@ namespace MSR.Application.ViewServices
 
         public async Task<ICollection<ProductModel>> GetProductsByWorkOrderAsync(int workOrderId)
         {
-            var products = new List<ProductModel>();
+            return await _productService.GetProductsByWorkOrder(workOrderId);
         }
     }
 }

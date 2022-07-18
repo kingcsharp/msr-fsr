@@ -14,5 +14,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("PurchaseOrderProductId")]
         public virtual PurchaseOrderProduct PurchaseOrderProduct { get; set; }
         public int PurchaseOrderProductId { get; set; }
+
+        public int Qty { get; set; }
     }
 }

@@ -585,10 +585,9 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static CreateWorkOrder ToCreateWorkOrderCommand(this CreateWorkOrderRequest request)
         {
-            return new CreateWorkOrder(request.PurchaseId, request.ProductId, request.PurchaseOrderId, request.Price,
-                request.ScheduledStartDate, request.ScheduledEndDate,
-                request.HasNCR, request.LocationId, request.Qty, request.SerializeIndividually, request.SerialNumbers,
-                request.CustomerLineNumbers);
+            return new CreateWorkOrder(request.PurchaseId, request.PurchaseOrderId, request.ScheduledStartDate, request.ScheduledEndDate,
+                request.HasNCR, request.LocationId, request.WorkOrderProducts.Select(i => 
+                new WorkOrderProduct(i.ProductId, i.SerializeIndividually, i.SerialNumbers, i.CustomerLineNumbers, i.Qty, i.Price)).ToList());
         }
 
         /// <summary>

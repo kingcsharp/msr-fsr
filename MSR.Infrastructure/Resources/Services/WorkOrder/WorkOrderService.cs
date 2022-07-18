@@ -89,7 +89,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderTaskIds = workOrderEntity.WorkOrderTasks.Select(i => i.Id).ToList();
             var workOrderPartIds = workOrderEntity.WorkOrderParts.Select(s => s.PartId).ToList();
             var workOrderWorkOrderPartIds = workOrderEntity.WorkOrderParts.Select(s => s.Id).ToList();
-
+                       
             _ = await _unitOfWork.Parts.Query().Where(s => workOrderPartIds.Contains(s.Id)).ToListAsync();
             _ = await _unitOfWork.Products.Query().FirstOrDefaultAsync(s => workOrderEntity.ProductId == s.Id);
 
@@ -115,6 +115,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             {
                 _ = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.PurchaseOrderId);
                 _ = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.LocationId);
+                _ = await _unitOfWork.PurchaseProductMaps.Query().Where(s => s.PurchaseId == workOrderEntity.PurchaseId).ToListAsync();
+                if (workOrderEntity.Purchase.PurchaseProducts != null)
+                {
+                    var ids = workOrderEntity.Purchase.PurchaseProducts.Select(i => i.PurchaseOrderProductId).ToList();
+                    _ = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => ids.Contains(i.Id)).ToListAsync();
+
+                    if(workOrderEntity.Purchase.PurchaseProducts.Any(i => i.PurchaseOrderProduct != null))
+                    {
+                        var purchaseOrderProductIds = workOrderEntity.Purchase.PurchaseProducts.Select(i => i.PurchaseOrderProduct.ProductId).ToList();
+                        _ = await _unitOfWork.Products.Query().Where(i => purchaseOrderProductIds.Contains(i.Id)).ToListAsync();
+                    }
+                }
             }
 
             if(workOrderEntity.Purchase.PurchaseOrder.Customer != null)
@@ -134,10 +146,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _ = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
             _ = await _unitOfWork.Status.Query().ToListAsync();
             _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
-            _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
+           _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
 
             var workOrderModel = _mapper.Map<WorkOrderModel>(workOrderEntity);
-
+            workOrderModel.WorkOrderProducts = workOrderEntity.Purchase.PurchaseProducts.Select(i => _mapper.Map<ProductModel>(i.PurchaseOrderProduct.Product)).ToList();
             workOrderModel.Status = TranslateWOStatusToViewModel(workOrderModel.WorkOrderTasks);
             var workOrderSerialNumbers = workOrderModel.WorkOrderParts.Select(i => i.SerialNumber).ToList();
             var ncrHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => workOrderPartIds.Contains(i.PartId) && workOrderSerialNumbers.Contains(i.SerialNumber)).ToListAsync();
@@ -390,9 +402,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public async Task<ICollection<WorkOrderTaskModel>> GetWorkOrderTasksAsync(CreateWorkOrder command)
+        public async Task<ICollection<WorkOrderTaskModel>> GetWorkOrderTasksAsync(int ProductId)
         {
-            var product = await _unitOfWork.Products.FirstOrDefaultAsync(false, x => x.Id == command.ProductId);
+            var product = await _unitOfWork.Products.FirstOrDefaultAsync(false, x => x.Id == ProductId);
             List<ProcedureStep> steps = await _unitOfWork.ProcedureSteps.Query()
                 .Where(x => x.ProcedureId == product.ProcedureId)
                 .OrderBy(x => x.PrintOrder)
@@ -431,65 +443,85 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         }
         public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command)
         {
-            var product = await _unitOfWork.Products
-                .Query()
-                .Include(x => x.Part)
-                .ThenInclude(y => y.Subparts)
-                .FirstAsync(x => x.Id == command.ProductId);
-
-            var subPartIds = product.Part.Subparts.Select(s => s.PartId);
-            _ = await _unitOfWork.Parts.Query().Where(s => subPartIds.Contains(s.Id)).ToListAsync();
-
-
-            int createCount = 1;
-            int quantity = command.Qty;
-
-            if (command.SerializeIndividually && command.Qty > 1)
-            {
-                createCount = command.Qty;
-                quantity = 1;
-            }
-
-            //we only have to do subpart mapping once because it doesn't change
-            
-
             var parts = new List<WorkOrderPartModel>();
-            for ( ; createCount > 0; createCount -= 1)
+            
+            foreach (var item in command.WorkOrderProducts)
             {
-                var subParts = new List<WorkOrderPartModel>();
-                if(product.Part.Subparts != null && product.Part.Subparts.Any())
+                //Get a list of the ProductIds and pull the entire list
+                var product = await _unitOfWork.Products
+                    .Query()
+                    .Include(x => x.Part)
+                    .ThenInclude(y => y.Subparts)
+                    .FirstAsync(x => x.Id == item.ProductId);
+
+                var subPartIds = product.Part.Subparts.Select(s => s.PartId);
+                _ = await _unitOfWork.Parts.Query().Where(s => subPartIds.Contains(s.Id)).ToListAsync();
+
+
+                int createCount = 1;
+                int quantity = item.Qty;
+
+                if (item.SerializeIndividually && item.Qty > 1)
                 {
-                    foreach(var partSubPartMapForSubPart in product.Part.Subparts)
-                    {
-                        var subPartQuantity = partSubPartMapForSubPart.Qty;
-                        if(subPartQuantity == 0)
-                        {
-                            subPartQuantity = 1;
-                        }
-
-                        var partSegregationTypeValue = partSubPartMapForSubPart.Part?.SegregationType;
-
-                        for(; subPartQuantity > 0; subPartQuantity -= 1)
-                        {
-                            subParts.Add(new WorkOrderPartModel()
-                            {
-                                PartId = partSubPartMapForSubPart.PartId,
-                                ParentId = partSubPartMapForSubPart.ParentPartId,
-                                Qty = 1,
-                                SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
-                            });
-                        }
-                    }
+                    createCount = item.Qty;
+                    quantity = 1;
                 }
 
-                parts.Add(new WorkOrderPartModel()
+                var partList = new List<WorkOrderPartModel>();
+                for (; createCount > 0; createCount -= 1)
+                {
+                    var subParts = new List<WorkOrderPartModel>();
+                    if (product.Part.Subparts != null && product.Part.Subparts.Any())
+                    {
+                        foreach (var partSubPartMapForSubPart in product.Part.Subparts)
+                        {
+                            var subPartQuantity = partSubPartMapForSubPart.Qty;
+                            if (subPartQuantity == 0)
+                            {
+                                subPartQuantity = 1;
+                            }
+
+                            var partSegregationTypeValue = partSubPartMapForSubPart.Part?.SegregationType;
+
+                            for (; subPartQuantity > 0; subPartQuantity -= 1)
+                            {
+                                subParts.Add(new WorkOrderPartModel()
+                                {
+                                    PartId = partSubPartMapForSubPart.PartId,
+                                    ParentId = partSubPartMapForSubPart.ParentPartId,
+                                    Qty = 1,
+                                    SegregationType = partSegregationTypeValue != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(partSegregationTypeValue) : EnumSegregationType.NONCU
+                                });
+                            }
+                        }
+                    }
+
+                    partList.Add(new WorkOrderPartModel()
                     {
                         PartId = product.PartId,
                         Children = subParts,
                         Qty = quantity
                     });
-            }
+                }
 
+                var serialNumberList = item.SerialNumbers.ToList();
+                var customerLineNumberList = item.CustomerLineNumbers.ToList();
+                for (var workOrderPartIndex = 0;
+                workOrderPartIndex < item.SerialNumbers.Count && workOrderPartIndex < parts.Count;
+                workOrderPartIndex += 1)
+                {
+                    if (serialNumberList[workOrderPartIndex] != null)
+                    {
+                        partList[workOrderPartIndex].SerialNumber = serialNumberList[workOrderPartIndex];
+                    }
+
+                    if (customerLineNumberList[workOrderPartIndex] != null)
+                    {
+                        partList[workOrderPartIndex].CustomerLineNumber = customerLineNumberList[workOrderPartIndex];
+                    }
+                }
+                parts.AddRange(partList);
+            }
             return parts;
         }
 

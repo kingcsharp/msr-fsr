@@ -29,7 +29,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(CreatePurchase command, CancellationToken cancellationToken = default)
         {
             var ret = await _purchaseService.CreatePurchaseAsync(command);
-            return new CommandResponse<PurchaseModel>(ret);
+            return new CommandResponse<ICollection<PurchaseModel>>(ret);
         }
     }
 }

@@ -80,10 +80,10 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProductStep, ProductStepModel>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>();
             CreateMap<Purchase, CreatePurchase>();
-            CreateMap<CreatePurchase, Purchase>()
+            CreateMap<CreatePurchase, Purchase>();
+            CreateMap<PurchaseItem, Purchase>();
                 // A purchase will take the first item's serial as the main serial number.  This
                 // follows the behavior of Answer 2.
-                .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => src.SerialNumbers == null ? null : src.SerialNumbers[0]));
             CreateMap<WorkOrderPart, WorkOrderPartModel>()
                 .ForMember(dest => dest.SegregationType, opt => opt.MapFrom(src => src.SegregationType != null ? EnumUtils.GetValueFromDescription<EnumSegregationType>(src.SegregationType) : EnumSegregationType.NONCU));
             CreateMap<WorkOrderTask, WorkOrderTaskModel>()
@@ -286,7 +286,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<WorkOrder, WorkOrderModel>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => GetCustomerName(src)))
-                .ForMember(dest => dest.HasSubParts, opt => opt.MapFrom(src => src.HasSubParts.HasValue ? src.HasSubParts : false));
+                .ForMember(dest => dest.HasSubParts, opt => opt.MapFrom(src => src.HasSubParts.HasValue ? src.HasSubParts : false))
+                .ForMember(dest => dest.WorkOrderProducts, opt => opt.Ignore());
             CreateMap<CreateWorkOrder, WorkOrder>();
             CreateMap<UpdateWorkOrderPrice, WorkOrder>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderId))
@@ -542,10 +543,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.CycleTime, opts => opts.MapFrom(src => src.Product.CycleTime));
 
             CreateMap<PurchaseModel, CreateWorkOrder>()
-                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => src.Qty > 0 ? src.Qty : 1))
                 .ForMember(dest => dest.PurchaseId, opts => opts.MapFrom(src => src.Id))
-                .ForMember(dest => dest.ProductId, opts => opts.MapFrom(src => src.PurchaseOrderProduct.ProductId))
-                .ForMember(dest => dest.Price, opts => opts.MapFrom(src => src.PurchasePrice))
                 .ForMember(dest => dest.ScheduledEndDate, opts => opts.MapFrom(src => src.DueDate));
 
             CreateMap<UpdateWorkOrderPart, WorkOrderPart>()

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.API.Extentions;
 using MSR.Answer.API.Infrastructure.Converters;
+using Newtonsoft.Json;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using System.Linq;
@@ -36,6 +37,9 @@ namespace MSR.Answer.API
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
+            }).AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
             services.AddApiVersioning();

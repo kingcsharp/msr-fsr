@@ -55,5 +55,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 
         public virtual ICollection<PurchaseProductMap> PurchaseProducts { get; set; }
+
+        [ForeignKey("PurchaseOrderProductId")]
+        public virtual PurchaseOrderProduct PurchaseOrderProduct { get; set; }
     }
 }
