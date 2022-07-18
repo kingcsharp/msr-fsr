@@ -314,8 +314,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 return new List<ProductModel>();
             }
             var products = await _unitOfWork.Products.Query().Where(i => productIds.Contains(i.Id)).ToListAsync();
-
-            return products.Select(i => _mapper.Map<ProductModel>(i)).ToList();
+            var productModels = products.Select(i => _mapper.Map<ProductModel>(i)).ToList();
+            
+            productModels.ForEach(j => j.WorkOrders.ToList().ForEach(i => i.Purchase = null));
+            
+            return productModels;
         }
     }
 }

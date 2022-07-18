@@ -16,6 +16,8 @@ using MSR.Infrastructure.Resources.Queries;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using MSR.Domain.Models;
 
 namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 {
@@ -51,64 +53,120 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             return result;
         }
 
-        public async Task<Domain.Models.PurchaseModel> CreatePurchaseAsync(CreatePurchase command)
+        public async Task<ICollection<Domain.Models.PurchaseModel>> CreatePurchaseAsync(CreatePurchase command)
         {
-            Domain.Models.PurchaseModel ret;
-
-            //if (command.StatusId == 0) 
-            //{
-            //    throw new DomainException("Invalid Status of 0", DomainError.BadRequest);
-            //}
+            List<Domain.Models.PurchaseModel> ret = new List<PurchaseModel>();
+            EntityEntry<Purchase> created;
+            Purchase purchase;
 
             if (CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
             {
-                var purchase = _mapper.Map<Purchase>(command);
-                var created = _unitOfWork.Purchases.Add(purchase);
-
-                // Call SaveChangesAsync to generate the new ID
-                await _unitOfWork.SaveChangesAsync();
-
-                // CustomerPurchaseNumber is the same as the DB id
-                // In answer 2 it was a sequential integer based on the object
-                // table.  In 3, we just use the purchase Id as a string.
-                purchase.CustomerPurchaseNumber = purchase.Id.ToString();
-
-                // log the transaction
-                await _unitOfWork.LogApprovalTransaction(purchase, purchase.Id);
-
-                // load required navigation fields
-                await created.Context.Entry(purchase)
-                    .Reference(x => x.Status).LoadAsync();
-                await created.Context.Entry(purchase)
-                    .Reference(x => x.Location).LoadAsync();
-                await created.Context.Entry(purchase)
-                    .Reference(x => x.PurchaseOrder).LoadAsync();
-                await created.Context.Entry(purchase)
-                    .Reference(x => x.PurchaseOrderProduct).LoadAsync();
-                await created.Context.Entry(purchase.PurchaseOrderProduct)
-                    .Reference(x => x.Product).LoadAsync();
-
-                ret = _mapper.Map<Domain.Models.PurchaseModel>(purchase);
-                ret.SerializeIndividually = command.SerializeIndividually;
-
-                var workOrderCreateEvent = new WorkOrderCreateEvent
+                if (command.GroupLines)
                 {
-                    SerialNumbers = command.SerialNumbers,
-                    CustomerLineNumbers = command.CustomerLineNumbers,
-                    Qty = ret.Qty,
-                    Price = ret.PurchasePrice,
-                    LocationId = ret.LocationId,
-                    PurchaseId = ret.Id,
-                    ScheduledEndDate = ret.DueDate,
-                    ScheduledStartDate = DateTime.UtcNow,
-                    ProductId = ret.PurchaseOrderProduct.ProductId,
-                    SerializeIndividually = ret.SerializeIndividually,
-                    HasNCR = false,
-                    PurchaseOrderId = ret.PurchaseOrderId
-                };
+                    purchase = _mapper.Map<Purchase>(command.PurchaseRequests.First());
+                    purchase.SerialNumber = command.PurchaseRequests.First().SerialNumbers.FirstOrDefault();
+                    created = _unitOfWork.Purchases.Add(purchase);
+                    await _unitOfWork.SaveChangesAsync();
+                    purchase.CustomerPurchaseNumber = purchase.Id.ToString();
 
-                var sqsMessageEnvelope = new MessageEnvelope(workOrderCreateEvent.GetType().Name, workOrderCreateEvent, await _accountService.GetJWTTokenAsync());
-                await _bus.SendMessage(sqsMessageEnvelope);
+                    var workOrderCreateEvent = new WorkOrderCreateEvent
+                    {
+                        HasNCR = false,
+                        LocationId = command.PurchaseRequests.First().LocationId,
+                        PurchaseId = purchase.Id,
+                        PurchaseOrderId = command.PurchaseRequests.First().PurchaseOrderId,
+                        ScheduledEndDate = command.PurchaseRequests.First().DueDate,
+                        ScheduledStartDate = DateTime.UtcNow
+                    };
+
+                    foreach (var item in command.PurchaseRequests)
+                    {
+                        var product = await _unitOfWork.PurchaseOrderProducts.FirstOrDefaultAsync(false,i => i.Id == item.PurchaseOrderProductId);
+                        var purchaseProductMap = new PurchaseProductMap()
+                        {
+                            PurchaseId = purchase.Id,
+                            PurchaseOrderProductId = item.PurchaseOrderProductId,
+                            Qty = item.Qty
+                        };
+
+                        _unitOfWork.PurchaseProductMaps.Add(purchaseProductMap);
+
+                        workOrderCreateEvent.WorkOrderProducts.Add(new WorkOrderProduct(product.Id, item.SerializeIndividually, item.SerialNumbers, item.CustomerLineNumbers, item.Qty, item.PurchasePrice));
+                    }
+
+                    await _unitOfWork.LogApprovalTransaction(purchase, purchase.Id);
+
+                    var sqsMessageEnvelope = new MessageEnvelope(workOrderCreateEvent.GetType().Name, workOrderCreateEvent, await _accountService.GetJWTTokenAsync());
+                    await _bus.SendMessage(sqsMessageEnvelope);
+
+                    await created.Context.Entry(purchase)
+                    .Reference(x => x.Status).LoadAsync();
+                    await created.Context.Entry(purchase)
+                        .Reference(x => x.Location).LoadAsync();
+                    await created.Context.Entry(purchase)
+                        .Reference(x => x.PurchaseOrder).LoadAsync();
+                    await created.Context.Entry(purchase)
+                        .Reference(x => x.PurchaseOrderProduct).LoadAsync();
+                    await created.Context.Entry(purchase.PurchaseOrderProduct)
+                        .Reference(x => x.Product).LoadAsync();
+
+                    var purchaseModel = _mapper.Map<PurchaseModel>(purchase);
+                    purchaseModel.SerializeIndividually = command.PurchaseRequests.First().SerializeIndividually;
+                    ret.Add(purchaseModel);
+                    
+                }
+                else 
+                { 
+                    foreach(var item in command.PurchaseRequests)
+                    {
+                        purchase = _mapper.Map<Purchase>(item);
+                        created = _unitOfWork.Purchases.Add(purchase);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        purchase.CustomerPurchaseNumber = purchase.Id.ToString();
+                        var purchaseProductMap = new PurchaseProductMap()
+                        {
+                            PurchaseId = purchase.Id,
+                            PurchaseOrderProductId = item.PurchaseOrderProductId,
+                            Qty = item.Qty
+                        };
+
+                        _unitOfWork.PurchaseProductMaps.Add(purchaseProductMap);
+
+                        await _unitOfWork.LogApprovalTransaction(purchase, purchase.Id);
+                        await created.Context.Entry(purchase)
+                        .Reference(x => x.Status).LoadAsync();
+                        await created.Context.Entry(purchase)
+                            .Reference(x => x.Location).LoadAsync();
+                        await created.Context.Entry(purchase)
+                            .Reference(x => x.PurchaseOrder).LoadAsync();
+                        await created.Context.Entry(purchase)
+                            .Reference(x => x.PurchaseOrderProduct).LoadAsync();
+                        await created.Context.Entry(purchase.PurchaseOrderProduct)
+                            .Reference(x => x.Product).LoadAsync();
+
+                        var purchaseModel = _mapper.Map<Domain.Models.PurchaseModel>(purchase);
+                        purchaseModel.SerializeIndividually = item.SerializeIndividually;
+                        ret.Add(purchaseModel);
+
+                        var workOrderCreateEvent = new WorkOrderCreateEvent
+                        {
+                            HasNCR = false,
+                            LocationId = command.PurchaseRequests.First().LocationId,
+                            PurchaseId = purchase.Id,
+                            PurchaseOrderId = command.PurchaseRequests.First().PurchaseOrderId,
+                            ScheduledEndDate = command.PurchaseRequests.First().DueDate,
+                            ScheduledStartDate = DateTime.UtcNow
+                        };
+
+                        var product = await _unitOfWork.PurchaseOrderProducts.FirstOrDefaultAsync(false, i => i.Id == item.PurchaseOrderProductId);
+                        workOrderCreateEvent.WorkOrderProducts.Add(new WorkOrderProduct(product.Id, item.SerializeIndividually, item.SerialNumbers, item.CustomerLineNumbers, item.Qty, item.PurchasePrice));
+                        var sqsMessageEnvelope = new MessageEnvelope(workOrderCreateEvent.GetType().Name, workOrderCreateEvent, await _accountService.GetJWTTokenAsync());
+                        await _bus.SendMessage(sqsMessageEnvelope);
+                    }
+                }
+
+               
 
             }
             else

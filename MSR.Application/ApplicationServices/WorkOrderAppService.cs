@@ -173,31 +173,14 @@ namespace MSR.Application.ApplicationServices
             CancellationToken cancellationToken = default)
         {
             var workOrderDto = CreateWorkOrderDTO.FromCommand(command);
-            var tasks = await _workOrderService.GetWorkOrderTasksAsync(command);
+            var tasks = await _workOrderService.GetWorkOrderTasksAsync(command.WorkOrderProducts.First().ProductId);
             workOrderDto.WorkOrderTasks = tasks;
 
+            
             var parts = (await _workOrderService.GetWorkOrderPartsAsync(command)).ToList();
-            var serialNumberList = workOrderDto.SerialNumbers.ToList();
-            var customerLineNumbers = workOrderDto.CustomerLineNumbers.ToList();
-
-            // Copy in the serial numbers entered at purchase time, if any.
-            for (var workOrderPartIndex = 0;
-                workOrderPartIndex < serialNumberList.Count && workOrderPartIndex < parts.Count;
-                workOrderPartIndex += 1)
-            {
-                if (serialNumberList[workOrderPartIndex] != null)
-                {
-                    parts[workOrderPartIndex].SerialNumber = serialNumberList[workOrderPartIndex];
-                }
-
-                if (customerLineNumbers[workOrderPartIndex] != null)
-                {
-                    parts[workOrderPartIndex].CustomerLineNumber = customerLineNumbers[workOrderPartIndex];
-                }
-            }
 
             workOrderDto.WorkOrderParts = parts;
-
+            workOrderDto.Price = command.WorkOrderProducts.Sum(i => i.Price * i.Qty);
             var workOrderModelNumber = await _workOrderService.CreateWorkOrderAsync(workOrderDto);
             return new CommandResponse<string>(workOrderModelNumber);
         }

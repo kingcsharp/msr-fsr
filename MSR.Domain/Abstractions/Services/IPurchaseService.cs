@@ -8,7 +8,7 @@ namespace MSR.Domain.Abstractions.Services
     public interface IPurchaseService
     {
         Task<ICollection<PurchaseModel>> GetPurchasesAsync(GetPurchases command);
-        Task<PurchaseModel> CreatePurchaseAsync(CreatePurchase command);
+        Task<ICollection<PurchaseModel>> CreatePurchaseAsync(CreatePurchase command);
         Task<int> GetPurchaseTotalRows(GetPurchases command);
     }
 }

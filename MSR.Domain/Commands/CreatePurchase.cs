@@ -6,7 +6,7 @@ namespace MSR.Domain.Commands
 {
     public class CreatePurchase : Command
     {
-        ICollection<PurchaseItem> PurchaseRequests { get; set; }
+        public ICollection<PurchaseItem> PurchaseRequests { get; set; }
         public bool GroupLines { get; set; }
     }
 }

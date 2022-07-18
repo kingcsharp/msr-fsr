@@ -9,10 +9,7 @@ namespace MSR.Answer.API.V1.Models
     /// </summary>
     public class CreatePurchaseRequest
     {
-        [Required]
-        ICollection<PurchaseRequest> PurchaseRequests { get; set; }
-
-        [Required]
         public bool GroupLines { get; set; }
+        public List<PurchaseRequest> PurchaseRequests { get; set; }
     }
 }

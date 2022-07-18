@@ -196,7 +196,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<NCRHistoryItem> NCRHistory { get { return _ncrHistory ??= new EFRepository<NCRHistoryItem>(Context); } }
         public IRepository<WorkOrderPartNCRMapItem> WorkOrderPartNCRMap { get { return _workOrderPartNcrMap ??= new EFRepository<WorkOrderPartNCRMapItem>(Context); } }
         public IRepository<WorkOrderPartDataMatrixView> WorkOrderPartDataMatrixViews { get { return _workOrderPartDataMatrixView ??= new EFRepository<WorkOrderPartDataMatrixView>(Context); } }
-        public IRepository<PurchaseProductMap> PurchaseProductMaps { get; { return _purchaseProductMap ??= new EFRepository<PurchaseProductMap>(Context); } }
+        public IRepository<PurchaseProductMap> PurchaseProductMaps { get { return _purchaseProductMap ??= new EFRepository<PurchaseProductMap>(Context); } }
 
         #endregion Repositories
 

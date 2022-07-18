@@ -183,5 +183,6 @@ namespace MSR.Domain.Models
         public decimal? Price { get; set;}
         public bool CustomerLastRespondent { get; set; }
         public ICollection<WorkOrderMessageModel> WorkOrderMessages { get; set; }
+        public bool MultipleProducts { get; set; }
     }
 }
