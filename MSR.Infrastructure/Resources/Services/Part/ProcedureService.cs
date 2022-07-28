@@ -518,11 +518,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval) || isImport)
             {
+                var roleMapsToRemoveIds = new List<int>();
                 if (command.Roles != null &&
                     command.Roles.Count > 0 &&
                     command.Roles.All(x => x != null))
                 {
-                    foreach (ProcedureStepRoleMap m in originalProcedureStepEntity.ProcedureStepRoles)
+                    var incomingRoleIds = command.Roles.Select(i => i.Id).ToList();
+                    roleMapsToRemoveIds = originalProcedureStepEntity.ProcedureStepRoles.Where(i => !incomingRoleIds.Contains(i.RoleId)).Select(i => i.Id).ToList();
+                }
+                else
+                {
+                    roleMapsToRemoveIds = originalProcedureStepEntity.ProcedureStepRoles.Select(i => i.Id).ToList();
+                }
+
+                foreach (ProcedureStepRoleMap m in originalProcedureStepEntity.ProcedureStepRoles)
+                {
+                    if (roleMapsToRemoveIds.Contains(m.Id))
                     {
                         _unitOfWork.ProcedureStepRoleMaps.Delete(false, m);
                     }
@@ -882,6 +893,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var procedureImportItems = procedures.ToList<ProcedureImportItem>();
             var procedureStepImportItems = procedureSteps.ToList<ProcedureStepImportItem>();
             var validImportItems = new List<ProcedureImportItem>();
+            var allRoleIds = _unitOfWork.Roles.Query().Select(i => i.Id).ToList();
 
             foreach (var procedureImportItem in procedureImportItems)
             {
@@ -939,6 +951,29 @@ namespace MSR.Infrastructure.Resources.Services.Part
                             importError.Errors.AddRange(returnedProcedureStepData.SelectMany(i => i.Errors.Select(j => $"Line: {i.Line}: Error: {j}")));
                             errors.Add(importError);
                         }
+
+                        foreach (var procedureStepItem in procedureStepItems)
+                        {
+                            if (!string.IsNullOrWhiteSpace(procedureStepItem.RoleIds))
+                            {
+                                var roleIds = procedureStepItem.RoleIds.Split(", ");
+                                foreach (var roleIdStr in roleIds)
+                                {
+                                    if (Int32.TryParse(roleIdStr, out var roleId))
+                                    {
+                                        if (allRoleIds.Contains(roleId))
+                                        {
+                                            procedureStepItem.Roles.Add(new Domain.Models.Role()
+                                            {
+                                                Id = roleId
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        
                         procedureImportItem.ProcedureSteps = procedureStepItems;
                     }
                     if (!errors.Any())
@@ -986,6 +1021,28 @@ namespace MSR.Infrastructure.Resources.Services.Part
                             },
                             Line = lineNumber
                         });
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(step.RoleIds))
+                    {
+                        var inComingRoleIds = step.RoleIds.Split(", ");
+                        foreach (var roleIdStr in inComingRoleIds)
+                        {
+                            if (Int32.TryParse(roleIdStr, out var roleId))
+                            {
+                                if (!roleIds.Contains(roleId))
+                                {
+                                    errors.Add(new ImportError()
+                                    {
+                                        Errors = new List<string>()
+                                        {
+                                            $"Step on line: {lineNumber} with Id: {step.Id.Value}, Role Id: {roleId} Does not exist"
+                                        },
+                                        Line = lineNumber
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
                 catch (InvalidCastException e)
