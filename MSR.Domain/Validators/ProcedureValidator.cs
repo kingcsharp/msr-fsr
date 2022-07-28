@@ -21,7 +21,7 @@ namespace MSR.Domain.Validators
             const int IMPORT_TABLE_COUNT = 2;
             const string PROCEDURESTEPIMPORT = "ProcedureSteps";
             const string PROCEDUREIMPORT = "Procedures";
-            const int PROCEDURESTEPS_COLUMNS_COUNT = 12;
+            const int PROCEDURESTEPS_COLUMNS_COUNT = 13;
             const int PROCEDURES_COLUMNS_COUNT = 7;
 
             try 
