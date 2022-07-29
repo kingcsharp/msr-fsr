@@ -257,6 +257,7 @@ export class WipComponent implements OnInit {
 
 
   editSelectedEndDate(model: SelectedItem, index: number){
+    if(!this.adminOrManager) return
     this.selectedItem = model;
     this.selectedItem.selectedIndex = index;
     this.selectedItem.initialValues = cloneDeep(model);
