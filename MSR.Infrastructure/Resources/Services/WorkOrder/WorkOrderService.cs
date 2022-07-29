@@ -1893,5 +1893,36 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             return ret;
         }
+
+        public async Task<WorkOrderModel> UpdateWorkOrderEndDateAsync(UpdateWorkOrderEndDate command)
+        {
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanEdit))
+            {
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
+            }
+
+            var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.WorkOrderId);
+
+            if (current is null)
+            {
+                throw new DomainException($"{nameof(WorkOrder)} not found with ID: {command.WorkOrderId}", DomainError.NotFound);
+            }
+
+            WorkOrderModel ret;
+            current.ScheduledEndDate = command.ScheduledEndDate;
+            current.ScheduledEndDateChangeReason = command.ScheduledEndDateChangeReason;
+            _unitOfWork.WorkOrders.Update(current);
+
+            // This will call SaveChangesAsync
+            await _unitOfWork.LogApprovalTransaction(current, current.Id);
+
+            ret = _mapper.Map<WorkOrderModel>(current);
+
+            return ret;
+
+        }
     }
 }

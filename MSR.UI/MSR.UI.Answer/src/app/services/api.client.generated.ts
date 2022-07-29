@@ -8535,6 +8535,61 @@ export class WorkOrderService {
         }
         return _observableOf<AuditActionResultOfWorkOrderModel>(<any>null);
     }
+
+    updateEndDate(version: string, request: UpdateWorkOrderEndDateRequest): Observable<AuditActionResultOfWorkOrderModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/UpdateEndDate";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateEndDate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateEndDate(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateEndDate(response: HttpResponseBase): Observable<AuditActionResultOfWorkOrderModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfWorkOrderModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfWorkOrderModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -22894,6 +22949,50 @@ export class UpdateWorkOrderPriceRequest implements IUpdateWorkOrderPriceRequest
 export interface IUpdateWorkOrderPriceRequest {
     workOrderId?: number;
     price?: number;
+}
+
+export class UpdateWorkOrderEndDateRequest implements IUpdateWorkOrderEndDateRequest {
+    workOrderId?: number;
+    scheduledEndDate?: Date;
+    scheduledEndDateChangeReason?: string | undefined;
+
+    constructor(data?: IUpdateWorkOrderEndDateRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
+            this.scheduledEndDateChangeReason = _data["scheduledEndDateChangeReason"];
+        }
+    }
+
+    static fromJS(data: any): UpdateWorkOrderEndDateRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateWorkOrderEndDateRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
+        data["scheduledEndDateChangeReason"] = this.scheduledEndDateChangeReason;
+        return data; 
+    }
+}
+
+export interface IUpdateWorkOrderEndDateRequest {
+    workOrderId?: number;
+    scheduledEndDate?: Date;
+    scheduledEndDateChangeReason?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

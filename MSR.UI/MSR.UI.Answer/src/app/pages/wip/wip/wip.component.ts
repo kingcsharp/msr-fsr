@@ -16,6 +16,7 @@ import {
   CreateWorkOrderMessageRequest,
   WorkOrderGridSummary,
   WorkOrderMessageModel,
+  UpdateWorkOrderEndDateRequest,
 } from "../../../services/api.client.generated";
 import { environment as env } from "../../../../environments/environment";
 import { responseHandler } from "../../../utils/responseHandler";
@@ -31,10 +32,7 @@ import { MergeScanOperator } from "rxjs/internal/operators/mergeScan";
 
 interface SelectedItem extends WorkOrderGridSummary {
   initialValues: Omit<SelectedItem, 'initialValues'>
-  scheduledEndDateChangeReason: string,
   selectedIndex: number,
-  scheduledEndDateChanged: boolean,
-  // workOrderMessages: Array<any>
 }
 
 @Component({
@@ -265,10 +263,21 @@ export class WipComponent implements OnInit {
     this.showScheduledEndDateDialog = true;
   }
 
-  saveScheduledEndDate(){
-    alert('saved');
-    this.selectedItem.scheduledEndDateChanged = true;
-    this.showScheduledEndDateDialog = false;
+   saveScheduledEndDate(){
+    const updateEndDateRequest = new UpdateWorkOrderEndDateRequest({
+      workOrderId: this.selectedItem.id,
+      scheduledEndDate: this.selectedItem.scheduledEndDate,
+      scheduledEndDateChangeReason: this.selectedItem.scheduledEndDateChangeReason,
+    });
+    this.workOrderService
+      .updateEndDate(env.apiVersion, updateEndDateRequest)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.selectedItem.scheduledEndDateChanged = true;
+          this.showScheduledEndDateDialog = false;
+        })
+      );
   }
   closeScheduledEndDateDialog(){
     const {initialValues}  = this.selectedItem;
