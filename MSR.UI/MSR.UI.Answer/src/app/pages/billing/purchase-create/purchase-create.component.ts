@@ -116,6 +116,7 @@ export class PurchaseCreateComponent implements OnInit {
               partName: product.partName,
               partNumber: product.partNumber,
               procedureName: product.procedureName,
+              procedureId: product.procedureId,
               price: product.totalSalePrice,
               qty: 0,
               groupWO: false,
@@ -384,7 +385,7 @@ export class PurchaseCreateComponent implements OnInit {
     this.showMultiLineWO =
       selectedProducts.length > 1 &&
       selectedProducts.some(
-        (v) => v["procedureId"] === selectedProducts[0]["procedureId"]
+        (v) => v.procedureId === selectedProducts[0].procedureId
       );
     if (!this.showMultiLineWO) this.multiLineWO = false;
 

@@ -17558,6 +17558,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     name?: string | undefined;
     partName?: string | undefined;
     partNumber?: string | undefined;
+    procedureId?: number;
     procedureName?: string | undefined;
     cycleTime?: number | undefined;
     totalSalePrice?: number;
@@ -17578,6 +17579,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
             this.name = _data["name"];
             this.partName = _data["partName"];
             this.partNumber = _data["partNumber"];
+            this.procedureId = _data["procedureId"];
             this.procedureName = _data["procedureName"];
             this.cycleTime = _data["cycleTime"];
             this.totalSalePrice = _data["totalSalePrice"];
@@ -17598,6 +17600,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
         data["name"] = this.name;
         data["partName"] = this.partName;
         data["partNumber"] = this.partNumber;
+        data["procedureId"] = this.procedureId;
         data["procedureName"] = this.procedureName;
         data["cycleTime"] = this.cycleTime;
         data["totalSalePrice"] = this.totalSalePrice;
@@ -17611,6 +17614,7 @@ export interface IPurchaseOrderProductView {
     name?: string | undefined;
     partName?: string | undefined;
     partNumber?: string | undefined;
+    procedureId?: number;
     procedureName?: string | undefined;
     cycleTime?: number | undefined;
     totalSalePrice?: number;
