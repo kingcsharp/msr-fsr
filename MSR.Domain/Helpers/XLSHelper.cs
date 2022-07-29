@@ -85,6 +85,10 @@ namespace MSR.Domain.Helpers
                             Double.TryParse(row[property.Name].ToString(), out var throwAwayNumber);
                             property.SetValue(item, throwAwayNumber, null);
                         }
+                        else if (property.PropertyType == typeof(string) && (row[property.Name].GetType() == typeof(int) || row[property.Name].GetType() == typeof(double)))
+                        {
+                            property.SetValue(item, row[property.Name].ToString(), null);
+                        }
                         else
                         {
                             property.SetValue(item, row[property.Name], null);

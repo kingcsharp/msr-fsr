@@ -226,13 +226,20 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 createWorkOrderDto.ScheduledStartDate = DateTime.UtcNow;
             }
 
+            var purchase = _unitOfWork.Purchases.FirstOrDefault(false, i => i.Id == createWorkOrderDto.PurchaseId);
+
+
             var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(createWorkOrderDto);
+
+            if(purchase != null)
+            {
+                workOrderEntity.Price = purchase.PurchasePrice * purchase.Qty;
+            }
 
             var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
             var procedureSteps = await _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id)).ToListAsync();
             var procedureStepMonitors = await _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId)).ToListAsync();
             var totalLaborTime = (decimal)0.0;
-
             workOrderEntity.HasMonitor = workOrderEntity.WorkOrderTasks.Any(i => i.WorkOrderTaskMonitors.Any());
             workOrderEntity.HasSubParts = createWorkOrderDto.WorkOrderParts.Any(i => i.Children.Any());
             foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
@@ -1042,8 +1049,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                         CreatedBy = CurrentUser.GetId(),
                         WorkOrderPartId = partId,
                         WorkOrderTaskId = command.Id,
-                        TagType = command?.MappedWorkOrderParts?.FirstOrDefault(i => i.Id == partId)?.TagType
-
+                        TagType = command?.MappedWorkOrderParts?.FirstOrDefault(i => i.Id == partId)?.TagType,
+                        Detail = command?.MappedWorkOrderParts?.FirstOrDefault(i => i.Id == partId)?.Detail
                     };
 
                     await _unitOfWork.WorkOrderPartNCRMap.AddAsync(mappedItem);
@@ -1064,13 +1071,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             {
                 foreach(var part in partsToUpdate)
                 {
-                    var incomingPart = command.MappedWorkOrderParts.FirstOrDefault(i => part.WorkOrderPartId == i.Id && part.TagType != i.TagType);
+                    var incomingPart = command.MappedWorkOrderParts.FirstOrDefault(i => part.WorkOrderPartId == i.Id && (part.TagType != i.TagType || part.Detail != i.Detail));
                     if(incomingPart == null)
                     {
                         continue;
                     }
 
                     part.TagType = incomingPart.TagType;
+                    part.Detail = incomingPart.Detail;
                     _unitOfWork.WorkOrderPartNCRMap.Update(part);
                 }
                 await _unitOfWork.SaveChangesAsync();
@@ -1192,7 +1200,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             workOrderTaskModel.MappedWorkOrderParts = mappedWorkOrderNCRMaps.Select(i => new MappedWorkOrderPart()
             {
                 Id = i.WorkOrderPartId,
-                TagType = i.TagType
+                TagType = i.TagType,
+                Detail = i.Detail
             }).ToList();
             // Update the work order datetimes, if needed
             // IMPORTANT: the return object cannot be remapped after this
