@@ -69,12 +69,12 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets ScheduledEndDateChangeReason
         /// </summary>
-        public string? ScheduledEndDateChangeReason { get; set; }
+        public string ScheduledEndDateChangeReason { get; set; }
 
         /// <summary>
         /// Gets ScheduledEndDateChanged
         /// </summary>
-        public Boolean ScheduledEndDateChanged
+        public bool ScheduledEndDateChanged
         {
             get
             {
