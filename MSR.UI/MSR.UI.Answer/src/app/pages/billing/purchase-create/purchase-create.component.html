@@ -166,6 +166,7 @@
                       [options]="selectButtonOptions"
                       [(ngModel)]="multiLineWO"
                       name="multiLineWO"
+                      (onChange)="onChangeMultiLineWO()"
                     >
                     </p-selectButton>
                     <label class="px-3">Group all lines on One WO</label>
@@ -193,7 +194,7 @@
                     mode="decimal"
                     name="ProductPo[{{ i }}].Qty"
                     [useGrouping]="false"
-                    (onBlur)="onChangeQTY()"
+                    (onBlur)="onChangeQTY(i)"
                   >
                   </p-inputNumber>
                 </td>

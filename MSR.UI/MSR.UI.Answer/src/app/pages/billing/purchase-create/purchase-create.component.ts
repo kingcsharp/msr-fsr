@@ -372,7 +372,7 @@ export class PurchaseCreateComponent implements OnInit {
     return Array(n);
   }
 
-  onChangeQTY() {
+  onChangeQTY(index: number) {
     const selectedProducts = this.purchaseProducts.filter(
       (v) => v.qty !== null && v.qty > 0
     );
@@ -382,5 +382,23 @@ export class PurchaseCreateComponent implements OnInit {
         (v) => v["procedureId"] === selectedProducts[0]["procedureId"]
       );
     if (!this.showMultiLineWO) this.multiLineWO = false;
+
+    if (this.showMultiLineWO) {
+      this.purchaseProducts[index].groupWO =
+        this.purchaseProducts[index].qty !== null &&
+        this.purchaseProducts[index].qty > 1
+          ? this.multiLineWO
+          : false;
+    }
+  }
+
+  onChangeMultiLineWO() {
+    this.purchaseProducts.map((v, index) => {
+      this.purchaseProducts[index].groupWO =
+        this.purchaseProducts[index].qty !== null &&
+        this.purchaseProducts[index].qty > 1
+          ? this.multiLineWO
+          : false;
+    });
   }
 }
