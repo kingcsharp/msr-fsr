@@ -37,9 +37,6 @@ namespace MSR.Answer.API
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
-            }).AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
             services.AddApiVersioning();
