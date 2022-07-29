@@ -27,6 +27,7 @@ using MSR.Domain.Abstractions;
 using System.IO;
 using Barcoder.DataMatrix;
 using Barcoder.Renderer.Image;
+using Microsoft.Extensions.Logging;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -43,9 +44,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         private readonly GeneralInformation _generalInformation;
         private readonly IMessageHubClient _messageHub;
         private readonly IDownloadFiles _fileDownloader;
+        private readonly ILogger _logger;
 
         public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService,
-            EmailInformation emailInformation, GeneralInformation generalInformation, IMessageHubClient messageHub, IFileHandlerFactory fileHanderFactory)
+            EmailInformation emailInformation, GeneralInformation generalInformation, IMessageHubClient messageHub, IFileHandlerFactory fileHanderFactory, ILogger<WorkOrderService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -211,126 +213,134 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         public async Task<string> CreateWorkOrderAsync(CreateWorkOrderDTO createWorkOrderDto)
         {
-            // Note the menu permission here: Purchases.  Work orders are created by a user
-            // entering a purchase against a purchase order.  The Processor then creates the
-            // work order as that user.
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
+            try
             {
-                throw new DomainException(
-                    $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
-                    DomainError.BadRequest);
-            }
-
-            if (createWorkOrderDto.ScheduledStartDate.Ticks == 0)
-            {
-                createWorkOrderDto.ScheduledStartDate = DateTime.UtcNow;
-            }
-
-            var purchase = _unitOfWork.Purchases.FirstOrDefault(false, i => i.Id == createWorkOrderDto.PurchaseId);
-
-
-            var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(createWorkOrderDto);
-
-            if(purchase != null)
-            {
-                workOrderEntity.Price = purchase.PurchasePrice * purchase.Qty;
-            }
-
-            var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
-            var procedureSteps = await _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id)).ToListAsync();
-            var procedureStepMonitors = await _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId)).ToListAsync();
-            var totalLaborTime = (decimal)0.0;
-            workOrderEntity.HasMonitor = workOrderEntity.WorkOrderTasks.Any(i => i.WorkOrderTaskMonitors.Any());
-            workOrderEntity.HasSubParts = createWorkOrderDto.WorkOrderParts.Any(i => i.Children.Any());
-            foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
-            {
-                var procedureStep = procedureSteps.FirstOrDefault(s => s.Id == workOrderTask.ProcedureStepId);
-                workOrderTask.Title = procedureStep?.Title;
-                workOrderTask.Description = procedureStep?.StepText;
-                totalLaborTime += (decimal)(procedureStep?.LaborTime ?? 0.0);
-
-                foreach (var workOrderTaskMonitor in workOrderTask.WorkOrderTaskMonitors)
+                // Note the menu permission here: Purchases.  Work orders are created by a user
+                // entering a purchase against a purchase order.  The Processor then creates the
+                // work order as that user.
+                if (!CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate))
                 {
-                    var procedureStepMonitor =  procedureStepMonitors.FirstOrDefault(s => s.Id == workOrderTaskMonitor.ProcedureMonitorId);
-
-                    workOrderTaskMonitor.Description = procedureStepMonitor?.Description;
-                    workOrderTaskMonitor.MonitorListId = procedureStepMonitor?.MonitorListId;
-                    workOrderTaskMonitor.ShouldBe = procedureStepMonitor?.ShouldBe;
-                    workOrderTaskMonitor.HighTarget = procedureStepMonitor?.HighTarget;
-                    workOrderTaskMonitor.LowTarget = procedureStepMonitor?.LowTarget;
-                    workOrderTaskMonitor.Target = procedureStepMonitor?.Target;
-                    workOrderTaskMonitor.FailAction = procedureStepMonitor?.FailAction;
-                    workOrderTaskMonitor.SensorName = procedureStepMonitor?.SensorName;
-                    workOrderTaskMonitor.MonitorTypeId = procedureStepMonitor?.MonitorTypeId;
-                    workOrderTaskMonitor.InputTypeId = procedureStepMonitor?.InputTypeId;
+                    throw new DomainException(
+                        $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
+                        DomainError.BadRequest);
                 }
+
+                if (createWorkOrderDto.ScheduledStartDate.Ticks == 0)
+                {
+                    createWorkOrderDto.ScheduledStartDate = DateTime.UtcNow;
+                }
+
+                var purchase = _unitOfWork.Purchases.FirstOrDefault(false, i => i.Id == createWorkOrderDto.PurchaseId);
+
+
+                var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(createWorkOrderDto);
+
+                if (purchase != null)
+                {
+                    workOrderEntity.Price = purchase.PurchasePrice * purchase.Qty;
+                }
+
+                var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
+                var procedureSteps = await _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id)).ToListAsync();
+                var procedureStepMonitors = await _unitOfWork.ProcedureStepMonitors.Query().Where(s => procedureStepIds.Contains(s.ProcedureStepId)).ToListAsync();
+                var totalLaborTime = (decimal)0.0;
+                workOrderEntity.HasMonitor = workOrderEntity.WorkOrderTasks.Any(i => i.WorkOrderTaskMonitors.Any());
+                workOrderEntity.HasSubParts = createWorkOrderDto.WorkOrderParts.Any(i => i.Children.Any());
+                foreach (var workOrderTask in workOrderEntity.WorkOrderTasks)
+                {
+                    var procedureStep = procedureSteps.FirstOrDefault(s => s.Id == workOrderTask.ProcedureStepId);
+                    workOrderTask.Title = procedureStep?.Title;
+                    workOrderTask.Description = procedureStep?.StepText;
+                    totalLaborTime += (decimal)(procedureStep?.LaborTime ?? 0.0);
+
+                    foreach (var workOrderTaskMonitor in workOrderTask.WorkOrderTaskMonitors)
+                    {
+                        var procedureStepMonitor = procedureStepMonitors.FirstOrDefault(s => s.Id == workOrderTaskMonitor.ProcedureMonitorId);
+
+                        workOrderTaskMonitor.Description = procedureStepMonitor?.Description;
+                        workOrderTaskMonitor.MonitorListId = procedureStepMonitor?.MonitorListId;
+                        workOrderTaskMonitor.ShouldBe = procedureStepMonitor?.ShouldBe;
+                        workOrderTaskMonitor.HighTarget = procedureStepMonitor?.HighTarget;
+                        workOrderTaskMonitor.LowTarget = procedureStepMonitor?.LowTarget;
+                        workOrderTaskMonitor.Target = procedureStepMonitor?.Target;
+                        workOrderTaskMonitor.FailAction = procedureStepMonitor?.FailAction;
+                        workOrderTaskMonitor.SensorName = procedureStepMonitor?.SensorName;
+                        workOrderTaskMonitor.MonitorTypeId = procedureStepMonitor?.MonitorTypeId;
+                        workOrderTaskMonitor.InputTypeId = procedureStepMonitor?.InputTypeId;
+                    }
+                }
+
+                var created = await _unitOfWork.WorkOrders.AddAsync(workOrderEntity);
+
+                var workOrderParts = workOrderEntity.WorkOrderParts.ToList();
+                workOrderParts.AddRange(workOrderEntity.WorkOrderParts.SelectMany(i => i.Children));
+                workOrderParts.ForEach(wop => wop.WorkOrder = workOrderEntity);
+
+                var parentParts = workOrderEntity.WorkOrderParts.Where(s => s.ParentId == null).ToList();
+
+                foreach (var parentPart in parentParts)
+                {
+                    await SetCycleCount(parentPart);
+                }
+
+                await _unitOfWork.LogApprovalTransaction(workOrderEntity, workOrderEntity.Id);
+
+                // load required navigation fields
+                await created.Context.Entry(workOrderEntity)
+                    .Collection(x => x.WorkOrderParts).LoadAsync();
+                await created.Context.Entry(workOrderEntity)
+                    .Collection(x => x.WorkOrderTasks).LoadAsync();
+                await created.Context.Entry(workOrderEntity)
+                    .Reference(x => x.Location).LoadAsync();
+                await created.Context.Entry(workOrderEntity)
+                    .Reference(x => x.Purchase).LoadAsync();
+                await created.Context.Entry(workOrderEntity)
+                    .Reference(x => x.Product).LoadAsync();
+                await created.Context.Entry(workOrderEntity.Product)
+                    .Reference(x => x.Procedure).LoadAsync();
+                await created.Context.Entry(workOrderEntity.Purchase)
+                    .Reference(x => x.PurchaseOrder).LoadAsync();
+                await created.Context.Entry(workOrderEntity.Purchase.PurchaseOrder)
+                    .Reference(x => x.Customer).LoadAsync();
+
+                var workOrderStatEntity = new WorkOrderStats()
+                {
+                    WorkOrderId = workOrderEntity.Id,
+                    TotalTasks = (int)workOrderEntity.WorkOrderTasks?.Count(),
+                    CompletedTasks = 0,
+                    TotalTimeLogged = 0,
+                    TotalTaskTime = totalLaborTime,
+                    ActiveTitle = null
+                };
+
+                await _unitOfWork.WorkOrderStats.AddAsync(workOrderStatEntity);
+                await _unitOfWork.SaveChangesAsync();
+                // Build out minimal information so this can be
+                // displayed on the WO status screen without a reload.
+                await _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
+                {
+                    workOrderId = workOrderEntity.Id,
+                    workOrderStatus = TranslateWOStatusToViewModel(workOrderEntity.WorkOrderTasks),
+                    productName = workOrderEntity.Product?.Name,
+                    partNumber = workOrderEntity.WorkOrderParts.First().Part.PartNumber,
+                    procedureName = workOrderEntity.Product?.Procedure?.Name,
+                    locationName = workOrderEntity.Location.Name,
+                    customerName = workOrderEntity.Product?.Customer?.Name,
+                    serialNumber = workOrderEntity.WorkOrderParts.First().SerialNumber,
+                });
+
+                var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(p => p.Id == createWorkOrderDto.PurchaseOrderId);
+                purchaseOrderEntity.UninvoicedBalance += workOrderEntity.Price;
+
+                await _unitOfWork.PurchaseOrders.UpdateAndSaveChangesAsync(purchaseOrderEntity);
+
+                return $"{workOrderEntity.Purchase?.PurchaseOrder?.Customer?.Name ?? string.Empty}-{workOrderEntity.Id}";
             }
-
-            var created = await _unitOfWork.WorkOrders.AddAsync(workOrderEntity);
-
-            var workOrderParts = workOrderEntity.WorkOrderParts.ToList();
-            workOrderParts.AddRange(workOrderEntity.WorkOrderParts.SelectMany(i => i.Children));
-            workOrderParts.ForEach(wop => wop.WorkOrder = workOrderEntity);
-
-            var parentParts = workOrderEntity.WorkOrderParts.Where(s => s.ParentId == null).ToList();
-
-            foreach (var parentPart in parentParts)
+            catch(Exception ex)
             {
-                await SetCycleCount(parentPart);
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
-
-            await _unitOfWork.LogApprovalTransaction(workOrderEntity, workOrderEntity.Id);
-            
-            // load required navigation fields
-            await created.Context.Entry(workOrderEntity)
-                .Collection(x => x.WorkOrderParts).LoadAsync();
-            await created.Context.Entry(workOrderEntity)
-                .Collection(x => x.WorkOrderTasks).LoadAsync();
-            await created.Context.Entry(workOrderEntity)
-                .Reference(x => x.Location).LoadAsync();
-            await created.Context.Entry(workOrderEntity)
-                .Reference(x => x.Purchase).LoadAsync();
-            await created.Context.Entry(workOrderEntity)
-                .Reference(x => x.Product).LoadAsync();
-            await created.Context.Entry(workOrderEntity.Product)
-                .Reference(x => x.Procedure).LoadAsync();
-            await created.Context.Entry(workOrderEntity.Purchase)
-                .Reference(x => x.PurchaseOrder).LoadAsync();
-            await created.Context.Entry(workOrderEntity.Purchase.PurchaseOrder)
-                .Reference(x => x.Customer).LoadAsync();
-                
-            var workOrderStatEntity = new WorkOrderStats()
-            {
-                WorkOrderId = workOrderEntity.Id,
-                TotalTasks = (int) workOrderEntity.WorkOrderTasks?.Count(),
-                CompletedTasks = 0,
-                TotalTimeLogged = 0,
-                TotalTaskTime = totalLaborTime,
-                ActiveTitle = null
-            };
-
-            await _unitOfWork.WorkOrderStats.AddAsync(workOrderStatEntity);
-            await _unitOfWork.SaveChangesAsync();
-            // Build out minimal information so this can be
-            // displayed on the WO status screen without a reload.
-            await _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
-            {
-                workOrderId = workOrderEntity.Id,
-                workOrderStatus = TranslateWOStatusToViewModel(workOrderEntity.WorkOrderTasks),
-                productName = workOrderEntity.Product?.Name,
-                partNumber = workOrderEntity.WorkOrderParts.First().Part.PartNumber,
-                procedureName = workOrderEntity.Product?.Procedure?.Name,
-                locationName = workOrderEntity.Location.Name,
-                customerName = workOrderEntity.Product?.Customer?.Name,
-                serialNumber = workOrderEntity.WorkOrderParts.First().SerialNumber,
-            });
-            
-            var purchaseOrderEntity = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(p => p.Id == createWorkOrderDto.PurchaseOrderId);
-            purchaseOrderEntity.UninvoicedBalance += workOrderEntity.Price;
-
-            await _unitOfWork.PurchaseOrders.UpdateAndSaveChangesAsync(purchaseOrderEntity);
-
-            return $"{workOrderEntity.Purchase?.PurchaseOrder?.Customer?.Name ?? string.Empty}-{workOrderEntity.Id}";
         }
 
         public async Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command)
