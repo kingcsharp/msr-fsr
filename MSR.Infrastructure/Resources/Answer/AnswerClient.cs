@@ -19,12 +19,10 @@ namespace MSR.Infrastructure.Resources.Answer
     public class AnswerClient: IAnswerRestClient
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger _logger;
 
-        public AnswerClient(HttpClient client, ILogger logger)
+        public AnswerClient(HttpClient client)
         {
             _httpClient = client;
-            _logger = logger;
         }
 
         public async Task<string> PostWorkOrderAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
