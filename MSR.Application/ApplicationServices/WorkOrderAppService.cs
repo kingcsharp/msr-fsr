@@ -169,11 +169,16 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<ICollection<WorkOrderTaskModel>>(workOrderTaskModels);
         }
 
-        public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command,
-            CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
         {
+            foreach(var product in command.WorkOrderProducts)
+            {
+                var id = await _workOrderService.GetProductIdFromPurchaseOrderProduct(product.ProductId);
+                product.ProductId = id;
+            }
             var workOrderDto = CreateWorkOrderDTO.FromCommand(command);
-            var tasks = await _workOrderService.GetWorkOrderTasksAsync(command.WorkOrderProducts.First().ProductId);
+            var productId = command.WorkOrderProducts.First().ProductId;
+            var tasks = await _workOrderService.GetWorkOrderTasksAsync(productId);
             workOrderDto.WorkOrderTasks = tasks;
 
             

@@ -56,7 +56,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _emailInformation = emailInformation;
             _generalInformation = generalInformation;
             _messageHub = messageHub;
-            _fileDownloader = fileHanderFactory.CreateDownloader(FileProvider.S3); ;
+            _fileDownloader = fileHanderFactory.CreateDownloader(FileProvider.S3);
+            _logger = logger;
         }
 
         // TODO: WorkOrder Status needs to be calculated in a timely matter
@@ -232,13 +233,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
                 var purchase = _unitOfWork.Purchases.FirstOrDefault(false, i => i.Id == createWorkOrderDto.PurchaseId);
 
+                
 
                 var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(createWorkOrderDto);
-
+                
                 if (purchase != null)
                 {
                     workOrderEntity.Price = purchase.PurchasePrice * purchase.Qty;
                 }
+                workOrderEntity.ProductId = createWorkOrderDto.WorkOrderProducts.First().ProductId;
 
                 var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
                 var procedureSteps = await _unitOfWork.ProcedureSteps.Query().Where(s => procedureStepIds.Contains(s.Id)).ToListAsync();
@@ -450,6 +453,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return tasks.Select(x =>
                 _mapper.Map<WorkOrderTaskModel>(x))
                 .ToList();
+        }
+
+        public async Task<int> GetProductIdFromPurchaseOrderProduct(int purchaseOrderProductId)
+        {
+            var purchaseOrderProduct = await _unitOfWork.PurchaseOrderProducts.FirstOrDefaultAsync(false, i => i.Id == purchaseOrderProductId);
+
+            if (purchaseOrderProduct == null)
+            {
+                throw new DomainException($"{nameof(PurchaseOrderProduct)} with ID: {purchaseOrderProductId} not found", DomainError.NotFound);
+            }
+
+            return purchaseOrderProduct.ProductId;
         }
         public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command)
         {

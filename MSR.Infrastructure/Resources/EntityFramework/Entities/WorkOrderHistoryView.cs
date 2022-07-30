@@ -28,6 +28,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Disposition { get; set; }
         public bool? HasSubParts { get; set; }
         public bool? CustomerLastRespondent { get; set; }
+        public bool MultipleProducts { get; set; }
 
     }
 }
