@@ -1421,6 +1421,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             {
                 wot.WorkOrder = null;
             }
+
+            foreach(var wop in model.WorkOrderProducts)
+            {
+                wop.WorkOrders = null;
+            }
+
             return model;
         }
 
