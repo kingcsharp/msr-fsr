@@ -21423,6 +21423,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
     subParts?: SubPartModel[] | undefined;
     customerLastRespondent?: boolean;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
+    multipleProducts?: boolean;
 
     constructor(data?: IWorkOrderHistoryView) {
         if (data) {
@@ -21470,6 +21471,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
                 for (let item of _data["workOrderMessages"])
                     this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
             }
+            this.multipleProducts = _data["multipleProducts"];
         }
     }
 
@@ -21517,6 +21519,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
             for (let item of this.workOrderMessages)
                 data["workOrderMessages"].push(item.toJSON());
         }
+        data["multipleProducts"] = this.multipleProducts;
         return data; 
     }
 }
@@ -21549,6 +21552,7 @@ export interface IWorkOrderHistoryView {
     subParts?: SubPartModel[] | undefined;
     customerLastRespondent?: boolean;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
+    multipleProducts?: boolean;
 }
 
 /** Base class for an API call with a typed result */
