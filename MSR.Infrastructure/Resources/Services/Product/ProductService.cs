@@ -300,7 +300,43 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 }
             }
         }
-
+        private void RemoveCycle(ProductModel product)
+        {
+            foreach(var model in product.WorkOrders)
+            {
+                if (model.Purchase != null)
+                {
+                    model.Purchase.WorkOrders = null;
+                }
+                if (model.Product != null)
+                {
+                    model.Product.WorkOrders = null;
+                }
+                if (model.WorkOrderParts != null)
+                {
+                    foreach (var wop in model.WorkOrderParts)
+                    {
+                        wop.WorkOrder = null;
+                        wop.Parent = null;
+                        wop.Children = null;
+                    }
+                }
+                if (model.WorkOrderTasks != null)
+                {
+                    foreach (var wot in model.WorkOrderTasks)
+                    {
+                        wot.WorkOrder = null;
+                    }
+                }
+                if (model.WorkOrderProducts != null)
+                {
+                    foreach (var wop in model.WorkOrderProducts)
+                    {
+                        wop.WorkOrders = null;
+                    }
+                }
+            }
+        }
         public async Task<ICollection<ProductModel>> GetProductsByWorkOrder(int workOrderId)
         {
             var workOrder = _unitOfWork.WorkOrders.FirstOrDefault(false, i => i.Id == workOrderId);
@@ -315,8 +351,12 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }
             var products = await _unitOfWork.Products.Query().Where(i => productIds.Contains(i.Id)).ToListAsync();
             var productModels = products.Select(i => _mapper.Map<ProductModel>(i)).ToList();
+
+            productModels.ForEach(j => {
+                RemoveReferences(j);
+                RemoveCycle(j);
+                });
             
-            productModels.ForEach(j => j.WorkOrders.ToList().ForEach(i => i.Purchase = null));
             
             return productModels;
         }
