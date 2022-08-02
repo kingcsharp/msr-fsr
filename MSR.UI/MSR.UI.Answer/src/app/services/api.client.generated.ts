@@ -16916,6 +16916,7 @@ export class ProductModel extends TrackableModel implements IProductModel {
     workOrders?: WorkOrderModel[] | undefined;
     productImage?: FileModel | undefined;
     productSteps?: ProductStepModel[] | undefined;
+    workOrderParts?: WorkOrderPartModel[] | undefined;
 
     constructor(data?: IProductModel) {
         super(data);
@@ -16953,6 +16954,11 @@ export class ProductModel extends TrackableModel implements IProductModel {
                 this.productSteps = [] as any;
                 for (let item of _data["productSteps"])
                     this.productSteps!.push(ProductStepModel.fromJS(item));
+            }
+            if (Array.isArray(_data["workOrderParts"])) {
+                this.workOrderParts = [] as any;
+                for (let item of _data["workOrderParts"])
+                    this.workOrderParts!.push(WorkOrderPartModel.fromJS(item));
             }
         }
     }
@@ -16996,6 +17002,11 @@ export class ProductModel extends TrackableModel implements IProductModel {
             for (let item of this.productSteps)
                 data["productSteps"].push(item.toJSON());
         }
+        if (Array.isArray(this.workOrderParts)) {
+            data["workOrderParts"] = [];
+            for (let item of this.workOrderParts)
+                data["workOrderParts"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
@@ -17024,6 +17035,7 @@ export interface IProductModel extends ITrackableModel {
     workOrders?: WorkOrderModel[] | undefined;
     productImage?: FileModel | undefined;
     productSteps?: ProductStepModel[] | undefined;
+    workOrderParts?: WorkOrderPartModel[] | undefined;
 }
 
 export class QuoteModel implements IQuoteModel {
