@@ -42,5 +42,7 @@ namespace MSR.Domain.Models
         public string ApprovalStatus;
 
         public virtual ICollection<ProductStepModel> ProductSteps { get; set; }
+
+        public ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
     }
 }
