@@ -1081,6 +1081,11 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<UpdateWorkOrderPrice>(request);
         }
 
+        public static UpdateWorkOrderEndDate ToUpdateWorkOrderEndDateCommand(this UpdateWorkOrderEndDateRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateWorkOrderEndDate>(request);
+        }
+
         public static ProcedureExportQueryFilters ToProcedureExportQueryFilters(this ProcedureExportRequest request)
         {
             return new ProcedureExportQueryFilters(request.Id, request.Name, request.ProcedureTypeName, request.Duration, request.DurationType, request.Revision

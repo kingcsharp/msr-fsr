@@ -41,3 +41,15 @@ p-table {
     width: 10em;
   }
 }
+.margin-top-10 {
+  margin-top: 10px;
+}
+
+.cell-changed div{
+  color: #db4912;
+  font-weight: bold;
+}
+
+.cell-editable div {
+  cursor: pointer;
+}

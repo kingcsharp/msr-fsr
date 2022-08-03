@@ -102,6 +102,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
             CreateMap<WorkOrderModel, WorkOrderGridSummary>()
+                .ForMember(dest => dest.ScheduledEndDateChangeReason, opts => opts.MapFrom(src => src.ScheduledEndDateChangeReason))
                 .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => (src.WorkOrderParts != null && src.WorkOrderParts.Count > 0) ? src.WorkOrderParts.First().SerialNumber : ""))
                 .ForMember(dest => dest.PurchaseOrderNumber, opts => opts.MapFrom(src =>
                     src.Purchase != null ?
@@ -161,7 +162,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetAssignedWorkOrdersRequest, GetAssignedWorkOrders>();
             CreateMap<GetQuotesProductsRequest, ProductDownloadFilter>();
             CreateMap<UpdateWorkOrderPriceRequest, UpdateWorkOrderPrice>()
-                .ForMember(dest => dest.Price, opts => opts.Condition(src => src.Price > 0));;
+                .ForMember(dest => dest.Price, opts => opts.Condition(src => src.Price > 0));
+            CreateMap<UpdateWorkOrderEndDateRequest, UpdateWorkOrderEndDate>();;
         }
     }
 }

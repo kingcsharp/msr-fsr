@@ -14,6 +14,9 @@ import {
   ReportModel,
   UpdateWorkOrderPriceRequest,
   CreateWorkOrderMessageRequest,
+  WorkOrderGridSummary,
+  WorkOrderMessageModel,
+  UpdateWorkOrderEndDateRequest,
 } from "../../../services/api.client.generated";
 import { environment as env } from "../../../../environments/environment";
 import { responseHandler } from "../../../utils/responseHandler";
@@ -24,6 +27,13 @@ import { EnumColumnType } from "../../../../app/models/enums/EnumColumnType";
 import { GridSaved } from "../../../models/lib/GridSaved";
 import * as moment from "moment";
 import * as _ from "lodash";
+import { clone, cloneDeep } from "lodash";
+import { MergeScanOperator } from "rxjs/internal/operators/mergeScan";
+
+interface SelectedItem extends WorkOrderGridSummary {
+  initialValues: Omit<SelectedItem, 'initialValues'>
+  selectedIndex: number,
+}
 
 @Component({
   selector: "app-wip",
@@ -48,9 +58,10 @@ export class WipComponent implements OnInit {
   invalidPriceError: boolean = false;
   adminOrManager: boolean = false;
   showDispositionDialog: boolean = false;
-  selectedItem: any = null;
+  selectedItem: SelectedItem = null;
   instructions: string;
   currentEvent: any;
+  showScheduledEndDateDialog: boolean = false;
 
   constructor(
     public commonGrid: CommonGrid,
@@ -244,6 +255,42 @@ export class WipComponent implements OnInit {
     this.locationOptions = this.globals.getTopLevelLocations();
   }
 
+
+  editSelectedEndDate(model: SelectedItem, index: number){
+    if(!this.adminOrManager) return
+    this.selectedItem = model;
+    this.selectedItem.selectedIndex = index;
+    this.selectedItem.initialValues = cloneDeep(model);
+    this.showScheduledEndDateDialog = true;
+  }
+
+   saveScheduledEndDate(){
+    const updateEndDateRequest = new UpdateWorkOrderEndDateRequest({
+      workOrderId: this.selectedItem.id,
+      scheduledEndDate: this.selectedItem.scheduledEndDate,
+      scheduledEndDateChangeReason: this.selectedItem.scheduledEndDateChangeReason,
+    });
+    this.workOrderService
+      .updateEndDate(env.apiVersion, updateEndDateRequest)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.selectedItem.scheduledEndDateChanged = true;
+          this.showScheduledEndDateDialog = false;
+        })
+      );
+  }
+  closeScheduledEndDateDialog(){
+    const {initialValues}  = this.selectedItem;
+    this.data[this.selectedItem.selectedIndex] = initialValues;
+    this.showScheduledEndDateDialog = false;
+  }
+
+
+  getScheduledEndDateChangeReason(model: SelectedItem){
+    return model.scheduledEndDateChangeReason ? `Reason: ${model.scheduledEndDateChangeReason}`: null;
+  }
+
   getWorkOrders(event: LazyLoadEvent) {
     if (event !== undefined) {
       this.currentEvent = event;
@@ -355,7 +402,7 @@ export class WipComponent implements OnInit {
     this.invalidPriceError = invalidPriceError;
   }
 
-  viewDispositionHistory(model: any) {
+  viewDispositionHistory(model: SelectedItem) {
     this.instructions = "";
     this.selectedItem = model;
     this.selectedItem.workOrderMessages = _.sortBy(
@@ -363,11 +410,11 @@ export class WipComponent implements OnInit {
       (message) => moment(message.date).valueOf()
     )
       .reverse()
-      .map((message) => {
+      .map<WorkOrderMessageModel>((message) => {
         return {
           ...message,
           date: moment(message.date).format("MMM DD, YYYY HH:mm"),
-        };
+        } as unknown as WorkOrderMessageModel;
       });
     this.showDispositionDialog = true;
   }
@@ -391,8 +438,8 @@ export class WipComponent implements OnInit {
           this.selectedItem.workOrderMessages.splice(0, 0, {
             message: request.message,
             name: this.globals.getCurrentUser().fullName,
-            date: moment().format("MMM DD, YYYY HH:mm"),
-          });
+            date: moment().format("MMM DD, YYYY HH:mm") as unknown as Date,
+          } as WorkOrderMessageModel);
           this.instructions = "";
           this.getWorkOrders(undefined);
         })

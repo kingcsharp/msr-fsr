@@ -17,6 +17,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public DateTime ScheduledStartDate { get; set; }
         public DateTime? ActualStartDate { get; set; }
         public DateTime ScheduledEndDate { get; set; }
+        [Column("EndDateChangeReason")]
+        public string ScheduledEndDateChangeReason { get; set; }
         public DateTime? ActualEndDate { get; set; }
         public string ProductName { get; set; }
         public string ProcedureName { get; set; }
