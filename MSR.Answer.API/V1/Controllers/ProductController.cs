@@ -97,6 +97,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("ByWorkOrder/{workOrderId}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<ProductModel>>))]
         public async Task<IActionResult> GetProductsForWorkOrder(int workOrderId)
         {
             var products = await _productViewService.GetProductsByWorkOrderAsync(workOrderId);
