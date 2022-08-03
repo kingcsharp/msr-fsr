@@ -31,6 +31,8 @@ namespace MSR.Domain.Models
         public virtual QuoteModel Quote { get; set; }
         public string DivisionFab { get; set; }
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
+        public string SerialNumber { get; set; }
+        public int Qty { get; set; }
 
         /// <summary>
         /// Gets or Sets ProductImage

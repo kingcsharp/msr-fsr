@@ -358,6 +358,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             partList.Add(parentPart);
             partList.AddRange(childParts);
             model.WorkOrderParts = partList.Select(i => _mapper.Map<WorkOrderPartModel>(i)).ToList();
+            model.Qty = parentPart.Qty.GetValueOrDefault(1);
+            model.SerialNumber = parentPart.SerialNumber;
             
         }
 
@@ -383,6 +385,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 await GetWorkOrderParts(model, workOrderId);
                 RemoveReferences(model);
                 RemoveCycle(model);
+
             }
             
             
