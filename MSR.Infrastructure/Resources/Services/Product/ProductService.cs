@@ -352,12 +352,20 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         private async Task GetWorkOrderParts(ProductModel model, int workOrderId)
         {
             //GetParentPart
-            var parentPart = await _unitOfWork.WorkOrderParts.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderId && i.PartId == model.PartId && i.ParentId == null);
-            var childParts = await _unitOfWork.WorkOrderParts.Query().Where(i => i.ParentId == parentPart.Id).ToListAsync();
+            var parentPart = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).FirstOrDefaultAsync(i => i.WorkOrderId == workOrderId && i.PartId == model.PartId && i.ParentId == null);
+            var childParts = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).Where(i => i.ParentId == parentPart.Id).ToListAsync();
             var partList = new List<WorkOrderPart>();
             partList.Add(parentPart);
             partList.AddRange(childParts);
-            model.WorkOrderParts = partList.Select(i => _mapper.Map<WorkOrderPartModel>(i)).ToList();
+            model.WorkOrderParts = new List<WorkOrderPartModel>();
+            foreach(var part in partList)
+            {
+                var partModel = _mapper.Map<WorkOrderPartModel>(part);
+                partModel.PartNumber = part.Part.PartNumber;
+                partModel.PartName = part.Part.Name;
+
+                model.WorkOrderParts.Add(partModel);
+            }
             model.Qty = parentPart.Qty.GetValueOrDefault(1);
             model.SerialNumber = parentPart.SerialNumber;
             

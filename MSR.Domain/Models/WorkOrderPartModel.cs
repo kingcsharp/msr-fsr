@@ -23,5 +23,7 @@ namespace MSR.Domain.Models
         public string NCNumber { get; set; }
         public byte[] DataMatrix { get; set; }
         public string Detail { get; set; }
+        public string PartNumber { get; set; }
+        public string PartName { get; set; }
     }
 }
