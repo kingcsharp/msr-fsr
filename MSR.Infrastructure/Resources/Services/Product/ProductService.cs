@@ -362,7 +362,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 var partModel = _mapper.Map<WorkOrderPartModel>(part);
                 partModel.PartNumber = part.Part.PartNumber;
-                partModel.PartName = part.Part.Name;
+                partModel.Name = part.Part.Name;
 
                 model.WorkOrderParts.Add(partModel);
             }

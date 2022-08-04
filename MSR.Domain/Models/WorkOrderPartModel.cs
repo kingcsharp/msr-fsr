@@ -24,6 +24,6 @@ namespace MSR.Domain.Models
         public byte[] DataMatrix { get; set; }
         public string Detail { get; set; }
         public string PartNumber { get; set; }
-        public string PartName { get; set; }
+        public string Name { get; set; }
     }
 }
