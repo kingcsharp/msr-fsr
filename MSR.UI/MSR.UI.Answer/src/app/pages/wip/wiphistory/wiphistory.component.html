@@ -225,13 +225,27 @@
           <tr class="ui-selectable-row">
             <td>
               <i
-                *ngIf="model.subParts && model.subParts.length > 0"
+                *ngIf="
+                  !model.multipleProducts &&
+                  model.subParts &&
+                  model.subParts.length > 0
+                "
                 class="fad pointer"
                 [pRowToggler]="model"
                 [ngClass]="{
                   'fa-plus': expanded !== true,
                   'fa-minus': expanded === true
                 }"
+              ></i>
+              <i
+                *ngIf="model.multipleProducts"
+                class="fad pointer"
+                [pRowToggler]="model"
+                [ngClass]="{
+                  'fa-expand': expanded !== true,
+                  'fa-minus': expanded === true
+                }"
+                (click)="expandRow(expanded, model)"
               ></i>
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('purchaseId', gridSettings)">
@@ -351,14 +365,27 @@
         </ng-template>
 
         <ng-template pTemplate="rowexpansion" let-itemData>
-          <tr>
+          <tr *ngIf="!itemData?.multipleProducts">
             <td [attr.colspan]="getVisibleColumns() + 1">
               <app-grid
                 class="innerGrid"
                 [showReport]="true"
                 [gridSaved]="gridPartsSaved"
-                [reportInfo]="reportPartsModel"
+                [reportInfo]="emptyReportModel"
                 [data]="itemData.subParts"
+              >
+              </app-grid>
+            </td>
+          </tr>
+          <tr *ngIf="itemData?.multipleProducts && itemData?.workOrderProducts">
+            <td [attr.colspan]="getVisibleColumns() + 1">
+              <app-grid
+                *ngIf="itemData.workOrderProducts"
+                class="innerGrid"
+                [showReport]="true"
+                [gridSaved]="gridProductsSaved"
+                [reportInfo]="emptyReportModel"
+                [data]="itemData.workOrderProducts"
               >
               </app-grid>
             </td>
@@ -368,6 +395,17 @@
     </widget>
   </div>
 </div>
+
+<ng-template #expandedRowTemplate let-expandRowData="expandRowData">
+  <app-grid
+    class="innerGrid"
+    [showReport]="true"
+    [gridSaved]="gridProductPartsSaved"
+    [reportInfo]="emptyReportModel"
+    [data]="expandRowData.rowData.workOrderParts"
+  >
+  </app-grid>
+</ng-template>
 
 <p-dialog
   header="Disposition History"
