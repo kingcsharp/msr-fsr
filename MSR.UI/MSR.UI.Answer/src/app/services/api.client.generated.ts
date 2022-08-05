@@ -5232,7 +5232,7 @@ export class ProductService {
         return _observableOf<AuditActionResultOfIEnumerableOfPurchaseOrderProductModel>(<any>null);
     }
 
-    byWorkOrder(workOrderId: number, version: string): Observable<FileResponse> {
+    byWorkOrder(workOrderId: number, version: string): Observable<AuditActionResultOfIEnumerableOfProductModel> {
         let url_ = this.baseUrl + "/v{version}/Product/ByWorkOrder/{workOrderId}";
         if (workOrderId === undefined || workOrderId === null)
             throw new Error("The parameter 'workOrderId' must be defined.");
@@ -5246,7 +5246,7 @@ export class ProductService {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
+                "Accept": "application/json"
             })
         };
 
@@ -5257,31 +5257,33 @@ export class ProductService {
                 try {
                     return this.processByWorkOrder(<any>response_);
                 } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfIEnumerableOfProductModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfIEnumerableOfProductModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processByWorkOrder(response: HttpResponseBase): Observable<FileResponse> {
+    protected processByWorkOrder(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfProductModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfProductModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<FileResponse>(<any>null);
+        return _observableOf<AuditActionResultOfIEnumerableOfProductModel>(<any>null);
     }
 }
 
@@ -16914,6 +16916,8 @@ export class ProductModel extends TrackableModel implements IProductModel {
     quote?: QuoteModel | undefined;
     divisionFab?: string | undefined;
     workOrders?: WorkOrderModel[] | undefined;
+    serialNumber?: string | undefined;
+    qty?: number;
     productImage?: FileModel | undefined;
     productSteps?: ProductStepModel[] | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
@@ -16949,6 +16953,8 @@ export class ProductModel extends TrackableModel implements IProductModel {
                 for (let item of _data["workOrders"])
                     this.workOrders!.push(WorkOrderModel.fromJS(item));
             }
+            this.serialNumber = _data["serialNumber"];
+            this.qty = _data["qty"];
             this.productImage = _data["productImage"] ? FileModel.fromJS(_data["productImage"]) : <any>undefined;
             if (Array.isArray(_data["productSteps"])) {
                 this.productSteps = [] as any;
@@ -16996,6 +17002,8 @@ export class ProductModel extends TrackableModel implements IProductModel {
             for (let item of this.workOrders)
                 data["workOrders"].push(item.toJSON());
         }
+        data["serialNumber"] = this.serialNumber;
+        data["qty"] = this.qty;
         data["productImage"] = this.productImage ? this.productImage.toJSON() : <any>undefined;
         if (Array.isArray(this.productSteps)) {
             data["productSteps"] = [];
@@ -17033,6 +17041,8 @@ export interface IProductModel extends ITrackableModel {
     quote?: QuoteModel | undefined;
     divisionFab?: string | undefined;
     workOrders?: WorkOrderModel[] | undefined;
+    serialNumber?: string | undefined;
+    qty?: number;
     productImage?: FileModel | undefined;
     productSteps?: ProductStepModel[] | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
@@ -17651,6 +17661,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     ncNumber?: string | undefined;
     dataMatrix?: string | undefined;
     detail?: string | undefined;
+    partNumber?: string | undefined;
+    name?: string | undefined;
 
     constructor(data?: IWorkOrderPartModel) {
         if (data) {
@@ -17689,6 +17701,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             this.ncNumber = _data["ncNumber"];
             this.dataMatrix = _data["dataMatrix"];
             this.detail = _data["detail"];
+            this.partNumber = _data["partNumber"];
+            this.name = _data["name"];
         }
     }
 
@@ -17727,6 +17741,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         data["ncNumber"] = this.ncNumber;
         data["dataMatrix"] = this.dataMatrix;
         data["detail"] = this.detail;
+        data["partNumber"] = this.partNumber;
+        data["name"] = this.name;
         return data; 
     }
 }
@@ -17750,6 +17766,8 @@ export interface IWorkOrderPartModel {
     ncNumber?: string | undefined;
     dataMatrix?: string | undefined;
     detail?: string | undefined;
+    partNumber?: string | undefined;
+    name?: string | undefined;
 }
 
 export class NCRHistoryItemModel implements INCRHistoryItemModel {
