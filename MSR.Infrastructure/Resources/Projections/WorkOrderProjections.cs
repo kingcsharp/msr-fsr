@@ -95,6 +95,7 @@ namespace MSR.Infrastructure.Resources.Projections
             Quantity = i.Quantity,
             ScheduledStartDate = i.ScheduledStartDate,
             ScheduledEndDate = i.ScheduledEndDate,
+            ScheduledEndDateReason = i.ScheduledEndDateChangeReason,
             ActualStartDate = i.ActualStartDate,
             ActualEndDate = i.ActualEndDate,
             ProductName = i.ProductName,

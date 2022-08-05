@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -175,6 +176,22 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToUpdateWorkOrderPriceCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<WorkOrderModel>("Work Order Price has been updated!");
+        }
+
+        [HttpPatch("UpdateEndDate")]
+        [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
+        public async Task<IActionResult> UpdateWorkOrderEndDate([FromBody] UpdateWorkOrderEndDateRequest request)
+        {
+            try
+            {
+                var command = request.ToUpdateWorkOrderEndDateCommand();
+                var ret = await _dispatcher.DispatchAsync(command);
+                return ret.ToOkObjectResponse<WorkOrderModel>("Work Order Scheduled End Date has been updated!");
+            } catch(Exception ex)
+            {
+                throw ex;
+            }
+            
         }
     }
 }

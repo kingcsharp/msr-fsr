@@ -10,6 +10,7 @@ namespace MSR.Domain.Models
         public decimal? Price { get; set; }
         public DateTime? ScheduledStartDate { get; set; }
         public DateTime? ScheduledEndDate { get; set; }
+        public string? ScheduledEndDateChangeReason { get; set; }
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
         public bool? HasNCR { get; set; }

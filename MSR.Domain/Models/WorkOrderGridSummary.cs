@@ -67,6 +67,22 @@ namespace MSR.Domain.Models
         public DateTime? ScheduledEndDate { get; set; }
 
         /// <summary>
+        /// Gets or Sets ScheduledEndDateChangeReason
+        /// </summary>
+        public string ScheduledEndDateChangeReason { get; set; }
+
+        /// <summary>
+        /// Gets ScheduledEndDateChanged
+        /// </summary>
+        public bool ScheduledEndDateChanged
+        {
+            get
+            {
+                return ScheduledEndDateChangeReason != null;
+            }
+        }
+
+        /// <summary>
         /// Gets or Sets ActualStartDate
         /// </summary>
         public DateTime? ActualStartDate { get; set; }

@@ -1,3 +1,56 @@
+<p-dialog
+  *ngIf="!!selectedItem"
+  [data-initialValues]="selectedItem"
+  id="scheduledEndDateDialog"
+  header="Update Scheduled End Date"
+  [(visible)]="showScheduledEndDateDialog"
+  appendTo="body"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  data-cy="user-header"
+>
+  <div class="container" id="scheduledEndDateDialog">
+    <div class="row">
+      <p-calendar
+        appendTo="body"
+        [baseZIndex]="100002"
+        [(ngModel)]="selectedItem.scheduledEndDate"
+        showTime="true"
+        [hourFormat]="12"
+      ></p-calendar>
+      <textarea
+        placeholder="Reason for change..."
+        rows="3"
+        class="form-control input-transparent margin-top-10"
+        [(ngModel)]="selectedItem.scheduledEndDateChangeReason"
+      ></textarea>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button
+        type="submit"
+        [disabled]="!selectedItem.scheduledEndDateChangeReason"
+        (click)="saveScheduledEndDate()"
+        class="btn btn-disabled btn-outline-inverse width-100 mb-xs"
+        role="button"
+        data-cy="confirm-save-button"
+      >
+        Save
+      </button>
+
+      <button
+        type="button"
+        (click)="closeScheduledEndDateDialog()"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        role="button"
+      >
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
 <div class="container-flex">
   <div class="row">
     <div class="col-6">
@@ -318,8 +371,17 @@
               [hidden]="
                 !commonGrid.isVisibleCol('scheduledEndDate', gridSettings)
               "
+              [ngClass]="{
+                'cell-changed': model.scheduledEndDateChanged,
+                'cell-editable': adminOrManager
+              }"
             >
-              {{ model.scheduledEndDate | userTimezone }}
+              <div
+                (click)="editSelectedEndDate(model, rowIndex)"
+                [pTooltip]="getScheduledEndDateChangeReason(model)"
+              >
+                {{ model.scheduledEndDate | userTimezone }}
+              </div>
             </td>
             <td
               [hidden]="

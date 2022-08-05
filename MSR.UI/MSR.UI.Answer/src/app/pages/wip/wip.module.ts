@@ -10,6 +10,7 @@ import { WipstatusWrapperComponent } from '../../components/wipstatus-wrapper/wi
 import { TableModule } from 'primeng/table';
 import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { CalendarModule } from 'primeng/calendar';
+import { TooltipModule } from 'primeng/tooltip';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { AlertModule } from 'ngx-bootstrap/alert';
@@ -60,6 +61,7 @@ export const routes = [
     MultiSelectModule,
     TableModule,
     CalendarModule,
+    TooltipModule,
     UtilsModule,
     WidgetModule,
     NewWidgetModule,
