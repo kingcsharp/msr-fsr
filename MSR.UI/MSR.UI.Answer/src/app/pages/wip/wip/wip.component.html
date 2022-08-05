@@ -297,7 +297,7 @@
             <td
               [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)"
             >
-              {{ model.serialNumber }}
+              {{ model.multipleProducts ? "Multiple" : model.serialNumber }}
             </td>
             <td
               [hidden]="!commonGrid.isVisibleCol('referencePO', gridSettings)"
@@ -305,7 +305,7 @@
               {{ model.referencePO }}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('quantity', gridSettings)">
-              {{ model.quantity }}
+              {{ model.multipleProducts ? "Multiple" : model.quantity }}
             </td>
             <td
               [hidden]="
@@ -331,7 +331,7 @@
             <td
               [hidden]="!commonGrid.isVisibleCol('productName', gridSettings)"
             >
-              {{ model.productName }}
+              {{ model.multipleProducts ? "Multiple" : model.productName }}
             </td>
             <td
               [hidden]="!commonGrid.isVisibleCol('procedureName', gridSettings)"

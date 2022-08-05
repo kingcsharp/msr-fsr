@@ -284,7 +284,7 @@
             <td
               [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)"
             >
-              {{ model.serialNumber }}
+              {{ model.multipleProducts ? "Multiple" : model.serialNumber }}
             </td>
             <td
               [hidden]="
@@ -294,7 +294,7 @@
               {{ model.purchaseOrderNumber }}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('qty', gridSettings)">
-              {{ model.qty }}
+              {{ model.multipleProducts ? "Multiple" : model.qty }}
             </td>
             <td
               [hidden]="
@@ -323,7 +323,7 @@
               {{ model.actualEndDate | userTimezone }}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('product', gridSettings)">
-              {{ model.product }}
+              {{ model.multipleProducts ? "Multiple" : model.product }}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('procedure', gridSettings)">
               {{ model.procedure }}

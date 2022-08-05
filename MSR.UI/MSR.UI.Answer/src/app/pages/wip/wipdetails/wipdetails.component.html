@@ -79,7 +79,13 @@
                   <div class="col-4 text-right">Customer:</div>
                   <div class="col-8 text-left">{{ customer.name }}</div>
                   <div class="col-4 text-right">Product:</div>
-                  <div class="col-8">{{ product.name }}</div>
+                  <div class="col-8">
+                    {{
+                      workOrderModel?.workOrderProducts?.length > 0
+                        ? "Multiple"
+                        : product.name
+                    }}
+                  </div>
                   <div class="col-4 text-right">Procedure:</div>
                   <div class="col-8">{{ procedure.name }}</div>
                   <div class="col-4 text-right">Purchase Item #:</div>
