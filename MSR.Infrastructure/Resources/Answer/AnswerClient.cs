@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using MSR.Domain.Abstractions;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Enums;
@@ -18,12 +19,12 @@ namespace MSR.Infrastructure.Resources.Answer
     public class AnswerClient: IAnswerRestClient
     {
         private readonly HttpClient _httpClient;
-        
+
         public AnswerClient(HttpClient client)
         {
             _httpClient = client;
         }
-        
+
         public async Task<string> PostWorkOrderAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
         {
             
@@ -38,7 +39,7 @@ namespace MSR.Infrastructure.Resources.Answer
 
             if (!httpResponse.IsSuccessStatusCode)
             {
-                throw new DomainException($"Error attempting to create WorkOrder: {httpResponse.StatusCode}", DomainError.InternalServerError);
+                throw new DomainException($"Error attempting to create WorkOrder: {httpResponse.StatusCode} | Request: {request}", DomainError.InternalServerError);
             }
             
             var result = await httpResponse.Content.ReadAsStringAsync();

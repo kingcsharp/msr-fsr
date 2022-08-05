@@ -134,7 +134,6 @@ namespace MSR.Application.EventServices
             try
             {
                 var command = handledEvent.ToCreateWorkOrderCommand();
-               
                 var workOrderNumber = await _restClient.PostWorkOrderAsync(command, cancellationToken);
                 _logger.LogInformation($"Finished creating WorkOrder: {workOrderNumber}");
 

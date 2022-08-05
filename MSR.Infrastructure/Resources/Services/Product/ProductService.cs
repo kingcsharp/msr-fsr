@@ -299,6 +299,105 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                     ps.ProductId = product.Id;
                 }
             }
+
+            if (product.WorkOrderParts != null)
+            {
+                foreach (var wop in product.WorkOrderParts)
+                {
+                    wop.WorkOrder = null;
+                    wop.Parent = null;
+                    wop.Children = null;
+                }
+            }
+
+        }
+        private void RemoveCycle(ProductModel product)
+        {
+            foreach(var model in product.WorkOrders)
+            {
+                if (model.Purchase != null)
+                {
+                    model.Purchase.WorkOrders = null;
+                }
+                if (model.Product != null)
+                {
+                    model.Product.WorkOrders = null;
+                }
+                if (model.WorkOrderParts != null)
+                {
+                    foreach (var wop in model.WorkOrderParts)
+                    {
+                        wop.WorkOrder = null;
+                        wop.Parent = null;
+                        wop.Children = null;
+                    }
+                }
+                if (model.WorkOrderTasks != null)
+                {
+                    foreach (var wot in model.WorkOrderTasks)
+                    {
+                        wot.WorkOrder = null;
+                    }
+                }
+                if (model.WorkOrderProducts != null)
+                {
+                    foreach (var wop in model.WorkOrderProducts)
+                    {
+                        wop.WorkOrders = null;
+                    }
+                }
+            }
+        }
+
+        private async Task GetWorkOrderParts(ProductModel model, int workOrderId)
+        {
+            //GetParentPart
+            var parentPart = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).FirstOrDefaultAsync(i => i.WorkOrderId == workOrderId && i.PartId == model.PartId && i.ParentId == null);
+            var childParts = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).Where(i => i.ParentId == parentPart.Id).ToListAsync();
+            var partList = new List<WorkOrderPart>();
+            partList.Add(parentPart);
+            partList.AddRange(childParts);
+            model.WorkOrderParts = new List<WorkOrderPartModel>();
+            foreach(var part in partList)
+            {
+                var partModel = _mapper.Map<WorkOrderPartModel>(part);
+                partModel.PartNumber = part.Part.PartNumber;
+                partModel.Name = part.Part.Name;
+
+                model.WorkOrderParts.Add(partModel);
+            }
+            model.Qty = parentPart.Qty.GetValueOrDefault(1);
+            model.SerialNumber = parentPart.SerialNumber;
+            
+        }
+
+
+        public async Task<ICollection<ProductModel>> GetProductsByWorkOrder(int workOrderId)
+        {
+            var workOrder = _unitOfWork.WorkOrders.FirstOrDefault(false, i => i.Id == workOrderId);
+            if (workOrder == null) 
+            {
+                throw new DomainException($"WorkOrder with Id {workOrderId} not found", DomainError.NotFound);
+            }
+            var productIds = await _unitOfWork.PurchaseProductMaps.Query().Where(i => i.PurchaseId == workOrder.PurchaseId).Select(i => i.PurchaseOrderProduct.ProductId).ToListAsync();
+            if (productIds == null || !productIds.Any()) 
+            {
+                return new List<ProductModel>();
+            }
+            var products = await _unitOfWork.Products.Query().Where(i => productIds.Contains(i.Id)).ToListAsync();
+            
+            var productModels = products.Select(i => _mapper.Map<ProductModel>(i)).ToList();
+
+            foreach(var model in productModels)
+            {
+                await GetWorkOrderParts(model, workOrderId);
+                RemoveReferences(model);
+                RemoveCycle(model);
+
+            }
+            
+            
+            return productModels;
         }
     }
 }

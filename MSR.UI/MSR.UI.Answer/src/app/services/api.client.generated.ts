@@ -5231,6 +5231,60 @@ export class ProductService {
         }
         return _observableOf<AuditActionResultOfIEnumerableOfPurchaseOrderProductModel>(<any>null);
     }
+
+    byWorkOrder(workOrderId: number, version: string): Observable<AuditActionResultOfIEnumerableOfProductModel> {
+        let url_ = this.baseUrl + "/v{version}/Product/ByWorkOrder/{workOrderId}";
+        if (workOrderId === undefined || workOrderId === null)
+            throw new Error("The parameter 'workOrderId' must be defined.");
+        url_ = url_.replace("{workOrderId}", encodeURIComponent("" + workOrderId));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processByWorkOrder(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processByWorkOrder(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfProductModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfProductModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processByWorkOrder(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfProductModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfProductModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfProductModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -5328,7 +5382,7 @@ export class PurchaseService {
     /**
      * Create a new purchase
      */
-    purchasePost(version: string, request: CreatePurchaseRequest): Observable<AuditActionResultOfPurchaseModel> {
+    purchasePost(version: string, request: CreatePurchaseRequest): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
         let url_ = this.baseUrl + "/v{version}/Purchase";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5354,14 +5408,14 @@ export class PurchaseService {
                 try {
                     return this.processPurchasePost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfPurchaseModel>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfPurchaseModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfPurchaseModel>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfPurchaseModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPurchasePost(response: HttpResponseBase): Observable<AuditActionResultOfPurchaseModel> {
+    protected processPurchasePost(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5372,7 +5426,7 @@ export class PurchaseService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfPurchaseModel.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfPurchaseModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -5380,7 +5434,7 @@ export class PurchaseService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfPurchaseModel>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfPurchaseModel>(<any>null);
     }
 }
 
@@ -16917,8 +16971,11 @@ export class ProductModel extends TrackableModel implements IProductModel {
     quote?: QuoteModel | undefined;
     divisionFab?: string | undefined;
     workOrders?: WorkOrderModel[] | undefined;
+    serialNumber?: string | undefined;
+    qty?: number;
     productImage?: FileModel | undefined;
     productSteps?: ProductStepModel[] | undefined;
+    workOrderParts?: WorkOrderPartModel[] | undefined;
 
     constructor(data?: IProductModel) {
         super(data);
@@ -16951,11 +17008,18 @@ export class ProductModel extends TrackableModel implements IProductModel {
                 for (let item of _data["workOrders"])
                     this.workOrders!.push(WorkOrderModel.fromJS(item));
             }
+            this.serialNumber = _data["serialNumber"];
+            this.qty = _data["qty"];
             this.productImage = _data["productImage"] ? FileModel.fromJS(_data["productImage"]) : <any>undefined;
             if (Array.isArray(_data["productSteps"])) {
                 this.productSteps = [] as any;
                 for (let item of _data["productSteps"])
                     this.productSteps!.push(ProductStepModel.fromJS(item));
+            }
+            if (Array.isArray(_data["workOrderParts"])) {
+                this.workOrderParts = [] as any;
+                for (let item of _data["workOrderParts"])
+                    this.workOrderParts!.push(WorkOrderPartModel.fromJS(item));
             }
         }
     }
@@ -16993,11 +17057,18 @@ export class ProductModel extends TrackableModel implements IProductModel {
             for (let item of this.workOrders)
                 data["workOrders"].push(item.toJSON());
         }
+        data["serialNumber"] = this.serialNumber;
+        data["qty"] = this.qty;
         data["productImage"] = this.productImage ? this.productImage.toJSON() : <any>undefined;
         if (Array.isArray(this.productSteps)) {
             data["productSteps"] = [];
             for (let item of this.productSteps)
                 data["productSteps"].push(item.toJSON());
+        }
+        if (Array.isArray(this.workOrderParts)) {
+            data["workOrderParts"] = [];
+            for (let item of this.workOrderParts)
+                data["workOrderParts"].push(item.toJSON());
         }
         super.toJSON(data);
         return data; 
@@ -17025,8 +17096,11 @@ export interface IProductModel extends ITrackableModel {
     quote?: QuoteModel | undefined;
     divisionFab?: string | undefined;
     workOrders?: WorkOrderModel[] | undefined;
+    serialNumber?: string | undefined;
+    qty?: number;
     productImage?: FileModel | undefined;
     productSteps?: ProductStepModel[] | undefined;
+    workOrderParts?: WorkOrderPartModel[] | undefined;
 }
 
 export class QuoteModel implements IQuoteModel {
@@ -17255,6 +17329,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
     hasSubParts?: boolean;
     customerLastRespondent?: boolean | undefined;
+    workOrderProducts?: ProductModel[] | undefined;
 
     constructor(data?: IWorkOrderModel) {
         if (data) {
@@ -17300,6 +17375,11 @@ export class WorkOrderModel implements IWorkOrderModel {
             }
             this.hasSubParts = _data["hasSubParts"];
             this.customerLastRespondent = _data["customerLastRespondent"];
+            if (Array.isArray(_data["workOrderProducts"])) {
+                this.workOrderProducts = [] as any;
+                for (let item of _data["workOrderProducts"])
+                    this.workOrderProducts!.push(ProductModel.fromJS(item));
+            }
         }
     }
 
@@ -17345,6 +17425,11 @@ export class WorkOrderModel implements IWorkOrderModel {
         }
         data["hasSubParts"] = this.hasSubParts;
         data["customerLastRespondent"] = this.customerLastRespondent;
+        if (Array.isArray(this.workOrderProducts)) {
+            data["workOrderProducts"] = [];
+            for (let item of this.workOrderProducts)
+                data["workOrderProducts"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -17371,6 +17456,7 @@ export interface IWorkOrderModel {
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
     hasSubParts?: boolean;
     customerLastRespondent?: boolean | undefined;
+    workOrderProducts?: ProductModel[] | undefined;
 }
 
 export class PurchaseModel extends CreatableModel implements IPurchaseModel {
@@ -17553,6 +17639,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     name?: string | undefined;
     partName?: string | undefined;
     partNumber?: string | undefined;
+    procedureId?: number;
     procedureName?: string | undefined;
     cycleTime?: number | undefined;
     totalSalePrice?: number;
@@ -17573,6 +17660,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
             this.name = _data["name"];
             this.partName = _data["partName"];
             this.partNumber = _data["partNumber"];
+            this.procedureId = _data["procedureId"];
             this.procedureName = _data["procedureName"];
             this.cycleTime = _data["cycleTime"];
             this.totalSalePrice = _data["totalSalePrice"];
@@ -17593,6 +17681,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
         data["name"] = this.name;
         data["partName"] = this.partName;
         data["partNumber"] = this.partNumber;
+        data["procedureId"] = this.procedureId;
         data["procedureName"] = this.procedureName;
         data["cycleTime"] = this.cycleTime;
         data["totalSalePrice"] = this.totalSalePrice;
@@ -17606,6 +17695,7 @@ export interface IPurchaseOrderProductView {
     name?: string | undefined;
     partName?: string | undefined;
     partNumber?: string | undefined;
+    procedureId?: number;
     procedureName?: string | undefined;
     cycleTime?: number | undefined;
     totalSalePrice?: number;
@@ -17630,6 +17720,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     ncNumber?: string | undefined;
     dataMatrix?: string | undefined;
     detail?: string | undefined;
+    partNumber?: string | undefined;
+    name?: string | undefined;
 
     constructor(data?: IWorkOrderPartModel) {
         if (data) {
@@ -17668,6 +17760,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             this.ncNumber = _data["ncNumber"];
             this.dataMatrix = _data["dataMatrix"];
             this.detail = _data["detail"];
+            this.partNumber = _data["partNumber"];
+            this.name = _data["name"];
         }
     }
 
@@ -17706,6 +17800,8 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         data["ncNumber"] = this.ncNumber;
         data["dataMatrix"] = this.dataMatrix;
         data["detail"] = this.detail;
+        data["partNumber"] = this.partNumber;
+        data["name"] = this.name;
         return data; 
     }
 }
@@ -17729,6 +17825,8 @@ export interface IWorkOrderPartModel {
     ncNumber?: string | undefined;
     dataMatrix?: string | undefined;
     detail?: string | undefined;
+    partNumber?: string | undefined;
+    name?: string | undefined;
 }
 
 export class NCRHistoryItemModel implements INCRHistoryItemModel {
@@ -18743,67 +18841,10 @@ export interface IAuditActionResultOfICollectionOfPurchaseModel extends IAuditAc
     object?: PurchaseModel[] | undefined;
 }
 
-/** Base class for an API call with a typed result */
-export class AuditActionResultOfPurchaseModel extends AuditActionResult implements IAuditActionResultOfPurchaseModel {
-    object?: PurchaseModel | undefined;
-
-    constructor(data?: IAuditActionResultOfPurchaseModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.object = _data["object"] ? PurchaseModel.fromJS(_data["object"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfPurchaseModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfPurchaseModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-/** Base class for an API call with a typed result */
-export interface IAuditActionResultOfPurchaseModel extends IAuditActionResult {
-    object?: PurchaseModel | undefined;
-}
-
 /** CreatePurchaseRequest */
 export class CreatePurchaseRequest implements ICreatePurchaseRequest {
-    /** PurchaseOrderId */
-    purchaseOrderId!: number;
-    /** Status ID */
-    statusId!: number;
-    /** PurchaseOrderProductId */
-    purchaseOrderProductId!: number;
-    /** CustomerPurchaseNumber */
-    customerPurchaseNumber?: string | undefined;
-    /** LocationId */
-    locationId!: number;
-    /** SerialNumber */
-    serialNumbers?: string[] | undefined;
-    /** CustomerLineNumbers */
-    customerLineNumbers!: string[];
-    /** Quantity */
-    qty!: number;
-    /** Material Transfer Number (MTTN) */
-    mttn?: string | undefined;
-    /** DueDate */
-    dueDate!: Date;
-    /** PurchasePrice */
-    purchasePrice!: number;
-    /** If true, the quantity will be expanded out on the serialize step */
-    serializeIndividually?: boolean;
+    groupLines?: boolean;
+    purchaseRequests?: PurchaseRequest[] | undefined;
 
     constructor(data?: ICreatePurchaseRequest) {
         if (data) {
@@ -18812,8 +18853,64 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
-        if (!data) {
-            this.customerLineNumbers = [];
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.groupLines = _data["groupLines"];
+            if (Array.isArray(_data["purchaseRequests"])) {
+                this.purchaseRequests = [] as any;
+                for (let item of _data["purchaseRequests"])
+                    this.purchaseRequests!.push(PurchaseRequest.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreatePurchaseRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreatePurchaseRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["groupLines"] = this.groupLines;
+        if (Array.isArray(this.purchaseRequests)) {
+            data["purchaseRequests"] = [];
+            for (let item of this.purchaseRequests)
+                data["purchaseRequests"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+/** CreatePurchaseRequest */
+export interface ICreatePurchaseRequest {
+    groupLines?: boolean;
+    purchaseRequests?: PurchaseRequest[] | undefined;
+}
+
+export class PurchaseRequest implements IPurchaseRequest {
+    purchaseOrderId?: number;
+    statusId?: number;
+    purchaseOrderProductId?: number;
+    customerPurchaseNumber?: string | undefined;
+    locationId?: number;
+    serialNumbers?: string[] | undefined;
+    customerLineNumbers?: string[] | undefined;
+    qty?: number;
+    mttn?: string | undefined;
+    dueDate?: Date;
+    purchasePrice?: number;
+    serializeIndividually?: boolean;
+
+    constructor(data?: IPurchaseRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
         }
     }
 
@@ -18842,9 +18939,9 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
         }
     }
 
-    static fromJS(data: any): CreatePurchaseRequest {
+    static fromJS(data: any): PurchaseRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new CreatePurchaseRequest();
+        let result = new PurchaseRequest();
         result.init(data);
         return result;
     }
@@ -18875,31 +18972,18 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     }
 }
 
-/** CreatePurchaseRequest */
-export interface ICreatePurchaseRequest {
-    /** PurchaseOrderId */
-    purchaseOrderId: number;
-    /** Status ID */
-    statusId: number;
-    /** PurchaseOrderProductId */
-    purchaseOrderProductId: number;
-    /** CustomerPurchaseNumber */
+export interface IPurchaseRequest {
+    purchaseOrderId?: number;
+    statusId?: number;
+    purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
-    /** LocationId */
-    locationId: number;
-    /** SerialNumber */
+    locationId?: number;
     serialNumbers?: string[] | undefined;
-    /** CustomerLineNumbers */
-    customerLineNumbers: string[];
-    /** Quantity */
-    qty: number;
-    /** Material Transfer Number (MTTN) */
+    customerLineNumbers?: string[] | undefined;
+    qty?: number;
     mttn?: string | undefined;
-    /** DueDate */
-    dueDate: Date;
-    /** PurchasePrice */
-    purchasePrice: number;
-    /** If true, the quantity will be expanded out on the serialize step */
+    dueDate?: Date;
+    purchasePrice?: number;
     serializeIndividually?: boolean;
 }
 
@@ -21428,6 +21512,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
     subParts?: SubPartModel[] | undefined;
     customerLastRespondent?: boolean;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
+    multipleProducts?: boolean;
 
     constructor(data?: IWorkOrderHistoryView) {
         if (data) {
@@ -21475,6 +21560,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
                 for (let item of _data["workOrderMessages"])
                     this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
             }
+            this.multipleProducts = _data["multipleProducts"];
         }
     }
 
@@ -21522,6 +21608,7 @@ export class WorkOrderHistoryView implements IWorkOrderHistoryView {
             for (let item of this.workOrderMessages)
                 data["workOrderMessages"].push(item.toJSON());
         }
+        data["multipleProducts"] = this.multipleProducts;
         return data; 
     }
 }
@@ -21554,6 +21641,7 @@ export interface IWorkOrderHistoryView {
     subParts?: SubPartModel[] | undefined;
     customerLastRespondent?: boolean;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
+    multipleProducts?: boolean;
 }
 
 /** Base class for an API call with a typed result */
@@ -21728,6 +21816,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     price?: number | undefined;
     customerLastRespondent?: boolean;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
+    multipleProducts?: boolean;
 
     constructor(data?: IWorkOrderGridSummary) {
         if (data) {
@@ -21781,6 +21870,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
                 for (let item of _data["workOrderMessages"])
                     this.workOrderMessages!.push(WorkOrderMessageModel.fromJS(item));
             }
+            this.multipleProducts = _data["multipleProducts"];
         }
     }
 
@@ -21834,6 +21924,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             for (let item of this.workOrderMessages)
                 data["workOrderMessages"].push(item.toJSON());
         }
+        data["multipleProducts"] = this.multipleProducts;
         return data; 
     }
 }
@@ -21872,6 +21963,7 @@ export interface IWorkOrderGridSummary {
     price?: number | undefined;
     customerLastRespondent?: boolean;
     workOrderMessages?: WorkOrderMessageModel[] | undefined;
+    multipleProducts?: boolean;
 }
 
 export class Sort implements ISort {
@@ -22782,17 +22874,12 @@ export interface IAddNCRWorkOrderTaskRequest {
 
 export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
     purchaseId!: number;
-    productId?: number;
+    workOrderProducts?: WorkOrderProductRequest[] | undefined;
     purchaseOrderId?: number;
-    price?: number;
     scheduledStartDate?: Date;
     scheduledEndDate?: Date;
     hasNCR?: boolean;
     locationId?: number;
-    serializeIndividually?: boolean;
-    serialNumbers?: string[] | undefined;
-    customerLineNumbers?: string[] | undefined;
-    qty?: number;
 
     constructor(data?: ICreateWorkOrderRequest) {
         if (data) {
@@ -22806,25 +22893,16 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
     init(_data?: any) {
         if (_data) {
             this.purchaseId = _data["purchaseId"];
-            this.productId = _data["productId"];
+            if (Array.isArray(_data["workOrderProducts"])) {
+                this.workOrderProducts = [] as any;
+                for (let item of _data["workOrderProducts"])
+                    this.workOrderProducts!.push(WorkOrderProductRequest.fromJS(item));
+            }
             this.purchaseOrderId = _data["purchaseOrderId"];
-            this.price = _data["price"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
             this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
             this.hasNCR = _data["hasNCR"];
             this.locationId = _data["locationId"];
-            this.serializeIndividually = _data["serializeIndividually"];
-            if (Array.isArray(_data["serialNumbers"])) {
-                this.serialNumbers = [] as any;
-                for (let item of _data["serialNumbers"])
-                    this.serialNumbers!.push(item);
-            }
-            if (Array.isArray(_data["customerLineNumbers"])) {
-                this.customerLineNumbers = [] as any;
-                for (let item of _data["customerLineNumbers"])
-                    this.customerLineNumbers!.push(item);
-            }
-            this.qty = _data["qty"];
         }
     }
 
@@ -22838,13 +22916,76 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["purchaseId"] = this.purchaseId;
-        data["productId"] = this.productId;
+        if (Array.isArray(this.workOrderProducts)) {
+            data["workOrderProducts"] = [];
+            for (let item of this.workOrderProducts)
+                data["workOrderProducts"].push(item.toJSON());
+        }
         data["purchaseOrderId"] = this.purchaseOrderId;
-        data["price"] = this.price;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
         data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
         data["hasNCR"] = this.hasNCR;
         data["locationId"] = this.locationId;
+        return data; 
+    }
+}
+
+export interface ICreateWorkOrderRequest {
+    purchaseId: number;
+    workOrderProducts?: WorkOrderProductRequest[] | undefined;
+    purchaseOrderId?: number;
+    scheduledStartDate?: Date;
+    scheduledEndDate?: Date;
+    hasNCR?: boolean;
+    locationId?: number;
+}
+
+export class WorkOrderProductRequest implements IWorkOrderProductRequest {
+    productId?: number;
+    serializeIndividually?: boolean;
+    serialNumbers?: string[] | undefined;
+    customerLineNumbers?: string[] | undefined;
+    qty?: number;
+    price?: number;
+
+    constructor(data?: IWorkOrderProductRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productId = _data["productId"];
+            this.serializeIndividually = _data["serializeIndividually"];
+            if (Array.isArray(_data["serialNumbers"])) {
+                this.serialNumbers = [] as any;
+                for (let item of _data["serialNumbers"])
+                    this.serialNumbers!.push(item);
+            }
+            if (Array.isArray(_data["customerLineNumbers"])) {
+                this.customerLineNumbers = [] as any;
+                for (let item of _data["customerLineNumbers"])
+                    this.customerLineNumbers!.push(item);
+            }
+            this.qty = _data["qty"];
+            this.price = _data["price"];
+        }
+    }
+
+    static fromJS(data: any): WorkOrderProductRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderProductRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productId"] = this.productId;
         data["serializeIndividually"] = this.serializeIndividually;
         if (Array.isArray(this.serialNumbers)) {
             data["serialNumbers"] = [];
@@ -22857,23 +22998,18 @@ export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
                 data["customerLineNumbers"].push(item);
         }
         data["qty"] = this.qty;
+        data["price"] = this.price;
         return data; 
     }
 }
 
-export interface ICreateWorkOrderRequest {
-    purchaseId: number;
+export interface IWorkOrderProductRequest {
     productId?: number;
-    purchaseOrderId?: number;
-    price?: number;
-    scheduledStartDate?: Date;
-    scheduledEndDate?: Date;
-    hasNCR?: boolean;
-    locationId?: number;
     serializeIndividually?: boolean;
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
     qty?: number;
+    price?: number;
 }
 
 /** Base class for an API call with a typed result */

@@ -1,7 +1,5 @@
 <div class="container-fluid">
-  <h1 class="page-title mb-5">
-    New Purchase - Purchase Order Details
-  </h1>
+  <h1 class="page-title mb-5">New Purchase - Purchase Order Details</h1>
 
   <widget>
     <form
@@ -15,10 +13,7 @@
       <div class="row mx-0">
         <div class="col-md-8 col-12">
           <div class="form-group row">
-            <label
-              for="CustomerName"
-              class="col-md-4 text-right"
-            >
+            <label for="CustomerName" class="col-md-4 text-right">
               Customer Name :
             </label>
             <div class="col-md-8">
@@ -30,17 +25,12 @@
                 class="form-control input-transparent"
                 name="CustomerName"
                 readonly
-              >
+              />
             </div>
           </div>
 
           <div class="form-group row">
-            <label
-              for="POName"
-              class="col-md-4 text-right"
-            >
-              PO Name :
-            </label>
+            <label for="POName" class="col-md-4 text-right"> PO Name : </label>
             <div class="col-md-8">
               <input
                 [value]="purchaseOrderData.name"
@@ -49,15 +39,12 @@
                 class="form-control input-transparent"
                 name="POName"
                 readonly
-              >
+              />
             </div>
           </div>
 
           <div class="form-group row">
-            <label
-              for="RefCustPO"
-              class="col-md-4 text-right"
-            >
+            <label for="RefCustPO" class="col-md-4 text-right">
               Reference Cust PO #:
             </label>
             <div class="col-md-8">
@@ -67,15 +54,12 @@
                 class="form-control input-transparent"
                 name="RefCustPO"
                 readonly
-              >
+              />
             </div>
           </div>
 
           <div class="form-group row">
-            <label
-              for="RefCustPO"
-              class="col-md-4 text-right"
-            >
+            <label for="RefCustPO" class="col-md-4 text-right">
               Cust Ref# / MTTN:
             </label>
             <div class="col-md-8">
@@ -85,7 +69,7 @@
                 class="form-control input-transparent"
                 name="CustRefNum"
                 readonly
-              >
+              />
             </div>
           </div>
 
@@ -95,12 +79,12 @@
             </label>
             <div class="col-md-8">
               <input
-                [value]="purchaseOrderData.openDate | date :'short'"
+                [value]="purchaseOrderData.openDate | date: 'short'"
                 type="text"
                 class="form-control input-transparent"
                 name="OpenDate"
                 readonly
-              >
+              />
             </div>
           </div>
 
@@ -110,20 +94,17 @@
             </label>
             <div class="col-md-8">
               <input
-                [value]="purchaseOrderData.closeDate | date :'short'"
+                [value]="purchaseOrderData.closeDate | date: 'short'"
                 type="text"
                 class="form-control input-transparent"
                 name="ClosedDate"
                 readonly
-              >
+              />
             </div>
           </div>
 
           <div class="form-group row">
-            <label
-              for="TotalPurchaseLimit"
-              class="col-md-4 text-right"
-            >
+            <label for="TotalPurchaseLimit" class="col-md-4 text-right">
               Maximum Amount to Charge:
             </label>
             <div class="col-md-8 input-group input-group-transparent">
@@ -134,16 +115,13 @@
                 class="form-control input-transparent"
                 name="TotalPurchaseLimit"
                 readonly
-              >
+              />
             </div>
           </div>
 
           <div *ngIf="step === 1" class="form-group row">
-            <label
-              for="TotalPurchaseLimit"
-              class="col-md-4 text-right"
-            >
-            Set all due dates to:
+            <label for="TotalPurchaseLimit" class="col-md-4 text-right">
+              Set all due dates to:
             </label>
             <div class="col-md-8 input-group input-group-transparent">
               <p-calendar
@@ -161,43 +139,62 @@
                   class="btn btn-primary"
                   data-cy="btn-apply"
                   (click)="applyGlobalDueDate()"
-                >Apply</button>
+                >
+                  Apply
+                </button>
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
       <ng-container *ngIf="step === 0">
-        <h2 class="page-title my-4 px-3">
-          Available Purchase Items
-        </h2>
-
-        <div class="row mx-0">
-          <table class="table table-bordered">
+        <div class="row mx-0 mt-4">
+          <table class="table table-bordered" style="border: none">
             <tbody>
               <tr>
-                <th style="width:50%;">Product</th>
-                <th style="width:10%;">Purchase Qty</th>
+                <th style="width: 50%; border: none">
+                  <h2 class="page-title mb-4">Available Purchase Items</h2>
+                </th>
+                <th style="width: 10%; border: none"></th>
+                <th style="border: none; vertical-align: middle">
+                  <div
+                    class="d-flex align-items-center justify-content-start"
+                    [class.hide]="!showMultiLineWO"
+                  >
+                    <p-selectButton
+                      [options]="selectButtonOptions"
+                      [(ngModel)]="multiLineWO"
+                      name="multiLineWO"
+                      (onChange)="onChangeMultiLineWO()"
+                    >
+                    </p-selectButton>
+                    <label class="px-3">Group all lines on One WO</label>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <th style="width: 50%">Product</th>
+                <th style="width: 10%">Purchase Qty</th>
                 <th><div id="show-hide">Work Order Creation</div></th>
               </tr>
               <tr *ngFor="let product of purchaseProducts; index as i">
                 <td>
                   <input
                     class="form-control input-transparent"
-                    name="ProductPo[{{i}}].Name"
+                    name="ProductPo[{{ i }}].Name"
                     readonly
                     type="text"
                     [value]="product.name"
-                  >
+                  />
                 </td>
                 <td>
                   <p-inputNumber
                     [(ngModel)]="purchaseProducts[i].qty"
                     mode="decimal"
-                    name="ProductPo[{{i}}].Qty"
+                    name="ProductPo[{{ i }}].Qty"
                     [useGrouping]="false"
+                    (onBlur)="onChangeQTY(i)"
                   >
                   </p-inputNumber>
                 </td>
@@ -209,7 +206,7 @@
                     <p-selectButton
                       [options]="selectButtonOptions"
                       [(ngModel)]="purchaseProducts[i].groupWO"
-                      name="ProductPo[{{i}}].groupWO"
+                      name="ProductPo[{{ i }}].groupWO"
                     >
                     </p-selectButton>
                     <label class="px-3">Group Quantity on One WO</label>
@@ -222,7 +219,7 @@
                     <p-selectButton
                       [options]="selectButtonOptions"
                       [(ngModel)]="purchaseProducts[i].serializeIndividually"
-                      name="ProductPo[{{i}}].serializeIndividually"
+                      name="ProductPo[{{ i }}].serializeIndividually"
                       class="ml-1"
                     >
                     </p-selectButton>
@@ -236,9 +233,7 @@
       </ng-container>
 
       <ng-container *ngIf="step === 1">
-        <h2 class="page-title my-4 px-3">
-          Purchase Items
-        </h2>
+        <h2 class="page-title my-4 px-3">Purchase Items</h2>
 
         <table class="table table-bordered">
           <tbody>
@@ -256,29 +251,29 @@
                 <input
                   [value]="purchaseItem.productName"
                   class="form-control input-transparent"
-                  name="purchaseItems[{{i}}].PROD_SHOW_NAME"
+                  name="purchaseItems[{{ i }}].PROD_SHOW_NAME"
                   readonly
                   type="text"
-                >
+                />
               </td>
               <td>
                 <input
                   [(ngModel)]="purchaseItems[i].mttn"
                   class="form-control input-transparent disable"
-                  name="purchaseItem[{{i}}].MATERIAL_TRANSFER_TICKET_NUMBER"
+                  name="purchaseItem[{{ i }}].MATERIAL_TRANSFER_TICKET_NUMBER"
                   type="text"
                   data-validate="parsley"
                   data-parsley-trigger="change"
-                  data-parsley-maxlength="15" data-parsley-maxlength-message="MTTN must be 15 characters or less."
+                  data-parsley-maxlength="15"
+                  data-parsley-maxlength-message="MTTN must be 15 characters or less."
                   data-parsley-required="false"
-                >
+                />
               </td>
               <td>
                 <div class="form-group row mx-0">
                   <p-calendar
-
-                  [(ngModel)]="purchaseItems[i].dueDate"
-                    name="purchaseItem[{{i}}].DUE_DATE"
+                    [(ngModel)]="purchaseItems[i].dueDate"
+                    name="purchaseItem[{{ i }}].DUE_DATE"
                     showIcon="true"
                     styleClass="input-group input-group-transparent"
                     inputStyleClass="form-control input-transparent"
@@ -290,10 +285,10 @@
                 <input
                   [value]="purchaseItem.qty"
                   class="form-control input-transparent disable"
-                  name="purchaseItem[{{i}}].QTY"
+                  name="purchaseItem[{{ i }}].QTY"
                   readonly
                   type="text"
-                >
+                />
               </td>
               <td>
                 <div class="input-group input-group-transparent">
@@ -301,10 +296,10 @@
                   <input
                     [value]="purchaseItem.unitPrice"
                     class="form-control input-transparent"
-                    name="purchaseItem[{{i}}].UNIT_PRICE"
+                    name="purchaseItem[{{ i }}].UNIT_PRICE"
                     readonly
                     type="text"
-                  >
+                  />
                 </div>
               </td>
               <td>
@@ -313,10 +308,10 @@
                   <input
                     [value]="purchaseItem.extPrice"
                     class="form-control input-transparent"
-                    name="purchaseItem[{{i}}].EXT_PRICE"
+                    name="purchaseItem[{{ i }}].EXT_PRICE"
                     readonly
                     type="text"
-                  >
+                  />
                 </div>
               </td>
             </tr>
@@ -325,9 +320,7 @@
       </ng-container>
 
       <ng-container *ngIf="step === 2">
-        <h2 class="page-title my-4 px-3">
-          Purchase Serialize Parts
-        </h2>
+        <h2 class="page-title my-4 px-3">Purchase Serialize Parts</h2>
 
         <table class="table table-bordered">
           <tbody>
@@ -335,7 +328,8 @@
               <th>Cust Line #</th>
               <th>Serial / Kit Number</th>
               <th>Quantity</th>
-              <th>Site
+              <th>
+                Site
                 <p-dropdown
                   placeholder="Location For All Parts"
                   name="purchaseSerializeItem[global].SITE"
@@ -353,45 +347,50 @@
               <th>Procedure</th>
             </tr>
 
-            <tr *ngFor="let purchaseSerializeItem of purchaseSerializeItems; index as i">
+            <tr
+              *ngFor="
+                let purchaseSerializeItem of purchaseSerializeItems;
+                index as i
+              "
+            >
               <td>
                 <input
                   [(ngModel)]="purchaseSerializeItem.customerLineNumber"
                   class="form-control input-transparent disable"
-                  name="purchaseSerializeItem[{{i}}].CUST_LINE_ITEM"
+                  name="purchaseSerializeItem[{{ i }}].CUST_LINE_ITEM"
                   type="text"
                   data-validate="parsley"
                   data-parsley-trigger="change"
                   data-parsley-minlength="1"
                   data-parsley-maxlength="3"
                   data-parsley-required="true"
-                >
+                />
               </td>
               <td>
                 <input
                   [(ngModel)]="purchaseSerializeItems[i].serialKitNo"
                   class="form-control input-transparent disable"
-                  name="purchaseSerializeItem[{{i}}].SERIAL_KIT_NUMBER"
+                  name="purchaseSerializeItem[{{ i }}].SERIAL_KIT_NUMBER"
                   type="text"
                   data-validate="parsley"
                   data-parsley-trigger="change"
                   data-parsley-maxlength="20"
                   data-parsley-maxlength-message="Serail Number must be 20 characters or less."
-                >
+                />
               </td>
               <td>
                 <input
                   [value]="purchaseSerializeItem.qty"
                   class="form-control input-transparent"
-                  name="purchaseSerializeItem[{{i}}].QTY"
+                  name="purchaseSerializeItem[{{ i }}].QTY"
                   readonly
                   type="text"
-                >
+                />
               </td>
               <td>
                 <p-dropdown
                   placeholder="Select Site"
-                  name="purchaseSerializeItem[{{i}}].SITE"
+                  name="purchaseSerializeItem[{{ i }}].SITE"
                   [(ngModel)]="purchaseSerializeItems[i].locationId"
                   [options]="locationsData"
                   appendTo="body"
@@ -399,6 +398,7 @@
                   data-validate="parsley"
                   data-parsley-trigger="change"
                   data-parsley-required="true"
+                  [disabled]="multiLineWO"
                 >
                 </p-dropdown>
                 <input
@@ -406,30 +406,30 @@
                   hidden
                   [(ngModel)]="purchaseSerializeItems[i].locationId"
                   class="form-control input-transparent"
-                  name="purchaseSerializeItem[{{i}}].SITE_INPUT"
+                  name="purchaseSerializeItem[{{ i }}].SITE_INPUT"
                   type="text"
                   data-validate="parsley"
                   data-parsley-trigger="change"
                   data-parsley-required="true"
-                >
+                />
               </td>
               <td>
                 <input
                   [value]="purchaseSerializeItem.partName"
                   class="form-control input-transparent"
-                  name="purchaseSerializeItem[{{i}}].PART_NAME"
+                  name="purchaseSerializeItem[{{ i }}].PART_NAME"
                   readonly
                   type="text"
-                >
+                />
               </td>
               <td>
                 <input
                   [value]="purchaseSerializeItem.procedureName"
                   class="form-control input-transparent"
-                  name="purchaseSerializeItem[{{i}}].PROCEDURE_NAME"
+                  name="purchaseSerializeItem[{{ i }}].PROCEDURE_NAME"
                   readonly
                   type="text"
-                >
+                />
               </td>
             </tr>
           </tbody>
@@ -464,14 +464,11 @@
   [(visible)]="serialNumberModal"
   [appendTo]="'body'"
   [baseZIndex]="100001"
-  [modal]='true'
-  [style]="{width: '50vw'}"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
   data-cy="purchase-order-header"
 >
-  <section
-  class="widget mrg-btm-sm"
-  widget
-  >
+  <section class="widget mrg-btm-sm" widget>
     <header class="mb-4">
       <h5>Details</h5>
     </header>

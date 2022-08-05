@@ -20,6 +20,7 @@
         public string PartName { get; set; }
 
         public string PartNumber { get; set; }
+        public int ProcedureId { get; set; }
 
         public string ProcedureName { get; set; }
 

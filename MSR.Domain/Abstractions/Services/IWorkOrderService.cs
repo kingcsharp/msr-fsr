@@ -13,7 +13,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command);
         Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command);
         Task<bool> DeleteWorkOrderAsync(DeleteWorkOrder command);
-        Task<ICollection<WorkOrderTaskModel>> GetWorkOrderTasksAsync(CreateWorkOrder command);
+        Task<ICollection<WorkOrderTaskModel>> GetWorkOrderTasksAsync(int ProductId);
         Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command);
         Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(GetWorkOrderPart command);
         ICollection<StatusModel> GetActiveStatusList();
@@ -31,6 +31,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersView();
         Task<ICollection<SubPartModel>> GetWorkOrderSubParts(List<int> workOrderIds);
         Task<WorkOrderModel> UpdateWorkOrderPriceAsync(UpdateWorkOrderPrice command);
+        Task<int> GetProductIdFromPurchaseOrderProduct(int purchaseOrderProductId);
         Task<WorkOrderModel> UpdateWorkOrderEndDateAsync(UpdateWorkOrderEndDate command);
     }
 }

@@ -103,6 +103,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<NCRHistoryItem> _ncrHistory;
         private IRepository<WorkOrderPartNCRMapItem> _workOrderPartNcrMap;
         private IRepository<WorkOrderPartDataMatrixView> _workOrderPartDataMatrixView;
+        private IRepository<PurchaseProductMap> _purchaseProductMap;
 
         public IRepository<CycleCountHistory> CycleCountHistory { get { return _cycleCountHistory ?? (_cycleCountHistory = new EFRepository<CycleCountHistory>(Context)); } }
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
@@ -195,6 +196,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<NCRHistoryItem> NCRHistory { get { return _ncrHistory ??= new EFRepository<NCRHistoryItem>(Context); } }
         public IRepository<WorkOrderPartNCRMapItem> WorkOrderPartNCRMap { get { return _workOrderPartNcrMap ??= new EFRepository<WorkOrderPartNCRMapItem>(Context); } }
         public IRepository<WorkOrderPartDataMatrixView> WorkOrderPartDataMatrixViews { get { return _workOrderPartDataMatrixView ??= new EFRepository<WorkOrderPartDataMatrixView>(Context); } }
+        public IRepository<PurchaseProductMap> PurchaseProductMaps { get { return _purchaseProductMap ??= new EFRepository<PurchaseProductMap>(Context); } }
 
         #endregion Repositories
 

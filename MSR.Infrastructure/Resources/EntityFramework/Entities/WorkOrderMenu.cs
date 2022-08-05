@@ -37,5 +37,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
         public bool? CustomerLastRespondent { get; set; }
+        public bool MultipleProducts { get; set; }
+
     }
 }

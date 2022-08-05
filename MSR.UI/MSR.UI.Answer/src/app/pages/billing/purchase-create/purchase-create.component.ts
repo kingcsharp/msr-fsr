@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Globals } from '../../../models/lib/globals';
-import { take } from 'rxjs/operators';
-import { responseHandler } from '../../../utils/responseHandler';
-import { environment as env } from '../../../../environments/environment';
+import { Component, OnInit } from "@angular/core";
+import { Globals } from "../../../models/lib/globals";
+import { take } from "rxjs/operators";
+import { responseHandler } from "../../../utils/responseHandler";
+import { environment as env } from "../../../../environments/environment";
 import {
   PurchaseOrderService,
   PurchaseOrderView,
@@ -12,17 +12,18 @@ import {
   CustomerService,
   CustomerModel,
   PurchaseService,
-  CreatePurchaseRequest
-} from '../../../services/api.client.generated';
-import { Router, ActivatedRoute } from '@angular/router';
-import * as moment from 'moment';
+  CreatePurchaseRequest,
+  PurchaseRequest,
+} from "../../../services/api.client.generated";
+import { Router, ActivatedRoute } from "@angular/router";
+import * as moment from "moment";
 
 declare let jQuery: any;
 
 @Component({
-  selector: 'app-purchase-create',
-  templateUrl: './purchase-create.component.html',
-  styleUrls: ['./purchase-create.component.scss'],
+  selector: "app-purchase-create",
+  templateUrl: "./purchase-create.component.html",
+  styleUrls: ["./purchase-create.component.scss"],
   providers: [
     PurchaseOrderService,
     CustomerService,
@@ -47,14 +48,16 @@ export class PurchaseCreateComponent implements OnInit {
   custLineElem: any;
   selectButtonOptions = [
     {
-      label: 'ON',
-      value: true
+      label: "ON",
+      value: true,
     },
     {
-      label: 'OFF',
-      value: false
-    }
+      label: "OFF",
+      value: false,
+    },
   ];
+  multiLineWO: boolean = false;
+  showMultiLineWO: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -63,13 +66,13 @@ export class PurchaseCreateComponent implements OnInit {
     private customerService: CustomerService,
     private purchaseService: PurchaseService,
     private locationService: LocationService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.globalDueDate = moment().add(7, 'days').toDate();
-    this.route.paramMap.subscribe(params => {
-      this.poId = parseInt(params.get('id'), 10);
+    this.globalDueDate = moment().add(7, "days").toDate();
+    this.route.paramMap.subscribe((params) => {
+      this.poId = parseInt(params.get("id"), 10);
       this.step = 0;
       this.getPurchaseOrderData(this.poId);
     });
@@ -78,38 +81,88 @@ export class PurchaseCreateComponent implements OnInit {
 
   getPurchaseOrderData(id: number) {
     this.globals.showLoader(true);
-    this.purchaseOrderService.purchaseOrderGet(id, null, null, null, null, null, null, null, null, null, null,
-      null, null, null, null, null, null, env.apiVersion)
+    this.purchaseOrderService
+      .purchaseOrderGet(
+        id,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
       .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.purchaseOrderData = response.object[0];
-        this.purchaseProducts = [];
-        this.purchaseOrderData.products.map(product => {
-          this.purchaseProducts.push({
-            id: product.id,
-            name: product.name,
-            partName: product.partName,
-            partNumber: product.partNumber,
-            procedureName: product.procedureName,
-            price: product.totalSalePrice,
-            qty: 0,
-            groupWO: false,
-            serializeIndividually: false,
-            dueDate: product.cycleTime ? moment().add(product.cycleTime, 'days').toDate() : this.globalDueDate,
+      .subscribe(
+        responseHandler((response) => {
+          this.multiLineWO = false;
+          this.showMultiLineWO = false;
+          this.purchaseOrderData = response.object[0];
+          this.purchaseProducts = [];
+          this.purchaseOrderData.products.map((product) => {
+            this.purchaseProducts.push({
+              id: product.id,
+              name: product.name,
+              partName: product.partName,
+              partNumber: product.partNumber,
+              procedureName: product.procedureName,
+              procedureId: product.procedureId,
+              price: product.totalSalePrice,
+              qty: 0,
+              groupWO: false,
+              serializeIndividually: false,
+              dueDate: product.cycleTime
+                ? moment().add(product.cycleTime, "days").toDate()
+                : this.globalDueDate,
+            });
           });
-        });
-        this.getPurchaseOrderFlag = true;
-        this.getCustomerData(this.purchaseOrderData.customerId);
-      }));
+          this.getPurchaseOrderFlag = true;
+          this.getCustomerData(this.purchaseOrderData.customerId);
+        })
+      );
   }
 
   getCustomerData(id: number) {
-    this.customerService.customerGet(id, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+    this.customerService
+      .customerGet(
+        id,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        true,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
       .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.customerData = response.object[0] ? response.object[0] : {};
-        this.getCustomerFlag = true;
-      }));
+      .subscribe(
+        responseHandler((response) => {
+          this.customerData = response.object[0] ? response.object[0] : {};
+          this.getCustomerFlag = true;
+        })
+      );
   }
 
   getCustomerLabel(customer: CustomerModel): string {
@@ -117,20 +170,46 @@ export class PurchaseCreateComponent implements OnInit {
   }
 
   getLocationsData() {
-    this.locationService.locationGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        response.object.map((x) => {
-          if (x.parentId === null) {
-            this.locationsData.push({ label: x.name, value: x.id });
-          }
-        });
-        this.getLocationsFlag = true;
-      }));
+    this.locationService
+      .locationGet(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          response.object.map((x) => {
+            if (x.parentId === null) {
+              this.locationsData.push({ label: x.name, value: x.id });
+            }
+          });
+          this.getLocationsFlag = true;
+        })
+      );
   }
 
   changeAllLocations(event) {
-    this.purchaseSerializeItems.forEach(e => {
-        e.locationId = event.value;
+    this.purchaseSerializeItems.forEach((e) => {
+      e.locationId = event.value;
     });
   }
 
@@ -141,17 +220,21 @@ export class PurchaseCreateComponent implements OnInit {
   }
 
   goToNextStep() {
-    jQuery('.parsleyjs').parsley().validate();
-    if (jQuery('.parsleyjs').parsley().isValid()) {
+    jQuery(".parsleyjs").parsley().validate();
+    if (jQuery(".parsleyjs").parsley().isValid()) {
       if (this.step === 0) {
         this.purchaseItems = [];
         let valid = true;
-        let sum: number = this.purchaseProducts.map(a => a.qty).reduce(function(a, b) {
-          return a + b;
-        });
+        let sum: number = this.purchaseProducts
+          .map((a) => a.qty)
+          .reduce(function (a, b) {
+            return a + b;
+          });
 
-        this.purchaseProducts.map(product => {
-          if (sum < 1) { valid = false; }
+        this.purchaseProducts.map((product) => {
+          if (sum < 1) {
+            valid = false;
+          }
           if (sum > 0 && product.qty > 0) {
             if (product.groupWO) {
               this.purchaseItems.push({
@@ -188,10 +271,12 @@ export class PurchaseCreateComponent implements OnInit {
             }
           }
         });
-        if (valid) { this.step = 1; }
+        if (valid) {
+          this.step = 1;
+        }
       } else if (this.step === 1) {
         this.purchaseSerializeItems = [];
-        this.purchaseItems.map(item => {
+        this.purchaseItems.map((item) => {
           if (!item.serializeIndividually) {
             this.purchaseSerializeItems.push({
               serialKitNo: null,
@@ -203,7 +288,7 @@ export class PurchaseCreateComponent implements OnInit {
             for (let i = 0; i < item.qty; i++) {
               this.purchaseSerializeItems.push({
                 serialKitNo: null,
-                locationId:  null,
+                locationId: null,
                 customerLineNumber: null,
                 ...item,
                 qty: 1,
@@ -213,34 +298,40 @@ export class PurchaseCreateComponent implements OnInit {
         });
         this.step = 2;
       } else {
-
         length = this.purchaseSerializeItems.length;
         let rootItemIndex = 0;
         this.globals.showLoader(true);
 
-        this.purchaseItems.forEach((purchaseItem) => {
+        const purchaseRequests = new Array<PurchaseRequest>();
 
+        this.purchaseItems.forEach((purchaseItem) => {
           const rootItem = this.purchaseSerializeItems[rootItemIndex];
 
           const serialNumbers: string[] = [];
           const customerLineNumbers: string[] = [];
-          let purchaseSerializeItemsCount = purchaseItem.serializeIndividually ? purchaseItem.qty : 1;
+          let purchaseSerializeItemsCount = purchaseItem.serializeIndividually
+            ? purchaseItem.qty
+            : 1;
 
-          for (let i = rootItemIndex;
-               i < rootItemIndex + purchaseSerializeItemsCount;
-               i++) {
+          for (
+            let i = rootItemIndex;
+            i < rootItemIndex + purchaseSerializeItemsCount;
+            i++
+          ) {
             serialNumbers.push(
-                this.purchaseSerializeItems[i].serialKitNo ?
-                    this.purchaseSerializeItems[i].serialKitNo : ''
+              this.purchaseSerializeItems[i].serialKitNo
+                ? this.purchaseSerializeItems[i].serialKitNo
+                : ""
             );
             customerLineNumbers.push(
-                this.purchaseSerializeItems[i].customerLineNumber ?
-                    this.purchaseSerializeItems[i].customerLineNumber : ''
+              this.purchaseSerializeItems[i].customerLineNumber
+                ? this.purchaseSerializeItems[i].customerLineNumber
+                : ""
             );
           }
 
-          const requestData = new CreatePurchaseRequest(
-            {
+          purchaseRequests.push(
+            new PurchaseRequest({
               purchaseOrderId: this.purchaseOrderData.id,
               statusId: 1, // Approved
               purchaseOrderProductId: rootItem.id,
@@ -252,20 +343,25 @@ export class PurchaseCreateComponent implements OnInit {
               dueDate: rootItem.dueDate,
               purchasePrice: rootItem.unitPrice,
               serializeIndividually: rootItem.serializeIndividually,
-            }
+            })
           );
 
           rootItemIndex += purchaseSerializeItemsCount;
-
-          this.purchaseService.purchasePost(env.apiVersion, requestData)
-          .pipe(take(1))
-          .subscribe(responseHandler((resp) => {
-            length -= purchaseItem.serializeIndividually ? purchaseItem.qty : 1;
-            if (length === 0) {
-              this.router.navigate(['app/pricing/purchaseorder']);
-            }
-          }));
         });
+
+        const requestData = new CreatePurchaseRequest({
+          groupLines: this.multiLineWO,
+          purchaseRequests,
+        });
+
+        this.purchaseService
+          .purchasePost(env.apiVersion, requestData)
+          .pipe(take(1))
+          .subscribe(
+            responseHandler((resp) => {
+              this.router.navigate(["app/pricing/purchaseorder"]);
+            })
+          );
       }
     }
   }
@@ -282,4 +378,33 @@ export class PurchaseCreateComponent implements OnInit {
     return Array(n);
   }
 
+  onChangeQTY(index: number) {
+    const selectedProducts = this.purchaseProducts.filter(
+      (v) => v.qty !== null && v.qty > 0
+    );
+    this.showMultiLineWO =
+      selectedProducts.length > 1 &&
+      selectedProducts.some(
+        (v) => v.procedureId === selectedProducts[0].procedureId
+      );
+    if (!this.showMultiLineWO) this.multiLineWO = false;
+
+    if (this.showMultiLineWO) {
+      this.purchaseProducts[index].groupWO =
+        this.purchaseProducts[index].qty !== null &&
+        this.purchaseProducts[index].qty > 1
+          ? this.multiLineWO
+          : false;
+    }
+  }
+
+  onChangeMultiLineWO() {
+    this.purchaseProducts.map((v, index) => {
+      this.purchaseProducts[index].groupWO =
+        this.purchaseProducts[index].qty !== null &&
+        this.purchaseProducts[index].qty > 1
+          ? this.multiLineWO
+          : false;
+    });
+  }
 }

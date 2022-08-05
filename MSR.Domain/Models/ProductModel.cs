@@ -9,6 +9,7 @@ namespace MSR.Domain.Models
         public ProductModel ()
         {
             ProductSteps = new List<ProductStepModel>();
+            WorkOrders = new List<WorkOrderModel>();
         }
 
         public string Name { get; set; }
@@ -30,6 +31,8 @@ namespace MSR.Domain.Models
         public virtual QuoteModel Quote { get; set; }
         public string DivisionFab { get; set; }
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
+        public string SerialNumber { get; set; }
+        public int Qty { get; set; }
 
         /// <summary>
         /// Gets or Sets ProductImage
@@ -41,5 +44,7 @@ namespace MSR.Domain.Models
         public string ApprovalStatus;
 
         public virtual ICollection<ProductStepModel> ProductSteps { get; set; }
+
+        public ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
     }
 }

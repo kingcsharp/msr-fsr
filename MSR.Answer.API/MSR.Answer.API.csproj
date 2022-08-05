@@ -14,7 +14,7 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'local' " />
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.22" />   
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.7.0" />

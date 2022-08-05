@@ -11,9 +11,8 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 using MSR.Domain.Models;
 using System.Net;
-using Microsoft.AspNetCore.SignalR;
 using MSR.Domain.Commands;
-using MSR.Domain.Abstractions.Services;
+using MSR.Application.Abstractions;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -26,10 +25,12 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private const string PrivilegeApiName = "QuotesProducts";
         private readonly ICommandDispatcher _dispatcher;
+        private readonly IProductViewService _productViewService;
 
-        public ProductController(ICommandDispatcher dispatcher)
+        public ProductController(ICommandDispatcher dispatcher, IProductViewService productViewService)
         {
             _dispatcher = dispatcher;
+            _productViewService = productViewService;
         }
 
         /// <summary>
@@ -55,6 +56,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
+        [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<ProductModel>>))]
         public async Task<IActionResult> GetProduct([FromQuery] GetProductRequest filters)
         {
@@ -92,6 +94,19 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ProductModel>(
                 DetermineResponseMessage<ProductModel>(ret, "Update", "Product")
             );
+        }
+
+        [HttpGet("ByWorkOrder/{workOrderId}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<ProductModel>>))]
+        public async Task<IActionResult> GetProductsForWorkOrder(int workOrderId)
+        {
+            var products = await _productViewService.GetProductsByWorkOrderAsync(workOrderId);
+
+            return new OkObjectResult(new AuditActionResult<ICollection<ProductModel>>()
+            {
+                Object = products,
+                SuccessMessage = "Successfully retrieved Products"
+            });
         }
     }
 }

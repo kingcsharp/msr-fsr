@@ -3,6 +3,8 @@ import {
   OnInit,
   ElementRef,
   ViewEncapsulation,
+  ViewChild,
+  AfterViewInit,
 } from "@angular/core";
 import { Globals } from "../../../models/lib/globals";
 import { ColumnsSaved } from "../../../models/lib/ColumnsSaved";
@@ -10,6 +12,7 @@ import { CommonGrid } from "../../../models/lib/CommonGrid";
 import { SelectItem } from "primeng/api";
 import {
   WorkOrderService,
+  ProductService,
   EnumSegregationType,
   ReportModel,
   UpdateWorkOrderPriceRequest,
@@ -31,8 +34,8 @@ import { clone, cloneDeep } from "lodash";
 import { MergeScanOperator } from "rxjs/internal/operators/mergeScan";
 
 interface SelectedItem extends WorkOrderGridSummary {
-  initialValues: Omit<SelectedItem, 'initialValues'>
-  selectedIndex: number,
+  initialValues: Omit<SelectedItem, "initialValues">;
+  selectedIndex: number;
 }
 
 @Component({
@@ -42,7 +45,7 @@ interface SelectedItem extends WorkOrderGridSummary {
   providers: [WorkOrderService],
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class WipComponent implements OnInit {
+export class WipComponent implements OnInit, AfterViewInit {
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   gridStorageId: string;
   data: Array<any> = new Array<any>();
@@ -52,7 +55,7 @@ export class WipComponent implements OnInit {
   EnumSegregationType = EnumSegregationType;
   totalRecords: number = 0;
   gridPartsSaved: GridSaved;
-  reportPartsModel: ReportModel;
+  emptyReportModel: ReportModel;
   prices: Array<number> = [];
   currentRowIndex: number = -1;
   invalidPriceError: boolean = false;
@@ -63,11 +66,16 @@ export class WipComponent implements OnInit {
   currentEvent: any;
   showScheduledEndDateDialog: boolean = false;
 
+  gridProductsSaved: GridSaved;
+  gridProductPartsSaved: GridSaved;
+  @ViewChild("expandedRowTemplate") expandedRowTemplate: ElementRef;
+
   constructor(
     public commonGrid: CommonGrid,
     private elementReference: ElementRef,
     public globals: Globals,
-    private workOrderService: WorkOrderService
+    private workOrderService: WorkOrderService,
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -78,7 +86,77 @@ export class WipComponent implements OnInit {
           role.name === "Administrator" || role.name === "Production Manager"
       );
 
+    const partColumnsSaved = [
+      new ColumnsSaved({
+        id: "id",
+        label: "Id",
+        visible: false,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.Number,
+      }),
+      new ColumnsSaved({
+        id: "serialNumber",
+        label: "Serial #",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.String,
+        styles: { "text-align": "center" },
+      }),
+      new ColumnsSaved({
+        id: "partNumber",
+        label: "Company Part #",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.String,
+        styles: { "text-align": "center" },
+      }),
+      new ColumnsSaved({
+        id: "cycleCount",
+        label: "Cycle Count",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.Number,
+        styles: { width: "10rem", "text-align": "center" },
+      }),
+      new ColumnsSaved({
+        id: "qty",
+        label: "Qty",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.Number,
+        styles: { width: "6rem", "text-align": "center" },
+      }),
+      new ColumnsSaved({
+        id: "name",
+        label: "Part Name",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.String,
+        styles: { width: "30rem", "text-align": "center" },
+      }),
+    ];
+
     this.gridPartsSaved = new GridSaved({
+      columnsSaved: partColumnsSaved,
+      showMyViewsFeature: false,
+      paginator: false,
+      storageId:
+        "wipmenu_parts" +
+        this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: "1.0.0",
+    });
+
+    this.emptyReportModel = new ReportModel({
+      name: "",
+    });
+
+    this.gridProductsSaved = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({
           id: "id",
@@ -90,30 +168,12 @@ export class WipComponent implements OnInit {
         }),
         new ColumnsSaved({
           id: "serialNumber",
-          label: "Serial #",
+          label: "Serial Number",
           visible: true,
           disableSort: true,
           disableFilter: true,
           type: EnumColumnType.String,
-          styles: { "text-align": "center" },
-        }),
-        new ColumnsSaved({
-          id: "partNumber",
-          label: "Company Part #",
-          visible: true,
-          disableSort: true,
-          disableFilter: true,
-          type: EnumColumnType.String,
-          styles: { "text-align": "center" },
-        }),
-        new ColumnsSaved({
-          id: "cycleCount",
-          label: "Cycle Count",
-          visible: true,
-          disableSort: true,
-          disableFilter: true,
-          type: EnumColumnType.Number,
-          styles: { width: "10rem", "text-align": "center" },
+          styles: { width: "4rem", "text-align": "center" },
         }),
         new ColumnsSaved({
           id: "qty",
@@ -122,32 +182,42 @@ export class WipComponent implements OnInit {
           disableSort: true,
           disableFilter: true,
           type: EnumColumnType.Number,
-          styles: { width: "6rem", "text-align": "center" },
+          styles: { width: "2rem", "text-align": "center" },
         }),
         new ColumnsSaved({
           id: "name",
-          label: "Part Name",
+          label: "Product Name",
           visible: true,
           disableSort: true,
           disableFilter: true,
           type: EnumColumnType.String,
-          styles: { width: "30rem", "text-align": "center" },
+          styles: { "text-align": "center" },
         }),
       ],
       showMyViewsFeature: false,
       paginator: false,
       storageId:
-        "wiphistory_parts" +
+        "wipmenu_products" +
+        this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: "1.0.0",
+      visibleColumns: 3,
+      expandRows: true,
+      expandRowProperty: "workOrderParts",
+    });
+
+    this.gridProductPartsSaved = new GridSaved({
+      columnsSaved: partColumnsSaved,
+      showMyViewsFeature: false,
+      paginator: false,
+      storageId:
+        "wipmenu_product_parts" +
         this.elementReference.nativeElement.tagName.toLowerCase(),
       version: "1.0.0",
     });
 
-    this.reportPartsModel = new ReportModel({
-      name: "",
-    });
-
     this.gridStorageId =
-      "wogrid" + this.elementReference.nativeElement.tagName.toLowerCase();
+      "wipmenu_grid" +
+      this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
       new ColumnsSaved({
@@ -255,20 +325,24 @@ export class WipComponent implements OnInit {
     this.locationOptions = this.globals.getTopLevelLocations();
   }
 
+  ngAfterViewInit(): void {
+    this.gridProductsSaved.expandRowsTemplate = this.expandedRowTemplate;
+  }
 
-  editSelectedEndDate(model: SelectedItem, index: number){
-    if(!this.adminOrManager) return
+  editSelectedEndDate(model: SelectedItem, index: number) {
+    if (!this.adminOrManager) return;
     this.selectedItem = model;
     this.selectedItem.selectedIndex = index;
     this.selectedItem.initialValues = cloneDeep(model);
     this.showScheduledEndDateDialog = true;
   }
 
-   saveScheduledEndDate(){
+  saveScheduledEndDate() {
     const updateEndDateRequest = new UpdateWorkOrderEndDateRequest({
       workOrderId: this.selectedItem.id,
       scheduledEndDate: this.selectedItem.scheduledEndDate,
-      scheduledEndDateChangeReason: this.selectedItem.scheduledEndDateChangeReason,
+      scheduledEndDateChangeReason:
+        this.selectedItem.scheduledEndDateChangeReason,
     });
     this.workOrderService
       .updateEndDate(env.apiVersion, updateEndDateRequest)
@@ -280,15 +354,16 @@ export class WipComponent implements OnInit {
         })
       );
   }
-  closeScheduledEndDateDialog(){
-    const {initialValues}  = this.selectedItem;
+  closeScheduledEndDateDialog() {
+    const { initialValues } = this.selectedItem;
     this.data[this.selectedItem.selectedIndex] = initialValues;
     this.showScheduledEndDateDialog = false;
   }
 
-
-  getScheduledEndDateChangeReason(model: SelectedItem){
-    return model.scheduledEndDateChangeReason ? `Reason: ${model.scheduledEndDateChangeReason}`: null;
+  getScheduledEndDateChangeReason(model: SelectedItem) {
+    return model.scheduledEndDateChangeReason
+      ? `Reason: ${model.scheduledEndDateChangeReason}`
+      : null;
   }
 
   getWorkOrders(event: LazyLoadEvent) {
@@ -297,7 +372,6 @@ export class WipComponent implements OnInit {
     }
     this.globals.showLoader(true);
     setTimeout(() => {
-      // this.workOrderService.menu(0, 100, null, null, env.apiVersion)
       callFunctionWithFiltersViews(
         this.workOrderService,
         this.workOrderService.menu,
@@ -444,5 +518,37 @@ export class WipComponent implements OnInit {
           this.getWorkOrders(undefined);
         })
       );
+  }
+
+  expandRow(expanded, row) {
+    this.clearExpandedRow();
+    if (!expanded && !row.workOrderProducts) {
+      const index = this.data.findIndex((v) => v.id === row.id);
+      if (index > -1) {
+        this.getProducts(index);
+      }
+    }
+  }
+
+  getProducts(index) {
+    this.globals.showLoader(true);
+    this.productService
+      .byWorkOrder(this.data[index].id, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.data[index].workOrderProducts = response.object;
+        })
+      );
+  }
+
+  clearExpandedRow() {
+    const gridState = localStorage.getItem(this.gridStorageId);
+
+    if (gridState) {
+      const jsonData = JSON.parse(gridState);
+      delete jsonData.expandedRowKeys;
+      localStorage.setItem(this.gridStorageId, JSON.stringify(jsonData));
+    }
   }
 }

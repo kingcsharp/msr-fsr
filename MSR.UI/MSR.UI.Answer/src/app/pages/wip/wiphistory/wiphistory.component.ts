@@ -1,4 +1,10 @@
-import { Component, OnInit, ElementRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+} from "@angular/core";
 import { Globals } from "../../../models/lib/globals";
 import { ColumnsSaved } from "../../../models/lib/ColumnsSaved";
 import { CommonGrid } from "../../../models/lib/CommonGrid";
@@ -8,6 +14,7 @@ import {
   EnumMenuItem,
   EnumApprovalTables,
   WorkOrderService,
+  ProductService,
   WorkOrderGridSummary,
   EnumSegregationType,
   WorkOrderHistoryView,
@@ -31,10 +38,10 @@ import * as _ from "lodash";
   styleUrls: ["./wiphistory.component.scss"],
   providers: [WorkOrderService],
 })
-export class WiphistoryComponent implements OnInit {
+export class WiphistoryComponent implements OnInit, AfterViewInit {
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   gridStorageId: string;
-  data: Array<WorkOrderHistoryView>;
+  data: Array<any> = new Array<any>();
   statusOptions: Array<SelectItem>;
   canRead: boolean = false;
   privileges = EnumPrivilege;
@@ -43,22 +50,97 @@ export class WiphistoryComponent implements OnInit {
   EnumSegregationType = EnumSegregationType;
   totalRecords: number = 0;
   gridPartsSaved: GridSaved;
-  reportPartsModel: ReportModel;
+  emptyReportModel: ReportModel;
   showDispositionDialog: boolean = false;
   selectedItem: any = null;
   instructions: string;
   currentEvent: any;
+
+  gridProductsSaved: GridSaved;
+  gridProductPartsSaved: GridSaved;
+  @ViewChild("expandedRowTemplate") expandedRowTemplate: ElementRef;
 
   constructor(
     public commonGrid: CommonGrid,
     private elementReference: ElementRef,
     public globals: Globals,
     private router: Router,
-    private workOrderService: WorkOrderService
+    private workOrderService: WorkOrderService,
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
+    const partColumnsSaved = [
+      new ColumnsSaved({
+        id: "id",
+        label: "Id",
+        visible: false,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.Number,
+      }),
+      new ColumnsSaved({
+        id: "serialNumber",
+        label: "Serial #",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.String,
+        styles: { "text-align": "center" },
+      }),
+      new ColumnsSaved({
+        id: "partNumber",
+        label: "Company Part #",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.String,
+        styles: { "text-align": "center" },
+      }),
+      new ColumnsSaved({
+        id: "cycleCount",
+        label: "Cycle Count",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.Number,
+        styles: { width: "10rem", "text-align": "center" },
+      }),
+      new ColumnsSaved({
+        id: "qty",
+        label: "Qty",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.Number,
+        styles: { width: "6rem", "text-align": "center" },
+      }),
+      new ColumnsSaved({
+        id: "name",
+        label: "Part Name",
+        visible: true,
+        disableSort: true,
+        disableFilter: true,
+        type: EnumColumnType.String,
+        styles: { width: "30rem", "text-align": "center" },
+      }),
+    ];
+
     this.gridPartsSaved = new GridSaved({
+      columnsSaved: partColumnsSaved,
+      showMyViewsFeature: false,
+      paginator: false,
+      storageId:
+        "wiphistory_parts" +
+        this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: "1.0.0",
+    });
+
+    this.emptyReportModel = new ReportModel({
+      name: "",
+    });
+
+    this.gridProductsSaved = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({
           id: "id",
@@ -70,30 +152,12 @@ export class WiphistoryComponent implements OnInit {
         }),
         new ColumnsSaved({
           id: "serialNumber",
-          label: "Serial #",
+          label: "Serial Number",
           visible: true,
           disableSort: true,
           disableFilter: true,
           type: EnumColumnType.String,
-          styles: { "text-align": "center" },
-        }),
-        new ColumnsSaved({
-          id: "partNumber",
-          label: "Company Part #",
-          visible: true,
-          disableSort: true,
-          disableFilter: true,
-          type: EnumColumnType.String,
-          styles: { "text-align": "center" },
-        }),
-        new ColumnsSaved({
-          id: "cycleCount",
-          label: "Cycle Count",
-          visible: true,
-          disableSort: true,
-          disableFilter: true,
-          type: EnumColumnType.Number,
-          styles: { width: "10rem", "text-align": "center" },
+          styles: { width: "4rem", "text-align": "center" },
         }),
         new ColumnsSaved({
           id: "qty",
@@ -102,32 +166,42 @@ export class WiphistoryComponent implements OnInit {
           disableSort: true,
           disableFilter: true,
           type: EnumColumnType.Number,
-          styles: { width: "6rem", "text-align": "center" },
+          styles: { width: "2rem", "text-align": "center" },
         }),
         new ColumnsSaved({
           id: "name",
-          label: "Part Name",
+          label: "Product Name",
           visible: true,
           disableSort: true,
           disableFilter: true,
           type: EnumColumnType.String,
-          styles: { width: "30rem", "text-align": "center" },
+          styles: { "text-align": "center" },
         }),
       ],
       showMyViewsFeature: false,
       paginator: false,
       storageId:
-        "wiphistory_parts" +
+        "wipmenu_products" +
+        this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: "1.0.0",
+      visibleColumns: 3,
+      expandRows: true,
+      expandRowProperty: "workOrderParts",
+    });
+
+    this.gridProductPartsSaved = new GridSaved({
+      columnsSaved: partColumnsSaved,
+      showMyViewsFeature: false,
+      paginator: false,
+      storageId:
+        "wiphistory_product_parts" +
         this.elementReference.nativeElement.tagName.toLowerCase(),
       version: "1.0.0",
     });
 
-    this.reportPartsModel = new ReportModel({
-      name: "",
-    });
-
     this.gridStorageId =
-      "wiphistory" + this.elementReference.nativeElement.tagName.toLowerCase();
+      "wiphistory_grid" +
+      this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
       new ColumnsSaved({
@@ -199,6 +273,10 @@ export class WiphistoryComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit(): void {
+    this.gridProductsSaved.expandRowsTemplate = this.expandedRowTemplate;
+  }
+
   getWorkOrdersHistory(event: LazyLoadEvent) {
     if (event !== undefined) {
       this.currentEvent = event;
@@ -267,5 +345,39 @@ export class WiphistoryComponent implements OnInit {
           this.getWorkOrdersHistory(undefined);
         })
       );
+  }
+
+  expandRow(expanded, row) {
+    this.clearExpandedRow();
+    if (!expanded && !row.workOrderProducts) {
+      const index = this.data.findIndex(
+        (v) => v.workOrderId === row.workOrderId
+      );
+      if (index > -1) {
+        this.getProducts(index);
+      }
+    }
+  }
+
+  getProducts(index) {
+    this.globals.showLoader(true);
+    this.productService
+      .byWorkOrder(this.data[index].workOrderId, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.data[index].workOrderProducts = response.object;
+        })
+      );
+  }
+
+  clearExpandedRow() {
+    const gridState = localStorage.getItem(this.gridStorageId);
+
+    if (gridState) {
+      const jsonData = JSON.parse(gridState);
+      delete jsonData.expandedRowKeys;
+      localStorage.setItem(this.gridStorageId, JSON.stringify(jsonData));
+    }
   }
 }
