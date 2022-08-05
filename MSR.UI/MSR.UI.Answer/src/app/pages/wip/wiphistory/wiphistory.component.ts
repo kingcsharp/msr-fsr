@@ -200,7 +200,8 @@ export class WiphistoryComponent implements OnInit, AfterViewInit {
     });
 
     this.gridStorageId =
-      "wiphistory" + this.elementReference.nativeElement.tagName.toLowerCase();
+      "wiphistory_grid" +
+      this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
       new ColumnsSaved({
@@ -347,7 +348,8 @@ export class WiphistoryComponent implements OnInit, AfterViewInit {
   }
 
   expandRow(expanded, row) {
-    if (expanded && !row.workOrderProducts) {
+    this.clearExpandedRow();
+    if (!expanded && !row.workOrderProducts) {
       const index = this.data.findIndex(
         (v) => v.workOrderId === row.workOrderId
       );
@@ -367,5 +369,15 @@ export class WiphistoryComponent implements OnInit, AfterViewInit {
           this.data[index].workOrderProducts = response.object;
         })
       );
+  }
+
+  clearExpandedRow() {
+    const gridState = localStorage.getItem(this.gridStorageId);
+
+    if (gridState) {
+      const jsonData = JSON.parse(gridState);
+      delete jsonData.expandedRowKeys;
+      localStorage.setItem(this.gridStorageId, JSON.stringify(jsonData));
+    }
   }
 }

@@ -205,7 +205,8 @@ export class WipComponent implements OnInit, AfterViewInit {
     });
 
     this.gridStorageId =
-      "wogrid" + this.elementReference.nativeElement.tagName.toLowerCase();
+      "wipmenu_grid" +
+      this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
       new ColumnsSaved({
@@ -323,7 +324,6 @@ export class WipComponent implements OnInit, AfterViewInit {
     }
     this.globals.showLoader(true);
     setTimeout(() => {
-      // this.workOrderService.menu(0, 100, null, null, env.apiVersion)
       callFunctionWithFiltersViews(
         this.workOrderService,
         this.workOrderService.menu,
@@ -473,7 +473,8 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   expandRow(expanded, row) {
-    if (expanded && !row.workOrderProducts) {
+    this.clearExpandedRow();
+    if (!expanded && !row.workOrderProducts) {
       const index = this.data.findIndex((v) => v.id === row.id);
       if (index > -1) {
         this.getProducts(index);
@@ -491,5 +492,15 @@ export class WipComponent implements OnInit, AfterViewInit {
           this.data[index].workOrderProducts = response.object;
         })
       );
+  }
+
+  clearExpandedRow() {
+    const gridState = localStorage.getItem(this.gridStorageId);
+
+    if (gridState) {
+      const jsonData = JSON.parse(gridState);
+      delete jsonData.expandedRowKeys;
+      localStorage.setItem(this.gridStorageId, JSON.stringify(jsonData));
+    }
   }
 }
