@@ -233,14 +233,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
                 var purchase = _unitOfWork.Purchases.FirstOrDefault(false, i => i.Id == createWorkOrderDto.PurchaseId);
 
-                
-
                 var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(createWorkOrderDto);
                 
-                if (purchase != null)
-                {
-                    workOrderEntity.Price = purchase.PurchasePrice * purchase.Qty;
-                }
                 workOrderEntity.ProductId = createWorkOrderDto.WorkOrderProducts.First().ProductId;
 
                 var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
@@ -531,9 +525,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
                 var serialNumberList = item.SerialNumbers.ToList();
                 var customerLineNumberList = item.CustomerLineNumbers.ToList();
-                for (var workOrderPartIndex = 0;
-                workOrderPartIndex < item.SerialNumbers.Count && workOrderPartIndex < parts.Count;
-                workOrderPartIndex += 1)
+                for (var workOrderPartIndex = 0;workOrderPartIndex < item.SerialNumbers.Count && workOrderPartIndex < partList.Count;workOrderPartIndex += 1)
                 {
                     if (serialNumberList[workOrderPartIndex] != null)
                     {
@@ -557,7 +549,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             if (command.Id.HasValue)
             {
                 query = query.Where(s => s.Id == command.Id);
-
             }
 
             if (command.WorkOrderId.HasValue)
@@ -614,6 +605,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
              * K == PurchaseOrder.ReferencePO up to the /
              * 4k == PurchaseOrder.ReferencePO after the /
              * 2S == MTTN
+             * 1T == PartData
              */
             var recordSeparator = ((char)30).ToString();
             var groupSeparator = ((char)29).ToString();
@@ -1748,7 +1740,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                 <td class=""border p-2"" width=""50%"">
                                     {desc}
                                 </td>
-                                <td class=""border p-2"" width=""25%"">{getResultFromMonitor(woTaskMonitorEntity)}</td>
+                                <td class=""border p-2"" width=""25%"">{GetResultFromMonitor(woTaskMonitorEntity)}</td>
                                 <td class=""border p-2"" width=""25%"">{woTaskMonitorEntity.Comment}</td>
                             </tr>
                         ";
@@ -1803,7 +1795,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
         }
 
-        private string getResultFromMonitor(WorkOrderTaskMonitor workOrderTaskMonitor)
+        private string GetResultFromMonitor(WorkOrderTaskMonitor workOrderTaskMonitor)
         {
             var monitorType = workOrderTaskMonitor?.ProcedureStepMonitor?.MonitorTypeId;
 
@@ -1854,7 +1846,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         /// </summary>
         /// <param name="workOrderModel">Work Order Model</param>
         /// <returns>The formatted disposition string</returns>
-        private string getWorkOrderDisposition(WorkOrderModel workOrderModel, bool includeMessages = false)
+        private string GetWorkOrderDisposition(WorkOrderModel workOrderModel, bool includeMessages = false)
         {
             string dispositionMessage = string.Empty;
 
