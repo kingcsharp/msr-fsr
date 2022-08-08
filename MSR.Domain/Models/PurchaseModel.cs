@@ -8,7 +8,6 @@ namespace MSR.Domain.Models
     public class PurchaseModel : CreatableModel
     {
         public int PurchaseOrderId { get; set; }
-        public int PurchaseOrderProductId { get; set; }
         public string CustomerPurchaseNumber { get; set; }
         public int LocationId { get; set; }
         public string SerialNumber { get; set; }
@@ -23,6 +22,5 @@ namespace MSR.Domain.Models
 
         public virtual LocationModel Location { get; set; }
         public virtual PurchaseOrderModel PurchaseOrder { get; set; }
-        public virtual PurchaseOrderProductView PurchaseOrderProduct { get; set; }
     }
 }

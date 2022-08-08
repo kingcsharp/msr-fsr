@@ -106,9 +106,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                     await created.Context.Entry(purchase)
                         .Reference(x => x.PurchaseOrder).LoadAsync();
                     await created.Context.Entry(purchase)
-                        .Reference(x => x.PurchaseOrderProduct).LoadAsync();
-                    await created.Context.Entry(purchase.PurchaseOrderProduct)
-                        .Reference(x => x.Product).LoadAsync();
+                        .Reference(x => x.PurchaseProducts).LoadAsync();
 
                     var purchaseModel = _mapper.Map<PurchaseModel>(purchase);
                     purchaseModel.SerializeIndividually = command.PurchaseRequests.First().SerializeIndividually;
@@ -141,9 +139,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                         await created.Context.Entry(purchase)
                             .Reference(x => x.PurchaseOrder).LoadAsync();
                         await created.Context.Entry(purchase)
-                            .Reference(x => x.PurchaseOrderProduct).LoadAsync();
-                        await created.Context.Entry(purchase.PurchaseOrderProduct)
-                            .Reference(x => x.Product).LoadAsync();
+                            .Reference(x => x.PurchaseProducts).LoadAsync();
 
                         var purchaseModel = _mapper.Map<Domain.Models.PurchaseModel>(purchase);
                         purchaseModel.SerializeIndividually = item.SerializeIndividually;

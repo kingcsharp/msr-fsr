@@ -16,8 +16,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int PurchaseOrderId { get; set; }
 
-        public int PurchaseOrderProductId { get; set; }
-
         [StringLength(50)]
         public string CustomerPurchaseNumber { get; set; }
 
@@ -55,8 +53,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 
         public virtual ICollection<PurchaseProductMap> PurchaseProducts { get; set; }
-
-        [ForeignKey("PurchaseOrderProductId")]
-        public virtual PurchaseOrderProduct PurchaseOrderProduct { get; set; }
     }
 }

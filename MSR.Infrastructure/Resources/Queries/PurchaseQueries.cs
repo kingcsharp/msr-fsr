@@ -21,7 +21,8 @@ namespace MSR.Infrastructure.Resources.Queries
                         .Include(x => x.WorkOrders)
                         .Include(x => x.Location)
                         .Include(x => x.PurchaseOrder)
-                        .Include(x => x.PurchaseOrderProduct)
+                        .Include(x => x.PurchaseProducts)
+                        .ThenInclude(x => x.PurchaseOrderProduct)
                         .ThenInclude(s => s.Product).AsQueryable();
             }
             else
@@ -30,7 +31,8 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.Include(x => x.Status)
                     .Include(x => x.Location)
                     .Include(x => x.PurchaseOrder)
-                    .Include(x => x.PurchaseOrderProduct)
+                    .Include(x => x.PurchaseProducts)
+                    .ThenInclude(x => x.PurchaseOrderProduct)
                     .ThenInclude(s => s.Product).AsQueryable();
             }
 
@@ -39,7 +41,11 @@ namespace MSR.Infrastructure.Resources.Queries
             query = query.Where<Purchase>(command.CreatedOn, s => DateTime.Compare(s.CreatedOn.Date,command.CreatedOn.Value.Date) == 0);
             query = query.Where<Purchase>(command.Id, s => s.Id == command.Id);
             query = query.Where<Purchase>(command.Mttn, s => s.MTTN.Contains(command.Mttn));
-            query = query.Where<Purchase>(command.PurchaseOrderProductName, s => s.PurchaseOrderProduct != null && s.PurchaseOrderProduct.Product != null && s.PurchaseOrderProduct.Product.Name.Contains(command.PurchaseOrderProductName));
+            query = query.Where<Purchase>(command.PurchaseOrderProductName,
+                                               s => s.PurchaseProducts != null
+                                                && s.PurchaseProducts.Any(i => i.PurchaseOrderProduct != null
+                                                                               && i.PurchaseOrderProduct.Product != null
+                                                                               && i.PurchaseOrderProduct.Product.Name.Contains(command.PurchaseOrderProductName)));
             query = query.Where<Purchase>(command.StatusId,s => s.Status != null && s.Status.Name != null && command.StatusId.Contains(s.Status.Name));
 
 
@@ -48,7 +54,6 @@ namespace MSR.Infrastructure.Resources.Queries
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPurchaseSortFields.CreatedOn), s => s.CreatedOn);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPurchaseSortFields.Id), s => s.Id);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPurchaseSortFields.Mttn), s => s.MTTN);
-                query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPurchaseSortFields.PurchaseOrderProductName), s => s.PurchaseOrderProduct.Product.Name);
                 query = query.OrderBy(command, command.Term == EnumUtils.GetDescription(EnumPurchaseSortFields.StatusId), s => s.Status.Name);
 
             }

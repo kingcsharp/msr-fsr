@@ -221,7 +221,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 var productIdsToAdd = command.Products.Except(productIds);
                 var usedProductIds = await _unitOfWork.Purchases.Query()
                     .Where(i => i.PurchaseOrderId == command.Id)
-                    .Select(i => i.PurchaseOrderProductId)
+                    .SelectMany(i => i.PurchaseProducts.Select(j => j.PurchaseOrderProductId))
                     .ToListAsync();
                 var purchaseOrderProductEntitiesToRemove = await _unitOfWork.PurchaseOrderProducts.Query()
                     .Where(i => i.PurchaseOrderId == purchaseOrderEntity.Id && productIdsToRemove.Contains(i.ProductId) && !usedProductIds.Contains(i.Id))
