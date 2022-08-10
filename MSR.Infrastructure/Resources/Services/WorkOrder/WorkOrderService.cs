@@ -160,6 +160,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var mappedParts = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => workOrderWorkOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
             foreach (var workOrderPart in workOrderModel.WorkOrderParts)
             {
+                var mostRecentPart = await _unitOfWork.WorkOrderParts.Query().OrderByDescending(i => i.Id)
+                                            .FirstOrDefaultAsync(i => i.SerialNumber == workOrderPart.SerialNumber && i.PartId == workOrderPart.PartId 
+                                                                    && i.Id < workOrderPart.Id && i.PartData != null);
+                if (mostRecentPart != null)
+                {
+                    workOrderPart.PartData = mostRecentPart.PartData;
+                }
+
                 var workOrderPartMappedPart = mappedParts.FirstOrDefault(i => i.WorkOrderPartId == workOrderPart.Id);
                 if(workOrderPartMappedPart != null)
                 {
@@ -613,7 +621,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var data = $"[)>{recordSeparator}06{groupSeparator}P{workOrderPartDataMatrixView.P}{groupSeparator}1P{workOrderPartDataMatrixView.OneP}{groupSeparator}20P{workOrderPartDataMatrixView.TwentyP}" +
                        $"{groupSeparator}16D{workOrderPartDataMatrixView.SixteenD}{groupSeparator}14D{workOrderPartDataMatrixView.FourteenD}{groupSeparator}30P{workOrderPartDataMatrixView.ThirtyP}" +
                        $"{groupSeparator}Z{workOrderPartDataMatrixView.Z}{groupSeparator}V1{workOrderPartDataMatrixView.V1}{groupSeparator}3S{workOrderPartDataMatrixView.ThreeS}{groupSeparator}" +
-                       $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
+                       $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}1T{workOrderPartDataMatrixView.OneT}{groupSeparator}2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
                        $"K{workOrderPartDataMatrixView.K}{groupSeparator}4k{workOrderPartDataMatrixView.FourK}{groupSeparator}2S{workOrderPartDataMatrixView.TwoS}{recordSeparator}{endTransmission}";
 
             var barcode = DataMatrixEncoder.Encode(data);
@@ -633,14 +641,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            var current = _unitOfWork.WorkOrderParts.Query().Include(s => s.Part).Where(x => x.Id == command.WorkOrderPartId);
+            var workOrderPartEntity = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part).FirstOrDefaultAsync(s => s.Id == command.WorkOrderPartId);
 
-            if (current == null || !current.Any())
+            if (workOrderPartEntity == null)
             {
                 throw new DomainException($"{nameof(WorkOrderPart)} not found with ID: {command.WorkOrderPartId}", DomainError.NotFound);
             }
-
-            WorkOrderPart workOrderPartEntity = await current.FirstOrDefaultAsync(s => s.Id == command.WorkOrderPartId);
 
             await SetCycleCount(workOrderPartEntity, command.SerialNumber);
 
