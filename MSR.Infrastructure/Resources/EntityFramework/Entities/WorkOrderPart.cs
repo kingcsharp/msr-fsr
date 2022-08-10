@@ -35,5 +35,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual WorkOrder WorkOrder { get; set; }
         public virtual ICollection<WorkOrderPart> Children { get; set; }
         public virtual WorkOrderPart Parent { get; set; }
+        public string PartData { get; set; }
     }
 }

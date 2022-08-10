@@ -7,6 +7,7 @@ namespace MSR.Domain.Commands
     {
         public int WorkOrderPartId { get; set; }
         public string SerialNumber { get; set; }
+        public string PartData { get; set; }
         public EnumSegregationType? SegregationType { get; set; }
     }
 }

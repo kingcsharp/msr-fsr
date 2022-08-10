@@ -160,6 +160,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var mappedParts = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => workOrderWorkOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
             foreach (var workOrderPart in workOrderModel.WorkOrderParts)
             {
+                var mostRecentPart = await _unitOfWork.WorkOrderParts.Query().OrderByDescending(i => i.Id)
+                                            .FirstOrDefaultAsync(i => i.SerialNumber == workOrderPart.SerialNumber && i.PartId == workOrderPart.PartId 
+                                                                    && i.Id < workOrderPart.Id && i.PartData != null);
+                if (mostRecentPart != null)
+                {
+                    workOrderPart.PartData = mostRecentPart.PartData;
+                }
+
                 var workOrderPartMappedPart = mappedParts.FirstOrDefault(i => i.WorkOrderPartId == workOrderPart.Id);
                 if(workOrderPartMappedPart != null)
                 {
@@ -233,14 +241,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
                 var purchase = _unitOfWork.Purchases.FirstOrDefault(false, i => i.Id == createWorkOrderDto.PurchaseId);
 
-                
-
                 var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(createWorkOrderDto);
                 
-                if (purchase != null)
-                {
-                    workOrderEntity.Price = purchase.PurchasePrice * purchase.Qty;
-                }
                 workOrderEntity.ProductId = createWorkOrderDto.WorkOrderProducts.First().ProductId;
 
                 var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
@@ -531,9 +533,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
                 var serialNumberList = item.SerialNumbers.ToList();
                 var customerLineNumberList = item.CustomerLineNumbers.ToList();
-                for (var workOrderPartIndex = 0;
-                workOrderPartIndex < item.SerialNumbers.Count && workOrderPartIndex < parts.Count;
-                workOrderPartIndex += 1)
+                for (var workOrderPartIndex = 0;workOrderPartIndex < item.SerialNumbers.Count && workOrderPartIndex < partList.Count;workOrderPartIndex += 1)
                 {
                     if (serialNumberList[workOrderPartIndex] != null)
                     {
@@ -557,7 +557,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             if (command.Id.HasValue)
             {
                 query = query.Where(s => s.Id == command.Id);
-
             }
 
             if (command.WorkOrderId.HasValue)
@@ -614,6 +613,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
              * K == PurchaseOrder.ReferencePO up to the /
              * 4k == PurchaseOrder.ReferencePO after the /
              * 2S == MTTN
+             * 1T == PartData
              */
             var recordSeparator = ((char)30).ToString();
             var groupSeparator = ((char)29).ToString();
@@ -621,7 +621,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var data = $"[)>{recordSeparator}06{groupSeparator}P{workOrderPartDataMatrixView.P}{groupSeparator}1P{workOrderPartDataMatrixView.OneP}{groupSeparator}20P{workOrderPartDataMatrixView.TwentyP}" +
                        $"{groupSeparator}16D{workOrderPartDataMatrixView.SixteenD}{groupSeparator}14D{workOrderPartDataMatrixView.FourteenD}{groupSeparator}30P{workOrderPartDataMatrixView.ThirtyP}" +
                        $"{groupSeparator}Z{workOrderPartDataMatrixView.Z}{groupSeparator}V1{workOrderPartDataMatrixView.V1}{groupSeparator}3S{workOrderPartDataMatrixView.ThreeS}{groupSeparator}" +
-                       $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
+                       $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}1T{workOrderPartDataMatrixView.OneT}{groupSeparator}2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
                        $"K{workOrderPartDataMatrixView.K}{groupSeparator}4k{workOrderPartDataMatrixView.FourK}{groupSeparator}2S{workOrderPartDataMatrixView.TwoS}{recordSeparator}{endTransmission}";
 
             var barcode = DataMatrixEncoder.Encode(data);
@@ -641,14 +641,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            var current = _unitOfWork.WorkOrderParts.Query().Include(s => s.Part).Where(x => x.Id == command.WorkOrderPartId);
+            var workOrderPartEntity = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part).FirstOrDefaultAsync(s => s.Id == command.WorkOrderPartId);
 
-            if (current == null || !current.Any())
+            if (workOrderPartEntity == null)
             {
                 throw new DomainException($"{nameof(WorkOrderPart)} not found with ID: {command.WorkOrderPartId}", DomainError.NotFound);
             }
-
-            WorkOrderPart workOrderPartEntity = await current.FirstOrDefaultAsync(s => s.Id == command.WorkOrderPartId);
 
             await SetCycleCount(workOrderPartEntity, command.SerialNumber);
 
@@ -1748,7 +1746,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                 <td class=""border p-2"" width=""50%"">
                                     {desc}
                                 </td>
-                                <td class=""border p-2"" width=""25%"">{getResultFromMonitor(woTaskMonitorEntity)}</td>
+                                <td class=""border p-2"" width=""25%"">{GetResultFromMonitor(woTaskMonitorEntity)}</td>
                                 <td class=""border p-2"" width=""25%"">{woTaskMonitorEntity.Comment}</td>
                             </tr>
                         ";
@@ -1803,7 +1801,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
         }
 
-        private string getResultFromMonitor(WorkOrderTaskMonitor workOrderTaskMonitor)
+        private string GetResultFromMonitor(WorkOrderTaskMonitor workOrderTaskMonitor)
         {
             var monitorType = workOrderTaskMonitor?.ProcedureStepMonitor?.MonitorTypeId;
 
@@ -1854,7 +1852,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         /// </summary>
         /// <param name="workOrderModel">Work Order Model</param>
         /// <returns>The formatted disposition string</returns>
-        private string getWorkOrderDisposition(WorkOrderModel workOrderModel, bool includeMessages = false)
+        private string GetWorkOrderDisposition(WorkOrderModel workOrderModel, bool includeMessages = false)
         {
             string dispositionMessage = string.Empty;
 

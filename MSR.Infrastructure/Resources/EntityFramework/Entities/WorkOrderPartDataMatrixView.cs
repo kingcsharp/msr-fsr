@@ -22,6 +22,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string K { get; set; }
         public string FourK { get; set; }
         public string TwoS { get; set; }
-
+        public string OneT { get; set; }
     }
 }
