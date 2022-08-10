@@ -106,7 +106,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                     await created.Context.Entry(purchase)
                         .Reference(x => x.PurchaseOrder).LoadAsync();
                     await created.Context.Entry(purchase)
-                        .Reference(x => x.PurchaseProducts).LoadAsync();
+                        .Collection(x => x.PurchaseProducts).LoadAsync();
 
                     var purchaseModel = _mapper.Map<PurchaseModel>(purchase);
                     purchaseModel.SerializeIndividually = command.PurchaseRequests.First().SerializeIndividually;
