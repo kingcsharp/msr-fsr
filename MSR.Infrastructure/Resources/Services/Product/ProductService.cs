@@ -361,6 +361,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 parentPart
             };
+
             partList.AddRange(childParts);
             model.WorkOrderParts = new List<WorkOrderPartModel>();
             foreach(var part in partList)
@@ -371,8 +372,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
                 model.WorkOrderParts.Add(partModel);
             }
-            model.Qty = parentPart.Qty.GetValueOrDefault(1);
-            model.SerialNumber = parentPart.SerialNumber;
+            model.Qty = parentParts.First().Qty.GetValueOrDefault(1);
+            model.SerialNumber = parentParts.First().SerialNumber;
             
         }
 
