@@ -372,9 +372,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
                 model.WorkOrderParts.Add(partModel);
             }
-            model.Qty = parentParts.First().Qty.GetValueOrDefault(1);
-            model.SerialNumber = parentParts.First().SerialNumber;
-            
+            model.Qty = parentPart.Qty.GetValueOrDefault(1);
+            model.SerialNumber = parentPart.SerialNumber;
         }
 
 
