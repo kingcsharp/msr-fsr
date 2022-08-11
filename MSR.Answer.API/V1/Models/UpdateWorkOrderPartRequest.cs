@@ -6,6 +6,7 @@ namespace MSR.Answer.API.V1.Models
     {
         public int WorkOrderPartId { get; set; }
         public string SerialNumber { get; set; }
+        public string PartData { get; set; }
         public EnumSegregationType? SegregationType { get; set; }
     }
 }
