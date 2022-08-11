@@ -313,6 +313,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         }
         private void RemoveCycle(ProductModel product)
         {
+            if(product.WorkOrders == null)
+            {
+                return;
+            }
+
             foreach(var model in product.WorkOrders)
             {
                 if (model.Purchase != null)
@@ -349,14 +354,13 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }
         }
 
-        private async Task GetWorkOrderParts(ProductModel model, int workOrderId)
+        private async Task GetWorkOrderParts(WorkOrderPart parentPart, ProductModel model, int workOrderId)
         {
-            //GetParentPart
-            var parentParts = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).Where(i => i.WorkOrderId == workOrderId && i.PartId == model.PartId && i.ParentId == null).ToListAsync();
-            var parentPartIds = parentParts.Select(i => i.Id).ToList();
-            var childParts = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).Where(i => i.ParentId.HasValue && parentPartIds.Contains(i.ParentId.Value)).ToListAsync();
-            var partList = new List<WorkOrderPart>();
-            partList.AddRange(parentParts);
+            var childParts = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).Where(i => i.ParentId == parentPart.Id).ToListAsync();
+            var partList = new List<WorkOrderPart>
+            {
+                parentPart
+            };
             partList.AddRange(childParts);
             model.WorkOrderParts = new List<WorkOrderPartModel>();
             foreach(var part in partList)
@@ -367,8 +371,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
                 model.WorkOrderParts.Add(partModel);
             }
-            model.Qty = parentParts.First().Qty.GetValueOrDefault(1);
-            model.SerialNumber = parentParts.First().SerialNumber;
+            model.Qty = parentPart.Qty.GetValueOrDefault(1);
+            model.SerialNumber = parentPart.SerialNumber;
             
         }
 
@@ -380,25 +384,34 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 throw new DomainException($"WorkOrder with Id {workOrderId} not found", DomainError.NotFound);
             }
-            var productIds = await _unitOfWork.PurchaseProductMaps.Query().Where(i => i.PurchaseId == workOrder.PurchaseId).Select(i => i.PurchaseOrderProduct.ProductId).ToListAsync();
-            if (productIds == null || !productIds.Any()) 
+            var purchaseProductMaps = await _unitOfWork.PurchaseProductMaps.Query().Include(i => i.PurchaseOrderProduct).Where(i => i.PurchaseId == workOrder.PurchaseId).ToListAsync();
+            if (purchaseProductMaps == null || !purchaseProductMaps.Any()) 
             {
                 return new List<ProductModel>();
             }
+            var productIds = purchaseProductMaps.Select(i => i.PurchaseOrderProduct.ProductId).ToList();
             var products = await _unitOfWork.Products.Query().Where(i => productIds.Contains(i.Id)).ToListAsync();
-            
             var productModels = products.Select(i => _mapper.Map<ProductModel>(i)).ToList();
-
-            foreach(var model in productModels)
+            var parentParts = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).Where(i => i.WorkOrderId == workOrderId && i.ParentId == null).ToListAsync();
+            var returnedProductModels = new List<ProductModel>();
+            foreach (var purchaseProduct in purchaseProductMaps)
             {
-                await GetWorkOrderParts(model, workOrderId);
-                RemoveReferences(model);
-                RemoveCycle(model);
-
+                for(int i = 0; i < purchaseProduct.Qty; i++)
+                {
+                    var product = productModels.FirstOrDefault(i => i.Id == purchaseProduct.PurchaseOrderProduct.ProductId).Clone();
+                    if(product == null)
+                    {
+                        continue;
+                    }
+                    var parentPart = parentParts.FirstOrDefault(i => i.PartId == product.PartId && !returnedProductModels.Any(j => j.WorkOrderParts.Any(h => h.Id == i.Id)));
+                    await GetWorkOrderParts(parentPart,product, workOrderId);
+                    RemoveReferences(product);
+                    RemoveCycle(product);
+                    returnedProductModels.Add(product);
+                }
             }
-            
-            
-            return productModels;
+
+            return returnedProductModels;
         }
     }
 }
