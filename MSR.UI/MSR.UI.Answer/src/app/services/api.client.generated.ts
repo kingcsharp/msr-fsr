@@ -17461,7 +17461,6 @@ export interface IWorkOrderModel {
 
 export class PurchaseModel extends CreatableModel implements IPurchaseModel {
     purchaseOrderId?: number;
-    purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
     locationId?: number;
     serialNumber?: string | undefined;
@@ -17475,7 +17474,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
     workOrders?: WorkOrderModel[] | undefined;
     location?: LocationModel | undefined;
     purchaseOrder?: PurchaseOrderModel | undefined;
-    purchaseOrderProduct?: PurchaseOrderProductView | undefined;
 
     constructor(data?: IPurchaseModel) {
         super(data);
@@ -17485,7 +17483,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
         super.init(_data);
         if (_data) {
             this.purchaseOrderId = _data["purchaseOrderId"];
-            this.purchaseOrderProductId = _data["purchaseOrderProductId"];
             this.customerPurchaseNumber = _data["customerPurchaseNumber"];
             this.locationId = _data["locationId"];
             this.serialNumber = _data["serialNumber"];
@@ -17503,7 +17500,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
             }
             this.location = _data["location"] ? LocationModel.fromJS(_data["location"]) : <any>undefined;
             this.purchaseOrder = _data["purchaseOrder"] ? PurchaseOrderModel.fromJS(_data["purchaseOrder"]) : <any>undefined;
-            this.purchaseOrderProduct = _data["purchaseOrderProduct"] ? PurchaseOrderProductView.fromJS(_data["purchaseOrderProduct"]) : <any>undefined;
         }
     }
 
@@ -17517,7 +17513,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["purchaseOrderId"] = this.purchaseOrderId;
-        data["purchaseOrderProductId"] = this.purchaseOrderProductId;
         data["customerPurchaseNumber"] = this.customerPurchaseNumber;
         data["locationId"] = this.locationId;
         data["serialNumber"] = this.serialNumber;
@@ -17535,7 +17530,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
         }
         data["location"] = this.location ? this.location.toJSON() : <any>undefined;
         data["purchaseOrder"] = this.purchaseOrder ? this.purchaseOrder.toJSON() : <any>undefined;
-        data["purchaseOrderProduct"] = this.purchaseOrderProduct ? this.purchaseOrderProduct.toJSON() : <any>undefined;
         super.toJSON(data);
         return data; 
     }
@@ -17543,7 +17537,6 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
 
 export interface IPurchaseModel extends ICreatableModel {
     purchaseOrderId?: number;
-    purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
     locationId?: number;
     serialNumber?: string | undefined;
@@ -17557,7 +17550,6 @@ export interface IPurchaseModel extends ICreatableModel {
     workOrders?: WorkOrderModel[] | undefined;
     location?: LocationModel | undefined;
     purchaseOrder?: PurchaseOrderModel | undefined;
-    purchaseOrderProduct?: PurchaseOrderProductView | undefined;
 }
 
 export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrderModel {
@@ -17633,74 +17625,6 @@ export interface IPurchaseOrderModel extends ICreatableModel {
     location?: LocationModel | undefined;
 }
 
-export class PurchaseOrderProductView implements IPurchaseOrderProductView {
-    id?: number;
-    productId?: number;
-    name?: string | undefined;
-    partName?: string | undefined;
-    partNumber?: string | undefined;
-    procedureId?: number;
-    procedureName?: string | undefined;
-    cycleTime?: number | undefined;
-    totalSalePrice?: number;
-
-    constructor(data?: IPurchaseOrderProductView) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.productId = _data["productId"];
-            this.name = _data["name"];
-            this.partName = _data["partName"];
-            this.partNumber = _data["partNumber"];
-            this.procedureId = _data["procedureId"];
-            this.procedureName = _data["procedureName"];
-            this.cycleTime = _data["cycleTime"];
-            this.totalSalePrice = _data["totalSalePrice"];
-        }
-    }
-
-    static fromJS(data: any): PurchaseOrderProductView {
-        data = typeof data === 'object' ? data : {};
-        let result = new PurchaseOrderProductView();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["productId"] = this.productId;
-        data["name"] = this.name;
-        data["partName"] = this.partName;
-        data["partNumber"] = this.partNumber;
-        data["procedureId"] = this.procedureId;
-        data["procedureName"] = this.procedureName;
-        data["cycleTime"] = this.cycleTime;
-        data["totalSalePrice"] = this.totalSalePrice;
-        return data; 
-    }
-}
-
-export interface IPurchaseOrderProductView {
-    id?: number;
-    productId?: number;
-    name?: string | undefined;
-    partName?: string | undefined;
-    partNumber?: string | undefined;
-    procedureId?: number;
-    procedureName?: string | undefined;
-    cycleTime?: number | undefined;
-    totalSalePrice?: number;
-}
-
 export class WorkOrderPartModel implements IWorkOrderPartModel {
     id?: number;
     workOrderId?: number;
@@ -17722,6 +17646,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     detail?: string | undefined;
     partNumber?: string | undefined;
     name?: string | undefined;
+    partData?: string | undefined;
 
     constructor(data?: IWorkOrderPartModel) {
         if (data) {
@@ -17762,6 +17687,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             this.detail = _data["detail"];
             this.partNumber = _data["partNumber"];
             this.name = _data["name"];
+            this.partData = _data["partData"];
         }
     }
 
@@ -17802,6 +17728,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         data["detail"] = this.detail;
         data["partNumber"] = this.partNumber;
         data["name"] = this.name;
+        data["partData"] = this.partData;
         return data; 
     }
 }
@@ -17827,6 +17754,7 @@ export interface IWorkOrderPartModel {
     detail?: string | undefined;
     partNumber?: string | undefined;
     name?: string | undefined;
+    partData?: string | undefined;
 }
 
 export class NCRHistoryItemModel implements INCRHistoryItemModel {
@@ -19137,6 +19065,74 @@ export interface IPurchaseOrderView extends ICreatableModel {
     status?: string | undefined;
     revision?: number | undefined;
     unusedAmount?: number;
+}
+
+export class PurchaseOrderProductView implements IPurchaseOrderProductView {
+    id?: number;
+    productId?: number;
+    name?: string | undefined;
+    partName?: string | undefined;
+    partNumber?: string | undefined;
+    procedureId?: number;
+    procedureName?: string | undefined;
+    cycleTime?: number | undefined;
+    totalSalePrice?: number;
+
+    constructor(data?: IPurchaseOrderProductView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.productId = _data["productId"];
+            this.name = _data["name"];
+            this.partName = _data["partName"];
+            this.partNumber = _data["partNumber"];
+            this.procedureId = _data["procedureId"];
+            this.procedureName = _data["procedureName"];
+            this.cycleTime = _data["cycleTime"];
+            this.totalSalePrice = _data["totalSalePrice"];
+        }
+    }
+
+    static fromJS(data: any): PurchaseOrderProductView {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseOrderProductView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["productId"] = this.productId;
+        data["name"] = this.name;
+        data["partName"] = this.partName;
+        data["partNumber"] = this.partNumber;
+        data["procedureId"] = this.procedureId;
+        data["procedureName"] = this.procedureName;
+        data["cycleTime"] = this.cycleTime;
+        data["totalSalePrice"] = this.totalSalePrice;
+        return data; 
+    }
+}
+
+export interface IPurchaseOrderProductView {
+    id?: number;
+    productId?: number;
+    name?: string | undefined;
+    partName?: string | undefined;
+    partNumber?: string | undefined;
+    procedureId?: number;
+    procedureName?: string | undefined;
+    cycleTime?: number | undefined;
+    totalSalePrice?: number;
 }
 
 /** Base class for an API call with a typed result */
@@ -22945,6 +22941,7 @@ export class WorkOrderProductRequest implements IWorkOrderProductRequest {
     serializeIndividually?: boolean;
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
+    partData?: string[] | undefined;
     qty?: number;
     price?: number;
 
@@ -22970,6 +22967,11 @@ export class WorkOrderProductRequest implements IWorkOrderProductRequest {
                 this.customerLineNumbers = [] as any;
                 for (let item of _data["customerLineNumbers"])
                     this.customerLineNumbers!.push(item);
+            }
+            if (Array.isArray(_data["partData"])) {
+                this.partData = [] as any;
+                for (let item of _data["partData"])
+                    this.partData!.push(item);
             }
             this.qty = _data["qty"];
             this.price = _data["price"];
@@ -22997,6 +22999,11 @@ export class WorkOrderProductRequest implements IWorkOrderProductRequest {
             for (let item of this.customerLineNumbers)
                 data["customerLineNumbers"].push(item);
         }
+        if (Array.isArray(this.partData)) {
+            data["partData"] = [];
+            for (let item of this.partData)
+                data["partData"].push(item);
+        }
         data["qty"] = this.qty;
         data["price"] = this.price;
         return data; 
@@ -23008,6 +23015,7 @@ export interface IWorkOrderProductRequest {
     serializeIndividually?: boolean;
     serialNumbers?: string[] | undefined;
     customerLineNumbers?: string[] | undefined;
+    partData?: string[] | undefined;
     qty?: number;
     price?: number;
 }
@@ -23212,6 +23220,7 @@ export interface IAuditActionResultOfWorkOrderPartModel extends IAuditActionResu
 export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
     workOrderPartId?: number;
     serialNumber?: string | undefined;
+    partData?: string | undefined;
     segregationType?: EnumSegregationType | undefined;
 
     constructor(data?: IUpdateWorkOrderPartRequest) {
@@ -23227,6 +23236,7 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
         if (_data) {
             this.workOrderPartId = _data["workOrderPartId"];
             this.serialNumber = _data["serialNumber"];
+            this.partData = _data["partData"];
             this.segregationType = _data["segregationType"];
         }
     }
@@ -23242,6 +23252,7 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
         data = typeof data === 'object' ? data : {};
         data["workOrderPartId"] = this.workOrderPartId;
         data["serialNumber"] = this.serialNumber;
+        data["partData"] = this.partData;
         data["segregationType"] = this.segregationType;
         return data; 
     }
@@ -23250,6 +23261,7 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
 export interface IUpdateWorkOrderPartRequest {
     workOrderPartId?: number;
     serialNumber?: string | undefined;
+    partData?: string | undefined;
     segregationType?: EnumSegregationType | undefined;
 }
 
