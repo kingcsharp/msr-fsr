@@ -352,10 +352,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         private async Task GetWorkOrderParts(ProductModel model, int workOrderId)
         {
             //GetParentPart
-            var parentPart = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).FirstOrDefaultAsync(i => i.WorkOrderId == workOrderId && i.PartId == model.PartId && i.ParentId == null);
-            var childParts = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).Where(i => i.ParentId == parentPart.Id).ToListAsync();
+            var parentParts = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).Where(i => i.WorkOrderId == workOrderId && i.PartId == model.PartId && i.ParentId == null).ToListAsync();
+            var parentPartIds = parentParts.Select(i => i.Id).ToList();
+            var childParts = await _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).Where(i => i.ParentId.HasValue && parentPartIds.Contains(i.ParentId.Value)).ToListAsync();
             var partList = new List<WorkOrderPart>();
-            partList.Add(parentPart);
+            partList.AddRange(parentParts);
             partList.AddRange(childParts);
             model.WorkOrderParts = new List<WorkOrderPartModel>();
             foreach(var part in partList)
@@ -366,8 +367,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
                 model.WorkOrderParts.Add(partModel);
             }
-            model.Qty = parentPart.Qty.GetValueOrDefault(1);
-            model.SerialNumber = parentPart.SerialNumber;
+            model.Qty = parentParts.First().Qty.GetValueOrDefault(1);
+            model.SerialNumber = parentParts.First().SerialNumber;
             
         }
 
