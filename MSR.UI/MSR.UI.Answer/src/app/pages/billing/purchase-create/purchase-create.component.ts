@@ -384,8 +384,8 @@ export class PurchaseCreateComponent implements OnInit {
     );
     this.showMultiLineWO =
       selectedProducts.length > 1 &&
-      selectedProducts.some(
-        (v) => v.procedureId === selectedProducts[0].procedureId
+      !selectedProducts.some(
+        (v) => v.procedureId !== selectedProducts[0].procedureId
       );
     if (!this.showMultiLineWO) this.multiLineWO = false;
 
