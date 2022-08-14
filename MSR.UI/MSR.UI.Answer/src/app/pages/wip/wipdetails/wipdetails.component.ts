@@ -532,101 +532,54 @@ export class WipdetailsComponent implements OnInit {
     });
   }
 
-  changeSerialNumber(index, serialNumber, partId) {
-    if (this.originalSerialNumbers.find((s) => s.id === partId) === undefined) {
-      this.originalSerialNumbers.push({
-        id: partId,
-        serialNumber: serialNumber,
-      });
-    }
-
-    let inputElement = <HTMLInputElement>(
-      document.getElementById("serialnumber" + index)
-    );
-    inputElement.disabled = false;
-
-    let changebuttonElement = <HTMLInputElement>(
-      document.getElementById("changebutton" + index)
-    );
-    changebuttonElement.classList.add("d-none");
-
-    let submitbuttonElement = <HTMLInputElement>(
-      document.getElementById("submitbutton" + index)
-    );
-    submitbuttonElement.classList.remove("d-none");
-
-    let cancelbuttonElement = <HTMLInputElement>(
-      document.getElementById("cancelbutton" + index)
-    );
-    cancelbuttonElement.classList.remove("d-none");
+  public submitSerialNumber(partId, value: string){
+    this.updatePartField(partId, 'serialNumber', value);
   }
 
-  submitSerialNumber(index, partId) {
+  submitAllWorkOrderParts(e){
+    const input = e.target.parentNode.querySelector('input[type=text]');
+    this.workOrderModel.workOrderParts.forEach(wop => {
+      this.submitPartData(wop.id, input.value);
+    });
+  }
+
+  public submitPartData(partId, value: string){
+    this.updatePartField(partId, 'partData', value);
+  }
+
+  /**
+   * Updates a part field on a work order part
+   * @param partId Work Order Part Id
+   * @param field  Field to update on the part
+   * @param value Value to update on the field
+   */
+  private updatePartField(partId, field: keyof UpdateWorkOrderPartRequest, value: string) {
+    let workOrderPart = this.workOrderModel.workOrderParts.find(
+      (s) => s.id === partId
+    );
+
+    // Update the request with existing data so it does not get overwritten
     let updateWorkOrderRequest = new UpdateWorkOrderPartRequest({
       workOrderPartId: partId,
-      serialNumber: this.workOrderModel.workOrderParts.find(
-        (s) => s.id === partId
-      ).serialNumber,
+      serialNumber: workOrderPart.serialNumber,
+      partData: workOrderPart.partData,
+
     } as IUpdateWorkOrderPartRequest);
+    // Updates the field with the new value that we are updating
+    updateWorkOrderRequest[field as string] = value;
 
     this.globals.showLoader(true);
     this.workOrderPartService
       .workOrderPartPatch(env.apiVersion, updateWorkOrderRequest)
       .pipe(take(1))
       .subscribe((response) => {
-        let workOrderPart = this.workOrderModel.workOrderParts.find(
-          (s) => s.id === partId
-        );
         workOrderPart.cycleCount = response.object?.cycleCount || 0;
         workOrderPart.ncrHistoryItems = response.object?.ncrHistoryItems || [];
-        this.originalSerialNumbers.find((s) => s.id === partId).serialNumber =
-          workOrderPart.serialNumber;
-
-        let changebuttonElement = <HTMLInputElement>(
-          document.getElementById("changebutton" + index)
-        );
-        changebuttonElement.classList.remove("d-none");
-
-        let submitbuttonElement = <HTMLInputElement>(
-          document.getElementById("submitbutton" + index)
-        );
-        submitbuttonElement.classList.add("d-none");
-
-        let cancelbuttonElement = <HTMLInputElement>(
-          document.getElementById("cancelbutton" + index)
-        );
-        cancelbuttonElement.classList.add("d-none");
+        workOrderPart[field] = value;
       });
   }
 
-  cancelSerialNumber(index, partId) {
-    let originalSerialNumber = this.originalSerialNumbers.find(
-      (s) => s.id === partId
-    );
-    let inputElement = <HTMLInputElement>(
-      document.getElementById("serialnumber" + index)
-    );
-    inputElement.disabled = true;
-    inputElement.value = originalSerialNumber.serialNumber;
-    this.workOrderModel.workOrderParts.find(
-      (s) => s.id === partId
-    ).serialNumber = originalSerialNumber.serialNumber;
 
-    let changebuttonElement = <HTMLInputElement>(
-      document.getElementById("changebutton" + index)
-    );
-    changebuttonElement.classList.remove("d-none");
-
-    let submitbuttonElement = <HTMLInputElement>(
-      document.getElementById("submitbutton" + index)
-    );
-    submitbuttonElement.classList.add("d-none");
-
-    let cancelbuttonElement = <HTMLInputElement>(
-      document.getElementById("cancelbutton" + index)
-    );
-    cancelbuttonElement.classList.add("d-none");
-  }
 
   updateWorkOrderTaskToViewAndInProgress(
     workOrderTaskModel: WorkOrderTaskModel
