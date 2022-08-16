@@ -671,6 +671,24 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             workOrderPartModel.NCRHistoryItems = NCRHistoryItems.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
             return workOrderPartModel;
         }
+        
+        public async Task<bool> BulkUpdateWorkOrderPart(BulkUpdateWorkOrderPart command)
+        {
+            var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part).Where(i => command.WorkOrderPartIds.Contains(i.Id)).ToListAsync();
+
+            workOrderParts.ForEach(i => 
+            {
+                i.PartData = command.PartData;
+                _unitOfWork.WorkOrderParts.Update(i);
+            });
+
+            await _unitOfWork.SaveChangesAsync();
+
+            
+            return true;
+        }
+
+
         public async Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))

@@ -925,6 +925,14 @@ namespace MSR.Answer.API.V1.Extentions
             AutoMapperHelper.Mapper.Map<UpdateWorkOrderPart>(request);
 
         /// <summary>
+        /// ToBulkUpdateWorkOrderPartcommand
+        /// </summary>
+        /// <param name="request"></param> 
+        /// <returns></returns>
+        public static BulkUpdateWorkOrderPart ToBulkUpdateWorkOrderPartCommand(this BulkUpdateWorkOrderPartRequest request) =>
+            new BulkUpdateWorkOrderPart(request.WorkOrderPartIds, request.PartData);
+    
+        /// <summary>
         /// ToCreateWorkOrderTaskCommand
         /// </summary>
         /// <param name="request"></param>

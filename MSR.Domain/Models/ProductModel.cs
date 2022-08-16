@@ -10,6 +10,7 @@ namespace MSR.Domain.Models
         {
             ProductSteps = new List<ProductStepModel>();
             WorkOrders = new List<WorkOrderModel>();
+            WorkOrderParts = new List<WorkOrderPartModel>();
         }
 
         public string Name { get; set; }
@@ -46,5 +47,44 @@ namespace MSR.Domain.Models
         public virtual ICollection<ProductStepModel> ProductSteps { get; set; }
 
         public ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
+
+        public ProductModel Clone()
+        {
+            return new ProductModel()
+            {
+                ProductImage = ProductImage,
+                Name = Name,
+                ApprovalStatus = ApprovalStatus,
+                Created = Created,
+                CreatedBy = CreatedBy,
+                CreatedOn = CreatedOn,
+                Customer = Customer,
+                CustomerId = CustomerId,
+                CustomerRequirementId = CustomerRequirementId,
+                CycleTime = CycleTime,
+                QuoteId = QuoteId,
+                DivisionFab = DivisionFab,
+                EquipmentCost = EquipmentCost,
+                Id = Id,
+                LaborCost = LaborCost,
+                LastUpdated = LastUpdated,
+                LastUpdatedBy = LastUpdatedBy,
+                LastUpdatedOn = LastUpdatedOn,
+                MaterialCost = MaterialCost,
+                Part = Part,
+                PartId = PartId,
+                Procedure = Procedure,
+                ProcedureId = ProcedureId,
+                ProductSteps = ProductSteps,
+                Qty = Qty,
+                Quote = Quote,
+                Revision = Revision,
+                SalesTax = SalesTax,
+                SerialNumber = SerialNumber,
+                TotalSalePrice = TotalSalePrice,
+                WorkOrderParts = WorkOrderParts,
+                WorkOrders = WorkOrders
+            };
+        }
     }
 }

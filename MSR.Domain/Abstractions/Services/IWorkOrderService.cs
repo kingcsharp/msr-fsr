@@ -33,5 +33,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderModel> UpdateWorkOrderPriceAsync(UpdateWorkOrderPrice command);
         Task<int> GetProductIdFromPurchaseOrderProduct(int purchaseOrderProductId);
         Task<WorkOrderModel> UpdateWorkOrderEndDateAsync(UpdateWorkOrderEndDate command);
+        Task<bool> BulkUpdateWorkOrderPart(BulkUpdateWorkOrderPart command);
     }
 }

@@ -81,5 +81,16 @@ namespace MSR.Answer.API.V1.Controllers
                 Object = ret
             });
         }
+
+        [HttpPatch("Bulk")]
+        [SwaggerResponse(typeof(AuditActionResult<bool>))]
+        public async Task<IActionResult> BulkUpdateWorkOrderPart([FromBody]BulkUpdateWorkOrderPartRequest body)
+        {
+            var command = body.ToBulkUpdateWorkOrderPartCommand();
+
+            var response = await _dispatcher.DispatchAsync(command);
+
+            return response.ToOkObjectResponse<bool>("Work Order Parts Successfully Updated");
+        }
     }
 }
