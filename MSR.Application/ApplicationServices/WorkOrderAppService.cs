@@ -36,7 +36,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<AddNCRWorkOrderTask>,
         ICommandHandler<CreateWorkOrder>,
         ICommandHandler<GetAssignedWorkOrders>,
-        ICommandHandler<GetInvoiceableWorkOrders>
+        ICommandHandler<GetInvoiceableWorkOrders>,
+        ICommandHandler<BulkUpdateWorkOrderPart>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
@@ -195,6 +196,11 @@ namespace MSR.Application.ApplicationServices
             workOrderDto.Price = command.WorkOrderProducts.Sum(i => i.Price * i.Qty);
             var workOrderModelNumber = await _workOrderService.CreateWorkOrderAsync(workOrderDto);
             return new CommandResponse<string>(workOrderModelNumber);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(BulkUpdateWorkOrderPart command, CancellationToken cancellationToken = default)
+        {
+            return new CommandResponse<bool>(await _workOrderService.BulkUpdateWorkOrderPart(command));
         }
     }
 }
