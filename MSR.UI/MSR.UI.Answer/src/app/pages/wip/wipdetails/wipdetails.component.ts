@@ -44,6 +44,7 @@ import {
   INCRPartWODetailView,
   MappedWorkOrderPart,
   IMappedWorkOrderPart,
+  BulkUpdateWorkOrderPartRequest,
 } from "../../../services/api.client.generated";
 import { environment as env } from "../../../../environments/environment";
 import { responseHandler } from "../../../utils/responseHandler";
@@ -538,9 +539,21 @@ export class WipdetailsComponent implements OnInit {
 
   submitAllWorkOrderParts(e){
     const input = e.target.parentNode.querySelector('input[type=text]');
-    this.workOrderModel.workOrderParts.forEach(wop => {
-      this.submitPartData(wop.id, input.value);
-    });
+
+    const bulkUpdateWorkOrderPartRequest = new BulkUpdateWorkOrderPartRequest({
+      workOrderPartIds: this.workOrderModel.workOrderParts.map(wop => wop.id),
+      partData: input.value
+    })
+
+    this.globals.showLoader(true);
+    this.workOrderPartService
+      .bulk(env.apiVersion, bulkUpdateWorkOrderPartRequest)
+      .pipe(take(1))
+      .subscribe((response) => {
+        this.workOrderModel.workOrderParts.forEach(wop => {
+            wop.partData = input.value;
+        });
+      });
   }
 
   public submitPartData(partId, value: string){
