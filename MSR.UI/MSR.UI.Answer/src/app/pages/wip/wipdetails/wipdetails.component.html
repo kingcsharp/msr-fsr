@@ -318,10 +318,35 @@
               <div class="container-fluid product-container m-2">
                 <table class="table">
                   <thead class="thead-dark">
+                    <tr *ngIf="!workOrderComplete">
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th>
+                        <div class="d-flex set-all">
+                          <input
+                            type="text"
+                            id="set-all-part-data-input"
+                            class="form-control serial-number m-2"
+                            [tooltip]="tooltip"
+                            placeholder="Set All To"
+                          />
+                          <button
+                            id="set-all-part-data--button"
+                            class="btn btn-warning m-2"
+                            (click)="submitAllWorkOrderParts($event)"
+                          >
+                            Set All
+                          </button>
+                        </div>
+                      </th>
+                      <th></th>
+                    </tr>
                     <tr>
                       <th class="part-td">Part</th>
                       <th class="count-td text-center">Cycle Count</th>
                       <th class="serial-td">Serial Number</th>
+                      <th class="serial-td">Part Data</th>
                       <th class="history-td">NCR History</th>
                     </tr>
                   </thead>
@@ -341,46 +366,25 @@
                       <td class="count-td text-center">
                         {{ workOrderPart.cycleCount }}
                       </td>
-                      <td
-                        class="d-flex serial-td"
-                        *ngIf="hasAccessToTaskBeingViewed"
-                      >
-                        <input
-                          type="text"
-                          id="serialnumber{{ index }}"
-                          [(ngModel)]="workOrderPart.serialNumber"
-                          class="form-control input-transparent serial-number m-2"
+                      <td class="edit-cell">
+                        <app-editable-cell
+                          *ngIf="hasAccessToTaskBeingViewed"
                           tooltip="Serial Number"
-                          disabled
-                        />
-                        <button
-                          id="changebutton{{ index }}"
-                          class="btn btn-warning m-2"
-                          *ngIf="!workOrderIsComplete"
-                          (click)="
-                            changeSerialNumber(
-                              index,
-                              workOrderPart.serialNumber,
-                              workOrderPart.id
-                            )
+                          [displayChangeButton]="!workOrderIsComplete"
+                          [value]="workOrderPart.serialNumber"
+                          (submit)="
+                            submitSerialNumber(workOrderPart.id, $event)
                           "
-                        >
-                          Change
-                        </button>
-                        <button
-                          id="submitbutton{{ index }}"
-                          class="btn btn-success d-none m-2"
-                          (click)="submitSerialNumber(index, workOrderPart.id)"
-                        >
-                          Submit
-                        </button>
-                        <button
-                          id="cancelbutton{{ index }}"
-                          class="btn btn-danger d-none m-2"
-                          (click)="cancelSerialNumber(index, workOrderPart.id)"
-                        >
-                          Cancel
-                        </button>
+                        ></app-editable-cell>
+                      </td>
+                      <td class="edit-cell">
+                        <app-editable-cell
+                          *ngIf="hasAccessToTaskBeingViewed"
+                          tooltip="Part Data"
+                          [displayChangeButton]="!workOrderIsComplete"
+                          [value]="workOrderPart.partData"
+                          (submit)="submitPartData(workOrderPart.id, $event)"
+                        ></app-editable-cell>
                       </td>
                       <td class="history-td">
                         <ng-container
