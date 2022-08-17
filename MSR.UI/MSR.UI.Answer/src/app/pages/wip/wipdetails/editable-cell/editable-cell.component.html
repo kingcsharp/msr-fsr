@@ -1,0 +1,34 @@
+<div class="d-flex" *ngIf="isVisible">
+  <input
+    type="text"
+    id="edit-input-{{ index }}"
+    [(ngModel)]="value"
+    class="form-control input-transparent serial-number m-2"
+    [tooltip]="tooltip"
+    [disabled]="!editable"
+  />
+  <button
+    id="change-button-{{ index }}"
+    class="btn btn-warning m-2"
+    *ngIf="displayChangeButton && !editable"
+    (click)="handleChange(index, workOrderPart)"
+  >
+    Change
+  </button>
+  <button
+    id="submit-button-{{ index }}"
+    class="btn btn-success m-2"
+    *ngIf="editable"
+    (click)="handleSubmit(index, workOrderPart)"
+  >
+    Submit
+  </button>
+  <button
+    id="cancel-button-{{ index }}"
+    *ngIf="editable"
+    class="btn btn-danger m-2"
+    (click)="handleCancel(index, workOrderPart)"
+  >
+    Cancel
+  </button>
+</div>

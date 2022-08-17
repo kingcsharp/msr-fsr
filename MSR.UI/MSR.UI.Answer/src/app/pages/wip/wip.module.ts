@@ -39,6 +39,7 @@ import { PartLabelRollComponent } from '../../components/part-label-roll/part-la
 import { NcrLabelComponent } from '../../components/ncr-label/ncr-label.component';
 import { TechnicalDataLabelComponent } from '../../components/technical-data-label/technical-data-label.component';
 import { WorkReportComponent } from '../../components/work-report/work-report.component';
+import { EditableCellComponent } from './wipdetails/editable-cell/editable-cell.component';
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -54,7 +55,7 @@ export const routes = [
     WorkordertasktimerWrapperComponent, WorkordertaskmonitorsWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
     WipListButtonWrapperComponent, SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent, PrintotherReportComponent,
     DeliveryTicketReportComponent, WipHistoryReportComponent, NcrReportComponent, PartLabelRollComponent, TechnicalDataLabelComponent, NcrLabelComponent,
-    WorkReportComponent, TakeOverTaskButtonWrapperComponent, DetailedPackingListComponent, CertOfComplianceComponent],
+    WorkReportComponent, TakeOverTaskButtonWrapperComponent, DetailedPackingListComponent, CertOfComplianceComponent, EditableCellComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

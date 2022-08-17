@@ -63,6 +63,18 @@ a.carousel-control {
   border-color: #32383e;
 }
 
+.table > tbody > tr {
+  border-top: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.table > tbody > tr > td,
+.table td {
+  border-top: 0;
+}
+td.edit-cell {
+  padding: 0;
+}
+
 .part-td {
   width: 20%;
 }
@@ -116,6 +128,10 @@ ol {
 
 p-dropdown .ui-dropdown {
   width: 100%;
+}
+
+.set-all > input[type=text]{
+  margin-left: 0 !important;
 }
 
 @media print {
