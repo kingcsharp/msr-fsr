@@ -328,7 +328,7 @@ export class WiphistoryComponent implements OnInit, AfterViewInit {
   saveInstructions() {
     this.globals.showLoader(true);
     const request = new CreateWorkOrderMessageRequest({
-      id: this.selectedItem.id,
+      id: this.selectedItem.workOrderId,
       message: this.instructions,
     });
     this.workOrderService
