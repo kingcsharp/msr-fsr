@@ -21,7 +21,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<DeleteProcedure>,
         ICommandHandler<DeleteProcedureStep>,
         ICommandHandler<GetProcedureStepType>,
-        ICommandHandler<UpdateProcedure>
+        ICommandHandler<UpdateProcedure>,
+        ICommandHandler<ReorderSteps>
     {
         private readonly IProcedureService _procedureService;
 
@@ -100,6 +101,11 @@ namespace MSR.Application.ApplicationServices
             var response = new CommandResponse<Procedure>(newProcedure);
             response.DisplayString = "[" + newProcedure.Id + "] " + newProcedure.Name;
             return response;
+        }
+
+        public async Task<ICommandResponse> HandleAsync(ReorderSteps command, CancellationToken cancellationToken = default)
+        {
+            return new CommandResponse<bool>(await _procedureService.ReorderSteps(command));
         }
     }
 }

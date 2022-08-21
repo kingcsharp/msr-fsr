@@ -201,5 +201,15 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _procedureViewService.ExportProcedures(filters.ToProcedureExportQueryFilters());
             return File(ret.data, "application/octet-stream", ret.FileName);
         }
+
+        [HttpPatch("{id}/step/reorder")]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
+        [SwaggerResponse(typeof(AuditActionResult<bool>))]
+        public async Task<IActionResult> UpdateProcedureStepOrder(int id, ReorderStepsRequest request)
+        {
+            var command = request.ToReorderStepsCommand(id);
+            var response = await _dispatcher.DispatchAsync(command);
+            return response.ToOkObjectResponse<bool>("Steps Reordered Successfully");
+        }
     }
 }

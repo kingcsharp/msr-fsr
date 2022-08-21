@@ -871,6 +871,23 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return createdProcs;
         }
 
+        public async Task<bool> ReorderSteps(ReorderSteps command)
+        {
+                var procedures = await _unitOfWork.ProcedureSteps.Query().Where(i => i.ProcedureId == command.ProcedureId).ToListAsync();
+
+                foreach (var procedure in procedures)
+                {
+                    var order = command.ProcedureSteps.FirstOrDefault(i => i.StepId == procedure.Id).PrintOrder;
+
+                    procedure.PrintOrder = order;
+                    _unitOfWork.ProcedureSteps.Update(procedure);
+                }
+
+                await _unitOfWork.SaveChangesAsync();
+
+                return true;
+        }
+
         private List<ProcedureImportItem> ParseData(byte[] binData, out IEnumerable<ImportError> importErrors)
         {
             var result = XLSHelper.ParseRecords(binData);

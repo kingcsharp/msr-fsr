@@ -18,5 +18,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ProcedureStepModel> DeleteProcedureStepAsync(DeleteProcedureStep command);
         Task<ICollection<ProcedureStepTypeModel>> GetProcedureStepType(GetProcedureStepType command);
         Task<ICollection<Procedure>> ImportProcedures(byte[] xlsData);
+        Task<bool> ReorderSteps(ReorderSteps command);
     }
 }

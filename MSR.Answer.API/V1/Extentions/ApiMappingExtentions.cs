@@ -518,6 +518,8 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<UpdateProcedureStep>(request);
         }
 
+        public static ReorderSteps ToReorderStepsCommand(this ReorderStepsRequest request, int Id) =>
+            new ReorderSteps(Id,request.ProcedureSteps.Select(i => AutoMapperHelper.Mapper.Map<MSR.Domain.Models.ReorderStep>(i)).ToList());
         /// <summary>
         ///
         /// </summary>
