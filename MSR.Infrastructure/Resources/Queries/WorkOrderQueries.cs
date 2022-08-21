@@ -16,6 +16,7 @@ using System.Text;
 using Newtonsoft.Json;
 using MSR.Domain.Models.Query;
 using System.Diagnostics;
+using MSR.Domain.Comparers;
 
 namespace MSR.Infrastructure.Resources.Queries
 {
@@ -65,7 +66,8 @@ namespace MSR.Infrastructure.Resources.Queries
         public static async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatus(this DbSet<WorkOrderStatusSummary> dbSet, Expression<Func<WorkOrderStatusSummary, dynamic>> projection)
         {
             var workOrderStatusViews = (await QueryHelper.GetViewDataFor<WorkOrderStatusSummary, ICollection<WorkOrderStatus>>(dbSet, projection)).ToList();
-            return workOrderStatusViews;
+            var returnedWorkOrderStatusViews = workOrderStatusViews.Distinct(new WorkOrderStatusComparer()).ToList();
+            return returnedWorkOrderStatusViews;
         }
 
         public static async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenu(this DbSet<WorkOrderMenu> dbSet, Expression<Func<WorkOrderMenu,dynamic>> projection, GetWorkOrderMenuQueryModel filters)
