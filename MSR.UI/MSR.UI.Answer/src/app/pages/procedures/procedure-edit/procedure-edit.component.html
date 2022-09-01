@@ -203,15 +203,16 @@
           </div>
         </div>
         <div class="col-12">
-          <ng-template #itemTemplate let-procedureStep="item" let-i="index">
+          <ng-container
+            *ngFor="let procedureStep of procedureSteps; let i = index"
+          >
             <div class="row my-4 procedure-step-panel">
               <div class="col-12 col-xl-5">
                 <div class="row form-row">
                   <div class="col-3">
                     <div class="form-group ml-0">
-                      <i class="fad fa-2x fa-expand-arrows-alt drag-handle"></i>
                       <label class="col-form-label text-left">
-                        Step Number: {{ procedureStep.value.printOrder }}
+                        Step Number: {{ procedureStep.printOrder }}
                       </label>
                     </div>
                   </div>
@@ -223,7 +224,7 @@
                       <input
                         type="text"
                         name="title{{ i }}"
-                        [(ngModel)]="procedureStep.value.predecessorStepName"
+                        [(ngModel)]="procedureStep.predecessorStepName"
                         data-validate="parsley"
                         data-parsley-trigger="change"
                         data-parsley-minlength="3"
@@ -247,8 +248,7 @@
                     <input
                       type="text"
                       name="title{{ i }}"
-                      [(ngModel)]="procedureStep.value.title"
-                      (keyup)="updateProcedurePredecessorAndOrder($event)"
+                      [(ngModel)]="procedureStep.title"
                       data-validate="parsley"
                       data-parsley-trigger="change"
                       data-parsley-minlength="3"
@@ -268,10 +268,8 @@
                       Text
                     </label>
                     <ckeditor-wrapper
-                      [editorcontent]="procedureStep.value.stepText"
-                      (editorContentChange)="
-                        procedureStep.value.stepText = $event
-                      "
+                      [editorcontent]="procedureStep.stepText"
+                      (editorContentChange)="procedureStep.stepText = $event"
                       style="width: 75%"
                     >
                     </ckeditor-wrapper>
@@ -290,7 +288,7 @@
                       <input
                         type="number"
                         name="labortime{{ i }}"
-                        [(ngModel)]="procedureStep.value.laborTime"
+                        [(ngModel)]="procedureStep.laborTime"
                         data-validate="parsley"
                         data-parsley-trigger="change"
                         data-parsley-minlength="3"
@@ -313,7 +311,7 @@
                       <input
                         type="number"
                         name="equipmenttime{{ i }}"
-                        [(ngModel)]="procedureStep.value.equipmentTime"
+                        [(ngModel)]="procedureStep.equipmentTime"
                         data-validate="parsley"
                         data-parsley-trigger="change"
                         data-parsley-minlength="3"
@@ -340,7 +338,7 @@
                     <input
                       type="number"
                       name="replacementcost{{ i }}"
-                      [(ngModel)]="procedureStep.value.replacementCost"
+                      [(ngModel)]="procedureStep.replacementCost"
                       data-validate="parsley"
                       data-parsley-trigger="change"
                       data-parsley-minlength="2"
@@ -358,7 +356,7 @@
                     <input
                       type="number"
                       name="utilizationtime{{ i }}"
-                      [(ngModel)]="procedureStep.value.utilization"
+                      [(ngModel)]="procedureStep.utilization"
                       data-validate="parsley"
                       data-parsley-trigger="change"
                       data-parsley-minlength="2"
@@ -376,7 +374,7 @@
                     <input
                       type="number"
                       name="usefullife{{ i }}"
-                      [(ngModel)]="procedureStep.value.usefulLife"
+                      [(ngModel)]="procedureStep.usefulLife"
                       data-validate="parsley"
                       data-parsley-trigger="change"
                       data-parsley-minlength="3"
@@ -390,30 +388,30 @@
 
                 <div class="row ml-2">
                   <button
-                    *ngIf="procedureStep.value.id === 0"
+                    *ngIf="procedureStep.id === 0"
                     type="button"
                     name="savebutton{{ i }}"
                     class="btn btn-primary m-2"
-                    (click)="saveProcedureStep(procedureStep.value)"
+                    (click)="saveProcedureStep(procedureStep)"
                   >
                     Save
                   </button>
                   <button
-                    *ngIf="procedureStep.value.id !== 0"
+                    *ngIf="procedureStep.id !== 0"
                     type="button"
                     name="updatebutton{{ i }}"
                     class="btn btn-primary m-2"
-                    (click)="updateProcedureStep(procedureStep.value)"
+                    (click)="updateProcedureStep(procedureStep)"
                     data-cy="update-button"
                   >
                     Update
                   </button>
                   <button
-                    *ngIf="!procedureStep.value.isUsed"
+                    *ngIf="!procedureStep.isUsed"
                     type="button"
                     name="deletebutton{{ i }}"
                     class="btn btn-danger m-2"
-                    (click)="openConfirmDeleteStepDialog(procedureStep.value)"
+                    (click)="openConfirmDeleteStepDialog(procedureStep)"
                     data-cy="delete-button"
                   >
                     Delete
@@ -422,7 +420,7 @@
                     type="button"
                     name="deletebutton{{ i }}"
                     class="btn btn-danger m-2 disabled-button"
-                    *ngIf="procedureStep.value.isUsed"
+                    *ngIf="procedureStep.isUsed"
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="Cannot Delete Step if used by WorkOrderTasks"
@@ -448,9 +446,7 @@
                       name="proceduresteptype{{ i }}"
                       [options]="procedureStepTypeOptions"
                       showClear="true"
-                      [(ngModel)]="
-                        procedureStep.value.selectedProcedureStepTypeId
-                      "
+                      [(ngModel)]="procedureStep.selectedProcedureStepTypeId"
                       data-cy="procedurestepyype-dropdown"
                     >
                     </p-dropdown>
@@ -469,10 +465,10 @@
                     <cmh-file-uploader
                       name="referencefiles"
                       [showSelectButton]="true"
-                      *ngIf="procedureStep.value.referenceFiles !== undefined"
+                      *ngIf="procedureStep.referenceFiles !== undefined"
                       [menuItem]="menuItems.Templates"
                       multiple="multiple"
-                      [(files)]="procedureStep.value.referenceFiles"
+                      [(files)]="procedureStep.referenceFiles"
                     >
                     </cmh-file-uploader>
                   </div>
@@ -490,7 +486,7 @@
                     <multiselect-wrapper-form
                       [options]="documentsAvailable"
                       [limit]="3"
-                      [(model)]="procedureStep.value.referenceDocuments"
+                      [(model)]="procedureStep.referenceDocuments"
                       defaultLabelProperty="label"
                       defaultId="value"
                       defaultLabel="Select Documents"
@@ -501,7 +497,7 @@
               </div>
               <div class="col-12 col-xl-4">
                 <procedurestepmonitor-wrapper
-                  [(procedureStep)]="procedureStep.value"
+                  [(procedureStep)]="procedureSteps[i]"
                   [canEdit]="canEdit"
                   [canDelete]="canDelete"
                 ></procedurestepmonitor-wrapper>
@@ -519,7 +515,7 @@
                       <multiselect-wrapper-form
                         [options]="availableRoles"
                         [limit]="10"
-                        [(model)]="procedureStep.value.selectedRoles"
+                        [(model)]="procedureStep.selectedRoles"
                         defaultLabelProperty="name"
                         defaultId="id"
                         defaultLabel="Select Roles"
@@ -531,19 +527,7 @@
                 </div>
               </div>
             </div>
-          </ng-template>
-
-          <bs-sortable
-            *ngIf="procedureSteps !== undefined && procedureSteps?.length > 0"
-            [(ngModel)]="procedureSteps"
-            [itemTemplate]="itemTemplate"
-            itemClass="sortable-item"
-            itemActiveClass="sortable-item-active"
-            placeholderItem="Drag here"
-            (onChange)="updateProcedurePredecessorAndOrder($event)"
-            placeholderClass="placeholderStyle"
-            wrapperClass="sortable-wrapper"
-          ></bs-sortable>
+          </ng-container>
         </div>
       </div>
     </div>

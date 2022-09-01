@@ -1,6 +1,5 @@
 import { Component, OnInit, ElementRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { DraggableItemService } from "ngx-bootstrap/sortable";
 import { SelectItem } from "primeng/api";
 import { EnumPrivilege } from "../../../models/enums/privileges";
 import {
@@ -39,7 +38,6 @@ import { take } from "rxjs/operators";
   templateUrl: "./procedure-edit.component.html",
   styleUrls: ["./procedure-edit.component.scss"],
   providers: [
-    DraggableItemService,
     ProcedureTemplateService,
     ProcedureService,
     ProcedureStepMonitorService,
@@ -679,19 +677,19 @@ export class ProcedureEditComponent implements OnInit {
       );
   }
 
-  updateProcedurePredecessorAndOrder() {
-    this.procedureSteps.forEach((procedureStep) => {
-      procedureStep.printOrder =
-        this.procedureSteps.findIndex((s) => s.id === procedureStep.id) + 1;
-      if (procedureStep.printOrder !== 1) {
-        procedureStep.predecessorStepId =
-          this.procedureSteps[procedureStep.printOrder - 2].id;
-        procedureStep.predecessorStepName =
-          this.procedureSteps[procedureStep.printOrder - 2].title;
-      } else {
-        procedureStep.predecessorStepId = undefined;
-        procedureStep.predecessorStepName = "";
-      }
-    });
-  }
+  // updateProcedurePredecessorAndOrder() {
+  //   this.procedureSteps.forEach((procedureStep) => {
+  //     procedureStep.printOrder =
+  //       this.procedureSteps.findIndex((s) => s.id === procedureStep.id) + 1;
+  //     if (procedureStep.printOrder !== 1) {
+  //       procedureStep.predecessorStepId =
+  //         this.procedureSteps[procedureStep.printOrder - 2].id;
+  //       procedureStep.predecessorStepName =
+  //         this.procedureSteps[procedureStep.printOrder - 2].title;
+  //     } else {
+  //       procedureStep.predecessorStepId = undefined;
+  //       procedureStep.predecessorStepName = "";
+  //     }
+  //   });
+  // }
 }
