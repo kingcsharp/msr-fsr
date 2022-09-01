@@ -26,12 +26,17 @@ import {
   IRoleRequest,
   FileRequest,
   ProcedureType,
+  ReorderStepRequest,
+  IReorderStepRequest,
+  ReorderStepsRequest,
+  IReorderStepsRequest,
 } from "../../../services/api.client.generated";
 import { environment as env } from "../../../../environments/environment";
 import { responseHandler } from "../../../utils/responseHandler";
 import { LookUpItems } from "../../../utils/lookup-items";
 import { Globals } from "../../../models/lib/globals";
 import { take } from "rxjs/operators";
+import { cloneDeep } from "lodash";
 
 @Component({
   selector: "app-procedure-edit",
@@ -51,6 +56,7 @@ export class ProcedureEditComponent implements OnInit {
   privileges = EnumPrivilege;
   procedure: Procedure = new Procedure();
   procedureSteps: Array<any>;
+  tempProcedureSteps: Array<any>;
   availableProcedureTypes: Array<SelectItem>;
   menuItems = EnumMenuItem;
   availableRoles: Array<Role>;
@@ -69,6 +75,7 @@ export class ProcedureEditComponent implements OnInit {
     { label: "Yellow Tag", value: "Yellow Tag" },
     { label: "Red Tag", value: "Red Tag" },
   ];
+  showReorderStepsDialog: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -305,6 +312,8 @@ export class ProcedureEditComponent implements OnInit {
               procedureStep.selectedRoles.push(role);
             });
           });
+
+          this.tempProcedureSteps = cloneDeep(this.procedureSteps);
         })
       );
   }
@@ -337,6 +346,8 @@ export class ProcedureEditComponent implements OnInit {
           this.procedureSteps = this.procedureSteps.filter(
             (s) => s.id !== this.procedureStepToDelete.id
           );
+
+          this.tempProcedureSteps = cloneDeep(this.procedureSteps);
         })
       );
   }
@@ -632,6 +643,7 @@ export class ProcedureEditComponent implements OnInit {
           procedureStepToAdd.referenceDocuments = new Array<SelectItem>();
           this.procedureSteps.push(procedureStepToAdd);
           this.procedureSteps = [...this.procedureSteps];
+          this.tempProcedureSteps = cloneDeep(this.procedureSteps);
         })
       );
   }
@@ -673,23 +685,36 @@ export class ProcedureEditComponent implements OnInit {
       .subscribe(
         responseHandler((response) => {
           procedureStep.id = response.object.id;
+          this.tempProcedureSteps = cloneDeep(this.procedureSteps);
         })
       );
   }
 
-  // updateProcedurePredecessorAndOrder() {
-  //   this.procedureSteps.forEach((procedureStep) => {
-  //     procedureStep.printOrder =
-  //       this.procedureSteps.findIndex((s) => s.id === procedureStep.id) + 1;
-  //     if (procedureStep.printOrder !== 1) {
-  //       procedureStep.predecessorStepId =
-  //         this.procedureSteps[procedureStep.printOrder - 2].id;
-  //       procedureStep.predecessorStepName =
-  //         this.procedureSteps[procedureStep.printOrder - 2].title;
-  //     } else {
-  //       procedureStep.predecessorStepId = undefined;
-  //       procedureStep.predecessorStepName = "";
-  //     }
-  //   });
-  // }
+  saveReorderSteps() {
+    const reorderStepRequest = new ReorderStepsRequest({
+      procedureSteps: this.tempProcedureSteps.map((procedureStep, index) => {
+        return new ReorderStepRequest({
+          stepId: procedureStep.id,
+          printOrder: index + 1,
+        } as IReorderStepRequest);
+      }),
+    } as IReorderStepsRequest);
+
+    this.procedureService
+      .reorder(this.procedure.id, env.apiVersion, reorderStepRequest)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.getProcedureSteps();
+        })
+      );
+  }
+
+  openReorderStepsDialog() {
+    this.showReorderStepsDialog = true;
+  }
+
+  closeReorderStepsDialog() {
+    this.showReorderStepsDialog = false;
+  }
 }

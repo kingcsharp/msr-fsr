@@ -172,12 +172,12 @@
             </div>
             <div class="col-9">
               <div class="form-group form-row">
-                <div class="col-4 text-right">
+                <div class="col-3 text-right">
                   <label for="addprocedurestep" class="col-form-label mt-4">
                     Add Procedure Step
                   </label>
                 </div>
-                <div class="col-8 mt-3 d-flex flex-row">
+                <div class="col-9 mt-3 d-flex flex-row">
                   <p-dropdown
                     placeholder="Select Procedure Step Template"
                     name="addprocedurestep"
@@ -189,6 +189,15 @@
                     data-cy="addprocedurestep-dropdown"
                   >
                   </p-dropdown>
+                  <button
+                    type="button"
+                    class="btn btn-warning m-2"
+                    (click)="openReorderStepsDialog()"
+                    data-cy="reorder-button"
+                  >
+                    <i class="fa-solid fa-arrow-down-arrow-up"></i> Reorder
+                    Steps
+                  </button>
                   <button
                     type="button"
                     class="btn btn-primary m-2"
@@ -562,6 +571,49 @@
         class="btn btn-outline-inverse width-100 mb-xs"
         role="button"
       >
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog
+  header="Reorder Steps"
+  [(visible)]="showReorderStepsDialog"
+  appendTo="body"
+  [baseZIndex]="100001"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  data-cy="user-header"
+>
+  <div class="container">
+    <p-orderList [value]="tempProcedureSteps" [dragdrop]="true">
+      <ng-template let-procedureStep pTemplate="item">
+        <div>
+          {{ procedureStep.title }}
+        </div>
+      </ng-template>
+    </p-orderList>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button
+        type="submit"
+        (click)="saveReorderSteps()"
+        class="btn btn-warning width-100 mb-xs"
+        role="button"
+        data-cy="reorder-save-button"
+      >
+        <i class="fa-solid fa-floppy-disk"></i>
+        Save
+      </button>
+      <button
+        type="button"
+        (click)="closeReorderStepsDialog()"
+        class="btn btn-danger width-100 mb-xs"
+        role="button"
+      >
+        <i class="fa-solid fa-circle-x"></i>
         Cancel
       </button>
     </div>
