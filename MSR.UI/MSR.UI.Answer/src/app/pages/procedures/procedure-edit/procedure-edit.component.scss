@@ -19,12 +19,6 @@
   width: 100% !important;
 }
 
-.drag-handle {
-  margin-left: -45px;
-  margin-right: 10px;
-  display: inline-block;
-  cursor: grab;
-}
 .input-group-append {
   margin-left: -1px;
 }
@@ -80,4 +74,7 @@
   background-color: #db4912;
   border-color: #db4912;
   opacity: 0.65;
+}
+.ui-widget-content ui-orderlist-list {
+  min-height:50vh
 }
