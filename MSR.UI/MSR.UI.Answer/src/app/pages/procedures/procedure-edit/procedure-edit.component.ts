@@ -312,8 +312,6 @@ export class ProcedureEditComponent implements OnInit {
               procedureStep.selectedRoles.push(role);
             });
           });
-
-          this.tempProcedureSteps = cloneDeep(this.procedureSteps);
         })
       );
   }
@@ -346,8 +344,6 @@ export class ProcedureEditComponent implements OnInit {
           this.procedureSteps = this.procedureSteps.filter(
             (s) => s.id !== this.procedureStepToDelete.id
           );
-
-          this.tempProcedureSteps = cloneDeep(this.procedureSteps);
         })
       );
   }
@@ -643,7 +639,6 @@ export class ProcedureEditComponent implements OnInit {
           procedureStepToAdd.referenceDocuments = new Array<SelectItem>();
           this.procedureSteps.push(procedureStepToAdd);
           this.procedureSteps = [...this.procedureSteps];
-          this.tempProcedureSteps = cloneDeep(this.procedureSteps);
         })
       );
   }
@@ -685,12 +680,13 @@ export class ProcedureEditComponent implements OnInit {
       .subscribe(
         responseHandler((response) => {
           procedureStep.id = response.object.id;
-          this.tempProcedureSteps = cloneDeep(this.procedureSteps);
         })
       );
   }
 
   saveReorderSteps() {
+    this.showReorderStepsDialog = false;
+    this.globals.showLoader(true);
     const reorderStepRequest = new ReorderStepsRequest({
       procedureSteps: this.tempProcedureSteps.map((procedureStep, index) => {
         return new ReorderStepRequest({
@@ -711,10 +707,12 @@ export class ProcedureEditComponent implements OnInit {
   }
 
   openReorderStepsDialog() {
+    this.tempProcedureSteps = cloneDeep(this.procedureSteps);
     this.showReorderStepsDialog = true;
   }
 
   closeReorderStepsDialog() {
     this.showReorderStepsDialog = false;
+    this.tempProcedureSteps = cloneDeep(this.procedureSteps);
   }
 }

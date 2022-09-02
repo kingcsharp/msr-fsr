@@ -190,6 +190,7 @@
                   >
                   </p-dropdown>
                   <button
+                    *ngIf="procedureSteps && procedureSteps.length > 0"
                     type="button"
                     class="btn btn-warning m-2"
                     (click)="openReorderStepsDialog()"
