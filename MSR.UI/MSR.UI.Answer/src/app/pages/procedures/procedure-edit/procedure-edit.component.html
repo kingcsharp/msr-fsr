@@ -588,7 +588,11 @@
   data-cy="user-header"
 >
   <div class="container">
-    <p-orderList [value]="tempProcedureSteps" [dragdrop]="true">
+    <p-orderList
+      [value]="tempProcedureSteps"
+      [dragdrop]="true"
+      [listStyle]="{ height: '50vh' }"
+    >
       <ng-template let-procedureStep pTemplate="item">
         <div>
           {{ procedureStep.title }}
