@@ -45,5 +45,7 @@
         , WorkOrderTasks = 35
         , ProcedureStep = 36
         , CycleCountImport = 37
+        // CycleCOUnt Update
+        , CycleCountUpdate = 38
     }
 }
