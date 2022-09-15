@@ -21,6 +21,15 @@ namespace MSR.Application.Profiles
             CreateMap<SubPart, SubPartModel>()
                 .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => src.Qty.HasValue ? src.Qty : 1))
                 .ForMember(dest => dest.CycleCount, opts => opts.MapFrom(src => src.CycleCount.HasValue ? src.CycleCount.Value : 0));
+            CreateMap<QuoteImportItem, CreateProduct>()
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.ProductName))
+                .ForMember(dest => dest.DivisionFab, opts => opts.MapFrom(src => src.DivisionFabNumber))
+                .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.PartKitNumber))
+                .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.ProcedureId))
+                .ForMember(dest => dest.Revision, opts => opts.MapFrom(src => src.Revision))
+                .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.TotalPrice))
+                .ForMember(dest => dest.CycleTime, opts => opts.MapFrom(src => src.CycleTime))
+                ;    
         }
     }
 }

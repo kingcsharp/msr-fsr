@@ -13,5 +13,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<PurchaseOrderProductModel>> GetPurchaseOrderProductAsync(GetPurchaseOrderProduct command);
         Task<ProductModel> UpdateProductAsync(UpdateProduct command);
         Task<ICollection<ProductModel>> GetProductsByWorkOrder(int workOrderId);
+        Task<IEnumerable<ProductModel>> ImportProducts(string csvData);
     }
 }

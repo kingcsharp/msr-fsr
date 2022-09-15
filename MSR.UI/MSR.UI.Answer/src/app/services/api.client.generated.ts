@@ -11277,6 +11277,7 @@ export enum EnumMenuItem {
     WorkOrderTasks = 35,
     ProcedureStep = 36,
     CycleCountImport = 37,
+    CycleCountUpdate = 38,
 }
 
 export class FileModel implements IFileModel {

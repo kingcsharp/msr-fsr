@@ -35,6 +35,7 @@ namespace MSR.Application.EventServices
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IAnswerRestClient _restClient;
+        private readonly IProductService _productService;
 
         public EventServiceHandler(
             ICustomerService customerService,
@@ -47,7 +48,8 @@ namespace MSR.Application.EventServices
             IMapper mapper,
             IMessageHubClient messageHub,
             ILogger<EventServiceHandler> logger,
-            IAnswerRestClient restClient)
+            IAnswerRestClient restClient,
+            IProductService productService)
         {
             _customerService = customerService;
             _locationService = locationService;
@@ -59,6 +61,7 @@ namespace MSR.Application.EventServices
             _mapper = mapper;
             _logger = logger;
             _restClient = restClient;
+            _productService = productService;
         }
 
         public async Task HandleAsync(ImportEvent handledEvent, CancellationToken cancellationToken = default)
@@ -92,7 +95,7 @@ namespace MSR.Application.EventServices
                         count = imported.Count();
                         break;
                     case EnumMenuItem.QuotesProducts:
-                        var importedQuotes = await _quoteService.ImportQuotes(
+                        var importedQuotes = await _productService.ImportProducts(
                             Encoding.UTF8.GetString(handledEvent.data)
                         );
                         count = importedQuotes.Count();

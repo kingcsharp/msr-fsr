@@ -14,6 +14,7 @@ namespace MSR.Domain.Commands
         public DateTime ScheduledEndDate { get; set; }
         public bool HasNCR { get; set; }
         public int LocationId { get; set; }
+        public decimal Price { get; set; }
 
         public CreateWorkOrder(int purchaseId, int purchaseOrderId,DateTime scheduledStartDate,
             DateTime scheduledEndDate, bool hasNcr, int locationId,ICollection<WorkOrderProduct> productRequest)

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -21,12 +23,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
         private readonly IMessageHubClient _messageHub;
+        private ILogger _logger;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IMessageHubClient messageHub)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IMessageHubClient messageHub, ILogger<QuoteService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _messageHub = messageHub;
+            _logger = logger;
         }
 
         public async Task<ICollection<ProductModel>> GetProductsAsync()
@@ -44,7 +48,6 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<ProductModel> CreateProductAsync(CreateProduct command)
         {
             var curCustomer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == command.CustomerId);
-
             if (curCustomer is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.Customer)} not found with ID: {command.CustomerId}", DomainError.NotFound);
@@ -68,7 +71,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 var product = _mapper.Map<Product>(command);
                 product.Revision = 1;
-
+                
                 if (product.ProductSteps != null)
                 {
                     foreach (ProductStep productStep in product.ProductSteps)
@@ -85,9 +88,12 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
 
                 var productModel = _mapper.Map<ProductModel>(product);
-                foreach (var productStep in productModel.ProductSteps)
+                if (productModel.ProductSteps != null)
                 {
-                    productStep.Product = null;
+                    foreach (var productStep in productModel.ProductSteps)
+                    {
+                        productStep.Product = null;
+                    }
                 }
                 return productModel;
             }
@@ -412,6 +418,35 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }
 
             return returnedProductModels;
+        }
+
+        public async Task<IEnumerable<ProductModel>> ImportProducts(string csvData)
+        {
+            var records = CSVHelper.ParseRecords<QuoteImportItem>(csvData);
+            var productModels = new List<ProductModel>();
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanApprove))
+            {
+                throw new DomainException("Permission denied for import", DomainError.BadRequest);
+            }
+
+            foreach (var record in records)
+            {
+                try
+                {
+                    var createProductModel = _mapper.Map<CreateProduct>(record);
+                    var productModel = await CreateProductAsync(createProductModel);
+                    productModels.Add(productModel);
+                  
+                }
+                catch (Exception exception)
+                {
+                    //If we get an error on a single import dump it and keep going. 
+                    _logger.LogError(exception, exception.Message);
+                }
+            }
+
+            return productModels;
         }
     }
 }

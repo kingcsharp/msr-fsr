@@ -46,6 +46,16 @@ namespace MSR.Domain.Validators
                     importError.Errors.Add($"{nameof(record.CustomerId)} does not have a value");
                 }
 
+                if (record.ProcedureId == 0)
+                {
+                    importError.Errors.Add($"{nameof(record.ProcedureId)} does not have a value");
+                }
+
+                if (record.PartKitNumber == 0)
+                {
+                    importError.Errors.Add($"{nameof(record.PartKitNumber)} does not have a value");
+                }
+
                 if (importError.Errors.Any())
                 {
                     importError.Line = line;
