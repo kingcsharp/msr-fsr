@@ -62,6 +62,18 @@ export class AdhocComponent implements OnInit {
 
     this.staticOptions = [
       {
+        msrfacility: "Chandler",
+      },
+      {
+        msrfacility: "Naas",
+      },
+      {
+        msrfacility: "Hillsboro",
+      },
+      {
+        msrfacility: "Kiryat Gat",
+      },
+      {
         msrfsrfacility: "Chandler",
       },
       {
