@@ -1001,7 +1001,7 @@ export class ReportCubeService {
         return [
           new ColumnsSaved({
             id: "woenddate",
-            label: "WO End Date",
+            label: "Completed Date ",
             visible: true,
             type: this.enumColumnType.Date,
             styles: { width: "8rem" },
@@ -1101,6 +1101,7 @@ export class ReportCubeService {
             id: "monitors",
             label: "Monitor Recorded",
             visible: true,
+            disableFilter: true,
             type: this.enumColumnType.String,
           }),
         ];
