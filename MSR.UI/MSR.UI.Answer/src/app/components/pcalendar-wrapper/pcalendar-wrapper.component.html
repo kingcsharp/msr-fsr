@@ -18,19 +18,9 @@
 
 <p-calendar
   *ngIf="
-    colsAndSettings && colsAndSettings.col.formattingMoment === 'MM-DD-YYYY'
-  "
-  [(ngModel)]="selectedDate"
-  (onSelect)="filterGrid()"
-  selectionMode="{{ isRanged ? 'range' : 'single' }}"
-  appendTo="body"
-  [locale]="en"
-></p-calendar>
-
-<p-calendar
-  *ngIf="
     colsAndSettings &&
-    colsAndSettings.col.formattingMoment === 'MM-DD-YYYY HH:mm:ss'
+    (colsAndSettings.col.formattingMoment === 'MM-DD-YYYY' ||
+      colsAndSettings.col.formattingMoment === 'MM-DD-YYYY HH:mm:ss')
   "
   [(ngModel)]="selectedDate"
   (onSelect)="filterGrid()"
