@@ -10,11 +10,6 @@
   view="month"
   yearRange="2015:2030"
 ></p-calendar>
-<i
-  *ngIf="datatable.filters[filterId]?.value"
-  class="fclear pi pi-times pointer"
-  (click)="clearFilter()"
-></i>
 
 <p-calendar
   *ngIf="
@@ -29,12 +24,6 @@
   [locale]="en"
 ></p-calendar>
 
-<i
-  *ngIf="datatable.filters[filterId]?.value"
-  class="fclear pi pi-times pointer"
-  (click)="clearFilter()"
-></i>
-
 <p-calendar
   *ngIf="!colsAndSettings"
   [(ngModel)]="selectedDate"
@@ -43,6 +32,7 @@
   appendTo="body"
   [locale]="en"
 ></p-calendar>
+
 <i
   *ngIf="datatable.filters[filterId]?.value"
   class="fclear pi pi-times pointer"
