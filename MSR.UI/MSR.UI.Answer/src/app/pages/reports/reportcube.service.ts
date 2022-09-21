@@ -1005,8 +1005,8 @@ export class ReportCubeService {
             visible: true,
             type: this.enumColumnType.Date,
             styles: { width: "8rem" },
-            formattingAngular: "MM-dd-yyyy",
-            formattingMoment: "MM-DD-YYYY",
+            formattingAngular: "MM-dd-yyyy HH:mm:ss",
+            formattingMoment: "MM-DD-YYYY HH:mm:ss",
           }),
           new ColumnsSaved({
             id: "customername",
@@ -1076,8 +1076,8 @@ export class ReportCubeService {
             visible: true,
             type: this.enumColumnType.Date,
             styles: { width: "8rem" },
-            formattingAngular: "MM-dd-yyyy",
-            formattingMoment: "MM-DD-YYYY",
+            formattingAngular: "MM-dd-yyyy HH:mm:ss",
+            formattingMoment: "MM-DD-YYYY HH:mm:ss",
           }),
           new ColumnsSaved({
             id: "endtime",
@@ -1085,8 +1085,8 @@ export class ReportCubeService {
             visible: true,
             type: this.enumColumnType.Date,
             styles: { width: "8rem" },
-            formattingAngular: "MM-dd-yyyy",
-            formattingMoment: "MM-DD-YYYY",
+            formattingAngular: "MM-dd-yyyy HH:mm:ss",
+            formattingMoment: "MM-DD-YYYY HH:mm:ss",
           }),
           new ColumnsSaved({
             id: "duration",
