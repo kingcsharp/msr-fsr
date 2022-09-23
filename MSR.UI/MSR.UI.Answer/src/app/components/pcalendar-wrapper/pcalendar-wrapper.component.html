@@ -1,8 +1,40 @@
-<p-calendar *ngIf = "colsAndSettings && colsAndSettings.col.formattingMoment === 'MM-YYYY'" class="pcalender-wrapper" [(ngModel)]="selectedDate" selectionMode="{{isRanged?'range':'single'}}" filterDelay="true" (ngModelChange)="filterGrid()" [locale]="en" appendTo="body" view="month" yearRange="2015:2030"></p-calendar>
-<i *ngIf="datatable.filters[filterId]?.value" class="fclear pi pi-times pointer" (click)="clearFilter()"></i>
+<p-calendar
+  *ngIf="colsAndSettings && colsAndSettings.col.formattingMoment === 'MM-YYYY'"
+  class="pcalender-wrapper"
+  [(ngModel)]="selectedDate"
+  selectionMode="{{ isRanged ? 'range' : 'single' }}"
+  filterDelay="true"
+  (ngModelChange)="filterGrid()"
+  [locale]="en"
+  appendTo="body"
+  view="month"
+  yearRange="2015:2030"
+></p-calendar>
 
-<p-calendar *ngIf = "colsAndSettings && colsAndSettings.col.formattingMoment === 'MM-DD-YYYY'" [(ngModel)]="selectedDate" (onSelect)="filterGrid()" selectionMode="{{isRanged?'range':'single'}}" appendTo="body" [locale]="en"></p-calendar>
-<i *ngIf="datatable.filters[filterId]?.value" class="fclear pi pi-times pointer" (click)="clearFilter()"></i>  
-  
-<p-calendar *ngIf ="!colsAndSettings" [(ngModel)]="selectedDate" (onSelect)="filterGrid()" selectionMode="{{isRanged?'range':'single'}}" appendTo="body" [locale]="en"></p-calendar>
-<i *ngIf="datatable.filters[filterId]?.value" class="fclear pi pi-times pointer" (click)="clearFilter()"></i>
+<p-calendar
+  *ngIf="
+    colsAndSettings &&
+    (colsAndSettings.col.formattingMoment === 'MM-DD-YYYY' ||
+      colsAndSettings.col.formattingMoment === 'MM-DD-YYYY HH:mm:ss')
+  "
+  [(ngModel)]="selectedDate"
+  (onSelect)="filterGrid()"
+  selectionMode="{{ isRanged ? 'range' : 'single' }}"
+  appendTo="body"
+  [locale]="en"
+></p-calendar>
+
+<p-calendar
+  *ngIf="!colsAndSettings"
+  [(ngModel)]="selectedDate"
+  (onSelect)="filterGrid()"
+  selectionMode="{{ isRanged ? 'range' : 'single' }}"
+  appendTo="body"
+  [locale]="en"
+></p-calendar>
+
+<i
+  *ngIf="datatable.filters[filterId]?.value"
+  class="fclear pi pi-times pointer"
+  (click)="clearFilter()"
+></i>

@@ -997,6 +997,114 @@ export class ReportCubeService {
             dropdownHeader: true,
           }),
         ];
+      case "WorkCompletedDetailbyTask":
+        return [
+          new ColumnsSaved({
+            id: "woenddate",
+            label: "Completed Date ",
+            visible: true,
+            type: this.enumColumnType.Date,
+            styles: { width: "8rem" },
+            formattingAngular: "MM-dd-yyyy HH:mm:ss",
+            formattingMoment: "MM-DD-YYYY HH:mm:ss",
+          }),
+          new ColumnsSaved({
+            id: "customername",
+            label: "Customer",
+            visible: true,
+            type: this.enumColumnType.String,
+            dropdownHeader: true,
+          }),
+          new ColumnsSaved({
+            id: "msrfacility",
+            label: "MSR Facility",
+            visible: true,
+            type: this.enumColumnType.String,
+            dropdownHeader: true,
+          }),
+          new ColumnsSaved({
+            id: "procedure",
+            label: "Procedure",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "procedureid",
+            label: "Procedure ID",
+            visible: true,
+            type: this.enumColumnType.Number,
+          }),
+          new ColumnsSaved({
+            id: "kitname",
+            label: "Kit Name",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "kitpartnumber",
+            label: "Kit PN",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "workordernumber",
+            label: "WO",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "stepno",
+            label: "Step #",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "steptitle",
+            label: "Step Title",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "username",
+            label: "User",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "starttime",
+            label: "Start time",
+            visible: true,
+            type: this.enumColumnType.Date,
+            styles: { width: "8rem" },
+            formattingAngular: "MM-dd-yyyy HH:mm:ss",
+            formattingMoment: "MM-DD-YYYY HH:mm:ss",
+          }),
+          new ColumnsSaved({
+            id: "endtime",
+            label: "End Time",
+            visible: true,
+            type: this.enumColumnType.Date,
+            styles: { width: "8rem" },
+            formattingAngular: "MM-dd-yyyy HH:mm:ss",
+            formattingMoment: "MM-DD-YYYY HH:mm:ss",
+          }),
+          new ColumnsSaved({
+            id: "duration",
+            label: "Duration",
+            visible: true,
+            disableFilter: true,
+            type: this.enumColumnType.Date,
+            formattingAngular: "HH:mm:ss",
+            formattingMoment: "HH:mm:ss",
+          }),
+          new ColumnsSaved({
+            id: "monitors",
+            label: "Monitor Recorded",
+            visible: true,
+            disableFilter: true,
+            type: this.enumColumnType.String,
+          }),
+        ];
       default:
         break;
     }
