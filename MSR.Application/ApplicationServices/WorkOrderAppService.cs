@@ -37,7 +37,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<CreateWorkOrder>,
         ICommandHandler<GetAssignedWorkOrders>,
         ICommandHandler<GetInvoiceableWorkOrders>,
-        ICommandHandler<BulkUpdateWorkOrderPart>
+        ICommandHandler<BulkUpdateWorkOrderPart>,
+        ICommandHandler<UpdateWorkOrderPartCycleCount>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
@@ -201,6 +202,18 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(BulkUpdateWorkOrderPart command, CancellationToken cancellationToken = default)
         {
             return new CommandResponse<bool>(await _workOrderService.BulkUpdateWorkOrderPart(command));
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderPartCycleCount command, CancellationToken cancellationToken = default)
+        {
+            var (Success, DisplayString) = await _workOrderService.UpdateWorkOrderPartCycleCount(command);
+            var response = new CommandResponse<bool>(Success)
+            {
+                Success = Success,
+                DisplayString = DisplayString
+            };
+
+            return response;
         }
     }
 }

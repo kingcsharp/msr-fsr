@@ -61,7 +61,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         }
 
         // TODO: WorkOrder Status needs to be calculated in a timely matter
-        public async Task<ICollection<WorkOrderSelectItem>> GetWorkOrderSelectItems(GetAssignedWorkOrders command) {
+        public async Task<ICollection<WorkOrderSelectItem>> GetWorkOrderSelectItems(GetAssignedWorkOrders command)
+        {
 
             var workOrderSelectItems = await _unitOfWork.WorkOrders.Query()
                             .Include(s => s.Purchase)
@@ -92,11 +93,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderTaskIds = workOrderEntity.WorkOrderTasks.Select(i => i.Id).ToList();
             var workOrderPartIds = workOrderEntity.WorkOrderParts.Select(s => s.PartId).ToList();
             var workOrderWorkOrderPartIds = workOrderEntity.WorkOrderParts.Select(s => s.Id).ToList();
-                       
+
             _ = await _unitOfWork.Parts.Query().Where(s => workOrderPartIds.Contains(s.Id)).ToListAsync();
             _ = await _unitOfWork.Products.Query().FirstOrDefaultAsync(s => workOrderEntity.ProductId == s.Id);
 
-            if(workOrderEntity.Product != null)
+            if (workOrderEntity.Product != null)
             {
                 _ = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Product.PartId);
                 _ = await _unitOfWork.Customers.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Product.CustomerId);
@@ -114,7 +115,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _ = await _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).Where(j => j.EntityTableName == "WorkOrderTask" && workOrderTaskIds.Contains(j.EntityId)).ToListAsync();
             _ = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => workOrderEntity.PurchaseId == s.Id);
 
-            if(workOrderEntity.Purchase != null)
+            if (workOrderEntity.Purchase != null)
             {
                 _ = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.PurchaseOrderId);
                 _ = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(s => s.Id == workOrderEntity.Purchase.LocationId);
@@ -124,7 +125,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     var ids = workOrderEntity.Purchase.PurchaseProducts.Select(i => i.PurchaseOrderProductId).ToList();
                     _ = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => ids.Contains(i.Id)).ToListAsync();
 
-                    if(workOrderEntity.Purchase.PurchaseProducts.Any(i => i.PurchaseOrderProduct != null))
+                    if (workOrderEntity.Purchase.PurchaseProducts.Any(i => i.PurchaseOrderProduct != null))
                     {
                         var purchaseOrderProductIds = workOrderEntity.Purchase.PurchaseProducts.Select(i => i.PurchaseOrderProduct.ProductId).ToList();
                         _ = await _unitOfWork.Products.Query().Where(i => purchaseOrderProductIds.Contains(i.Id)).ToListAsync();
@@ -132,14 +133,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
             }
 
-            if(workOrderEntity.Purchase.PurchaseOrder.Customer != null)
+            if (workOrderEntity.Purchase.PurchaseOrder.Customer != null)
             {
                 var userIds = new List<int>();
 
-                if(workOrderEntity.Purchase.PurchaseOrder.Customer.PrimaryContactUserId.HasValue)
+                if (workOrderEntity.Purchase.PurchaseOrder.Customer.PrimaryContactUserId.HasValue)
                     userIds.Add(workOrderEntity.Purchase.PurchaseOrder.Customer.PrimaryContactUserId.Value);
 
-                if(workOrderEntity.Purchase.PurchaseOrder.Customer.SecondaryContactUserId.HasValue)
+                if (workOrderEntity.Purchase.PurchaseOrder.Customer.SecondaryContactUserId.HasValue)
                     userIds.Add(workOrderEntity.Purchase.PurchaseOrder.Customer.SecondaryContactUserId.Value);
 
                 _ = await _unitOfWork.Users.Query().Where(s => userIds.Contains(s.Id)).ToListAsync();
@@ -149,7 +150,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _ = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
             _ = await _unitOfWork.Status.Query().ToListAsync();
             _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
-           _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
+            _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
 
             var workOrderModel = _mapper.Map<WorkOrderModel>(workOrderEntity);
             workOrderModel.WorkOrderProducts = workOrderEntity.Purchase.PurchaseProducts.Select(i => _mapper.Map<ProductModel>(i.PurchaseOrderProduct.Product)).ToList();
@@ -161,7 +162,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             foreach (var workOrderPart in workOrderModel.WorkOrderParts)
             {
                 var mostRecentPart = await _unitOfWork.WorkOrderParts.Query().OrderByDescending(i => i.Id)
-                                            .FirstOrDefaultAsync(i => i.SerialNumber == workOrderPart.SerialNumber && i.PartId == workOrderPart.PartId 
+                                            .FirstOrDefaultAsync(i => i.SerialNumber == workOrderPart.SerialNumber && i.PartId == workOrderPart.PartId
                                                                     && i.Id < workOrderPart.Id && i.PartData != null);
                 if (mostRecentPart != null)
                 {
@@ -169,20 +170,20 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
 
                 var workOrderPartMappedPart = mappedParts.FirstOrDefault(i => i.WorkOrderPartId == workOrderPart.Id);
-                if(workOrderPartMappedPart != null)
+                if (workOrderPartMappedPart != null)
                 {
                     workOrderPart.TagType = workOrderPartMappedPart.TagType;
                     var associatedWorkOrderTask = workOrderModel.WorkOrderTasks.FirstOrDefault(i => i.Id == workOrderPartMappedPart.WorkOrderTaskId);
-                    if(associatedWorkOrderTask != null)
+                    if (associatedWorkOrderTask != null)
                     {
                         workOrderPart.NCNumber = associatedWorkOrderTask.NCNumber;
                     }
                     workOrderPart.Detail = workOrderPartMappedPart.Detail;
                 }
 
-                workOrderPart.NCRHistoryItems = ncrHistoryItems?.Where(i => i.PartId == workOrderPart.PartId 
-                                                                        && (i.SerialNumber != null 
-                                                                            && workOrderPart.SerialNumber != null 
+                workOrderPart.NCRHistoryItems = ncrHistoryItems?.Where(i => i.PartId == workOrderPart.PartId
+                                                                        && (i.SerialNumber != null
+                                                                            && workOrderPart.SerialNumber != null
                                                                             && i.SerialNumber == workOrderPart.SerialNumber)
                                                                         && i.WorkOrderId != workOrderPart.WorkOrderId
                                                                        )?.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
@@ -194,7 +195,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
                 var workOrderTaskMonitorModels = new List<WorkOrderTaskMonitorModel>();
                 var i = 1; // Monitor Number starts at 1
-                foreach(var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
+                foreach (var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
                 {
                     workOrderTaskMonitorModel.MonitorNumber = i;
                     workOrderTaskMonitorModel.WorkOrderTask = null; // avoid loops
@@ -203,17 +204,17 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 }
                 workOrderTaskModel.WorkOrderTaskMonitors = workOrderTaskMonitorModels;
 
-                if(workOrderTaskModel.ReferenceFiles != null && workOrderTaskModel.ReferenceFiles.Any())
+                if (workOrderTaskModel.ReferenceFiles != null && workOrderTaskModel.ReferenceFiles.Any())
                 {
                     workOrderTaskModel.ReferenceFiles.ForEach(s => s.FileURL = _fileDownloader.GetURL(s.FileURL, 86400));
                 }
                 var workOrderMappedParts = mappedParts.Where(i => i.WorkOrderTaskId == workOrderTaskModel.Id);
-                workOrderTaskModel.MappedWorkOrderParts = workOrderMappedParts != null && workOrderMappedParts.Any() 
+                workOrderTaskModel.MappedWorkOrderParts = workOrderMappedParts != null && workOrderMappedParts.Any()
                                                                 ? workOrderMappedParts.Select(i => new MappedWorkOrderPart()
-                                                                                                    {
-                                                                                                            Id = i.WorkOrderPartId,
-                                                                                                            TagType = i.TagType
-                                                                                                    }).ToList() 
+                                                                {
+                                                                    Id = i.WorkOrderPartId,
+                                                                    TagType = i.TagType
+                                                                }).ToList()
                                                                 : new List<MappedWorkOrderPart>();
             }
 
@@ -242,7 +243,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 var purchase = _unitOfWork.Purchases.FirstOrDefault(false, i => i.Id == createWorkOrderDto.PurchaseId);
 
                 var workOrderEntity = _mapper.Map<EntityFramework.Entities.WorkOrder>(createWorkOrderDto);
-                
+
                 workOrderEntity.ProductId = createWorkOrderDto.WorkOrderProducts.First().ProductId;
 
                 var procedureStepIds = workOrderEntity.WorkOrderTasks.Select(m => m.ProcedureStepId);
@@ -341,7 +342,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
                 return $"{workOrderEntity.Purchase?.PurchaseOrder?.Customer?.Name ?? string.Empty}-{workOrderEntity.Id}";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 throw;
@@ -471,7 +472,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command)
         {
             var parts = new List<WorkOrderPartModel>();
-            
+
             foreach (var item in command.WorkOrderProducts)
             {
                 //Get a list of the ProductIds and pull the entire list
@@ -533,7 +534,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
                 var serialNumberList = item.SerialNumbers.ToList();
                 var customerLineNumberList = item.CustomerLineNumbers.ToList();
-                for (var workOrderPartIndex = 0;workOrderPartIndex < item.SerialNumbers.Count && workOrderPartIndex < partList.Count;workOrderPartIndex += 1)
+                for (var workOrderPartIndex = 0; workOrderPartIndex < item.SerialNumbers.Count && workOrderPartIndex < partList.Count; workOrderPartIndex += 1)
                 {
                     if (serialNumberList[workOrderPartIndex] != null)
                     {
@@ -576,9 +577,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             // TODO: Since we track if WorkOrderPart is child based on parentId and parent property, the child property is not needed and should be removed
             foreach (var workOrderPartModel in workOrderPartModels)
             {
-                workOrderPartModel.NCRHistoryItems = ncrHistoryItems.Where(i => i.WorkOrderPartId == workOrderPartModel.Id 
-                                                                            && (i.SerialNumber != null 
-                                                                                && workOrderPartModel.SerialNumber != null 
+                workOrderPartModel.NCRHistoryItems = ncrHistoryItems.Where(i => i.WorkOrderPartId == workOrderPartModel.Id
+                                                                            && (i.SerialNumber != null
+                                                                                && workOrderPartModel.SerialNumber != null
                                                                                 && i.SerialNumber == workOrderPartModel.SerialNumber)
                                                                             && i.WorkOrderId != workOrderPartModel.WorkOrderId
                                                                             ).Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
@@ -628,7 +629,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var renderer = new ImageRenderer(imageFormat: ImageFormat.Png);
 
             using var stream = new MemoryStream();
-            renderer.Render(barcode, stream);            
+            renderer.Render(barcode, stream);
             return stream.ToArray();
         }
 
@@ -663,20 +664,20 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderPartModel = _mapper.Map<WorkOrderPartModel>(workOrderPartEntity);
             workOrderPartModel.WorkOrder = null;
             var partId = workOrderPartModel.PartId;
-            var NCRHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => i.PartId == partId 
-                                                                            && (i.SerialNumber != null 
-                                                                                && command.SerialNumber != null 
+            var NCRHistoryItems = await _unitOfWork.NCRHistory.Query().Where(i => i.PartId == partId
+                                                                            && (i.SerialNumber != null
+                                                                                && command.SerialNumber != null
                                                                                 && i.SerialNumber == command.SerialNumber)
                                                                             && i.WorkOrderId != workOrderPartModel.WorkOrderId).ToListAsync();
             workOrderPartModel.NCRHistoryItems = NCRHistoryItems.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
             return workOrderPartModel;
         }
-        
+
         public async Task<bool> BulkUpdateWorkOrderPart(BulkUpdateWorkOrderPart command)
         {
             var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part).Where(i => command.WorkOrderPartIds.Contains(i.Id)).ToListAsync();
 
-            workOrderParts.ForEach(i => 
+            workOrderParts.ForEach(i =>
             {
                 i.PartData = command.PartData;
                 _unitOfWork.WorkOrderParts.Update(i);
@@ -684,8 +685,38 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             await _unitOfWork.SaveChangesAsync();
 
-            
+
             return true;
+        }
+
+        public async Task<(bool Success, string DisplayString)> UpdateWorkOrderPartCycleCount(UpdateWorkOrderPartCycleCount command)
+        {
+            try
+            {
+                var workOrderPart = _unitOfWork.WorkOrderParts.Query().Include(i => i.Part).OrderByDescending(i => i.LastUpdatedOn == null ? i.CreatedOn : i.LastUpdatedOn)
+                                                                      .FirstOrDefault(i => i.SerialNumber == command.SerialNumber && i.Part.PartNumber == command.PartNumber);
+
+                if (workOrderPart == null)
+                {
+                    throw new DomainException(
+                        $"No {nameof(WorkOrderPart)} with PartNumber: {command.PartNumber} && SerialNumber: {command.SerialNumber}",
+                        DomainError.NotFound);
+                }
+
+                workOrderPart.CycleCount = command.CycleCount;
+
+                _unitOfWork.WorkOrderParts.Update(workOrderPart);
+                await _unitOfWork.SaveChangesAsync();
+
+                return (true, $"The CycleCount for WorkOrderPart with Id {workOrderPart.Id} has been updated to {command.CycleCount}");
+            }
+            catch(Exception ex)
+            {
+                throw new DomainException($"The Cycle Count for WorkOrderPart with Part Number {command.PartNumber} and Serial Number {command.SerialNumber} could not be updated. " +
+                                $"- Error Message: {ex.Message}", DomainError.NotFound);
+                
+            }
+
         }
 
 
@@ -795,7 +826,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return workOrderTaskModel;
         }
 
-        public async Task<ICollection<WorkOrderTaskModel>> TakeOverWorkOrderTasks(TakeOverWorkOrder takeOverWorkOrder) {
+        public async Task<ICollection<WorkOrderTaskModel>> TakeOverWorkOrderTasks(TakeOverWorkOrder takeOverWorkOrder)
+        {
 
             var userEntity = _unitOfWork.Users.Query().FirstOrDefault(s => s.Id == takeOverWorkOrder.UserId);
 
@@ -827,7 +859,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             }
 
-            workOrderTasksToTakeOverEntities.ToList().ForEach(workOrderTaskEntity => {
+            workOrderTasksToTakeOverEntities.ToList().ForEach(workOrderTaskEntity =>
+            {
 
                 workOrderTaskEntity.AssignedTo = userEntity.Id;
                 workOrderTaskEntity.AssignedToUser = userEntity;
@@ -843,7 +876,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return workOrderTaskModels;
         }
 
-        public async Task<ICollection<WorkOrderTaskModel>> AddNCRWorkOrderTasksAsync(AddNCRWorkOrderTask addNCRWorkOrderTask) {
+        public async Task<ICollection<WorkOrderTaskModel>> AddNCRWorkOrderTasksAsync(AddNCRWorkOrderTask addNCRWorkOrderTask)
+        {
 
             var userEntity = _unitOfWork.Users.Query().FirstOrDefault(s => s.Id == addNCRWorkOrderTask.UserId);
 
@@ -887,7 +921,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            var workOrderTaskIsInProgress =  await _unitOfWork.WorkOrderTasks.Query()
+            var workOrderTaskIsInProgress = await _unitOfWork.WorkOrderTasks.Query()
             .Where(s => s.WorkOrderId == addNCRWorkOrderTask.WorkOrderId && s.StatusId == (int)EnumStatusSteps.InProgress).FirstOrDefaultAsync();
 
             var seedStepOrderNumber = workOrderTaskIsInProgress != null ? workOrderTaskIsInProgress.TaskStepOrder : 0;
@@ -968,7 +1002,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 workOrderTaskEntities.Add(workOrderTaskEntity);
             }
 
-            foreach(var workOrderTaskEntity in workOrderTaskEntities)
+            foreach (var workOrderTaskEntity in workOrderTaskEntities)
             {
                 foreach (var workOrderTaskMonitorEntity in workOrderTaskEntity.WorkOrderTaskMonitors)
                 {
@@ -984,7 +1018,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return workOrderTaskModels;
         }
 
-        public async Task<ICollection<WorkOrderTaskModel>> CancelWorkOrderTasksAsync(CancelWorkOrder cancelWorkOrder) {
+        public async Task<ICollection<WorkOrderTaskModel>> CancelWorkOrderTasksAsync(CancelWorkOrder cancelWorkOrder)
+        {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {
                 throw new DomainException(
@@ -1019,7 +1054,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == cancelWorkOrder.WorkOrderId);
 
             _unitOfWork.CancelledWorkOrderLogs.Add(
-                new CancelledWorkOrderLog() {
+                new CancelledWorkOrderLog()
+                {
                     WasInvoiced = cancelWorkOrder.Invoiceable,
                     WorkOrderId = workOrderEntity.Id
                 }
@@ -1035,7 +1071,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     workOrderStatEntity.TotalTimeLogged += workOrderTaskEntity.TotalTaskTime;
                 }
                 _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
-                    await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
             }
             _unitOfWork.WorkOrderStats.Update(workOrderStatEntity);
 
@@ -1050,7 +1086,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 .Include(x => x.Status)
                 .Where(s => s.WorkOrderId == cancelWorkOrder.WorkOrderId).ToListAsync();
 
-            foreach(var workOrderTaskEntity in workOrderTaskEntities)
+            foreach (var workOrderTaskEntity in workOrderTaskEntities)
             {
                 foreach (var workOrderTaskMonitorEntity in workOrderTaskEntity.WorkOrderTaskMonitors)
                 {
@@ -1080,7 +1116,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var partIdsToRemove = command.MappedWorkOrderParts == null || !incomingMappedParts.Any() ? currentMappedParts : currentMappedParts.Where(i => !incomingMappedParts.Contains(i)).ToList();
             var partsToRemove = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => partIdsToRemove.Contains(i.WorkOrderPartId)).ToListAsync();
             var partsToUpdate = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => incomingMappedParts.Contains(i.WorkOrderPartId) && !partIdsToRemove.Contains(i.Id)).ToListAsync();
-            
+
             if (PartIdsToAdd.Any())
             {
                 foreach (var partId in PartIdsToAdd)
@@ -1101,7 +1137,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             if (partsToRemove.Any())
             {
-                foreach(var part in partsToRemove)
+                foreach (var part in partsToRemove)
                 {
                     _unitOfWork.WorkOrderPartNCRMap.Delete(false, part);
                 }
@@ -1110,10 +1146,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             if (partsToUpdate.Any())
             {
-                foreach(var part in partsToUpdate)
+                foreach (var part in partsToUpdate)
                 {
                     var incomingPart = command.MappedWorkOrderParts.FirstOrDefault(i => part.WorkOrderPartId == i.Id && (part.TagType != i.TagType || part.Detail != i.Detail));
-                    if(incomingPart == null)
+                    if (incomingPart == null)
                     {
                         continue;
                     }
@@ -1189,7 +1225,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var statEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == workOrderTaskEntity.WorkOrderId);
-            
+
             if (statEntity != null)
             {
                 if (isTaskStarted)
@@ -1234,7 +1270,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             WorkOrderTaskModel workOrderTaskModel = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workOrderTaskEntity);
 
             workOrderTaskModel.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), workOrderTaskModel.Id).ToList();
-            
+
             //Get a list of mapped work order parts
             var mappedWorkOrderNCRMaps = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => i.WorkOrderTaskId == workOrderTaskModel.Id).ToListAsync();
 
@@ -1438,7 +1474,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 wot.WorkOrder = null;
             }
 
-            foreach(var wop in model.WorkOrderProducts)
+            foreach (var wop in model.WorkOrderProducts)
             {
                 wop.WorkOrders = null;
             }
@@ -1601,7 +1637,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 .FirstOrDefaultAsync(m => m.WorkOrderId == workOrderEntity.Id && m.ParentId.HasValue == false);
             var primaryContactUserModel = await _unitOfWork.Users.Query()
                 .FirstOrDefaultAsync(s => s.Id == customerEntity.PrimaryContactUserId);
-            var secondaryContactUserModel = await _unitOfWork.Users.FirstOrDefaultAsync(false,s => s.Id == customerEntity.SecondaryContactUserId);
+            var secondaryContactUserModel = await _unitOfWork.Users.FirstOrDefaultAsync(false, s => s.Id == customerEntity.SecondaryContactUserId);
             var workOrderTaskAssignedUserModel = workOrderTaskEntity.AssignedToUser;
 
             if ((primaryContactUserModel != null && !primaryContactUserModel.IsAnswerUser.Value) || !string.IsNullOrWhiteSpace(ncrEmail))
@@ -1828,34 +1864,40 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 case 1: // Equipment
                     return workOrderTaskMonitor.TextVal;
                 case 2: // Number
-                {
-                    if (workOrderTaskMonitor.ProcedureStepMonitor?.InputTypeId == 6)
                     {
-                        return workOrderTaskMonitor.TextVal;
-                    } else {
-                        return workOrderTaskMonitor.NumVal.HasValue ? (workOrderTaskMonitor.NumVal.Value ==  1 ?  "1" : "0") : null;
+                        if (workOrderTaskMonitor.ProcedureStepMonitor?.InputTypeId == 6)
+                        {
+                            return workOrderTaskMonitor.TextVal;
+                        }
+                        else
+                        {
+                            return workOrderTaskMonitor.NumVal.HasValue ? (workOrderTaskMonitor.NumVal.Value == 1 ? "1" : "0") : null;
+                        }
                     }
-                }
                 case 3: // YesOrNo
-                {
-                    if (!workOrderTaskMonitor.NumVal.HasValue)
                     {
-                        return null;
-                    } else {
-                        return workOrderTaskMonitor.NumVal.Value == 1 ? "Yes" : "No";
+                        if (!workOrderTaskMonitor.NumVal.HasValue)
+                        {
+                            return null;
+                        }
+                        else
+                        {
+                            return workOrderTaskMonitor.NumVal.Value == 1 ? "Yes" : "No";
+                        }
                     }
-                }
                 case 4: // Text
                     return workOrderTaskMonitor.TextVal;
                 case 5: // PassOrFail
-                {
-                    if (!workOrderTaskMonitor.NumVal.HasValue)
                     {
-                        return null;
-                    } else {
-                        return workOrderTaskMonitor.NumVal == 1 ? "Pass" : "Fail";
+                        if (!workOrderTaskMonitor.NumVal.HasValue)
+                        {
+                            return null;
+                        }
+                        else
+                        {
+                            return workOrderTaskMonitor.NumVal == 1 ? "Pass" : "Fail";
+                        }
                     }
-                }
                 case 6: // Select
                     return workOrderTaskMonitor.TextVal;
                 default:
@@ -1903,7 +1945,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return dispositionMessage.Trim().Trim('|').Trim();
         }
 
-        public async Task<ICollection<Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView(GetWorkOrderHistory command) {
+        public async Task<ICollection<Domain.Views.WorkOrderHistoryView>> GetWorkOrderHistoryView(GetWorkOrderHistory command)
+        {
 
             var workOrderHistoryViewEntities = await _unitOfWork.WorkOrderHistoryViews.Query().CreateWorkOrderHistoryViewQuery(command).ToListAsync();
             var workOrderHistoryViewModels = _mapper.Map<ICollection<Domain.Views.WorkOrderHistoryView>>(workOrderHistoryViewEntities);
@@ -1911,12 +1954,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var workOrderMessages = await _unitOfWork.WorkOrderMessages.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
 
-            foreach(var workOrderHistoryViewModel in workOrderHistoryViewModels)
+            foreach (var workOrderHistoryViewModel in workOrderHistoryViewModels)
             {
                 workOrderHistoryViewModel.WorkOrderMessages = workOrderMessages.Where(i => i.WorkOrderId == workOrderHistoryViewModel.WorkOrderId).Select(i => _mapper.Map<WorkOrderMessageModel>(i)).ToList();
             }
             return workOrderHistoryViewModels;
-
         }
 
         public async Task<int> GetTotalWorkOrderHistoryViewRows(GetWorkOrderHistory command)
@@ -1926,7 +1968,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return totalRows;
         }
 
-        public async Task<ICollection<MSR.Domain.Views.InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersView() {
+        public async Task<ICollection<MSR.Domain.Views.InvoiceableWorkOrderView>> GetInvoiceableWorkOrdersView()
+        {
 
             var invoiceableWorkOrdersViewEntities = await _unitOfWork.InvoiceableWorkOrdersViews.Query().ToListAsync();
 
@@ -1937,7 +1980,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         public async Task<ICollection<SubPartModel>> GetWorkOrderSubParts(List<int> workOrderIds)
         {
-            if(workOrderIds == null || !workOrderIds.Any())
+            if (workOrderIds == null || !workOrderIds.Any())
             {
                 return null;
             }

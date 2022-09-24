@@ -60,7 +60,6 @@ namespace MSR.Answer.API.V1.Extentions
             } 
             else 
             {
-
                 return new OkObjectResult(new AuditActionResult<TResult>()
                 {
                     Object = dataObject,
