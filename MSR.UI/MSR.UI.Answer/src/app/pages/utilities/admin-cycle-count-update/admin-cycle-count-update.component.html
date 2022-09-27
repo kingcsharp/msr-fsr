@@ -1,0 +1,95 @@
+<div class="container">
+  <h1 class="page-title mb-5">
+    <i [ngClass]="'fa ' + globals.activeMenu.icon"></i>
+    {{ globals.activeMenu.name }}
+  </h1>
+
+  <widget class="py-4 px-5">
+    <form
+      data-parsley-validate
+      data-cy="cycle-count-update-form"
+      class="parsleyjs cycle-count-update-form"
+      data-parsley-priority-enabled="false"
+      (ngSubmit)="onSubmit()"
+      novalidate="novalidate"
+    >
+      <div class="form-group row mb-4">
+        <label for="partNumber" class="col-md-4 text-right">
+          Part Number
+        </label>
+        <div class="col-md-8">
+          <input
+            [(ngModel)]="partNumber"
+            type="text"
+            class="form-control input-transparent"
+            placeholder="Part Number"
+            name="partNumber"
+            data-cy="partnumber"
+            data-validate="parsley"
+            data-parsley-trigger="change"
+            required
+          />
+        </div>
+      </div>
+      <div class="form-group row mb-4">
+        <label for="serialNumber" class="col-md-4 text-right">
+          Serial Number
+        </label>
+        <div class="col-md-8">
+          <input
+            [(ngModel)]="serialNumber"
+            type="text"
+            class="form-control input-transparent"
+            placeholder="Serial Number"
+            name="serialNumber"
+            data-cy="serialnumber"
+            data-validate="parsley"
+            data-parsley-trigger="change"
+            required
+          />
+        </div>
+      </div>
+      <div class="form-group row mb-4">
+        <label for="cycleCount" class="col-md-4 text-right">
+          New Cycle Count
+        </label>
+        <div class="col-md-8">
+          <input
+            [(ngModel)]="cycleCount"
+            class="form-control input-transparent"
+            placeholder="New Cycle Count"
+            name="cycleCount"
+            data-cy="cyclecount"
+            data-validate="parsley"
+            data-parsley-trigger="change"
+            data-parsley-type="integer"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="row mx-0 my-4">
+        <div class="col-md-12 d-flex justify-content-end">
+          <button
+            type="submit"
+            class="btn btn-success ml-2 width-100"
+            data-cy="btn-save"
+          >
+            <i class="fas fa-save mx-1"></i>
+            Save
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-danger width-100 ml-2"
+            data-cy="btn-cancel"
+            (click)="initFormData()"
+          >
+            <i class="fas fa-times mx-1"></i>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </widget>
+</div>
