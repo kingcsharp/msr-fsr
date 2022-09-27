@@ -1,17 +1,19 @@
-﻿namespace MSR.Domain.Models
+﻿using System;
+using MSR.Domain.Commanding;
+using MSR.Domain.Commanding.Enums;
+
+namespace MSR.Domain.Models
 {
     public class QuoteImportItem
     {
         public int CustomerId { get; set; }
-        public string Contact { get; set; }
-        public string Delivery { get; set; }
-        public string Title { get; set; }
-        public string Phone { get; set; }
-        public string ProcessName { get; set; }
-        public string Description { get; set; }
-        public string Representative { get; set; }
-        public string RepresentativeTitle { get; set; }
-        public string RepresentativeAddress { get; set; }
-        public string PartKitNo { get; set; }
+        public string DivisionFabNumber { get; set; }
+        public int PartKitNumber { get; set; }
+        public EnumSegregationType SegregationType { get; set; }
+        public int ProcedureId { get; set; }
+        public string ProductName { get; set; }
+        public int Revision { get; set; }
+        public decimal TotalPrice { get; set; }
+        public int CycleTime { get; set; }
     }
 }
