@@ -1,15 +1,24 @@
 .exportCsv {
-    font-size: 31px;
-    margin-right: 5px;
-    cursor: pointer;
+  font-size: 31px;
+  margin-right: 5px;
+  cursor: pointer;
 }
 
 .exportBtnsMargin {
-    .btn {
-        margin-right: 5px;
-    }
-    .btn-secondary {
-        color: #fff;
-        border-color: #868e96;
-    }
+  .btn {
+    margin-right: 5px;
+  }
+  .btn-secondary {
+    color: #fff;
+    border-color: #868e96;
+  }
+}
+
+.footer-summary {
+  background-color: transparent !important;
+  border: none !important;
+  text-align: right;
+  padding: 0 27px !important;
+  color: #fff !important;
+  font-weight: 100 !important;
 }
