@@ -6,21 +6,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MSR.Domain.Validators
 {
     public class QuoteImportValidator: IValidateImportData
     {
+        ICustomerService _customerService;
+        public QuoteImportValidator(ICustomerService customerService)
+        {
+            _customerService = customerService;
+        }
         public bool ValidateImportData(string csvData, out IEnumerable<ImportError> importErrors)
         {
             List<ImportError> errors = new List<ImportError>();
             int line = 0;
             IEnumerable<QuoteImportItem> records = null;
+
             ImportError importError;
 
             try
             {
                 records = CSVHelper.ParseRecords<QuoteImportItem>(csvData);
+
             }
             catch (Exception e)
             {
@@ -29,7 +37,7 @@ namespace MSR.Domain.Validators
                 errors.Add(importError);
             }
 
-            if (!records.Any())
+            if (records.Count() < 1)
             {
                 importError = new ImportError() { Line = line };
                 importError.Errors.Add($"This file does not have records to import.");
@@ -40,11 +48,27 @@ namespace MSR.Domain.Validators
             {
                 line++;
                 importError = new ImportError();
+                /**
+                 * May need to do a lookup for valid CustomerId by Company
+                 * to ensure user is notified when bad data is entered.
+                **/
 
-                if (record.CustomerId == 0)
+                if (string.IsNullOrEmpty(record.Company))
                 {
-                    importError.Errors.Add($"{nameof(record.CustomerId)} does not have a value");
+                    importError.Errors.Add($"{nameof(record.Company)} does not have a value");
                 }
+
+                try
+                {
+                    // Look up customer id by company name and if none is found throw an exception
+                    var company = _customerService.GetCustomerByNameAsync(record.Company).Result;
+
+                 
+                } catch (Exception ex)
+                {
+                    throw ex;
+                }
+                
 
                 if (record.ProcedureId == 0)
                 {
@@ -64,6 +88,7 @@ namespace MSR.Domain.Validators
             }
             
             importErrors = errors.Any() ? errors : null;
+           
             return !errors.Any();
         }
 

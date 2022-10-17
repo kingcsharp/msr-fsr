@@ -22,12 +22,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
         private ILogger _logger;
-
-        public QuoteService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<QuoteService> logger)
+        private ICustomerService _customerService;
+        
+        public QuoteService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<QuoteService> logger, ICustomerService customerService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _customerService = customerService;
         }
 
         public async Task<IEnumerable<QuoteModel>> GetQuotesAsync()
@@ -110,6 +112,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var records = CSVHelper.ParseRecords<QuoteImportItem>(csvData);
             var quoteModels = new List<QuoteModel>();
             var customerIds = await _unitOfWork.Customers.Query().Select(i => i.Id).ToListAsync();
+            
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanApprove))
             {
@@ -120,7 +123,9 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 try
                 {
-                    if (customerIds.Contains(record.CustomerId))
+                    var customerId = _customerService.GetCustomerByName(record.Company).Id;
+
+                    if (customerIds.Contains(customerId))
                     {
                         var quoteModel = await CreateQuoteAsync(_mapper.Map<CreateQuote>(record));
                         quoteModels.Add(quoteModel);

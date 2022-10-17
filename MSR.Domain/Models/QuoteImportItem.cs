@@ -6,7 +6,7 @@ namespace MSR.Domain.Models
 {
     public class QuoteImportItem
     {
-        public int CustomerId { get; set; }
+        public string Company { get; set; }
         public string DivisionFabNumber { get; set; }
         public int PartKitNumber { get; set; }
         public EnumSegregationType SegregationType { get; set; }

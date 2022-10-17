@@ -173,6 +173,18 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return retCustomer;
         }
 
+        public async Task<Domain.Models.CustomerModel> GetCustomerByNameAsync(string name)
+        {
+            var customer = await _unitOfWork.Customers.FirstOrDefault(false, i => i.Name.Trim().ToLower().Contains(name.Trim().ToLower()));
+            if (customer = null)
+            {
+                return new CustomerModel();
+            }
+            var retCustomer = _mapper.Map<Domain.Models.CustomerModel>(customer);
+
+            return retCustomer;
+        }
+
         public async Task<Domain.Models.CustomerModel> GetCustomerAsync(int id)
         {
             var customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == id);
