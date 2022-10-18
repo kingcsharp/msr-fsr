@@ -21,13 +21,15 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
     {
         private IUnitOfWork _unitOfWork;
+        private ICustomerService _customerService;
         private IMapper _mapper;
         private readonly IMessageHubClient _messageHub;
         private ILogger _logger;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IMessageHubClient messageHub, ILogger<QuoteService> logger)
+        public ProductService(IUnitOfWork unitOfWork, ICustomerService customerService, IMapper mapper, IMessageHubClient messageHub, ILogger<QuoteService> logger)
         {
             _unitOfWork = unitOfWork;
+            _customerService = customerService;
             _mapper = mapper;
             _messageHub = messageHub;
             _logger = logger;
@@ -434,7 +436,9 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 try
                 {
+                    var customer = await _customerService.GetCustomerByNameAsync(record.Company);
                     var createProductModel = _mapper.Map<CreateProduct>(record);
+                    createProductModel.CustomerId = customer.Id;
                     var productModel = await CreateProductAsync(createProductModel);
                     productModels.Add(productModel);
                   
