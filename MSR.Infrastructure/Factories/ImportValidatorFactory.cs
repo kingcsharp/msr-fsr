@@ -28,7 +28,7 @@ namespace MSR.Infrastructure.Factories
                 case EnumMenuItem.RunnableProcedures:
                     return scope.ServiceProvider.GetService<ProcedureValidator>();
                 case EnumMenuItem.QuotesProducts:
-                    return scope.ServiceProvider.GetService<QuoteImportValidator>();
+                    return _serviceProvider.GetService<QuoteImportValidator>();
                 case EnumMenuItem.CycleCountImport:
                     return scope.ServiceProvider.GetService<CycleCountImportValidator>();
                 default:
