@@ -58,17 +58,11 @@ namespace MSR.Domain.Validators
                     importError.Errors.Add($"{nameof(record.Company)} does not have a value");
                 }
 
-                try
+                var customer = _customerService.GetCustomerByNameAsync(record.Company).Result;
+                if (customer.Id == 0)
                 {
-                    // Look up customer id by company name and if none is found throw an exception
-                    var company = _customerService.GetCustomerByNameAsync(record.Company).Result;
-
-                 
-                } catch (Exception ex)
-                {
-                    throw ex;
+                    importError.Errors.Add($"Company with name {nameof(record.Company)} could not be found");
                 }
-                
 
                 if (record.ProcedureId == 0)
                 {
