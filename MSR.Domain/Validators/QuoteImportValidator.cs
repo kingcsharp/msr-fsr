@@ -37,7 +37,7 @@ namespace MSR.Domain.Validators
                 errors.Add(importError);
             }
 
-            if (records.Count() < 1)
+            if (!records.Any())
             {
                 importError = new ImportError() { Line = line };
                 importError.Errors.Add($"This file does not have records to import.");
