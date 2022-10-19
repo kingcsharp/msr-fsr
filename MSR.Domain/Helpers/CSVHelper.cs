@@ -10,11 +10,11 @@ namespace MSR.Domain.Helpers
 {
     public static class CSVHelper
     {
-        public static IEnumerable<T> ParseRecords<T>(string data)
+        public static IList<T> ParseRecords<T>(string data)
         {
             var reader = new StringReader(data);
             var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-            return csv.GetRecords<T>();
+            return csv.GetRecords<T>().ToList();
         }
 
         public static byte[] GenerateCSV<T>(List<T> data) where T : class
