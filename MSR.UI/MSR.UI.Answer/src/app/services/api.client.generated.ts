@@ -8936,6 +8936,61 @@ export class WorkOrderPartService {
         }
         return _observableOf<AuditActionResultOfBoolean>(<any>null);
     }
+
+    cycleCount(version: string, request: CycleCountUpdateRequest): Observable<AuditActionResultOfBoolean> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrderPart/CycleCount";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCycleCount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCycleCount(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfBoolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfBoolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCycleCount(response: HttpResponseBase): Observable<AuditActionResultOfBoolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfBoolean.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfBoolean>(<any>null);
+    }
 }
 
 @Injectable()
@@ -23771,6 +23826,50 @@ export class BulkUpdateWorkOrderPartRequest implements IBulkUpdateWorkOrderPartR
 export interface IBulkUpdateWorkOrderPartRequest {
     workOrderPartIds?: number[] | undefined;
     partData?: string | undefined;
+}
+
+export class CycleCountUpdateRequest implements ICycleCountUpdateRequest {
+    partNumber?: string | undefined;
+    serialNumber?: string | undefined;
+    cycleCount?: number;
+
+    constructor(data?: ICycleCountUpdateRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.partNumber = _data["partNumber"];
+            this.serialNumber = _data["serialNumber"];
+            this.cycleCount = _data["cycleCount"];
+        }
+    }
+
+    static fromJS(data: any): CycleCountUpdateRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CycleCountUpdateRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["partNumber"] = this.partNumber;
+        data["serialNumber"] = this.serialNumber;
+        data["cycleCount"] = this.cycleCount;
+        return data; 
+    }
+}
+
+export interface ICycleCountUpdateRequest {
+    partNumber?: string | undefined;
+    serialNumber?: string | undefined;
+    cycleCount?: number;
 }
 
 /** Base class for an API call with a typed result */

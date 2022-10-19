@@ -17,6 +17,7 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Application.Abstractions;
+using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
@@ -91,6 +92,16 @@ namespace MSR.Answer.API.V1.Controllers
             var response = await _dispatcher.DispatchAsync(command);
 
             return response.ToOkObjectResponse<bool>("Work Order Parts Successfully Updated");
+        }
+
+        [HttpPatch("CycleCount")]
+        [SwaggerResponse(typeof(AuditActionResult<bool>))]
+        public async Task<IActionResult> UpdateWorkOrderPartCycleCount([FromBody] CycleCountUpdateRequest request)
+        {
+            var command = request.ToUpdateWorkOrderPartCycleCount();
+            var response = await _dispatcher.DispatchAsync(command);
+
+            return response.ToOkObjectResponse<bool>(response.DisplayString);
         }
     }
 }

@@ -1100,5 +1100,10 @@ namespace MSR.Answer.API.V1.Extentions
             return new ProcedureExportQueryFilters(request.Id, request.Name, request.ProcedureTypeName, request.Duration, request.DurationType, request.Revision
                                                     , request.CreatedFullName, request.CreatedOn, request.LastUpdatedFullName, request.LastUpdatedOn);
         }
+
+        public static UpdateWorkOrderPartCycleCount ToUpdateWorkOrderPartCycleCount(this CycleCountUpdateRequest request)
+        {
+            return new UpdateWorkOrderPartCycleCount(request.PartNumber, request.SerialNumber, request.CycleCount);
+        }
     }
 }

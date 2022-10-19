@@ -231,7 +231,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 customerModels.Add(customerModel);
             }
 
-            return customerModels;
+            return customerModels.OrderBy(i => i.Name).ToList();
         }
 
         public async Task<IEnumerable<CustomerModel>> ImportCustomers(string csvData)

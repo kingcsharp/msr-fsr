@@ -1,38 +1,53 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { WidgetModule } from '../../layout/widget/widget.module';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { TrendModule } from 'ngx-trend';
-import { UtilsModule } from '../../layout/utils/utils.module';
-import { LiveTileModule } from '../../components/tile/tile.module';
-import { MapaelLayersMapModule } from '../../components/mapael/mapael.module';
-import { NewWidgetModule } from '../../layout/new-widget/widget.module';
-import { FormsModule } from '@angular/forms';
-import { TextMaskModule } from 'angular2-text-mask';
-import { InputSwitchModule } from 'primeng/inputswitch';
-import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { AdminCostSettingsComponent } from './admin-cost-settings/admin-cost-settings.component';
-import { EquipmentMaintenanceComponent } from './equipment-maintenance/equipment-maintenance.component';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { WidgetModule } from "../../layout/widget/widget.module";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { ProgressbarModule } from "ngx-bootstrap/progressbar";
+import { TrendModule } from "ngx-trend";
+import { UtilsModule } from "../../layout/utils/utils.module";
+import { LiveTileModule } from "../../components/tile/tile.module";
+import { MapaelLayersMapModule } from "../../components/mapael/mapael.module";
+import { NewWidgetModule } from "../../layout/new-widget/widget.module";
+import { FormsModule } from "@angular/forms";
+import { TextMaskModule } from "angular2-text-mask";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { DialogModule } from "primeng/dialog";
+import { TableModule } from "primeng/table";
+import { DropdownModule } from "primeng/dropdown";
+import { CalendarModule } from "primeng/calendar";
+import { InputNumberModule } from "primeng/inputnumber";
+import { MultiSelectModule } from "primeng/multiselect";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { SelectButtonModule } from "primeng/selectbutton";
+import { AdminCostSettingsComponent } from "./admin-cost-settings/admin-cost-settings.component";
+import { EquipmentMaintenanceComponent } from "./equipment-maintenance/equipment-maintenance.component";
+import { AdminCycleCountUpdateComponent } from "./admin-cycle-count-update/admin-cycle-count-update.component";
 
 export const routes = [
-  { path: '', redirectTo: 'equipmentmaintenance', pathMatch: 'full' },
-  { path: 'equipmentmaintenance', component: EquipmentMaintenanceComponent, pathMatch: 'full' },
-  { path: 'admincostsettings', component: AdminCostSettingsComponent, pathMatch: 'full' },
+  { path: "", redirectTo: "equipmentmaintenance", pathMatch: "full" },
+  {
+    path: "equipmentmaintenance",
+    component: EquipmentMaintenanceComponent,
+    pathMatch: "full",
+  },
+  {
+    path: "admincostsettings",
+    component: AdminCostSettingsComponent,
+    pathMatch: "full",
+  },
+  {
+    path: "admincyclecountupdate",
+    component: AdminCycleCountUpdateComponent,
+    pathMatch: "full",
+  },
 ];
 
 @NgModule({
   declarations: [
     AdminCostSettingsComponent,
-    EquipmentMaintenanceComponent
+    EquipmentMaintenanceComponent,
+    AdminCycleCountUpdateComponent,
   ],
   imports: [
     CommonModule,
@@ -56,9 +71,9 @@ export const routes = [
     MapaelLayersMapModule,
     NewWidgetModule,
     ConfirmDialogModule,
-    SelectButtonModule
+    SelectButtonModule,
   ],
-  providers: []
+  providers: [],
 })
 export class UtilitiesModule {
   static routes = routes;
