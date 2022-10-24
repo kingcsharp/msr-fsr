@@ -7,6 +7,7 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface ICustomerService
     {
+        Task<CustomerModel> GetCustomerByNameAsync(string name);
         Task<CustomerModel> GetCustomerAsync(int id);
         Task<List<CustomerModel>> GetCustomersAsync(GetMultipleCustomers command);
         Task<CustomerModel> CreateCustomerAsync(CreateCustomer command, bool import = false);
