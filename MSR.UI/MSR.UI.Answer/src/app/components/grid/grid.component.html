@@ -141,6 +141,11 @@
       </td>
     </tr>
   </ng-template>
+  <ng-template pTemplate="footer">
+    <tr>
+      <td *ngIf="totals" class="footer-summary" [attr.colspan]="gridSaved.visibleColumns"><em>Total: {{this.totals | currency}}</em></td>
+    </tr>
+</ng-template>
 </p-table>
 
 <ng-template #rowViewData let-colsDataAndSettings="colsDataAndSettings">
