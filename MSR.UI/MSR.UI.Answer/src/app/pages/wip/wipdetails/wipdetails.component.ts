@@ -196,7 +196,7 @@ export class WipdetailsComponent implements OnInit {
   getWorkOrder(workOrderId: number) {
     this.globals.showLoader(true);
     this.workOrdersService
-      .workOrder(workOrderId, env.apiVersion)
+      .workOrderGet(workOrderId, env.apiVersion)
       .pipe(take(1))
       .subscribe(
         responseHandler((response) => {
@@ -533,31 +533,31 @@ export class WipdetailsComponent implements OnInit {
     });
   }
 
-  public submitSerialNumber(partId, value: string){
-    this.updatePartField(partId, 'serialNumber', value);
+  public submitSerialNumber(partId, value: string) {
+    this.updatePartField(partId, "serialNumber", value);
   }
 
-  submitAllWorkOrderParts(e){
-    const input = e.target.parentNode.querySelector('input[type=text]');
+  submitAllWorkOrderParts(e) {
+    const input = e.target.parentNode.querySelector("input[type=text]");
 
     const bulkUpdateWorkOrderPartRequest = new BulkUpdateWorkOrderPartRequest({
-      workOrderPartIds: this.workOrderModel.workOrderParts.map(wop => wop.id),
-      partData: input.value
-    })
+      workOrderPartIds: this.workOrderModel.workOrderParts.map((wop) => wop.id),
+      partData: input.value,
+    });
 
     this.globals.showLoader(true);
     this.workOrderPartService
       .bulk(env.apiVersion, bulkUpdateWorkOrderPartRequest)
       .pipe(take(1))
       .subscribe((response) => {
-        this.workOrderModel.workOrderParts.forEach(wop => {
-            wop.partData = input.value;
+        this.workOrderModel.workOrderParts.forEach((wop) => {
+          wop.partData = input.value;
         });
       });
   }
 
-  public submitPartData(partId, value: string){
-    this.updatePartField(partId, 'partData', value);
+  public submitPartData(partId, value: string) {
+    this.updatePartField(partId, "partData", value);
   }
 
   /**
@@ -566,7 +566,11 @@ export class WipdetailsComponent implements OnInit {
    * @param field  Field to update on the part
    * @param value Value to update on the field
    */
-  private updatePartField(partId, field: keyof UpdateWorkOrderPartRequest, value: string) {
+  private updatePartField(
+    partId,
+    field: keyof UpdateWorkOrderPartRequest,
+    value: string
+  ) {
     let workOrderPart = this.workOrderModel.workOrderParts.find(
       (s) => s.id === partId
     );
@@ -576,7 +580,6 @@ export class WipdetailsComponent implements OnInit {
       workOrderPartId: partId,
       serialNumber: workOrderPart.serialNumber,
       partData: workOrderPart.partData,
-
     } as IUpdateWorkOrderPartRequest);
     // Updates the field with the new value that we are updating
     updateWorkOrderRequest[field as string] = value;
@@ -591,8 +594,6 @@ export class WipdetailsComponent implements OnInit {
         workOrderPart[field] = value;
       });
   }
-
-
 
   updateWorkOrderTaskToViewAndInProgress(
     workOrderTaskModel: WorkOrderTaskModel

@@ -470,7 +470,9 @@ export class WipComponent implements OnInit, AfterViewInit {
   onChangePrice(rowIndex: number) {
     this.currentRowIndex = rowIndex;
     let invalidPriceError = false;
-    if (!Number(this.data[this.currentRowIndex].price)) {
+    const price = Number(this.data[this.currentRowIndex].price);
+
+    if (!this.data[this.currentRowIndex].price || isNaN(price) || price < 0) {
       invalidPriceError = true;
     }
     this.invalidPriceError = invalidPriceError;
