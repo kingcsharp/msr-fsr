@@ -36,6 +36,7 @@ namespace MSR.Answer.API.V1.Controllers
             _workOrderViewService = workOrderViewService;
         }
 
+        #region GET
         /// <summary>
         /// Returns a summary of COMPLETED or CANCELLED WorkOrders
         /// </summary>
@@ -122,7 +123,29 @@ namespace MSR.Answer.API.V1.Controllers
             var portalWorkOrderMenuViews = await _workOrderViewService.GetPortalWorkOrderMenuAsync(queryModel);
             return GenerateOkViewResponse(portalWorkOrderMenuViews.data, portalWorkOrderMenuViews.totalRows);
         }
+        #endregion
 
+        #region POST
+        [HttpPost("AddNCRWorkOrderTask")]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderTaskModel>>))]
+        public async Task<IActionResult> AddNCRWorkOrderTask([FromBody] AddNCRWorkOrderTaskRequest request)
+        {
+            var command = request.ToAddNCRWorkOrderTaskCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderTaskModel>>("NCR Work Order Task has been added!");
+        }
+
+        [HttpPost("Create")]
+        [SwaggerResponse(typeof(AuditActionResult<string>))]
+        public async Task<IActionResult> CreateWorkOrder([FromBody] CreateWorkOrderRequest request)
+        {
+            var command = request.ToCreateWorkOrderCommand();
+            var returnValue = await _dispatcher.DispatchAsync(command);
+            return returnValue.ToOkObjectResponse<string>("WorkOrder Created Successfully");
+        }
+        #endregion
+
+        #region PATCH
         [HttpPatch("Message")]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderMessageModel>))]
         public async Task<IActionResult> AddMessage([FromBody, Required] CreateWorkOrderMessageRequest request)
@@ -151,24 +174,6 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<WorkOrderTaskModel>>("Work Order has been cancelled!");
         }
 
-        [HttpPost("AddNCRWorkOrderTask")]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderTaskModel>>))]
-        public async Task<IActionResult> AddNCRWorkOrderTask([FromBody] AddNCRWorkOrderTaskRequest request)
-        {
-            var command = request.ToAddNCRWorkOrderTaskCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<WorkOrderTaskModel>>("NCR Work Order Task has been added!");
-        }
-
-        [HttpPost("Create")]
-        [SwaggerResponse(typeof(AuditActionResult<string>))]
-        public async Task<IActionResult> CreateWorkOrder([FromBody] CreateWorkOrderRequest request)
-        {
-            var command = request.ToCreateWorkOrderCommand();
-            var returnValue = await _dispatcher.DispatchAsync(command);
-            return returnValue.ToOkObjectResponse<string>("WorkOrder Created Successfully");
-        }
-
         [HttpPatch("UpdatePrice")]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
         public async Task<IActionResult> UpdateWorkOrderPrice([FromBody] UpdateWorkOrderPriceRequest request)
@@ -187,11 +192,34 @@ namespace MSR.Answer.API.V1.Controllers
                 var command = request.ToUpdateWorkOrderEndDateCommand();
                 var ret = await _dispatcher.DispatchAsync(command);
                 return ret.ToOkObjectResponse<WorkOrderModel>("Work Order Scheduled End Date has been updated!");
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
-            
+
         }
+        #endregion
+
+        #region PUT
+        #endregion
+
+        #region DELETE
+        [HttpDelete("{id}")]
+        [SwaggerResponse(typeof(AuditActionResult<bool>))]
+        public async Task<IActionResult> DeleteWorkOrderAsync(int id)
+        {
+            var command = new DeleteWorkOrder(id);
+            var response = await _dispatcher.DispatchAsync(command);
+
+            return response.ToOkObjectResponse<bool>();
+
+        }
+        #endregion
+
+
+
+
+
     }
 }

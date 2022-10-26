@@ -398,6 +398,72 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
+            //Check to see if it's been invoiced
+            var invoicedItem = await _unitOfWork.InvoiceItems.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
+
+            if (invoicedItem.Any())
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} with ID: {command.Id} has been invoiced and cannot be deleted", DomainError.Conflict);
+            }
+
+            var workOrderMessages = await  _unitOfWork.WorkOrderMessages.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
+            foreach(var message in workOrderMessages)
+            {
+                _unitOfWork.WorkOrderMessages.Delete(false,message);
+            }
+            await _unitOfWork.SaveChangesAsync();
+            var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
+            var workOrderPartIds = workOrderParts.Select(i => i.Id).ToList();
+
+            var workOrderPartNCRMaps = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => workOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
+            foreach(var ncrMap in workOrderPartNCRMaps)
+            {
+                _unitOfWork.WorkOrderPartNCRMap.Delete(false, ncrMap);
+            }
+            await _unitOfWork.SaveChangesAsync();
+
+            foreach (var part in workOrderParts)
+            {
+                
+                _unitOfWork.WorkOrderParts.Delete(false, part);
+            }
+            await _unitOfWork.SaveChangesAsync();
+            var workOrderTasks = await _unitOfWork.WorkOrderTasks.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
+            var workOrderTaskIds = workOrderTasks.Select(i => i.Id).ToList();
+
+            var workOrderTaskMonitors = await _unitOfWork.WorkOrderTaskMonitors.Query().Where(i => workOrderTaskIds.Contains(i.WorkOrderTaskId)).ToListAsync();
+            var fileEntityMaps = await _unitOfWork.FileEntityMap.Query().Where(i => i.EntityTableName == "WorkOrderTask" && workOrderTaskIds.Contains(i.EntityId)).ToListAsync();
+            var fileIds = fileEntityMaps.Select(i => i.FileId).ToList();
+            var files = await _unitOfWork.Files.Query().Where(i => fileIds.Contains(i.Id)).ToListAsync();
+
+            foreach(var file in files)
+            {
+                _unitOfWork.Files.Delete(false, file);
+            }
+            await _unitOfWork.SaveChangesAsync();
+
+            foreach(var monitor in workOrderTaskMonitors)
+            {
+                _unitOfWork.WorkOrderTaskMonitors.Delete(false, monitor);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            foreach (var task in workOrderTasks)
+            {
+                _unitOfWork.WorkOrderTasks.Delete(false, task);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var stats = await _unitOfWork.WorkOrderStats.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
+            foreach(var stat in stats)
+            {
+                _unitOfWork.WorkOrderStats.Delete(false, stat);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
             _unitOfWork.WorkOrders.Delete(false, workOrder.Id);
 
             // This will call SaveChangesAsync
@@ -406,11 +472,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _ = _messageHub.SendWorkOrderUpdate(new WorkOrderStatusUpdate()
             {
                 workOrderId = workOrder.Id,
-                workOrderStatus = TranslateWOStatusToViewModel(workOrder.WorkOrderTasks)
+                workOrderStatus = "Deleted"
             });
 
             return true;
         }
+
         /// <summary>
         /// Create the EF objects based on the Procedure, ProcedureStep, and
         /// ProcedureStepMonitor definitions in the database.
