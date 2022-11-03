@@ -161,8 +161,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetPurchaseOrderDBRequest, GetPurchaseOrderDBView>();
             CreateMap<GetAssignedWorkOrdersRequest, GetAssignedWorkOrders>();
             CreateMap<GetQuotesProductsRequest, ProductDownloadFilter>();
-            CreateMap<UpdateWorkOrderPriceRequest, UpdateWorkOrderPrice>()
-                .ForMember(dest => dest.Price, opts => opts.Condition(src => src.Price > 0));
+            CreateMap<UpdateWorkOrderPriceRequest, UpdateWorkOrderPrice>();
             CreateMap<PurchaseRequest, PurchaseItem>();
             CreateMap<UpdateWorkOrderEndDateRequest, UpdateWorkOrderEndDate>();
             CreateMap<ReorderStepRequest, ReorderStep>();

@@ -290,8 +290,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.WorkOrderProducts, opt => opt.Ignore());
             CreateMap<CreateWorkOrder, WorkOrder>();
             CreateMap<UpdateWorkOrderPrice, WorkOrder>()
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderId))
-                .ForMember(dest => dest.Price, opts => opts.Condition(src => src.Price > 0));
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderId));
             CreateMap<UpdateWorkOrderPrice, WorkOrder>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));

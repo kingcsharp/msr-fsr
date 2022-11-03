@@ -406,28 +406,37 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} with ID: {command.Id} has been invoiced and cannot be deleted", DomainError.Conflict);
             }
 
-            var workOrderMessages = await  _unitOfWork.WorkOrderMessages.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
-            foreach(var message in workOrderMessages)
+            var workOrderMessages = await _unitOfWork.WorkOrderMessages.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
+            if (workOrderMessages.Any())
             {
-                _unitOfWork.WorkOrderMessages.Delete(false,message);
+                foreach (var message in workOrderMessages)
+                {
+                    _unitOfWork.WorkOrderMessages.Delete(false, message);
+                }
+                await _unitOfWork.SaveChangesAsync();
             }
-            await _unitOfWork.SaveChangesAsync();
+
             var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
             var workOrderPartIds = workOrderParts.Select(i => i.Id).ToList();
 
             var workOrderPartNCRMaps = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => workOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
-            foreach(var ncrMap in workOrderPartNCRMaps)
+            if (workOrderPartNCRMaps.Any())
             {
-                _unitOfWork.WorkOrderPartNCRMap.Delete(false, ncrMap);
+                foreach (var ncrMap in workOrderPartNCRMaps)
+                {
+                    _unitOfWork.WorkOrderPartNCRMap.Delete(false, ncrMap);
+                }
+                await _unitOfWork.SaveChangesAsync();
             }
-            await _unitOfWork.SaveChangesAsync();
+            if (workOrderParts.Any())
+            {
+                foreach (var part in workOrderParts)
+                {
+                    _unitOfWork.WorkOrderParts.Delete(false, part);
+                }
+                await _unitOfWork.SaveChangesAsync();
+            }
 
-            foreach (var part in workOrderParts)
-            {
-                
-                _unitOfWork.WorkOrderParts.Delete(false, part);
-            }
-            await _unitOfWork.SaveChangesAsync();
             var workOrderTasks = await _unitOfWork.WorkOrderTasks.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
             var workOrderTaskIds = workOrderTasks.Select(i => i.Id).ToList();
 
@@ -436,33 +445,54 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var fileIds = fileEntityMaps.Select(i => i.FileId).ToList();
             var files = await _unitOfWork.Files.Query().Where(i => fileIds.Contains(i.Id)).ToListAsync();
 
-            foreach(var file in files)
+            if (files.Any())
             {
-                _unitOfWork.Files.Delete(false, file);
-            }
-            await _unitOfWork.SaveChangesAsync();
-
-            foreach(var monitor in workOrderTaskMonitors)
-            {
-                _unitOfWork.WorkOrderTaskMonitors.Delete(false, monitor);
-            }
-
-            await _unitOfWork.SaveChangesAsync();
-
-            foreach (var task in workOrderTasks)
-            {
-                _unitOfWork.WorkOrderTasks.Delete(false, task);
+                for (int i = 0; i < files.Count; i++)
+                {
+                    EntityFramework.Entities.File file = files[i];
+                    _unitOfWork.Files.Delete(false, file);
+                }
+                await _unitOfWork.SaveChangesAsync();
             }
 
-            await _unitOfWork.SaveChangesAsync();
+            if (workOrderTaskMonitors.Any())
+            {
+                for (var i = 0; i < workOrderTaskMonitors.Count; i++)
+                {
+                    WorkOrderTaskMonitor monitor = workOrderTaskMonitors[i];
+                    _unitOfWork.WorkOrderTaskMonitors.Delete(false, monitor);
+                }
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            if (workOrderTasks.Any())
+            {
+                foreach (var task in workOrderTasks)
+                {
+                    _unitOfWork.WorkOrderTasks.Delete(false, task);
+                }
+                await _unitOfWork.SaveChangesAsync();
+            }
 
             var stats = await _unitOfWork.WorkOrderStats.Query().Where(i => i.WorkOrderId == command.Id).ToListAsync();
-            foreach(var stat in stats)
+            if (stats.Any())
             {
-                _unitOfWork.WorkOrderStats.Delete(false, stat);
+                foreach (var stat in stats)
+                {
+                    _unitOfWork.WorkOrderStats.Delete(false, stat);
+                }
+                await _unitOfWork.SaveChangesAsync();
             }
 
-            await _unitOfWork.SaveChangesAsync();
+            var cancelledLog = _unitOfWork.CancelledWorkOrderLogs.Query().Where(i => i.WorkOrderId == workOrder.Id);
+            if (cancelledLog.Any())
+            {
+                foreach (var log in cancelledLog)
+                {
+                    _unitOfWork.CancelledWorkOrderLogs.Delete(false, log);
+                }
+                await _unitOfWork.SaveChangesAsync();
+            }
 
             _unitOfWork.WorkOrders.Delete(false, workOrder.Id);
 
