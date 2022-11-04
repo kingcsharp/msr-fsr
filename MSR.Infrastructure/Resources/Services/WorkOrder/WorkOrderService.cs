@@ -1124,6 +1124,12 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
+            if (!cancelWorkOrder.Invoiceable)
+            {
+                await DeleteWorkOrderAsync(new DeleteWorkOrder(cancelWorkOrder.WorkOrderId));
+                return new List<WorkOrderTaskModel>();
+            }
+
             var workOrderEntity = await _unitOfWork.WorkOrders.Query()
                 .Include(x => x.WorkOrderTasks)
                 .Where(x => x.Id == cancelWorkOrder.WorkOrderId)
