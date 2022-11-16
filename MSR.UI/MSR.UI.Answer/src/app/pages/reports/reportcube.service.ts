@@ -748,13 +748,13 @@ export class ReportCubeService {
             id: "subtotal",
             label: "SubTotal",
             visible: true,
-            type: this.enumColumnType.String,
+            type: this.enumColumnType.Money,
           }),
           new ColumnsSaved({
             id: "wtax",
             label: "w/ Tax",
             visible: true,
-            type: this.enumColumnType.String,
+            type: this.enumColumnType.Money,
           }),
           new ColumnsSaved({
             id: "status",
