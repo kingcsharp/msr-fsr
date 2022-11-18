@@ -412,6 +412,12 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
+            id: "mttn2",
+            label: "MTTN",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
             id: "quantity",
             label: "Quantity",
             visible: true,
