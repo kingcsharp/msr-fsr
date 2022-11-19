@@ -436,7 +436,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 try
                 {
-                    var customer = await _customerService.GetCustomerByNameAsync(record.Company);
+                    var customer = await _customerService.GetCustomerByNameAsync(record.CustomerName);
                     var createProductModel = _mapper.Map<CreateProduct>(record);
                     createProductModel.CustomerId = customer.Id;
                     var productModel = await CreateProductAsync(createProductModel);

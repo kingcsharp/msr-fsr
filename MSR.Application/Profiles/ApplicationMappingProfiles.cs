@@ -23,11 +23,11 @@ namespace MSR.Application.Profiles
                 .ForMember(dest => dest.CycleCount, opts => opts.MapFrom(src => src.CycleCount.HasValue ? src.CycleCount.Value : 0));
             CreateMap<QuoteImportItem, CreateProduct>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.ProductName))
-                .ForMember(dest => dest.DivisionFab, opts => opts.MapFrom(src => src.DivisionFabNumber))
-                .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.PartKitNumber))
+                .ForMember(dest => dest.DivisionFab, opts => opts.MapFrom(src => src.DivisionFab))
+                .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.PartKitNo))
                 .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.ProcedureId))
                 .ForMember(dest => dest.Revision, opts => opts.MapFrom(src => src.Revision))
-                .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.TotalPrice))
+                .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.TotalSalesPrice))
                 .ForMember(dest => dest.CycleTime, opts => opts.MapFrom(src => src.CycleTime))
                 ;    
         }
