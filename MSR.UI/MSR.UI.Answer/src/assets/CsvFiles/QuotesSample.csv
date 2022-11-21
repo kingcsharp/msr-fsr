@@ -1,1 +1,1 @@
-Submitted Date,Company,Submitted By,Division/Fab #,Part/Kit Number,Segregation Type,Procedure ID,Procedure Name,Product Name,Revision,Total Price,Cycle Time
+Id,Name,Revision,CustomerId,CustomerName,ProcedureId,ProcedureName,PartId,PartName,LaborCost,EquipmentCost,MaterialCost,SalesTax,TotalSalePrice,CycleTime,QuoteId,DivisionFab,PartKitNo,CustomerRequirementId
