@@ -10,6 +10,8 @@
   .roll-label {
     margin-bottom: 0in !important;
     margin-top: 0in !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
 
