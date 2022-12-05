@@ -53,9 +53,9 @@ namespace MSR.Domain.Validators
                  * to ensure user is notified when bad data is entered.
                 **/
 
-                if (string.IsNullOrEmpty(record.CustomerName))
+                if (string.IsNullOrEmpty(record.Name))
                 {
-                    importError.Errors.Add($"{nameof(record.CustomerName)} does not have a value");
+                    importError.Errors.Add($"{nameof(record.Name)} does not have a value");
                 }
 
                 var customer = _customerService.GetCustomerByNameAsync(record.CustomerName).Result;
@@ -69,7 +69,12 @@ namespace MSR.Domain.Validators
                     importError.Errors.Add($"{nameof(record.ProcedureId)} does not have a value");
                 }
 
-                if (record.PartKitNo == 0)
+                if (record.PartId == 0)
+                {
+                    importError.Errors.Add($"{nameof(record.PartId)} does not have a value");
+                }
+
+                if (string.IsNullOrEmpty(record.PartKitNo))
                 {
                     importError.Errors.Add($"{nameof(record.PartKitNo)} does not have a value");
                 }

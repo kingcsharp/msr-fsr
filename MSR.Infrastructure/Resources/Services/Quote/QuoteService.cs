@@ -123,7 +123,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 try
                 {
-                    var customerId = _customerService.GetCustomerByNameAsync(record.CustomerName).Result.Id;
+                    var customerId = _customerService.GetCustomerByNameAsync(record.Name).Result.Id;
 
                     if (customerIds.Contains(customerId))
                     {
