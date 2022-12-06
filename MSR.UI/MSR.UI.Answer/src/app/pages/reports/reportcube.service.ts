@@ -29,6 +29,11 @@ export class ReportCubeService {
     private globals: Globals
   ) {}
 
+  public getReportName(reportInfo: ReportModel) {
+    return reportInfo.name.replace(/\s/g, "") +
+    reportInfo.subtitle.replace(/\s/g, "")
+  }
+
   public getReport = async (
     reportInfo: ReportModel,
     pagingModel: PagingModel = null,
@@ -53,12 +58,15 @@ export class ReportCubeService {
       .get(apiEndPointUrl, { headers: headers })
       .toPromise()
       .then((response) => {
+        const reportName = this.getReportName(reportInfo);
         let newPagingModel = new PagingModel({
           pageNumber: forReportDownload ? response["pagenumber"] : undefined,
           pageSize: forReportDownload ? response["pagesize"] : undefined,
           totalRows: response["totalrows"],
           data: response["data"],
           partsdata: response["partsdata"],
+          totals: response["totals"],
+          showTotals: reportName === 'CombinedFinancialDatabyWorkOrder' || reportName === 'WorkInProcessbyWorkOrder'
         } as IPagingModel);
 
         return this.filterReportData(newPagingModel, reportInfo);
@@ -89,10 +97,7 @@ export class ReportCubeService {
   };
 
   public getArchivedEnum(reportInfo: ReportModel) {
-    switch (
-      reportInfo.name.replace(/\s/g, "") +
-      reportInfo.subtitle.replace(/\s/g, "")
-    ) {
+    switch (this.getReportName(reportInfo)) {
       case "CombinedFinancialDatabyWorkOrder":
       case "WorkOrdersNotInvoicedbyWorkOrder":
         return EnumAwsFolders.Combinedfinancialdata;
@@ -102,10 +107,7 @@ export class ReportCubeService {
   }
 
   public getReportColumns(reportInfo: ReportModel) {
-    switch (
-      reportInfo.name.replace(/\s/g, "") +
-      reportInfo.subtitle.replace(/\s/g, "")
-    ) {
+    switch (this.getReportName(reportInfo)) {
       case "PartsCycleCountsbyWorkOrderDate":
         return [
           new ColumnsSaved({
@@ -1173,10 +1175,7 @@ export class ReportCubeService {
   }
 
   private filterReportData(pagingModel: PagingModel, reportInfo: ReportModel) {
-    switch (
-      reportInfo.name.replace(/\s/g, "") +
-      reportInfo.subtitle.replace(/\s/g, "")
-    ) {
+    switch (this.getReportName(reportInfo)) {
       case "PartsCycleCountsbyWorkOrderDate":
         const gridData = pagingModel.data.map((elem) => {
           elem = this.removePrefixesOfPropertyNames(elem);

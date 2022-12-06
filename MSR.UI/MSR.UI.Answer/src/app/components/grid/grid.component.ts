@@ -69,7 +69,6 @@ export class GridComponent implements OnInit {
   waitingToStartOrInProgressStatuses: Array<any>;
   mainSub: Array<any>;
   partOptions: Array<any> = new Array<any>();
-  totals: number;
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
@@ -185,10 +184,6 @@ export class GridComponent implements OnInit {
       this.reportCubeService
         .getReport(reportInfo, this.pagingModel)
         .then((responsePagingModel) => {
-          this.totals = responsePagingModel.data
-            .map(d => d.total)
-            .filter(v => Boolean(v))
-            .reduce((partialSum, total) => partialSum + total, 0);
           if (responsePagingModel.HasChart) {
             this.hasChart = true;
             this.gridData = responsePagingModel.data;
@@ -240,6 +235,8 @@ export class GridComponent implements OnInit {
           this.totalRows = responsePagingModel.totalRows;
           this.pagingModel.pageNumber = responsePagingModel.pageNumber;
           this.pagingModel.pageSize = responsePagingModel.pageSize;
+          this.pagingModel.totals = responsePagingModel.totals;
+          this.pagingModel.showTotals = responsePagingModel.showTotals;
           this.globals.showLoader(false);
         });
     }
