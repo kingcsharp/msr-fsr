@@ -222,7 +222,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   showPhotos(rowData) {
     this.globals.showLoader(true);
     this.workOrderService
-      .workOrder(rowData.workOrderId, env.apiVersion)
+      .workOrderGet(rowData.workOrderId, env.apiVersion)
       .pipe(take(1))
       .subscribe(
         responseHandler((response) => {
@@ -282,7 +282,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
   showFiles(rowData) {
     this.globals.showLoader(true);
     this.workOrderService
-      .workOrder(rowData.workOrderId, env.apiVersion)
+      .workOrderGet(rowData.workOrderId, env.apiVersion)
       .pipe(take(1))
       .subscribe(
         responseHandler((response) => {
@@ -459,7 +459,7 @@ export class WipComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedReport = reportType;
     if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId) {
       this.workOrderService
-        .workOrder(row.colData.workOrderId, env.apiVersion)
+        .workOrderGet(row.colData.workOrderId, env.apiVersion)
         .pipe(take(1))
         .subscribe(
           responseHandler((response) => {

@@ -8121,7 +8121,7 @@ export class WorkOrderService {
      * Get work order list by id, customerid, locationid, or date
      * @param id Get work order by ID
      */
-    workOrder(id: number | null, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+    workOrderGet(id: number | null, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -8140,11 +8140,11 @@ export class WorkOrderService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processWorkOrder(response_);
+            return this.processWorkOrderGet(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processWorkOrder(<any>response_);
+                    return this.processWorkOrderGet(<any>response_);
                 } catch (e) {
                     return <Observable<AuditActionResultOfICollectionOfWorkOrderModel>><any>_observableThrow(e);
                 }
@@ -8153,7 +8153,7 @@ export class WorkOrderService {
         }));
     }
 
-    protected processWorkOrder(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+    protected processWorkOrderGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -8173,6 +8173,60 @@ export class WorkOrderService {
             }));
         }
         return _observableOf<AuditActionResultOfICollectionOfWorkOrderModel>(<any>null);
+    }
+
+    workOrderDelete(id: number, version: string): Observable<AuditActionResultOfBoolean> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkOrderDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkOrderDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfBoolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfBoolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkOrderDelete(response: HttpResponseBase): Observable<AuditActionResultOfBoolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfBoolean.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfBoolean>(<any>null);
     }
 
     /**
@@ -8316,6 +8370,116 @@ export class WorkOrderService {
             }));
         }
         return _observableOf<AuditActionResultOfICollectionOfPortalWorkOrderView>(<any>null);
+    }
+
+    addNCRWorkOrderTask(version: string, request: AddNCRWorkOrderTaskRequest): Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/AddNCRWorkOrderTask";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddNCRWorkOrderTask(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddNCRWorkOrderTask(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddNCRWorkOrderTask(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfWorkOrderTaskModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfWorkOrderTaskModel>(<any>null);
+    }
+
+    create(version: string, request: CreateWorkOrderRequest): Observable<AuditActionResultOfString> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/Create";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfString>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfString>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<AuditActionResultOfString> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfString.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfString>(<any>null);
     }
 
     message(version: string, request: CreateWorkOrderMessageRequest): Observable<AuditActionResultOfWorkOrderMessageModel> {
@@ -8481,116 +8645,6 @@ export class WorkOrderService {
             }));
         }
         return _observableOf<AuditActionResultOfICollectionOfWorkOrderTaskModel>(<any>null);
-    }
-
-    addNCRWorkOrderTask(version: string, request: AddNCRWorkOrderTaskRequest): Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/AddNCRWorkOrderTask";
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddNCRWorkOrderTask(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAddNCRWorkOrderTask(<any>response_);
-                } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processAddNCRWorkOrderTask(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderTaskModel> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfWorkOrderTaskModel.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AuditActionResultOfICollectionOfWorkOrderTaskModel>(<any>null);
-    }
-
-    create(version: string, request: CreateWorkOrderRequest): Observable<AuditActionResultOfString> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/Create";
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreate(<any>response_);
-                } catch (e) {
-                    return <Observable<AuditActionResultOfString>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AuditActionResultOfString>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCreate(response: HttpResponseBase): Observable<AuditActionResultOfString> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfString.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AuditActionResultOfString>(<any>null);
     }
 
     updatePrice(version: string, request: UpdateWorkOrderPriceRequest): Observable<AuditActionResultOfWorkOrderModel> {
@@ -22915,81 +22969,6 @@ export interface IPortalWorkOrderView {
 }
 
 /** Base class for an API call with a typed result */
-export class AuditActionResultOfWorkOrderMessageModel extends AuditActionResult implements IAuditActionResultOfWorkOrderMessageModel {
-    object?: WorkOrderMessageModel | undefined;
-
-    constructor(data?: IAuditActionResultOfWorkOrderMessageModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.object = _data["object"] ? WorkOrderMessageModel.fromJS(_data["object"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfWorkOrderMessageModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfWorkOrderMessageModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-/** Base class for an API call with a typed result */
-export interface IAuditActionResultOfWorkOrderMessageModel extends IAuditActionResult {
-    object?: WorkOrderMessageModel | undefined;
-}
-
-export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageRequest {
-    id!: number;
-    message!: string;
-
-    constructor(data?: ICreateWorkOrderMessageRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.message = _data["message"];
-        }
-    }
-
-    static fromJS(data: any): CreateWorkOrderMessageRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateWorkOrderMessageRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["message"] = this.message;
-        return data; 
-    }
-}
-
-export interface ICreateWorkOrderMessageRequest {
-    id: number;
-    message: string;
-}
-
-/** Base class for an API call with a typed result */
 export class AuditActionResultOfICollectionOfWorkOrderTaskModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderTaskModel {
     object?: WorkOrderTaskModel[] | undefined;
 
@@ -23030,86 +23009,6 @@ export class AuditActionResultOfICollectionOfWorkOrderTaskModel extends AuditAct
 /** Base class for an API call with a typed result */
 export interface IAuditActionResultOfICollectionOfWorkOrderTaskModel extends IAuditActionResult {
     object?: WorkOrderTaskModel[] | undefined;
-}
-
-export class TakeOverWorkOrderRequest implements ITakeOverWorkOrderRequest {
-    workOrderId?: number;
-    userId?: number;
-
-    constructor(data?: ITakeOverWorkOrderRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.workOrderId = _data["workOrderId"];
-            this.userId = _data["userId"];
-        }
-    }
-
-    static fromJS(data: any): TakeOverWorkOrderRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new TakeOverWorkOrderRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["workOrderId"] = this.workOrderId;
-        data["userId"] = this.userId;
-        return data; 
-    }
-}
-
-export interface ITakeOverWorkOrderRequest {
-    workOrderId?: number;
-    userId?: number;
-}
-
-export class CancelWorkOrderRequest implements ICancelWorkOrderRequest {
-    workOrderId?: number;
-    invoiceable?: boolean;
-
-    constructor(data?: ICancelWorkOrderRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.workOrderId = _data["workOrderId"];
-            this.invoiceable = _data["invoiceable"];
-        }
-    }
-
-    static fromJS(data: any): CancelWorkOrderRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new CancelWorkOrderRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["workOrderId"] = this.workOrderId;
-        data["invoiceable"] = this.invoiceable;
-        return data; 
-    }
-}
-
-export interface ICancelWorkOrderRequest {
-    workOrderId?: number;
-    invoiceable?: boolean;
 }
 
 export class AddNCRWorkOrderTaskRequest implements IAddNCRWorkOrderTaskRequest {
@@ -23306,6 +23205,161 @@ export interface IWorkOrderProductRequest {
     partData?: string[] | undefined;
     qty?: number;
     price?: number;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfWorkOrderMessageModel extends AuditActionResult implements IAuditActionResultOfWorkOrderMessageModel {
+    object?: WorkOrderMessageModel | undefined;
+
+    constructor(data?: IAuditActionResultOfWorkOrderMessageModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? WorkOrderMessageModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfWorkOrderMessageModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfWorkOrderMessageModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfWorkOrderMessageModel extends IAuditActionResult {
+    object?: WorkOrderMessageModel | undefined;
+}
+
+export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageRequest {
+    id!: number;
+    message!: string;
+
+    constructor(data?: ICreateWorkOrderMessageRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): CreateWorkOrderMessageRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateWorkOrderMessageRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["message"] = this.message;
+        return data; 
+    }
+}
+
+export interface ICreateWorkOrderMessageRequest {
+    id: number;
+    message: string;
+}
+
+export class TakeOverWorkOrderRequest implements ITakeOverWorkOrderRequest {
+    workOrderId?: number;
+    userId?: number;
+
+    constructor(data?: ITakeOverWorkOrderRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.userId = _data["userId"];
+        }
+    }
+
+    static fromJS(data: any): TakeOverWorkOrderRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new TakeOverWorkOrderRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["userId"] = this.userId;
+        return data; 
+    }
+}
+
+export interface ITakeOverWorkOrderRequest {
+    workOrderId?: number;
+    userId?: number;
+}
+
+export class CancelWorkOrderRequest implements ICancelWorkOrderRequest {
+    workOrderId?: number;
+    invoiceable?: boolean;
+
+    constructor(data?: ICancelWorkOrderRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.invoiceable = _data["invoiceable"];
+        }
+    }
+
+    static fromJS(data: any): CancelWorkOrderRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CancelWorkOrderRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["invoiceable"] = this.invoiceable;
+        return data; 
+    }
+}
+
+export interface ICancelWorkOrderRequest {
+    workOrderId?: number;
+    invoiceable?: boolean;
 }
 
 /** Base class for an API call with a typed result */
