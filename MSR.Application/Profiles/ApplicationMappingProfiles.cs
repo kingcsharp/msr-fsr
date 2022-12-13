@@ -24,7 +24,7 @@ namespace MSR.Application.Profiles
             CreateMap<QuoteImportItem, CreateProduct>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.DivisionFab, opts => opts.MapFrom(src => src.DivisionFab))
-                .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.PartKitNo))
+                .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.PartId))
                 .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.ProcedureId))
                 .ForMember(dest => dest.Revision, opts => opts.MapFrom(src => src.Revision))
                 .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.TotalSalePrice))
