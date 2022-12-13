@@ -6,7 +6,7 @@
     "install": "napa",
     "ng": "ng",
     "start": "nswag run && ng serve",
-    "startdev": "nswag run && ng serve --configuration dev",
+    "startdev": "nswag run /runtime:NetCore21 && ng serve --configuration dev",
     "nswag": "nswag run",
     "build": "nswag run && ng build",
     "builddev": "ng build --configuration=dev",
