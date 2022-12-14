@@ -69,21 +69,6 @@
               (click)="cg.filter(dt,'workflowGroupName')"></i>
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('workflowCreatedByName',gridSettings)">
-          <div class="position-relative">
-            <input id="workflowCreatedByName" pInputText type="text" tooltip="Search by Initiatior"
-              (input)="dt.filter($event.target.value, 'workflowCreatedByName', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['workflowCreatedByName']?.value">
-            <i *ngIf="dt.filters['workflowCreatedByName']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'workflowCreatedByName')"></i>
-          </div>
-        </th>
-        <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          <div class="position-relative" tooltip="Search by Created On Date">
-            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
-            </pcalendar-wrapper>
-          </div>
-        </th>
         <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
           <div class="position-relative">
             <input id="createdByName" pInputText type="text" tooltip="Search by Created By"
@@ -91,6 +76,12 @@
               [value]="dt.filters['createdByName']?.value">
             <i *ngIf="dt.filters['createdByName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'createdByName')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+          <div class="position-relative" tooltip="Search by Created On Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+            </pcalendar-wrapper>
           </div>
         </th>
         <th></th>
@@ -122,13 +113,10 @@
           {{approval.workflowGroupName}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('workflowCreatedByName',gridSettings)">
-          {{approval.workflowCreatedByName}}
+          {{approval.createdByName}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
           {{approval.createdOn | userTimezone}}
-        </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
-          {{approval.createdByName}}
         </td>
         <td>
           <ng-template #popTemplate let-object="approvalInfo">
@@ -228,21 +216,6 @@
               (click)="cg.filter(dt2,'workflowGroupName')"></i>
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('workflowCreatedByName',gridSettings2)">
-          <div class="position-relative">
-            <input id="workflowCreatedByName2" pInputText type="text" tooltip="Search by Initiatior"
-              (input)="dt2.filter($event.target.value, 'workflowCreatedByName', 'contains')" class="ui-column-filter"
-              [value]="dt2.filters['workflowCreatedByName']?.value">
-            <i *ngIf="dt2.filters['workflowCreatedByName']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt2,'workflowCreatedByName')"></i>
-          </div>
-        </th>
-        <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings2)">
-          <div class="position-relative" tooltip="Search by Created On Date">
-            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
-            </pcalendar-wrapper>
-          </div>
-        </th>
         <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings2)">
           <div class="position-relative">
             <input id="createdByName2" pInputText type="text" tooltip="Search by Created By"
@@ -250,6 +223,12 @@
               [value]="dt2.filters['createdByName']?.value">
             <i *ngIf="dt2.filters['createdByName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt2,'createdByName')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings2)">
+          <div class="position-relative" tooltip="Search by Created On Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+            </pcalendar-wrapper>
           </div>
         </th>
         <th></th>
@@ -280,14 +259,11 @@
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('workflowGroupName',gridSettings2)">
           {{approval.workflowGroupName}}
         </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('workflowCreatedByName',gridSettings2)">
-          {{approval.workflowCreatedByName}}
+        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdByName',gridSettings2)">
+          {{approval.createdByName}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdOn',gridSettings2)">
           {{approval.createdOn | userTimezone}}
-        </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdByName',gridSettings2)">
-          {{approval.createdByName}}
         </td>
         <td>
           <i data-cy="cancel-approval"

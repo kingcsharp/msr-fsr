@@ -83,9 +83,8 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'RequestedChanges', label: 'Requested Changes', visible: true }),
       new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
       new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
-      new ColumnsSaved({ id: 'workflowCreatedByName', label: 'Initiatior', visible: true }),
-      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
-      new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true })
+      new ColumnsSaved({ id: 'createdByName', label: 'Initiatior', visible: true }),
+      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true })
     ];
 
     this.gridStorageId2 = 'approvalGridProducts' + this.elem.nativeElement.tagName.toLowerCase();
@@ -96,9 +95,8 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'RequestedChanges', label: 'Requested Changes', visible: true }),
       new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
       new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
-      new ColumnsSaved({ id: 'workflowCreatedByName', label: 'Initiatior', visible: true }),
-      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
-      new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true })
+      new ColumnsSaved({ id: 'createdByName', label: 'Initiatior', visible: true }),
+      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true })
     ];
     this.route.params.subscribe(routeParams => {
       this.currentRouteApprovalData = { data: this.data, table: routeParams.table };
