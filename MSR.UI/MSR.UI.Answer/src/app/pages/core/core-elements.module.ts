@@ -1,24 +1,24 @@
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 
-import { ButtonsModule } from 'ngx-bootstrap/buttons';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { AlertModule } from 'ngx-bootstrap/alert';
-import { UtilsModule } from '../../layout/utils/utils.module';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { ButtonsModule } from "ngx-bootstrap/buttons";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { AlertModule } from "ngx-bootstrap/alert";
+import { UtilsModule } from "../../layout/utils/utils.module";
+import { TabsModule } from "ngx-bootstrap/tabs";
+import { AccordionModule } from "ngx-bootstrap/accordion";
+import { ModalModule } from "ngx-bootstrap/modal";
 
-import { WidgetModule } from '../../layout/widget/widget.module';
-import { TypographyComponent } from './typography/typography.component';
-import { ColorsComponent } from './colors/colors.component';
+import { WidgetModule } from "../../layout/widget/widget.module";
+import { TypographyComponent } from "./typography/typography.component";
+import { ColorsComponent } from "./colors/colors.component";
 
-export const routes = [
-  { path: '', redirectTo: 'typography', pathMatch: 'full' },
-  { path: 'typography', component: TypographyComponent },
-  { path: 'colors', component: ColorsComponent }
+export const routes: Routes = [
+  { path: "", redirectTo: "typography", pathMatch: "full" },
+  { path: "typography", component: TypographyComponent },
+  { path: "colors", component: ColorsComponent },
 ];
 
 @NgModule({
@@ -38,8 +38,8 @@ export const routes = [
     ButtonsModule.forRoot(),
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-    AccordionModule.forRoot()
-  ]
+    AccordionModule.forRoot(),
+  ],
 })
 export class CoreElementsModule {
   static routes = routes;

@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RouterModule } from "@angular/router";
+import { RouterModule, Routes } from "@angular/router";
 import { TableModule } from "primeng/table";
 import { NewWidgetModule } from "../../layout/new-widget/widget.module";
 import { DialogModule } from "primeng/dialog";
@@ -20,7 +20,7 @@ import { SortableModule } from "ngx-bootstrap/sortable";
 import { ProcedureStepMonitorWrapperComponent } from "../../components/procedure-step-monitor-wrapper/procedure-step-monitor-wrapper.component";
 import { OrderListModule } from "primeng/orderlist";
 
-export const routes = [
+export const routes: Routes = [
   { path: "", redirectTo: "people", pathMatch: "full" },
   { path: "procedures", component: ProceduresComponent, pathMatch: "full" },
   {

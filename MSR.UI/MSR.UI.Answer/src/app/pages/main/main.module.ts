@@ -1,40 +1,47 @@
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule, Routes } from "@angular/router";
+import { WidgetModule } from "../../layout/widget/widget.module";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { ProgressbarModule } from "ngx-bootstrap/progressbar";
+import { UtilsModule } from "../../layout/utils/utils.module";
+import { LiveTileModule } from "../../components/tile/tile.module";
+import { MapaelLayersMapModule } from "../../components/mapael/mapael.module";
+import { NewWidgetModule } from "../../layout/new-widget/widget.module";
+import { UserComponent } from "./user/user.component";
+import { FormsModule } from "@angular/forms";
+import { TextMaskModule } from "angular2-text-mask";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { DialogModule } from "primeng/dialog";
+import { TableModule } from "primeng/table";
+import { DropdownModule } from "primeng/dropdown";
+import { CalendarModule } from "primeng/calendar";
+import { MultiSelectModule } from "primeng/multiselect";
+import { RoleassignmentsComponent } from "./roleassignments/roleassignments.component";
+import { ListboxModule } from "primeng/listbox";
+import { CustomersComponent } from "./customers/customers.component";
+import { CustomerCreateComponent } from "./customer-create/customer-create.component";
+import { CertificationsComponent } from "./certifications/certifications.component";
+import { RoleComponent } from "./role/role.component";
+import { ProfileComponent } from "./profile/profile.component";
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { WidgetModule } from '../../layout/widget/widget.module';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { UtilsModule } from '../../layout/utils/utils.module';
-import { LiveTileModule } from '../../components/tile/tile.module';
-import { MapaelLayersMapModule } from '../../components/mapael/mapael.module';
-import { NewWidgetModule } from '../../layout/new-widget/widget.module';
-import { UserComponent } from './user/user.component';
-import { FormsModule } from '@angular/forms';
-import { TextMaskModule } from 'angular2-text-mask';
-import { InputSwitchModule } from 'primeng/inputswitch';
-import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { RoleassignmentsComponent } from './roleassignments/roleassignments.component';
-import { ListboxModule } from 'primeng/listbox';
-import { CustomersComponent } from './customers/customers.component';
-import { CustomerCreateComponent } from './customer-create/customer-create.component';
-import { CertificationsComponent } from './certifications/certifications.component';
-import { RoleComponent } from './role/role.component';
-import { ProfileComponent } from './profile/profile.component';
-
-export const routes = [
-  { path: '', redirectTo: 'people', pathMatch: 'full' },
-  { path: 'people', component: UserComponent, pathMatch: 'full' },
-  { path: 'roleassignments', component: RoleassignmentsComponent, pathMatch: 'full' },
-  { path: 'customers', component: CustomersComponent, pathMatch: 'full' },
-  { path: 'customer-create', component: CustomerCreateComponent, pathMatch: 'full' },
-  { path: 'training', component: CertificationsComponent, pathMatch: 'full' },
-  { path: 'roles', component: RoleComponent, pathMatch: 'full' },
-  { path: 'profile', component: ProfileComponent, pathMatch: 'full' }
+export const routes: Routes = [
+  { path: "", redirectTo: "people", pathMatch: "full" },
+  { path: "people", component: UserComponent, pathMatch: "full" },
+  {
+    path: "roleassignments",
+    component: RoleassignmentsComponent,
+    pathMatch: "full",
+  },
+  { path: "customers", component: CustomersComponent, pathMatch: "full" },
+  {
+    path: "customer-create",
+    component: CustomerCreateComponent,
+    pathMatch: "full",
+  },
+  { path: "training", component: CertificationsComponent, pathMatch: "full" },
+  { path: "roles", component: RoleComponent, pathMatch: "full" },
+  { path: "profile", component: ProfileComponent, pathMatch: "full" },
 ];
 
 @NgModule({
@@ -45,7 +52,7 @@ export const routes = [
     CustomerCreateComponent,
     CertificationsComponent,
     RoleComponent,
-    ProfileComponent
+    ProfileComponent,
   ],
   imports: [
     CommonModule,
@@ -66,9 +73,9 @@ export const routes = [
     WidgetModule,
     MapaelLayersMapModule,
     NewWidgetModule,
-    ListboxModule
+    ListboxModule,
   ],
-  providers: []
+  providers: [],
 })
 export class MainModule {
   static routes = routes;

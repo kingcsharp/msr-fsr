@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RouterModule } from "@angular/router";
+import { RouterModule, Routes } from "@angular/router";
 import { WidgetModule } from "../../layout/widget/widget.module";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ProgressbarModule } from "ngx-bootstrap/progressbar";
@@ -24,7 +24,7 @@ import { AdminCostSettingsComponent } from "./admin-cost-settings/admin-cost-set
 import { EquipmentMaintenanceComponent } from "./equipment-maintenance/equipment-maintenance.component";
 import { AdminCycleCountUpdateComponent } from "./admin-cycle-count-update/admin-cycle-count-update.component";
 
-export const routes = [
+export const routes: Routes = [
   { path: "", redirectTo: "equipmentmaintenance", pathMatch: "full" },
   {
     path: "equipmentmaintenance",

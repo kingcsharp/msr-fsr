@@ -1,34 +1,54 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ApprovalWorkflowComponent } from './approval-workflow/approval-workflow.component';
-import { RouterModule } from '@angular/router';
-import { WidgetModule } from '../../layout/widget/widget.module';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { UtilsModule } from '../../layout/utils/utils.module';
-import { LiveTileModule } from '../../components/tile/tile.module';
-import { MapaelLayersMapModule } from '../../components/mapael/mapael.module';
-import { NewWidgetModule } from '../../layout/new-widget/widget.module';
-import { FormsModule } from '@angular/forms';
-import { TextMaskModule } from 'angular2-text-mask';
-import { InputSwitchModule } from 'primeng/inputswitch';
-import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { PendingApprovalsComponent } from './pending-approvals/pending-approvals.component';
-import { ApprovalGroupsComponent } from './approval-groups/approval-groups.component';
-import { ApprovalStagesComponent } from './approval-stages/approval-stages.component';
-import { PopoverModule } from 'ngx-bootstrap/popover';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ApprovalWorkflowComponent } from "./approval-workflow/approval-workflow.component";
+import { RouterModule, Routes } from "@angular/router";
+import { WidgetModule } from "../../layout/widget/widget.module";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { ProgressbarModule } from "ngx-bootstrap/progressbar";
+import { UtilsModule } from "../../layout/utils/utils.module";
+import { LiveTileModule } from "../../components/tile/tile.module";
+import { MapaelLayersMapModule } from "../../components/mapael/mapael.module";
+import { NewWidgetModule } from "../../layout/new-widget/widget.module";
+import { FormsModule } from "@angular/forms";
+import { TextMaskModule } from "angular2-text-mask";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { DialogModule } from "primeng/dialog";
+import { TableModule } from "primeng/table";
+import { DropdownModule } from "primeng/dropdown";
+import { CalendarModule } from "primeng/calendar";
+import { MultiSelectModule } from "primeng/multiselect";
+import { PendingApprovalsComponent } from "./pending-approvals/pending-approvals.component";
+import { ApprovalGroupsComponent } from "./approval-groups/approval-groups.component";
+import { ApprovalStagesComponent } from "./approval-stages/approval-stages.component";
+import { PopoverModule } from "ngx-bootstrap/popover";
 
-export const routes = [
-  { path: '', redirectTo: 'workflow', pathMatch: 'full' },
-  { path: 'pendingapproval', redirectTo: 'pendingapproval/9', pathMatch: 'full' },
-  { path: 'approvalworkflows', component: ApprovalWorkflowComponent, pathMatch: 'full' },
-  { path: 'pendingapproval/:table', component: PendingApprovalsComponent, pathMatch: 'full' },
-  { path: 'approvalgroups', component: ApprovalGroupsComponent, pathMatch: 'full' },
-  { path: 'approvalstages', component: ApprovalStagesComponent, pathMatch: 'full' }
+export const routes: Routes = [
+  { path: "", redirectTo: "workflow", pathMatch: "full" },
+  {
+    path: "pendingapproval",
+    redirectTo: "pendingapproval/9",
+    pathMatch: "full",
+  },
+  {
+    path: "approvalworkflows",
+    component: ApprovalWorkflowComponent,
+    pathMatch: "full",
+  },
+  {
+    path: "pendingapproval/:table",
+    component: PendingApprovalsComponent,
+    pathMatch: "full",
+  },
+  {
+    path: "approvalgroups",
+    component: ApprovalGroupsComponent,
+    pathMatch: "full",
+  },
+  {
+    path: "approvalstages",
+    component: ApprovalStagesComponent,
+    pathMatch: "full",
+  },
 ];
 
 @NgModule({
@@ -36,7 +56,7 @@ export const routes = [
     PendingApprovalsComponent,
     ApprovalGroupsComponent,
     ApprovalStagesComponent,
-    ApprovalWorkflowComponent
+    ApprovalWorkflowComponent,
   ],
   imports: [
     CommonModule,
@@ -57,8 +77,8 @@ export const routes = [
     WidgetModule,
     MapaelLayersMapModule,
     NewWidgetModule,
-    PopoverModule.forRoot()
-  ]
+    PopoverModule.forRoot(),
+  ],
 })
 export class WorkflowModule {
   static routes = routes;
