@@ -712,6 +712,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
              * 4k == PurchaseOrder.ReferencePO after the /
              * 2S == MTTN
              * 1T == PartData
+             * 4L == CountryCode
              */
             var recordSeparator = ((char)30).ToString();
             var groupSeparator = ((char)29).ToString();
@@ -720,7 +721,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                        $"{groupSeparator}16D{workOrderPartDataMatrixView.SixteenD}{groupSeparator}14D{workOrderPartDataMatrixView.FourteenD}{groupSeparator}30P{workOrderPartDataMatrixView.ThirtyP}" +
                        $"{groupSeparator}Z{workOrderPartDataMatrixView.Z}{groupSeparator}V1{workOrderPartDataMatrixView.V1}{groupSeparator}3S{workOrderPartDataMatrixView.ThreeS}{groupSeparator}" +
                        $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}1T{workOrderPartDataMatrixView.OneT}{groupSeparator}2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
-                       $"K{workOrderPartDataMatrixView.K}{groupSeparator}4k{workOrderPartDataMatrixView.FourK}{groupSeparator}2S{workOrderPartDataMatrixView.TwoS}{recordSeparator}{endTransmission}";
+                       $"K{workOrderPartDataMatrixView.K}{groupSeparator}4k{workOrderPartDataMatrixView.FourK}{groupSeparator}2S{workOrderPartDataMatrixView.TwoS}{groupSeparator}4L{workOrderPartDataMatrixView.FourL}" +
+                       $"{recordSeparator}{endTransmission}";
 
             var barcode = DataMatrixEncoder.Encode(data);
             var renderer = new ImageRenderer(imageFormat: ImageFormat.Png);
