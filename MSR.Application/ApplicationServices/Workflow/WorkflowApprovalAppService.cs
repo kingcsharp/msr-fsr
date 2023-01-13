@@ -32,7 +32,7 @@ namespace MSR.Application.ApplicationServices.Workflow
         public async Task<ICommandResponse> HandleAsync(GetPendingApprovalModel command, CancellationToken cancellationToken = default)
         {
             var pendingApprovalModels = await _workflowApprovalService.GetPendingApprovalAsync(command);
-            int totalRows = pendingApprovalModels.AsQueryable().CreateWorkflowPendingQuery(command).Count();
+            int totalRows = pendingApprovalModels.AsQueryable().CreateWorkflowPendingQuery(command,true).Count();
             pendingApprovalModels = pendingApprovalModels.AsQueryable().CreateWorkflowPendingQuery(command).ToList();
             return new PagingCommandResponse<ICollection<PendingApprovalModel>>(pendingApprovalModels, totalRows, command.Term, command.PageNumber, command.PageSize, command.SortAscending);
         }

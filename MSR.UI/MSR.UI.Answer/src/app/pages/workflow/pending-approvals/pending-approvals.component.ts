@@ -114,6 +114,8 @@ export class PendingApprovalsComponent implements OnInit {
         .subscribe(responseHandler(response => {
           ctrl.emptyArr(dataArr);
           dataArr.push(...response.object);
+          this.totalRecordsRoute = response.totalNumberOfRecords;
+          
           dataArr.map((elem) => {
             ctrl.addToGridTableDropdown(elem);
             return elem;
@@ -133,6 +135,7 @@ export class PendingApprovalsComponent implements OnInit {
         .subscribe(responseHandler(response => {
           ctrl.emptyArr(dataArr);
           dataArr.push(...response.object);
+          this.totalRecordsProductGrid = response.totalNumberOfRecords;
           dataArr.map((elem) => {
             ctrl.addToGridTableDropdown(elem);
             return elem;
