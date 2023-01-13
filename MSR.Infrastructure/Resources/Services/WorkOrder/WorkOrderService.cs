@@ -680,7 +680,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                                 && i.SerialNumber == workOrderPartModel.SerialNumber)
                                                                             && i.WorkOrderId != workOrderPartModel.WorkOrderId
                                                                             ).Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
-                workOrderPartModel.DataMatrix = ConvertItemToDataMatrix(DataMatrixItems.FirstOrDefault(i => i.WorkOrderPartId == workOrderPartModel.Id));
+                workOrderPartModel.DataMatrix = ConvertItemToDataMatrix(DataMatrixItems.FirstOrDefault(i => i.WorkOrderPartId == workOrderPartModel.Id), command.WorkOrderId);
                 workOrderPartModel.Children = null;
             }
 
@@ -688,23 +688,25 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         }
 
-        private byte[] ConvertItemToDataMatrix(WorkOrderPartDataMatrixView workOrderPartDataMatrixView)
+        private byte[] ConvertItemToDataMatrix(WorkOrderPartDataMatrixView workOrderPartDataMatrixView, int workOrderId)
         {
             if (workOrderPartDataMatrixView == null)
             {
                 return null;
             }
             /*
+             * 9S == WorkOrderId
              * P == Part Number
              * 1P == SerialNumber
              * 6 == Part.Name
              * 20P == Cycle Count
              * 16D == Date of Printing Sticker
              * 14D == Six Months from 16D
+             * 12D == Date of Printing Sticker
              * 30P == N
              * Z == 1
              * V1 == We do not have currently.  Will need to add
-             * 3S == Work Order Part SerialNumber
+             * S == Work Order Part SerialNumber
              * Q == Work Order Part Quantity
              * 3Q == "PCE"
              * 2T == Procedure.Id
@@ -712,15 +714,33 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
              * 4k == PurchaseOrder.ReferencePO after the /
              * 2S == MTTN
              * 1T == PartData
+             * 4L == CountryCode
              */
             var recordSeparator = ((char)30).ToString();
             var groupSeparator = ((char)29).ToString();
             var endTransmission = ((char)4).ToString();
-            var data = $"[)>{recordSeparator}06{groupSeparator}P{workOrderPartDataMatrixView.P}{groupSeparator}1P{workOrderPartDataMatrixView.OneP}{groupSeparator}20P{workOrderPartDataMatrixView.TwentyP}" +
-                       $"{groupSeparator}16D{workOrderPartDataMatrixView.SixteenD}{groupSeparator}14D{workOrderPartDataMatrixView.FourteenD}{groupSeparator}30P{workOrderPartDataMatrixView.ThirtyP}" +
-                       $"{groupSeparator}Z{workOrderPartDataMatrixView.Z}{groupSeparator}V1{workOrderPartDataMatrixView.V1}{groupSeparator}3S{workOrderPartDataMatrixView.ThreeS}{groupSeparator}" +
-                       $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}1T{workOrderPartDataMatrixView.OneT}{groupSeparator}2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
-                       $"K{workOrderPartDataMatrixView.K}{groupSeparator}4k{workOrderPartDataMatrixView.FourK}{groupSeparator}2S{workOrderPartDataMatrixView.TwoS}{recordSeparator}{endTransmission}";
+            var data =  $"[)>{recordSeparator}06{groupSeparator}" +
+                        $"9S{workOrderId}{groupSeparator}" +
+                        $"P{workOrderPartDataMatrixView.P}{groupSeparator}" +
+                        $"1P{workOrderPartDataMatrixView.OneP}{groupSeparator}" +
+                        $"2P1{groupSeparator}" +
+                        $"20P{workOrderPartDataMatrixView.TwentyP}{groupSeparator}" +
+                        $"16D{workOrderPartDataMatrixView.SixteenD}{groupSeparator}" +
+                        $"14D{workOrderPartDataMatrixView.FourteenD}{groupSeparator}" +
+                        $"12D{workOrderPartDataMatrixView.SixteenD}{groupSeparator}" +
+                        $"30P{workOrderPartDataMatrixView.ThirtyP}{groupSeparator}" +
+                        $"Z{workOrderPartDataMatrixView.Z}{groupSeparator}" +
+                        $"V1{workOrderPartDataMatrixView.V1}{groupSeparator}" +
+                        $"S{workOrderPartDataMatrixView.ThreeS}{groupSeparator}" +
+                        $"Q{workOrderPartDataMatrixView.Q}{groupSeparator}" +
+                        $"3Q{workOrderPartDataMatrixView.ThreeQ}{groupSeparator}" +
+                        $"1T{workOrderPartDataMatrixView.OneT}{groupSeparator}" +
+                        $"2T{workOrderPartDataMatrixView.TwoT}{groupSeparator}" +
+                        $"K{workOrderPartDataMatrixView.K}{groupSeparator}" +
+                        $"4k{workOrderPartDataMatrixView.FourK}{groupSeparator}" +
+                        $"2S{workOrderPartDataMatrixView.TwoS}{groupSeparator}" +
+                        $"4L{workOrderPartDataMatrixView.FourL}" +
+                        $"{recordSeparator}{endTransmission}";
 
             var barcode = DataMatrixEncoder.Encode(data);
             var renderer = new ImageRenderer(imageFormat: ImageFormat.Png);
