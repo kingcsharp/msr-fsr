@@ -680,7 +680,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                                 && i.SerialNumber == workOrderPartModel.SerialNumber)
                                                                             && i.WorkOrderId != workOrderPartModel.WorkOrderId
                                                                             ).Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
-                workOrderPartModel.DataMatrix = ConvertItemToDataMatrix(DataMatrixItems.FirstOrDefault(i => i.WorkOrderPartId == workOrderPartModel.Id), command.WorkOrderId);
+                workOrderPartModel.DataMatrix = ConvertItemToDataMatrix(DataMatrixItems.FirstOrDefault(i => i.WorkOrderPartId == workOrderPartModel.Id), command.WorkOrderId.GetValueOrDefault(0));
                 workOrderPartModel.Children = null;
             }
 
