@@ -34,6 +34,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
   @Output() updateNCRPartsMap = new EventEmitter();
   workOrderMonitorYesOrNoOptions: Array<SelectItem>;
   monitorListItemOptions: Array<SelectItem>;
+  ncDispositionOptions: Array<SelectItem>;
   sensorsAvailable: Array<SelectItem>;
   workOrderMonitorPassOrFailOptions: Array<SelectItem>;
   wasValidationCalled: boolean = false;
@@ -74,6 +75,16 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
       { label: 'Cust NC - shipped to wrong location', value: '22' },
       { label: 'Cust NC - incorrect paperwork', value: '23' },
       { label: 'Cust NC - cannot disassemble', value: '24' }
+    ];
+
+    this.ncDispositionOptions = [
+      {label: 'Accept As-Is (No Tag)', value: '26'},
+      {label: 'Return Yellow Tagged', value: '27'},
+      {label: 'Return Red Tagged', value: '28'},
+      {label: 'Rework', value: '29'},
+      {label: 'Repair', value: '30'},
+      {label: 'Scrap', value: '31'},
+      {label: 'Other', value: '32'}
     ];
 
     this.workOrderMonitorYesOrNoOptions = [
@@ -132,6 +143,13 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
     this.wasValidationCalled = false;
   }
 
+  getListOptions(monitor: any): Array<SelectItem> {
+    if(monitor.monitorListId == 2){
+      return this.ncDispositionOptions;
+    }
+    return this.monitorListItemOptions;
+  }
+  
   areDropDownsValid(): boolean {
 
     let dropDownsAreValid = true;

@@ -187,7 +187,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (CurrentUser.HasPrivilege(EnumMenuItem.Monitors, EnumPrivilege.CanDelete)) {
 
                 var workOrderTaskMonitorEntity = await _unitOfWork.WorkOrderTaskMonitors.FirstOrDefaultAsync(false, i => i.ProcedureMonitorId == command.Id);
-                workOrderTaskMonitorEntity.ProcedureMonitorId = null;
+                if (workOrderTaskMonitorEntity != null)
+                {
+                    workOrderTaskMonitorEntity.ProcedureMonitorId = null;
+                }
                 procedureStepMonitorEntity.ProcedureStepId = null;
                 _unitOfWork.ProcedureStepMonitors.Delete(false, procedureStepMonitorEntity);
                 await _unitOfWork.SaveChangesAsync();

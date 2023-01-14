@@ -391,7 +391,7 @@
               Result:
             </label>
             <div class="col-8 pl-0 pr-3">
-              <p-dropdown name="selectresult{{i}}" [options]="monitorListItemOptions" placeholder="Select a Response"
+              <p-dropdown  name="selectresult{{i}}" [options]="getListOptions(workOrderTaskMonitor)" placeholder="Select a Response"
                 [disabled]="!doNotAllowEditing" [showClear]="true" [(ngModel)]="workOrderTaskMonitor.multiVal">
               </p-dropdown>
               <ul class="parsley-errors-list filled" *ngIf="wasValidationCalled">

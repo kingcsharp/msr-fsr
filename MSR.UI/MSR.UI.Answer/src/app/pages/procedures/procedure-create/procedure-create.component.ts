@@ -23,7 +23,8 @@ export class ProcedureCreateComponent implements OnInit {
   ncrProcedureType: ProcedureType;
   tagTypes: Array<SelectItem> = [
     {label: 'Yellow Tag', value: 'Yellow Tag'},
-    {label: 'Red Tag', value: 'Red Tag'}
+    {label: 'Red Tag', value: 'Red Tag'},
+    {label: 'No Tag', value: 'No Tag'}
   ];
 
   constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,

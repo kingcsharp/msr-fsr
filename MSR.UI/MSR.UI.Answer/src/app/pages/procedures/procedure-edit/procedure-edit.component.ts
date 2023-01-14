@@ -74,6 +74,7 @@ export class ProcedureEditComponent implements OnInit {
   tagTypes: Array<SelectItem> = [
     { label: "Yellow Tag", value: "Yellow Tag" },
     { label: "Red Tag", value: "Red Tag" },
+    {label: 'No Tag', value: 'No Tag'}
   ];
   showReorderStepsDialog: boolean = false;
 
