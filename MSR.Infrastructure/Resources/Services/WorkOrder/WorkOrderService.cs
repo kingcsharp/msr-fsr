@@ -1165,6 +1165,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var workOrderTasksEntitiesToCancel = workOrderEntity.WorkOrderTasks
                 .Where(s => s.StatusId == (int)EnumStatusSteps.InProgress || s.StatusId == (int)EnumStatusSteps.WaitingtoStart || s.StatusId == (int)EnumStatusSteps.Approved).ToList();
 
+            var workOrderTaskIds = workOrderTasksEntitiesToCancel.Select(i => i.Id).ToList();
+
             if (!workOrderTasksEntitiesToCancel.Any())
             {
 
@@ -1172,6 +1174,20 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     $"No {nameof(WorkOrderTask)}s to cancel since all are Completed or Cancelled for {nameof(WorkOrder)} with Id {cancelWorkOrder.WorkOrderId}",
                     DomainError.BadRequest);
 
+            }
+
+            //Get all of the NCRPartMaps and update them
+            var workOrderPartNCRMapEntities = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => workOrderTaskIds.Contains(i.WorkOrderTaskId)).ToListAsync();
+            if (workOrderPartNCRMapEntities.Any())
+            {
+                foreach (var ncrMap in workOrderPartNCRMapEntities)
+                {
+                    ncrMap.TagType = "Cancelled";
+                    ncrMap.ClosedOn = DateTime.UtcNow;
+                    _unitOfWork.WorkOrderPartNCRMap.Update(ncrMap);
+                }
+
+                await _unitOfWork.SaveChangesAsync();
             }
 
             var workOrderStatEntity = await _unitOfWork.WorkOrderStats.FirstOrDefaultAsync(false, i => i.WorkOrderId == cancelWorkOrder.WorkOrderId);

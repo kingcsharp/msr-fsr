@@ -88,7 +88,8 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
     ];
 
     this.listSource = [
-      { label: 'NCR Category', value: 1 }
+      { label: 'NCR Category', value: 1 },
+      { label: 'NC Disposition', value: 2 }
     ];
 
     this.getMonitors();
@@ -173,7 +174,8 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
           procedureStepId: this.procedureStep.id,
           lowTarget: lowTarget ? parseFloat(lowTarget) : null,
           highTarget: highTarget ? parseFloat(highTarget) : null,
-          sensorName: this.procedureStepMonitor.sensorName
+          sensorName: this.procedureStepMonitor.sensorName,
+          monitorListId: this.procedureStepMonitor.monitorListId
         } as ICreateProcedureStepMonitorRequest);
 
         this.globals.showLoader(true);
