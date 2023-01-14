@@ -12,6 +12,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int WorkOrderPartId { get; set; }
         public string TagType { get; set; }
         public string Detail { get; set; }
-        public DateTime ClosedOn { get; set; }
+        public DateTime? ClosedOn { get; set; }
     }
 }
