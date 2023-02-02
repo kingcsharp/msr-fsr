@@ -72,7 +72,6 @@ const APP_PROVIDERS = [
     RouterModule.forRoot(ROUTES, {
       useHash: true,
       preloadingStrategy: PreloadAllModules,
-      relativeLinkResolution: "legacy",
     }),
   ],
   providers: [
