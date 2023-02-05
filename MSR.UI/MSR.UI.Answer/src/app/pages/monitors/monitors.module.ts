@@ -1,17 +1,16 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { MonitorsComponent } from './monitors/monitors.component';
-import { UtilsModule } from '../../layout/utils/utils.module';
-import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
-import { NewWidgetModule } from '../../layout/new-widget/widget.module';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule, Routes } from "@angular/router";
+import { MonitorsComponent } from "./monitors/monitors.component";
+import { UtilsModule } from "../../layout/utils/utils.module";
+import { DialogModule } from "primeng/dialog";
+import { TableModule } from "primeng/table";
+import { NewWidgetModule } from "../../layout/new-widget/widget.module";
 
-export const routes = [
-  { path: '', redirectTo: 'people', pathMatch: 'full' },
-  { path: 'monitors', component: MonitorsComponent, pathMatch: 'full' }
+export const routes: Routes = [
+  { path: "", redirectTo: "people", pathMatch: "full" },
+  { path: "monitors", component: MonitorsComponent, pathMatch: "full" },
 ];
-
 
 @NgModule({
   declarations: [MonitorsComponent],
@@ -21,7 +20,9 @@ export const routes = [
     UtilsModule,
     DialogModule,
     TableModule,
-    NewWidgetModule
-  ]
+    NewWidgetModule,
+  ],
 })
-export class MonitorsModule { static routes = routes; }
+export class MonitorsModule {
+  static routes = routes;
+}

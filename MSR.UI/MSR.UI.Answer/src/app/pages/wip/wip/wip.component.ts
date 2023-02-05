@@ -30,8 +30,7 @@ import { EnumColumnType } from "../../../../app/models/enums/EnumColumnType";
 import { GridSaved } from "../../../models/lib/GridSaved";
 import * as moment from "moment";
 import * as _ from "lodash";
-import { clone, cloneDeep } from "lodash";
-import { MergeScanOperator } from "rxjs/internal/operators/mergeScan";
+import { cloneDeep } from "lodash";
 
 interface SelectedItem extends WorkOrderGridSummary {
   initialValues: Omit<SelectedItem, "initialValues">;
