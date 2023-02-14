@@ -771,6 +771,13 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
             dropdownHeader: true,
           }),
+          new ColumnsSaved({
+            id:"originalWOPrice",
+            label:"Original",
+            visible:true,
+            type:this.enumColumnType.Money,
+            dropdownHeader:false,
+          })
         ];
       case "WorkOrdersNotInvoicedbyWorkOrder":
         return [
