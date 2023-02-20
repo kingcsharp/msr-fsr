@@ -772,7 +772,7 @@ export class ReportCubeService {
             dropdownHeader: true,
           }),
           new ColumnsSaved({
-            id:"originalWOPrice",
+            id:"originalwoprice",
             label:"Original",
             visible:true,
             type:this.enumColumnType.Money,
