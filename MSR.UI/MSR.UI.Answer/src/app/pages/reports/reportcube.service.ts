@@ -999,6 +999,12 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
+            id: "status",
+            label: "Status",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
             id: "tagtype",
             label: "Yellow / Red tag",
             visible: true,
