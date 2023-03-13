@@ -1017,6 +1017,15 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
             dropdownHeader: true,
           }),
+          new ColumnsSaved({
+            id: "lastupdated",
+            label: "Last Updated",
+            visible: true,
+            type: this.enumColumnType.Date,
+            styles: { width: "8rem" },
+            formattingAngular: "MM-dd-yyyy",
+            formattingMoment: "MM-DD-YYYY",
+          }),
         ];
       case "WorkCompletedDetailbyTask":
         return [
