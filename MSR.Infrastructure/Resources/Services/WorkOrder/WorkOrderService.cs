@@ -1485,15 +1485,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            var current = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(i => i.WorkOrderTask).Include(x => x.ProcedureStepMonitor).FirstOrDefaultAsync(i => i.Id == command.Id);
+            var current = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(x => x.ProcedureStepMonitor).FirstOrDefaultAsync(i => i.Id == command.Id);
+            
 
             if (current is null)
             {
                 throw new DomainException($"{nameof(WorkOrderTaskMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-
-
+            current.WorkOrderTask = await _unitOfWork.WorkOrderTasks.FirstOrDefaultAsync(false, i => i.Id == current.WorkOrderTaskId);
             if (current.ProcedureStepMonitor.MonitorTypeId == 6)
             {
                 var ncNumber = current.WorkOrderTask.NCNumber;
@@ -1535,7 +1535,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             {
                 await SendNcrEmailNotification(workOrderTaskMonitorModel.Id, command.SendNCREmail);
             }
-
+            workOrderTaskMonitorModel.WorkOrderTask.WorkOrderTaskMonitors = null;
             return workOrderTaskMonitorModel;
         }
 
