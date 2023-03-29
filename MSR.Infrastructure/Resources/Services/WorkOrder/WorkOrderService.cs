@@ -189,10 +189,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                        )?.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
             }
 
+            bool invoiceable = true;
             foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
             {
                 // enforce sane data by limiting the status IDs returned by the API
                 workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
+                if (workOrderTaskModel.IsNCRTask == true && workOrderTaskModel.StatusId != (int)EnumStatusSteps.Complete)
+                {
+                    invoiceable = false;
+                }
                 var workOrderTaskMonitorModels = new List<WorkOrderTaskMonitorModel>();
                 var i = 1; // Monitor Number starts at 1
                 foreach (var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
@@ -218,6 +223,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                 : new List<MappedWorkOrderPart>();
             }
 
+            workOrderModel.Invoiceable = invoiceable;
+            
             return new List<WorkOrderModel>() { DetachBackPointers(workOrderModel) };
         }
 
