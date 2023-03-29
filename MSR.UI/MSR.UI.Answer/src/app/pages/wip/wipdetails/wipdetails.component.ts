@@ -183,7 +183,7 @@ export class WipdetailsComponent implements OnInit {
         styleClass: "tag-type-yellow",
       },
       { label: "Red Tag", value: "Red Tag", styleClass: "tag-type-red" },
-      { label: "No Tag", value: "No Tag", styleClass: "tag-type-grey" }
+      { label: "No Tag", value: "No Tag", styleClass: "tag-type-grey" },
     ];
 
     this.globals.showLoader(true);
