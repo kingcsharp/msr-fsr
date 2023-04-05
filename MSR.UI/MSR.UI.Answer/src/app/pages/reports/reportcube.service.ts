@@ -30,8 +30,10 @@ export class ReportCubeService {
   ) {}
 
   public getReportName(reportInfo: ReportModel) {
-    return reportInfo.name.replace(/\s/g, "") +
-    reportInfo.subtitle.replace(/\s/g, "")
+    return (
+      reportInfo.name.replace(/\s/g, "") +
+      reportInfo.subtitle.replace(/\s/g, "")
+    );
   }
 
   public getReport = async (
@@ -66,7 +68,9 @@ export class ReportCubeService {
           data: response["data"],
           partsdata: response["partsdata"],
           totals: response["totals"],
-          showTotals: reportName === 'CombinedFinancialDatabyWorkOrder' || reportName === 'WorkInProcessbyWorkOrder'
+          showTotals:
+            reportName === "CombinedFinancialDatabyWorkOrder" ||
+            reportName === "WorkInProcessbyWorkOrder",
         } as IPagingModel);
 
         return this.filterReportData(newPagingModel, reportInfo);
@@ -772,12 +776,12 @@ export class ReportCubeService {
             dropdownHeader: true,
           }),
           new ColumnsSaved({
-            id:"originalwoprice",
-            label:"Original",
-            visible:true,
-            type:this.enumColumnType.Money,
-            dropdownHeader:false,
-          })
+            id: "originalwoprice",
+            label: "Original",
+            visible: true,
+            type: this.enumColumnType.Money,
+            dropdownHeader: false,
+          }),
         ];
       case "WorkOrdersNotInvoicedbyWorkOrder":
         return [
@@ -982,6 +986,7 @@ export class ReportCubeService {
             label: "NC Desc",
             visible: true,
             type: this.enumColumnType.String,
+            innerHTML: true,
           }),
           new ColumnsSaved({
             id: "ncdate",
