@@ -602,6 +602,28 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderTaskInProgress = workOrderTaskModel;
     this.workOrderTaskToView = workOrderTaskModel;
     this.workOrderIsComplete = this.isWorkOrderComplete();
+
+    let index = this.workOrderModel.workOrderTasks.findIndex(
+      (s) => s.id === this.workOrderTaskInProgress.id
+    );
+
+    let invoiceable = true;
+
+    while (this.workOrderModel.workOrderTasks.length > index) {
+      const isNCRTask = this.workOrderModel.workOrderTasks[index].isNCRTask;
+      const status = this.workOrderModel.workOrderTasks[index].status;
+      if (
+        isNCRTask &&
+        (status.name === "In Progress" ||
+          status.name === "Approved" ||
+          status.name === "Waiting to Start")
+      ) {
+        invoiceable = false;
+        break;
+      }
+    }
+    this.workOrderModel.invoiceable = invoiceable;
+
     this.getNCRParts();
   }
 
@@ -693,6 +715,8 @@ export class WipdetailsComponent implements OnInit {
     workOrderTasksToAddBack.reverse().map((workOrderTask) => {
       this.workOrderModel.workOrderTasks.push(workOrderTask);
     });
+
+    this.workOrderModel.invoiceable = false;
 
     this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
 
