@@ -452,7 +452,7 @@
                       <td class="serial-td" *ngIf="hasAccessToTaskBeingViewed">
                         {{ workOrderPart.serialNumber }}
                       </td>
-                      <td class="tagtype-td">
+                      <td class="tagtype-td" *ngIf="ncrParts.length > 0">
                         <p-dropdown
                           *ngIf="
                             workOrderTaskToView.id ===
@@ -514,7 +514,7 @@
                           {{ ncrParts[index].tagType }}
                         </div>
                       </td>
-                      <td class="history-td">
+                      <td class="history-td" *ngIf="ncrParts.length > 0">
                         <input
                           *ngIf="
                             workOrderTaskToView.id ===
