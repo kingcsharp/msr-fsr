@@ -621,6 +621,7 @@ export class WipdetailsComponent implements OnInit {
         invoiceable = false;
         break;
       }
+      index++;
     }
     this.workOrderModel.invoiceable = invoiceable;
 
