@@ -1368,12 +1368,12 @@ export class ReportCubeService {
         const resultData = pagingModel.data.map((elem) => {
           elem = this.removePrefixesOfPropertyNames(elem);
           elem.elemKey =
-            elem["duedate"] +
+            elem["shipdate"] +
             this.splitChars +
             elem["kitname"].replace(/\s/g, "") +
             this.splitChars +
             elem["msrfsrfacility"].replace(/\s/g, "");
-          elem.yearMonth = moment(elem["duedate"]);
+          elem.yearMonth = moment(elem["shipdate"]);
           elem.isValidForChart = true;
           elem.total = parseFloat(elem["wtax"]);
           elem.site = elem["msrfsrfacility"];
