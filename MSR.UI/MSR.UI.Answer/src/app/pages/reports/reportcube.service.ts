@@ -1337,12 +1337,12 @@ export class ReportCubeService {
           (elem) => {
             elem = this.removePrefixesOfPropertyNames(elem);
             elem.elemKey =
-              elem["duedate"] +
+              elem["shipdate"] +
               this.splitChars +
               elem["customername"].replace(/\s/g, "") +
               this.splitChars +
               elem["msrfsrfacility"].replace(/\s/g, "");
-            elem.yearMonth = moment(elem["duedate"]);
+            elem.yearMonth = moment(elem["shipdate"]);
             elem.isValidForChart = true;
             elem.site = elem["msrfsrfacility"];
             elem.total = parseFloat(elem["total"]);
@@ -1405,16 +1405,16 @@ export class ReportCubeService {
             "-"
           );
           const key =
-            moment(elem["duedate"]).format("YYYY-MM") +
+            moment(elem["shipdate"]).format("YYYY-MM") +
             this.splitChars +
             keyCombinedName;
-          elem.elemKey = elem["duedate"] + this.splitChars + keyCombinedName;
+          elem.elemKey = elem["shipdate"] + this.splitChars + keyCombinedName;
           elem.isValidForChart = this.isValidRowForChart(
             elem,
             "kitname",
             "msrfsrfacility"
           );
-          elem.yearMonth = moment(elem["duedate"]);
+          elem.yearMonth = moment(elem["shipdate"]);
           elem.site = elem["msrfsrfacility"];
 
           if (elem.isValidForChart) {
