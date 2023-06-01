@@ -1395,41 +1395,23 @@ export class ReportCubeService {
         );
         break;
       case "CountofKitsbyPart/Kit":
-        let countOfKitsGridDataDic = {};
-        pagingModel.data.forEach((elem) => {
-          elem = this.removePrefixesOfPropertyNames(elem);
-          const keyCombinedName = this.setName(
-            elem,
-            "kitname",
-            "msrfsrfacility",
-            "-"
-          );
-          const key =
-            moment(elem["shipdate"]).format("YYYY-MM") +
-            this.splitChars +
-            keyCombinedName;
-          elem.elemKey = elem["shipdate"] + this.splitChars + keyCombinedName;
-          elem.isValidForChart = this.isValidRowForChart(
-            elem,
-            "kitname",
-            "msrfsrfacility"
-          );
-          elem.yearMonth = moment(elem["shipdate"]);
-          elem.site = elem["msrfsrfacility"];
-
-          if (elem.isValidForChart) {
-            countOfKitsGridDataDic[key] = elem;
-          }
+        const resultDataKits = pagingModel.data.map((elem) => {
+            elem = this.removePrefixesOfPropertyNames(elem);
+            elem.elemKey =
+              elem["shipdate"] +
+              this.splitChars +
+              elem["kitname"].replace(/\s/g, "") +
+              this.splitChars +
+              elem["msrfsrfacility"].replace(/\s/g, "");
+            elem.yearMonth = moment(elem["shipdate"]);
+            elem.isValidForChart = true;
+            elem.count = elem["count"];
+            elem.site = elem["msrfsrfacility"];
+            return elem;
         });
-
-        const countOfKitsGridData = [];
-
-        Object.keys(countOfKitsGridDataDic).forEach((chartDataKey) => {
-          countOfKitsGridData.push(countOfKitsGridDataDic[chartDataKey]);
-        });
-
+        
         pagingModel.ChartInformation = new ChartInfo({
-          gridData: countOfKitsGridData,
+          gridData: resultDataKits,
           stackBy: "count",
           chartTitle: "Count of Kits",
           xAxisTitle: "Month (Previous 12 Months Rolling)",
