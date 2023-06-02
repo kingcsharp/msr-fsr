@@ -1202,7 +1202,8 @@ export class ReportCubeService {
   }
 
   private filterReportData(pagingModel: PagingModel, reportInfo: ReportModel) {
-    switch (this.getReportName(reportInfo)) {
+    const reportName = this.getReportName(reportInfo)
+    switch (reportName) {
       case "PartsCycleCountsbyWorkOrderDate":
         const gridData = pagingModel.data.map((elem) => {
           elem = this.removePrefixesOfPropertyNames(elem);
@@ -1646,7 +1647,7 @@ export class ReportCubeService {
       );
 
       pagingModel.data = pagingModel.data.map((elem) => {
-        elem.yearMonth = moment(elem["duedate"]);
+        elem.yearMonth = moment(elem["shipdate"]);
         elem.site = elem["msrfsrfacility"];
         return elem;
       });
