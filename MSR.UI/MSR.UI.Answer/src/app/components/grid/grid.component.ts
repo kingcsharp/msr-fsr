@@ -116,7 +116,7 @@ export class GridComponent implements OnInit {
   }
 
   /**
-   * Ansynchronously called by the p-table element to
+   * Asynchronously called by the p-table element to
    * fetch grid data.
    *
    * @param {LazyLoadEvent} lazyLoadEvent
