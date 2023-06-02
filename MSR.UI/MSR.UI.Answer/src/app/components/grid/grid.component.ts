@@ -115,6 +115,13 @@ export class GridComponent implements OnInit {
     }
   }
 
+  /**
+   * Ansynchronously called by the p-table element to
+   * fetch grid data.
+   *
+   * @param {LazyLoadEvent} lazyLoadEvent
+   * @memberof GridComponent
+   */
   getData(lazyLoadEvent: LazyLoadEvent) {
     if (
       this.reportInfo.name !== "" &&
