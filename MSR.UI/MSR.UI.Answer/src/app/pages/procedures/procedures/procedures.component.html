@@ -270,6 +270,13 @@
                 (click)="copyProcedure(model)"
                 data-cy="copy-button"
               ></i>
+              <i
+                class="fal fa-print pointer"
+                tooltip="Print Procedure Summary and Steps"
+                [routerLink]="['../procedure-view']"
+                [queryParams]="{ id: model.id, print: true }"
+                data-cy="print-button"
+              ></i>
             </td>
           </tr>
         </ng-template>
