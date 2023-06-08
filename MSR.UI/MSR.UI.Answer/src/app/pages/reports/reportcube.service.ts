@@ -1202,7 +1202,7 @@ export class ReportCubeService {
   }
 
   private filterReportData(pagingModel: PagingModel, reportInfo: ReportModel) {
-    const reportName = this.getReportName(reportInfo)
+    const reportName = this.getReportName(reportInfo);
     switch (reportName) {
       case "PartsCycleCountsbyWorkOrderDate":
         const gridData = pagingModel.data.map((elem) => {
@@ -1397,20 +1397,20 @@ export class ReportCubeService {
         break;
       case "CountofKitsbyPart/Kit":
         const resultDataKits = pagingModel.data.map((elem) => {
-            elem = this.removePrefixesOfPropertyNames(elem);
-            elem.elemKey =
-              elem["shipdate"] +
-              this.splitChars +
-              elem["kitname"].replace(/\s/g, "") +
-              this.splitChars +
-              elem["msrfsrfacility"].replace(/\s/g, "");
-            elem.yearMonth = moment(elem["shipdate"]);
-            elem.isValidForChart = true;
-            elem.count = elem["count"];
-            elem.site = elem["msrfsrfacility"];
-            return elem;
+          elem = this.removePrefixesOfPropertyNames(elem);
+          elem.elemKey =
+            elem["shipdate"] +
+            this.splitChars +
+            elem["kitname"].replace(/\s/g, "") +
+            this.splitChars +
+            elem["msrfsrfacility"].replace(/\s/g, "");
+          elem.yearMonth = moment(elem["shipdate"]);
+          elem.isValidForChart = true;
+          elem.count = elem["count"];
+          elem.site = elem["msrfsrfacility"];
+          return elem;
         });
-        
+
         pagingModel.ChartInformation = new ChartInfo({
           gridData: resultDataKits,
           stackBy: "count",

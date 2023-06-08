@@ -1,16 +1,27 @@
-import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit, Input } from '@angular/core';
-import { LoginService } from '../../pages/login/login.service';
-import { Globals } from '../../models/lib/globals';
-import { NotificationService } from './notification.service';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { EnumMenuItem, EnumSegregationType } from '../../../app/services/api.client.generated';
-import { EnumPrivilege } from '../../../app/models/enums/privileges';
-import { ProductSegregationService } from '../../../app/services/product-segregation.service';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  ElementRef,
+  Renderer2,
+  OnInit,
+  Input,
+} from "@angular/core";
+import { LoginService } from "../../pages/login/login.service";
+import { Globals } from "../../models/lib/globals";
+import { NotificationService } from "./notification.service";
+import { Router } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
+import {
+  EnumMenuItem,
+  EnumSegregationType,
+} from "../../../app/services/api.client.generated";
+import { EnumPrivilege } from "../../../app/models/enums/privileges";
+import { ProductSegregationService } from "../../../app/services/product-segregation.service";
 
 @Component({
-  selector: '[navbar]',
-  templateUrl: './navbar.template.html'
+  selector: "[navbar]",
+  templateUrl: "./navbar.template.html",
 })
 export class Navbar implements OnInit {
   @Output() changeSidebarPosition = new EventEmitter();
@@ -19,11 +30,11 @@ export class Navbar implements OnInit {
   @Input() closed: boolean;
   @Output() closedChange = new EventEmitter<boolean>();
 
-  display: string = 'Left';
-  radioModel: string = 'Left';
+  display: string = "Left";
+  radioModel: string = "Left";
   searchFormState: boolean = true;
   settings: any = {
-    isOpen: false
+    isOpen: false,
   };
   searchValue: string;
   hideImg: boolean = false;
@@ -39,11 +50,10 @@ export class Navbar implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     public productSegregationService: ProductSegregationService
-  ) { }
-
+  ) {}
 
   ngOnInit(): void {
-    this.searchValue = '';
+    this.searchValue = "";
     this.canViewNotifications = this.allowNotification();
     if (this.canViewNotifications) {
       this.notificationservice.getNotifications();
@@ -51,7 +61,10 @@ export class Navbar implements OnInit {
   }
 
   allowNotification() {
-    return this.globals.hasPrivilege(EnumMenuItem.ApprovalWorkflows, EnumPrivilege.CanRead);
+    return this.globals.hasPrivilege(
+      EnumMenuItem.ApprovalWorkflows,
+      EnumPrivilege.CanRead
+    );
   }
 
   updateUrl(ev) {
@@ -72,27 +85,39 @@ export class Navbar implements OnInit {
 
   searchFormOpen(): void {
     if (this.searchFormState) {
-      this.changeStyleElement('#search-form', 'height', '40px');
-      this.changeStyleElement('.notifications ', 'top', '86px');
+      this.changeStyleElement("#search-form", "height", "40px");
+      this.changeStyleElement(".notifications ", "top", "86px");
     } else {
-      this.changeStyleElement('#search-form', 'height', '0px');
-      this.changeStyleElement('.notifications ', 'top', '46px');
+      this.changeStyleElement("#search-form", "height", "0px");
+      this.changeStyleElement(".notifications ", "top", "46px");
     }
     this.searchFormState = !this.searchFormState;
   }
 
   search() {
     if (this.searchValue.length < 3) {
-      this.toastr.error('Search value is too short. It should have 3 characters or more.');
+      this.toastr.error(
+        "Search value is too short. It should have 3 characters or more."
+      );
     } else {
-      this.router.navigate(['app/search'], { queryParams: { search: this.searchValue }, queryParamsHandling: 'merge' });
+      this.router.navigate(["app/search"], {
+        queryParams: { search: this.searchValue },
+        queryParamsHandling: "merge",
+      });
     }
   }
 
   private changeStyleElement(selector, styleName, styleValue): void {
-    styleValue == null ? this.renderer.removeStyle(this.el.nativeElement
-      .querySelector(selector), styleName) : this.renderer.setStyle(this.el.nativeElement
-        .querySelector(selector), styleName, styleValue);
+    styleValue == null
+      ? this.renderer.removeStyle(
+          this.el.nativeElement.querySelector(selector),
+          styleName
+        )
+      : this.renderer.setStyle(
+          this.el.nativeElement.querySelector(selector),
+          styleName,
+          styleValue
+        );
   }
 
   logout() {

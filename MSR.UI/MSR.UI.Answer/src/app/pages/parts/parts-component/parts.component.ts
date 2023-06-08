@@ -1,28 +1,36 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { Globals } from '../../../models/lib/globals';
+import { Component, OnInit, ElementRef } from "@angular/core";
+import { Globals } from "../../../models/lib/globals";
 import {
-  PartService, PartModel, SubPartModel, EnumMenuItem, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel, EnumSegregationType
-} from '../../../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege } from '../../../models/enums/privileges';
-import { responseHandler } from '../../../utils/responseHandler';
-import { ViewSaved } from '../../../models/lib/ViewSaved';
-import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
-import { callFunctionWithFilters } from '../../../models/lib/Utils';
-import { LazyLoadEvent } from 'primeng/api';
+  PartService,
+  PartModel,
+  SubPartModel,
+  EnumMenuItem,
+  EnumApprovalTables,
+  AuditActionResultOfPartModel,
+  CreatePartRequest,
+  UpdatePartRequest,
+  FileModel,
+  EnumSegregationType,
+} from "../../../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { environment as env } from "../../../../environments/environment";
+import { EnumPrivilege } from "../../../models/enums/privileges";
+import { responseHandler } from "../../../utils/responseHandler";
+import { ViewSaved } from "../../../models/lib/ViewSaved";
+import { ColumnsSaved } from "../../../models/lib/ColumnsSaved";
+import { CommonGrid } from "../../../models/lib/CommonGrid";
+import { ToastrService } from "ngx-toastr";
+import { Observable } from "rxjs";
+import { callFunctionWithFilters } from "../../../models/lib/Utils";
+import { LazyLoadEvent } from "primeng/api";
 
 declare let jQuery: any;
 
 @Component({
-  selector: 'app-parts',
-  styleUrls: ['./parts.style.scss'],
-  templateUrl: './parts.component.html'
+  selector: "app-parts",
+  styleUrls: ["./parts.style.scss"],
+  templateUrl: "./parts.component.html",
 })
-
 export class PartsComponent implements OnInit {
   privileges = EnumPrivilege;
   menuItems = EnumMenuItem;
@@ -50,27 +58,69 @@ export class PartsComponent implements OnInit {
   segregationTypes: any[] = [];
   totalRecords: number = 0;
 
-  constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
-    private elem: ElementRef, private partsService: PartService) {
-  }
+  constructor(
+    public globals: Globals,
+    public cg: CommonGrid,
+    private toastr: ToastrService,
+    private elem: ElementRef,
+    private partsService: PartService
+  ) {}
 
   ngOnInit(): void {
     this.currPart = this.getPart(undefined);
-    this.gridVersion = '1.0.1';
-    this.gridStorageId = 'partsGrid' + this.elem.nativeElement.tagName.toLowerCase();
-    this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
-    new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
-    new ColumnsSaved({ id: 'segregationType', label: 'Segregation Type', visible: true }),
-    new ColumnsSaved({ id: 'partNumber', label: 'Part Number', visible: true }),
-    new ColumnsSaved({ id: 'oemPartNumber', label: 'OEM Part Number', visible: true }),
-    new ColumnsSaved({ id: 'isKit', label: 'Is Kit', visible: true }),
-    new ColumnsSaved({ id: 'isActive', label: 'Is Active', visible: true }),
-    new ColumnsSaved({ id: 'maximumCycles', label: 'Maximun Cycles', visible: true }),
-    new ColumnsSaved({ id: 'files', label: 'Reference Files', visible: true }),
-    new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
-    new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
-    new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
-    new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
+    this.gridVersion = "1.0.1";
+    this.gridStorageId =
+      "partsGrid" + this.elem.nativeElement.tagName.toLowerCase();
+    this.gridSettings = [
+      new ColumnsSaved({ id: "id", label: "Id", visible: true }),
+      new ColumnsSaved({ id: "name", label: "Name", visible: true }),
+      new ColumnsSaved({
+        id: "segregationType",
+        label: "Segregation Type",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "partNumber",
+        label: "Part Number",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "oemPartNumber",
+        label: "OEM Part Number",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "isKit", label: "Is Kit", visible: true }),
+      new ColumnsSaved({ id: "isActive", label: "Is Active", visible: true }),
+      new ColumnsSaved({
+        id: "maximumCycles",
+        label: "Maximun Cycles",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "files",
+        label: "Reference Files",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "createdOn",
+        label: "Created On",
+        visible: false,
+      }),
+      new ColumnsSaved({
+        id: "createdByName",
+        label: "Created By",
+        visible: false,
+      }),
+      new ColumnsSaved({
+        id: "lastUpdatedOn",
+        label: "Updated On",
+        visible: false,
+      }),
+      new ColumnsSaved({
+        id: "lastUpdatedByName",
+        label: "Updated By",
+        visible: false,
+      }),
     ];
     this.isKitStatus = this.globals.getYesNoArray();
     this.isActive = this.globals.getYesNoArray();
@@ -87,36 +137,55 @@ export class PartsComponent implements OnInit {
   getParts(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.partsService, this.partsService.partGet, event, this.globals.functionDic).pipe(take(1))
-        .subscribe(responseHandler(response => {
-          this.globals.showLoader(false);
-          this.data = response.object.map((elem) => {
-            elem.isActive = elem.isActive === null ? false : elem.isActive;
-            return elem;
-          });
-          this.totalRecords = response.totalNumberOfRecords;
-        }));
+      callFunctionWithFilters(
+        this.partsService,
+        this.partsService.partGet,
+        event,
+        this.globals.functionDic
+      )
+        .pipe(take(1))
+        .subscribe(
+          responseHandler((response) => {
+            this.globals.showLoader(false);
+            this.data = response.object.map((elem) => {
+              elem.isActive = elem.isActive === null ? false : elem.isActive;
+              return elem;
+            });
+            this.totalRecords = response.totalNumberOfRecords;
+          })
+        );
     }, 10);
   }
 
   async getPartsForDropdown(): Promise<any> {
-    const filtering: LazyLoadEvent = { first: null, rows: null, sortField: null, filters: {} };
+    const filtering: LazyLoadEvent = {
+      first: null,
+      rows: null,
+      sortField: null,
+      filters: {},
+    };
 
     let promise = new Promise((resolve, reject) => {
       this.globals.showLoader(true);
-      callFunctionWithFilters(this.partsService, this.partsService.partGet, filtering, this.globals.functionDic)
+      callFunctionWithFilters(
+        this.partsService,
+        this.partsService.partGet,
+        filtering,
+        this.globals.functionDic
+      )
         .pipe(take(1))
-        .subscribe(responseHandler(response => {
-          const responseResolved = response.object.map((elem) => {
-            elem.isActive = elem.isActive === null ? false : elem.isActive;
-            return elem;
-          });
+        .subscribe(
+          responseHandler((response) => {
+            const responseResolved = response.object.map((elem) => {
+              elem.isActive = elem.isActive === null ? false : elem.isActive;
+              return elem;
+            });
 
-          resolve(responseResolved);
-        }));
+            resolve(responseResolved);
+          })
+        );
     });
     return promise;
-
   }
 
   async getPartsDropdown() {
@@ -126,9 +195,12 @@ export class PartsComponent implements OnInit {
     const allPartsObjects = this.getAllPartsAndUsedIn(parts);
     Object.keys(allPartsObjects).forEach(function (key) {
       const item = allPartsObjects[key];
-      const usedIn = item.usedIn.join(',');
-      const usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : '';
-      ctrl.allParts.push({ label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`, value: item.element.id });
+      const usedIn = item.usedIn.join(",");
+      const usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : "";
+      ctrl.allParts.push({
+        label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`,
+        value: item.element.id,
+      });
     });
   }
 
@@ -140,7 +212,10 @@ export class PartsComponent implements OnInit {
         if (element.isKit) {
           element.createSubParts.forEach((subpart: SubPartModel) => {
             if (partsDictionary[subpart.parentId] === undefined) {
-              partsDictionary[subpart.parentId] = { element: undefined, usedIn: [element.partNumber] };
+              partsDictionary[subpart.parentId] = {
+                element: undefined,
+                usedIn: [element.partNumber],
+              };
             } else {
               partsDictionary[subpart.parentId].usedIn.push(element.partNumber);
             }
@@ -155,7 +230,7 @@ export class PartsComponent implements OnInit {
     if (subparts === undefined) {
       return -1;
     }
-    const index = subparts.findIndex(x => x.parentId === partId);
+    const index = subparts.findIndex((x) => x.parentId === partId);
     return subparts[index].partId;
   }
 
@@ -174,8 +249,8 @@ export class PartsComponent implements OnInit {
   }
 
   resetParsleyjs() {
-    if (jQuery('.parsleyjs').parsley() !== undefined) {
-      jQuery('.parsleyjs').parsley().reset();
+    if (jQuery(".parsleyjs").parsley() !== undefined) {
+      jQuery(".parsleyjs").parsley().reset();
     }
   }
 
@@ -194,7 +269,7 @@ export class PartsComponent implements OnInit {
     if (part === undefined) {
       let ret = new PartModel();
       ret.isKit = false;
-      ret.name = '';
+      ret.name = "";
       ret.createSubParts = [];
       ret.isActive = true;
       ret.files = [];
@@ -202,7 +277,10 @@ export class PartsComponent implements OnInit {
     } else {
       let copyPart: PartModel = new PartModel();
       Object.assign(copyPart, part);
-      if (copyPart.createSubParts === null || copyPart.createSubParts === undefined) {
+      if (
+        copyPart.createSubParts === null ||
+        copyPart.createSubParts === undefined
+      ) {
         copyPart.createSubParts = [];
       }
       return copyPart;
@@ -233,66 +311,92 @@ export class PartsComponent implements OnInit {
 
   removeRow(part) {
     this.globals.showLoader(true);
-    this.partsService.partDelete(part.id, env.apiVersion)
-      .pipe(take(1)).subscribe(responseHandler((resp) => {
-        const index = this.data.findIndex(x => x.id === part.id);
-        this.data.splice(index, 1);
-        this.data = this.data.slice(0);
-      }, () => {
-        // DO not update user
-      }));
+    this.partsService
+      .partDelete(part.id, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler(
+          (resp) => {
+            const index = this.data.findIndex((x) => x.id === part.id);
+            this.data.splice(index, 1);
+            this.data = this.data.slice(0);
+          },
+          () => {
+            // DO not update user
+          }
+        )
+      );
   }
 
   onpartSubmit() {
-    jQuery('.parsleyjs').parsley().validate();
-    if (jQuery('.parsleyjs').parsley().isValid()) {
+    jQuery(".parsleyjs").parsley().validate();
+    if (jQuery(".parsleyjs").parsley().isValid()) {
       let method: Observable<AuditActionResultOfPartModel> = null;
       this.currPart.files.push(...this.uploadedFiles);
 
-      this.globals.showApprovalCommentModal(this.currPart, EnumApprovalTables.PartApproval).then(() => {
-        if (this.currPart.id === undefined) {
-          let createPartRequest = this.getCreatePartRequest(this.currPart);
-          createPartRequest.comment = this.currPart.comment;
-          method = this.partsService.partPost(env.apiVersion, createPartRequest);
-        } else {
-          let updatePartRequest = this.getUpdatePartRequest(this.currPart);
-          updatePartRequest.comment = this.currPart.comment;
-          method = this.partsService.partPatch(env.apiVersion, updatePartRequest);
-        }
-
-        this.globals.showLoader(true);
-        method.pipe(take(1)).subscribe(responseHandler((resp) => {
-          if (!resp.hasErrors) {
-            if (this.currPart.id === undefined) {
-              this.data.push(resp.object);
-              this.data = this.data.slice(0);
-            } else {
-              const index = this.data.findIndex(x => x.id === this.currPart.id);
-              this.data.splice(index, 1);
-              this.data.splice(index, 0, resp.object);
-              this.data = this.data.slice(0);
-            }
-            this.closeDialog();
+      this.globals
+        .showApprovalCommentModal(
+          this.currPart,
+          EnumApprovalTables.PartApproval
+        )
+        .then(() => {
+          if (this.currPart.id === undefined) {
+            let createPartRequest = this.getCreatePartRequest(this.currPart);
+            createPartRequest.comment = this.currPart.comment;
+            method = this.partsService.partPost(
+              env.apiVersion,
+              createPartRequest
+            );
+          } else {
+            let updatePartRequest = this.getUpdatePartRequest(this.currPart);
+            updatePartRequest.comment = this.currPart.comment;
+            method = this.partsService.partPatch(
+              env.apiVersion,
+              updatePartRequest
+            );
           }
-        }));
-      });
+
+          this.globals.showLoader(true);
+          method.pipe(take(1)).subscribe(
+            responseHandler((resp) => {
+              if (!resp.hasErrors) {
+                if (this.currPart.id === undefined) {
+                  this.data.push(resp.object);
+                  this.data = this.data.slice(0);
+                } else {
+                  const index = this.data.findIndex(
+                    (x) => x.id === this.currPart.id
+                  );
+                  this.data.splice(index, 1);
+                  this.data.splice(index, 0, resp.object);
+                  this.data = this.data.slice(0);
+                }
+                this.closeDialog();
+              }
+            })
+          );
+        });
     }
   }
 
   removeFile(file) {
-    const currIndex = this.currPart.files.findIndex(x => x.fileId === file.fileId);
+    const currIndex = this.currPart.files.findIndex(
+      (x) => x.fileId === file.fileId
+    );
     this.currPart.files.splice(currIndex, 1);
   }
 
   removeuploadFile(event) {
-    const index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
+    const index = this.uploadedFiles.findIndex(
+      (x) => x.name === event.file.name
+    );
     this.uploadedFiles.splice(index, 1);
   }
 
   myUploader(event) {
     const ctrl = this;
     for (let file of event.files) {
-      if (ctrl.uploadedFiles.findIndex(x => x.name === file.name) === -1) {
+      if (ctrl.uploadedFiles.findIndex((x) => x.name === file.name) === -1) {
         let fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = function () {
@@ -316,7 +420,7 @@ export class PartsComponent implements OnInit {
       nickName: currentPart.nickName,
       oemPartNumber: currentPart.oemPartNumber,
       files: currentPart.files,
-      segregationType: currentPart.segregationType
+      segregationType: currentPart.segregationType,
     });
     return ret;
   }
@@ -327,5 +431,4 @@ export class PartsComponent implements OnInit {
     Object.assign(partUpdate, this.getCreatePartRequest(currentPart));
     return partUpdate;
   }
-
 }

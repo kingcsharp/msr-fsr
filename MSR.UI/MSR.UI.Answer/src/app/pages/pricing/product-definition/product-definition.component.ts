@@ -1,25 +1,31 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import {
   PartService,
   PartModel,
-  ProcedureService, Procedure,
+  ProcedureService,
+  Procedure,
   ProcedureStepTemplateService,
-  ProductService, CreateProductRequest, UpdateProductRequest,
-  CustomerService, CustomerModel,
-  QuoteService, QuoteModel,
+  ProductService,
+  CreateProductRequest,
+  UpdateProductRequest,
+  CustomerService,
+  CustomerModel,
+  QuoteService,
+  QuoteModel,
   ProcedureStepModel,
-  AdminCostSettingsService, AdminCostSettingsModel,
+  AdminCostSettingsService,
+  AdminCostSettingsModel,
   ProductStepModel,
   ProductStep,
-} from '../../../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { environment as env } from '../../../../environments/environment';
-import { responseHandler } from '../../../utils/responseHandler';
-import { Globals } from '../../../models/lib/globals';
-import { ActivatedRoute } from '@angular/router';
-import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
-import { Router } from '@angular/router';
-import { CSRJsonModel } from '../../../models/csr-json-model';
+} from "../../../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { environment as env } from "../../../../environments/environment";
+import { responseHandler } from "../../../utils/responseHandler";
+import { Globals } from "../../../models/lib/globals";
+import { ActivatedRoute } from "@angular/router";
+import { EnumProductPageModes } from "../../../models/enums/ProductPageModes";
+import { Router } from "@angular/router";
+import { CSRJsonModel } from "../../../models/csr-json-model";
 
 declare let jQuery: any;
 
@@ -29,9 +35,9 @@ const YEAR_HOURS = 2080;
 const HOURS_MINUTES = 60;
 
 @Component({
-  selector: 'app-product-definition',
-  templateUrl: './product-definition.component.html',
-  styleUrls: ['./product-definition.component.scss'],
+  selector: "app-product-definition",
+  templateUrl: "./product-definition.component.html",
+  styleUrls: ["./product-definition.component.scss"],
   encapsulation: ViewEncapsulation.None,
   providers: [
     CustomerService,
@@ -40,7 +46,7 @@ const HOURS_MINUTES = 60;
     ProcedureStepTemplateService,
     QuoteService,
     AdminCostSettingsService,
-  ]
+  ],
 })
 export class ProductDefinitionComponent implements OnInit {
   productPageModes = EnumProductPageModes;
@@ -86,26 +92,29 @@ export class ProductDefinitionComponent implements OnInit {
     private quoteService: QuoteService,
     private route: ActivatedRoute,
     private router: Router,
-    private adminCostSettingsService: AdminCostSettingsService,
-  ) { }
+    private adminCostSettingsService: AdminCostSettingsService
+  ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.id = parseInt(params.get('id'), 10);
-      this.mode = params.get('mode');
-      this.isEditableHiddenColumns = this.globals.hasRole('CFO');
+    this.route.paramMap.subscribe((params) => {
+      this.id = parseInt(params.get("id"), 10);
+      this.mode = params.get("mode");
+      this.isEditableHiddenColumns = this.globals.hasRole("CFO");
       this.globals.showLoader(true);
       this.getAdminCostSettings();
     });
   }
   getAdminCostSettings() {
-    this.adminCostSettingsService.adminCostSettingsGet(env.apiVersion)
+    this.adminCostSettingsService
+      .adminCostSettingsGet(env.apiVersion)
       .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.adminCostSettings = response.object;
-        this.getAdminCostSettingsFlag = true;
-        this.initPage();
-      }));
+      .subscribe(
+        responseHandler((response) => {
+          this.adminCostSettings = response.object;
+          this.getAdminCostSettingsFlag = true;
+          this.initPage();
+        })
+      );
   }
 
   initPage() {
@@ -149,100 +158,154 @@ export class ProductDefinitionComponent implements OnInit {
   getQuoteData(id: number) {
     this.getQuoteDataFlag = false;
     const isCreateMode = this.mode === this.productPageModes.Create;
-    this.quoteService.quoteGet(id, env.apiVersion)
+    this.quoteService
+      .quoteGet(id, env.apiVersion)
       .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.quoteData = response.object[0];
-        if (this.quoteData.quoteJson) {
-          this.quoteJson = JSON.parse(this.quoteData.quoteJson);
-          if (!this.quoteData.partKitNo && this.quoteJson.quoteItems && this.quoteJson.quoteItems.length > 0) {
-            this.quoteData.partKitNo = this.quoteJson.quoteItems[0].customerPartNo;
-          }
-        }
-        if (this.quoteData.customerRequirementJson) {
-          this.customerRequirementJson = JSON.parse(this.quoteData.customerRequirementJson);
-          if (!this.quoteData.quoteJson && !isCreateMode) {
-            this.quoteJson = {
-              customerId: this.quoteData.customerId,
-              contact: this.customerRequirementJson.CommercialName,
-              title: this.customerRequirementJson.CommercialTitle,
-              phone: this.customerRequirementJson.CommercialPhone,
-              email: this.customerRequirementJson.CommercialEmail,
-              representative: this.quoteData.submittedBy.fullName,
-              representativeTitle: this.quoteData.submittedBy.title,
-              representativeAddress: this.customerRequirementJson.StreetAddress,
-            };
-
-            this.quoteJson.quoteItems = [{
-              qty: 1,
-              unit: 'Unit',
-              description: this.productData.procedure?.name,
-              price: this.productData.totalSalePrice,
-              extension: this.productData.totalSalePrice,
-              cycleTime: this.customerRequirementJson.ExpectedCycleTime,
-              customerPartNo: this.customerRequirementJson.PartKitNo,
-            }];
-          }
-        }
-
-        this.getQuoteDataFlag = true;
-
-        if (isCreateMode) {
-          this.productData = new CreateProductRequest();
-          if (this.quoteData.customerRequirementJson) {
-            this.productData.name =  this.customerRequirementJson.RequirementName;
-            if (this.customerRequirementJson && this.customerRequirementJson.ExpectedCycleTime) {
-              this.productData.cycleTime = parseInt('' + this.customerRequirementJson.ExpectedCycleTime, 10);
+      .subscribe(
+        responseHandler((response) => {
+          this.quoteData = response.object[0];
+          if (this.quoteData.quoteJson) {
+            this.quoteJson = JSON.parse(this.quoteData.quoteJson);
+            if (
+              !this.quoteData.partKitNo &&
+              this.quoteJson.quoteItems &&
+              this.quoteJson.quoteItems.length > 0
+            ) {
+              this.quoteData.partKitNo =
+                this.quoteJson.quoteItems[0].customerPartNo;
             }
           }
-          this.productData.quoteId = this.quoteData.id;
-          this.productData.customerId = this.quoteData.customerId;
-          this.productData.partId = null;
-          this.productData.procedureId = null;
-          this.productData.revision = 0;
-          this.productData.laborCost = 0;
-          this.productData.equipmentCost = 0;
-          this.productData.totalLaborMins = 0;
-          this.productData.totalMachineMins = 0;
-          this.productData.materialCost = 0;
-          this.getProductDataFlag = true;
-          this.getQuotePartKitNo();
-        }
-      }));
+          if (this.quoteData.customerRequirementJson) {
+            this.customerRequirementJson = JSON.parse(
+              this.quoteData.customerRequirementJson
+            );
+            if (!this.quoteData.quoteJson && !isCreateMode) {
+              this.quoteJson = {
+                customerId: this.quoteData.customerId,
+                contact: this.customerRequirementJson.CommercialName,
+                title: this.customerRequirementJson.CommercialTitle,
+                phone: this.customerRequirementJson.CommercialPhone,
+                email: this.customerRequirementJson.CommercialEmail,
+                representative: this.quoteData.submittedBy.fullName,
+                representativeTitle: this.quoteData.submittedBy.title,
+                representativeAddress:
+                  this.customerRequirementJson.StreetAddress,
+              };
+
+              this.quoteJson.quoteItems = [
+                {
+                  qty: 1,
+                  unit: "Unit",
+                  description: this.productData.procedure?.name,
+                  price: this.productData.totalSalePrice,
+                  extension: this.productData.totalSalePrice,
+                  cycleTime: this.customerRequirementJson.ExpectedCycleTime,
+                  customerPartNo: this.customerRequirementJson.PartKitNo,
+                },
+              ];
+            }
+          }
+
+          this.getQuoteDataFlag = true;
+
+          if (isCreateMode) {
+            this.productData = new CreateProductRequest();
+            if (this.quoteData.customerRequirementJson) {
+              this.productData.name =
+                this.customerRequirementJson.RequirementName;
+              if (
+                this.customerRequirementJson &&
+                this.customerRequirementJson.ExpectedCycleTime
+              ) {
+                this.productData.cycleTime = parseInt(
+                  "" + this.customerRequirementJson.ExpectedCycleTime,
+                  10
+                );
+              }
+            }
+            this.productData.quoteId = this.quoteData.id;
+            this.productData.customerId = this.quoteData.customerId;
+            this.productData.partId = null;
+            this.productData.procedureId = null;
+            this.productData.revision = 0;
+            this.productData.laborCost = 0;
+            this.productData.equipmentCost = 0;
+            this.productData.totalLaborMins = 0;
+            this.productData.totalMachineMins = 0;
+            this.productData.materialCost = 0;
+            this.getProductDataFlag = true;
+            this.getQuotePartKitNo();
+          }
+        })
+      );
   }
 
   getProductData() {
     this.getProductDataFlag = false;
     this.productSteps = [];
-    this.productService.productGet(this.id, null, env.apiVersion)
+    this.productService
+      .productGet(this.id, null, env.apiVersion)
       .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.productData = response.object[0];
-        this.getProductDataFlag = true;
-        if (this.productData.productSteps && this.productData.productSteps.length > 0) {
-          this.productData.productSteps.forEach((value) => {
-            const productStepValue = this.calculateProductStepValues(value);
-            this.productSteps.push(productStepValue);
-          });
-          this.getStepsValues(this.mode === this.productPageModes.Create);
-          this.getProcedureStepsFlag = true;
-        } else {
-          this.getProcedureSteps(this.productData.procedureId);
-        }
-        this.getQuoteData(this.productData.quoteId);
-      }));
+      .subscribe(
+        responseHandler((response) => {
+          this.productData = response.object[0];
+          this.getProductDataFlag = true;
+          if (
+            this.productData.productSteps &&
+            this.productData.productSteps.length > 0
+          ) {
+            this.productData.productSteps.forEach((value) => {
+              const productStepValue = this.calculateProductStepValues(value);
+              this.productSteps.push(productStepValue);
+            });
+            this.getStepsValues(this.mode === this.productPageModes.Create);
+            this.getProcedureStepsFlag = true;
+          } else {
+            this.getProcedureSteps(this.productData.procedureId);
+          }
+          this.getQuoteData(this.productData.quoteId);
+        })
+      );
   }
 
   getCustomers() {
     if (this.getCustomersFlag) {
       return this.customersData;
     }
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
-      response.object.map((x) => {
-        this.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
-      });
-      this.getCustomersFlag = true;
-    }));
+    this.customerService
+      .customerGet(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
+      .subscribe(
+        responseHandler((response) => {
+          response.object.map((x) => {
+            this.customersData.push({
+              label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`,
+              value: x.id,
+            });
+          });
+          this.getCustomersFlag = true;
+        })
+      );
   }
 
   getCustomerLabel(customer: CustomerModel): string {
@@ -260,25 +323,56 @@ export class ProductDefinitionComponent implements OnInit {
       return this.partsData;
     }
 
-    this.partsService.partGet(null, null, null, null, null, null, null, null, null, null
-      , null, null, null, null, null, null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        response.object.map((x) => {
-          this.partsData.push({ label: `${x.name} [${x.partNumber}] [ID: ${x.id}]`, partNumber: x.partNumber, value: x.id });
-        });
-        this.getPartsFlag = true;
-        if (isRefresh) {
-          this.isRefreshingPartsData = false;
-        }
-        if (this.mode === this.productPageModes.Create) {
-          this.getQuotePartKitNo();
-        }
-      }));
+    this.partsService
+      .partGet(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          response.object.map((x) => {
+            this.partsData.push({
+              label: `${x.name} [${x.partNumber}] [ID: ${x.id}]`,
+              partNumber: x.partNumber,
+              value: x.id,
+            });
+          });
+          this.getPartsFlag = true;
+          if (isRefresh) {
+            this.isRefreshingPartsData = false;
+          }
+          if (this.mode === this.productPageModes.Create) {
+            this.getQuotePartKitNo();
+          }
+        })
+      );
   }
 
   getQuotePartKitNo() {
-    if (this.productData.partId === null && this.getQuoteDataFlag && this.getPartsFlag) {
-      const index = this.partsData.findIndex(x => x.partNumber === this.quoteData.partKitNo);
+    if (
+      this.productData.partId === null &&
+      this.getQuoteDataFlag &&
+      this.getPartsFlag
+    ) {
+      const index = this.partsData.findIndex(
+        (x) => x.partNumber === this.quoteData.partKitNo
+      );
       if (index > -1) {
         this.productData.partId = this.partsData[index].value;
       }
@@ -298,17 +392,39 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.getProceduresFlag && !isRefresh) {
       return this.proceduresData;
     }
-    this.procedureService.procedureGet(null, null, null, null, null, null, null, null
-      , null, null, null, null, null, null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        response.object.map((x) => {
-          this.proceduresData.push({ label: `${x.name} [ID: ${x.id}]`, value: x.id });
-        });
-        this.getProceduresFlag = true;
-        if (isRefresh) {
-          this.isRefreshingProceduresData = false;
-        }
-      }));
+    this.procedureService
+      .procedureGet(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          response.object.map((x) => {
+            this.proceduresData.push({
+              label: `${x.name} [ID: ${x.id}]`,
+              value: x.id,
+            });
+          });
+          this.getProceduresFlag = true;
+          if (isRefresh) {
+            this.isRefreshingProceduresData = false;
+          }
+        })
+      );
   }
 
   getProcedureLabel(procedure: Procedure): string {
@@ -327,14 +443,14 @@ export class ProductDefinitionComponent implements OnInit {
         laborMinutes: $event.value.laborTime,
         equipmentMinutes: $event.value.equipmentTime,
         replacementCost: $event.value.replacementCost,
-        utilization:  $event.value.utilization,
+        utilization: $event.value.utilization,
         usefulLife: $event.value.usefulLife,
         printOrder: index + 1,
         title: $event.value.title,
       });
       const productStepValue = this.calculateProductStepValues(step);
       const stepTemplate = this.productSteps[index].stepTemplate;
-      this.productSteps[index] = {stepTemplate, ...productStepValue};
+      this.productSteps[index] = { stepTemplate, ...productStepValue };
       this.getStepsValues(true);
     }
   }
@@ -343,12 +459,24 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.getProcedureStepTemplatesFlag) {
       return this.procedureStepTemplatesData;
     }
-    this.procedureStepTemplateService.procedureStepTemplateGet(null, null, null, null, null, null, null, env.apiVersion)
+    this.procedureStepTemplateService
+      .procedureStepTemplateGet(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
       .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.procedureStepTemplatesData = response.object;
-        this.getProcedureStepTemplatesFlag = true;
-      }));
+      .subscribe(
+        responseHandler((response) => {
+          this.procedureStepTemplatesData = response.object;
+          this.getProcedureStepTemplatesFlag = true;
+        })
+      );
   }
 
   /**
@@ -358,29 +486,33 @@ export class ProductDefinitionComponent implements OnInit {
     this.getProcedureStepsFlag = false;
     this.globals.showLoader(true);
     this.productSteps = [];
-    this.procedureService.stepGet(id, null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        response.object.forEach((value) => {
-          // Calculate each step values
-          const step = new ProductStepModel({
-            procedureStepId: value.id,
-            laborMinutes: value.laborTime,
-            equipmentMinutes: value.equipmentTime,
-            replacementCost: value.replacementCost,
-            utilization:  value.utilization,
-            usefulLife: value.usefulLife,
-            printOrder: value.printOrder,
-            title: value.title,
+    this.procedureService
+      .stepGet(id, null, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          response.object.forEach((value) => {
+            // Calculate each step values
+            const step = new ProductStepModel({
+              procedureStepId: value.id,
+              laborMinutes: value.laborTime,
+              equipmentMinutes: value.equipmentTime,
+              replacementCost: value.replacementCost,
+              utilization: value.utilization,
+              usefulLife: value.usefulLife,
+              printOrder: value.printOrder,
+              title: value.title,
+            });
+            const productStepValue = this.calculateProductStepValues(step);
+            this.productSteps.push(productStepValue);
           });
-          const productStepValue = this.calculateProductStepValues(step);
-          this.productSteps.push(productStepValue);
-        });
-        this.getProcedureStepsFlag = true;
+          this.getProcedureStepsFlag = true;
 
-        // Calcuate total step values
-        this.getStepsValues(this.mode === this.productPageModes.Create);
-        this.newStepsCounts = 0;
-      }));
+          // Calcuate total step values
+          this.getStepsValues(this.mode === this.productPageModes.Create);
+          this.newStepsCounts = 0;
+        })
+      );
   }
 
   onSelectProcedure($event) {
@@ -406,9 +538,9 @@ export class ProductDefinitionComponent implements OnInit {
     let totalLaborCharge = 0;
     let totalEquipmentCharge = 0;
 
-    this.productSteps.forEach(step => {
-      totalLaborMins += (step.laborMinutes ? step.laborMinutes : 0);
-      totalMachineMins += (step.equipmentMinutes ? step.equipmentMinutes : 0);
+    this.productSteps.forEach((step) => {
+      totalLaborMins += step.laborMinutes ? step.laborMinutes : 0;
+      totalMachineMins += step.equipmentMinutes ? step.equipmentMinutes : 0;
       totalLaborCharge += step.laborCharge;
       totalEquipmentCharge += step.equipmentCharge;
     });
@@ -417,8 +549,16 @@ export class ProductDefinitionComponent implements OnInit {
 
     if (isRefresh) {
       this.productData.laborCost = parseFloat(totalLaborCharge.toFixed(2));
-      this.productData.equipmentCost = parseFloat(totalEquipmentCharge.toFixed(2));
-      this.productData.totalSalePrice = parseFloat((this.productData.laborCost + this.productData.equipmentCost + (this.productData.materialCost ? this.productData.materialCost : 0)).toFixed(2));
+      this.productData.equipmentCost = parseFloat(
+        totalEquipmentCharge.toFixed(2)
+      );
+      this.productData.totalSalePrice = parseFloat(
+        (
+          this.productData.laborCost +
+          this.productData.equipmentCost +
+          (this.productData.materialCost ? this.productData.materialCost : 0)
+        ).toFixed(2)
+      );
     }
   }
 
@@ -431,7 +571,8 @@ export class ProductDefinitionComponent implements OnInit {
       }
 
       this.productSteps[index].laborMinutes = laborMinutes;
-      this.productSteps[index].laborCharge = laborMinutes * this.adminCostSettings.laborRateMinute;
+      this.productSteps[index].laborCharge =
+        laborMinutes * this.adminCostSettings.laborRateMinute;
 
       this.getStepsValues(true);
     }
@@ -446,15 +587,17 @@ export class ProductDefinitionComponent implements OnInit {
       }
 
       this.productSteps[index].equipmentMinutes = equipmentMinutes;
-      this.productSteps[index].equipmentCharge = equipmentMinutes * this.productSteps[index].equipmentExpensePerMinute + equipmentMinutes * this.productSteps[index].rmPerMinuteRate;
+      this.productSteps[index].equipmentCharge =
+        equipmentMinutes * this.productSteps[index].equipmentExpensePerMinute +
+        equipmentMinutes * this.productSteps[index].rmPerMinuteRate;
 
       this.getStepsValues(true);
     }
   }
 
   onChangeMaterialCost($event) {
-    jQuery('#materialCost').parsley().validate();
-    if (jQuery('#materialCost').parsley().isValid()) {
+    jQuery("#materialCost").parsley().validate();
+    if (jQuery("#materialCost").parsley().isValid()) {
       let materialCost = 0.0;
       if ($event.target.value) {
         materialCost = parseFloat(parseFloat($event.target.value).toFixed(2));
@@ -462,15 +605,23 @@ export class ProductDefinitionComponent implements OnInit {
       } else {
         this.productData.materialCost = null;
       }
-      this.productData.totalSalePrice = parseFloat((this.productData.laborCost + this.productData.equipmentCost + materialCost).toFixed(2));
+      this.productData.totalSalePrice = parseFloat(
+        (
+          this.productData.laborCost +
+          this.productData.equipmentCost +
+          materialCost
+        ).toFixed(2)
+      );
     }
   }
 
   onChangeTotalSalePrice($event) {
-    jQuery('#totalSalePrice').parsley().validate();
-    if (jQuery('#totalSalePrice').parsley().isValid()) {
+    jQuery("#totalSalePrice").parsley().validate();
+    if (jQuery("#totalSalePrice").parsley().isValid()) {
       if ($event.target.value) {
-        const totalSalePrice = parseFloat(parseFloat($event.target.value).toFixed(2));
+        const totalSalePrice = parseFloat(
+          parseFloat($event.target.value).toFixed(2)
+        );
         this.productData.totalSalePrice = totalSalePrice;
       } else {
         this.productData.totalSalePrice = null;
@@ -479,8 +630,8 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   onChangeCycleTime($event) {
-    jQuery('#cycleTime').parsley().validate();
-    if (jQuery('#cycleTime').parsley().isValid()) {
+    jQuery("#cycleTime").parsley().validate();
+    if (jQuery("#cycleTime").parsley().isValid()) {
       if ($event.target.value) {
         const cycleTime = parseInt($event.target.value, 10);
         this.productData.cycleTime = cycleTime;
@@ -512,7 +663,9 @@ export class ProductDefinitionComponent implements OnInit {
 
       this.productSteps[index].replacementCost = replacementCost;
 
-      this.productSteps[index].rmAnnualRate = replacementCost ? replacementCost * this.adminCostSettings.rmAnnualRate : 0;
+      this.productSteps[index].rmAnnualRate = replacementCost
+        ? replacementCost * this.adminCostSettings.rmAnnualRate
+        : 0;
       this.calculateEquipPerMinute(index);
     }
   }
@@ -528,7 +681,12 @@ export class ProductDefinitionComponent implements OnInit {
 
       this.productSteps[index].utilization = utilization;
 
-      this.productSteps[index].rmPerMinuteRate = utilization ? (this.adminCostSettings.rmAnnualRate / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * utilization)) : 0;
+      this.productSteps[index].rmPerMinuteRate = utilization
+        ? this.adminCostSettings.rmAnnualRate /
+          (this.adminCostSettings.yearsHours *
+            this.adminCostSettings.hourMinutes *
+            utilization)
+        : 0;
       this.calculateEquipPerMinute(index);
     }
   }
@@ -556,7 +714,8 @@ export class ProductDefinitionComponent implements OnInit {
         equipmentExpensePerMinute = parseFloat($event.target.value);
       }
 
-      this.productSteps[index].equipmentExpensePerMinute = equipmentExpensePerMinute;
+      this.productSteps[index].equipmentExpensePerMinute =
+        equipmentExpensePerMinute;
       this.calculateCharge(index);
     }
   }
@@ -591,36 +750,69 @@ export class ProductDefinitionComponent implements OnInit {
 
   calculateEquipPerMinute(index: number) {
     this.productSteps[index].equipmentExpensePerMinute =
-        (this.productSteps[index].replacementCost && this.productSteps[index].utilization && this.productSteps[index].usefulLife)
-          ? (this.productSteps[index].replacementCost / this.productSteps[index].usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * this.productSteps[index].utilization)
-          : 0;
+      this.productSteps[index].replacementCost &&
+      this.productSteps[index].utilization &&
+      this.productSteps[index].usefulLife
+        ? this.productSteps[index].replacementCost /
+          this.productSteps[index].usefulLife /
+          (this.adminCostSettings.yearsHours *
+            this.adminCostSettings.hourMinutes *
+            this.productSteps[index].utilization)
+        : 0;
     this.calculateCharge(index);
   }
 
   calculateCharge(index: number) {
-    this.productSteps[index].laborCharge = this.productSteps[index].laborMinutes ? this.productSteps[index].laborMinutes * this.adminCostSettings.laborRateMinute : 0;
+    this.productSteps[index].laborCharge = this.productSteps[index].laborMinutes
+      ? this.productSteps[index].laborMinutes *
+        this.adminCostSettings.laborRateMinute
+      : 0;
 
-    this.productSteps[index].equipmentCharge = this.productSteps[index].equipmentMinutes
-      ? (this.productSteps[index].equipmentMinutes * this.productSteps[index].equipmentExpensePerMinute +  this.productSteps[index].equipmentMinutes * this.productSteps[index].rmPerMinuteRate)
+    this.productSteps[index].equipmentCharge = this.productSteps[index]
+      .equipmentMinutes
+      ? this.productSteps[index].equipmentMinutes *
+          this.productSteps[index].equipmentExpensePerMinute +
+        this.productSteps[index].equipmentMinutes *
+          this.productSteps[index].rmPerMinuteRate
       : 0;
 
     this.getStepsValues(true);
   }
 
   calculateProductStepValues(step: ProductStepModel) {
-    const rmAnnualRate = step.rmAnnualRate ? step.rmAnnualRate : (step.replacementCost ? step.replacementCost * this.adminCostSettings.rmAnnualRate : 0);
+    const rmAnnualRate = step.rmAnnualRate
+      ? step.rmAnnualRate
+      : step.replacementCost
+      ? step.replacementCost * this.adminCostSettings.rmAnnualRate
+      : 0;
 
-    const rmPerMinuteRate = step.rmPerMinuteRate ? step.rmPerMinuteRate : (step.utilization ? (this.adminCostSettings.rmAnnualRate / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization)) : 0);
+    const rmPerMinuteRate = step.rmPerMinuteRate
+      ? step.rmPerMinuteRate
+      : step.utilization
+      ? this.adminCostSettings.rmAnnualRate /
+        (this.adminCostSettings.yearsHours *
+          this.adminCostSettings.hourMinutes *
+          step.utilization)
+      : 0;
 
     const equipmentExpensePerMinute = step.equipmentExpensePerMinute
       ? step.equipmentExpensePerMinute
-      : ((step.replacementCost && step.utilization && step.usefulLife)
-        ? (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization)
-        : 0);
+      : step.replacementCost && step.utilization && step.usefulLife
+      ? step.replacementCost /
+        step.usefulLife /
+        (this.adminCostSettings.yearsHours *
+          this.adminCostSettings.hourMinutes *
+          step.utilization)
+      : 0;
 
-    const laborCharge = step.laborMinutes ? step.laborMinutes * this.adminCostSettings.laborRateMinute : 0;
+    const laborCharge = step.laborMinutes
+      ? step.laborMinutes * this.adminCostSettings.laborRateMinute
+      : 0;
 
-    const equipmentCharge = step.equipmentMinutes ? (step.equipmentMinutes * equipmentExpensePerMinute + step.equipmentMinutes * rmPerMinuteRate) : 0;
+    const equipmentCharge = step.equipmentMinutes
+      ? step.equipmentMinutes * equipmentExpensePerMinute +
+        step.equipmentMinutes * rmPerMinuteRate
+      : 0;
 
     return {
       ...step,
@@ -655,44 +847,49 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   openUrlWithNewTab(urlTree: string) {
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree([urlTree])
-    );
-    window.open('#/' + url, '_blank');
+    const url = this.router.serializeUrl(this.router.createUrlTree([urlTree]));
+    window.open("#/" + url, "_blank");
   }
 
   onSubmit() {
-    jQuery('.parsleyjs').parsley().validate();
-    if (jQuery('.parsleyjs').parsley().isValid()) {
+    jQuery(".parsleyjs").parsley().validate();
+    if (jQuery(".parsleyjs").parsley().isValid()) {
       const productData = this.productData;
       productData.productSteps = [];
       this.productSteps.forEach((step) => {
         const productStep = new ProductStep();
         productStep.init(step);
-        productStep.productId = this.mode === this.productPageModes.Create ? null : this.id;
+        productStep.productId =
+          this.mode === this.productPageModes.Create ? null : this.id;
         productData.productSteps.push(productStep);
       });
       this.globals.showLoader(true);
       if (this.mode === this.productPageModes.Create) {
         const requestData = new CreateProductRequest();
         requestData.init(productData);
-        this.productService.productPost(env.apiVersion, requestData)
+        this.productService
+          .productPost(env.apiVersion, requestData)
           .pipe(take(1))
-          .subscribe(responseHandler((resp) => {
-            if (!resp.hasErrors) {
-              this.router.navigate(['app/pricing/products']);
-            }
-          }));
+          .subscribe(
+            responseHandler((resp) => {
+              if (!resp.hasErrors) {
+                this.router.navigate(["app/pricing/products"]);
+              }
+            })
+          );
       } else if (this.mode === this.productPageModes.Edit) {
         const updateData = new UpdateProductRequest();
         updateData.init(productData);
-        this.productService.productPatch(env.apiVersion, updateData)
+        this.productService
+          .productPatch(env.apiVersion, updateData)
           .pipe(take(1))
-          .subscribe(responseHandler((resp) => {
-            if (!resp.hasErrors) {
-              this.router.navigate(['app/pricing/products']);
-            }
-          }));
+          .subscribe(
+            responseHandler((resp) => {
+              if (!resp.hasErrors) {
+                this.router.navigate(["app/pricing/products"]);
+              }
+            })
+          );
       }
     }
   }
@@ -701,4 +898,3 @@ export class ProductDefinitionComponent implements OnInit {
     window.print();
   }
 }
-

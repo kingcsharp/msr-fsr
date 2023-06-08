@@ -1,19 +1,31 @@
-import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-import { catchError, map } from 'rxjs/operators';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { AppConfig } from './app.config';
-import { Globals } from './models/lib/globals';
-import { LoginService } from './pages/login/login.service';
-import { Router } from '@angular/router';
+import { Injectable } from "@angular/core";
+import { Observable, throwError } from "rxjs";
+import { ToastrService } from "ngx-toastr";
+import { catchError, map } from "rxjs/operators";
+import {
+  HttpEvent,
+  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
+  HttpResponse,
+  HttpHeaders,
+} from "@angular/common/http";
+import { AppConfig } from "./app.config";
+import { Globals } from "./models/lib/globals";
+import { LoginService } from "./pages/login/login.service";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class AppInterceptor implements HttpInterceptor {
   config;
   requests: number = 0;
-  constructor(appConfig: AppConfig, private toastr: ToastrService, private globals: Globals
-    , private loginService: LoginService, private router: Router) {
+  constructor(
+    appConfig: AppConfig,
+    private toastr: ToastrService,
+    private globals: Globals,
+    private loginService: LoginService,
+    private router: Router
+  ) {
     this.config = appConfig.getConfig();
   }
 
@@ -25,7 +37,7 @@ export class AppInterceptor implements HttpInterceptor {
 
   nextSuccessHandler(blob) {
     let reader = new FileReader();
-    reader.onload = event => {
+    reader.onload = (event) => {
       const value = JSON.parse(event.target.result.toString());
       if (value === undefined || value === null) {
         return;
@@ -47,13 +59,19 @@ export class AppInterceptor implements HttpInterceptor {
     }
   }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     req = req.clone({ url: this.config.baseURLApi + req.url });
     const method = req.method;
-    const token: string = localStorage.getItem('token');
+    const token: string = localStorage.getItem("token");
 
-    if (this.loginService.isAuthenticated() !== undefined && !this.loginService.isAuthenticated()) {
-      this.toastr.error('Your token has expired, please log in again.');
+    if (
+      this.loginService.isAuthenticated() !== undefined &&
+      !this.loginService.isAuthenticated()
+    ) {
+      this.toastr.error("Your token has expired, please log in again.");
       this.loginService.logoutUser();
       return throwError(undefined);
     }
@@ -63,26 +81,31 @@ export class AppInterceptor implements HttpInterceptor {
     }
 
     req = req.clone({
-      headers: req.headers.set('Authorization', 'Bearer ' + token)
+      headers: req.headers.set("Authorization", "Bearer " + token),
     });
 
     return next.handle(req).pipe(
-      catchError(err => {
+      catchError((err) => {
         this.decrementRequestCounter(req.url);
         this.turnOffLoader();
         if (err.error) {
           let reader = new FileReader();
-          reader.onload = event => {
-            if (event.target.result === '') {
-              this.toastr.error('Internal Server Error, please try again later.');
+          reader.onload = (event) => {
+            if (event.target.result === "") {
+              this.toastr.error(
+                "Internal Server Error, please try again later."
+              );
               return throwError(undefined);
             }
             const errorParsed = JSON.parse(event.target.result.toString());
             if (err.status === 401) {
-              this.toastr.error('You are not authorized to do this action.');
+              this.toastr.error("You are not authorized to do this action.");
               return throwError(err.error);
             }
-            if (errorParsed.errorMessages && errorParsed.errorMessages.length > 0) {
+            if (
+              errorParsed.errorMessages &&
+              errorParsed.errorMessages.length > 0
+            ) {
               this.toastr.error(errorParsed.errorMessages[0].message);
             } else {
               this.toastr.error(err.statusText);
@@ -90,27 +113,29 @@ export class AppInterceptor implements HttpInterceptor {
 
             return throwError(err.error);
           };
-          if (err.statusText === 'Unknown Error') {
-            this.toastr.error('Internal Server Error, please try again later.');
+          if (err.statusText === "Unknown Error") {
+            this.toastr.error("Internal Server Error, please try again later.");
             return throwError(undefined);
           } else {
             reader.readAsText(err.error);
             return throwError(err.error);
           }
         }
-        if (err.error === 'Invalid token.') {
-          this.toastr.error('Invalid token.');
+        if (err.error === "Invalid token.") {
+          this.toastr.error("Invalid token.");
           return throwError(err);
         }
-      }), map((event: HttpEvent<any>) => {
+      }),
+      map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
-          if (method === 'PATCH' || method === 'POST' || method === 'DELETE') {
+          if (method === "PATCH" || method === "POST" || method === "DELETE") {
             this.nextSuccessHandler(event.body);
           }
           this.decrementRequestCounter(req.url);
           this.turnOffLoader();
         }
         return event;
-      }));
+      })
+    );
   }
 }

@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: '[tables-basic]',
-  templateUrl: './tables-basic.template.html'
+  selector: "[tables-basic]",
+  templateUrl: "./tables-basic.template.html",
 })
-export class TablesBasicComponent {
-}
+export class TablesBasicComponent {}

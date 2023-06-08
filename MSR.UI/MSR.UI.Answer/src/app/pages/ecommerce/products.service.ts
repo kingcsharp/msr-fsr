@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
-import mock from './mock';
-import {AppConfig} from '../../app.config';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Router } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
+import mock from "./mock";
+import { AppConfig } from "../../app.config";
 
 export class Product {
   id?: number;
@@ -23,15 +23,15 @@ export class Product {
     if (id) {
       this.id = id;
     }
-    this.img = '';
-    this.title = '';
-    this.subtitle = '';
+    this.img = "";
+    this.title = "";
+    this.subtitle = "";
     this.price = 0.01;
     this.rating = 5;
-    this.description_1 = '';
-    this.description_2 = '';
+    this.description_1 = "";
+    this.description_2 = "";
     this.code = null;
-    this.hashtag = '';
+    this.hashtag = "";
     this.technology = [];
     this.discount = null;
   }
@@ -63,7 +63,7 @@ export class ProductsService {
       this.receiveProducts(mock);
     } else {
       this.receivingProducts();
-      this.http.get('/products').subscribe(products => {
+      this.http.get("/products").subscribe((products) => {
         this.receiveProducts(products);
       });
     }
@@ -72,10 +72,10 @@ export class ProductsService {
   loadProductRequest(id) {
     // We check if app runs with backend mode
     if (!this.config.isBackend) {
-      this.receiveProduct(mock.find(arr => arr.id === id));
+      this.receiveProduct(mock.find((arr) => arr.id === id));
     } else {
       this.receivingProduct();
-      this.http.get('/products/' + id).subscribe(product => {
+      this.http.get("/products/" + id).subscribe((product) => {
         this.receiveProduct(product);
       });
     }
@@ -88,10 +88,12 @@ export class ProductsService {
     }
 
     this.updatingProduct();
-    this.http.put('/products/' + payload.product.id, payload.product).subscribe(() => {
-      this.updateProduct(payload.product);
-      this.toastr.success('Product has been Updated!');
-    });
+    this.http
+      .put("/products/" + payload.product.id, payload.product)
+      .subscribe(() => {
+        this.updateProduct(payload.product);
+        this.toastr.success("Product has been Updated!");
+      });
   }
 
   createProductRequest(payload) {
@@ -101,10 +103,10 @@ export class ProductsService {
     }
 
     this.updatingProduct();
-    this.http.post('/products', payload.product).subscribe(() => {
+    this.http.post("/products", payload.product).subscribe(() => {
       this.updateProduct(payload.product);
-      this.router.navigate(['/app/ecommerce/management']);
-      this.toastr.success('Product has been Created!');
+      this.router.navigate(["/app/ecommerce/management"]);
+      this.toastr.success("Product has been Created!");
     });
   }
 
@@ -115,12 +117,12 @@ export class ProductsService {
     }
 
     this.deletingProduct(payload);
-    this.http.delete('/products/' + payload.id).subscribe(() => {
-      this.deleteProduct({id: payload.id});
+    this.http.delete("/products/" + payload.id).subscribe(() => {
+      this.deleteProduct({ id: payload.id });
       // if (this.router.history.current.pathname !== '/app/ecommerce/management') {
       //   this.router.navigate(['/app/ecommerce/management']);
       // }
-      this.toastr.success('Product has been Deleted!');
+      this.toastr.success("Product has been Deleted!");
     });
   }
 
@@ -130,12 +132,14 @@ export class ProductsService {
       return;
     }
 
-    this.http.get('/products/images-list').subscribe((images: Array<string>) => {
-      this.receiveProductImages(images);
-      if (!payload.img && images.length) {
-        this.updateProduct({id: payload.id, img: images[0]});
-      }
-    });
+    this.http
+      .get("/products/images-list")
+      .subscribe((images: Array<string>) => {
+        this.receiveProductImages(images);
+        if (!payload.img && images.length) {
+          this.updateProduct({ id: payload.id, img: images[0] });
+        }
+      });
   }
 
   receiveProducts(payload) {
@@ -172,7 +176,7 @@ export class ProductsService {
   }
 
   deleteProduct(payload) {
-    const indexToDelete = this.products.findIndex(p => p.id === payload.id);
+    const indexToDelete = this.products.findIndex((p) => p.id === payload.id);
     this.products.splice(indexToDelete, 1);
     this.isDeleting = false;
     this.idToDelete = null;

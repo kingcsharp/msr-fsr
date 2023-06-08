@@ -10,8 +10,7 @@ After cloning the project, run the following command to install required package
 
 The following options allow the application to run for different purposes
 
-Option 1) Run with dev server as the backend (The backend needs to
-be running before issuing this command, or it will fail).
+Option 1) Run with dev server as the backend (The backend needs to be running before issuing this command, or it will fail).
 
     npm run start
 
@@ -23,12 +22,11 @@ Option 3) Run with Cypress Test Runner
 
     npm run cypress:test
 
-
 Navigate to [http://localhost:3000/](http://localhost:3000/). The app will automatically reload if you change any of the source files.
 
 **Note: If Cypress is running, it will automatically reload tests**
 
-## Other commands worth noting ##
+## Other commands worth noting
 
 **Code scaffolding**
 
@@ -63,21 +61,17 @@ Once the backend is running and you have started the application with `npm run s
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
-**package.json has all the scripts you can run or add to be compiled before actions.**
-eg. `npm run buildstage` this will build the solution with the environment file environment.stage
+**package.json has all the scripts you can run or add to be compiled before actions.** eg. `npm run buildstage` this will build the solution with the environment file environment.stage
 
-# Must Read Developer Notes #
+# Must Read Developer Notes
+
 **Note: All developers should read this**
 
 ## GLOBALS
 
 The `hashasPrivilege` method handles the privileges of the user. Every view will need to handle the specific privileges in the following way:
 
-This method will tell globals what views can be accessed based on the user's privileges
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
-    hasPrivilege(privName) {
-        return this.globals.hasPrivilege(EnumPrivilege.Users, privName);
-    }
+This method will tell globals what views can be accessed based on the user's privileges import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges'; hasPrivilege(privName) { return this.globals.hasPrivilege(EnumPrivilege.Users, privName); }
 
 Then in the initialization of the component we need to set the privilege as follows:
 
@@ -86,15 +80,16 @@ Then in the initialization of the component we need to set the privilege as foll
 
 Setting that up in the view with `<button *ngIf="canAddUsers".../>` we'll know if the user can or can not see a button.
 
-
 ## Environments:
+
 Environments defined in the folder with .dev/.prod/stage or the localhost which is environment.ts
 
 ## UtilsModule
+
 Has many of the repeated modules needed in all the pages
 
+## Services:
 
-##  Services:
     imports needed:
     import { AccountService, ForgotPasswordRequest, ForgotUserNameRequest } from '../../services/api.client.generated';
     import { environment as env } from '../../../environments/environment';
@@ -124,16 +119,16 @@ Example
 
     }));
 
+# Third-party documentation
 
-# Third-party documentation #
-
-## Ngx Admin Template ##
+## Ngx Admin Template
 
 Light Blue Angular Dashboard - Ngx Admin Template (4.3.0 Full version) with Angular 8.0 Final Release support
+
 - [Documentation](https://demo.flatlogic.com/sing-app/documentation/angular_components.html)
 - [Demo](https://flatlogic.com/templates/light-blue-angular/demo)
 
-## Primefaces Grid ##
+## Primefaces Grid
 
 - [Documentation](https://www.primefaces.org/primeng/showcase/#/filterutils)
 - [Gihub](https://github.com/primefaces/primeng/blob/master/src/app/components/table/table.ts)
@@ -151,10 +146,9 @@ Light Blue Angular Dashboard - Ngx Admin Template (4.3.0 Full version) with Angu
 - [Nswag Studio to generate the nswag config file](https://github.com/RicoSuter/NSwag/wiki/NSwagStudio)
 
 ## Bootstrap
-[Documentation](https://ng-bootstrap.github.io/#/components/tooltip/examples)
-[Documentation](https://getbootstrap.com/docs/4.0/utilities/colors/)
+
+[Documentation](https://ng-bootstrap.github.io/#/components/tooltip/examples) [Documentation](https://getbootstrap.com/docs/4.0/utilities/colors/)
 
 ## HighCharts
-[Documentation](https://github.com/highcharts/highcharts-angular)
-[ChartOptions to set up all the chart options](https://api.highcharts.com/highcharts)
-[ChartDemoExamples](https://codepen.io/pen)
+
+[Documentation](https://github.com/highcharts/highcharts-angular) [ChartOptions to set up all the chart options](https://api.highcharts.com/highcharts) [ChartDemoExamples](https://codepen.io/pen)

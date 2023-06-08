@@ -1,6 +1,6 @@
-import { Subject } from 'rxjs';
+import { Subject } from "rxjs";
 
 export class ModalData {
-    showModal: boolean;
-    comment: Subject<string>;
+  showModal: boolean;
+  comment: Subject<string>;
 }

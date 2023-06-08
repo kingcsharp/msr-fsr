@@ -1,7 +1,7 @@
 export class WorkOrderItem {
-    WorkOrderId: number;
-    ProcedureName: string;
-    SerialNumber: string;
-    Status: string;
-    CustomerPurchaseNumber: string;
-  }
+  WorkOrderId: number;
+  ProcedureName: string;
+  SerialNumber: string;
+  Status: string;
+  CustomerPurchaseNumber: string;
+}

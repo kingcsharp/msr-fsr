@@ -1,24 +1,28 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { Globals } from '../../../models/lib/globals';
-import { environment as env } from '../../../../environments/environment';
-import { responseHandler } from '../../../utils/responseHandler';
-import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege } from '../../../models/enums/privileges';
-import { Procedure, ProcedureService, EnumApprovalTables, EnumMenuItem } from '../../../services/api.client.generated';
-import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { callFunctionWithFilters } from '../../../models/lib/Utils';
-import { LazyLoadEvent } from 'primeng/api';
-import { take } from 'rxjs/operators';
-import { CSVConverterService } from '../../../services/csvconverter.service';
+import { Component, OnInit, ElementRef } from "@angular/core";
+import { Globals } from "../../../models/lib/globals";
+import { environment as env } from "../../../../environments/environment";
+import { responseHandler } from "../../../utils/responseHandler";
+import { ColumnsSaved } from "../../../models/lib/ColumnsSaved";
+import { CommonGrid } from "../../../models/lib/CommonGrid";
+import { EnumPrivilege } from "../../../models/enums/privileges";
+import {
+  Procedure,
+  ProcedureService,
+  EnumApprovalTables,
+  EnumMenuItem,
+} from "../../../services/api.client.generated";
+import { AllowedActions } from "../../../models/lib/AllowedActions";
+import { callFunctionWithFilters } from "../../../models/lib/Utils";
+import { LazyLoadEvent } from "primeng/api";
+import { take } from "rxjs/operators";
+import { CSVConverterService } from "../../../services/csvconverter.service";
 @Component({
-  selector: 'app-procedures',
-  templateUrl: './procedures.component.html',
-  styleUrls: ['./procedures.component.scss'],
-  providers: [ProcedureService]
+  selector: "app-procedures",
+  templateUrl: "./procedures.component.html",
+  styleUrls: ["./procedures.component.scss"],
+  providers: [ProcedureService],
 })
 export class ProceduresComponent implements OnInit {
-
   data: any;
   privileges = EnumPrivilege;
   approvalTables = EnumApprovalTables;
@@ -39,40 +43,78 @@ export class ProceduresComponent implements OnInit {
     private elementReference: ElementRef,
     public globals: Globals,
     private csvService: CSVConverterService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.gridVersion = '1.0.0';
-    this.gridStorageId = this.constructor.name + this.elementReference.nativeElement.tagName.toLowerCase();
+    this.gridVersion = "1.0.0";
+    this.gridStorageId =
+      this.constructor.name +
+      this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
-      new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
-      new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
-      new ColumnsSaved({ id: 'procedureType.name', label: 'Procedure Type', visible: true }),
-      new ColumnsSaved({ id: 'duration', label: 'Duration', visible: false }),
-      new ColumnsSaved({ id: 'durationType', label: 'Duration Type', visible: false }),
-      new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
-      new ColumnsSaved({ id: 'referenceFiles', label: 'Reference Files', visible: true }),
-      new ColumnsSaved({ id: 'created.fullName', label: 'Created By', visible: false }),
-      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
-      new ColumnsSaved({ id: 'lastUpdated.fullName', label: 'Last Updated By', visible: true }),
-      new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Last Updated On', visible: true }),
-      new ColumnsSaved({ id: 'Actions', label: 'Actions', visible: true })
+      new ColumnsSaved({ id: "id", label: "Id", visible: true }),
+      new ColumnsSaved({ id: "name", label: "Name", visible: true }),
+      new ColumnsSaved({
+        id: "procedureType.name",
+        label: "Procedure Type",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "duration", label: "Duration", visible: false }),
+      new ColumnsSaved({
+        id: "durationType",
+        label: "Duration Type",
+        visible: false,
+      }),
+      new ColumnsSaved({ id: "revision", label: "Revision", visible: true }),
+      new ColumnsSaved({
+        id: "referenceFiles",
+        label: "Reference Files",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "created.fullName",
+        label: "Created By",
+        visible: false,
+      }),
+      new ColumnsSaved({
+        id: "createdOn",
+        label: "Created On",
+        visible: false,
+      }),
+      new ColumnsSaved({
+        id: "lastUpdated.fullName",
+        label: "Last Updated By",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "lastUpdatedOn",
+        label: "Last Updated On",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "Actions", label: "Actions", visible: true }),
     ];
-    this.procedurePrivileges = this.globals.getEnumPrivileges(this.menuItems.RunnableProcedures);
-
+    this.procedurePrivileges = this.globals.getEnumPrivileges(
+      this.menuItems.RunnableProcedures
+    );
   }
 
   getProcedures(event: LazyLoadEvent) {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.procedureService, this.procedureService.procedureGet, event, this.globals.functionDic)
+      callFunctionWithFilters(
+        this.procedureService,
+        this.procedureService.procedureGet,
+        event,
+        this.globals.functionDic
+      )
         .pipe(take(1))
-        .subscribe(responseHandler((response) => {
-          this.data = response.object;
-          this.currentEvent = event;
-          this.totalRecords = response.totalNumberOfRecords;
-        }));
+        .subscribe(
+          responseHandler((response) => {
+            this.data = response.object;
+            this.currentEvent = event;
+            this.totalRecords = response.totalNumberOfRecords;
+          })
+        );
     }, 10);
   }
 
@@ -91,36 +133,63 @@ export class ProceduresComponent implements OnInit {
 
   delete() {
     this.globals.showLoader(true);
-    this.procedureService.procedureDelete(this.procedureToDelete.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((response) => {
-      // success, remove row
-      let idx = this.data.findIndex((x) => (x.id === this.procedureToDelete.id));
-      if (idx >= 0) {
-        this.data.splice(idx, 1);
-        this.data = this.data.slice(0);
-      }
-      this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
-    }, () => {
-      this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
-    }));
+    this.procedureService
+      .procedureDelete(this.procedureToDelete.id, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler(
+          (response) => {
+            // success, remove row
+            let idx = this.data.findIndex(
+              (x) => x.id === this.procedureToDelete.id
+            );
+            if (idx >= 0) {
+              this.data.splice(idx, 1);
+              this.data = this.data.slice(0);
+            }
+            this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+          },
+          () => {
+            this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+          }
+        )
+      );
   }
 
   copyProcedure(procedure) {
     this.globals.showLoader(true);
-    this.procedureService.copy(procedure.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((response) => {
-      this.data.length = 0;
-      this.getProcedures(this.currentEvent);
-    }));
+    this.procedureService
+      .copy(procedure.id, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.data.length = 0;
+          this.getProcedures(this.currentEvent);
+        })
+      );
   }
   procedureXlsx() {
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.procedureService, this.procedureService.export, this.currentEvent, this.globals.functionDic)
+      callFunctionWithFilters(
+        this.procedureService,
+        this.procedureService.export,
+        this.currentEvent,
+        this.globals.functionDic
+      )
         .pipe(take(1))
-        .subscribe(responseHandler((response) => {
-          if (response.data) {
-            this.csvService.downloadFile(response.data, null, 'procedure_export', 'xlsx');
-          }
-        }));
+        .subscribe(
+          responseHandler((response) => {
+            if (response.data) {
+              this.csvService.downloadFile(
+                response.data,
+                null,
+                "procedure_export",
+                "xlsx"
+              );
+            }
+          })
+        );
     }, 10);
   }
 }

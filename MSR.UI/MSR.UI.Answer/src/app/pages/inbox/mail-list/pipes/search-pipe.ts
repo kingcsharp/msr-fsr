@@ -1,15 +1,13 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-  name: 'SearchPipe'
+  name: "SearchPipe",
 })
-
 export class SearchPipe implements PipeTransform {
-
   transform(value, args?): Array<any> {
-    const searchText = new RegExp(args, 'ig');
+    const searchText = new RegExp(args, "ig");
     if (value) {
-      return value.filter(mail => {
+      return value.filter((mail) => {
         if (mail.sender) {
           return mail.sender.search(searchText) !== -1;
         }
