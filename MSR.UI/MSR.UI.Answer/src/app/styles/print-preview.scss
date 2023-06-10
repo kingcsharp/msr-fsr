@@ -1,0 +1,13 @@
+body.print {
+  background: none !important;
+  color: black !important;
+}
+
+.print nav {
+  display: none !important;
+}
+
+.print .content {
+  padding: 0 !important;
+  margin: 0 0.5in !important;
+}
