@@ -86,6 +86,12 @@ export class AdhocComponent implements OnInit {
         msrfsrfacility: "Kiryat Gat",
       },
       {
+        status: "Open"
+      },
+      {
+        status: "Closed"
+      },
+      {
         facilityname: "Chandler",
       },
       {
