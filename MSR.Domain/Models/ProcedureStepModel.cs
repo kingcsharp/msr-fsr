@@ -16,114 +16,29 @@ namespace MSR.Domain.Models
             ReferenceFiles = new List<FileModel>();
             ReferenceDocumentIds = new List<int>();
         }
-        /// <summary>
-        /// Gets or Sets Id
-        /// </summary>
+
         public int Id { get; set; }
-
-        /// <summary>
-        /// Procedure that contains this step
-        /// </summary>
         public Procedure Procedure { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ProcedureId
-        /// </summary>
         public int? ProcedureId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Title
-        /// </summary>
         public string Title { get; set; }
-
-        /// <summary>
-        /// Gets or Sets StepText
-        /// </summary>
         public string StepText { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Duration
-        /// </summary>
         public double? Duration { get; set; }
-
-        /// <summary>
-        /// Gets or Sets DurationType
-        /// </summary>
         public string DurationType { get; set; }
-
-        /// <summary>
-        /// Procedure Step Type
-        /// </summary>
         public string ProcedureStepType { get; set; }
-
-        /// <summary>
-        /// Procedure Step Type
-        /// </summary>
         public int? ProcedureStepTypeId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets PrintOrder
-        /// </summary>
         public int? PrintOrder { get; set; }
-
-        /// <summary>
-        /// Gets or Sets PredecessorStepId
-        /// </summary>
         public int? PredecessorStepId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets LaborTime
-        /// </summary>
         public double? LaborTime { get; set; }
-
-        /// <summary>
-        /// Gets or Sets EquipmentTime
-        /// </summary>
         public int? EquipmentTime { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ReplacementCost
-        /// </summary>
         public double? ReplacementCost { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Utilization
-        /// </summary>
         public float? Utilization { get; set; }
-
-        /// <summary>
-        /// Gets or Sets UsefulLife
-        /// </summary>
         public int? UsefulLife { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ReferenceFiles
-        /// </summary>
         public List<FileModel> ReferenceFiles { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Roles
-        /// </summary>
         public List<Role> Roles { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Documents
-        /// </summary>
         public List<int> ReferenceDocumentIds { get; set; }
-
-        /// <summary>
-        /// Gets or Sets DocumentFiles
-        /// </summary>
         public List<FileModel> ReferenceDocument { get; set; }
-
-        /// <summary>
-        /// Copy of the status field of the ProductApproval row
-        /// </summary>
-        public string ApprovalStatus;
-
-        /// <summary>
-        /// TRUE if ProcedureStep is used by a WorkOrderTask
-        /// </summary>
+        public string ApprovalStatus { get; set; }
         public bool IsUsed { get; set; }
+        public List<ProcedureStepMonitor> ProcedureStepMonitors { get; set; }
     }
 }
