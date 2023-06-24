@@ -1008,6 +1008,7 @@ export class ReportCubeService {
             label: "Status",
             visible: true,
             type: this.enumColumnType.String,
+            dropdownHeader: true
           }),
           new ColumnsSaved({
             id: "tagtype",

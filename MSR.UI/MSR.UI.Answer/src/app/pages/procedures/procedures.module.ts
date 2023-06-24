@@ -15,6 +15,8 @@ import { ProcedureCreateComponent } from "./procedure-create/procedure-create.co
 import { ProceduretypeComponent } from "./proceduretype/proceduretype.component";
 import { TemplateComponent } from "./template/template.component";
 import { ProcedureViewComponent } from "./procedure-view/procedure-view.component";
+import { ProcedureViewPrintComponent } from "./procedure-view-print/procedure-view-print.component";
+
 import { ProcedureEditComponent } from "./procedure-edit/procedure-edit.component";
 import { SortableModule } from "ngx-bootstrap/sortable";
 import { ProcedureStepMonitorWrapperComponent } from "../../components/procedure-step-monitor-wrapper/procedure-step-monitor-wrapper.component";
@@ -49,6 +51,11 @@ export const routes: Routes = [
     pathMatch: "full",
   },
   {
+    path: "procedure-view-print",
+    component: ProcedureViewPrintComponent,
+    pathMatch: "full",
+  },
+  {
     path: "proceduretype-create",
     component: ProceduretypeComponent,
     pathMatch: "full",
@@ -79,6 +86,7 @@ export const routes: Routes = [
     ProceduretypeComponent,
     TemplateComponent,
     ProcedureViewComponent,
+    ProcedureViewPrintComponent,
     ProcedureEditComponent,
     ProcedureStepMonitorWrapperComponent,
   ],

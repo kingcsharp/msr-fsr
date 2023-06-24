@@ -1,10 +1,19 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-12 pl-0">
+    <div class="col-11 pl-0">
       <h1 class="page-title">
         <i class="far fa-edit mr-2 ml-0"></i>
         <span>Edit Procedure</span>
       </h1>
+    </div>
+    <div class="col-1">
+      <i
+        class="fal fa-lg float-right fa-print pointer"
+        tooltip="Print Procedure Summary and Steps"
+        [routerLink]="['../procedure-view-print']"
+        [queryParams]="{ id: procedure.id }"
+        data-cy="print-button"
+      ></i>
     </div>
   </div>
   <div class="row">

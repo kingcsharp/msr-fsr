@@ -365,13 +365,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ToListAsync();
             }
 
-            var procedureStepModels = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
+            var procedureStepModels = steps.Select(x => _mapper.Map<ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
 
-            var procedureStepIds = procedureStepModels.Select(m => m.Id).ToList();
+            var procedureStepIds = steps.Select(m => m.Id).ToList();
 
             var documentEntityMaps = await _unitOfWork.DocumentEntityMap.Query().Where(s =>
                 procedureStepIds.Contains(s.EntityId) &&
-                s.EntityTableName == nameof(EntityFramework.Entities.ProcedureStep)).ToListAsync();
+                s.EntityTableName == nameof(ProcedureStep)).ToListAsync();
+
+            var monitors = await _unitOfWork.ProcedureStepMonitors.Query().Where(i => procedureStepIds.Contains((int)i.ProcedureStepId)).ToListAsync();
 
             var workOrderTasksInUse = _unitOfWork.WorkOrderTasks.Query()
                 .Where(s => procedureStepIds.Contains(s.ProcedureStepId.Value)
@@ -381,9 +383,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             procedureStepModels.ForEach(procedureStep =>
             {
-                procedureStep.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStep.Id).ToList();
+                procedureStep.ReferenceFiles = _fileService.ListFiles(nameof(ProcedureStep), procedureStep.Id).ToList();
                 procedureStep.ReferenceDocumentIds = documentEntityMaps.Where(s => s.EntityId == procedureStep.Id).Select(m => m.DocumentId).ToList();
                 procedureStep.IsUsed = workOrderTasksInUse.Any(s => s.ProcedureStepId == procedureStep.Id);
+                procedureStep.ProcedureStepMonitors = monitors.Where(i => i.ProcedureStepId == procedureStep.Id).Select(i => _mapper.Map<Domain.Models.ProcedureStepMonitor>(i)).ToList();
             });
 
             return procedureStepModels;

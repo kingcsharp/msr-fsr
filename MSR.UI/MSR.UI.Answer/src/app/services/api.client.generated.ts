@@ -42,7 +42,7 @@ export class AccountService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -478,7 +478,7 @@ export class AdminCostSettingsService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -686,7 +686,7 @@ export class CustomerService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   customerGet(
@@ -1145,7 +1145,7 @@ export class DocumentService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -1678,7 +1678,7 @@ export class EquipmentMaintenanceService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -2148,7 +2148,7 @@ export class FileService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -2567,7 +2567,7 @@ export class HelpService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   helpGet(
@@ -3156,7 +3156,7 @@ export class InvoiceService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   invoiceGet(
@@ -3750,7 +3750,7 @@ export class LocationService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   locationGet(
@@ -4481,7 +4481,7 @@ export class MenuService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   menu(version: string): Observable<AuditActionResultOfIEnumerableOfMenuItem> {
@@ -4863,7 +4863,7 @@ export class MonitorService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -4978,7 +4978,7 @@ export class PartService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -5443,7 +5443,7 @@ export class ProcedureService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -6643,7 +6643,7 @@ export class ProcedureStepMonitorService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -7048,7 +7048,7 @@ export class ProcedureStepTemplateService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -7476,7 +7476,7 @@ export class ProcedureStepTypeService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -7593,7 +7593,7 @@ export class ProcedureTemplateService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -7997,7 +7997,7 @@ export class ProcedureTypeService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -8413,7 +8413,7 @@ export class ProductService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -8916,7 +8916,7 @@ export class PurchaseService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -9172,7 +9172,7 @@ export class PurchaseOrderService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   purchaseOrderGet(
@@ -9789,7 +9789,7 @@ export class QuoteService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   product(
@@ -10442,7 +10442,7 @@ export class ReportService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   report(
@@ -10646,7 +10646,7 @@ export class RoleService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   roleGet(
@@ -11172,7 +11172,7 @@ export class SearchService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   search(
@@ -11283,7 +11283,7 @@ export class SensorService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   sensor(
@@ -11574,7 +11574,7 @@ export class TimezoneService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   timezone(
@@ -11682,7 +11682,7 @@ export class UserService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -12625,7 +12625,7 @@ export class WorkflowPendingApprovalService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   workflowPendingApprovalGet(
@@ -13083,7 +13083,7 @@ export class WorkOrderService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -14735,7 +14735,7 @@ export class WorkOrderPartService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   workOrderPartGet(
@@ -15219,7 +15219,7 @@ export class WorkOrderTaskService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   /**
@@ -15425,7 +15425,7 @@ export class WorkOrderTaskMonitorService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   workOrderTaskMonitor(
@@ -15538,7 +15538,7 @@ export class WorkflowService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   pending(
@@ -16154,7 +16154,7 @@ export class WorkflowGroupService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   workflowGroupGet(
@@ -16586,7 +16586,7 @@ export class WorkflowStageService {
     this.baseUrl =
       baseUrl !== undefined && baseUrl !== null
         ? baseUrl
-        : "https://localhost:44398";
+        : "http://ip-172-31-15-125.us-west-2.compute.internal";
   }
 
   workflowStageGet(
