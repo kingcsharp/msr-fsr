@@ -130,7 +130,7 @@ p-dropdown .ui-dropdown {
   width: 100%;
 }
 
-.set-all > input[type=text]{
+.set-all > input[type="text"] {
   margin-left: 0 !important;
 }
 
@@ -324,4 +324,10 @@ p-dropdown .ui-dropdown {
 .tag-type-grey {
   background: gray;
   color: white;
+}
+
+.alert-bg-warning {
+  color: #7d5b02;
+  background-color: #fcefcd;
+  border-color: #fbe9b8;
 }

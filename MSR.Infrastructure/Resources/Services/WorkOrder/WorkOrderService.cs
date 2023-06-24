@@ -189,10 +189,15 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                        )?.Select(i => _mapper.Map<NCRHistoryItemModel>(i)).ToList();
             }
 
+            bool invoiceable = true;
             foreach (var workOrderTaskModel in workOrderModel.WorkOrderTasks)
             {
                 // enforce sane data by limiting the status IDs returned by the API
                 workOrderTaskModel.StatusId = TranslateWOTaskStatusToViewModel(workOrderTaskModel);
+                if (workOrderTaskModel.IsNCRTask == true && workOrderTaskModel.StatusId != (int)EnumStatusSteps.Complete)
+                {
+                    invoiceable = false;
+                }
                 var workOrderTaskMonitorModels = new List<WorkOrderTaskMonitorModel>();
                 var i = 1; // Monitor Number starts at 1
                 foreach (var workOrderTaskMonitorModel in workOrderTaskModel.WorkOrderTaskMonitors.OrderBy(x => x.Id))
@@ -218,6 +223,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                                                 : new List<MappedWorkOrderPart>();
             }
 
+            workOrderModel.Invoiceable = invoiceable;
+            
             return new List<WorkOrderModel>() { DetachBackPointers(workOrderModel) };
         }
 
@@ -1070,7 +1077,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     TaskIsRunning = false,
                     TaskRunningSince = null,
                     TotalTaskTime = 0,
-                    NCNumber = ncNumber
+                    NCNumber = ncNumber,
+                    Title = procedureStepEntity.Title,
+                    Description = procedureStepEntity.StepText
                 };
 
                 if (procedureStepEntity.ProcedureStepTypeId.HasValue)
@@ -1484,19 +1493,39 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var current = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(x => x.ProcedureStepMonitor).FirstOrDefaultAsync(i => i.Id == command.Id);
+            
 
             if (current is null)
             {
                 throw new DomainException($"{nameof(WorkOrderTaskMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-
-
+            current.WorkOrderTask = await _unitOfWork.WorkOrderTasks.FirstOrDefaultAsync(false, i => i.Id == current.WorkOrderTaskId);
             if (current.ProcedureStepMonitor.MonitorTypeId == 6)
             {
+                var ncNumber = current.WorkOrderTask.NCNumber;
                 var multival = int.Parse(command.MultiVal);
                 var monitorListItem = await _unitOfWork.MonitorListItems.Query().Where(x => x.Id == multival).FirstOrDefaultAsync();
                 command.TextVal = monitorListItem.Name;
+
+                if(current.Description.Contains("Customer Disposition"))
+                {
+                    var allWorkOrderTaskIds = await _unitOfWork.WorkOrderTasks.Query().Where(i => i.WorkOrderId == current.WorkOrderTask.WorkOrderId 
+                                                                                            && i.NCNumber == ncNumber).Select(i => i.Id).ToListAsync();
+                   
+                    if (allWorkOrderTaskIds.Any())
+                    {
+                        //Get all of the ncr maps and set them to closed
+                        var ncrMaps = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => allWorkOrderTaskIds.Contains(i.WorkOrderTaskId)).ToListAsync();
+
+                        foreach(var ncrMap in ncrMaps)
+                        {
+                            ncrMap.ClosedOn = DateTime.UtcNow;
+                            _unitOfWork.WorkOrderPartNCRMap.Update(ncrMap);
+                        }
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+                }
             }
 
             var workOrderTaskMonitor = _mapper.Map(command, current);
@@ -1513,7 +1542,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             {
                 await SendNcrEmailNotification(workOrderTaskMonitorModel.Id, command.SendNCREmail);
             }
-
+            workOrderTaskMonitorModel.WorkOrderTask.WorkOrderTaskMonitors = null;
             return workOrderTaskMonitorModel;
         }
 

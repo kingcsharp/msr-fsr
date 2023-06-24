@@ -10,7 +10,8 @@ html {
 body {
   overflow-x: hidden;
   color: $text-color;
-  background: url(assets/img/bg-pattern.svg), radial-gradient(farthest-side ellipse at 10% 0, #36455a 20%, #889caf);
+  background: url("/assets/img/bg-pattern.svg"),
+    radial-gradient(farthest-side ellipse at 10% 0, #36455a 20%, #889caf);
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
@@ -42,12 +43,13 @@ input[type="search"],
 input.search {
   padding-left: 26px;
   background-color: $input-bg;
-  background: url(assets/img/search.png) 5px 6px no-repeat $input-bg;
+  background: url("/assets/img/search.png") 5px 6px no-repeat $input-bg;
 
   &.input-transparent {
     border: none;
     color: $widget-color;
-    background: url(assets/img/search-white.png) 5px 5px no-repeat $widget-bg-color;
+    background: url("/assets/img/search-white.png") 5px 5px no-repeat
+      $widget-bg-color;
     @include placeholder(rgba(#eee, 0.76));
   }
 }
@@ -134,15 +136,15 @@ p-footer button[type="submit"] {
   }
 }
 
-.custom-panel{
+.custom-panel {
   border-radius: 10px;
   padding: 15px 17px;
   color: #f8f8f8;
   background: rgba(0, 0, 0, 0.24);
 }
 
-.taskcompleted > pcalendar-wrapper > p-calendar > span{
-  width:100%;
+.taskcompleted > pcalendar-wrapper > p-calendar > span {
+  width: 100%;
 }
 
 .help-content-container {

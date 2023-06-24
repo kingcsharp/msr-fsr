@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RouterModule } from "@angular/router";
+import { RouterModule, Routes } from "@angular/router";
 import { TableModule } from "primeng/table";
 import { NewWidgetModule } from "../../layout/new-widget/widget.module";
 import { DialogModule } from "primeng/dialog";
@@ -15,12 +15,14 @@ import { ProcedureCreateComponent } from "./procedure-create/procedure-create.co
 import { ProceduretypeComponent } from "./proceduretype/proceduretype.component";
 import { TemplateComponent } from "./template/template.component";
 import { ProcedureViewComponent } from "./procedure-view/procedure-view.component";
+import { ProcedureViewPrintComponent } from "./procedure-view-print/procedure-view-print.component";
+
 import { ProcedureEditComponent } from "./procedure-edit/procedure-edit.component";
 import { SortableModule } from "ngx-bootstrap/sortable";
 import { ProcedureStepMonitorWrapperComponent } from "../../components/procedure-step-monitor-wrapper/procedure-step-monitor-wrapper.component";
 import { OrderListModule } from "primeng/orderlist";
 
-export const routes = [
+export const routes: Routes = [
   { path: "", redirectTo: "people", pathMatch: "full" },
   { path: "procedures", component: ProceduresComponent, pathMatch: "full" },
   {
@@ -46,6 +48,11 @@ export const routes = [
   {
     path: "procedure-view",
     component: ProcedureViewComponent,
+    pathMatch: "full",
+  },
+  {
+    path: "procedure-view-print",
+    component: ProcedureViewPrintComponent,
     pathMatch: "full",
   },
   {
@@ -79,6 +86,7 @@ export const routes = [
     ProceduretypeComponent,
     TemplateComponent,
     ProcedureViewComponent,
+    ProcedureViewPrintComponent,
     ProcedureEditComponent,
     ProcedureStepMonitorWrapperComponent,
   ],

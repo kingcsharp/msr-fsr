@@ -7,7 +7,7 @@ $libs-compiled-folder: "../../../node_modules" !default;
 $glyphicons-halflings-include-bonus: false !default;
 $glyphicons-halflings-class-prefix: glyphicon !default;
 $glyphicons-halflings-font-base-size: 14px !default;
-$glyphicons-halflings-font-path: "fonts/glyphicons" !default;
+$glyphicons-halflings-font-path: "/assets/fonts/glyphicons" !default;
 
 $fa-font-path: "~font-awesome/fonts";
 
@@ -147,7 +147,7 @@ $page-title-color: $white;
 $header-link-color: $text-transparent;
 $header-notification-count: rgba($widget-bg-color, 0.55);
 
-$header-search-query-bg-image: url(assets/img/search-white.png);
+$header-search-query-bg-image: url("/assets/img/search-white.png");
 $header-search-query-placeholder-color: rgba(#eee, 0.76);
 
 $header-dropdown-primary-color: $widget-header-color;
@@ -237,8 +237,12 @@ $section-margin-bottom: 1.39rem; //~18px
 $section-padding-top: 0.77rem; //~10px
 
 // recalculate input heights
-$input-height-base: calc(#{1rem} + (#{$padding-base-vertical} * 2) + 2) !default;
-$input-height-small: (floor($font-size-sm * $line-height-small) + ($padding-small-vertical * 2) + 2) !default;
+$input-height-base: calc(
+  #{1rem} + (#{$padding-base-vertical} * 2) + 2
+) !default;
+$input-height-small: (
+  floor($font-size-sm * $line-height-small) + ($padding-small-vertical * 2) + 2
+) !default;
 
 $legend-color: $white !default;
 
@@ -281,7 +285,10 @@ $state-danger-bg: rgba($state-danger-border, 0.29) !default;
 //== Tables
 //
 $table-accent-bg: $widget-bg-color !default;
-$table-border-color: rgba($widget-bg-color, 0.35) !default; // table and cell border
+$table-border-color: rgba(
+  $widget-bg-color,
+  0.35
+) !default; // table and cell border
 $table-bg-hover: darken($bg-addition, 5%);
 
 // List group

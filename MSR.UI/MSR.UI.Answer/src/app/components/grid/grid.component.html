@@ -143,9 +143,15 @@
   </ng-template>
   <ng-template pTemplate="footer">
     <tr>
-      <td *ngIf="pagingModel?.showTotals" class="footer-summary" [attr.colspan]="gridSaved.visibleColumns"><em>Total: {{pagingModel.totals | currency}}</em></td>
+      <td
+        *ngIf="pagingModel?.showTotals"
+        class="footer-summary"
+        [attr.colspan]="gridSaved.visibleColumns"
+      >
+        <em>Total: {{ pagingModel.totals | currency }}</em>
+      </td>
     </tr>
-</ng-template>
+  </ng-template>
 </p-table>
 
 <ng-template #rowViewData let-colsDataAndSettings="colsDataAndSettings">
@@ -168,7 +174,24 @@
     tooltip="{{ colsDataAndSettings.colData[colsDataAndSettings.col.id] }}"
     class="text-capitalize"
     *ngIf="
-      colsDataAndSettings.col.type === enumColumnType.String ||
+      colsDataAndSettings.col.type === enumColumnType.String &&
+      colsDataAndSettings.col.innerHTML
+    "
+    [hidden]="
+      !cg.isVisibleCol(
+        colsDataAndSettings.col.id,
+        colsDataAndSettings.colsSaved
+      )
+    "
+    [innerHTML]="colsDataAndSettings.colData[colsDataAndSettings.col.id]"
+  ></td>
+  <td
+    container="body"
+    tooltip="{{ colsDataAndSettings.colData[colsDataAndSettings.col.id] }}"
+    class="text-capitalize"
+    *ngIf="
+      (colsDataAndSettings.col.type === enumColumnType.String &&
+        !colsDataAndSettings.col.innerHTML) ||
       colsDataAndSettings.col.type === enumColumnType.Number
     "
     [hidden]="
@@ -231,7 +254,7 @@
     <div *ngIf="colsDataAndSettings.col.formattingAngular !== undefined">
       {{
         colsDataAndSettings.colData[colsDataAndSettings.col.id]
-          | date: colsDataAndSettings.col.formattingAngular
+          | date : colsDataAndSettings.col.formattingAngular
       }}
     </div>
   </td>

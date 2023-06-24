@@ -20,25 +20,24 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "https://localhost:44398/swagger",
+      "applicationUrl": "https://localhost:44398",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:44398"
+      }
     },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "publishAllPorts": true,
-      "useSSL": true
+      "environmentVariables": {}
     },
     "local": {
       "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Localhost"
-      },
-      "applicationUrl": "http://localhost:5000"
+      }
     }
   }
 }

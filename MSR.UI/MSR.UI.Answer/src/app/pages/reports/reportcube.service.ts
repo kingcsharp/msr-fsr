@@ -30,8 +30,10 @@ export class ReportCubeService {
   ) {}
 
   public getReportName(reportInfo: ReportModel) {
-    return reportInfo.name.replace(/\s/g, "") +
-    reportInfo.subtitle.replace(/\s/g, "")
+    return (
+      reportInfo.name.replace(/\s/g, "") +
+      reportInfo.subtitle.replace(/\s/g, "")
+    );
   }
 
   public getReport = async (
@@ -66,7 +68,9 @@ export class ReportCubeService {
           data: response["data"],
           partsdata: response["partsdata"],
           totals: response["totals"],
-          showTotals: reportName === 'CombinedFinancialDatabyWorkOrder' || reportName === 'WorkInProcessbyWorkOrder'
+          showTotals:
+            reportName === "CombinedFinancialDatabyWorkOrder" ||
+            reportName === "WorkInProcessbyWorkOrder",
         } as IPagingModel);
 
         return this.filterReportData(newPagingModel, reportInfo);
@@ -771,6 +775,13 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
             dropdownHeader: true,
           }),
+          new ColumnsSaved({
+            id: "originalwoprice",
+            label: "Original",
+            visible: true,
+            type: this.enumColumnType.Money,
+            dropdownHeader: false,
+          }),
         ];
       case "WorkOrdersNotInvoicedbyWorkOrder":
         return [
@@ -975,6 +986,7 @@ export class ReportCubeService {
             label: "NC Desc",
             visible: true,
             type: this.enumColumnType.String,
+            innerHTML: true,
           }),
           new ColumnsSaved({
             id: "ncdate",
@@ -992,6 +1004,13 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
+            id: "status",
+            label: "Status",
+            visible: true,
+            type: this.enumColumnType.String,
+            dropdownHeader: true
+          }),
+          new ColumnsSaved({
             id: "tagtype",
             label: "Yellow / Red tag",
             visible: true,
@@ -1003,6 +1022,15 @@ export class ReportCubeService {
             visible: true,
             type: this.enumColumnType.String,
             dropdownHeader: true,
+          }),
+          new ColumnsSaved({
+            id: "lastupdated",
+            label: "Last Updated",
+            visible: true,
+            type: this.enumColumnType.Date,
+            styles: { width: "8rem" },
+            formattingAngular: "MM-dd-yyyy",
+            formattingMoment: "MM-DD-YYYY",
           }),
         ];
       case "WorkCompletedDetailbyTask":
@@ -1175,7 +1203,8 @@ export class ReportCubeService {
   }
 
   private filterReportData(pagingModel: PagingModel, reportInfo: ReportModel) {
-    switch (this.getReportName(reportInfo)) {
+    const reportName = this.getReportName(reportInfo)
+    switch (reportName) {
       case "PartsCycleCountsbyWorkOrderDate":
         const gridData = pagingModel.data.map((elem) => {
           elem = this.removePrefixesOfPropertyNames(elem);
@@ -1310,12 +1339,12 @@ export class ReportCubeService {
           (elem) => {
             elem = this.removePrefixesOfPropertyNames(elem);
             elem.elemKey =
-              elem["duedate"] +
+              elem["shipdate"] +
               this.splitChars +
               elem["customername"].replace(/\s/g, "") +
               this.splitChars +
               elem["msrfsrfacility"].replace(/\s/g, "");
-            elem.yearMonth = moment(elem["duedate"]);
+            elem.yearMonth = moment(elem["shipdate"]);
             elem.isValidForChart = true;
             elem.site = elem["msrfsrfacility"];
             elem.total = parseFloat(elem["total"]);
@@ -1341,12 +1370,12 @@ export class ReportCubeService {
         const resultData = pagingModel.data.map((elem) => {
           elem = this.removePrefixesOfPropertyNames(elem);
           elem.elemKey =
-            elem["duedate"] +
+            elem["shipdate"] +
             this.splitChars +
             elem["kitname"].replace(/\s/g, "") +
             this.splitChars +
             elem["msrfsrfacility"].replace(/\s/g, "");
-          elem.yearMonth = moment(elem["duedate"]);
+          elem.yearMonth = moment(elem["shipdate"]);
           elem.isValidForChart = true;
           elem.total = parseFloat(elem["wtax"]);
           elem.site = elem["msrfsrfacility"];
@@ -1368,41 +1397,23 @@ export class ReportCubeService {
         );
         break;
       case "CountofKitsbyPart/Kit":
-        let countOfKitsGridDataDic = {};
-        pagingModel.data.forEach((elem) => {
-          elem = this.removePrefixesOfPropertyNames(elem);
-          const keyCombinedName = this.setName(
-            elem,
-            "kitname",
-            "msrfsrfacility",
-            "-"
-          );
-          const key =
-            moment(elem["duedate"]).format("YYYY-MM") +
-            this.splitChars +
-            keyCombinedName;
-          elem.elemKey = elem["duedate"] + this.splitChars + keyCombinedName;
-          elem.isValidForChart = this.isValidRowForChart(
-            elem,
-            "kitname",
-            "msrfsrfacility"
-          );
-          elem.yearMonth = moment(elem["duedate"]);
-          elem.site = elem["msrfsrfacility"];
-
-          if (elem.isValidForChart) {
-            countOfKitsGridDataDic[key] = elem;
-          }
+        const resultDataKits = pagingModel.data.map((elem) => {
+            elem = this.removePrefixesOfPropertyNames(elem);
+            elem.elemKey =
+              elem["shipdate"] +
+              this.splitChars +
+              elem["kitname"].replace(/\s/g, "") +
+              this.splitChars +
+              elem["msrfsrfacility"].replace(/\s/g, "");
+            elem.yearMonth = moment(elem["shipdate"]);
+            elem.isValidForChart = true;
+            elem.count = elem["count"];
+            elem.site = elem["msrfsrfacility"];
+            return elem;
         });
-
-        const countOfKitsGridData = [];
-
-        Object.keys(countOfKitsGridDataDic).forEach((chartDataKey) => {
-          countOfKitsGridData.push(countOfKitsGridDataDic[chartDataKey]);
-        });
-
+        
         pagingModel.ChartInformation = new ChartInfo({
-          gridData: countOfKitsGridData,
+          gridData: resultDataKits,
           stackBy: "count",
           chartTitle: "Count of Kits",
           xAxisTitle: "Month (Previous 12 Months Rolling)",
@@ -1637,7 +1648,7 @@ export class ReportCubeService {
       );
 
       pagingModel.data = pagingModel.data.map((elem) => {
-        elem.yearMonth = moment(elem["duedate"]);
+        elem.yearMonth = moment(elem["shipdate"]);
         elem.site = elem["msrfsrfacility"];
         return elem;
       });

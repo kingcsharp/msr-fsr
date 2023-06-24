@@ -1,35 +1,32 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PartsComponent } from './parts-component/parts.component';
-import { RouterModule } from '@angular/router';
-import { WidgetModule } from '../../layout/widget/widget.module';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { UtilsModule } from '../../layout/utils/utils.module';
-import { LiveTileModule } from '../../components/tile/tile.module';
-import { MapaelLayersMapModule } from '../../components/mapael/mapael.module';
-import { NewWidgetModule } from '../../layout/new-widget/widget.module';
-import { FormsModule } from '@angular/forms';
-import { TextMaskModule } from 'angular2-text-mask';
-import { InputSwitchModule } from 'primeng/inputswitch';
-import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { PopoverModule } from 'ngx-bootstrap/popover';
-import { SegregationTypeComponent } from '../../components/segregation-type/segregation-type.component';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { PartsComponent } from "./parts-component/parts.component";
+import { RouterModule, Routes } from "@angular/router";
+import { WidgetModule } from "../../layout/widget/widget.module";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { ProgressbarModule } from "ngx-bootstrap/progressbar";
+import { UtilsModule } from "../../layout/utils/utils.module";
+import { LiveTileModule } from "../../components/tile/tile.module";
+import { MapaelLayersMapModule } from "../../components/mapael/mapael.module";
+import { NewWidgetModule } from "../../layout/new-widget/widget.module";
+import { FormsModule } from "@angular/forms";
+import { TextMaskModule } from "angular2-text-mask";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { DialogModule } from "primeng/dialog";
+import { TableModule } from "primeng/table";
+import { DropdownModule } from "primeng/dropdown";
+import { CalendarModule } from "primeng/calendar";
+import { MultiSelectModule } from "primeng/multiselect";
+import { PopoverModule } from "ngx-bootstrap/popover";
+import { SegregationTypeComponent } from "../../components/segregation-type/segregation-type.component";
 
-export const routes = [
-  { path: '', redirectTo: 'parts', pathMatch: 'prefix' },
-  { path: 'parts', component: PartsComponent, pathMatch: 'full' },
+export const routes: Routes = [
+  { path: "", redirectTo: "parts", pathMatch: "prefix" },
+  { path: "parts", component: PartsComponent, pathMatch: "full" },
 ];
 
 @NgModule({
-  declarations: [
-    PartsComponent,
-    SegregationTypeComponent
-  ],
+  declarations: [PartsComponent, SegregationTypeComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -49,8 +46,8 @@ export const routes = [
     WidgetModule,
     MapaelLayersMapModule,
     NewWidgetModule,
-    PopoverModule.forRoot()
-  ]
+    PopoverModule.forRoot(),
+  ],
 })
 export class PartsModule {
   static routes = routes;

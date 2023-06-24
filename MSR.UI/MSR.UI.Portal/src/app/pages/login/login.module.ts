@@ -1,26 +1,24 @@
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Login } from './login.component';
-import { NewWidgetModule } from '../../layout/new-widget/widget.module';
-import { AlertModule } from 'ngx-bootstrap/alert';
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { Login } from "./login.component";
+import { NewWidgetModule } from "../../layout/new-widget/widget.module";
+import { AlertModule } from "ngx-bootstrap/alert";
 
-export const routes = [
-  { path: '', component: Login, pathMatch: 'full' }
+export const routes: Routes = [
+  { path: "", component: Login, pathMatch: "full" },
 ];
 
 @NgModule({
-  declarations: [
-    Login
-  ],
+  declarations: [Login],
   imports: [
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),
     NewWidgetModule,
-    AlertModule.forRoot()
-  ]
+    AlertModule.forRoot(),
+  ],
 })
 export class LoginModule {
   static routes = routes;

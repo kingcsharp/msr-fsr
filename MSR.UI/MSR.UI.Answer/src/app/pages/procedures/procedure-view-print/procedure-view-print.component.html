@@ -1,0 +1,33 @@
+<h2>Procedure: {{ procedure.name }}</h2>
+<table class="table table-bordered">
+  <tr>
+    <th>
+      Procedure Id: {{ procedure.id }}<br />
+      Revision Number: {{ procedure.revision }}
+    </th>
+  </tr>
+
+  <tr *ngFor="let procedureStep of procedureSteps">
+    <td>
+      <div class="step-title d-inline-block">
+        {{ procedureStep.title }}
+      </div>
+      <div class="red d-inline-block float-right">
+        Labor Time: {{ procedureStep.laborTime }} m Equipment Time:
+        {{ procedureStep.equipmentTime }} m
+      </div>
+      <p [innerHTML]="procedureStep.stepText"></p>
+      <!-- If Monitors exist in Step -->
+      <div
+        class="sub-title"
+        *ngIf="procedureStepMonitors[procedureStep.id]?.length > 0"
+      >
+        Monitors:
+      </div>
+
+      <ol *ngFor="let monitor of procedureStepMonitors[procedureStep.id]">
+        <li [innerHTML]="monitor.description"></li>
+      </ol>
+    </td>
+  </tr>
+</table>

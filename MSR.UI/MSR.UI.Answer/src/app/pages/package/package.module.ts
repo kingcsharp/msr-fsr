@@ -1,23 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 
-import { Package } from './package.component';
-import { WidgetModule } from '../../layout/widget/widget.module';
+import { Package } from "./package.component";
+import { WidgetModule } from "../../layout/widget/widget.module";
 
-export const routes = [
-  { path: '', component: Package, pathMatch: 'full' }
+export const routes: Routes = [
+  { path: "", component: Package, pathMatch: "full" },
 ];
 
 @NgModule({
-  declarations: [
-    Package
-  ],
-  imports: [
-    CommonModule,
-    WidgetModule,
-    RouterModule.forChild(routes),
-  ]
+  declarations: [Package],
+  imports: [CommonModule, WidgetModule, RouterModule.forChild(routes)],
 })
 export class PackageModule {
   static routes = routes;

@@ -27,5 +27,6 @@ namespace MSR.Domain.Models
         public bool HasSubParts { get; set; }
         public bool? CustomerLastRespondent { get; set; }
         public ICollection<ProductModel> WorkOrderProducts { get; set; }
+        public bool? Invoiceable { get; set; }
     }
 }

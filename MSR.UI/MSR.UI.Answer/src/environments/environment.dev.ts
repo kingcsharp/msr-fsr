@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   url: 'https://qa-api.answer.msr-fsr.com',
   API_BASE_URL: 'https://qa-api.answer.msr-fsr.com',
   MESSAGE_URL: 'https://qa-message.answer.msr-fsr.com',

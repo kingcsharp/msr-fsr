@@ -183,7 +183,7 @@ export class WipdetailsComponent implements OnInit {
         styleClass: "tag-type-yellow",
       },
       { label: "Red Tag", value: "Red Tag", styleClass: "tag-type-red" },
-      { label: "No Tag", value: "No Tag", styleClass: "tag-type-grey" }
+      { label: "No Tag", value: "No Tag", styleClass: "tag-type-grey" },
     ];
 
     this.globals.showLoader(true);
@@ -602,6 +602,29 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderTaskInProgress = workOrderTaskModel;
     this.workOrderTaskToView = workOrderTaskModel;
     this.workOrderIsComplete = this.isWorkOrderComplete();
+
+    let index = this.workOrderModel.workOrderTasks.findIndex(
+      (s) => s.id === this.workOrderTaskInProgress.id
+    );
+
+    let invoiceable = true;
+
+    while (this.workOrderModel.workOrderTasks.length > index) {
+      const isNCRTask = this.workOrderModel.workOrderTasks[index].isNCRTask;
+      const status = this.workOrderModel.workOrderTasks[index].status;
+      if (
+        isNCRTask &&
+        (status.name === "In Progress" ||
+          status.name === "Approved" ||
+          status.name === "Waiting to Start")
+      ) {
+        invoiceable = false;
+        break;
+      }
+      index++;
+    }
+    this.workOrderModel.invoiceable = invoiceable;
+
     this.getNCRParts();
   }
 
@@ -693,6 +716,8 @@ export class WipdetailsComponent implements OnInit {
     workOrderTasksToAddBack.reverse().map((workOrderTask) => {
       this.workOrderModel.workOrderTasks.push(workOrderTask);
     });
+
+    this.workOrderModel.invoiceable = false;
 
     this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
 

@@ -117,7 +117,10 @@ export function callFunctionWithFilters(service, func, event: LazyLoadEvent, glo
         const filterObj = filterEvObj.filters[arg];
         if (filterObj !== undefined) {
             if (Array.isArray(filterObj.value)) {
-                if (typeof (filterObj.value[0]) === 'boolean') {
+                if (typeof (filterObj.value[0]) === 'number') {
+                    argsToCallFn.push(filterObj.value);
+                }
+                else if (typeof (filterObj.value[0]) === 'boolean') {
                     if (filterObj.value.length === 1) {
                         argsToCallFn.push(filterObj.value[0]);
                     } else {
