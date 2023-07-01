@@ -89,7 +89,9 @@ export class ProcedureViewPrintComponent implements OnInit {
                 );
 
               allLoaded.then(() => {
-                window.print();
+                setTimeout(() => {
+                  window.print();
+                }, 1000);
               });
             })
           );
