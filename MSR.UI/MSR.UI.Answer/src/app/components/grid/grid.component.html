@@ -1,3 +1,9 @@
+<app-xml-retry [isFailure]="false" value="Succeeded"></app-xml-retry>
+
+|
+
+<app-xml-retry [isFailure]="true" value="Failed"></app-xml-retry>
+
 <div *ngIf="hasChart" style="height: 600px">
   <highcharts-chart
     *ngIf="showCharts"
@@ -316,6 +322,18 @@
       class="badge mr-xs badge-secondary"
       >{{ item.name }}</span
     >
+  </td>
+
+  <td
+    *ngIf="colsDataAndSettings.col.type === enumColumnType.XML"
+    [hidden]="
+      !cg.isVisibleCol(
+        colsDataAndSettings.col.id,
+        colsDataAndSettings.colsSaved
+      )
+    "
+  >
+    <!-- add a new component here with a retry button and success / failure status-->
   </td>
 </ng-template>
 <ng-template #rowView let-colsAndSettings="colsAndSettings">
