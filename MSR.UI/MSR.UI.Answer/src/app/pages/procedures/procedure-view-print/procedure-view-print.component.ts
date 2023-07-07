@@ -54,13 +54,20 @@ export class ProcedureViewPrintComponent implements OnInit {
             responseHandler((response) => {
               this.procedure = response.object[0];
 
+              let resolveAllLoaded;
+
+              const allLoaded = new Promise((resolve) => {
+                resolveAllLoaded = resolve;
+              });
+
               this.procedureService
                 .stepGet(this.procedure.id, null, env.apiVersion)
                 .subscribe(
                   responseHandler((stepGetResponse) => {
                     this.procedureSteps = stepGetResponse.object;
 
-                    this.procedureSteps.forEach((step, index) => {
+                    let remainingSteps = this.procedureSteps.length;
+                    const steps = this.procedureSteps.forEach((step) => {
                       this.procedureStepMonitorService
                         .procedurestep(step.id, null, env.apiVersion)
                         .subscribe(
@@ -69,11 +76,23 @@ export class ProcedureViewPrintComponent implements OnInit {
                               response.object.length === 0
                                 ? []
                                 : response.object;
+
+                            remainingSteps--;
+
+                            if (remainingSteps === 0) {
+                              resolveAllLoaded();
+                            }
                           })
                         );
                     });
                   })
                 );
+
+              allLoaded.then(() => {
+                setTimeout(() => {
+                  window.print();
+                }, 1000);
+              });
             })
           );
       }
