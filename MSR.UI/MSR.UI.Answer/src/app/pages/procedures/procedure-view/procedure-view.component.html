@@ -7,13 +7,16 @@
       </h1>
     </div>
     <div class="col-1">
-      <i
-        class="fal fa-lg float-right fa-print pointer"
+      <a
+        class="btn btn-primary m-2"
         tooltip="Print Procedure Summary and Steps"
         [routerLink]="['../procedure-view-print']"
         [queryParams]="{ id: procedure.id }"
+        target="print"
         data-cy="print-button"
-      ></i>
+      >
+        <i class="fas fa-print mx-1"></i>Print
+      </a>
     </div>
   </div>
   <div class="row">
