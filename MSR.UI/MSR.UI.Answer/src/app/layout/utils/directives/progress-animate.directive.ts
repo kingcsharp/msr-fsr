@@ -1,10 +1,9 @@
-import {Directive, ElementRef, OnInit} from '@angular/core';
+import { Directive, ElementRef, OnInit } from "@angular/core";
 declare let jQuery: any;
 
-@Directive ({
-  selector: '[progress-animate]'
+@Directive({
+  selector: "[progress-animate]",
 })
-
 export class ProgressAnimateDirective implements OnInit {
   $el: any;
 
@@ -13,17 +12,17 @@ export class ProgressAnimateDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    const width = this.$el.data('width'),
+    const width = this.$el.data("width"),
       $bar = this.$el;
-    $bar.css('opacity', 0);
+    $bar.css("opacity", 0);
     setTimeout(() => {
       $bar.css({
-        transition: 'none',
+        transition: "none",
         width: 0,
-        opacity: 1
+        opacity: 1,
       });
       setTimeout(() => {
-        $bar.css('transition', '').css('width', width);
+        $bar.css("transition", "").css("width", width);
       });
     });
   }

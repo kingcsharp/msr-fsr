@@ -1,31 +1,40 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
-import { Globals } from '../../../models/lib/globals';
 import {
-  WorkflowService, WorkflowModel, PostPendingApprovalRequest,
-  WorkflowGroupService, WorkflowStageService, WorkflowPendingApprovalService, EnumApprovalTables
-} from '../../../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege } from '../../../models/enums/privileges';
-import { responseHandler } from '../../../utils/responseHandler';
-import { ViewSaved } from '../../../models/lib/ViewSaved';
-import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, forkJoin, of } from 'rxjs';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { callFunctionWithFilters } from '../../../models/lib/Utils';
-import { LazyLoadEvent } from 'primeng/api';
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  ElementRef,
+} from "@angular/core";
+import { Globals } from "../../../models/lib/globals";
+import {
+  WorkflowService,
+  WorkflowModel,
+  PostPendingApprovalRequest,
+  WorkflowGroupService,
+  WorkflowStageService,
+  WorkflowPendingApprovalService,
+  EnumApprovalTables,
+} from "../../../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { environment as env } from "../../../../environments/environment";
+import { EnumPrivilege } from "../../../models/enums/privileges";
+import { responseHandler } from "../../../utils/responseHandler";
+import { ViewSaved } from "../../../models/lib/ViewSaved";
+import { ColumnsSaved } from "../../../models/lib/ColumnsSaved";
+import { CommonGrid } from "../../../models/lib/CommonGrid";
+import { ToastrService } from "ngx-toastr";
+import { Observable, forkJoin, of } from "rxjs";
+import { Router, ActivatedRoute, ParamMap } from "@angular/router";
+import { callFunctionWithFilters } from "../../../models/lib/Utils";
+import { LazyLoadEvent } from "primeng/api";
 
 declare let jQuery: any;
 
 @Component({
-  selector: 'app-pending-approvals',
-  templateUrl: './pending-approvals.component.html',
-  styleUrls: ['./pending-approvals.component.scss']
+  selector: "app-pending-approvals",
+  templateUrl: "./pending-approvals.component.html",
+  styleUrls: ["./pending-approvals.component.scss"],
 })
 export class PendingApprovalsComponent implements OnInit {
-
   privileges = EnumPrivilege;
   approvalTables = EnumApprovalTables; // EnumApprovalTables.ProductApproval = 6 in the backend
   defaultView: ViewSaved;
@@ -36,7 +45,6 @@ export class PendingApprovalsComponent implements OnInit {
   productData: any = [];
   data: any = [];
   currAction: any = {};
-
 
   roles: any[];
   allRoles: any[] = [];
@@ -63,43 +71,93 @@ export class PendingApprovalsComponent implements OnInit {
   totalRecordsRoute: number = 0;
   totalRecordsProductGrid: number = 0;
 
-  constructor(private _globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
-    private elem: ElementRef, private workflowService: WorkflowService, private route: ActivatedRoute,
-    private workflowGroupService: WorkflowGroupService, private workflowStageService: WorkflowStageService,
-    private workflowPendingApprovalService: WorkflowPendingApprovalService) {
-
-  }
+  constructor(
+    private _globals: Globals,
+    public cg: CommonGrid,
+    private toastr: ToastrService,
+    private elem: ElementRef,
+    private workflowService: WorkflowService,
+    private route: ActivatedRoute,
+    private workflowGroupService: WorkflowGroupService,
+    private workflowStageService: WorkflowStageService,
+    private workflowPendingApprovalService: WorkflowPendingApprovalService
+  ) {}
 
   ngOnInit(): void {
     this.globals = this._globals;
     this.currWorkflow = new WorkflowModel();
-    this.gridStorageId = 'approvalGrid' + this.elem.nativeElement.tagName.toLowerCase();
-    this.approveAction = { 'Header': 'Pending Approval', 'Action': 'Approve' };
-    this.cancelAction = { 'Header': 'Pending Approval', 'Action': 'Cancel' };
+    this.gridStorageId =
+      "approvalGrid" + this.elem.nativeElement.tagName.toLowerCase();
+    this.approveAction = { Header: "Pending Approval", Action: "Approve" };
+    this.cancelAction = { Header: "Pending Approval", Action: "Cancel" };
     this.gridSettings = [
-      new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
-      new ColumnsSaved({ id: 'activityType', label: 'Activity Type', visible: true }),
-      new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
-      new ColumnsSaved({ id: 'RequestedChanges', label: 'Requested Changes', visible: true }),
-      new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
-      new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
-      new ColumnsSaved({ id: 'createdByName', label: 'Initiatior', visible: true }),
-      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true })
+      new ColumnsSaved({ id: "id", label: "Id", visible: true }),
+      new ColumnsSaved({
+        id: "activityType",
+        label: "Activity Type",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "name", label: "Name", visible: true }),
+      new ColumnsSaved({
+        id: "RequestedChanges",
+        label: "Requested Changes",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "workflowName",
+        label: "Workflow Name",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "workflowGroupName",
+        label: "Workflow Group",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "createdByName",
+        label: "Initiatior",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "createdOn", label: "Created On", visible: true }),
     ];
 
-    this.gridStorageId2 = 'approvalGridProducts' + this.elem.nativeElement.tagName.toLowerCase();
+    this.gridStorageId2 =
+      "approvalGridProducts" + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings2 = [
-      new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
-      new ColumnsSaved({ id: 'activityType', label: 'Activity Type', visible: true }),
-      new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
-      new ColumnsSaved({ id: 'RequestedChanges', label: 'Requested Changes', visible: true }),
-      new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
-      new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
-      new ColumnsSaved({ id: 'createdByName', label: 'Initiatior', visible: true }),
-      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true })
+      new ColumnsSaved({ id: "id", label: "Id", visible: true }),
+      new ColumnsSaved({
+        id: "activityType",
+        label: "Activity Type",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "name", label: "Name", visible: true }),
+      new ColumnsSaved({
+        id: "RequestedChanges",
+        label: "Requested Changes",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "workflowName",
+        label: "Workflow Name",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "workflowGroupName",
+        label: "Workflow Group",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "createdByName",
+        label: "Initiatior",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "createdOn", label: "Created On", visible: true }),
     ];
-    this.route.params.subscribe(routeParams => {
-      this.currentRouteApprovalData = { data: this.data, table: routeParams.table };
+    this.route.params.subscribe((routeParams) => {
+      this.currentRouteApprovalData = {
+        data: this.data,
+        table: routeParams.table,
+      };
     });
   }
 
@@ -108,19 +166,26 @@ export class PendingApprovalsComponent implements OnInit {
     const ctrl = this;
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.workflowPendingApprovalService, this.workflowPendingApprovalService.workflowPendingApprovalGet, event, this.globals.functionDic
-        , { table: this.currentRouteApprovalData.table })
+      callFunctionWithFilters(
+        this.workflowPendingApprovalService,
+        this.workflowPendingApprovalService.workflowPendingApprovalGet,
+        event,
+        this.globals.functionDic,
+        { table: this.currentRouteApprovalData.table }
+      )
         .pipe(take(1))
-        .subscribe(responseHandler(response => {
-          ctrl.emptyArr(dataArr);
-          dataArr.push(...response.object);
-          this.totalRecordsRoute = response.totalNumberOfRecords;
-          
-          dataArr.map((elem) => {
-            ctrl.addToGridTableDropdown(elem);
-            return elem;
-          });
-        }));
+        .subscribe(
+          responseHandler((response) => {
+            ctrl.emptyArr(dataArr);
+            dataArr.push(...response.object);
+            this.totalRecordsRoute = response.totalNumberOfRecords;
+
+            dataArr.map((elem) => {
+              ctrl.addToGridTableDropdown(elem);
+              return elem;
+            });
+          })
+        );
     }, 10);
   }
 
@@ -129,29 +194,40 @@ export class PendingApprovalsComponent implements OnInit {
     const ctrl = this;
     this.globals.showLoader(true);
     setTimeout(() => {
-      callFunctionWithFilters(this.workflowPendingApprovalService, this.workflowPendingApprovalService.workflowPendingApprovalGet, event, this.globals.functionDic
-        , { table: EnumApprovalTables.ProductApproval })
+      callFunctionWithFilters(
+        this.workflowPendingApprovalService,
+        this.workflowPendingApprovalService.workflowPendingApprovalGet,
+        event,
+        this.globals.functionDic,
+        { table: EnumApprovalTables.ProductApproval }
+      )
         .pipe(take(1))
-        .subscribe(responseHandler(response => {
-          ctrl.emptyArr(dataArr);
-          dataArr.push(...response.object);
-          this.totalRecordsProductGrid = response.totalNumberOfRecords;
-          dataArr.map((elem) => {
-            ctrl.addToGridTableDropdown(elem);
-            return elem;
-          });
-        }));
+        .subscribe(
+          responseHandler((response) => {
+            ctrl.emptyArr(dataArr);
+            dataArr.push(...response.object);
+            this.totalRecordsProductGrid = response.totalNumberOfRecords;
+            dataArr.map((elem) => {
+              ctrl.addToGridTableDropdown(elem);
+              return elem;
+            });
+          })
+        );
     }, 10);
   }
 
   getApprovalInfo(table, id) {
     const ctrl = this;
     this.loading2 = true;
-    this.workflowPendingApprovalService.details(table, id, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.loading2 = false;
-        ctrl.approvalInfo = response;
-      }));
+    this.workflowPendingApprovalService
+      .details(table, id, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          this.loading2 = false;
+          ctrl.approvalInfo = response;
+        })
+      );
   }
 
   clearGetApprovalInfo() {
@@ -159,11 +235,9 @@ export class PendingApprovalsComponent implements OnInit {
     this.approvalInfo = {};
   }
 
-
-
   addToGridTableDropdown(elem: any) {
     const ctrl = this;
-    if (ctrl.tables.findIndex(z => z.value === elem.activityType) === -1) {
+    if (ctrl.tables.findIndex((z) => z.value === elem.activityType) === -1) {
       ctrl.tables.push({ label: elem.activityType, value: elem.activityType });
     }
   }
@@ -180,7 +254,7 @@ export class PendingApprovalsComponent implements OnInit {
     this.currAction.approval = approval;
     this.currAction.id = approval.id;
     this.currAction.activityType = approval.activityType;
-    this.currAction.comments = '';
+    this.currAction.comments = "";
   }
 
   clseDialog() {
@@ -194,25 +268,43 @@ export class PendingApprovalsComponent implements OnInit {
       let postPendingApprovalRequest = new PostPendingApprovalRequest();
       postPendingApprovalRequest.comments = this.currAction.comments;
       postPendingApprovalRequest.id = this.currAction.id;
-      postPendingApprovalRequest.table = parseInt(EnumApprovalTables[this.currAction.activityType], 10);
+      postPendingApprovalRequest.table = parseInt(
+        EnumApprovalTables[this.currAction.activityType],
+        10
+      );
 
-      this.workflowPendingApprovalService.workflowPendingApprovalPost(env.apiVersion, postPendingApprovalRequest)
-        .pipe(take(1)).subscribe(responseHandler((resp) => {
-          const index = this.data.findIndex(x => x.id === this.currAction.id);
-          this.data.splice(index, 1);
-          this.data = this.data.slice(0);
-          ctrl.clseDialog();
-        }));
+      this.workflowPendingApprovalService
+        .workflowPendingApprovalPost(env.apiVersion, postPendingApprovalRequest)
+        .pipe(take(1))
+        .subscribe(
+          responseHandler((resp) => {
+            const index = this.data.findIndex(
+              (x) => x.id === this.currAction.id
+            );
+            this.data.splice(index, 1);
+            this.data = this.data.slice(0);
+            ctrl.clseDialog();
+          })
+        );
     } else {
-      this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.currAction.activityType, this.currAction.id, this.currAction.comments, env.apiVersion)
-        .pipe(take(1)).subscribe(responseHandler((resp) => {
-          const index = this.data.findIndex(x => x.id === this.currAction.id);
-          this.data.splice(index, 1);
-          this.data = this.data.slice(0);
-          ctrl.clseDialog();
-        }));
+      this.workflowPendingApprovalService
+        .workflowPendingApprovalDelete(
+          this.currAction.activityType,
+          this.currAction.id,
+          this.currAction.comments,
+          env.apiVersion
+        )
+        .pipe(take(1))
+        .subscribe(
+          responseHandler((resp) => {
+            const index = this.data.findIndex(
+              (x) => x.id === this.currAction.id
+            );
+            this.data.splice(index, 1);
+            this.data = this.data.slice(0);
+            ctrl.clseDialog();
+          })
+        );
     }
   }
-
-
 }

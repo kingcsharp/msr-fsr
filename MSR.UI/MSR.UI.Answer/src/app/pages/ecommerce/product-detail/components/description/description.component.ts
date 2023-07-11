@@ -1,11 +1,11 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
-import {Product} from '../../../products.service';
+import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Product } from "../../../products.service";
 
 @Component({
-  selector: 'description',
-  templateUrl: './description.template.html',
-  styleUrls: ['./description.style.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: "description",
+  templateUrl: "./description.template.html",
+  styleUrls: ["./description.style.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DescriptionComponent {
   @Input() public product: Product = {};
@@ -17,5 +17,4 @@ export class DescriptionComponent {
     newAccordion[id] = !newAccordion[id];
     this.accordion = newAccordion;
   }
-
 }

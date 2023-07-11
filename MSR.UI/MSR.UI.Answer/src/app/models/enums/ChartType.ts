@@ -1,4 +1,4 @@
 export enum EnumChartType {
-    Bar = 1,
-    Line = 2
+  Bar = 1,
+  Line = 2,
 }

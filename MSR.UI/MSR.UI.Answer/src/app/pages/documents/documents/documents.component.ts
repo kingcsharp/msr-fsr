@@ -1,6 +1,11 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
-import { Globals } from '../../../models/lib/globals';
-import { EnumPrivilege } from '../../../models/enums/privileges';
+import {
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  ElementRef,
+} from "@angular/core";
+import { Globals } from "../../../models/lib/globals";
+import { EnumPrivilege } from "../../../models/enums/privileges";
 import {
   EnumMenuItem,
   DocumentService,
@@ -10,26 +15,26 @@ import {
   FileRequest,
   RoleService,
   Role,
-} from '../../../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { environment as env } from '../../../../environments/environment';
-import { responseHandler } from '../../../utils/responseHandler';
-import { ViewSaved } from '../../../models/lib/ViewSaved';
-import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { callFunctionWithFilters } from '../../../models/lib/Utils';
-import { LazyLoadEvent } from 'primeng/api';
+} from "../../../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { environment as env } from "../../../../environments/environment";
+import { responseHandler } from "../../../utils/responseHandler";
+import { ViewSaved } from "../../../models/lib/ViewSaved";
+import { ColumnsSaved } from "../../../models/lib/ColumnsSaved";
+import { CommonGrid } from "../../../models/lib/CommonGrid";
+import { AllowedActions } from "../../../models/lib/AllowedActions";
+import { callFunctionWithFilters } from "../../../models/lib/Utils";
+import { LazyLoadEvent } from "primeng/api";
 
 declare let jQuery: any;
 
 @Component({
-  selector: 'app-documents',
-  templateUrl: './documents.component.html',
-  styleUrls: ['./documents.component.scss'],
+  selector: "app-documents",
+  templateUrl: "./documents.component.html",
+  styleUrls: ["./documents.component.scss"],
   providers: [DocumentService],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: true
+  preserveWhitespaces: true,
 })
 export class DocumentsComponent implements OnInit {
   privileges = EnumPrivilege;
@@ -59,21 +64,36 @@ export class DocumentsComponent implements OnInit {
     public cg: CommonGrid,
     private elem: ElementRef,
     private documentService: DocumentService,
-    public roleService: RoleService,
-  ) { }
+    public roleService: RoleService
+  ) {}
 
   ngOnInit(): void {
-    this.gridVersion = '1.0.0';
-    this.gridStorageId = 'emGrid' + this.elem.nativeElement.tagName.toLowerCase();
+    this.gridVersion = "1.0.0";
+    this.gridStorageId =
+      "emGrid" + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
-      new ColumnsSaved({ id: 'id', label: 'ID', visible: true }),
-      new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
-      new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
-      new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Approval Date', visible: true }),
-      new ColumnsSaved({ id: 'lastUpdated.fullName', label: 'Updated By', visible: true }),
-      new ColumnsSaved({ id: 'referenceFiles', label: 'Reference Files', visible: true }),
+      new ColumnsSaved({ id: "id", label: "ID", visible: true }),
+      new ColumnsSaved({ id: "name", label: "Name", visible: true }),
+      new ColumnsSaved({ id: "revision", label: "Revision", visible: true }),
+      new ColumnsSaved({
+        id: "lastUpdatedOn",
+        label: "Approval Date",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "lastUpdated.fullName",
+        label: "Updated By",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "referenceFiles",
+        label: "Reference Files",
+        visible: true,
+      }),
     ];
-    this.documentsPrivileges = this.globals.getEnumPrivileges(this.menuItems.Documents);
+    this.documentsPrivileges = this.globals.getEnumPrivileges(
+      this.menuItems.Documents
+    );
     this.data = [];
     this.getAvailableRoles();
   }
@@ -81,21 +101,47 @@ export class DocumentsComponent implements OnInit {
   getDocuments(event: LazyLoadEvent) {
     setTimeout(() => {
       this.globals.showLoader(true);
-      callFunctionWithFilters(this.documentService, this.documentService.documentGet, event, this.globals.functionDic)
+      callFunctionWithFilters(
+        this.documentService,
+        this.documentService.documentGet,
+        event,
+        this.globals.functionDic
+      )
         .pipe(take(1))
-        .subscribe(responseHandler(response => {
-          this.data = response.object;
-          this.totalRecords = response.totalNumberOfRecords;
-          this.getDataFlag = true;
-        }));
+        .subscribe(
+          responseHandler((response) => {
+            this.data = response.object;
+            this.totalRecords = response.totalNumberOfRecords;
+            this.getDataFlag = true;
+          })
+        );
     }, 10);
   }
 
   getAvailableRoles() {
-    this.roleService.roleGet(null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
-      this.availableRoles = response.object;
-      this.getAvailableRolesFlag = true;
-    }));
+    this.roleService
+      .roleGet(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
+      .subscribe(
+        responseHandler((response) => {
+          this.availableRoles = response.object;
+          this.getAvailableRolesFlag = true;
+        })
+      );
   }
 
   openConfirmDeleteDialog(document: DocumentView) {
@@ -109,20 +155,26 @@ export class DocumentsComponent implements OnInit {
 
   delete() {
     this.globals.showLoader(true);
-    this.documentService.documentDelete(this.documentToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
-      const index = this.data.findIndex(x => x.id === this.documentToDelete.id);
-      this.data.splice(index, 1);
-      this.data = this.data.slice(0);
-      this.showConfirmDeleteDialog = false;
-    }));
+    this.documentService
+      .documentDelete(this.documentToDelete.id, env.apiVersion)
+      .subscribe(
+        responseHandler((response) => {
+          const index = this.data.findIndex(
+            (x) => x.id === this.documentToDelete.id
+          );
+          this.data.splice(index, 1);
+          this.data = this.data.slice(0);
+          this.showConfirmDeleteDialog = false;
+        })
+      );
   }
 
   openDocumentDialog(document: DocumentView) {
     this.selectedRoles = new Array<Role>();
     if (document) {
       this.document = document;
-      this.document?.roleIds?.forEach(id => {
-        let preSelectedRole = this.availableRoles.find(s => s.id === id);
+      this.document?.roleIds?.forEach((id) => {
+        let preSelectedRole = this.availableRoles.find((s) => s.id === id);
         this.selectedRoles.push(preSelectedRole);
       });
       if (this.document.referenceFiles === undefined) {
@@ -130,7 +182,7 @@ export class DocumentsComponent implements OnInit {
       }
     } else {
       this.document = new DocumentView();
-      this.document.comments = '';
+      this.document.comments = "";
       this.document.referenceFiles = [];
     }
     this.showDocumentDialog = true;
@@ -140,15 +192,15 @@ export class DocumentsComponent implements OnInit {
     this.document = null;
     this.showDocumentDialog = false;
     this.selectedRoles = null;
-    jQuery('.parsleyjs').parsley().reset();
+    jQuery(".parsleyjs").parsley().reset();
   }
 
   documentSubmit() {
-    jQuery('.parsleyjs').parsley().validate();
-    if (jQuery('.parsleyjs').parsley().isValid()) {
+    jQuery(".parsleyjs").parsley().validate();
+    if (jQuery(".parsleyjs").parsley().isValid()) {
       const newFiles = new Array<FileRequest>();
       const uploadedFileIds = new Array<number>();
-      this.document.referenceFiles.forEach(file => {
+      this.document.referenceFiles.forEach((file) => {
         if (file.fileId !== undefined) {
           uploadedFileIds.push(file.fileId);
         } else {
@@ -163,16 +215,22 @@ export class DocumentsComponent implements OnInit {
         updateDocumentRequest.revision = this.document.revision;
         updateDocumentRequest.referenceFileIds = uploadedFileIds;
         updateDocumentRequest.referenceFiles = newFiles;
-        updateDocumentRequest.roleIds = this.selectedRoles.map(s => s.id);
+        updateDocumentRequest.roleIds = this.selectedRoles.map((s) => s.id);
 
         this.globals.showLoader(true);
-        this.documentService.documentPatch(env.apiVersion, updateDocumentRequest).subscribe(responseHandler((response) => {
-          const index = this.data.findIndex(x => x.id === this.document.id);
-          this.data.splice(index, 1);
-          this.data.splice(index, 0, response.object);
-          this.data = this.data.slice(0);
-          this.closeDocumentDialog();
-        }));
+        this.documentService
+          .documentPatch(env.apiVersion, updateDocumentRequest)
+          .subscribe(
+            responseHandler((response) => {
+              const index = this.data.findIndex(
+                (x) => x.id === this.document.id
+              );
+              this.data.splice(index, 1);
+              this.data.splice(index, 0, response.object);
+              this.data = this.data.slice(0);
+              this.closeDocumentDialog();
+            })
+          );
       } else {
         let createDocumentRequest = new CreateDocumentRequest();
         createDocumentRequest.name = this.document.name;
@@ -180,18 +238,19 @@ export class DocumentsComponent implements OnInit {
         createDocumentRequest.revision = 0;
         createDocumentRequest.referenceFileIds = uploadedFileIds;
         createDocumentRequest.referenceFiles = newFiles;
-        createDocumentRequest.roleIds = this.selectedRoles.map(s => s.id);
+        createDocumentRequest.roleIds = this.selectedRoles.map((s) => s.id);
 
         this.globals.showLoader(true);
-        this.documentService.documentPost(env.apiVersion, createDocumentRequest).subscribe(responseHandler((response) => {
-          this.data.unshift(response.object);
-          this.data = this.data.slice(0);
-          this.closeDocumentDialog();
-        }));
+        this.documentService
+          .documentPost(env.apiVersion, createDocumentRequest)
+          .subscribe(
+            responseHandler((response) => {
+              this.data.unshift(response.object);
+              this.data = this.data.slice(0);
+              this.closeDocumentDialog();
+            })
+          );
       }
     }
   }
-
 }
-
-

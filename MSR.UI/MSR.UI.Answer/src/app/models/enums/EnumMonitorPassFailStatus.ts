@@ -1,4 +1,4 @@
 export enum EnumMonitorPassFailStatus {
-    PassOrYes = 1,
-    FailOrNo = 0
+  PassOrYes = 1,
+  FailOrNo = 0,
 }

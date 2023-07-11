@@ -1,39 +1,34 @@
-
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
-import { ModalData } from '../../../app/models/lib/ModalData';
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Observable, BehaviorSubject, Subject } from "rxjs";
+import { ModalData } from "../../../app/models/lib/ModalData";
 
 @Component({
-  selector: 'approval-comment',
-  templateUrl: './approval-comment.component.html',
-  styleUrls: ['./approval-comment.component.scss']
+  selector: "approval-comment",
+  templateUrl: "./approval-comment.component.html",
+  styleUrls: ["./approval-comment.component.scss"],
 })
 export class ApprovalCommentComponent implements OnInit {
   showDialog: boolean = false;
-  comment: string = '';
+  comment: string = "";
   @Input() modalData: ModalData = {
     showModal: false,
-    comment: null
+    comment: null,
   };
 
-  constructor() {
+  constructor() {}
 
-  }
-
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   commentSubmit() {
     const comment = this.comment;
-    this.comment = '';
+    this.comment = "";
     this.modalData.showModal = false;
     this.modalData.comment.next(comment);
     this.modalData.comment.complete();
   }
 
   clseDialog() {
-    this.comment = '';
+    this.comment = "";
     this.modalData.showModal = false;
     this.modalData.comment.next(null);
     this.modalData.comment.complete();

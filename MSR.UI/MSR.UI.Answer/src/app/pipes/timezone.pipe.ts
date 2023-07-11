@@ -1,13 +1,12 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { Globals } from '../models/lib/globals';
-import * as moment from 'moment';
+import { Pipe, PipeTransform } from "@angular/core";
+import { DatePipe } from "@angular/common";
+import { Globals } from "../models/lib/globals";
+import * as moment from "moment";
 
 @Pipe({
-  name: 'userTimezone'
+  name: "userTimezone",
 })
 export class TimeZonePipe implements PipeTransform {
-
   currentUserSTDTimezone: string;
   currentUserDSTTimezone: string;
   constructor(private globals: Globals, private datePipe: DatePipe) {
@@ -15,9 +14,15 @@ export class TimeZonePipe implements PipeTransform {
     this.currentUserDSTTimezone = globals.user.timezoneDSTPipe;
   }
 
-  transform(value: Date, format: string = 'short'): string {
+  transform(value: Date, format: string = "short"): string {
     if (value) {
-      let convert = this.datePipe.transform(value, format, moment(value).isDST() ? this.currentUserDSTTimezone : this.currentUserSTDTimezone);
+      let convert = this.datePipe.transform(
+        value,
+        format,
+        moment(value).isDST()
+          ? this.currentUserDSTTimezone
+          : this.currentUserSTDTimezone
+      );
       return convert;
     }
   }

@@ -1,11 +1,20 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+} from "@angular/core";
 
 @Component({
-  selector: 'multiselect-wrapper-form',
-  templateUrl: './multiselect-wrapper-form.component.html'
+  selector: "multiselect-wrapper-form",
+  templateUrl: "./multiselect-wrapper-form.component.html",
 })
 export class MultiselectWrapperFormComponent implements OnInit {
-  multiselectName: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  multiselectName: string =
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15);
 
   @Input() options: any;
   @Input() model: any;
@@ -18,26 +27,32 @@ export class MultiselectWrapperFormComponent implements OnInit {
   currentOptions: any = [];
   selectedObjs: any;
   basicOptions: any;
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit(): void {
     const ctrl = this;
     this.selectedObjs = { items: [] };
     this.basicOptions = {
-      name: this.defaultLabelProperty || 'name',
-      id: this.defaultId || 'id',
+      name: this.defaultLabelProperty || "name",
+      id: this.defaultId || "id",
       limit: this.limit || 4,
     };
     this.options.map((x) => {
-      this.currentOptions.push({ label: x[ctrl.basicOptions.name], value: { id: x[ctrl.basicOptions.id], name: x[ctrl.basicOptions.name] } });
+      this.currentOptions.push({
+        label: x[ctrl.basicOptions.name],
+        value: { id: x[ctrl.basicOptions.id], name: x[ctrl.basicOptions.name] },
+      });
     });
     this.setSelectedObjects();
   }
 
   removeItem(elem) {
-    const index = this.model.findIndex(x => x[this.basicOptions.id] === elem.id);
-    const selectedObjIndex = this.selectedObjs.items.findIndex(x => x.id === elem.id);
+    const index = this.model.findIndex(
+      (x) => x[this.basicOptions.id] === elem.id
+    );
+    const selectedObjIndex = this.selectedObjs.items.findIndex(
+      (x) => x.id === elem.id
+    );
     this.selectedObjs.items.splice(selectedObjIndex, 1);
     this.model.splice(index, 1);
     this.onSelectChange.emit();
@@ -69,7 +84,7 @@ export class MultiselectWrapperFormComponent implements OnInit {
     const ctrl = this;
 
     this.selectedObjs.items.map((x) => {
-      const elem = ctrl.options.find(u => u[this.basicOptions.id] === x.id);
+      const elem = ctrl.options.find((u) => u[this.basicOptions.id] === x.id);
       this.model.push(elem);
     });
     this.modelChange.emit(this.model);

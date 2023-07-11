@@ -1,13 +1,13 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ViewEncapsulation } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'error',
-  styleUrls: [ './error.style.scss' ],
-  templateUrl: './error.template.html',
+  selector: "error",
+  styleUrls: ["./error.style.scss"],
+  templateUrl: "./error.template.html",
   encapsulation: ViewEncapsulation.None,
   host: {
-    class: 'error-page container'
+    class: "error-page container",
   },
 })
 export class ErrorComponent {
@@ -18,6 +18,6 @@ export class ErrorComponent {
   }
 
   searchResult(): void {
-    this.router.navigate(['/app', 'dashboard']);
+    this.router.navigate(["/app", "dashboard"]);
   }
 }

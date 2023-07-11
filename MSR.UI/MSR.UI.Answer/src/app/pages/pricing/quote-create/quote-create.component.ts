@@ -1,22 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { Globals } from '../../../models/lib/globals';
+import { Component, OnInit } from "@angular/core";
+import { Globals } from "../../../models/lib/globals";
 import {
   QuoteService,
   CreateQuoteRequest,
   CreateQuoteItemRequest,
   CustomerService,
-} from '../../../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { environment as env } from '../../../../environments/environment';
-import { responseHandler } from '../../../utils/responseHandler';
-import { Router } from '@angular/router';
+} from "../../../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { environment as env } from "../../../../environments/environment";
+import { responseHandler } from "../../../utils/responseHandler";
+import { Router } from "@angular/router";
 
 declare let jQuery: any;
 
 @Component({
-  selector: 'app-quote-create',
-  templateUrl: './quote-create.component.html',
-  styleUrls: ['./quote-create.component.scss'],
+  selector: "app-quote-create",
+  templateUrl: "./quote-create.component.html",
+  styleUrls: ["./quote-create.component.scss"],
   providers: [QuoteService],
 })
 export class QuoteCreateComponent implements OnInit {
@@ -29,7 +29,7 @@ export class QuoteCreateComponent implements OnInit {
     private quoteService: QuoteService,
     private customerService: CustomerService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.initCreateQuoteRequestData();
@@ -52,18 +52,21 @@ export class QuoteCreateComponent implements OnInit {
   }
 
   submit() {
-    jQuery('.parsleyjs').parsley().validate();
+    jQuery(".parsleyjs").parsley().validate();
     const ctrl = this;
-    if (jQuery('.parsleyjs').parsley().isValid()) {
+    if (jQuery(".parsleyjs").parsley().isValid()) {
       this.globals.showLoader(true);
       this.data.quoteJson = JSON.stringify(this.data);
-      this.quoteService.quotePost(env.apiVersion, this.data)
+      this.quoteService
+        .quotePost(env.apiVersion, this.data)
         .pipe(take(1))
-        .subscribe(responseHandler((resp) => {
-          if (!resp.hasErrors) {
-            ctrl.router.navigate(['app/pricing/products']);
-          }
-      }));
+        .subscribe(
+          responseHandler((resp) => {
+            if (!resp.hasErrors) {
+              ctrl.router.navigate(["app/pricing/products"]);
+            }
+          })
+        );
     }
   }
 
@@ -73,11 +76,39 @@ export class QuoteCreateComponent implements OnInit {
       return ctrl.customersData;
     }
     this.globals.showLoader(true);
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
-      response.object.map((x) => {
-        ctrl.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
-      });
-      ctrl.getCustomersFlag = true;
-    }));
+    this.customerService
+      .customerGet(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
+      .subscribe(
+        responseHandler((response) => {
+          response.object.map((x) => {
+            ctrl.customersData.push({
+              label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`,
+              value: x.id,
+            });
+          });
+          ctrl.getCustomersFlag = true;
+        })
+      );
   }
 }

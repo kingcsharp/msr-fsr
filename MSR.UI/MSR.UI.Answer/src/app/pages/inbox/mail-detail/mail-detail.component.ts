@@ -1,9 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 @Component({
-  selector: '[mail-detail]',
-  templateUrl: './mail-detail.template.html',
-  styleUrls: ['./mail-detail.style.scss']
+  selector: "[mail-detail]",
+  templateUrl: "./mail-detail.template.html",
+  styleUrls: ["./mail-detail.style.scss"],
 })
 export class MailDetailComponent {
   @Input() mail: any;
@@ -11,7 +11,7 @@ export class MailDetailComponent {
   @Output() replyMessage = new EventEmitter();
   math = Math;
   onToBack(): void {
-    this.backToMailList.emit('');
+    this.backToMailList.emit("");
   }
 
   goToReply(mail): void {
@@ -22,4 +22,3 @@ export class MailDetailComponent {
     return Math.random();
   }
 }
-

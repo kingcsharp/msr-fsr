@@ -1,18 +1,17 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import { Component, ElementRef, OnInit } from "@angular/core";
 declare let jQuery: any;
 
 @Component({
-  selector: 'inbox',
-  templateUrl: './inbox.template.html',
-  styleUrls: ['./inbox.style.scss']
+  selector: "inbox",
+  templateUrl: "./inbox.template.html",
+  styleUrls: ["./inbox.style.scss"],
 })
-
 export class InboxComponent implements OnInit {
   mailListShow: boolean = true;
   mailFormShow: boolean = false;
   mailDetailShow: boolean = false;
   currentMail: any;
-  currentFolderName: string = 'Inbox';
+  currentFolderName: string = "Inbox";
   $el: any;
   repliedMessage: any;
 
@@ -24,27 +23,27 @@ export class InboxComponent implements OnInit {
 
   handleComposeBtn(): void {
     this.repliedMessage = void 0;
-    this.changeEmailComponents('mailForm');
+    this.changeEmailComponents("mailForm");
   }
 
   onReplyMail(mail: any): void {
     this.currentMail = mail;
-    this.changeEmailComponents('mailDetail');
+    this.changeEmailComponents("mailDetail");
   }
 
   changeEmailComponents(componentName: string): void {
     const mailState = {
-      'mailList': (that): void => {
+      mailList: (that): void => {
         that.mailFormShow = that.mailDetailShow = false;
         that.mailListShow = true;
       },
 
-      'mailForm': (that): void => {
+      mailForm: (that): void => {
         that.mailListShow = that.mailDetailShow = false;
         that.mailFormShow = true;
       },
 
-      'mailDetail': (that): void => {
+      mailDetail: (that): void => {
         that.mailListShow = that.mailFormShow = false;
         that.mailDetailShow = true;
       },
@@ -56,26 +55,30 @@ export class InboxComponent implements OnInit {
   setFolderName(folderName: string): void {
     this.currentFolderName = folderName;
     if (!this.mailListShow) {
-      this.changeEmailComponents('mailList');
+      this.changeEmailComponents("mailList");
     }
   }
   /* tslint:disable */
   initMailboxAppDemo($el: any): void {
-    let showAlert = function(): void {
-      $el.find('#app-alert')
-        .removeClass('hide')
-        .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(): void {
-          jQuery(this).removeClass('animated bounceInLeft');
-        });
+    let showAlert = function (): void {
+      $el
+        .find("#app-alert")
+        .removeClass("hide")
+        .one(
+          "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",
+          function (): void {
+            jQuery(this).removeClass("animated bounceInLeft");
+          }
+        );
     };
 
     setTimeout(() => showAlert(), 3000);
   }
   /* tslint:enable */
   changeActiveItem(): void {
-    this.$el.find('.nav a').on('click', function(): void {
-      jQuery('.nav').find('.active').removeClass('active');
-      jQuery(this).parent().addClass('active');
+    this.$el.find(".nav a").on("click", function (): void {
+      jQuery(".nav").find(".active").removeClass("active");
+      jQuery(this).parent().addClass("active");
     });
   }
 

@@ -1,21 +1,21 @@
-import {Component, HostBinding} from '@angular/core';
-import {RegisterService} from './register.service';
-import {LoginService} from '../login/login.service';
+import { Component, HostBinding } from "@angular/core";
+import { RegisterService } from "./register.service";
+import { LoginService } from "../login/login.service";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './register.template.html'
+  selector: "app-login",
+  templateUrl: "./register.template.html",
 })
 export class RegisterComponent {
-  @HostBinding('class') classes = 'auth-page app';
+  @HostBinding("class") classes = "auth-page app";
 
-  email: string = '';
-  password: string = '';
-  confirmPassword: string = '';
+  email: string = "";
+  password: string = "";
+  confirmPassword: string = "";
 
   constructor(
     public loginService: LoginService,
-    public registerService: RegisterService,
+    public registerService: RegisterService
   ) {}
 
   public register() {
@@ -25,19 +25,19 @@ export class RegisterComponent {
     if (!this.isPasswordValid()) {
       this.checkPassword();
     } else {
-      this.registerService.registerUser({email, password});
+      this.registerService.registerUser({ email, password });
     }
   }
 
   checkPassword() {
     if (!this.isPasswordValid()) {
       if (!this.password) {
-        this.registerService.registerError('Password field is empty');
+        this.registerService.registerError("Password field is empty");
       } else {
-        this.registerService.registerError('Passwords are not equal');
+        this.registerService.registerError("Passwords are not equal");
       }
       setTimeout(() => {
-        this.registerService.registerError('');
+        this.registerService.registerError("");
       }, 3 * 1000);
     }
   }
@@ -47,10 +47,10 @@ export class RegisterComponent {
   }
 
   public googleLogin() {
-    this.loginService.loginUser({social: 'google'});
+    this.loginService.loginUser({ social: "google" });
   }
 
   public microsoftLogin() {
-    this.loginService.loginUser({social: 'microsoft'});
+    this.loginService.loginUser({ social: "microsoft" });
   }
 }

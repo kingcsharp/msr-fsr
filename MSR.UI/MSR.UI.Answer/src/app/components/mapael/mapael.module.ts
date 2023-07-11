@@ -1,13 +1,8 @@
-import { NgModule } from '@angular/core';
-import { MapaelLayersMapDirective } from './mapael.directive';
+import { NgModule } from "@angular/core";
+import { MapaelLayersMapDirective } from "./mapael.directive";
 
 @NgModule({
-  declarations: [
-    MapaelLayersMapDirective
-  ],
-  exports: [
-    MapaelLayersMapDirective
-  ]
+  declarations: [MapaelLayersMapDirective],
+  exports: [MapaelLayersMapDirective],
 })
-export class MapaelLayersMapModule {
-}
+export class MapaelLayersMapModule {}
