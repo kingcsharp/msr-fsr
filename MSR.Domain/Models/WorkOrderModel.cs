@@ -7,6 +7,7 @@ namespace MSR.Domain.Models
     {
         public int? Id { get; set; }
         public string CustomerName { get; set; }
+        public string CustomerAddress { get; set; }
         public decimal? Price { get; set; }
         public DateTime? ScheduledStartDate { get; set; }
         public DateTime? ScheduledEndDate { get; set; }
