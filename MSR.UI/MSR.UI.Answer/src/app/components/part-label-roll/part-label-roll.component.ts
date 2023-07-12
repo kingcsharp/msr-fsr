@@ -8,6 +8,7 @@ import { environment as env } from "../../../environments/environment";
 import { responseHandler } from "../../utils/responseHandler";
 import { take } from "rxjs/operators";
 import * as _ from "lodash";
+import { EnumWipPrintLogo } from "../../models/enums/EnumWipPrintLogo";
 
 @Component({
   selector: "part-label-roll",
@@ -16,10 +17,17 @@ import * as _ from "lodash";
   providers: [WorkOrderPartService],
 })
 export class PartLabelRollComponent implements OnInit {
-  todayDate: Date = new Date();
-
   @Input() WorkOrder: WorkOrderModel;
+  @Input() printLogo: EnumWipPrintLogo;
+
+  todayDate: Date = new Date();
+  enumWipPrintLogo = EnumWipPrintLogo;
+  logo: string;
   workOrderParts: Array<WorkOrderPartModel>;
+
+  LOGO_MSR: string = "msr-label-logo-black.jpg";
+  LOGO_KOMICO: string = "komico-label-logo-black.png";
+  LOGO_BLANK: string = "blank-label-logo.png";
 
   constructor(private workOrderPartService: WorkOrderPartService) {}
 
@@ -43,6 +51,8 @@ export class PartLabelRollComponent implements OnInit {
           });
         })
       );
+
+    this.setPrintLogo();
   }
 
   getWidth(value) {
@@ -62,5 +72,15 @@ export class PartLabelRollComponent implements OnInit {
     }
 
     return width;
+  }
+
+  setPrintLogo() {
+    if (this.printLogo === EnumWipPrintLogo.KoMiCo) {
+      this.logo = this.LOGO_KOMICO;
+    } else if (this.printLogo === EnumWipPrintLogo.NoLogo) {
+      this.logo = this.LOGO_BLANK;
+    } else {
+      this.logo = this.LOGO_MSR;
+    }
   }
 }
