@@ -20,7 +20,7 @@ export class DetailedPackingListComponent implements OnInit {
   packingList: PackingListViewModel;
   currentDate: string;
   heading: string;
-  displayShipFrom: boolean = false;
+  displayShipFromDetails: boolean = false;
 
   constructor() {
     this.packingList = new PackingListViewModel();
@@ -43,7 +43,7 @@ export class DetailedPackingListComponent implements OnInit {
       this.heading = this.HEADING_NOLOGO;
     } else {
       this.heading = this.HEADING_MSRFSR;
-      this.displayShipFrom = true;
+      this.displayShipFromDetails = true;
     }
   }
 }

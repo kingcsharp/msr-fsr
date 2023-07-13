@@ -17,7 +17,7 @@ export class DeliveryTicketReportComponent implements OnInit {
   @Input() printLogo: EnumWipPrintLogo;
   packingList: PackingListViewModel;
   heading: string;
-  displayShipFrom: boolean = false;
+  displayShipFromDetails: boolean = false;
 
   constructor() {
     this.packingList = new PackingListViewModel();
@@ -35,7 +35,7 @@ export class DeliveryTicketReportComponent implements OnInit {
       this.heading = this.HEADING_NOLOGO;
     } else {
       this.heading = this.HEADING_MSRFSR;
-      this.displayShipFrom = true;
+      this.displayShipFromDetails = true;
     }
   }
 }

@@ -13,8 +13,8 @@
     <div class="col-12 mb-4 px-2">
       <div class="row mb-3 mx-2">
         <div class="col-4">
-          <div *ngIf="displayShipFrom">
-            <u>Ship From</u><br />
+          <u>Ship From</u><br />
+          <div *ngIf="displayShipFromDetails">
             MSR-FSR {{ WorkOrder.location?.name }}<br />
             {{ WorkOrder.location?.address1 }} {{ WorkOrder.location?.address2
             }}<br />
