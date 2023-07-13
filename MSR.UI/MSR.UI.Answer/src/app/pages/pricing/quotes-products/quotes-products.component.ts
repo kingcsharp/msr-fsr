@@ -1,14 +1,14 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { Globals } from '../../../models/lib/globals';
-import { ViewSaved } from '../../../models/lib/ViewSaved';
-import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
-import { take } from 'rxjs/operators';
-import { responseHandler } from '../../../utils/responseHandler';
-import { environment as env } from '../../../../environments/environment';
-import { callFunctionWithFilters } from '../../../models/lib/Utils';
+import { Component, OnInit, ElementRef } from "@angular/core";
+import { Globals } from "../../../models/lib/globals";
+import { ViewSaved } from "../../../models/lib/ViewSaved";
+import { ColumnsSaved } from "../../../models/lib/ColumnsSaved";
+import { CommonGrid } from "../../../models/lib/CommonGrid";
+import { AllowedActions } from "../../../models/lib/AllowedActions";
+import { EnumProductPageModes } from "../../../models/enums/ProductPageModes";
+import { take } from "rxjs/operators";
+import { responseHandler } from "../../../utils/responseHandler";
+import { environment as env } from "../../../../environments/environment";
+import { callFunctionWithFilters } from "../../../models/lib/Utils";
 import {
   QuoteService,
   QuotesProductsView,
@@ -17,20 +17,24 @@ import {
   CustomerModel,
   CreateQuoteRequest,
   EnumSegregationType,
-} from '../../../services/api.client.generated';
-import { CSRJsonModel, ProcessModel, PartModel } from '../../../models/csr-json-model';
-import { EnumCRFTabs } from '../../../models/enums/EnumCRFTabs';
-import { LazyLoadEvent } from 'primeng/api';
-import * as moment from 'moment';
+} from "../../../services/api.client.generated";
+import {
+  CSRJsonModel,
+  ProcessModel,
+  PartModel,
+} from "../../../models/csr-json-model";
+import { EnumCRFTabs } from "../../../models/enums/EnumCRFTabs";
+import { LazyLoadEvent } from "primeng/api";
+import * as moment from "moment";
 
 declare let jQuery: any;
 declare let Parsley: any;
 
 @Component({
-  selector: 'app-quotes-products',
-  templateUrl: './quotes-products.component.html',
-  styleUrls: ['./quotes-products.component.scss'],
-  providers: [QuoteService, CustomerService]
+  selector: "app-quotes-products",
+  templateUrl: "./quotes-products.component.html",
+  styleUrls: ["./quotes-products.component.scss"],
+  providers: [QuoteService, CustomerService],
 })
 export class QuotesProductsComponent implements OnInit {
   productPageModes = EnumProductPageModes;
@@ -47,21 +51,21 @@ export class QuotesProductsComponent implements OnInit {
   CSRToCreate: CSRJsonModel;
   CSRShippingMethods: any[] = [
     {
-      value: 'UPS',
-      label: 'UPS',
+      value: "UPS",
+      label: "UPS",
     },
     {
-      value: 'FEDEX',
-      label: 'FEDEX',
+      value: "FEDEX",
+      label: "FEDEX",
     },
     {
-      value: 'USPS',
-      label: 'USPS',
+      value: "USPS",
+      label: "USPS",
     },
     {
-      value: 'Freight',
-      label: 'Freight',
-    }
+      value: "Freight",
+      label: "Freight",
+    },
   ];
   customersData: CustomerModel[] = [];
   getCustomersFlag: boolean = false;
@@ -77,41 +81,103 @@ export class QuotesProductsComponent implements OnInit {
     public cg: CommonGrid,
     private elem: ElementRef,
     private quoteService: QuoteService,
-    private customerService: CustomerService,
-  ) { }
+    private customerService: CustomerService
+  ) {}
 
   ngOnInit(): void {
-    this.gridVersion = '1.0.0';
-    this.gridStorageId = 'quotesGrid' + this.elem.nativeElement.tagName.toLowerCase();
+    this.gridVersion = "1.0.0";
+    this.gridStorageId =
+      "quotesGrid" + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
-      new ColumnsSaved({ id: 'submittedDate', label: 'Submitted Date', visible: true }),
-      new ColumnsSaved({ id: 'company', label: 'Company', visible: true }),
-      new ColumnsSaved({ id: 'submittedBy.fullName', label: 'Submitted By', visible: true }),
-      new ColumnsSaved({ id: 'divisionFab', label: 'Division/Fab #', visible: true }),
-      new ColumnsSaved({ id: 'partKitNo', label: 'Part/Kit Number', visible: true }),
-      new ColumnsSaved({ id: 'segregationType', label: 'Segregation Type', visible: true }),
-      new ColumnsSaved({ id: 'procedureId', label: 'Procedure Id', visible: true }),
-      new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true }),
-      new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true }),
-      new ColumnsSaved({ id: 'representative', label: 'Representative', visible: false }),
-      new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
-      new ColumnsSaved({ id: 'equipmentCost', label: 'Equipment Cost', visible: false }),
-      new ColumnsSaved({ id: 'materialCost', label: 'Material Cost', visible: false }),
-      new ColumnsSaved({ id: 'salesTax', label: 'Sales Tax', visible: false }),
-      new ColumnsSaved({ id: 'totalPrice', label: 'Total Price', visible: true }),
-      new ColumnsSaved({ id: 'cycleTime', label: 'Cycle Time', visible: true }),
-      new ColumnsSaved({ id: 'lastUpdateOn', label: 'LastUpdateOn', visible: false }),
-      new ColumnsSaved({ id: 'lastUpdatedBy', label: 'LastUpdated By', visible: false })
+      new ColumnsSaved({
+        id: "submittedDate",
+        label: "Submitted Date",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "company", label: "Company", visible: true }),
+      new ColumnsSaved({
+        id: "submittedBy.fullName",
+        label: "Submitted By",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "divisionFab",
+        label: "Division/Fab #",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "partKitNo",
+        label: "Part/Kit Number",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "segregationType",
+        label: "Segregation Type",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "procedureId",
+        label: "Procedure Id",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "procedureName",
+        label: "Procedure Name",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "productName",
+        label: "Product Name",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "representative",
+        label: "Representative",
+        visible: false,
+      }),
+      new ColumnsSaved({ id: "revision", label: "Revision", visible: true }),
+      new ColumnsSaved({
+        id: "equipmentCost",
+        label: "Equipment Cost",
+        visible: false,
+      }),
+      new ColumnsSaved({
+        id: "materialCost",
+        label: "Material Cost",
+        visible: false,
+      }),
+      new ColumnsSaved({ id: "salesTax", label: "Sales Tax", visible: false }),
+      new ColumnsSaved({
+        id: "totalPrice",
+        label: "Total Price",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "cycleTime", label: "Cycle Time", visible: true }),
+      new ColumnsSaved({
+        id: "lastUpdateOn",
+        label: "LastUpdateOn",
+        visible: false,
+      }),
+      new ColumnsSaved({
+        id: "lastUpdatedBy",
+        label: "LastUpdated By",
+        visible: false,
+      }),
     ];
-    this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.QuotesProducts);
+    this.userPrivileges = this.globals.getEnumPrivileges(
+      this.menuItems.QuotesProducts
+    );
     this.showConfirmDeleteDialog = false;
     this.data = [];
     this.segregationTypes = this.globals.getSegregationTypes();
 
     this.getCustomers();
     let ctrl = this;
-    Parsley.on('field:error', function() {
-      if (ctrl.CSRFormValidErrors.findIndex(val => val === this.element.name) < 0) {
+    Parsley.on("field:error", function () {
+      if (
+        ctrl.CSRFormValidErrors.findIndex((val) => val === this.element.name) <
+        0
+      ) {
         ctrl.CSRFormValidErrors.push(this.element.name);
       }
     });
@@ -119,23 +185,55 @@ export class QuotesProductsComponent implements OnInit {
 
   getQuotesProducts(event: LazyLoadEvent) {
     this.globals.showLoader(true);
-      callFunctionWithFilters(this.quoteService, this.quoteService.product, event, this.globals.functionDic)
+    callFunctionWithFilters(
+      this.quoteService,
+      this.quoteService.product,
+      event,
+      this.globals.functionDic
+    )
       .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.currentEvent = event;
-        this.totalRecords = response.totalNumberOfRecords;
-        this.data = response.object;
-      }));
+      .subscribe(
+        responseHandler((response) => {
+          this.currentEvent = event;
+          this.totalRecords = response.totalNumberOfRecords;
+          this.data = response.object;
+        })
+      );
   }
 
   getCustomers() {
     if (this.getCustomersFlag) {
       return this.customersData;
     }
-    this.customerService.customerGet(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
-      this.customersData = response.object;
-      this.getCustomersFlag = true;
-    }));
+    this.customerService
+      .customerGet(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
+      .subscribe(
+        responseHandler((response) => {
+          this.customersData = response.object;
+          this.getCustomersFlag = true;
+        })
+      );
   }
 
   openConfirmDeleteDialog(quote: QuotesProductsView) {
@@ -151,11 +249,14 @@ export class QuotesProductsComponent implements OnInit {
   deleteQuote() {
     this.showConfirmDeleteDialog = false;
     this.globals.showLoader(true);
-    this.quoteService.quoteDelete(this.quoteToDelete.id, env.apiVersion)
-      .subscribe(responseHandler((response) => {
-        this.quoteToDelete = null;
-        this.getQuotesProducts(this.currentEvent);
-      }));
+    this.quoteService
+      .quoteDelete(this.quoteToDelete.id, env.apiVersion)
+      .subscribe(
+        responseHandler((response) => {
+          this.quoteToDelete = null;
+          this.getQuotesProducts(this.currentEvent);
+        })
+      );
   }
 
   addCSRProcess() {
@@ -195,7 +296,7 @@ export class QuotesProductsComponent implements OnInit {
 
   closeCSRDialog() {
     this.showCSRDialog = false;
-    jQuery('.parsleyjs').parsley().reset();
+    jQuery(".parsleyjs").parsley().reset();
   }
 
   setCustomerId() {
@@ -203,8 +304,8 @@ export class QuotesProductsComponent implements OnInit {
   }
 
   onChangeCycleTime($event) {
-    jQuery('#cycleTime').parsley().validate();
-    if (jQuery('#cycleTime').parsley().isValid()) {
+    jQuery("#cycleTime").parsley().validate();
+    if (jQuery("#cycleTime").parsley().isValid()) {
       if ($event.target.value) {
         const cycleTime = parseInt($event.target.value, 10);
         this.CSRToCreate.ExpectedCycleTime = cycleTime;
@@ -216,46 +317,57 @@ export class QuotesProductsComponent implements OnInit {
 
   onCSRSubmit() {
     this.CSRFormValidErrors = [];
-    jQuery('.parsleyjs').parsley().validate();
-    if (jQuery('.parsleyjs').parsley().isValid()) {
+    jQuery(".parsleyjs").parsley().validate();
+    if (jQuery(".parsleyjs").parsley().isValid()) {
       this.globals.showLoader(true);
       const requestData = new CreateQuoteRequest();
       requestData.customerId = this.CSRToCreate.customerId;
       requestData.partKitNo = this.CSRToCreate.PartKitNo;
       const process = [];
-      this.CSRToCreate.Process.forEach(v => {
+      this.CSRToCreate.Process.forEach((v) => {
         if (v.Contaminents) {
           process.push(v);
         }
       });
       this.CSRToCreate.Process = process;
       requestData.customerRequirementJson = JSON.stringify(this.CSRToCreate);
-      this.quoteService.quotePost(env.apiVersion, requestData)
+      this.quoteService
+        .quotePost(env.apiVersion, requestData)
         .pipe(take(1))
-        .subscribe(responseHandler((resp) => {
-          this.closeCSRDialog();
-          this.getQuotesProducts(this.currentEvent);
-      }));
+        .subscribe(
+          responseHandler((resp) => {
+            this.closeCSRDialog();
+            this.getQuotesProducts(this.currentEvent);
+          })
+        );
     }
   }
 
   downloadCSV() {
     this.globals.showLoader(true);
-    callFunctionWithFilters(this.quoteService, this.quoteService.download, this.currentEvent, this.globals.functionDic)
+    callFunctionWithFilters(
+      this.quoteService,
+      this.quoteService.download,
+      this.currentEvent,
+      this.globals.functionDic
+    )
       .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        if (response.data) {
-          const downloadDocument = document.createElement('a');
-          const blob = new Blob([response.data], { type: 'text/csv' });
-          const url = window.URL.createObjectURL(blob);
+      .subscribe(
+        responseHandler((response) => {
+          if (response.data) {
+            const downloadDocument = document.createElement("a");
+            const blob = new Blob([response.data], { type: "text/csv" });
+            const url = window.URL.createObjectURL(blob);
 
-          downloadDocument.href = url;
-          downloadDocument.download = `product_export_${moment.utc().valueOf()}.csv`;
-          downloadDocument.click();
-          window.URL.revokeObjectURL(url);
-          downloadDocument.remove();
-        }
-      }));
+            downloadDocument.href = url;
+            downloadDocument.download = `product_export_${moment
+              .utc()
+              .valueOf()}.csv`;
+            downloadDocument.click();
+            window.URL.revokeObjectURL(url);
+            downloadDocument.remove();
+          }
+        })
+      );
   }
-
 }

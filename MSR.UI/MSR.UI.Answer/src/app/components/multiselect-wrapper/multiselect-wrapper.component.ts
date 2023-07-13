@@ -1,15 +1,17 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { FilterUtils } from 'primeng/utils';
+import { Component, OnInit, Input } from "@angular/core";
+import { Subscription } from "rxjs";
+import { FilterUtils } from "primeng/utils";
 
 @Component({
-  selector: 'multiselect-wrapper',
-  templateUrl: './multiselect-wrapper.component.html'
+  selector: "multiselect-wrapper",
+  templateUrl: "./multiselect-wrapper.component.html",
 })
 export class MultiselectWrapperComponent implements OnInit {
   selectedColumns: Array<any>;
   subscriptions: Subscription[] = [];
-  multiselectName: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  multiselectName: string =
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15);
 
   @Input() gridStorageId: string;
   @Input() options: any;
@@ -25,21 +27,23 @@ export class MultiselectWrapperComponent implements OnInit {
   currentOptions: any = [];
   basicOptions: any;
   isOldFilter: boolean = false;
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit(): void {
     const ctrl = this;
     this.selectedColumns = [];
     this.basicOptions = {
-      name: this.filterProp || 'name',
-      id: this.defaultId || 'id'
+      name: this.filterProp || "name",
+      id: this.defaultId || "id",
     };
-    FilterUtils['multipleValuesFilter' + this.multiselectName] = (value, filter): boolean => {
+    FilterUtils["multipleValuesFilter" + this.multiselectName] = (
+      value,
+      filter
+    ): boolean => {
       let found = false;
-      filter.forEach(fElement => {
+      filter.forEach((fElement) => {
         if (value !== undefined) {
-          value.forEach(vElement => {
+          value.forEach((vElement) => {
             if (ctrl.isOldFilter) {
               if (fElement === vElement[ctrl.filterProp]) {
                 found = true;
@@ -55,16 +59,25 @@ export class MultiselectWrapperComponent implements OnInit {
       return found;
     };
     this.pushOptions();
-    this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
+    this.setSelectedColumns(
+      this.options,
+      this.datatable.filters[this.filterId]
+    );
     const sub1 = this.datatable.onFilter.subscribe((elem) => {
-      if (elem.filters === undefined || elem.filters[this.filterId] === undefined) {
+      if (
+        elem.filters === undefined ||
+        elem.filters[this.filterId] === undefined
+      ) {
         this.selectedColumns = [];
       } else {
         this.selectedColumns = elem.filters[this.filterId].value;
       }
     });
     const sub2 = this.datatable.onStateRestore.subscribe((elem) => {
-      if (elem.filters === undefined || elem.filters[this.filterId] === undefined) {
+      if (
+        elem.filters === undefined ||
+        elem.filters[this.filterId] === undefined
+      ) {
         this.selectedColumns = [];
       } else {
         this.selectedColumns = elem.filters[this.filterId].value;
@@ -89,7 +102,7 @@ export class MultiselectWrapperComponent implements OnInit {
     const lengthChange = this.options.length !== this.currentOptions.length;
     if (lengthChange) {
       this.pushOptions();
-      this.currentOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
+      this.currentOptions.sort((a, b) => (a.label > b.label ? 1 : -1));
     }
   }
 
@@ -114,7 +127,7 @@ export class MultiselectWrapperComponent implements OnInit {
           filterItem = item;
         }
         if (filterItem.length > 0) {
-          filterItem.forEach(element => {
+          filterItem.forEach((element) => {
             let length = this.currentOptions.length;
             let found = false;
             while (length--) {
@@ -129,8 +142,8 @@ export class MultiselectWrapperComponent implements OnInit {
                 label: element[ctrl.basicOptions.name],
                 value: {
                   id: element[ctrl.basicOptions.id],
-                  name: element[ctrl.basicOptions.name]
-                }
+                  name: element[ctrl.basicOptions.name],
+                },
               });
             }
           });
@@ -141,7 +154,11 @@ export class MultiselectWrapperComponent implements OnInit {
 
         if (Array.isArray(labels) && Array.isArray(values)) {
           for (let index = 0; index < labels.length; index++) {
-            this.insertItemIfNotRepeated(this.currentOptions, labels[index], values[index]);
+            this.insertItemIfNotRepeated(
+              this.currentOptions,
+              labels[index],
+              values[index]
+            );
           }
         } else {
           if (labels !== undefined && values !== undefined) {
@@ -150,15 +167,16 @@ export class MultiselectWrapperComponent implements OnInit {
         }
       }
     });
-
   }
 
   insertItemIfNotRepeated(currentOptions: any, label: any, val: any) {
     const elemToAdd = {
       label: label,
-      value: val
+      value: val,
     };
-    const idx = currentOptions.findIndex(u => u.label === elemToAdd.label && u.value === elemToAdd.value);
+    const idx = currentOptions.findIndex(
+      (u) => u.label === elemToAdd.label && u.value === elemToAdd.value
+    );
     if (idx === -1) {
       currentOptions.push(elemToAdd);
     }
@@ -186,9 +204,13 @@ export class MultiselectWrapperComponent implements OnInit {
 
   filterGrid() {
     if (this.multipleValues) {
-      this.datatable.filter(this.selectedColumns, this.filterId, 'multipleValuesFilter' + this.multiselectName);
+      this.datatable.filter(
+        this.selectedColumns,
+        this.filterId,
+        "multipleValuesFilter" + this.multiselectName
+      );
     } else {
-      this.datatable.filter(this.selectedColumns, this.filterId, 'in');
+      this.datatable.filter(this.selectedColumns, this.filterId, "in");
     }
   }
 
@@ -196,11 +218,10 @@ export class MultiselectWrapperComponent implements OnInit {
     if (filters === undefined || filters.value.length === 0) {
       return;
     }
-    options?.forEach(element => {
+    options?.forEach((element) => {
       if (filters.value.indexOf(element.value) > -1) {
         this.selectedColumns.push(element.value);
       }
     });
   }
-
 }

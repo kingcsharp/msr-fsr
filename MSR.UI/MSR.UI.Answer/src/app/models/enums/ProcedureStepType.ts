@@ -1,5 +1,5 @@
 export enum ProcedureStepType {
-    Standard = 1,
-    Serialization = 2,
-    NCR = 3
+  Standard = 1,
+  Serialization = 2,
+  NCR = 3,
 }

@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
-import { EnumSegregationType } from './api.client.generated';
+import { Injectable } from "@angular/core";
+import { EnumSegregationType } from "./api.client.generated";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ProductSegregationService {
-
   private segregationType: EnumSegregationType = EnumSegregationType.NONCU;
   private wipDetailsBeingDisplayed: boolean = false;
   private partTitle: string;
 
-  constructor() { }
+  constructor() {}
 
   get SegregationType() {
     return this.segregationType;
@@ -35,5 +34,4 @@ export class ProductSegregationService {
   set WipDetailsBeingDisplayed(wipDetailsBeingDisplayed: boolean) {
     this.wipDetailsBeingDisplayed = wipDetailsBeingDisplayed;
   }
-
 }

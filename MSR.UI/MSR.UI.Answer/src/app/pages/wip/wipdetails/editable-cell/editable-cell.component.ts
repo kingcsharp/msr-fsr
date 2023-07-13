@@ -3,7 +3,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
 @Component({
   selector: "app-editable-cell",
   templateUrl: "./editable-cell.component.html",
-  styleUrls: ["./editable-cell.component.scss"]
+  styleUrls: ["./editable-cell.component.scss"],
 })
 export class EditableCellComponent implements OnInit {
   constructor() {}

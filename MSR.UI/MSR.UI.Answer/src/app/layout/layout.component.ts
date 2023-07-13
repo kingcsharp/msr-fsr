@@ -1,41 +1,59 @@
-import { Component, ViewEncapsulation, ElementRef, ViewChild, NgZone, Renderer2 } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ElementRef,
+  ViewChild,
+  NgZone,
+  Renderer2,
+} from "@angular/core";
 import {
   Router,
   Event as RouterEvent,
   NavigationStart,
   NavigationEnd,
   NavigationCancel,
-  NavigationError
-} from '@angular/router';
-import { Globals } from '../models/lib/globals';
-import { ProductSegregationService } from '../services/product-segregation.service';
-import { EnumSegregationType, EnumMenuItem, FileService, ImportRequest } from '../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { responseHandler } from '../utils/responseHandler';
-import { environment as env } from '../../environments/environment';
-
+  NavigationError,
+} from "@angular/router";
+import { Globals } from "../models/lib/globals";
+import { ProductSegregationService } from "../services/product-segregation.service";
+import {
+  EnumSegregationType,
+  EnumMenuItem,
+  FileService,
+  ImportRequest,
+} from "../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { responseHandler } from "../utils/responseHandler";
+import { environment as env } from "../../environments/environment";
 
 @Component({
-  selector: 'layout',
+  selector: "layout",
   encapsulation: ViewEncapsulation.None,
-  templateUrl: './layout.template.html'
+  templateUrl: "./layout.template.html",
 })
 export class Layout {
   closed: boolean = true;
   sidebarState: boolean = true;
   globals: Globals;
   currDate: Date = new Date();
-  body: string = 'body';
+  body: string = "body";
   supportTicketModalDisplayed: boolean = false;
   cycleCountImportModalDisplayed: boolean = false;
   menuItems = EnumMenuItem;
-  @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
-  @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;
+  @ViewChild("spinnerElement", { static: true }) spinnerElement: ElementRef;
+  @ViewChild("routerComponent", { static: true }) routerComponent: ElementRef;
   EnumSegregationType = EnumSegregationType;
   uploadedFiles: any[] = [];
 
-  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router,
-    private ngZone: NgZone, private _globals: Globals, public productSegregationService: ProductSegregationService, private fileService: FileService) {
+  constructor(
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private router: Router,
+    private ngZone: NgZone,
+    private _globals: Globals,
+    public productSegregationService: ProductSegregationService,
+    private fileService: FileService
+  ) {
     this.globals = this._globals;
 
     router.events.subscribe((event: RouterEvent) => {
@@ -46,20 +64,26 @@ export class Layout {
   }
 
   private _navigationInterceptor(event: RouterEvent): void {
-
     if (event instanceof NavigationStart) {
       // We wanna run this function outside of Angular's zone to
       // bypass change detection
       this.ngZone.runOutsideAngular(() => {
-
         // For simplicity we are going to turn opacity on / off
         // you could add/remove a class for more advanced styling
         // and enter/leave animation of the spinner
         // For simplicity we are going to turn opacity on / off
         // you could add/remove a class for more advanced styling
         // and enter/leave animation of the spinner
-        this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '1');
-        this.renderer.setStyle(this.routerComponent.nativeElement, 'opacity', '0');
+        this.renderer.setStyle(
+          this.spinnerElement.nativeElement,
+          "opacity",
+          "1"
+        );
+        this.renderer.setStyle(
+          this.routerComponent.nativeElement,
+          "opacity",
+          "0"
+        );
       });
     }
     if (event instanceof NavigationEnd) {
@@ -86,36 +110,60 @@ export class Layout {
       // For simplicity we are going to turn opacity on / off
       // you could add/remove a class for more advanced styling
       // and enter/leave animation of the spinner
-      this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '0');
-      this.renderer.setStyle(this.routerComponent.nativeElement, 'opacity', '1');
+      this.renderer.setStyle(this.spinnerElement.nativeElement, "opacity", "0");
+      this.renderer.setStyle(
+        this.routerComponent.nativeElement,
+        "opacity",
+        "1"
+      );
     });
   }
 
   sidebarPosition(position): void {
-    let pos = position === 'Right' ? true : false;
-    pos ? this.renderer.addClass(this.el.nativeElement, 'sidebar-on-right') : this.renderer.removeClass(this.el.nativeElement, 'sidebar-on-right');
+    let pos = position === "Right" ? true : false;
+    pos
+      ? this.renderer.addClass(this.el.nativeElement, "sidebar-on-right")
+      : this.renderer.removeClass(this.el.nativeElement, "sidebar-on-right");
   }
 
   sidebarDisplay(display): void {
-    if (this.supportTicketModalDisplayed || this.cycleCountImportModalDisplayed) {
+    if (
+      this.supportTicketModalDisplayed ||
+      this.cycleCountImportModalDisplayed
+    ) {
       return;
     }
-    let _display = display === 'Hide' ? true : false;
-    _display ? this.renderer.addClass(this.el.nativeElement, 'sidebar-hidden') : this.renderer.removeClass(this.el.nativeElement, 'sidebar-hidden');
+    let _display = display === "Hide" ? true : false;
+    _display
+      ? this.renderer.addClass(this.el.nativeElement, "sidebar-hidden")
+      : this.renderer.removeClass(this.el.nativeElement, "sidebar-hidden");
   }
 
   openSidebar(): void {
-    let sidebar = document.getElementById('side-nav');
-    let sidebarMarginTop = parseInt(window.getComputedStyle(sidebar).marginTop, 10);
-    let sidebarMarginBottom = parseInt(window.getComputedStyle(sidebar).marginBottom, 10);
-    let sidebarHeight = sidebar.offsetHeight + sidebarMarginTop + sidebarMarginBottom;
+    let sidebar = document.getElementById("side-nav");
+    let sidebarMarginTop = parseInt(
+      window.getComputedStyle(sidebar).marginTop,
+      10
+    );
+    let sidebarMarginBottom = parseInt(
+      window.getComputedStyle(sidebar).marginBottom,
+      10
+    );
+    let sidebarHeight =
+      sidebar.offsetHeight + sidebarMarginTop + sidebarMarginBottom;
 
     if (this.sidebarState) {
-      this.renderer.setStyle(this.el.nativeElement
-        .querySelector('.content'), 'margin-top', sidebarHeight + 'px');
+      this.renderer.setStyle(
+        this.el.nativeElement.querySelector(".content"),
+        "margin-top",
+        sidebarHeight + "px"
+      );
     } else {
-      this.renderer.setStyle(this.el.nativeElement
-        .querySelector('.content'), 'margin-top', '0px');
+      this.renderer.setStyle(
+        this.el.nativeElement.querySelector(".content"),
+        "margin-top",
+        "0px"
+      );
     }
 
     this.sidebarState = !this.sidebarState;
@@ -139,10 +187,14 @@ export class Layout {
     let imporReq = new ImportRequest();
     imporReq.base64Data = this.uploadedFiles[0].base64String;
     imporReq.menuItem = this.menuItems.CycleCountImport;
-    this.fileService.import(env.apiVersion, imporReq).pipe(take(1))
-      .subscribe(responseHandler((resp) => {
-        this.hideCycleCountImportModal();
-      }));
+    this.fileService
+      .import(env.apiVersion, imporReq)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((resp) => {
+          this.hideCycleCountImportModal();
+        })
+      );
   }
 
   mouseEnter() {

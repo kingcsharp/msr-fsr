@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input } from "@angular/core";
 
 @Component({
-  selector: 'bag',
-  templateUrl: './bag.template.html',
-  styleUrls: ['./bag.style.scss']
+  selector: "bag",
+  templateUrl: "./bag.template.html",
+  styleUrls: ["./bag.style.scss"],
 })
 export class BagComponent {
   public favorite: boolean = false;
@@ -12,5 +12,3 @@ export class BagComponent {
     this.favorite = !this.favorite;
   }
 }
-
-

@@ -1,12 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { FilterUtils } from 'primeng/utils';
-import * as moment from 'moment';
-import { CommonGrid } from '../../models/lib/CommonGrid';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+} from "@angular/core";
+import { Subscription } from "rxjs";
+import { FilterUtils } from "primeng/utils";
+import * as moment from "moment";
+import { CommonGrid } from "../../models/lib/CommonGrid";
 
 @Component({
-  selector: 'pcalendar-wrapper',
-  templateUrl: './pcalendar-wrapper.component.html'
+  selector: "pcalendar-wrapper",
+  templateUrl: "./pcalendar-wrapper.component.html",
 })
 export class PcalendarWrapperComponent implements OnInit {
   selectedDate: any;
@@ -19,32 +26,71 @@ export class PcalendarWrapperComponent implements OnInit {
   @Input() reset: any;
   @Input() isRanged: boolean;
   @Input() colsAndSettings: any;
-  constructor(public cg: CommonGrid) {
-  }
+  constructor(public cg: CommonGrid) {}
 
   ngOnInit(): void {
     this.en = {
       firstDayOfWeek: 0,
-      dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-      dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-      monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      today: 'Today',
-      clear: 'Clear',
-      dateFormat: 'yyy-mm-dd'
+      dayNames: [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ],
+      dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+      monthNames: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ],
+      monthNamesShort: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+      today: "Today",
+      clear: "Clear",
+      dateFormat: "yyy-mm-dd",
     };
     const ctrl = this;
-    FilterUtils['dateRangeFilter'] = (value, filter): boolean => {
+    FilterUtils["dateRangeFilter"] = (value, filter): boolean => {
       // debugger;
       if (Array.isArray(filter)) {
         if (filter[1] === null) {
-          return moment(filter[0]).startOf('day').isBefore(value);
+          return moment(filter[0]).startOf("day").isBefore(value);
         } else {
-          return moment(filter[0]).startOf('day').isBefore(value) && moment(filter[1]).endOf('day').isAfter(value);
+          return (
+            moment(filter[0]).startOf("day").isBefore(value) &&
+            moment(filter[1]).endOf("day").isAfter(value)
+          );
         }
       } else {
-        return moment(filter).startOf('day').isBefore(value) && moment(filter).endOf('day').isAfter(value);
+        return (
+          moment(filter).startOf("day").isBefore(value) &&
+          moment(filter).endOf("day").isAfter(value)
+        );
       }
     };
 
@@ -57,7 +103,10 @@ export class PcalendarWrapperComponent implements OnInit {
     });
 
     const sub2 = this.datatable.onStateRestore.subscribe((elem) => {
-      if (elem.filters === undefined || elem.filters[ctrl.filterId] === undefined) {
+      if (
+        elem.filters === undefined ||
+        elem.filters[ctrl.filterId] === undefined
+      ) {
         this.selectedDate = undefined;
       } else {
         const restoredVal = elem.filters[ctrl.filterId].value;
@@ -69,8 +118,9 @@ export class PcalendarWrapperComponent implements OnInit {
             this.selectedDate = new Array();
           }
 
-          restoredVal.filter(s => s !== null).map(m => this.selectedDate.push(moment(m).toDate()));
-
+          restoredVal
+            .filter((s) => s !== null)
+            .map((m) => this.selectedDate.push(moment(m).toDate()));
         } else {
           this.selectedDate = moment(restoredVal).toDate();
         }
@@ -94,7 +144,9 @@ export class PcalendarWrapperComponent implements OnInit {
     }
 
     if (Array.isArray(filters.value)) {
-      this.selectedDate = filters.value.filter(s => s !== null).map(m => moment(m).toDate());
+      this.selectedDate = filters.value
+        .filter((s) => s !== null)
+        .map((m) => moment(m).toDate());
     } else {
       this.selectedDate = moment(filters.value).toDate();
     }
@@ -105,13 +157,23 @@ export class PcalendarWrapperComponent implements OnInit {
   }
 
   filterGrid() {
-    if (this.selectedDate[1] === null && this.colsAndSettings.col.formattingMoment === 'MM-YYYY') {
-      this.selectedDate.push(moment(this.selectedDate[0]).endOf('month').toDate());
-    } else if (Array.isArray(this.selectedDate) && this.colsAndSettings.col.formattingMoment === 'MM-YYYY') {
-      this.selectedDate.push(moment(this.selectedDate[1]).endOf('month').toDate());
+    if (
+      this.selectedDate[1] === null &&
+      this.colsAndSettings.col.formattingMoment === "MM-YYYY"
+    ) {
+      this.selectedDate.push(
+        moment(this.selectedDate[0]).endOf("month").toDate()
+      );
+    } else if (
+      Array.isArray(this.selectedDate) &&
+      this.colsAndSettings.col.formattingMoment === "MM-YYYY"
+    ) {
+      this.selectedDate.push(
+        moment(this.selectedDate[1]).endOf("month").toDate()
+      );
       this.selectedDate.splice(1, 1);
     }
 
-    this.datatable.filter(this.selectedDate, this.filterId, 'dateRangeFilter');
+    this.datatable.filter(this.selectedDate, this.filterId, "dateRangeFilter");
   }
 }

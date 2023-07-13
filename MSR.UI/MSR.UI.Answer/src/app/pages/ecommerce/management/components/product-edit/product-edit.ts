@@ -1,14 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {Product, ProductsService} from '../../../products.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { Product, ProductsService } from "../../../products.service";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
-  selector: 'product-edit',
-  templateUrl: './product-edit.html',
-  styleUrls: ['./product-edit.scss'],
+  selector: "product-edit",
+  templateUrl: "./product-edit.html",
+  styleUrls: ["./product-edit.scss"],
 })
 export class ProductEditComponent implements OnInit {
-
   constructor(
     public productsService: ProductsService,
     private router: Router,
@@ -24,7 +23,6 @@ export class ProductEditComponent implements OnInit {
       if (!product) {
         this.productsService.receiveProduct(newProduct);
       }
-
     }
     this.productsService.getProductsImagesRequest(newProduct);
   }
@@ -34,25 +32,27 @@ export class ProductEditComponent implements OnInit {
   }
 
   get product(): Product {
-    return this.findProduct(this.getId()) || {technology: []};
+    return this.findProduct(this.getId()) || { technology: [] };
   }
 
   goBack() {
-    this.router.navigate(['/app/ecommerce/management']);
+    this.router.navigate(["/app/ecommerce/management"]);
   }
 
   findProduct(id) {
-    return this.productsService.products.find(p => p.id === id);
+    return this.productsService.products.find((p) => p.id === id);
   }
 
   getId() {
-    return parseInt(this.route.params['value'].id, 10) || -1;
+    return parseInt(this.route.params["value"].id, 10) || -1;
   }
 
   updateTechnology(value, type) {
     const technology = this.product.technology;
-    type === 'add' ? technology.push(value) : technology.splice(technology.indexOf(value), 1);
-    this.updateProductProperty(technology, 'technology');
+    type === "add"
+      ? technology.push(value)
+      : technology.splice(technology.indexOf(value), 1);
+    this.updateProductProperty(technology, "technology");
   }
 
   updateProductProperty(value, key) {

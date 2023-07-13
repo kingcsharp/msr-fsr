@@ -1,3 +1,3 @@
 export enum EnumProcedureType {
-    NCR = 6
+  NCR = 6,
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import {
   IStatusModel,
   IUpdateWorkOrderTaskRequest,
@@ -10,22 +10,21 @@ import {
   UserModel,
   MappedWorkOrderPart,
   IMappedWorkOrderPart,
-} from '../../services/api.client.generated';
-import { environment as env } from '../../../environments/environment';
-import { responseHandler } from '../../utils/responseHandler';
-import { Globals } from '../../models/lib/globals';
-import * as moment from 'moment';
-import { Router } from '@angular/router';
-import { ProcedureStepType } from '../../models/enums/ProcedureStepType';
+} from "../../services/api.client.generated";
+import { environment as env } from "../../../environments/environment";
+import { responseHandler } from "../../utils/responseHandler";
+import { Globals } from "../../models/lib/globals";
+import * as moment from "moment";
+import { Router } from "@angular/router";
+import { ProcedureStepType } from "../../models/enums/ProcedureStepType";
 
 @Component({
-  selector: 'workordertasktimer-wrapper',
-  templateUrl: './workordertasktimer-wrapper.component.html',
-  styleUrls: ['./workordertasktimer-wrapper.component.scss'],
-  providers: [WorkOrderTaskService, UserService]
+  selector: "workordertasktimer-wrapper",
+  templateUrl: "./workordertasktimer-wrapper.component.html",
+  styleUrls: ["./workordertasktimer-wrapper.component.scss"],
+  providers: [WorkOrderTaskService, UserService],
 })
 export class WorkordertasktimerWrapperComponent implements OnInit {
-
   @Input() workOrderTaskInProgress: WorkOrderTaskModel;
   @Input() workOrderTasks: Array<WorkOrderTaskModel>;
   @Input() workOrderTaskToView: WorkOrderTaskModel;
@@ -49,19 +48,21 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   stepHours: number = 0;
   timerStartTime: Date;
 
-  constructor(private workOrderTaskService: WorkOrderTaskService, private userService: UserService, private globals: Globals, private router: Router) { }
+  constructor(
+    private workOrderTaskService: WorkOrderTaskService,
+    private userService: UserService,
+    private globals: Globals,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-
     this.startTimer();
-
   }
 
   ngOnChanges() {
     if (this.workOrderIsComplete) {
       this.updateTimerDisplay();
     }
-
   }
 
   completeTask() {
@@ -77,15 +78,21 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   saveTaskTimerState(closeStep: boolean) {
     let mappedWorkOrderParts = null;
     if (this.showNCParts) {
-      mappedWorkOrderParts = this.ncrParts.filter(part => part.selected).map(part => {
-        return new MappedWorkOrderPart({
-          id: part.id,
-          tagType: part.tagType,
-        } as IMappedWorkOrderPart);
-      });
+      mappedWorkOrderParts = this.ncrParts
+        .filter((part) => part.selected)
+        .map((part) => {
+          return new MappedWorkOrderPart({
+            id: part.id,
+            tagType: part.tagType,
+          } as IMappedWorkOrderPart);
+        });
     }
 
-    if (this.workOrderTaskInProgress.procedureStepTypeId === ProcedureStepType.NCR && closeStep) {
+    if (
+      this.workOrderTaskInProgress.procedureStepTypeId ===
+        ProcedureStepType.NCR &&
+      closeStep
+    ) {
       this.updateNCRPartsMap.emit();
     }
 
@@ -93,57 +100,76 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       assignedUserId: this.globals.getCurrentUser().id,
       status: this.workOrderTaskInProgress.status.name,
       taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
-      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince === null ? null : this.workOrderTaskInProgress.taskRunningSince,
+      taskRunningSince:
+        this.workOrderTaskInProgress.taskRunningSince === null
+          ? null
+          : this.workOrderTaskInProgress.taskRunningSince,
       totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
       taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
       workOrderTaskId: this.workOrderTaskInProgress.id,
-      startedOn: this.workOrderTaskInProgress.startedOn === null ? null : this.workOrderTaskInProgress.startedOn,
+      startedOn:
+        this.workOrderTaskInProgress.startedOn === null
+          ? null
+          : this.workOrderTaskInProgress.startedOn,
       mappedWorkOrderParts: mappedWorkOrderParts,
     } as IUpdateWorkOrderTaskRequest);
 
-    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
-      this.workOrderTaskInProgress.mappedWorkOrderParts = workOrderTaskPatchResponse.object?.mappedWorkOrderParts || [];
+    this.workOrderTaskService
+      .workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest)
+      .subscribe(
+        responseHandler((workOrderTaskPatchResponse) => {
+          this.workOrderTaskInProgress.mappedWorkOrderParts =
+            workOrderTaskPatchResponse.object?.mappedWorkOrderParts || [];
 
-      if (closeStep) {
-        let indexOfNextTask = this.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
-        if ((indexOfNextTask + 1) === this.workOrderTasks.length) {
-          this.updateWorkOrderTaskToViewAndInProgress.emit(updateWorkOrderTaskRequest);
-          this.resetTimerDisplay();
-        } else {
+          if (closeStep) {
+            let indexOfNextTask = this.workOrderTasks.findIndex(
+              (s) => s.id === this.workOrderTaskInProgress.id
+            );
+            if (indexOfNextTask + 1 === this.workOrderTasks.length) {
+              this.updateWorkOrderTaskToViewAndInProgress.emit(
+                updateWorkOrderTaskRequest
+              );
+              this.resetTimerDisplay();
+            } else {
+              let nextWorkOrderTask = this.workOrderTasks[indexOfNextTask + 1];
+              nextWorkOrderTask.statusId = 2;
+              nextWorkOrderTask.status = new StatusModel({
+                id: 2,
+                name: "In Progress",
+              } as IStatusModel);
 
-          let nextWorkOrderTask = this.workOrderTasks[indexOfNextTask + 1];
-          nextWorkOrderTask.statusId = 2;
-          nextWorkOrderTask.status = new StatusModel({
-            id: 2,
-            name: 'In Progress'
-          } as IStatusModel);
+              let updateNextWorkOrderTaskRequest =
+                new UpdateWorkOrderTaskRequest({
+                  assignedUserId: this.globals.getCurrentUser().id,
+                  status: "In Progress",
+                  taskIsRunning: nextWorkOrderTask.taskIsRunning,
+                  taskRunningSince: nextWorkOrderTask.taskRunningSince,
+                  totalTaskTime: nextWorkOrderTask.totalTaskTime,
+                  taskStepOrder: nextWorkOrderTask.taskStepOrder,
+                  workOrderTaskId: nextWorkOrderTask.id,
+                  startedOn: nextWorkOrderTask.startedOn,
+                } as IUpdateWorkOrderTaskRequest);
 
-          let updateNextWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-            assignedUserId: this.globals.getCurrentUser().id,
-            status: 'In Progress',
-            taskIsRunning: nextWorkOrderTask.taskIsRunning,
-            taskRunningSince: nextWorkOrderTask.taskRunningSince,
-            totalTaskTime: nextWorkOrderTask.totalTaskTime,
-            taskStepOrder: nextWorkOrderTask.taskStepOrder,
-            workOrderTaskId: nextWorkOrderTask.id,
-            startedOn: nextWorkOrderTask.startedOn
-          } as IUpdateWorkOrderTaskRequest);
-
-          this.globals.showLoader(true);
-          this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateNextWorkOrderTaskRequest).subscribe(responseHandler(nextWorkOrderTaskPatchResponse => {
-            this.updateWorkOrderTaskToViewAndInProgress.emit(nextWorkOrderTask);
-            this.resetTimerDisplay();
-            this.globals.showLoader(false);
-          }));
-
-
-        }
-      }
-
-    }));
-
+              this.globals.showLoader(true);
+              this.workOrderTaskService
+                .workOrderTaskPatch(
+                  env.apiVersion,
+                  updateNextWorkOrderTaskRequest
+                )
+                .subscribe(
+                  responseHandler((nextWorkOrderTaskPatchResponse) => {
+                    this.updateWorkOrderTaskToViewAndInProgress.emit(
+                      nextWorkOrderTask
+                    );
+                    this.resetTimerDisplay();
+                    this.globals.showLoader(false);
+                  })
+                );
+            }
+          }
+        })
+      );
   }
-
 
   start() {
     this.globals.showLoader(true);
@@ -180,9 +206,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   startTimer() {
     this.stepTimer = setInterval(() => {
-
       this.updateTimerDisplay();
-
     }, 1000);
   }
 
@@ -191,14 +215,15 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   }
 
   updateTimerDisplay() {
-
     if (this.workOrderTaskInProgress.taskIsRunning) {
-
-      const taskHasBeenRunningSince = moment(this.workOrderTaskInProgress.taskRunningSince);
+      const taskHasBeenRunningSince = moment(
+        this.workOrderTaskInProgress.taskRunningSince
+      );
       const currentDate = moment();
 
-      this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime + (-taskHasBeenRunningSince.diff(currentDate, 'seconds'));
-
+      this.stepSeconds =
+        this.workOrderTaskInProgress.totalTaskTime +
+        -taskHasBeenRunningSince.diff(currentDate, "seconds");
     } else {
       this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime;
     }
@@ -209,7 +234,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
     this.stepMinutes = Math.floor(this.stepSeconds / 60);
     this.stepHours = Math.floor(this.stepMinutes / 60);
-
   }
 
   resetTimerDisplay() {
@@ -222,7 +246,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     this.workOrderTaskInProgress.statusId = 2;
     this.workOrderTaskInProgress.status = new StatusModel({
       id: 2,
-      name: 'In Progress'
+      name: "In Progress",
     } as IStatusModel);
   }
 
@@ -230,24 +254,34 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     this.workOrderTaskInProgress.statusId = 3;
     this.workOrderTaskInProgress.status = new StatusModel({
       id: 3,
-      name: 'Complete'
+      name: "Complete",
     } as IStatusModel);
   }
 
   updateTotalTaskTime() {
-    const taskHasBeenRunningSince = moment(this.workOrderTaskInProgress.taskRunningSince);
+    const taskHasBeenRunningSince = moment(
+      this.workOrderTaskInProgress.taskRunningSince
+    );
     const currentDate = moment();
-    this.workOrderTaskInProgress.totalTaskTime = this.workOrderTaskInProgress.totalTaskTime + (-taskHasBeenRunningSince.diff(currentDate, 'seconds'));
+    this.workOrderTaskInProgress.totalTaskTime =
+      this.workOrderTaskInProgress.totalTaskTime +
+      -taskHasBeenRunningSince.diff(currentDate, "seconds");
   }
 
   convertDateToUTC(date): Date {
-    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+    return new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      date.getUTCHours(),
+      date.getUTCMinutes(),
+      date.getUTCSeconds()
+    );
   }
 
   setStartDateToWorkOrder() {
     if (this.workOrderTaskInProgress.taskStepOrder === 10) {
       this.setStartDate.emit(moment().toDate());
     }
-
   }
 }

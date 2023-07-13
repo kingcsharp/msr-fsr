@@ -1,28 +1,47 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
-import { Globals } from '../../../models/lib/globals';
 import {
-  WorkflowService, WorkflowModel, WorkflowStageMapModel, WorkflowActivityMapModel,
-  AuditActionResultOfWorkflowModel, CreateWorkflowRequest, UpdateWorkflowRequest, WorkflowActivityModel,
-  WorkflowGroupService, WorkflowStageService, EnumMenuItem
-} from '../../../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege } from '../../../models/enums/privileges';
-import { responseHandler } from '../../../utils/responseHandler';
-import { ViewSaved } from '../../../models/lib/ViewSaved';
-import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, forkJoin, of } from 'rxjs';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj, callFunctionWithFilters } from '../../../models/lib/Utils';
-import { LazyLoadEvent } from 'primeng/api';
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  ElementRef,
+} from "@angular/core";
+import { Globals } from "../../../models/lib/globals";
+import {
+  WorkflowService,
+  WorkflowModel,
+  WorkflowStageMapModel,
+  WorkflowActivityMapModel,
+  AuditActionResultOfWorkflowModel,
+  CreateWorkflowRequest,
+  UpdateWorkflowRequest,
+  WorkflowActivityModel,
+  WorkflowGroupService,
+  WorkflowStageService,
+  EnumMenuItem,
+} from "../../../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { environment as env } from "../../../../environments/environment";
+import { EnumPrivilege } from "../../../models/enums/privileges";
+import { responseHandler } from "../../../utils/responseHandler";
+import { ViewSaved } from "../../../models/lib/ViewSaved";
+import { ColumnsSaved } from "../../../models/lib/ColumnsSaved";
+import { CommonGrid } from "../../../models/lib/CommonGrid";
+import { ToastrService } from "ngx-toastr";
+import { Observable, forkJoin, of } from "rxjs";
+import {
+  replaceArrayItems,
+  pushIfNotExists,
+  emptyArray,
+  copyObj,
+  callFunctionWithFilters,
+} from "../../../models/lib/Utils";
+import { LazyLoadEvent } from "primeng/api";
 declare let jQuery: any;
 
 @Component({
-  selector: 'app-approval-workflow',
-  templateUrl: './approval-workflow.component.html',
-  styleUrls: ['./approval-workflow.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-approval-workflow",
+  templateUrl: "./approval-workflow.component.html",
+  styleUrls: ["./approval-workflow.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ApprovalWorkflowComponent implements OnInit {
   privileges = EnumPrivilege;
@@ -47,31 +66,57 @@ export class ApprovalWorkflowComponent implements OnInit {
   getAllActivities: boolean = false;
   totalRecords: number = 0;
 
-  constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
-    private elem: ElementRef, private workflowService: WorkflowService,
-    private workflowGroupService: WorkflowGroupService, private workflowStageService: WorkflowStageService) {
-
-  }
+  constructor(
+    public globals: Globals,
+    public cg: CommonGrid,
+    private toastr: ToastrService,
+    private elem: ElementRef,
+    private workflowService: WorkflowService,
+    private workflowGroupService: WorkflowGroupService,
+    private workflowStageService: WorkflowStageService
+  ) {}
 
   ngOnInit(): void {
     this.memberStages = [];
     this.activityMaps = [];
     this.currWorkflow = new WorkflowModel();
-    this.gridStorageId = 'workflowGrid' + this.elem.nativeElement.tagName.toLowerCase();
-    this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
-    new ColumnsSaved({ id: 'name', label: 'Workflow Name', visible: true }),
-    new ColumnsSaved({ id: 'memberStages', label: 'Member Stages', visible: true }),
-    new ColumnsSaved({ id: 'activityMaps', label: 'Applicable Activities', visible: true }),
-    new ColumnsSaved({ id: 'isActive', label: 'Active', visible: true }),
-    new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
-    new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true }),
-    new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
-    new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
+    this.gridStorageId =
+      "workflowGrid" + this.elem.nativeElement.tagName.toLowerCase();
+    this.gridSettings = [
+      new ColumnsSaved({ id: "id", label: "Id", visible: true }),
+      new ColumnsSaved({ id: "name", label: "Workflow Name", visible: true }),
+      new ColumnsSaved({
+        id: "memberStages",
+        label: "Member Stages",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "activityMaps",
+        label: "Applicable Activities",
+        visible: true,
+      }),
+      new ColumnsSaved({ id: "isActive", label: "Active", visible: true }),
+      new ColumnsSaved({ id: "createdOn", label: "Created On", visible: true }),
+      new ColumnsSaved({
+        id: "createdByName",
+        label: "Created By",
+        visible: true,
+      }),
+      new ColumnsSaved({
+        id: "lastUpdatedOn",
+        label: "Updated On",
+        visible: false,
+      }),
+      new ColumnsSaved({
+        id: "lastUpdatedByName",
+        label: "Updated By",
+        visible: false,
+      }),
     ];
 
     this.statuses = [
-      { label: 'Active', value: true },
-      { label: 'InActive', value: false },
+      { label: "Active", value: true },
+      { label: "InActive", value: false },
     ];
 
     this.canAdd = this.hasPrivilege(this.privileges.CanCreate);
@@ -84,26 +129,47 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   getWorkflowActivityDropdown() {
     const ctrl = this;
-    return this.workflowService.activity(env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        ctrl.allActivities = response.object.map((x) => {
-          x.workflowActivityId = x.id;
-          x.workflowActivityName = x.name;
-          return x;
-        });
-      }));
+    return this.workflowService
+      .activity(env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          ctrl.allActivities = response.object.map((x) => {
+            x.workflowActivityId = x.id;
+            x.workflowActivityName = x.name;
+            return x;
+          });
+        })
+      );
   }
 
   getWorkflowStageDropdown() {
     const ctrl = this;
-    return this.workflowStageService.workflowStageGet(null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        ctrl.allStages = response.object.map((x) => {
-          x.workflowStageId = x.id;
-          x.workflowStageName = x.name;
-          return x;
-        });
-      }));
+    return this.workflowStageService
+      .workflowStageGet(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        env.apiVersion
+      )
+      .pipe(take(1))
+      .subscribe(
+        responseHandler((response) => {
+          ctrl.allStages = response.object.map((x) => {
+            x.workflowStageId = x.id;
+            x.workflowStageName = x.name;
+            return x;
+          });
+        })
+      );
   }
 
   getWorkflows(event: LazyLoadEvent) {
@@ -111,12 +177,20 @@ export class ApprovalWorkflowComponent implements OnInit {
     this.globals.showLoader(true);
 
     setTimeout(() => {
-      callFunctionWithFilters(this.workflowService, this.workflowService.workflowGet, event, this.globals.functionDic)
-        .pipe(take(1)).subscribe(responseHandler(response => {
-          this.globals.showLoader(false);
-          this.totalRecords = response.totalNumberOfRecords;
-          ctrl.data = response.object;
-        }));
+      callFunctionWithFilters(
+        this.workflowService,
+        this.workflowService.workflowGet,
+        event,
+        this.globals.functionDic
+      )
+        .pipe(take(1))
+        .subscribe(
+          responseHandler((response) => {
+            this.globals.showLoader(false);
+            this.totalRecords = response.totalNumberOfRecords;
+            ctrl.data = response.object;
+          })
+        );
     }, 10);
   }
 
@@ -129,8 +203,10 @@ export class ApprovalWorkflowComponent implements OnInit {
     }
     const ctrl = this;
     elem.activitiesSaved = [];
-    elem.activityMaps.forEach(activityMap => {
-      const foundItem = ctrl.allActivities.find(r => r.value === activityMap.workflowActivityId);
+    elem.activityMaps.forEach((activityMap) => {
+      const foundItem = ctrl.allActivities.find(
+        (r) => r.value === activityMap.workflowActivityId
+      );
       if (foundItem !== undefined) {
         activityMap.name = foundItem.label;
         elem.activitiesSaved.push(foundItem.value);
@@ -148,8 +224,10 @@ export class ApprovalWorkflowComponent implements OnInit {
     }
     const ctrl = this;
     elem.stagesSaved = [];
-    elem.memberStages.forEach(activityMap => {
-      const foundItem = ctrl.allStages.find(r => r.value === activityMap.workflowStageId);
+    elem.memberStages.forEach((activityMap) => {
+      const foundItem = ctrl.allStages.find(
+        (r) => r.value === activityMap.workflowStageId
+      );
       if (foundItem !== undefined) {
         activityMap.name = foundItem.label;
         elem.stagesSaved.push(foundItem.value);
@@ -160,18 +238,31 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   addToGridActivityDropdown(activityMaps: any) {
     const ctrl = this;
-    activityMaps.forEach(item => {
-      if (ctrl.activityMaps.findIndex(z => z.value === item.workflowActivityId) === -1) {
-        ctrl.activityMaps.push({ label: item.name, value: item.workflowActivityId });
+    activityMaps.forEach((item) => {
+      if (
+        ctrl.activityMaps.findIndex(
+          (z) => z.value === item.workflowActivityId
+        ) === -1
+      ) {
+        ctrl.activityMaps.push({
+          label: item.name,
+          value: item.workflowActivityId,
+        });
       }
     });
   }
 
   addToGridMemberStagesDropdown(memberStages: any) {
     const ctrl = this;
-    memberStages.forEach(item => {
-      if (ctrl.memberStages.findIndex(z => z.value === item.workflowStageId) === -1) {
-        ctrl.memberStages.push({ label: item.name, value: item.workflowStageId });
+    memberStages.forEach((item) => {
+      if (
+        ctrl.memberStages.findIndex((z) => z.value === item.workflowStageId) ===
+        -1
+      ) {
+        ctrl.memberStages.push({
+          label: item.name,
+          value: item.workflowStageId,
+        });
       }
     });
   }
@@ -187,13 +278,13 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   clseDialog() {
     this.display = false;
-    jQuery('.parsleyjs').parsley().reset();
+    jQuery(".parsleyjs").parsley().reset();
   }
 
   getWorkflow(workflow: WorkflowModel) {
     if (workflow === undefined) {
       let ret = new WorkflowModel();
-      ret.name = '';
+      ret.name = "";
       ret.isActive = true;
       ret.memberStages = [];
       ret.activityMaps = [];
@@ -206,65 +297,99 @@ export class ApprovalWorkflowComponent implements OnInit {
   removeRow(workflow) {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowService.workflowDelete(workflow.id, env.apiVersion)
-      .pipe(take(1)).subscribe(responseHandler((resp) => {
-        const index = this.data.findIndex(x => x.id === workflow.id);
-        this.data.splice(index, 1);
-        this.data = this.data.slice(0);
-      }, () => {
-        // DO not update user
-      }));
+    this.workflowService
+      .workflowDelete(workflow.id, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(
+        responseHandler(
+          (resp) => {
+            const index = this.data.findIndex((x) => x.id === workflow.id);
+            this.data.splice(index, 1);
+            this.data = this.data.slice(0);
+          },
+          () => {
+            // DO not update user
+          }
+        )
+      );
   }
 
   onWorkflowSubmit() {
-    jQuery('.parsleyjs').parsley().validate();
+    jQuery(".parsleyjs").parsley().validate();
     const ctrl = this;
-    if (jQuery('.parsleyjs').parsley().isValid()) {
+    if (jQuery(".parsleyjs").parsley().isValid()) {
       let method: Observable<AuditActionResultOfWorkflowModel> = null;
       this.globals.showLoader(true);
 
       const memberStages = [];
       const activityMaps = [];
 
-      this.currWorkflow.memberStages.forEach(x => {
-        memberStages.push(new WorkflowStageMapModel({ workflowStageId: x.workflowStageId, workflowId: this.currWorkflow.id }));
+      this.currWorkflow.memberStages.forEach((x) => {
+        memberStages.push(
+          new WorkflowStageMapModel({
+            workflowStageId: x.workflowStageId,
+            workflowId: this.currWorkflow.id,
+          })
+        );
       });
 
-      this.currWorkflow.activityMaps.forEach(x => {
-        activityMaps.push(new WorkflowActivityMapModel({ workflowActivityId: x.workflowActivityId, workflowId: this.currWorkflow.id }));
+      this.currWorkflow.activityMaps.forEach((x) => {
+        activityMaps.push(
+          new WorkflowActivityMapModel({
+            workflowActivityId: x.workflowActivityId,
+            workflowId: this.currWorkflow.id,
+          })
+        );
       });
 
       if (this.currWorkflow.id === undefined) {
         const createWorkflow = new CreateWorkflowRequest({
-          name: this.currWorkflow.name, isActive: this.currWorkflow.isActive
-          , activityMaps: activityMaps, memberStages: memberStages
+          name: this.currWorkflow.name,
+          isActive: this.currWorkflow.isActive,
+          activityMaps: activityMaps,
+          memberStages: memberStages,
         });
-        method = this.workflowService.workflowPost(env.apiVersion, createWorkflow);
+        method = this.workflowService.workflowPost(
+          env.apiVersion,
+          createWorkflow
+        );
       } else {
         const updateWorkflow = new UpdateWorkflowRequest({
           id: this.currWorkflow.id,
-          name: this.currWorkflow.name, isActive: this.currWorkflow.isActive
-          , activityMaps: activityMaps, memberStages: memberStages
+          name: this.currWorkflow.name,
+          isActive: this.currWorkflow.isActive,
+          activityMaps: activityMaps,
+          memberStages: memberStages,
         });
-        method = this.workflowService.workflowPatch(env.apiVersion, updateWorkflow);
+        method = this.workflowService.workflowPatch(
+          env.apiVersion,
+          updateWorkflow
+        );
       }
       this.globals.showLoader(true);
-      method.pipe(take(1)).subscribe(responseHandler((resp) => {
-        if (!resp.hasErrors) {
-          if (ctrl.currWorkflow.id === undefined) {
-            ctrl.data.push(resp.object);
-            this.data = this.data.slice(0);
-          } else {
-            const index = ctrl.data.findIndex(x => x.id === ctrl.currWorkflow.id);
-            ctrl.data.splice(index, 1);
-            ctrl.data.splice(index, 0, resp.object);
-            this.data = this.data.slice(0);
+      method.pipe(take(1)).subscribe(
+        responseHandler(
+          (resp) => {
+            if (!resp.hasErrors) {
+              if (ctrl.currWorkflow.id === undefined) {
+                ctrl.data.push(resp.object);
+                this.data = this.data.slice(0);
+              } else {
+                const index = ctrl.data.findIndex(
+                  (x) => x.id === ctrl.currWorkflow.id
+                );
+                ctrl.data.splice(index, 1);
+                ctrl.data.splice(index, 0, resp.object);
+                this.data = this.data.slice(0);
+              }
+              ctrl.clseDialog();
+            }
+          },
+          () => {
+            // DO not update user
           }
-          ctrl.clseDialog();
-        }
-      }, () => {
-        // DO not update user
-      }));
+        )
+      );
     }
   }
 }

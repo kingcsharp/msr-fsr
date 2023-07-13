@@ -15,11 +15,13 @@
     "builduatprodsetting": "ng build --configuration=uat",
     "buildprod": "ng build --configuration=prod",
     "test": "ng test",
+    "posttest": "npm run format",
     "lint": "ng lint",
     "fixlint": "ng lint -- --fix",
     "cypress": "./node_modules/.bin/cypress open",
     "cypress:test": "concurrently \"npm run start\" \"npm run cypress:wait\"",
-    "cypress:wait": "wait-on http://localhost:3000/ && npm run cypress -env configFile=local"
+    "cypress:wait": "wait-on http://localhost:3000/ && npm run cypress -env configFile=local",
+    "format": "prettier --loglevel warn --write \"**/*.{ts,tsx,css,md}\""
   },
   "private": true,
   "dependencies": {
@@ -119,6 +121,7 @@
     "metrojs": "0.9.77",
     "napa": "2.3.0",
     "nswag": "13.18.0",
+    "prettier": ">=2",
     "primeicons": "^2.0.0",
     "primeng": "^9.0.6",
     "rxjs-compat": "^6.5.2",

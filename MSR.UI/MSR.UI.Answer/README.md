@@ -14,8 +14,7 @@ yarn install
 
 The following options allow the application to run for different purposes
 
-Option 1) Run with dev server as the backend (The backend needs to
-be running before issuing this command, or it will fail).
+Option 1) Run with dev server as the backend (The backend needs to be running before issuing this command, or it will fail).
 
 ```sh copy
 npm run start
@@ -74,8 +73,10 @@ Once the backend is running and you have started the application with `npm run s
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
-**package.json has all the scripts you can run or add to be compiled before actions.**
-eg. `npm run buildstage` this will build the solution with the environment file environment.stage
+**package.json has all the scripts you can run or add to be compiled before actions.** eg. `npm run buildstage` this will build the solution with the environment file environment.stage
+
+# Must Read Developer Notes
+
 
 # Must Read Developer Notes
 
@@ -84,6 +85,7 @@ eg. `npm run buildstage` this will build the solution with the environment file 
 ## GLOBALS
 
 The `hasPrivilege()` method handles the privileges of the user. Every view will need to handle the specific privileges in the following way:
+
 
 This method will tell globals what views can be accessed based on the user's privileges
 
@@ -94,6 +96,7 @@ hasPrivilege(privName) {
     return this.globals.hasPrivilege(EnumPrivilege.Users, privName);
 }
 ```
+
 
 Then in the initialization of the component we need to set the privilege as follows:
 
@@ -127,6 +130,7 @@ import { take } from "rxjs/operators";
 import { responseHandler } from "../../utils/responseHandler";
 ```
 
+
 `responseHandler` will act as handler to show any success message or cases we will want to automatically handle.
 
 `app.interceptor.ts` will handle all main loaders shown in the site, and handle all errors to show a toaster
@@ -158,6 +162,7 @@ this.accountService
   );
 ```
 
+
 # Third-party documentation
 
 ## Ngx Admin Template
@@ -186,6 +191,7 @@ Light Blue Angular Dashboard - Ngx Admin Template (4.3.0 Full version) with Angu
 
 ## Bootstrap
 
+
 - [Documentation](https://ng-bootstrap.github.io/#/components/tooltip/examples)
 - [Documentation](https://getbootstrap.com/docs/4.0/utilities/colors/)
 
@@ -193,4 +199,4 @@ Light Blue Angular Dashboard - Ngx Admin Template (4.3.0 Full version) with Angu
 
 - [Documentation](https://github.com/highcharts/highcharts-angular)
 - [ChartOptions to set up all the chart options](https://api.highcharts.com/highcharts)
-- [ChartDemoExamples](https://codepen.io/pen)
+

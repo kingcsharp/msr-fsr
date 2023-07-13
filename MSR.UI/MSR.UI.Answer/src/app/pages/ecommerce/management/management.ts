@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {ProductsService} from '../products.service';
-import {Router} from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { ProductsService } from "../products.service";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'management',
-  templateUrl: './management.html',
-  styleUrls: ['./management.scss'],
+  selector: "management",
+  templateUrl: "./management.html",
+  styleUrls: ["./management.scss"],
 })
 export class ManagementComponent implements OnInit {
   showAlert: boolean = false;
@@ -16,7 +16,7 @@ export class ManagementComponent implements OnInit {
   ) {}
 
   createNewProduct() {
-    this.router.navigate(['/app/ecommerce/management/create']);
+    this.router.navigate(["/app/ecommerce/management/create"]);
   }
 
   ngOnInit(): void {

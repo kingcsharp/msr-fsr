@@ -1,8 +1,12 @@
-import { take } from 'rxjs/operators';
-import { WorkflowService, PendingApprovalNotification, PendingNotificationItem } from '../../services/api.client.generated';
-import { environment as env } from '../../../environments/environment';
-import { Injectable } from '@angular/core';
-import { responseHandler } from '../../utils/responseHandler';
+import { take } from "rxjs/operators";
+import {
+  WorkflowService,
+  PendingApprovalNotification,
+  PendingNotificationItem,
+} from "../../services/api.client.generated";
+import { environment as env } from "../../../environments/environment";
+import { Injectable } from "@angular/core";
+import { responseHandler } from "../../utils/responseHandler";
 
 @Injectable()
 export class NotificationService {
@@ -14,7 +18,9 @@ export class NotificationService {
   }
 
   addNotification(notificationItem: PendingNotificationItem) {
-    let itemFound = this.notificationData.items.find(x => x.table === notificationItem.table);
+    let itemFound = this.notificationData.items.find(
+      (x) => x.table === notificationItem.table
+    );
     if (itemFound) {
       itemFound.count += notificationItem.count;
     } else {
@@ -25,18 +31,21 @@ export class NotificationService {
 
   getNotifications() {
     this.resetNotifications();
-    this.workflowService.pending(env.apiVersion)
+    this.workflowService
+      .pending(env.apiVersion)
       .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        response.object.items.forEach(element => {
-          this.addNotification(element);
-        });
-      }));
+      .subscribe(
+        responseHandler((response) => {
+          response.object.items.forEach((element) => {
+            this.addNotification(element);
+          });
+        })
+      );
   }
 
   updateNotificationCount() {
     let total = 0;
-    this.notificationData.items.forEach(element => {
+    this.notificationData.items.forEach((element) => {
       total += element.count;
     });
     this.notificationCount = total;
@@ -47,5 +56,4 @@ export class NotificationService {
     this.notificationData = new PendingNotificationItem();
     this.notificationData.items = new Array<PendingNotificationItem>();
   }
-
 }

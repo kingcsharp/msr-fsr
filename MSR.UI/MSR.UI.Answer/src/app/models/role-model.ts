@@ -1,6 +1,6 @@
-import { MenuItem, Role } from '../services/api.client.generated';
-import { MenuModel } from './menu-model';
-import { PermissionModel } from './permission-model';
+import { MenuItem, Role } from "../services/api.client.generated";
+import { MenuModel } from "./menu-model";
+import { PermissionModel } from "./permission-model";
 
 export class RoleModel {
   id?: number;
@@ -11,5 +11,4 @@ export class RoleModel {
   childRoles: Array<Role> = new Array<Role>();
   childRoleHasAccessToMenuModule: boolean = false;
   permissions: PermissionModel[] = new Array<PermissionModel>();
-
 }

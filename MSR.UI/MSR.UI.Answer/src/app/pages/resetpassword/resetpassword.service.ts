@@ -1,64 +1,79 @@
-import { Router } from '@angular/router';
-import { Injectable } from '@angular/core';
-import { AccountService, ResetPasswordRequest } from '../../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { environment as env } from '../../../environments/environment';
-import { responseHandler } from '../../utils/responseHandler';
-import { SignalRService } from '../../services/signalr.service';
+import { Router } from "@angular/router";
+import { Injectable } from "@angular/core";
+import {
+  AccountService,
+  ResetPasswordRequest,
+} from "../../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { environment as env } from "../../../environments/environment";
+import { responseHandler } from "../../utils/responseHandler";
+import { SignalRService } from "../../services/signalr.service";
 
 @Injectable()
 export class ResetpasswordService {
-    _isFetching: boolean = false;
-    _errorMessage: string = '';
+  _isFetching: boolean = false;
+  _errorMessage: string = "";
 
-    constructor(private router: Router, private accountService: AccountService, private signalrService: SignalRService) {
+  constructor(
+    private router: Router,
+    private accountService: AccountService,
+    private signalrService: SignalRService
+  ) {}
 
+  get isFetching() {
+    return this._isFetching;
+  }
+
+  set isFetching(val: boolean) {
+    this._isFetching = val;
+  }
+
+  get errorMessage() {
+    return this._errorMessage;
+  }
+
+  set errorMessage(val: string) {
+    this._errorMessage = val;
+  }
+
+  resetPassword(creds) {
+    this.requestLogin();
+    if (creds.token.length > 0 && creds.password.length > 0) {
+      this.accountService
+        .resetpassword(
+          env.apiVersion,
+          new ResetPasswordRequest({
+            token: creds.token,
+            newPassword: creds.password,
+          })
+        )
+        .pipe(take(1))
+        .subscribe(
+          responseHandler(() => {
+            this.loginError("Password was updated!");
+            setTimeout(() => {
+              this.logoutUser();
+            }, 3000);
+          })
+        );
+    } else {
+      this.loginError("Something was wrong. Try again");
     }
+  }
 
-    get isFetching() {
-        return this._isFetching;
-    }
+  logoutUser() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    this.signalrService.discconecctHub();
+    this.router.navigate(["/login"]);
+  }
 
-    set isFetching(val: boolean) {
-        this._isFetching = val;
-    }
+  loginError(payload) {
+    this.isFetching = false;
+    this.errorMessage = payload;
+  }
 
-    get errorMessage() {
-        return this._errorMessage;
-    }
-
-    set errorMessage(val: string) {
-        this._errorMessage = val;
-    }
-
-    resetPassword(creds) {
-        this.requestLogin();
-        if (creds.token.length > 0 && creds.password.length > 0) {
-            this.accountService.resetpassword(env.apiVersion, new ResetPasswordRequest({ token: creds.token, newPassword: creds.password })).pipe(take(1))
-                .subscribe(responseHandler(() => {
-                    this.loginError('Password was updated!');
-                    setTimeout(() => {
-                        this.logoutUser();
-                    }, 3000);
-                }));
-        } else {
-            this.loginError('Something was wrong. Try again');
-        }
-    }
-
-    logoutUser() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        this.signalrService.discconecctHub();
-        this.router.navigate(['/login']);
-    }
-
-    loginError(payload) {
-        this.isFetching = false;
-        this.errorMessage = payload;
-    }
-
-    requestLogin() {
-        this.isFetching = true;
-    }
+  requestLogin() {
+    this.isFetching = true;
+  }
 }

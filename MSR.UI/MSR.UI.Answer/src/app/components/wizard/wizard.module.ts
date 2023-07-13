@@ -1,13 +1,8 @@
-import { NgModule } from '@angular/core';
-import { BootstrapWizardDirective } from './wizard.directive';
+import { NgModule } from "@angular/core";
+import { BootstrapWizardDirective } from "./wizard.directive";
 
 @NgModule({
-    declarations: [
-        BootstrapWizardDirective
-    ],
-    exports: [
-        BootstrapWizardDirective
-    ]
+  declarations: [BootstrapWizardDirective],
+  exports: [BootstrapWizardDirective],
 })
-export class BootstrapWizardModule {
-}
+export class BootstrapWizardModule {}

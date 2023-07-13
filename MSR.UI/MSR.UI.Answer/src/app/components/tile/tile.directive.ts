@@ -1,10 +1,9 @@
-import {Directive, ElementRef, OnInit} from '@angular/core';
+import { Directive, ElementRef, OnInit } from "@angular/core";
 declare let jQuery: any;
 
-@Directive ({
-  selector: '[live-tile]'
+@Directive({
+  selector: "[live-tile]",
 })
-
 export class LiveTileDirective implements OnInit {
   $el: any;
 
@@ -13,8 +12,6 @@ export class LiveTileDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    this.$el
-      .css('height', this.$el.data('height'))
-      .liveTile();
+    this.$el.css("height", this.$el.data("height")).liveTile();
   }
 }

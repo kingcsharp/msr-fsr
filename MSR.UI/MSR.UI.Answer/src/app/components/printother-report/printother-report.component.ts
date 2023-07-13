@@ -4,9 +4,9 @@ import { WorkOrderModel } from '../../services/api.client.generated';
 import { EnumWipPrintLogo } from '../../models/enums/EnumWipPrintLogo';
 
 @Component({
-  selector: 'printother-report',
-  templateUrl: './printother-report.component.html',
-  styleUrls: ['./printother-report.component.scss'],
+  selector: "printother-report",
+  templateUrl: "./printother-report.component.html",
+  styleUrls: ["./printother-report.component.scss"],
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class PrintotherReportComponent implements OnInit {

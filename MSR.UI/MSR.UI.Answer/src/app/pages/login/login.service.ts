@@ -1,14 +1,20 @@
-import { AppConfig } from '../../app.config';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { Injectable } from '@angular/core';
-import { Globals } from '../../models/lib/globals';
-import { AccountService, SystemLoginRequest, UserService, ForgotPasswordRequest, ForgotUserNameRequest } from '../../services/api.client.generated';
-import { take } from 'rxjs/operators';
-import { environment as env } from '../../../environments/environment';
-import { responseHandler } from '../../utils/responseHandler';
-import { SignalRService } from '../../services/signalr.service';
+import { AppConfig } from "../../app.config";
+import { HttpClient } from "@angular/common/http";
+import { Router } from "@angular/router";
+import { JwtHelperService } from "@auth0/angular-jwt";
+import { Injectable } from "@angular/core";
+import { Globals } from "../../models/lib/globals";
+import {
+  AccountService,
+  SystemLoginRequest,
+  UserService,
+  ForgotPasswordRequest,
+  ForgotUserNameRequest,
+} from "../../services/api.client.generated";
+import { take } from "rxjs/operators";
+import { environment as env } from "../../../environments/environment";
+import { responseHandler } from "../../utils/responseHandler";
+import { SignalRService } from "../../services/signalr.service";
 
 const jwt = new JwtHelperService();
 
@@ -16,13 +22,15 @@ const jwt = new JwtHelperService();
 export class LoginService {
   config: any;
   isFetching: boolean = false;
-  _errorMessage: string = '';
+  _errorMessage: string = "";
 
   constructor(
     appConfig: AppConfig,
     private globals: Globals,
     private http: HttpClient,
-    private router: Router, private accountService: AccountService, private userService: UserService,
+    private router: Router,
+    private accountService: AccountService,
+    private userService: UserService,
     private signalrService: SignalRService
   ) {
     this.config = appConfig.getConfig();
@@ -37,14 +45,14 @@ export class LoginService {
   }
 
   isAuthenticated() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
       return;
     }
     const tokenExpired = jwt.isTokenExpired(token);
     if (tokenExpired) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     }
     return !tokenExpired;
   }
@@ -54,28 +62,42 @@ export class LoginService {
     this.requestLogin();
     const ctrl = this;
     if (creds.email.length <= 0 || creds.password.length <= 0) {
-      this.loginError('Something was wrong. Try again');
+      this.loginError("Something was wrong. Try again");
     }
     this.isFetching = true;
-    this.accountService.login(env.apiVersion, new SystemLoginRequest({ userName: creds.email, password: creds.password }))
+    this.accountService
+      .login(
+        env.apiVersion,
+        new SystemLoginRequest({
+          userName: creds.email,
+          password: creds.password,
+        })
+      )
       .pipe(take(1))
-      .subscribe(responseHandler((result) => {
-        ctrl.receiveToken(result.object);
-      }, () => {
-        this.isFetching = false;
-        ctrl.loginError('Username or Password is invalid.');
-      }));
+      .subscribe(
+        responseHandler(
+          (result) => {
+            ctrl.receiveToken(result.object);
+          },
+          () => {
+            this.isFetching = false;
+            ctrl.loginError("Username or Password is invalid.");
+          }
+        )
+      );
   }
 
   async receiveToken(token) {
     let user: any = {};
     // We check if app runs with backend mode
     user = {
-      email: this.config.auth.email
+      email: this.config.auth.email,
     };
-    localStorage.setItem('token', token);
+    localStorage.setItem("token", token);
     this.isFetching = true;
-    this.userService.loggedInUser(env.apiVersion).pipe(take(1))
+    this.userService
+      .loggedInUser(env.apiVersion)
+      .pipe(take(1))
       .subscribe((result) => {
         this.isFetching = false;
         Object.assign(user, result.object);
@@ -86,7 +108,9 @@ export class LoginService {
 
         if (user.roles.length === 0) {
           this.logoutUser();
-          this.loginError('Sorry you do not have roles associated with your user.');
+          this.loginError(
+            "Sorry you do not have roles associated with your user."
+          );
           this.isFetching = false;
           return;
         }
@@ -98,11 +122,11 @@ export class LoginService {
   }
 
   logoutUser() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     this.signalrService.discconecctHub();
     this.isFetching = false;
-    this.router.navigate(['/login']);
+    this.router.navigate(["/login"]);
   }
 
   loginError(payload) {
@@ -112,8 +136,8 @@ export class LoginService {
 
   receiveLogin() {
     this.isFetching = false;
-    this.errorMessage = '';
-    this.router.navigate(['/app/landing/landingPage']);
+    this.errorMessage = "";
+    this.router.navigate(["/app/landing/landingPage"]);
   }
 
   requestLogin() {

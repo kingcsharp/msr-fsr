@@ -1,82 +1,97 @@
-import { Injectable } from '@angular/core';
-import * as moment from 'moment';
-import { EnumColumnType } from '../models/enums/EnumColumnType';
-import { ColumnsSaved } from '../models/lib/ColumnsSaved';
+import { Injectable } from "@angular/core";
+import * as moment from "moment";
+import { EnumColumnType } from "../models/enums/EnumColumnType";
+import { ColumnsSaved } from "../models/lib/ColumnsSaved";
 
 @Injectable()
 export class CSVConverterService {
-    downloadFile(data: any, columns: ColumnsSaved[], filename: string = 'data', type: string = 'csv') {
-        let blob;
+  downloadFile(
+    data: any,
+    columns: ColumnsSaved[],
+    filename: string = "data",
+    type: string = "csv"
+  ) {
+    let blob;
 
-        if (type === 'xlsx') {
-          blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;' })
-        } else {
-          const csvData = this.ConvertToCSV(data, columns);
-          blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
-        }
-
-        let dwldLink = document.createElement('a');
-        let url = URL.createObjectURL(blob);
-        let isSafariBrowser = navigator.userAgent.indexOf('Safari') !== -1 && navigator.userAgent.indexOf('Chrome') === -1;
-        if (isSafariBrowser) {  // if Safari open in new window to save file with random filename.
-            dwldLink.setAttribute('target', '_blank');
-        }
-        dwldLink.setAttribute('href', url);
-        dwldLink.setAttribute('download', `${filename}_${moment().format('MM_DD_YYYY')}.${type}`);
-        dwldLink.style.visibility = 'hidden';
-        document.body.appendChild(dwldLink);
-        dwldLink.click();
-        URL.revokeObjectURL(url)
-        document.body.removeChild(dwldLink);
+    if (type === "xlsx") {
+      blob = new Blob([data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;",
+      });
+    } else {
+      const csvData = this.ConvertToCSV(data, columns);
+      blob = new Blob(["\ufeff" + csvData], {
+        type: "text/csv;charset=utf-8;",
+      });
     }
 
-    ConvertToCSV(objArray, columns: ColumnsSaved[]) {
-        let array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
-        let str = '';
-        let row = '';
+    let dwldLink = document.createElement("a");
+    let url = URL.createObjectURL(blob);
+    let isSafariBrowser =
+      navigator.userAgent.indexOf("Safari") !== -1 &&
+      navigator.userAgent.indexOf("Chrome") === -1;
+    if (isSafariBrowser) {
+      // if Safari open in new window to save file with random filename.
+      dwldLink.setAttribute("target", "_blank");
+    }
+    dwldLink.setAttribute("href", url);
+    dwldLink.setAttribute(
+      "download",
+      `${filename}_${moment().format("MM_DD_YYYY")}.${type}`
+    );
+    dwldLink.style.visibility = "hidden";
+    document.body.appendChild(dwldLink);
+    dwldLink.click();
+    URL.revokeObjectURL(url);
+    document.body.removeChild(dwldLink);
+  }
 
-        for (let index = 0; index < columns.length; index++) {
-            row += columns[index].label + ',';
-        }
-        row = row.slice(0, -1);
-        str += row + '\r\n';
-        for (let i = 0; i < array.length; i++) {
-            let line = '';
-            for (let index = 0; index < columns.length; index++) {
-                let propName = columns[index].id;
-                const value = array[i][propName];
-                const item = '"' + this.getDefaultValue(value, columns[index]) + '"';
-                if (line.length > 0) {
-                    line += ',';
-                }
+  ConvertToCSV(objArray, columns: ColumnsSaved[]) {
+    let array = typeof objArray !== "object" ? JSON.parse(objArray) : objArray;
+    let str = "";
+    let row = "";
 
-                line += item;
-            }
-            str += line + '\r\n';
+    for (let index = 0; index < columns.length; index++) {
+      row += columns[index].label + ",";
+    }
+    row = row.slice(0, -1);
+    str += row + "\r\n";
+    for (let i = 0; i < array.length; i++) {
+      let line = "";
+      for (let index = 0; index < columns.length; index++) {
+        let propName = columns[index].id;
+        const value = array[i][propName];
+        const item = '"' + this.getDefaultValue(value, columns[index]) + '"';
+        if (line.length > 0) {
+          line += ",";
         }
-        return str;
+
+        line += item;
+      }
+      str += line + "\r\n";
+    }
+    return str;
+  }
+
+  getDefaultValue(value, column: ColumnsSaved) {
+    if (value === null || value === undefined) {
+      if (column.type === EnumColumnType.Number) {
+        return 0;
+      }
+      return "";
+    }
+    if (column.type === EnumColumnType.Date) {
+      return moment(value).format(column.formattingMoment);
+    }
+    if (column.type === EnumColumnType.Boolean) {
+      return value === true ? "Yes" : "No";
+    }
+    if (column.type === EnumColumnType.StringArray) {
+      return `${value}`;
+    }
+    if (column.type === EnumColumnType.Money) {
+      return `$${value}`;
     }
 
-    getDefaultValue(value, column: ColumnsSaved) {
-        if (value === null || value === undefined) {
-            if (column.type === EnumColumnType.Number) {
-                return 0;
-            }
-            return '';
-        }
-        if (column.type === EnumColumnType.Date) {
-            return moment(value).format(column.formattingMoment);
-        }
-        if (column.type === EnumColumnType.Boolean) {
-            return value === true ? 'Yes' : 'No';
-        }
-        if (column.type === EnumColumnType.StringArray) {
-            return `${value}`;
-        }
-        if (column.type === EnumColumnType.Money) {
-            return `$${value}`;
-        }
-
-        return value;
-    }
+    return value;
+  }
 }
