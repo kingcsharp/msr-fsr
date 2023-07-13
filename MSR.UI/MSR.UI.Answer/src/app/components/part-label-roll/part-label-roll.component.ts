@@ -1,25 +1,39 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {
   WorkOrderModel,
   WorkOrderPartModel,
   WorkOrderPartService,
-} from "../../services/api.client.generated";
-import { environment as env } from "../../../environments/environment";
-import { responseHandler } from "../../utils/responseHandler";
-import { take } from "rxjs/operators";
-import * as _ from "lodash";
+} from '../../services/api.client.generated';
+import { environment as env } from '../../../environments/environment';
+import { responseHandler } from '../../utils/responseHandler';
+import { take } from 'rxjs/operators';
+import * as _ from 'lodash';
+import { EnumWipPrintLogo } from '../../models/enums/EnumWipPrintLogo';
 
 @Component({
-  selector: "part-label-roll",
-  templateUrl: "./part-label-roll.component.html",
-  styleUrls: ["./part-label-roll.component.scss"],
+  selector: 'part-label-roll',
+  templateUrl: './part-label-roll.component.html',
+  styleUrls: ['./part-label-roll.component.scss'],
   providers: [WorkOrderPartService],
 })
 export class PartLabelRollComponent implements OnInit {
-  todayDate: Date = new Date();
-
   @Input() WorkOrder: WorkOrderModel;
+  @Input() printLogo: EnumWipPrintLogo;
+
+  todayDate: Date = new Date();
+  logo: string;
   workOrderParts: Array<WorkOrderPartModel>;
+  displayMSRFSRLabel: boolean = false;
+
+  LOGO_MSR: string = 'msr-label-logo-black.jpg';
+  LOGO_KOMICO: string = 'komico-label-logo-black.png';
+  LOGO_BLANK: string = 'blank-label-logo.png';
 
   constructor(private workOrderPartService: WorkOrderPartService) {}
 
@@ -43,6 +57,8 @@ export class PartLabelRollComponent implements OnInit {
           });
         })
       );
+
+    this.setPrintLogo();
   }
 
   getWidth(value) {
@@ -62,5 +78,16 @@ export class PartLabelRollComponent implements OnInit {
     }
 
     return width;
+  }
+
+  setPrintLogo() {
+    if (this.printLogo === EnumWipPrintLogo.KoMiCo) {
+      this.logo = this.LOGO_KOMICO;
+    } else if (this.printLogo === EnumWipPrintLogo.NoLogo) {
+      this.logo = this.LOGO_BLANK;
+    } else {
+      this.logo = this.LOGO_MSR;
+      this.displayMSRFSRLabel = true;
+    }
   }
 }
