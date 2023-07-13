@@ -1,4 +1,10 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from "@angular/core";
 import {
   WorkOrderModel,
   WorkOrderPartModel,
@@ -21,9 +27,9 @@ export class PartLabelRollComponent implements OnInit {
   @Input() printLogo: EnumWipPrintLogo;
 
   todayDate: Date = new Date();
-  enumWipPrintLogo = EnumWipPrintLogo;
   logo: string;
   workOrderParts: Array<WorkOrderPartModel>;
+  displayMSRFSRLabel: boolean = false;
 
   LOGO_MSR: string = "msr-label-logo-black.jpg";
   LOGO_KOMICO: string = "komico-label-logo-black.png";
@@ -81,6 +87,7 @@ export class PartLabelRollComponent implements OnInit {
       this.logo = this.LOGO_BLANK;
     } else {
       this.logo = this.LOGO_MSR;
+      this.displayMSRFSRLabel = true;
     }
   }
 }

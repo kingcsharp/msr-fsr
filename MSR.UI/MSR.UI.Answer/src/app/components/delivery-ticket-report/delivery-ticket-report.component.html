@@ -3,7 +3,7 @@
     <div class="col-12 mb-2 border-bottom">
       <div class="row">
         <div class="col-6">
-          <h1>MSR-FSR</h1>
+          <h1>{{ heading }}</h1>
         </div>
         <div class="col-6 text-right">
           <h2>DELIVERY TICKET</h2>
@@ -13,14 +13,17 @@
     <div class="col-12 mb-2">
       <div class="row mx-2">
         <div class="col-3">
-          <u>Ship From</u><br />
-          MSR-FSR<br />
-          {{ WorkOrder.location?.name }}<br />
-          {{ WorkOrder.location?.address1 }} {{ WorkOrder.location?.address2
-          }}<br />
-          {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }}
-          {{ WorkOrder.location?.postalCode }}<br />
+          <div *ngIf="displayShipFrom">
+            <u>Ship From</u><br />
+            MSR-FSR<br />
+            {{ WorkOrder.location?.name }}<br />
+            {{ WorkOrder.location?.address1 }} {{ WorkOrder.location?.address2
+            }}<br />
+            {{ WorkOrder.location?.city }}, {{ WorkOrder.location?.state }}
+            {{ WorkOrder.location?.postalCode }}<br />
+          </div>
         </div>
+
         <div class="col-3">
           <u>Ship To</u><br />
           {{ WorkOrder.product?.customer?.name }}

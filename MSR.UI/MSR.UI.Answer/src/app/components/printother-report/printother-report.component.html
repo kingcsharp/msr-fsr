@@ -29,22 +29,42 @@
     </div>
   </div>
   <div class="report-viewport d-print-flex">
+    <!--Delivery Ticket -->
     <delivery-ticket-report
+      *ngIf="selectedReport === 'DeliveryTicket'"
       [WorkOrder]="WorkOrder"
-      *ngIf="
-        selectedReport === 'DeliveryTicket' ||
-        selectedReport === 'DeliveryTicketKoMiCo' ||
-        selectedReport === 'DeliveryTicketNoLogo'
-      "
+      [printLogo]="enumWipPrintLogo.MSRFSR"
     ></delivery-ticket-report>
-    <detailed-packing-list
+    <delivery-ticket-report
+      *ngIf="selectedReport === 'DeliveryTicketKoMiCo'"
       [WorkOrder]="WorkOrder"
-      *ngIf="
-        selectedReport === 'DetailedPackingList' ||
-        selectedReport === 'DetailedPackingListKoMiCo' ||
-        selectedReport === 'DetailedPackingListNoLogo'
-      "
+      [printLogo]="enumWipPrintLogo.KoMiCo"
+    ></delivery-ticket-report>
+    <delivery-ticket-report
+      *ngIf="selectedReport === 'DeliveryTicketNoLogo'"
+      [WorkOrder]="WorkOrder"
+      [printLogo]="enumWipPrintLogo.NoLogo"
+    ></delivery-ticket-report>
+    <!--End Delivery Ticket -->
+
+    <!--Detailed Packing List -->
+    <detailed-packing-list
+      *ngIf="selectedReport === 'DetailedPackingList'"
+      [WorkOrder]="WorkOrder"
+      [printLogo]="enumWipPrintLogo.MSRFSR"
     ></detailed-packing-list>
+    <detailed-packing-list
+      *ngIf="selectedReport === 'DetailedPackingListKoMiCo'"
+      [WorkOrder]="WorkOrder"
+      [printLogo]="enumWipPrintLogo.KoMiCo"
+    ></detailed-packing-list>
+    <detailed-packing-list
+      *ngIf="selectedReport === 'DetailedPackingListNoLogo'"
+      [WorkOrder]="WorkOrder"
+      [printLogo]="enumWipPrintLogo.NoLogo"
+    ></detailed-packing-list>
+    <!--End Detailed Packing List -->
+
     <cert-of-compliance
       [WorkOrder]="WorkOrder"
       *ngIf="selectedReport === 'CertOfCompliance'"
@@ -61,21 +81,25 @@
       [WorkOrder]="WorkOrder"
       *ngIf="selectedReport === 'TechnicalDataLabel'"
     ></technical-data-label>
+
+    <!--Part Label Roll -->
     <part-label-roll
-      [WorkOrder]="WorkOrder"
       *ngIf="selectedReport === 'PartLabelRoll4in'"
+      [WorkOrder]="WorkOrder"
       [printLogo]="enumWipPrintLogo.MSRFSR"
     ></part-label-roll>
     <part-label-roll
-      [WorkOrder]="WorkOrder"
       *ngIf="selectedReport === 'PartLabelRoll4inKoMiCo'"
+      [WorkOrder]="WorkOrder"
       [printLogo]="enumWipPrintLogo.KoMiCo"
     ></part-label-roll>
     <part-label-roll
-      [WorkOrder]="WorkOrder"
       *ngIf="selectedReport === 'PartLabelRoll4inNoLogo'"
+      [WorkOrder]="WorkOrder"
       [printLogo]="enumWipPrintLogo.NoLogo"
     ></part-label-roll>
+    <!--End Part Label Roll -->
+
     <work-report
       [WorkOrder]="WorkOrder"
       *ngIf="selectedReport === 'WorkReport'"
