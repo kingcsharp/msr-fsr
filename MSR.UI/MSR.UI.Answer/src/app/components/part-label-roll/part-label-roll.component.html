@@ -7,15 +7,15 @@
             <img [src]="'assets/img/' + logo" alt="Logo" style="width: 100%" />
           </div>
           <p class="date">
-            Date: <strong>{{ todayDate | date : "shortDate" }}</strong>
+            Date: <strong>{{ todayDate | date : 'shortDate' }}</strong>
           </p>
           <!-- {{todayDate}} -->
           <p>
             Site:
             <strong>
               <span *ngIf="displayMSRFSRLabel">MSR-FSR</span>
-              {{ WorkOrder.location?.name }}</strong
-            >
+              {{ WorkOrder.location?.name }}
+            </strong>
           </p>
           <p>
             WO:

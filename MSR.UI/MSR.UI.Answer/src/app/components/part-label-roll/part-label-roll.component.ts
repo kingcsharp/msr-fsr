@@ -4,22 +4,22 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-} from "@angular/core";
+} from '@angular/core';
 import {
   WorkOrderModel,
   WorkOrderPartModel,
   WorkOrderPartService,
-} from "../../services/api.client.generated";
-import { environment as env } from "../../../environments/environment";
-import { responseHandler } from "../../utils/responseHandler";
-import { take } from "rxjs/operators";
-import * as _ from "lodash";
-import { EnumWipPrintLogo } from "../../models/enums/EnumWipPrintLogo";
+} from '../../services/api.client.generated';
+import { environment as env } from '../../../environments/environment';
+import { responseHandler } from '../../utils/responseHandler';
+import { take } from 'rxjs/operators';
+import * as _ from 'lodash';
+import { EnumWipPrintLogo } from '../../models/enums/EnumWipPrintLogo';
 
 @Component({
-  selector: "part-label-roll",
-  templateUrl: "./part-label-roll.component.html",
-  styleUrls: ["./part-label-roll.component.scss"],
+  selector: 'part-label-roll',
+  templateUrl: './part-label-roll.component.html',
+  styleUrls: ['./part-label-roll.component.scss'],
   providers: [WorkOrderPartService],
 })
 export class PartLabelRollComponent implements OnInit {
@@ -31,9 +31,9 @@ export class PartLabelRollComponent implements OnInit {
   workOrderParts: Array<WorkOrderPartModel>;
   displayMSRFSRLabel: boolean = false;
 
-  LOGO_MSR: string = "msr-label-logo-black.jpg";
-  LOGO_KOMICO: string = "komico-label-logo-black.png";
-  LOGO_BLANK: string = "blank-label-logo.png";
+  LOGO_MSR: string = 'msr-label-logo-black.jpg';
+  LOGO_KOMICO: string = 'komico-label-logo-black.png';
+  LOGO_BLANK: string = 'blank-label-logo.png';
 
   constructor(private workOrderPartService: WorkOrderPartService) {}
 

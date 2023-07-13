@@ -1,19 +1,19 @@
-import { Component, Input, OnInit, ViewEncapsulation } from "@angular/core";
-import { WorkOrderModel } from "../../services/api.client.generated";
-import { PackingListViewModel } from "./detailed-packing-list-view-model";
-import { formatDate } from "@angular/common";
-import { EnumWipPrintLogo } from "../../models/enums/EnumWipPrintLogo";
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { WorkOrderModel } from '../../services/api.client.generated';
+import { PackingListViewModel } from './detailed-packing-list-view-model';
+import { formatDate } from '@angular/common';
+import { EnumWipPrintLogo } from '../../models/enums/EnumWipPrintLogo';
 
 @Component({
-  selector: "detailed-packing-list",
-  templateUrl: "./detailed-packing-list.component.html",
-  styleUrls: ["./detailed-packing-list.component.scss"],
+  selector: 'detailed-packing-list',
+  templateUrl: './detailed-packing-list.component.html',
+  styleUrls: ['./detailed-packing-list.component.scss'],
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class DetailedPackingListComponent implements OnInit {
-  HEADING_MSRFSR = "MSR_FSR";
-  HEADING_KOMICO = "KoMiCo";
-  HEADING_NOLOGO = "";
+  HEADING_MSRFSR = 'MSR_FSR';
+  HEADING_KOMICO = 'KoMiCo';
+  HEADING_NOLOGO = '';
 
   @Input() WorkOrder: WorkOrderModel;
   @Input() printLogo: EnumWipPrintLogo;
@@ -28,7 +28,7 @@ export class DetailedPackingListComponent implements OnInit {
 
   ngOnInit(): void {
     this.packingList.populate(this.WorkOrder, this.WorkOrder.purchase);
-    this.currentDate = formatDate(new Date(), "MM/dd/yyyy", "en");
+    this.currentDate = formatDate(new Date(), 'MM/dd/yyyy', 'en');
     this.setPropertiesBasedOnPrintLogo();
   }
 
