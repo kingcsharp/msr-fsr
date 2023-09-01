@@ -191,6 +191,15 @@ namespace MSR.Answer.API.V1.Controllers
             {
                 var command = request.ToUpdateWorkOrderEndDateCommand();
                 var ret = await _dispatcher.DispatchAsync(command);
+                var wo = ret.ToEntity<WorkOrderModel>();
+
+                if (wo.CustomerName.ToLower().Contains("intel"))
+                {
+                    var data = this._workOrderViewService.GetIntelXmlData(request.WorkOrderId);
+                    var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
+                    await _dispatcher.DispatchAsync(xmlCommand);
+                }
+
                 return ret.ToOkObjectResponse<WorkOrderModel>("Work Order Scheduled End Date has been updated!");
             }
             catch (Exception ex)
@@ -199,13 +208,29 @@ namespace MSR.Answer.API.V1.Controllers
             }
 
         }
-        #endregion
 
-        #region PUT
-        #endregion
+        [HttpPost("TransmitXml")]
+        public async Task<IActionResult> TransmitXml([FromBody] TransmitXmlByWorkOrderRequest request)
+        {
+            try
+            {
+                var data = this._workOrderViewService.GetIntelXmlData(request.WorkOrderId);
+                var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
+                var ret = await _dispatcher.DispatchAsync(xmlCommand);
+                return ret.ToOkObjectResponse<ICollection<XmlTransmissionLogModel>>("Work Order Data has been successfuly transmited.");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+            #endregion
 
-        #region DELETE
-        [HttpDelete("{id}")]
+            #region PUT
+            #endregion
+
+            #region DELETE
+            [HttpDelete("{id}")]
         [SwaggerResponse(typeof(AuditActionResult<bool>))]
         public async Task<IActionResult> DeleteWorkOrderAsync(int id)
         {

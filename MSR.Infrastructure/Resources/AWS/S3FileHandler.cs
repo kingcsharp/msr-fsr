@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading.Tasks;
 using MSR.Domain.Models;
 using MSR.Domain.Helpers;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Infrastructure.Resources.AWS
 {
@@ -22,7 +23,19 @@ namespace MSR.Infrastructure.Resources.AWS
             _s3Information = s3Information;
         }
 
-        public async Task<Stream> DownloadFile(string fileName)
+        public async Task<Stream> DowloadFile(string fileName, string bucketName)
+        {
+            var response = await _s3Handler.GetObjectAsync(new GetObjectRequest
+            {
+                BucketName = bucketName,
+                Key = fileName
+            });
+
+            return response.ResponseStream;
+        }
+
+
+            public async Task<Stream> DownloadFile(string fileName)
         {
             var response = await _s3Handler.GetObjectAsync(new GetObjectRequest
             {
@@ -61,9 +74,17 @@ namespace MSR.Infrastructure.Resources.AWS
             return GetURL(uniqueName, 6000);
         }
 
-        public async Task<string> UploadFile(MemoryStream stream, FileModel file, string entityName, int entityId)
+        public async Task<string> UploadFile(MemoryStream stream, FileModel file, string bucketName)
         {
-            string uniqueName = $"{entityName}-{entityId}-{file.Name}";
+
+            await Upload(stream.ToArray(), file.ContentType, bucketName, file.Name);
+
+            return GetURL(file.Name, 6000);
+        }
+
+        public async Task<string> UploadFile(MemoryStream stream, FileModel file, string entityName, int? entityId)
+        {
+            string uniqueName = entityId != null ? $"{entityName}-{entityId}-{file.Name}" : $"{entityName}-{file.Name}";
 
             await Upload(stream.ToArray(), file.ContentType, _s3Information.FileBucketName, uniqueName);
 

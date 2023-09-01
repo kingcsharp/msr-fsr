@@ -220,6 +220,12 @@ export class WipComponent implements OnInit, AfterViewInit {
 
     this.gridSettings = [
       new ColumnsSaved({
+        id: "id",
+        label: "WIP Id",
+        visible: true,
+        type: EnumColumnType.Number,
+      }),
+      new ColumnsSaved({
         id: "purchaseId",
         label: "Purchase Id",
         visible: false,

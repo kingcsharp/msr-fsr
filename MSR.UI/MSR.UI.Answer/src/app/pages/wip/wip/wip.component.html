@@ -315,6 +315,11 @@
             </td>
             <td
               [hidden]="
+                !commonGrid.isVisibleCol('id', gridSettings)
+              "
+            >{{ model.id }}</td>
+            <td
+              [hidden]="
                 !commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)
               "
             >
