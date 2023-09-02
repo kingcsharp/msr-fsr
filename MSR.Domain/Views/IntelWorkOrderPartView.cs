@@ -6,7 +6,7 @@ namespace MSR.Domain.Views
         public int WorkOrderPartId { get; set; }
         public int WorkOrderId { get; set; }
         public string UnitNumber { get; set; }
-        public string? ThisDocumentGenerationDateTime { get; set; }
+        public string? ThisDocumentGeneration { get; set; }
         public String ScheduledShipDate { get; set; }
         public string ResponsiblePartyEmail { get; set; }
         public string PurchaseOrderNumber { get; set; }
@@ -14,6 +14,7 @@ namespace MSR.Domain.Views
         public string PartRevisionNumber { get; set; }
         public string ManufacturingPlantCode { get; set; }
         public string ManufacturerPartNumber { get; set; }
+        public string ManufacturerOrderNumber { get; set; }
         public string ManufacturerNumber { get; set; }
         public string ManufacturerName { get; set; }
         public string LotCreatedDate { get; set; }

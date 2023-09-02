@@ -2384,7 +2384,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 new XElement("Measurements",
                     new XElement("Measurement",
                         new XElement("MeasurementType", m.MeasurementType),
-                        new XElement("MeasurementValue", m.MeasurementValue)
+                        new XElement("MeasurementValue", m.MeasurementValue),
+                        !String.IsNullOrEmpty(m.ControlValue) ? XElement.Parse(m.ControlValue) : null
                     )
                 )
 
@@ -2404,10 +2405,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             new XElement("QualityCertificates",
                                 new XElement("QualityCertificate",
                                     new XAttribute("certificateType", "SingleCertificate"),
-                                    new XElement("ThisDocumentGenerationDateTime", woPart.ThisDocumentGenerationDateTime ?? "N/A"),
+                                    new XElement("ThisDocumentGenerationDateTime", woPart.ThisDocumentGeneration ?? "N/A"),
                                     new XElement("ProductDescription",
                                         new XElement("ProductName", woPart.CustomerPartName),
                                         new XElement("ManufacturerPartNumber", woPart.ManufacturerNumber),
+                                        new XElement("ManufacturerOrderNumber", woPart.ManufacturerOrderNumber),
                                         new XElement("PurchaseOrderNumber", woPart.PurchaseOrderNumber),
                                         new XElement("KitNumber", woPart.KitNumber),
                                         new XElement("KitName", woPart.KitName),
