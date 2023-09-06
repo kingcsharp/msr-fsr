@@ -278,6 +278,19 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        public static TransmitXmlFile ToTransmitXmlFileCommand(this XmlTransmissionRequest request)
+        {
+            return new TransmitXmlFile()
+            {
+                TransmissionId = request.TransmissionId
+            };
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static UpdateUser ToUpdateUserCommand(this UpdateUserRequest request)
         {
             return new UpdateUser()
@@ -519,7 +532,7 @@ namespace MSR.Answer.API.V1.Extentions
         }
 
         public static ReorderSteps ToReorderStepsCommand(this ReorderStepsRequest request, int Id) =>
-            new ReorderSteps(Id,request.ProcedureSteps.Select(i => AutoMapperHelper.Mapper.Map<MSR.Domain.Models.ReorderStep>(i)).ToList());
+            new ReorderSteps(Id, request.ProcedureSteps.Select(i => AutoMapperHelper.Mapper.Map<MSR.Domain.Models.ReorderStep>(i)).ToList());
         /// <summary>
         ///
         /// </summary>
@@ -588,7 +601,7 @@ namespace MSR.Answer.API.V1.Extentions
         public static CreateWorkOrder ToCreateWorkOrderCommand(this CreateWorkOrderRequest request)
         {
             return new CreateWorkOrder(request.PurchaseId, request.PurchaseOrderId, request.ScheduledStartDate, request.ScheduledEndDate,
-                request.HasNCR, request.LocationId, request.WorkOrderProducts.Select(i => 
+                request.HasNCR, request.LocationId, request.WorkOrderProducts.Select(i =>
                 new WorkOrderProduct(i.ProductId, i.SerializeIndividually, i.SerialNumbers, i.CustomerLineNumbers, i.Qty, i.Price)).ToList());
         }
 
@@ -933,7 +946,7 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static BulkUpdateWorkOrderPart ToBulkUpdateWorkOrderPartCommand(this BulkUpdateWorkOrderPartRequest request) =>
             new BulkUpdateWorkOrderPart(request.WorkOrderPartIds, request.PartData);
-    
+
         /// <summary>
         /// ToCreateWorkOrderTaskCommand
         /// </summary>
@@ -995,15 +1008,16 @@ namespace MSR.Answer.API.V1.Extentions
         public static GetPortalWorkOrder ToGetPortalWorkOrderCommand(this GetPortalWorkOrderRequest request) => AutoMapperHelper.Mapper.Map<GetPortalWorkOrder>(request);
 
         public static GetArchiveDocument ToArchiveDocumentCommand(this GetArchiveDocumentRequest request) => AutoMapperHelper.Mapper.Map<GetArchiveDocument>(request);
-        
+
         public static CreateWorkOrderMessage ToCreateWorkOrderMessageCommand(this CreateWorkOrderMessageRequest request)
         {
             var command = AutoMapperHelper.Mapper.Map<CreateWorkOrderMessage>(request);
             return command;
         }
 
-        public static GetParts ToGetPartsCommand(this GetPartRequest request) { 
-            return AutoMapperHelper.Mapper.Map<GetParts>(request);    
+        public static GetParts ToGetPartsCommand(this GetPartRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetParts>(request);
         }
 
         public static GetProcedureStepTemplate ToGetProcedureStepTemplateCommand(this GetProcedureStepTemplateRequest request)
@@ -1025,8 +1039,9 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<GetWorkOrderHistory>(request);
         }
 
-        public static GetQuotesProducts ToGetQuotesProductsRequest(this GetQuotesProductsRequest request) { 
-            
+        public static GetQuotesProducts ToGetQuotesProductsRequest(this GetQuotesProductsRequest request)
+        {
+
             return AutoMapperHelper.Mapper.Map<GetQuotesProducts>(request);
         }
 
@@ -1075,7 +1090,7 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<AddNCRWorkOrderTask>(request);
         }
 
-        public static GetAssignedWorkOrders ToWorkOrderSelectItem(this GetAssignedWorkOrdersRequest request) 
+        public static GetAssignedWorkOrders ToWorkOrderSelectItem(this GetAssignedWorkOrdersRequest request)
         {
             return AutoMapperHelper.Mapper.Map<GetAssignedWorkOrders>(request);
         }

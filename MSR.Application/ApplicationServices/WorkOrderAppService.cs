@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using AutoMapper;
+using MSR.Application.Abstractions;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
@@ -38,9 +40,12 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetAssignedWorkOrders>,
         ICommandHandler<GetInvoiceableWorkOrders>,
         ICommandHandler<BulkUpdateWorkOrderPart>,
-        ICommandHandler<UpdateWorkOrderPartCycleCount>
+        ICommandHandler<UpdateWorkOrderPartCycleCount>,
+        ICommandHandler<TransmitIntelXmlDataByWorkOrder>,
+        ICommandHandler<TransmitXmlFile>
     {
         private readonly IWorkOrderService _workOrderService;
+        private readonly IWorkOrderViewService _workOrderViewService;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
         private readonly IDocumentService _documentService;
@@ -70,9 +75,8 @@ namespace MSR.Application.ApplicationServices
 
             var ret = await _workOrderService.GetWorkOrderById(command.Id.Value);
             return new CommandResponse<ICollection<WorkOrderModel>>(ret);
-            
-            
         }
+
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrder command, CancellationToken cancellationToken = default)
         {
             var ret = await _workOrderService.UpdateWorkOrderAsync(command);
@@ -136,7 +140,7 @@ namespace MSR.Application.ApplicationServices
         {
             var workOrders = await _workOrderService.GetWorkOrderHistoryView(command);
             var workOrderIds = workOrders.Select(i => i.WorkOrderId.Value).ToList();
-            var subPartList = await _workOrderService.GetWorkOrderSubParts(workOrderIds); 
+            var subPartList = await _workOrderService.GetWorkOrderSubParts(workOrderIds);
             foreach (var summary in workOrders.Where(i => i.HasSubParts))
             {
                 summary.SubParts = subPartList.Where(i => i.WorkOrderId == summary.WorkOrderId).ToList();
@@ -148,14 +152,14 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(TakeOverWorkOrder command, CancellationToken cancellationToken = default)
         {
             var workOrderTaskModels = await _workOrderService.TakeOverWorkOrderTasks(command);
-            
+
             return new CommandResponse<ICollection<WorkOrderTaskModel>>(workOrderTaskModels);
         }
 
         public async Task<ICommandResponse> HandleAsync(CancelWorkOrder command, CancellationToken cancellationToken = default)
         {
             var workOrderTaskModels = await _workOrderService.CancelWorkOrderTasksAsync(command);
-            
+
             return new CommandResponse<ICollection<WorkOrderTaskModel>>(workOrderTaskModels);
         }
 
@@ -168,19 +172,27 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderEndDate command, CancellationToken cancellationToken = default)
         {
             var ret = await _workOrderService.UpdateWorkOrderEndDateAsync(command);
+
             return new CommandResponse<WorkOrderModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(TransmitIntelXmlDataByWorkOrder command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.GenerateAndTransmitXmlFiles(command);
+
+            return new CommandResponse<ICollection<XmlTransmissionLogModel>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(AddNCRWorkOrderTask command, CancellationToken cancellationToken = default)
         {
             var workOrderTaskModels = await _workOrderService.AddNCRWorkOrderTasksAsync(command);
-            
+
             return new CommandResponse<ICollection<WorkOrderTaskModel>>(workOrderTaskModels);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
         {
-            foreach(var product in command.WorkOrderProducts)
+            foreach (var product in command.WorkOrderProducts)
             {
                 var id = await _workOrderService.GetProductIdFromPurchaseOrderProduct(product.ProductId);
                 product.ProductId = id;
@@ -190,7 +202,7 @@ namespace MSR.Application.ApplicationServices
             var tasks = await _workOrderService.GetWorkOrderTasksAsync(productId);
             workOrderDto.WorkOrderTasks = tasks;
 
-            
+
             var parts = (await _workOrderService.GetWorkOrderPartsAsync(command)).ToList();
 
             workOrderDto.WorkOrderParts = parts;
@@ -215,5 +227,12 @@ namespace MSR.Application.ApplicationServices
 
             return response;
         }
+
+        public async Task<ICommandResponse> HandleAsync(TransmitXmlFile command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.RetransmitXmlFile(command);
+            return new CommandResponse<XmlTransmissionLogModel>(ret);
+        }
+
     }
 }

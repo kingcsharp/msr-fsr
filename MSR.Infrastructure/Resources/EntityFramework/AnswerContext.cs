@@ -92,6 +92,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<NCRHistoryItem> NCRHistory { get; set; }
         public DbSet<WorkOrderPartNCRMapItem> WorkOrderPartNCRMapItems { get; set; }
         public DbSet<WorkOrderPartDataMatrixView> WorkOrderPartDataMatrixViews { get; set; }
+        public DbSet<XmlTransmissionLog> XmlTransmissonLog { get; set; }
 
         public AnswerContext() : base()
         {
@@ -230,7 +231,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         {
             using (var db2 = new ContextForQueryType<T>(db.Database.GetDbConnection()))
             {
-                return db2.Set<T>().FromSqlRaw(sql, parameters).ToList();
+                var query = db2.Set<T>().FromSqlRaw(sql, parameters);
+                return query.ToList();
             }
         }
 

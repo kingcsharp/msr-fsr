@@ -18,6 +18,7 @@ namespace MSR.Application.Extentions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            
             services.AddTransient<AccountAppService>();
             services.AddTransient<CustomerAppService>();
             services.AddTransient<HelpAppService>();
@@ -36,10 +37,10 @@ namespace MSR.Application.Extentions
             services.AddTransient<TimezoneAppService>();
             services.AddTransient<ReportAppService>();
             services.AddTransient<SearchAppService>();
-            services.AddTransient<IWorkOrderViewService, WorkOrderViewService>();
             services.AddTransient<IProductViewService, ProductViewService>();
             services.AddTransient<IWorkOrderPartViewService, WorkOrderPartViewService>();
             services.AddTransient<IProcedureViewService, ProcedureViewService>();
+            services.AddTransient<IWorkOrderViewService, WorkOrderViewService>();
 
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

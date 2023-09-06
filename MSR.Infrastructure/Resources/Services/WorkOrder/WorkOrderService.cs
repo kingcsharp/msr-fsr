@@ -28,6 +28,9 @@ using System.IO;
 using Barcoder.DataMatrix;
 using Barcoder.Renderer.Image;
 using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
+using Renci.SshNet;
+using Microsoft.Extensions.Configuration;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -45,8 +48,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         private readonly IMessageHubClient _messageHub;
         private readonly IDownloadFiles _fileDownloader;
         private readonly ILogger _logger;
+        private readonly IUploadFiles _fileUploader;
+        private readonly IConfiguration _config;
 
-        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService,
+        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService, IConfiguration config,
             EmailInformation emailInformation, GeneralInformation generalInformation, IMessageHubClient messageHub, IFileHandlerFactory fileHanderFactory, ILogger<WorkOrderService> logger)
         {
             _unitOfWork = unitOfWork;
@@ -58,6 +63,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _messageHub = messageHub;
             _fileDownloader = fileHanderFactory.CreateDownloader(FileProvider.S3);
             _logger = logger;
+            _fileUploader = fileHanderFactory.CreateUploader(FileProvider.S3);
+            _config = config;
         }
 
         // TODO: WorkOrder Status needs to be calculated in a timely matter
@@ -224,7 +231,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             workOrderModel.Invoiceable = invoiceable;
-            
+
             return new List<WorkOrderModel>() { DetachBackPointers(workOrderModel) };
         }
 
@@ -726,7 +733,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var recordSeparator = ((char)30).ToString();
             var groupSeparator = ((char)29).ToString();
             var endTransmission = ((char)4).ToString();
-            var data =  $"[)>{recordSeparator}06{groupSeparator}" +
+            var data = $"[)>{recordSeparator}06{groupSeparator}" +
                         $"9S{workOrderId}{groupSeparator}" +
                         $"P{workOrderPartDataMatrixView.P}{groupSeparator}" +
                         $"1P{workOrderPartDataMatrixView.OneP}{groupSeparator}" +
@@ -834,11 +841,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
                 return (true, $"The CycleCount for WorkOrderPart with Id {workOrderPart.Id} has been updated to {command.CycleCount}");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new DomainException($"The Cycle Count for WorkOrderPart with Part Number {command.PartNumber} and Serial Number {command.SerialNumber} could not be updated. " +
                                 $"- Error Message: {ex.Message}", DomainError.NotFound);
-                
+
             }
 
         }
@@ -1493,7 +1500,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var current = await _unitOfWork.WorkOrderTaskMonitors.Query().Include(x => x.ProcedureStepMonitor).FirstOrDefaultAsync(i => i.Id == command.Id);
-            
+
 
             if (current is null)
             {
@@ -1508,17 +1515,17 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 var monitorListItem = await _unitOfWork.MonitorListItems.Query().Where(x => x.Id == multival).FirstOrDefaultAsync();
                 command.TextVal = monitorListItem.Name;
 
-                if(current.Description.Contains("Customer Disposition"))
+                if (current.Description.Contains("Customer Disposition"))
                 {
-                    var allWorkOrderTaskIds = await _unitOfWork.WorkOrderTasks.Query().Where(i => i.WorkOrderId == current.WorkOrderTask.WorkOrderId 
+                    var allWorkOrderTaskIds = await _unitOfWork.WorkOrderTasks.Query().Where(i => i.WorkOrderId == current.WorkOrderTask.WorkOrderId
                                                                                             && i.NCNumber == ncNumber).Select(i => i.Id).ToListAsync();
-                   
+
                     if (allWorkOrderTaskIds.Any())
                     {
                         //Get all of the ncr maps and set them to closed
                         var ncrMaps = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => allWorkOrderTaskIds.Contains(i.WorkOrderTaskId)).ToListAsync();
 
-                        foreach(var ncrMap in ncrMaps)
+                        foreach (var ncrMap in ncrMaps)
                         {
                             ncrMap.ClosedOn = DateTime.UtcNow;
                             _unitOfWork.WorkOrderPartNCRMap.Update(ncrMap);
@@ -2194,7 +2201,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     DomainError.BadRequest);
             }
 
-            var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.WorkOrderId);
+            var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, wo => wo.Id == command.WorkOrderId, wo => wo.Purchase.PurchaseOrder.Customer);
 
             if (current is null)
             {
@@ -2209,10 +2216,233 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(current, current.Id);
 
+
+
             ret = _mapper.Map<WorkOrderModel>(current);
 
             return ret;
 
+        }
+
+        public async Task<XmlTransmissionLogModel> RetransmitXmlFile(TransmitXmlFile command)
+        {
+
+            var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
+            var log = _unitOfWork.XmlTransmissionLogs.Query().FirstOrDefault(log => log.Id == command.TransmissionId);
+            var fileName = log.XmlLink.Split("/").Last();
+            var stream = await _fileDownloader.DowloadFile(fileName, sftpInfo.S3Bucket);
+
+            stream.Seek(0, SeekOrigin.Begin);
+            try
+            {
+                using (SftpClient sftp = new SftpClient(sftpInfo.Host, sftpInfo.Username, sftpInfo.Password))
+                {
+                    sftp.Connect();
+                    sftp.UploadFile(stream, sftpInfo.RemoteDirectory + fileName);
+                    sftp.Disconnect();
+
+                    log.Result = "Success";
+                    log.SubmittedOn = DateTime.Now;
+                    log.TransmissionDetail = "File transmitted successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Result = "Failure";
+                log.SubmittedOn = DateTime.Now;
+                log.TransmissionDetail = $"Failed to send file to SFTP Server. Error: {ex.Message}";
+            }
+
+            _unitOfWork.XmlTransmissionLogs.Update(log);
+
+            return new XmlTransmissionLogModel
+            {
+                Result = log.Result,
+                SubmittedOn = log.SubmittedOn,
+                TransmissionDetail = log.TransmissionDetail,
+                WorkOrderId = log.WorkOrderId,
+                XmlLink = log.XmlLink,
+                Id = log.Id
+
+            };
+
+        }
+
+        public async Task<ICollection<XmlTransmissionLogModel>> GenerateAndTransmitXmlFiles(TransmitIntelXmlDataByWorkOrder command)
+        {
+            var monitors = command.Data.WorkOrderMonitors;
+            var xmlFiles = command.Data.WorkOrderParts.Select(wop => this.generateXmlDocument(
+                wop,
+                monitors.ToList())
+            );
+
+            var logs = await sendIntelXmlDocuments(command.Data.WorkOrderParts.FirstOrDefault().WorkOrderId, xmlFiles.ToList());
+
+            return logs;
+        }
+
+        private async Task<ICollection<XmlTransmissionLogModel>> sendIntelXmlDocuments(int workOrderId, ICollection<XDocument> files)
+        {
+
+            var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
+
+
+            using (SftpClient sftp = new SftpClient(sftpInfo.Host, sftpInfo.Username, sftpInfo.Password))
+            {
+                var logs = new List<XmlTransmissionLogModel>();
+
+
+
+                sftp.Connect();
+
+                if (!sftp.Exists(sftpInfo.RemoteDirectory))
+                {
+                    sftp.Disconnect(); // Disconnect if directory doesn't exist
+                    throw new Exception($"The SFTP path: {sftpInfo.RemoteDirectory} cannot be found on the remote server.");
+                }
+
+                var uploadTasks = files.Select(async xDoc =>
+                {
+                    // Log defaults
+                    var log = new XmlTransmissionLog
+                    {
+                        Result = "Success",
+                        SubmittedOn = DateTime.Now,
+                        XmlLink = "",
+                        TransmissionDetail = "Successful SFTP Transmission",
+                        WorkOrderId = workOrderId
+                    };
+                    var fileName = $"intel-{DateTime.Now.ToString("MM_dd_yyyy_hh_mm_ss")}.xml";
+                    try
+                    {
+                        try
+                        {
+                            using (MemoryStream stream = new MemoryStream())
+                            {
+                                xDoc.Save(stream);
+                                stream.Seek(0, SeekOrigin.Begin);
+                                var fileModel = new FileModel() { Name = fileName, ContentType = "application/xml" };
+                                log.XmlLink = await _fileUploader.UploadFile(stream, fileModel, sftpInfo.S3Bucket);
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception($"Failed to send file to S3 bucket. Error: {ex.Message}");
+                        }
+
+                        try
+                        {
+                            using (MemoryStream stream = new MemoryStream())
+                            {
+                                xDoc.Save(stream);
+                                stream.Seek(0, SeekOrigin.Begin);
+                                sftp.UploadFile(stream, sftpInfo.RemoteDirectory + fileName);
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception($"Failed to send file to SFTP Server. Error: {ex.Message}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        log.TransmissionDetail = ex.Message;
+                        log.Result = "Failure";
+                        _unitOfWork.XmlTransmissionLogs.Add(log);
+                        _unitOfWork.SaveChanges();
+
+                        logs.Add(new XmlTransmissionLogModel
+                        {
+                            Result = log.Result,
+                            SubmittedOn = log.SubmittedOn,
+                            TransmissionDetail = log.TransmissionDetail,
+                            WorkOrderId = log.WorkOrderId,
+                            XmlLink = log.XmlLink,
+                            Id = log.Id
+
+                        });
+                    }
+
+                });
+
+                await Task.WhenAll(uploadTasks);
+
+                sftp.Disconnect();
+
+                return logs;
+
+            }
+        }
+
+        private XDocument generateXmlDocument(IntelWorkOrderPartView woPart, ICollection<IntelWorkOrderMonitorView> monitors)
+        {
+            IEnumerable<XElement> monitorMaterialParameters = monitors.Select(m => new XElement("MaterialParameter",
+                new XElement("ShortName", m.ShortName),
+                new XElement("UnitOfMeasure", m.UnitOfMeasure),
+                new XElement("Measurements",
+                    new XElement("Measurement",
+                        new XElement("MeasurementType", m.MeasurementType),
+                        new XElement("MeasurementValue", m.MeasurementValue),
+                        !String.IsNullOrEmpty(m.ControlValue) ? XElement.Parse(m.ControlValue) : null
+                    )
+                )
+
+            ));
+            XNamespace xSchema = "x-schema:../Schema/PLTSchema2023May.xml";
+            XDocument document = new XDocument(
+                new XDeclaration("1.0", "UTF-8", "yes"),
+                new XElement(xSchema + "QualityCertificateFile",
+                    new XElement("FileCreationInfo",
+                        new XElement("ResponsiblePartyEmail", woPart.ResponsiblePartyEmail)
+                    ),
+                    new XElement("BusinessSites",
+                        new XElement("BusinessSiteDescription",
+                            new XElement("ManufacturerNumber", woPart.ManufacturerNumber),
+                            new XElement("ManufacturerName", woPart.ManufacturerName),
+                            new XElement("ManufacturingPlantCode", woPart.ManufacturingPlantCode),
+                            new XElement("QualityCertificates",
+                                new XElement("QualityCertificate",
+                                    new XAttribute("certificateType", "SingleCertificate"),
+                                    new XElement("ThisDocumentGenerationDateTime", woPart.ThisDocumentGeneration ?? "N/A"),
+                                    new XElement("ProductDescription",
+                                        new XElement("ProductName", woPart.CustomerPartName),
+                                        new XElement("ManufacturerPartNumber", woPart.ManufacturerNumber),
+                                        new XElement("ManufacturerOrderNumber", woPart.ManufacturerOrderNumber),
+                                        new XElement("PurchaseOrderNumber", woPart.PurchaseOrderNumber),
+                                        new XElement("KitNumber", woPart.KitNumber),
+                                        new XElement("KitName", woPart.KitName),
+                                        new XElement("PartNumber", woPart.CustomerPartNumber),
+                                        new XElement("PartRevisionNumber", "01"),
+                                        new XElement("LotCreatedDate", woPart.LotCreatedDate),
+                                        new XElement("UnitNumber", woPart.UnitNumber)
+                                    ),
+                                    new XElement("Shipment",
+                                        new XElement("DeliverTo", woPart.CustomerName),
+                                        new XElement("ScheduledShipDate", woPart.ScheduledShipDate ?? "N/A"),
+                                        new XElement("ActualShipDate", woPart.ActualShipDate ?? "N/A")
+                                    ),
+                                    new XElement("MaterialParameters",
+                                        new XElement("MaterialParameter",
+                                            new XElement("ShortName", "Clean Count"),
+                                            new XElement("UnitOfMeasure", "N/A"),
+                                            new XElement("Measurements",
+                                                new XElement("Measurement",
+                                                    new XElement("MeasurementType", "Value"),
+                                                    new XElement("MeasurementValue", woPart.CycleCount)
+                                                )
+                                            )
+                                        ),
+                                        monitorMaterialParameters
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            return document;
         }
     }
 }

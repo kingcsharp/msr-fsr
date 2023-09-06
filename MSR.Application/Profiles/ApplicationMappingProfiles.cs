@@ -29,7 +29,7 @@ namespace MSR.Application.Profiles
                 .ForMember(dest => dest.Revision, opts => opts.MapFrom(src => src.Revision))
                 .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.TotalSalePrice))
                 .ForMember(dest => dest.CycleTime, opts => opts.MapFrom(src => src.CycleTime))
-                ;    
+                ;
         }
     }
 }

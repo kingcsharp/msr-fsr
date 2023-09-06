@@ -15,6 +15,8 @@ using System;
 using MSR.Domain.Models.Query;
 using MSR.Domain.Helpers;
 using Newtonsoft.Json;
+using MSR.Infrastructure.Resources.EntityFramework;
+using Microsoft.Data.SqlClient;
 
 namespace MSR.Application.ViewServices
 {
@@ -23,7 +25,7 @@ namespace MSR.Application.ViewServices
         private readonly IUnitOfWork _unitOfWork;
         private IMapper _mapper;
 
-        public WorkOrderViewService(IUnitOfWork unitOfWork,IMapper mapper)
+        public WorkOrderViewService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -31,16 +33,16 @@ namespace MSR.Application.ViewServices
 
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync()
         {
-             return await _unitOfWork.Query<WorkOrderStatusSummary>().GetWorkOrderStatus(WorkOrderProjections.WorkOrderStatusView);       
+            return await _unitOfWork.Query<WorkOrderStatusSummary>().GetWorkOrderStatus(WorkOrderProjections.WorkOrderStatusView);
         }
 
         public async Task<(ICollection<WorkOrderGridSummary> data, int totalRows)> GetWorkOrderMenuAsync(GetWorkOrderMenuQueryModel filters)
         {
-            var workOrders = await _unitOfWork.Query<WorkOrderMenu>().GetWorkOrderMenu(WorkOrderProjections.WorkOrderMenuView,filters);
+            var workOrders = await _unitOfWork.Query<WorkOrderMenu>().GetWorkOrderMenu(WorkOrderProjections.WorkOrderMenuView, filters);
             var workOrderIds = workOrders.data.Select(i => i.Id).ToList();
             var subPartsList = await _unitOfWork.SubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
             foreach (var summary in workOrders.data.Where(i => i.HasSubParts))
-            { 
+            {
                 summary.SubParts = subPartsList.Where(i => i.WorkOrderId == summary.Id).Select(i => _mapper.Map<SubPartModel>(i)).ToList();
             }
             var workOrderMessages = await _unitOfWork.WorkOrderMessages.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
@@ -66,7 +68,7 @@ namespace MSR.Application.ViewServices
 
             var allPortalSubParts = await _unitOfWork.SubParts.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
 
-            foreach(var workOrder in workOrderData.Data)
+            foreach (var workOrder in workOrderData.Data)
             {
                 workOrder.SubParts = allPortalSubParts.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<SubPartModel>(i)).ToList();
                 workOrder.Messages = messages.Where(i => i.WorkOrderId == workOrder.WorkOrderId).Select(i => AutoMapperHelper.Mapper.Map<WorkOrderMessageModel>(i)).ToList();
@@ -74,5 +76,20 @@ namespace MSR.Application.ViewServices
 
             return workOrderData;
         }
+
+
+        public IntelXmlData GetIntelXmlData(int workOrderId)
+        {
+            var woParts = _unitOfWork.Context.SqlQuery<IntelWorkOrderPartView>("SELECT * FROM dbo.IntelXMLParts WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
+            var woMonitors = _unitOfWork.Context.SqlQuery<IntelWorkOrderMonitorView>("SELECT * FROM dbo.IntelXMLMonitors WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
+            return new IntelXmlData
+            {
+                WorkOrderParts = woParts,
+                WorkOrderMonitors = woMonitors
+            };
+        }
     }
 }
+
+
+
