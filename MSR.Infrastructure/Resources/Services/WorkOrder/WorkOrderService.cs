@@ -2378,57 +2378,63 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         private XDocument generateXmlDocument(IntelWorkOrderPartView woPart, ICollection<IntelWorkOrderMonitorView> monitors)
         {
-            IEnumerable<XElement> monitorMaterialParameters = monitors.Select(m => new XElement("MaterialParameter",
-                new XElement("ShortName", m.ShortName),
-                new XElement("UnitOfMeasure", m.UnitOfMeasure),
-                new XElement("Measurements",
-                    new XElement("Measurement",
-                        new XElement("MeasurementType", m.MeasurementType),
-                        new XElement("MeasurementValue", m.MeasurementValue)
+            XNamespace xSchema = "x-schema:../Schema/PLTSchema2023May.xml";
+            IEnumerable<XElement> monitorMaterialParameters = monitors.Select(m => new XElement(xSchema + "MaterialParameter",
+                new XElement(xSchema + "ShortName", m.ShortName),
+                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
+                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
+                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
+                new XElement(xSchema + "Measurements",
+                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
+                    new XElement(xSchema + "Measurement",
+                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
+                        new XElement(xSchema + "MeasurementType", m.MeasurementType),
+                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
+                        new XElement(xSchema + "MeasurementValue", m.MeasurementValue)
                     )
                 )
 
             ));
-            XNamespace xSchema = "x-schema:../Schema/PLTSchema2023May.xml";
+            
             XDocument document = new XDocument(
                 new XDeclaration("1.0", "UTF-8", "yes"),
                 new XElement(xSchema + "QualityCertificateFile",
                     new XElement(xSchema + "FileCreationInfo",
-                        new XElement("ResponsiblePartyEmail", woPart.ResponsiblePartyEmail)
+                        new XElement(xSchema + "ResponsiblePartyEmail", woPart.ResponsiblePartyEmail)
                     ),
                     new XElement(xSchema + "BusinessSites",
-                        new XElement("BusinessSiteDescription",
-                            new XElement("ManufacturerNumber", woPart.ManufacturerNumber),
-                            new XElement("ManufacturerName", woPart.ManufacturerName),
-                            new XElement("ManufacturingPlantCode", woPart.ManufacturingPlantCode),
-                            new XElement("QualityCertificates",
-                                new XElement("QualityCertificate",
-                                    new XAttribute("certificateType", "SingleCertificate"),
-                                    new XElement("ThisDocumentGenerationDateTime", woPart.ThisDocumentGenerationDateTime ?? "N/A"),
-                                    new XElement("ProductDescription",
-                                        new XElement("ProductName", woPart.CustomerPartName),
-                                        new XElement("ManufacturerPartNumber", woPart.ManufacturerNumber),
-                                        new XElement("PurchaseOrderNumber", woPart.PurchaseOrderNumber),
-                                        new XElement("KitNumber", woPart.KitNumber),
-                                        new XElement("KitName", woPart.KitName),
-                                        new XElement("PartNumber", woPart.CustomerPartNumber),
-                                        new XElement("PartRevisionNumber", "01"),
-                                        new XElement("LotCreatedDate", woPart.LotCreatedDate),
-                                        new XElement("UnitNumber", woPart.UnitNumber)
+                        new XElement(xSchema + "BusinessSiteDescription",
+                            new XElement(xSchema + "ManufacturerNumber", woPart.ManufacturerNumber),
+                            new XElement(xSchema + "ManufacturerName", woPart.ManufacturerName),
+                            new XElement(xSchema + "ManufacturingPlantCode", woPart.ManufacturingPlantCode),
+                            new XElement(xSchema + "QualityCertificates",
+                                new XElement(xSchema + "QualityCertificate",
+                                    new XAttribute(xSchema + "certificateType", "SingleCertificate"),
+                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", woPart.ThisDocumentGenerationDateTime ?? "N/A"),
+                                    new XElement(xSchema + "ProductDescription",
+                                        new XElement(xSchema + "ProductName", woPart.CustomerPartName),
+                                        new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerNumber),
+                                        new XElement(xSchema + "PurchaseOrderNumber", woPart.PurchaseOrderNumber),
+                                        new XElement(xSchema + "KitNumber", woPart.KitNumber),
+                                        new XElement(xSchema + "KitName", woPart.KitName),
+                                        new XElement(xSchema + "PartNumber", woPart.CustomerPartNumber),
+                                        new XElement(xSchema + "PartRevisionNumber", "01"),
+                                        new XElement(xSchema + "LotCreatedDate", woPart.LotCreatedDate),
+                                        new XElement(xSchema + "UnitNumber", woPart.UnitNumber)
                                     ),
-                                    new XElement("Shipment",
-                                        new XElement("DeliverTo", woPart.CustomerName),
-                                        new XElement("ScheduledShipDate", woPart.ScheduledShipDate ?? "N/A"),
-                                        new XElement("ActualShipDate", woPart.ActualShipDate ?? "N/A")
+                                    new XElement(xSchema + "Shipment",
+                                        new XElement(xSchema + "DeliverTo", woPart.CustomerName),
+                                        new XElement(xSchema + "ScheduledShipDate", woPart.ScheduledShipDate ?? "N/A"),
+                                        new XElement(xSchema + "ActualShipDate", woPart.ActualShipDate ?? "N/A")
                                     ),
-                                    new XElement("MaterialParameters",
-                                        new XElement("MaterialParameter",
-                                            new XElement("ShortName", "Clean Count"),
-                                            new XElement("UnitOfMeasure", "N/A"),
-                                            new XElement("Measurements",
-                                                new XElement("Measurement",
-                                                    new XElement("MeasurementType", "Value"),
-                                                    new XElement("MeasurementValue", woPart.CycleCount)
+                                    new XElement(xSchema + "MaterialParameters",
+                                        new XElement(xSchema + "MaterialParameter",
+                                            new XElement(xSchema + "ShortName", "Clean Count"),
+                                            new XElement(xSchema + "UnitOfMeasure", "N/A"),
+                                            new XElement(xSchema + "Measurements",
+                                                new XElement(xSchema + "Measurement",
+                                                    new XElement(xSchema + "MeasurementType", "Value"),
+                                                    new XElement(xSchema + "MeasurementValue", woPart.CycleCount)
                                                 )
                                             )
                                         ),
