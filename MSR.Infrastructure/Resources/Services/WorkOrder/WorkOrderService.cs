@@ -2379,21 +2379,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         private XDocument generateXmlDocument(IntelWorkOrderPartView woPart, ICollection<IntelWorkOrderMonitorView> monitors)
         {
             XNamespace xSchema = "x-schema:../Schema/PLTSchema2023May.xml";
+            
             IEnumerable<XElement> monitorMaterialParameters = monitors.Select(m => new XElement(xSchema + "MaterialParameter",
                 new XElement(xSchema + "ShortName", m.ShortName),
-                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
-                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
-                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
-                new XElement(xSchema + "Measurements",
-                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
-                    new XElement(xSchema + "Measurement",
-                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
-                        new XElement(xSchema + "MeasurementType", m.MeasurementType),
-                new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
-                        new XElement(xSchema + "MeasurementValue", m.MeasurementValue)
+                    new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
+                    new XElement(xSchema + "Measurements",
+                      new XElement(xSchema + "Measurement",
+                      new XElement(xSchema + "MeasurementType", m.MeasurementType),
+                      new XElement(xSchema + "MeasurementValue", m.MeasurementValue),
+                      !String.IsNullOrEmpty(m.LowerControlValue) ? new XElement(xSchema + "LCL", m.LowerControlValue) : null
+                      !String.IsNullOrEmpty(m.UpperControlValue) ? new XElement(xSchema + "UCL", m.UpperControlValue) : null
                     )
                 )
-
             ));
             
             XDocument document = new XDocument(

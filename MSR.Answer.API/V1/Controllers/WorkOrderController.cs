@@ -69,7 +69,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
-        public async Task<IActionResult> WorkOrderGetMenu([FromQuery]GetWorkOrderMenuRequest request)
+        public async Task<IActionResult> WorkOrderGetMenu([FromQuery] GetWorkOrderMenuRequest request)
         {
             var queryModel = request.ToGetWorkOrderQueryModel();
             var workOrderMenuViews = await _workOrderViewService.GetWorkOrderMenuAsync(queryModel);
@@ -187,25 +187,27 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
         public async Task<IActionResult> UpdateWorkOrderEndDate([FromBody] UpdateWorkOrderEndDateRequest request)
         {
-            try
-            {
-                var command = request.ToUpdateWorkOrderEndDateCommand();
-                var ret = await _dispatcher.DispatchAsync(command);
-                var wo = ret.ToEntity<WorkOrderModel>();
 
-                if (wo.CustomerName.ToLower().Contains("intel"))
+            var command = request.ToUpdateWorkOrderEndDateCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            var wo = ret.ToEntity<WorkOrderModel>();
+            var isIntel = wo.CustomerName.ToLower().Contains("intel");
+
+            // Run this code in another thread pool so we don't block the action
+            Task task = Task.Run(async () =>
+            {
+                if (isIntel)
                 {
                     var data = this._workOrderViewService.GetIntelXmlData(request.WorkOrderId);
                     var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
                     await _dispatcher.DispatchAsync(xmlCommand);
                 }
+            });
+              
 
-                return ret.ToOkObjectResponse<WorkOrderModel>("Work Order Scheduled End Date has been updated!");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return ret.ToOkObjectResponse<WorkOrderModel>("Work Order Scheduled End Date has been updated!");
+
+
 
         }
 
@@ -224,13 +226,13 @@ namespace MSR.Answer.API.V1.Controllers
                 throw ex;
             }
         }
-            #endregion
+        #endregion
 
-            #region PUT
-            #endregion
+        #region PUT
+        #endregion
 
-            #region DELETE
-            [HttpDelete("{id}")]
+        #region DELETE
+        [HttpDelete("{id}")]
         [SwaggerResponse(typeof(AuditActionResult<bool>))]
         public async Task<IActionResult> DeleteWorkOrderAsync(int id)
         {
