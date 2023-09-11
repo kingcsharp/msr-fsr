@@ -2393,10 +2393,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             XDocument document = new XDocument(
                 new XDeclaration("1.0", "UTF-8", "yes"),
                 new XElement(xSchema + "QualityCertificateFile",
-                    new XElement("FileCreationInfo",
+                    new XElement(xSchema + "FileCreationInfo",
                         new XElement("ResponsiblePartyEmail", woPart.ResponsiblePartyEmail)
                     ),
-                    new XElement("BusinessSites",
+                    new XElement(xSchema + "BusinessSites",
                         new XElement("BusinessSiteDescription",
                             new XElement("ManufacturerNumber", woPart.ManufacturerNumber),
                             new XElement("ManufacturerName", woPart.ManufacturerName),
