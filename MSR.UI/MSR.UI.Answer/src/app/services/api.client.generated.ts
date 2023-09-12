@@ -23,7 +23,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -306,7 +306,7 @@ export class AdminCostSettingsService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -430,7 +430,7 @@ export class CustomerService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserFullName: string | null | undefined, secondaryContactUserFullName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
@@ -695,7 +695,7 @@ export class DocumentService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -1020,7 +1020,7 @@ export class EquipmentMaintenanceService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -1298,7 +1298,7 @@ export class FileService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -1554,7 +1554,7 @@ export class HelpService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, title: string | null | undefined, roles: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
@@ -1911,7 +1911,7 @@ export class InvoiceService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     invoiceGet(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceView> {
@@ -2246,7 +2246,7 @@ export class LocationService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, name: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, address1: string | null | undefined, city: string | null | undefined, state: string | null | undefined, postalcode: string | null | undefined, country: string | null | undefined, phone: string | null | undefined, parentName: string | null | undefined, timezoneDescription: string | null | undefined, address2: string | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
@@ -2681,7 +2681,7 @@ export class MenuService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     menu(version: string): Observable<AuditActionResultOfIEnumerableOfMenuItem> {
@@ -2913,7 +2913,7 @@ export class MonitorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -2982,7 +2982,7 @@ export class PartService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -3269,7 +3269,7 @@ export class ProcedureService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -3990,7 +3990,7 @@ export class ProcedureStepMonitorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -4235,7 +4235,7 @@ export class ProcedureStepTemplateService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -4495,7 +4495,7 @@ export class ProcedureStepTypeService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -4564,7 +4564,7 @@ export class ProcedureTemplateService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -4806,7 +4806,7 @@ export class ProcedureTypeService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -5063,7 +5063,7 @@ export class ProductService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -5366,7 +5366,7 @@ export class PurchaseService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -5517,7 +5517,7 @@ export class PurchaseOrderService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     purchaseOrderGet(id: number | null | undefined, name: string | null | undefined, customerReferencePO: string | null | undefined, invoicedBalance: number | null | undefined, uninvoicedBalance: number | null | undefined, balance: number | null | undefined, customerName: string | null | undefined, openDate: Date | null | undefined, closeDate: Date | null | undefined, totalPurchaseLimit: number | null | undefined, unusedAmount: number | null | undefined, revision: number | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
@@ -5869,7 +5869,7 @@ export class QuoteService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureId: number | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
@@ -6244,7 +6244,7 @@ export class ReportService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     report(isPortal: boolean | undefined, version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
@@ -6365,7 +6365,7 @@ export class RoleService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     roleGet(id: number | null | undefined, name: string | null | undefined, isCertificationRole: boolean | null | undefined, parentRoles: number[] | null | undefined, assignedUsers: number[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfRole> {
@@ -6671,7 +6671,7 @@ export class SearchService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     search(searchTerm: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfSearchView> {
@@ -6736,7 +6736,7 @@ export class SensorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     sensor(sensorId: number | null | undefined, siteId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfSensorModel> {
@@ -6909,7 +6909,7 @@ export class TimezoneService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     timezone(version: string): Observable<AuditActionResultOfICollectionOfTimeZoneModel> {
@@ -6972,7 +6972,7 @@ export class UserService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -7560,7 +7560,7 @@ export class WorkflowPendingApprovalService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     workflowPendingApprovalGet(table: EnumApprovalTables | undefined, id: number | null | undefined, activityType: string[] | null | undefined, name: string | null | undefined, requestedChanges: string | null | undefined, workflowName: string | null | undefined, workflowGroupName: string | null | undefined, workflowCreatedByName: string | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
@@ -7828,7 +7828,7 @@ export class WorkOrderService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -8775,6 +8775,65 @@ export class WorkOrderService {
         }
         return _observableOf<AuditActionResultOfWorkOrderModel>(null as any);
     }
+
+    transmitXml(version: string, request: TransmitXmlByWorkOrderRequest): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/TransmitXml";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTransmitXml(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTransmitXml(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processTransmitXml(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(null as any);
+    }
 }
 
 @Injectable()
@@ -8785,7 +8844,7 @@ export class WorkOrderPartService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     workOrderPartGet(id: number | null | undefined, workOrderId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderPartModel> {
@@ -9074,7 +9133,7 @@ export class WorkOrderTaskService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     /**
@@ -9199,7 +9258,7 @@ export class WorkOrderTaskMonitorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     workOrderTaskMonitor(version: string | null, body: UpdateWorkOrderTaskMonitorRequest): Observable<AuditActionResultOfWorkOrderTaskMonitorModel> {
@@ -9259,6 +9318,73 @@ export class WorkOrderTaskMonitorService {
 }
 
 @Injectable()
+export class XmlService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
+    }
+
+    transmit(version: string, request: XmlTransmissionRequest): Observable<AuditActionResultOfXmlTransmissionLogModel> {
+        let url_ = this.baseUrl + "/v{version}/Xml/Transmit";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTransmit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTransmit(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AuditActionResultOfXmlTransmissionLogModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AuditActionResultOfXmlTransmissionLogModel>;
+        }));
+    }
+
+    protected processTransmit(response: HttpResponseBase): Observable<AuditActionResultOfXmlTransmissionLogModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfXmlTransmissionLogModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfXmlTransmissionLogModel>(null as any);
+    }
+}
+
+@Injectable()
 export class WorkflowService {
     private http: HttpClient;
     private baseUrl: string;
@@ -9266,7 +9392,7 @@ export class WorkflowService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     pending(version: string): Observable<AuditActionResultOfPendingApprovalNotification> {
@@ -9621,7 +9747,7 @@ export class WorkflowGroupService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     workflowGroupGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, groupRoles: string[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
@@ -9872,7 +9998,7 @@ export class WorkflowStageService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-45-114.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-16-7.us-west-2.compute.internal";
     }
 
     workflowStageGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowStageModel> {
@@ -23520,6 +23646,42 @@ export interface IUpdateWorkOrderEndDateRequest {
     scheduledEndDateChangeReason?: string | undefined;
 }
 
+export class TransmitXmlByWorkOrderRequest implements ITransmitXmlByWorkOrderRequest {
+    workOrderId?: number;
+
+    constructor(data?: ITransmitXmlByWorkOrderRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+        }
+    }
+
+    static fromJS(data: any): TransmitXmlByWorkOrderRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new TransmitXmlByWorkOrderRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        return data;
+    }
+}
+
+export interface ITransmitXmlByWorkOrderRequest {
+    workOrderId?: number;
+}
+
 /** Base class for an API call with a typed result */
 export class AuditActionResultOfICollectionOfWorkOrderPartModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderPartModel {
     object?: WorkOrderPartModel[] | undefined;
@@ -24323,6 +24485,133 @@ export interface IUpdateWorkOrderTaskMonitorRequest {
     lowNumVal?: number | undefined;
     /** Gets or Sets NumVal */
     highNumVal?: number | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfXmlTransmissionLogModel extends AuditActionResult implements IAuditActionResultOfXmlTransmissionLogModel {
+    object?: XmlTransmissionLogModel | undefined;
+
+    constructor(data?: IAuditActionResultOfXmlTransmissionLogModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? XmlTransmissionLogModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfXmlTransmissionLogModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfXmlTransmissionLogModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfXmlTransmissionLogModel extends IAuditActionResult {
+    object?: XmlTransmissionLogModel | undefined;
+}
+
+export class XmlTransmissionLogModel implements IXmlTransmissionLogModel {
+    id?: number | undefined;
+    result?: string | undefined;
+    submittedOn?: Date;
+    transmissionDetail?: string | undefined;
+    workOrderId?: number;
+    xmlLink?: string | undefined;
+
+    constructor(data?: IXmlTransmissionLogModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.result = _data["result"];
+            this.submittedOn = _data["submittedOn"] ? new Date(_data["submittedOn"].toString()) : <any>undefined;
+            this.transmissionDetail = _data["transmissionDetail"];
+            this.workOrderId = _data["workOrderId"];
+            this.xmlLink = _data["xmlLink"];
+        }
+    }
+
+    static fromJS(data: any): XmlTransmissionLogModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new XmlTransmissionLogModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["result"] = this.result;
+        data["submittedOn"] = this.submittedOn ? this.submittedOn.toISOString() : <any>undefined;
+        data["transmissionDetail"] = this.transmissionDetail;
+        data["workOrderId"] = this.workOrderId;
+        data["xmlLink"] = this.xmlLink;
+        return data;
+    }
+}
+
+export interface IXmlTransmissionLogModel {
+    id?: number | undefined;
+    result?: string | undefined;
+    submittedOn?: Date;
+    transmissionDetail?: string | undefined;
+    workOrderId?: number;
+    xmlLink?: string | undefined;
+}
+
+export class XmlTransmissionRequest implements IXmlTransmissionRequest {
+    transmissionId?: number;
+
+    constructor(data?: IXmlTransmissionRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.transmissionId = _data["transmissionId"];
+        }
+    }
+
+    static fromJS(data: any): XmlTransmissionRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new XmlTransmissionRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["transmissionId"] = this.transmissionId;
+        return data;
+    }
+}
+
+export interface IXmlTransmissionRequest {
+    transmissionId?: number;
 }
 
 /** Base class for an API call with a typed result */

@@ -1148,18 +1148,10 @@ export class ReportCubeService {
               label: "ID",
               visible: true,
               type: this.enumColumnType.Number,
-              dropdownHeader: true,
             }),
             new ColumnsSaved({
               id: "workorderid",
               label: "WorkOrder Id",
-              visible: true,
-              type: this.enumColumnType.String,
-              dropdownHeader: true,
-            }),
-            new ColumnsSaved({
-              id: "result",
-              label: "Result",
               visible: true,
               type: this.enumColumnType.String,
             }),
@@ -1183,6 +1175,18 @@ export class ReportCubeService {
               styles: { width: "8rem" },
               formattingAngular: "MM-dd-yyyy HH:mm:ss",
               formattingMoment: "MM-DD-YYYY HH:mm:ss",
+            }),
+            new ColumnsSaved({
+              id: "result",
+              label: "Result",
+              visible: true,
+              type: this.enumColumnType.XMLResult,
+            }),
+            new ColumnsSaved({
+              id: "action",
+              label: "Action",
+              visible: true,
+              type: this.enumColumnType.XMLAction,
             }),
           ];
       default:

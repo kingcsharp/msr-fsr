@@ -325,7 +325,7 @@
   </td>
 
   <td
-    *ngIf="colsDataAndSettings.col.type === enumColumnType.XML"
+    *ngIf="colsDataAndSettings.col.type === enumColumnType.XMLResult"
     [hidden]="
       !cg.isVisibleCol(
         colsDataAndSettings.col.id,
@@ -333,7 +333,24 @@
       )
     "
   >
-    <!-- add a new component here with a retry button and success / failure status-->
+    <span class="badge rounded-0 {{colsDataAndSettings.colData[colsDataAndSettings.col.id] === 'Success' ? 'badge-success' : 'badge-danger'}}">
+      {{ colsDataAndSettings.colData[colsDataAndSettings.col.id] }}</span
+    >
+  </td>
+
+  <td
+    *ngIf="colsDataAndSettings.col.type === enumColumnType.XMLAction"
+    [hidden]="
+      !cg.isVisibleCol(
+        colsDataAndSettings.col.id,
+        colsDataAndSettings.colsSaved
+      )
+    "
+  >
+  <app-xml-retry
+    *ngIf="colsDataAndSettings.colData['result'] !== 'Success'"
+    [id]="colsDataAndSettings.colData['id']"
+  ></app-xml-retry>
   </td>
 </ng-template>
 <ng-template #rowView let-colsAndSettings="colsAndSettings">
