@@ -12,6 +12,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
 using NSwag.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -24,16 +25,18 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private ICommandDispatcher _dispatcher;
         private IWorkOrderViewService _workOrderViewService;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="dispatcher"></param>
         /// <param name="workOrderViewService"></param>
-        public WorkOrderController(ICommandDispatcher dispatcher, IWorkOrderViewService workOrderViewService)
+        public WorkOrderController(ICommandDispatcher dispatcher, IWorkOrderViewService workOrderViewService, ILogger<WorkOrderController> logger)
         {
             _dispatcher = dispatcher;
             _workOrderViewService = workOrderViewService;
+            _logger = logger;
         }
 
         #region GET
@@ -194,16 +197,20 @@ namespace MSR.Answer.API.V1.Controllers
             var isIntel = wo.CustomerName.ToLower().Contains("intel");
 
             // Run this code in another thread pool so we don't block the action
-            Task task = Task.Run(async () =>
+            if (isIntel)
             {
-                if (isIntel)
+                try
                 {
                     var data = this._workOrderViewService.GetIntelXmlData(request.WorkOrderId);
                     var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
                     await _dispatcher.DispatchAsync(xmlCommand);
                 }
-            });
-              
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+            }
+
 
             return ret.ToOkObjectResponse<WorkOrderModel>("Work Order Scheduled End Date has been updated!");
 

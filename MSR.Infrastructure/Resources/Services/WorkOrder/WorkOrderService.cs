@@ -2229,10 +2229,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             var log = _unitOfWork.XmlTransmissionLogs.Query().FirstOrDefault(log => log.Id == command.TransmissionId);
-            var fileName = log.XmlLink.Split("/").Last();
+            var fileName= $"{log.XmlLink.Split("/").Last().Split(".xml").First()}.xml";
             var stream = await _fileDownloader.DowloadFile(fileName, sftpInfo.S3Bucket);
 
-            stream.Seek(0, SeekOrigin.Begin);
             try
             {
                 using (SftpClient sftp = new SftpClient(sftpInfo.Host, sftpInfo.Username, sftpInfo.Password))
@@ -2405,7 +2404,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             new XElement("QualityCertificates",
                                 new XElement("QualityCertificate",
                                     new XAttribute("certificateType", "SingleCertificate"),
-                                    new XElement("ThisDocumentGenerationDateTime", woPart.ThisDocumentGeneration ?? "N/A"),
+                                    new XElement("ThisDocumentGenerationDateTime", woPart.ThisDocumentGenerationDateTime.HasValue ? woPart.ThisDocumentGenerationDateTime?.ToString("MM-dd-yyyy hh:mm:ss") : "N/A"),
                                     new XElement("ProductDescription",
                                         new XElement("ProductName", woPart.CustomerPartName),
                                         new XElement("ManufacturerPartNumber", woPart.ManufacturerNumber),
