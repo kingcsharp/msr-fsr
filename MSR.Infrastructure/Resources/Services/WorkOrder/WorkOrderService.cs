@@ -1488,6 +1488,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             });
 
             return workOrderTaskModel;
+            
         }
 
         public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
@@ -2182,7 +2183,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             WorkOrderModel ret;
             current.Price = command.Price;
             _unitOfWork.WorkOrders.Update(current);
-
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(current, current.Id);
 
