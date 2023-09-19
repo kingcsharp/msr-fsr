@@ -2386,7 +2386,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                       new XElement(xSchema + "Measurement",
                       new XElement(xSchema + "MeasurementType", m.MeasurementType),
                       new XElement(xSchema + "MeasurementValue", m.MeasurementValue),
-                      !String.IsNullOrEmpty(m.LowerControlValue) ? new XElement(xSchema + "LCL", m.LowerControlValue) : null
+                      !String.IsNullOrEmpty(m.LowerControlValue) ? new XElement(xSchema + "LCL", m.LowerControlValue) : null,
                       !String.IsNullOrEmpty(m.UpperControlValue) ? new XElement(xSchema + "UCL", m.UpperControlValue) : null
                     )
                 )
