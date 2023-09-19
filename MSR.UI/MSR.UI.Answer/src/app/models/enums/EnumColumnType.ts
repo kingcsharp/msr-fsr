@@ -10,4 +10,6 @@ export enum EnumColumnType {
   InputDateTime = 7,
   DownloadLink = 8,
   ByteToMb = 9,
+  XMLResult = 10,
+  XMLAction = 11,
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Amazon.Runtime.Internal;
 using AutoMapper;
 using MSR.Application.Abstractions;
 using MSR.Domain.Abstractions.Services;
@@ -106,6 +107,21 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderTask command, CancellationToken cancellationToken = default)
         {
             var ret = await _workOrderService.UpdateWorkOrderTaskAsync(command);
+            var wo = (await _workOrderService.GetWorkOrderById(ret.WorkOrderId)).FirstOrDefault();
+
+            var isIntel = wo.Product.Customer.Name.ToLower().Contains("intel");
+            var allTasksComplete = wo.WorkOrderTasks.All(wot => wot.Status.Id == 3);
+
+            if (isIntel && allTasksComplete)
+            {
+                // Run this code in another thread pool so we don't block the action
+                Task task = Task.Run(async () =>
+                {  
+                    var data = this._workOrderViewService.GetIntelXmlData(ret.WorkOrderId);
+                    var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
+                    await _workOrderService.GenerateAndTransmitXmlFiles(xmlCommand);
+                });
+            }
             return new CommandResponse<WorkOrderTaskModel>(ret);
         }
 

@@ -29,7 +29,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToTransmitXmlFileCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderMessageModel>("File transmitted successfully");
+            return ret.ToOkObjectResponse<XmlTransmissionLogModel>("File transmitted successfully");
 
         }
     }

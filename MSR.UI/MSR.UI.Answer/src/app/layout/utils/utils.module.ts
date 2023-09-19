@@ -42,6 +42,7 @@ import { WorkOrderTaskAndMonitorPipe } from "../../pipes/work-order-task-and-mon
 import { TaskTitlePipe } from "../../pipes/task-title.pipe";
 import { SegregationTypePipe } from "../../pipes/segregation-type.pipe";
 import { NumberToPercentrPipe } from "../../pipes/number-to-percent.pipe";
+import { XmlRetryComponent } from "../../components/xml-retry/xml-retry.component";
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { NumberToPercentrPipe } from "../../pipes/number-to-percent.pipe";
     SegregationTypePipe,
     NumberToPercentrPipe,
     TaskTitlePipe,
+    XmlRetryComponent,
   ],
   exports: [
     GridComponent,

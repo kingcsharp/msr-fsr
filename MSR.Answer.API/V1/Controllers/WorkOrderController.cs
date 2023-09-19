@@ -190,24 +190,8 @@ namespace MSR.Answer.API.V1.Controllers
 
             var command = request.ToUpdateWorkOrderEndDateCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            var wo = ret.ToEntity<WorkOrderModel>();
-            var isIntel = wo.CustomerName.ToLower().Contains("intel");
-
-            // Run this code in another thread pool so we don't block the action
-            Task task = Task.Run(async () =>
-            {
-                if (isIntel)
-                {
-                    var data = this._workOrderViewService.GetIntelXmlData(request.WorkOrderId);
-                    var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
-                    await _dispatcher.DispatchAsync(xmlCommand);
-                }
-            });
-              
-
+       
             return ret.ToOkObjectResponse<WorkOrderModel>("Work Order Scheduled End Date has been updated!");
-
-
 
         }
 

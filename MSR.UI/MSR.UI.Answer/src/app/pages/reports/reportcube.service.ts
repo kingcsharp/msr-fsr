@@ -1141,6 +1141,54 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
         ];
+        case "IntelMonitorTransmissionsbyWorkOrder":
+          return [
+            new ColumnsSaved({
+              id: "id",
+              label: "ID",
+              visible: true,
+              type: this.enumColumnType.Number,
+            }),
+            new ColumnsSaved({
+              id: "workorderid",
+              label: "WorkOrder Id",
+              visible: true,
+              type: this.enumColumnType.String,
+            }),
+            new ColumnsSaved({
+              id: "transmissiondetail",
+              label: "Transmission Detail",
+              visible: true,
+              type: this.enumColumnType.String,
+            }),
+            new ColumnsSaved({
+              id: "xmllink",
+              label: "XML Link",
+              visible: true,
+              type: this.enumColumnType.String,
+            }),
+            new ColumnsSaved({
+              id: "submitteddate",
+              label: "Submitted On",
+              visible: true,
+              type: this.enumColumnType.Date,
+              styles: { width: "8rem" },
+              formattingAngular: "MM-dd-yyyy HH:mm:ss",
+              formattingMoment: "MM-DD-YYYY HH:mm:ss",
+            }),
+            new ColumnsSaved({
+              id: "result",
+              label: "Result",
+              visible: true,
+              type: this.enumColumnType.XMLResult,
+            }),
+            new ColumnsSaved({
+              id: "action",
+              label: "Action",
+              visible: true,
+              type: this.enumColumnType.XMLAction,
+            }),
+          ];
       default:
         break;
     }

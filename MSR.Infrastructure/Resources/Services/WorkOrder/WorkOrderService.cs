@@ -1488,6 +1488,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             });
 
             return workOrderTaskModel;
+            
         }
 
         public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
@@ -2182,7 +2183,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             WorkOrderModel ret;
             current.Price = command.Price;
             _unitOfWork.WorkOrders.Update(current);
-
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(current, current.Id);
 
@@ -2229,10 +2229,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             var log = _unitOfWork.XmlTransmissionLogs.Query().FirstOrDefault(log => log.Id == command.TransmissionId);
-            var fileName = log.XmlLink.Split("/").Last();
+            var fileName= $"{log.XmlLink.Split("/").Last().Split(".xml").First()}.xml";
             var stream = await _fileDownloader.DowloadFile(fileName, sftpInfo.S3Bucket);
 
-            stream.Seek(0, SeekOrigin.Begin);
             try
             {
                 using (SftpClient sftp = new SftpClient(sftpInfo.Host, sftpInfo.Username, sftpInfo.Password))
@@ -2407,7 +2406,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             new XElement(xSchema + "QualityCertificates",
                                 new XElement(xSchema + "QualityCertificate",
                                     new XAttribute(xSchema + "certificateType", "SingleCertificate"),
-                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", woPart.ThisDocumentGenerationDateTime ?? "N/A"),
+                                    new XElement("ThisDocumentGenerationDateTime", woPart.ThisDocumentGenerationDateTime.HasValue ? woPart.ThisDocumentGenerationDateTime?.ToString("MM-dd-yyyy hh:mm:ss") : "N/A"),
                                     new XElement(xSchema + "ProductDescription",
                                         new XElement(xSchema + "ProductName", woPart.CustomerPartName),
                                         new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerNumber),

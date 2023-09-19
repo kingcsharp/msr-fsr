@@ -1,0 +1,11 @@
+<button
+  type="button"
+  class="btn btn-sm btn-secondary"
+  (click)="retry()"
+  [disabled]="isLoading"
+  style="margin-left: 5px"
+>
+  <i class="fas fa-redo" *ngIf="!isLoading"></i>
+  <i class="fa fa-spinner fa-spin" *ngIf="isLoading"></i>
+  Retry
+</button>
