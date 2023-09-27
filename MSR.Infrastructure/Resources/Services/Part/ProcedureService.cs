@@ -1031,7 +1031,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 try
                 {
-                    if (step.Id.HasValue && step.Id.Value > 0 && !procedureStepIds.Contains(step.Id.Value))
+                    if (!step.Id.HasValue)
+                    {
+                        errors.Add(new ImportError()
+                        {
+                            Errors = new List<string>()
+                            {
+                                $"Step on line: {lineNumber} does not have an Id"
+                            },
+                            Line = lineNumber
+                        });
+                    } else if (step.Id.HasValue && step.Id.Value > 0 && !procedureStepIds.Contains(step.Id.Value))
                     {
                         errors.Add(new ImportError()
                         {
@@ -1056,7 +1066,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                                     {
                                         Errors = new List<string>()
                                         {
-                                            $"Step on line: {lineNumber} with Id: {step.Id.Value}, Role Id: {roleId} Does not exist"
+                                                $"Step on line: {lineNumber} with Role Id: {roleId} Does not exist" 
                                         },
                                         Line = lineNumber
                                     });
