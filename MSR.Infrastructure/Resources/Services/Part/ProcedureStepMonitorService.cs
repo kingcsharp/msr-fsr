@@ -230,5 +230,25 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return itype;
         }
 
+        public async Task<ICollection<MonitorUnitofMeasureModel>> GetMonitorUnitOfMeasureAsync(GetMonitorUnitofMeasureModel command)
+        {
+            List<MonitorUnitofMeasureModel> units;
+            if (command.Id.HasValue) {
+                units = await _unitOfWork.MonitorUnitofMeasure
+                    .Query()
+                    .Where(x => x.Id == command.Id.Value)
+                    .ToListAsync();
+                if (units.Count == 0) {
+                    throw new DomainException($"ID {command.Id.Value} not found", DomainError.NotFound);
+                }
+            } else {
+                units = await _unitOfWork.MonitorUnitofMeasure
+                    .Query()
+                    .ToListAsync();
+            }
+            var result = units.Select(x => _mapper.Map<MonitorUnitofMeasureModel>(x)).OrderBy(x => x.Id).ToList();
+            return result;
+        }
+
     }
 }

@@ -93,5 +93,20 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ProcedureStepMonitor>("ProcedureStepMonitor updated successfully");
         }
+
+        /// <summary>
+        /// Get Unit of measure for monitor
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        [HttpGet("measureUnit")]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<MonitorUnitofMeasureModel>>))]
+        public async Task<IActionResult> GetMonitorUnitOfMeasure(int? id)
+        {
+            var ret = await _dispatcher.DispatchAsync(new GetMonitorUnitofMeasure() {
+                Id = id
+            });
+            return ret.ToOkObjectResponse<ICollection<MonitorUnitofMeasureModel>>();
+        }
     }
 }
