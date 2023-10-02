@@ -76,18 +76,6 @@ namespace MSR.Application.ViewServices
 
             return workOrderData;
         }
-
-
-        public IntelXmlData GetIntelXmlData(int workOrderId)
-        {
-            var woParts = _unitOfWork.Context.SqlQuery<IntelWorkOrderPartView>("SELECT * FROM dbo.IntelXMLParts WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
-            var woMonitors = _unitOfWork.Context.SqlQuery<IntelWorkOrderMonitorView>("SELECT * FROM dbo.IntelXMLMonitors WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
-            return new IntelXmlData
-            {
-                WorkOrderParts = woParts,
-                WorkOrderMonitors = woMonitors
-            };
-        }
     }
 }
 

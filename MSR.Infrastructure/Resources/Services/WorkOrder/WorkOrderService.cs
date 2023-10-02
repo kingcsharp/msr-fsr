@@ -15,6 +15,7 @@ using MSR.Domain.Hub;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using MSR.Domain.Views;
+using MSR.Infrastructure.Resources.EntityFramework;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -31,6 +32,7 @@ using Microsoft.Extensions.Logging;
 using System.Xml.Linq;
 using Renci.SshNet;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -2443,6 +2445,17 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 )
             );
             return document;
+        }
+
+        public IntelXmlData GetIntelXmlData(int workOrderId)
+        {
+            var woParts = _unitOfWork.Context.SqlQuery<IntelWorkOrderPartView>("SELECT * FROM dbo.IntelXMLParts WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
+            var woMonitors = _unitOfWork.Context.SqlQuery<IntelWorkOrderMonitorView>("SELECT * FROM dbo.IntelXMLMonitors WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
+            return new IntelXmlData
+            {
+                WorkOrderParts = woParts,
+                WorkOrderMonitors = woMonitors
+            };
         }
     }
 }

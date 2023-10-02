@@ -47,20 +47,18 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<TransmitXmlFile>
     {
         private readonly IWorkOrderService _workOrderService;
-        private readonly IWorkOrderViewService _workOrderViewService;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
         private readonly IDocumentService _documentService;
         private readonly ILogger<WorkOrderAppService> _logger;
 
-        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper, IFileService fileService, IDocumentService documentService, ILogger<WorkOrderAppService> logger, IWorkOrderViewService workOrderViewService)
+        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper, IFileService fileService, IDocumentService documentService, ILogger<WorkOrderAppService> logger)
         {
             _workOrderService = procedureService;
             _mapper = mapper;
             _fileService = fileService;
             _documentService = documentService;
             _logger = logger;
-            _workOrderViewService = workOrderViewService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetInvoiceableWorkOrders command, CancellationToken cancellationToken = default)
@@ -123,7 +121,7 @@ namespace MSR.Application.ApplicationServices
                 {
                     try
                     {
-                        var data = this._workOrderViewService.GetIntelXmlData(ret.WorkOrderId);
+                        var data = _workOrderService.GetIntelXmlData(ret.WorkOrderId);
                         var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
                         await _workOrderService.GenerateAndTransmitXmlFiles(xmlCommand);
                     }
