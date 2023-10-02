@@ -18,5 +18,6 @@
         public decimal? HighTarget { get; set; }
         public decimal? LowTarget { get; set; }
         public int? MonitorListId { get; set; }
+        public int? UnitofMeasureId { get; set; }
     }
 }
