@@ -239,7 +239,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             List<MonitorUnitofMeasure> units;
             if (command.Id.HasValue) {
-                units = await _unitOfWork.MonitorUnitofMeasure
+                units = await _unitOfWork.MonitorUnitofMeasures
                     .Query()
                     .Where(x => x.Id == command.Id.Value)
                     .ToListAsync();
@@ -247,7 +247,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     throw new DomainException($"ID {command.Id.Value} not found", DomainError.NotFound);
                 }
             } else {
-                units = await _unitOfWork.MonitorUnitofMeasure
+                units = await _unitOfWork.MonitorUnitofMeasures
                     .Query()
                     .ToListAsync();
             }

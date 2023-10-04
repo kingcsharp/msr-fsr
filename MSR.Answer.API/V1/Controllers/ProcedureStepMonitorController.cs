@@ -101,11 +101,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("measureUnit")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<MonitorUnitofMeasureModel>>))]
-        public async Task<IActionResult> GetMonitorUnitOfMeasure(int? id)
+        public async Task<IActionResult> GetMonitorUnitOfMeasure([FromQuery] GetMonitorUnitofMeasureRequest body)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetMonitorUnitofMeasure() {
-                Id = id
-            });
+            var getMonitorUnitofMeasure = body.ToGetMonitorUnitofMeasureCommand();
+            var ret = await _dispatcher.DispatchAsync(getMonitorUnitofMeasure);
             return ret.ToOkObjectResponse<ICollection<MonitorUnitofMeasureModel>>();
         }
     }
