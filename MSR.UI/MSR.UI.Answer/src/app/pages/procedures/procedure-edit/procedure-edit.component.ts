@@ -77,6 +77,38 @@ export class ProcedureEditComponent implements OnInit {
     { label: "No Tag", value: "No Tag" },
   ];
   showReorderStepsDialog: boolean = false;
+  unitOfMeasureOptions: Array<SelectItem> = [
+    { label: "Fahrenheit", value: 1, },
+    { label: "Celsius", value: 2 },
+    {  label: "mm", value: 3 },
+    { label: "cm", value: 4 },
+    { label: "Inches",  value: 5 },
+    { label: "Feet", value: 6 },
+    { label: "µm", value: 7 },
+    { label: "microinch",  value: 8 },
+    { label: "mbar*L/s", value: 9 },
+    { label: "Ohm",  value: 10 },
+    { label: "MOhm",  value: 11 },
+    { label: "GOhm",  value: 12 },
+    { label: "Amps",  value: 13 },
+    { label: "mA",  value: 14 },
+    { label: "p/mL",  value: 15 },
+    { label: "PPM",  value: 16 },
+    { label: "PPB",  value: 17 },
+    { label: "PPT",  value: 18 },
+    { label: "Seconds",  value: 19 },
+    { label: "Minutes",  value: 20 },
+    { label: "Hours",  value: 21 },
+    { label: "Milligrams",  value: 22 },
+    { label: "Grams",  value: 23 },
+    { label: "Kg",  value: 24 },
+    { label: "Ounces",  value: 25 },
+    { label: "Pounds",  value: 26 },
+    { label: "cc",  value: 27 },
+    { label: "mL",  value: 28 },
+    { label: "Liters",  value: 29 },
+    { label: "Gallons",  value: 30 },
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -88,7 +120,8 @@ export class ProcedureEditComponent implements OnInit {
     private procedureTemplateService: ProcedureTemplateService,
     private procedureService: ProcedureService,
     private procedureStepTypeService: ProcedureStepTypeService,
-    private procedureTypeService: ProcedureTypeService
+    private procedureTypeService: ProcedureTypeService,
+    private procedureStepMonitorService: ProcedureStepMonitorService
   ) {}
 
   ngOnInit(): void {
@@ -197,6 +230,25 @@ export class ProcedureEditComponent implements OnInit {
                   });
               })
             );
+        })
+      );
+
+      this.getUnitOfMeasures();
+  }
+
+  getUnitOfMeasures() {
+    this.procedureStepMonitorService
+      .measureUnit(null, env.apiVersion)
+      .subscribe(
+        responseHandler((response) => {
+          if (response.object.length === 0) {
+            this.unitOfMeasureOptions = [];
+          } else {
+            this.unitOfMeasureOptions = response.object.map((unit) => ({
+              label: unit.name,
+              value: unit.id,
+            }));
+          }
         })
       );
   }

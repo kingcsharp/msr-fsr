@@ -28,6 +28,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
   @Input() procedureStep: ProcedureStepModel;
   @Input() canEdit: boolean = false;
   @Input() canDelete: boolean = false;
+  @Input() unitOfMeasureOptions: Array<SelectItem> = [];
   @Output() procedureStepChange: EventEmitter<ProcedureStepModel> =
     new EventEmitter<ProcedureStepModel>();
 
@@ -163,6 +164,9 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
     this.procedureStepMonitor.monitorType = this.monitorTypeOptions.find(
       (s) => s.value === monitor.monitorType
     )?.value;
+    this.procedureStepMonitor.unitofMeasureId = this.unitOfMeasureOptions.find(
+      (s) => s.value === monitor.unitofMeasureId
+    )?.value;
     this.procedureStepMonitor.inputType = this.inputTypeOptionsWithSensor.find(
       (s) => s.value === monitor.inputType
     )?.value;
@@ -178,6 +182,12 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
     this.procedureStepMonitor.description =
       monitor.description === undefined ? "" : monitor.description;
     this.showAddOrEditMonitorDialog = !this.showAddOrEditMonitorDialog;
+  }
+
+  getUnitOfMeasureName(id: number) {
+    return this.unitOfMeasureOptions.find(
+      (s) => s.value === id
+    )?.label;
   }
 
   saveOrUpdateProcedureStepMonitor() {
@@ -202,6 +212,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
             highTarget: highTarget ? parseFloat(highTarget) : null,
             sensorName: this.procedureStepMonitor.sensorName,
             monitorListId: this.procedureStepMonitor.monitorListId,
+            unitofMeasureId: this.procedureStepMonitor.unitofMeasureId,
           } as ICreateProcedureStepMonitorRequest);
 
         this.globals.showLoader(true);
@@ -230,6 +241,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
             sensorName: this.procedureStepMonitor.sensorName,
             failAction: this.procedureStepMonitor.failAction,
             monitorListId: this.procedureStepMonitor.monitorListId,
+            unitofMeasureId: this.procedureStepMonitor.unitofMeasureId,
             sendNCREmail: this.procedureStepMonitor.sendNCREmail,
             target: target ? parseFloat(target) : null,
           } as IUpdateProcedureStepMonitorRequest);
