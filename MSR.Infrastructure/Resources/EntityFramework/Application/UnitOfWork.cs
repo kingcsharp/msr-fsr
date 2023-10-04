@@ -200,7 +200,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkOrderPartDataMatrixView> WorkOrderPartDataMatrixViews { get { return _workOrderPartDataMatrixView ??= new EFRepository<WorkOrderPartDataMatrixView>(Context); } }
         public IRepository<PurchaseProductMap> PurchaseProductMaps { get { return _purchaseProductMap ??= new EFRepository<PurchaseProductMap>(Context); } }
         public IRepository<XmlTransmissionLog> XmlTransmissionLogs { get { return _xmlTransmissionLogs ??= new EFRepository<XmlTransmissionLog>(Context); } }
-        public IRepository<MonitorUnitofMeasure> MonitorUnitOfMeasures { get { return _monitorUnitOfMeasures ??= new EFRepository<MonitorUnitofMeasure>(Context); } }
+        public IRepository<MonitorUnitofMeasure> MonitorUnitofMeasures { get { return _monitorUnitOfMeasures ??= new EFRepository<MonitorUnitofMeasure>(Context); } }
 
 
         #endregion Repositories
