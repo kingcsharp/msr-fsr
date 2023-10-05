@@ -85,6 +85,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
             MonitorType mtype = GetMonitorType(command.MonitorType);
             MonitorInputType itype = GetInputType(mtype.Id, command.InputType);
 
+            if (mtype.Id == (int) EnumMonitorUnitofMeasure.Number && !command.UnitofMeasureId.HasValue)
+            {
+                throw new DomainException($"UnitofMeasureId is empty", DomainError.BadRequest);
+            }
+
             if (user.CanApprove(EnumMenuItem.Monitors))
             {
                 EntityFramework.Entities.ProcedureStepMonitor procedure = _mapper.Map<EntityFramework.Entities.ProcedureStepMonitor>(command);
@@ -228,6 +233,26 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.NotFound);
             }
             return itype;
+        }
+
+        public async Task<ICollection<MonitorUnitofMeasureModel>> GetMonitorUnitOfMeasureAsync(GetMonitorUnitofMeasure command)
+        {
+            List<MonitorUnitofMeasure> units;
+            if (command.Id.HasValue) {
+                units = await _unitOfWork.MonitorUnitofMeasures
+                    .Query()
+                    .Where(x => x.Id == command.Id.Value)
+                    .ToListAsync();
+                if (units.Count == 0) {
+                    throw new DomainException($"ID {command.Id.Value} not found", DomainError.NotFound);
+                }
+            } else {
+                units = await _unitOfWork.MonitorUnitofMeasures
+                    .Query()
+                    .ToListAsync();
+            }
+            var result = units.Select(x => _mapper.Map<MonitorUnitofMeasureModel>(x)).OrderBy(x => x.Id).ToList();
+            return result;
         }
 
     }

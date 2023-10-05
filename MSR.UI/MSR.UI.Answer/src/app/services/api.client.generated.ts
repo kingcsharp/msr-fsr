@@ -4225,6 +4225,63 @@ export class ProcedureStepMonitorService {
         }
         return _observableOf<AuditActionResultOfICollectionOfProcedureStepMonitor>(null as any);
     }
+
+    /**
+     * Get Unit of measure for monitor
+     * @param id (optional) 
+     */
+    measureUnit(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfMonitorUnitofMeasureModel> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor/measureUnit?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMeasureUnit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMeasureUnit(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AuditActionResultOfICollectionOfMonitorUnitofMeasureModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AuditActionResultOfICollectionOfMonitorUnitofMeasureModel>;
+        }));
+    }
+
+    protected processMeasureUnit(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfMonitorUnitofMeasureModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfMonitorUnitofMeasureModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfMonitorUnitofMeasureModel>(null as any);
+    }
 }
 
 @Injectable()
@@ -15201,6 +15258,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
     monitorListId?: number | undefined;
+    unitofMeasureId?: number | undefined;
 
     constructor(data?: IProcedureStepMonitor) {
         if (data) {
@@ -15227,6 +15285,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
+            this.unitofMeasureId = _data["unitofMeasureId"];
         }
     }
 
@@ -15253,6 +15312,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
+        data["unitofMeasureId"] = this.unitofMeasureId;
         return data;
     }
 }
@@ -15272,6 +15332,7 @@ export interface IProcedureStepMonitor {
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
     monitorListId?: number | undefined;
+    unitofMeasureId?: number | undefined;
 }
 
 export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
@@ -16122,6 +16183,8 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
     lowTarget?: number | undefined;
     /** MonitorListId */
     monitorListId?: number | undefined;
+    /** UnitofMeasureId */
+    unitofMeasureId?: number | undefined;
 
     constructor(data?: ICreateProcedureStepMonitorRequest) {
         if (data) {
@@ -16146,6 +16209,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
+            this.unitofMeasureId = _data["unitofMeasureId"];
         }
     }
 
@@ -16170,6 +16234,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
+        data["unitofMeasureId"] = this.unitofMeasureId;
         return data;
     }
 }
@@ -16200,6 +16265,8 @@ export interface ICreateProcedureStepMonitorRequest {
     lowTarget?: number | undefined;
     /** MonitorListId */
     monitorListId?: number | undefined;
+    /** UnitofMeasureId */
+    unitofMeasureId?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -16271,6 +16338,8 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
     lowTarget?: number | undefined;
     /** MonitorListId */
     monitorListId?: number | undefined;
+    /** UnitofMeasureId */
+    unitofMeasureId?: number | undefined;
 
     constructor(data?: IUpdateProcedureStepMonitorRequest) {
         if (data) {
@@ -16295,6 +16364,7 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
+            this.unitofMeasureId = _data["unitofMeasureId"];
         }
     }
 
@@ -16319,6 +16389,7 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
+        data["unitofMeasureId"] = this.unitofMeasureId;
         return data;
     }
 }
@@ -16349,6 +16420,91 @@ export interface IUpdateProcedureStepMonitorRequest {
     lowTarget?: number | undefined;
     /** MonitorListId */
     monitorListId?: number | undefined;
+    /** UnitofMeasureId */
+    unitofMeasureId?: number | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfMonitorUnitofMeasureModel extends AuditActionResult implements IAuditActionResultOfICollectionOfMonitorUnitofMeasureModel {
+    object?: MonitorUnitofMeasureModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfMonitorUnitofMeasureModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(MonitorUnitofMeasureModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfMonitorUnitofMeasureModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfMonitorUnitofMeasureModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data;
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfMonitorUnitofMeasureModel extends IAuditActionResult {
+    object?: MonitorUnitofMeasureModel[] | undefined;
+}
+
+export class MonitorUnitofMeasureModel implements IMonitorUnitofMeasureModel {
+    id?: number;
+    name?: string | undefined;
+
+    constructor(data?: IMonitorUnitofMeasureModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): MonitorUnitofMeasureModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new MonitorUnitofMeasureModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface IMonitorUnitofMeasureModel {
+    id?: number;
+    name?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

@@ -608,6 +608,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<NCRHistoryItem, NCRHistoryItemModel>().ReverseMap();
 
+            CreateMap<MonitorUnitofMeasure, MonitorUnitofMeasureModel>();
         }
 
         private static bool ignoreNullOrZero(object srcMember)
