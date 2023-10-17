@@ -38,6 +38,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<(bool Success, string DisplayString)> UpdateWorkOrderPartCycleCount(UpdateWorkOrderPartCycleCount command);
         Task<ICollection<XmlTransmissionLogModel>> GenerateAndTransmitXmlFiles(TransmitIntelXmlDataByWorkOrder command);
         Task<XmlTransmissionLogModel> RetransmitXmlFile(TransmitXmlFile command);
+        IntelXmlData GetIntelXmlData(int workOrderId);
     }
         
 }

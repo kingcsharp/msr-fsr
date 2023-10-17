@@ -94,6 +94,12 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name = "monitorListId")]
         public int? MonitorListId { get; set; }
+
+        /// <summary>
+        /// UnitofMeasureId
+        /// </summary>
+        [DataMember(Name = "unitOfMeasureId")]
+        public int? UnitofMeasureId { get; set; }
         
     }
 }

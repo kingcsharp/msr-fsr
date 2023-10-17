@@ -19,6 +19,7 @@ using System;
 using MSR.Infrastructure.Resources.Queries;
 using MSR.Infrastructure.Resources.EntityFramework.Projections;
 using MSR.Domain.Views;
+using Microsoft.Extensions.Logging;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -57,16 +58,20 @@ namespace MSR.Infrastructure.Resources.Services.Part
         private readonly IFileService _fileService;
         private readonly ProcedureValidator _validator;
         private readonly IMessageHubClient _messageHub;
+        private readonly ILogger<ProcedureService> _logger;
 
         public ProcedureService(IUnitOfWork unitOfWork,
-            IMapper mapper, IFileService fileService, ProcedureValidator validator,
-            IMessageHubClient messageHub)
+            IMapper mapper, IFileService fileService, 
+            ProcedureValidator validator,
+            IMessageHubClient messageHub,
+            ILogger<ProcedureService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _fileService = fileService;
             _validator = validator; // used for import
             _messageHub = messageHub;
+            _logger = logger;
         }
 
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
@@ -428,7 +433,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     foreach (ProcedureStepRoleMap m in procedureStepEntity.ProcedureStepRoles)
                     {
                         m.ProcedureStepId = procedureStepEntity.Id;
-                        await _unitOfWork.ProcedureStepRoleMaps.AddAsync(m);
                         roleModels.Add(_mapper.Map<Domain.Models.Role>(m.Role));
                     }
                 }
@@ -867,8 +871,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                    
                     createdProcs.Add(proc);
                 }
-                catch (Exception)
-                { }
+                catch (Exception ex)
+                { 
+                    _logger.LogError(ex, ex.Message);
+                }
             }
 
             return createdProcs;
@@ -1056,7 +1062,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                                     {
                                         Errors = new List<string>()
                                         {
-                                            $"Step on line: {lineNumber} with Id: {step.Id.Value}, Role Id: {roleId} Does not exist"
+                                                $"Step on line: {lineNumber} with Role Id: {roleId} Does not exist"
                                         },
                                         Line = lineNumber
                                     });

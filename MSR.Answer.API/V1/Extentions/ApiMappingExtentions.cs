@@ -1120,5 +1120,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new UpdateWorkOrderPartCycleCount(request.PartNumber, request.SerialNumber, request.CycleCount);
         }
+
+        public static GetMonitorUnitofMeasure ToGetMonitorUnitofMeasureCommand(this GetMonitorUnitofMeasureRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetMonitorUnitofMeasure>(request);
+        }
     }
 }

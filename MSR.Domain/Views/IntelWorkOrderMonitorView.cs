@@ -9,7 +9,7 @@ namespace MSR.Domain.Views
         public string UnitOfMeasure { get; set; }
         public string MeasurementType { get; set; }
         public string MeasurementValue { get; set; }
-        public string LowerControlValue { get; set; }
-	public string UpperControlValue { get; set; }	
+        public decimal? LowerControlValue { get; set; }
+	public decimal? UpperControlValue { get; set; }	
     }
 };

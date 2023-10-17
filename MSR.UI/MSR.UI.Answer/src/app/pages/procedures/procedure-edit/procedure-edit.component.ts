@@ -77,6 +77,7 @@ export class ProcedureEditComponent implements OnInit {
     { label: "No Tag", value: "No Tag" },
   ];
   showReorderStepsDialog: boolean = false;
+  unitOfMeasureOptions: Array<SelectItem> = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -88,7 +89,8 @@ export class ProcedureEditComponent implements OnInit {
     private procedureTemplateService: ProcedureTemplateService,
     private procedureService: ProcedureService,
     private procedureStepTypeService: ProcedureStepTypeService,
-    private procedureTypeService: ProcedureTypeService
+    private procedureTypeService: ProcedureTypeService,
+    private procedureStepMonitorService: ProcedureStepMonitorService
   ) {}
 
   ngOnInit(): void {
@@ -197,6 +199,25 @@ export class ProcedureEditComponent implements OnInit {
                   });
               })
             );
+        })
+      );
+
+      this.getUnitOfMeasures();
+  }
+
+  getUnitOfMeasures() {
+    this.procedureStepMonitorService
+      .measureUnit(null, env.apiVersion)
+      .subscribe(
+        responseHandler((response) => {
+          if (response.object.length === 0) {
+            this.unitOfMeasureOptions = [];
+          } else {
+            this.unitOfMeasureOptions = response.object.map((unit) => ({
+              label: unit.name,
+              value: unit.id,
+            }));
+          }
         })
       );
   }

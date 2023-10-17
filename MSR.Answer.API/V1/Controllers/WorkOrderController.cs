@@ -11,6 +11,7 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
+using MSR.Domain.Abstractions.Services;
 using NSwag.Annotations;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -24,16 +25,18 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private ICommandDispatcher _dispatcher;
         private IWorkOrderViewService _workOrderViewService;
+        private IWorkOrderService _workOrderService;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="dispatcher"></param>
         /// <param name="workOrderViewService"></param>
-        public WorkOrderController(ICommandDispatcher dispatcher, IWorkOrderViewService workOrderViewService)
+        public WorkOrderController(ICommandDispatcher dispatcher, IWorkOrderViewService workOrderViewService, IWorkOrderService workOrderService)
         {
             _dispatcher = dispatcher;
             _workOrderViewService = workOrderViewService;
+            _workOrderService = workOrderService;
         }
 
         #region GET
@@ -200,7 +203,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             try
             {
-                var data = this._workOrderViewService.GetIntelXmlData(request.WorkOrderId);
+                var data = _workOrderService.GetIntelXmlData(request.WorkOrderId);
                 var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
                 var ret = await _dispatcher.DispatchAsync(xmlCommand);
                 return ret.ToOkObjectResponse<ICollection<XmlTransmissionLogModel>>("Work Order Data has been successfuly transmited.");

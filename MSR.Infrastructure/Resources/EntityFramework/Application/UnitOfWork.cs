@@ -105,6 +105,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<WorkOrderPartDataMatrixView> _workOrderPartDataMatrixView;
         private IRepository<PurchaseProductMap> _purchaseProductMap;
         private IRepository<XmlTransmissionLog> _xmlTransmissionLogs;
+        private IRepository<MonitorUnitofMeasure> _monitorUnitOfMeasures;
 
         public IRepository<CycleCountHistory> CycleCountHistory { get { return _cycleCountHistory ?? (_cycleCountHistory = new EFRepository<CycleCountHistory>(Context)); } }
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
@@ -199,6 +200,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkOrderPartDataMatrixView> WorkOrderPartDataMatrixViews { get { return _workOrderPartDataMatrixView ??= new EFRepository<WorkOrderPartDataMatrixView>(Context); } }
         public IRepository<PurchaseProductMap> PurchaseProductMaps { get { return _purchaseProductMap ??= new EFRepository<PurchaseProductMap>(Context); } }
         public IRepository<XmlTransmissionLog> XmlTransmissionLogs { get { return _xmlTransmissionLogs ??= new EFRepository<XmlTransmissionLog>(Context); } }
+        public IRepository<MonitorUnitofMeasure> MonitorUnitofMeasures { get { return _monitorUnitOfMeasures ??= new EFRepository<MonitorUnitofMeasure>(Context); } }
 
 
         #endregion Repositories

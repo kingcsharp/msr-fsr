@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Amazon.Runtime.Internal;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using MSR.Application.Abstractions;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
@@ -46,17 +47,18 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<TransmitXmlFile>
     {
         private readonly IWorkOrderService _workOrderService;
-        private readonly IWorkOrderViewService _workOrderViewService;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
         private readonly IDocumentService _documentService;
+        private readonly ILogger<WorkOrderAppService> _logger;
 
-        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper, IFileService fileService, IDocumentService documentService)
+        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper, IFileService fileService, IDocumentService documentService, ILogger<WorkOrderAppService> logger)
         {
             _workOrderService = procedureService;
             _mapper = mapper;
             _fileService = fileService;
             _documentService = documentService;
+            _logger = logger;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetInvoiceableWorkOrders command, CancellationToken cancellationToken = default)
@@ -116,10 +118,17 @@ namespace MSR.Application.ApplicationServices
             {
                 // Run this code in another thread pool so we don't block the action
                 Task task = Task.Run(async () =>
-                {  
-                    var data = this._workOrderViewService.GetIntelXmlData(ret.WorkOrderId);
-                    var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
-                    await _workOrderService.GenerateAndTransmitXmlFiles(xmlCommand);
+                {
+                    try
+                    {
+                        var data = _workOrderService.GetIntelXmlData(ret.WorkOrderId);
+                        var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
+                        await _workOrderService.GenerateAndTransmitXmlFiles(xmlCommand);
+                    }
+                    catch (Exception ex)
+                    {
+                        this._logger.LogError(ex, $"Error Transmitting Files: {ex.Message}");
+                    }
                 });
             }
             return new CommandResponse<WorkOrderTaskModel>(ret);

@@ -19,5 +19,6 @@ namespace MSR.Domain.Commands
         public string FailAction { get; set; }
         public string SensorName { get; set; }
         public bool? SendNCREmail { get; set; }
+        public int? UnitofMeasureId { get; set; }
     }
 }

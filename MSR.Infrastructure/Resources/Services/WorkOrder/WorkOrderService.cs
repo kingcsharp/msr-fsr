@@ -15,6 +15,7 @@ using MSR.Domain.Hub;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using MSR.Domain.Views;
+using MSR.Infrastructure.Resources.EntityFramework;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -31,6 +32,7 @@ using Microsoft.Extensions.Logging;
 using System.Xml.Linq;
 using Renci.SshNet;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -2337,6 +2339,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                 xDoc.Save(stream);
                                 stream.Seek(0, SeekOrigin.Begin);
                                 sftp.UploadFile(stream, sftpInfo.RemoteDirectory + fileName);
+                                logs.Add(new XmlTransmissionLogModel
+                                {
+                                    Result = log.Result,
+                                    SubmittedOn = log.SubmittedOn,
+                                    TransmissionDetail = log.TransmissionDetail,
+                                    WorkOrderId = log.WorkOrderId,
+                                    XmlLink = log.XmlLink,
+                                    Id = log.Id
+
+                                });
+                                _unitOfWork.XmlTransmissionLogs.Add(log);
+                                _unitOfWork.SaveChanges();
                             }
 
                         }
@@ -2362,6 +2376,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             Id = log.Id
 
                         });
+
+
                     }
 
                 });
@@ -2369,6 +2385,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 await Task.WhenAll(uploadTasks);
 
                 sftp.Disconnect();
+
+                
 
                 return logs;
 
@@ -2386,8 +2404,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                       new XElement(xSchema + "Measurement",
                       new XElement(xSchema + "MeasurementType", m.MeasurementType),
                       new XElement(xSchema + "MeasurementValue", m.MeasurementValue),
-                      !String.IsNullOrEmpty(m.LowerControlValue) ? new XElement(xSchema + "LCL", m.LowerControlValue) : null,
-                      !String.IsNullOrEmpty(m.UpperControlValue) ? new XElement(xSchema + "UCL", m.UpperControlValue) : null
+                      !String.IsNullOrEmpty(m.LowerControlValue.ToString()) ? new XElement(xSchema + "LCL", m.LowerControlValue) : null,
+                      !String.IsNullOrEmpty(m.UpperControlValue.ToString()) ? new XElement(xSchema + "UCL", m.UpperControlValue) : null
                     )
                 )
             ));
@@ -2405,6 +2423,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             new XElement(xSchema + "ManufacturingPlantCode", woPart.ManufacturingPlantCode),
                             new XElement(xSchema + "QualityCertificates",
                                 new XElement(xSchema + "QualityCertificate",
+
                                     new XAttribute("certificateType", "SingleCertificate"),
                                     new XElement(xSchema +"ThisDocumentGenerationDateTime", woPart.ThisDocumentGenerationDateTime.HasValue ? woPart.ThisDocumentGenerationDateTime?.ToString("MM-dd-yyyy hh:mm:ss") : "N/A"),
                                     new XElement(xSchema + "ProductDescription",
@@ -2443,6 +2462,18 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 )
             );
             return document;
+        }
+
+        public IntelXmlData GetIntelXmlData(int workOrderId)
+        {
+            // Issue starts here
+            var woParts = _unitOfWork.Context.SqlQuery<IntelWorkOrderPartView>("SELECT * FROM dbo.IntelXMLParts WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
+            var woMonitors = _unitOfWork.Context.SqlQuery<IntelWorkOrderMonitorView>("SELECT * FROM dbo.IntelXMLMonitors WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
+            return new IntelXmlData
+            {
+                WorkOrderParts = woParts,
+                WorkOrderMonitors = woMonitors
+            };
         }
     }
 }

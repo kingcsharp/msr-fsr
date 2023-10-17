@@ -28,6 +28,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string FailAction { get; set; }
         public string SensorName { get; set; }
         public bool? SendNCREmail { get; set; }
+        public int? UnitofMeasureId { get; set; }
 
         public virtual ProcedureStep ProcedureStep { get; set; }
     }
