@@ -2423,9 +2423,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             new XElement(xSchema + "ManufacturingPlantCode", woPart.ManufacturingPlantCode),
                             new XElement(xSchema + "QualityCertificates",
                                 new XElement(xSchema + "QualityCertificate",
-
                                     new XAttribute("certificateType", "SingleCertificate"),
-                                    new XElement(xSchema +"ThisDocumentGenerationDateTime", woPart.ThisDocumentGenerationDateTime.HasValue ? woPart.ThisDocumentGenerationDateTime?.ToString("MM-dd-yyyy hh:mm:ss") : "N/A"),
+                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", woPart.ThisDocumentGenerationDateTime.HasValue ? woPart.ThisDocumentGenerationDateTime?.ToString("MM-dd-yyyy hh:mm:ss") : "N/A"),
                                     new XElement(xSchema + "ProductDescription",
                                         new XElement(xSchema + "ProductName", woPart.CustomerPartName),
                                         new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerNumber),
