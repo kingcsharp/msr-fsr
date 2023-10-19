@@ -2424,7 +2424,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             new XElement(xSchema + "QualityCertificates",
                                 new XElement(xSchema + "QualityCertificate",
                                     new XAttribute("certificateType", "SingleCertificate"),
-                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", DateTime.UTCNow.ToString("MM-dd-yyyy hh:mm:ss"),
+                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", DateTime.UtcNow.ToString("MM-dd-yyyy hh:mm:ss")),
                                     new XElement(xSchema + "ProductDescription",
                                         new XElement(xSchema + "ProductName", woPart.CustomerPartName),
                                         new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerNumber),
