@@ -108,20 +108,29 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderTask command, CancellationToken cancellationToken = default)
         {
+
+            _logger.LogDebug($"UpdateWorkOrderTask: Starting Update for work order task: {command.Id} for workorder {command.WorkOrderId}");
+                 
             var ret = await _workOrderService.UpdateWorkOrderTaskAsync(command);
             var wo = (await _workOrderService.GetWorkOrderById(ret.WorkOrderId)).FirstOrDefault();
-
+            _logger.LogDebug($"UpdateWorkOrderTask: Update complete for work order task: {command.Id} for workorder {command.WorkOrderId}");
             var isIntel = wo.Product.Customer.Name.ToLower().Contains("intel");
             var allTasksComplete = wo.WorkOrderTasks.All(wot => wot.Status.Id == 3);
+            _logger.LogDebug($"UpdateWorkOrderTask: workOrderTask: {command.Id}, workOrder: {command.WorkOrderId}, isIntelCustomer: {isIntel}, allTasksComplete: {allTasksComplete}");
+
+            
 
             if (isIntel && allTasksComplete)
             {
+                _logger.LogDebug($"UpdateWorkOrderTask: All tasks are complete for intel customer work order {wo.Id}");
                 // Run this code in another thread pool so we don't block the action
-                Task task = Task.Run(async () =>
-                {
+
                     try
                     {
+                    _logger.LogDebug($"UpdateWorkOrderTask: Retreving IntexlXmlData for work order: {wo.Id}");
+
                         var data = _workOrderService.GetIntelXmlData(ret.WorkOrderId);
+                        _logger.LogDebug($"UpdateWorkOrderTask: Successfully retrieved IntexlXmlData for work order: {wo.Id}. Now beginning xml transmission");
                         var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
                         await _workOrderService.GenerateAndTransmitXmlFiles(xmlCommand);
                     }
@@ -129,7 +138,7 @@ namespace MSR.Application.ApplicationServices
                     {
                         this._logger.LogError(ex, $"Error Transmitting Files: {ex.Message}");
                     }
-                });
+               
             }
             return new CommandResponse<WorkOrderTaskModel>(ret);
         }

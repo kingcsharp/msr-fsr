@@ -2286,6 +2286,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         {
 
             var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
+            _logger.LogInformation($"sendIntelXmlDocuments: Starting XML transmission for wo: {workOrderId}");
 
 
             using (SftpClient sftp = new SftpClient(sftpInfo.Host, sftpInfo.Username, sftpInfo.Password))
@@ -2293,17 +2294,28 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 var logs = new List<XmlTransmissionLogModel>();
 
 
-
+                
                 sftp.Connect();
+                _logger.LogInformation($"sendIntelXmlDocuments: Connected to host {sftpInfo.Host} for wo: {workOrderId}.");
 
                 if (!sftp.Exists(sftpInfo.RemoteDirectory))
                 {
+                    _logger.LogInformation($"sendIntelXmlDocuments: Remoted Directory: {sftpInfo.RemoteDirectory} not found for host {sftpInfo.Host} for wo: {workOrderId}.");
                     sftp.Disconnect(); // Disconnect if directory doesn't exist
-                    throw new Exception($"The SFTP path: {sftpInfo.RemoteDirectory} cannot be found on the remote server.");
+                    var ex = new Exception($"The SFTP path: {sftpInfo.RemoteDirectory} cannot be found on the remote server.");
+                    _logger.LogError(ex, ex.Message);
+                    throw ex;
+
                 }
+
+                _logger.LogInformation($"sendIntelXmlDocuments: Found {files.Count} for wo: {workOrderId}.");
+
+                var fileIndex = 1;
 
                 var uploadTasks = files.Select(async xDoc =>
                 {
+                    _logger.LogInformation($"sendIntelXmlDocuments: Beginning Transmisstion for file: {fileIndex}/{files.Count} for wo: {workOrderId}.");
+                    fileIndex = fileIndex + 1;
                     // Log defaults
                     var log = new XmlTransmissionLog
                     {
@@ -2313,11 +2325,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                         TransmissionDetail = "Successful SFTP Transmission",
                         WorkOrderId = workOrderId
                     };
+
                     var fileName = $"intel-{DateTime.Now.ToString("MM_dd_yyyy_hh_mm_ss")}.xml";
+                    _logger.LogInformation($"sendIntelXmlDocuments: Generated filename {fileName} for wo: {workOrderId}.");
                     try
                     {
                         try
                         {
+                            _logger.LogDebug($"sendIntelXmlDocuments: Attempting to upload file to S3: {fileName} for wo: {workOrderId} to Bucket: {sftpInfo.S3Bucket}");
                             using (MemoryStream stream = new MemoryStream())
                             {
                                 xDoc.Save(stream);
@@ -2325,15 +2340,20 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                 var fileModel = new FileModel() { Name = fileName, ContentType = "application/xml" };
                                 log.XmlLink = await _fileUploader.UploadFile(stream, fileModel, sftpInfo.S3Bucket);
                             }
+                            _logger.LogInformation($"sendIntelXmlDocuments: Upload complete for file: {fileName} for wo: {workOrderId} to S3 Bucket: {sftpInfo.S3Bucket}");
 
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception($"Failed to send file to S3 bucket. Error: {ex.Message}");
+                            var exception = new Exception($"Failed to send file to S3 bucket. Error: {ex.Message}");
+                            _logger.LogError(exception, exception.Message);
+                            throw exception;
+
                         }
 
                         try
                         {
+                            _logger.LogInformation($"sendIntelXmlDocuments: Attempting to transmit file: {fileName} for wo: {workOrderId} via sftp to: {sftpInfo.Host}");
                             using (MemoryStream stream = new MemoryStream())
                             {
                                 xDoc.Save(stream);
@@ -2352,11 +2372,14 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                 _unitOfWork.XmlTransmissionLogs.Add(log);
                                 _unitOfWork.SaveChanges();
                             }
+                            _logger.LogInformation($"sendIntelXmlDocuments: Transmission complete for file: {fileName} for wo: {workOrderId} via sftp to: {sftpInfo.Host}");
 
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception($"Failed to send file to SFTP Server. Error: {ex.Message}");
+                            var exception =  new Exception($"Failed to send file to SFTP Server. Error: {ex.Message}");
+                            _logger.LogError(exception, exception.Message);
+                            throw exception;
                         }
                     }
                     catch (Exception ex)
