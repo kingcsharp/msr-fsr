@@ -133,6 +133,7 @@ namespace MSR.Answer.API.V1.Controllers
 
 
             return ret.ToOkObjectResponse("User has been Deactivated");
+
         }
 
         /// <summary>
