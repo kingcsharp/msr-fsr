@@ -52,14 +52,14 @@ export class CmhFileUploaderComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.chooseLabel === "" || this.chooseLabel === undefined) {
-      this.chooseLabel = "Select Files";
+      this.chooseLabel = "Browse";
     }
 
     if (this.files.length > 0) {
-      if (this.useLoader) {
-        this.globals.showLoader(true);
-      } else {
+      if (!this.useLoader) {
         this.globals.showLoader(false);
+      } else  {
+        this.globals.showLoader(true);
       }
 
       this.fileService
@@ -128,6 +128,15 @@ export class CmhFileUploaderComponent implements OnInit {
     this.isReadyToSubmit();
   }
 
+  openSelectModal() {
+    this.selectedFiles = [];
+    this.showSelectModal = true;
+  }
+
+  closeSelectModal() {
+    this.showSelectModal = false;
+  }
+
   myUploader(event) {
     const ctrl = this;
     if (ctrl.multiple !== "multiple") {
@@ -149,15 +158,6 @@ export class CmhFileUploaderComponent implements OnInit {
         };
       }
     }
-  }
-
-  openSelectModal() {
-    this.selectedFiles = [];
-    this.showSelectModal = true;
-  }
-
-  closeSelectModal() {
-    this.showSelectModal = false;
   }
 
   selectUploadedFiles() {

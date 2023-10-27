@@ -112,7 +112,8 @@ namespace MSR.Application.ApplicationServices
             var wo = (await _workOrderService.GetWorkOrderById(ret.WorkOrderId)).FirstOrDefault();
 
             var isIntel = wo.Product.Customer.Name.ToLower().Contains("intel");
-            var allTasksComplete = wo.WorkOrderTasks.All(wot => wot.Status.Id == 3);
+            int[] completed = { 3, 4, 6, 8 };
+            var allTasksComplete = wo.WorkOrderTasks.All(wot => completed.Contains(wot.StatusId));
 
             if (isIntel && allTasksComplete)
             {
