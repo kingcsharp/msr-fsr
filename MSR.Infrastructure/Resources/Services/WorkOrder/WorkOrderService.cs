@@ -1,4 +1,4 @@
-using System;
+0using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -2447,7 +2447,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             new XElement(xSchema + "QualityCertificates",
                                 new XElement(xSchema + "QualityCertificate",
                                     new XAttribute("certificateType", "SingleCertificate"),
-                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", DateTime.UTCNow.ToString("MM-dd-yyyyThh:mm:ss"),
+                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", DateTime.UTCNow.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'"),
                                     new XElement(xSchema + "ProductDescription",
                                         new XElement(xSchema + "ProductName", woPart.CustomerPartName),
                                         new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerPartNumber),
