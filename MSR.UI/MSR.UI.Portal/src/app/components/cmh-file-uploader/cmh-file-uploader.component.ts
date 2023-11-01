@@ -39,7 +39,7 @@ export class CmhFileUploaderComponent implements OnInit {
   @Input() selectLabel: string;
   ngOnInit(): void {
     if (this.chooseLabel === '' || this.chooseLabel === undefined) {
-      this.chooseLabel = 'Select Files';
+      this.chooseLabel = 'Browse';
     }
 
     if (this.files.length > 0) {

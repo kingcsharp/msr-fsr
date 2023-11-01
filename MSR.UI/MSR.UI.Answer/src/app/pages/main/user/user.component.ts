@@ -314,7 +314,7 @@ export class UserComponent implements OnInit {
 
   changeUserStatus(user: UserModel) {
     this.userService
-      .userDelete(user.customerId, env.apiVersion)
+      .userDelete(user.id, env.apiVersion)
       .pipe(take(1))
       .subscribe(
         responseHandler(

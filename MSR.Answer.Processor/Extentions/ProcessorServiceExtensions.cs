@@ -86,7 +86,7 @@ namespace MSR.Answer.Processor.Extentions
             services.AddLogging();
             var loggerConfig = new LoggerConfiguration()
                 .WriteTo.Console(new JsonFormatter())
-                .WriteTo.Rollbar("0e34b5fc000342528dc361a4bb90f085", environment: generalConfig.Environment, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
+                .WriteTo.Rollbar("09d6582dd46349368d4b4956d164e33a", environment: generalConfig.Environment, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
 
             Log.Logger = loggerConfig.CreateLogger();
             services.AddLogging(loggerConfig => loggerConfig.AddSerilog(dispose: true));
