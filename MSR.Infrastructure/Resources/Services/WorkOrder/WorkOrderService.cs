@@ -2450,7 +2450,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                     new XElement(xSchema + "ThisDocumentGenerationDateTime", DateTime.UTCNow.ToString("MM-dd-yyyyThh:mm:ss"),
                                     new XElement(xSchema + "ProductDescription",
                                         new XElement(xSchema + "ProductName", woPart.CustomerPartName),
-                                        new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerNumber),
+                                        new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerPartNumber),
                                         new XElement(xSchema + "PurchaseOrderNumber", woPart.PurchaseOrderNumber),
                                         new XElement(xSchema + "KitNumber", woPart.KitNumber),
                                         new XElement(xSchema + "KitName", woPart.KitName),
