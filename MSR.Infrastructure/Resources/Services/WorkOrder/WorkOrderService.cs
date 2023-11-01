@@ -2424,7 +2424,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             new XElement(xSchema + "QualityCertificates",
                                 new XElement(xSchema + "QualityCertificate",
                                     new XAttribute("certificateType", "SingleCertificate"),
-                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", DateTime.UTCNow.ToString("MM-dd-yyyy hh:mm:ss"),
+                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", DateTime.UTCNow.ToString("MM-dd-yyyyThh:mm:ss"),
                                     new XElement(xSchema + "ProductDescription",
                                         new XElement(xSchema + "ProductName", woPart.CustomerPartName),
                                         new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerNumber),
@@ -2440,17 +2440,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                         new XElement(xSchema + "DeliverTo", woPart.CustomerName),
                                         new XElement(xSchema + "ScheduledShipDate", woPart.ScheduledShipDate ?? "N/A"),
                                         new XElement(xSchema + "ActualShipDate", woPart.ActualShipDate ?? "N/A")
-                                    ),
-                                    new XElement(xSchema + "MaterialParameters",
-                                        new XElement(xSchema + "MaterialParameter",
-                                            new XElement(xSchema + "ShortName", "Clean Count"),
-                                            new XElement(xSchema + "UnitOfMeasure", "N/A"),
-                                            new XElement(xSchema + "Measurements",
-                                                new XElement(xSchema + "Measurement",
-                                                    new XElement(xSchema + "MeasurementType", "Value"),
-                                                    new XElement(xSchema + "MeasurementValue", woPart.CycleCount)
-                                                )
-                                            )
                                         ),
                                         monitorMaterialParameters
                                     )
