@@ -2420,6 +2420,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         {
             XNamespace xSchema = "x-schema:../Schema/PLTSchema2023May.xml";
             
+            DateTime utcDate = DateTime.UtcNow;
+            
             IEnumerable<XElement> monitorMaterialParameters = monitors.Select(m => new XElement(xSchema + "MaterialParameter",
                 new XElement(xSchema + "ShortName", m.ShortName),
                     new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
@@ -2447,7 +2449,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                             new XElement(xSchema + "QualityCertificates",
                                 new XElement(xSchema + "QualityCertificate",
                                     new XAttribute("certificateType", "SingleCertificate"),
-                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", DateTime.UTCNow.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'"),
+                                    new XElement(xSchema + "ThisDocumentGenerationDateTime", utcDate.ToString("s")),
                                     new XElement(xSchema + "ProductDescription",
                                         new XElement(xSchema + "ProductName", woPart.CustomerPartName),
                                         new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerPartNumber),
