@@ -2465,9 +2465,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                         new XElement(xSchema + "DeliverTo", woPart.CustomerName),
                                         new XElement(xSchema + "ScheduledShipDate", woPart.ScheduledShipDate ?? "N/A"),
                                         new XElement(xSchema + "ActualShipDate", woPart.ActualShipDate ?? "N/A")
-                                        ),
-                                        monitorMaterialParameters
-                                    )
+                                    ),
+                                    monitorMaterialParameters
                                 )
                             )
                         )
