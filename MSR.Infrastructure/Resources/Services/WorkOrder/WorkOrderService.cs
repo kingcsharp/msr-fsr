@@ -2454,6 +2454,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                         new XElement(xSchema + "ProductName", woPart.CustomerPartName),
                                         new XElement(xSchema + "ManufacturerPartNumber", woPart.ManufacturerPartNumber),
                                         new XElement(xSchema + "PurchaseOrderNumber", woPart.PurchaseOrderNumber),
+                                        new XElement(xSchema + "ManufacturerOrderNumber", woPart.ManufacturerOrderNumber),
                                         new XElement(xSchema + "KitNumber", woPart.KitNumber),
                                         new XElement(xSchema + "KitName", woPart.KitName),
                                         new XElement(xSchema + "PartNumber", woPart.CustomerPartNumber),
@@ -2466,7 +2467,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                                         new XElement(xSchema + "ScheduledShipDate", woPart.ScheduledShipDate ?? "N/A"),
                                         new XElement(xSchema + "ActualShipDate", woPart.ActualShipDate ?? "N/A")
                                     ),
-                                    monitorMaterialParameters
+                                    new XElement(xSchema + "MaterialParameters",
+                                        monitorMaterialParameters
+                                    )
                                 )
                             )
                         )
