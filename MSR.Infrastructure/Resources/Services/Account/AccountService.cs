@@ -9,13 +9,13 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using Newtonsoft.Json;
 using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Domain.Abstractions.Services.Workflow;
@@ -34,6 +34,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private readonly GeneralInformation _generalInformation;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly IWorkflowService _workflowService;
+        private readonly ISessionManagementService _sessionManagementService;
 
         private static readonly Dictionary<int, DateTime> _knownUsers =
             new Dictionary<int, DateTime>();
@@ -47,7 +48,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
             EmailInformation emailInformation,
             GeneralInformation generalInformation,
             IAuthenticationHelper authenticationHelper,
-            IWorkflowService workflowService)
+            IWorkflowService workflowService,
+            ISessionManagementService sessionManagementService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -57,6 +59,13 @@ namespace MSR.Infrastructure.Resources.Services.Account
             _generalInformation = generalInformation;
             _authenticationHelper = authenticationHelper;
             _workflowService = workflowService;
+            _sessionManagementService = sessionManagementService;
+        }
+
+        public async Task<bool> IsUserDeactivatedAsync(int userId)
+        {
+            var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == userId);
+            return user != null && !user.IsActive;
         }
 
         public async Task<string> LoginAsync(SystemLogin command)
@@ -78,13 +87,22 @@ namespace MSR.Infrastructure.Resources.Services.Account
                     Id = x.Id,
                     IsAnswerUser = x.IsAnswerUser,
                     PasswordHash = x.PasswordHash,
-                    PasswordSalt = x.PasswordSalt
+                    PasswordSalt = x.PasswordSalt,
+                    IsActive = x.IsActive
                 })
                 .FirstOrDefaultAsync();
 
             if (user == null)
             {
                 throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
+            }
+
+            if (!user.IsActive)
+            {
+                // If the user is deactivated, expire the session
+                await _sessionManagementService.ExpireUserSessionAsync(user.Id);
+
+                throw new DomainException("Your account is deactivated", DomainError.Unknown);
             }
 
             user.Roles = LoadChildRoles(user.Roles, childRoles);
@@ -122,7 +140,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).Distinct().ToList();
             }
 
-            if (user.IsAnswerUser.HasValue && !user.IsAnswerUser.Value && command.Host.IndexOf("answer") != -1 && command.Host.IndexOf("localhost") == -1)
+            if (user.IsAnswerUser.HasValue && !user.IsAnswerUser.Value && command.Host.IndexOf("answer") != -1 && command.Host.IndexOf("localhost") == -1 && user.IsActive == false)
             {
                 throw new DomainException("Your account does not have access to Answer Application.", DomainError.NotFound);
             }
@@ -133,6 +151,38 @@ namespace MSR.Infrastructure.Resources.Services.Account
             }
 
             return await GetJWTToken(user);
+        }
+
+
+        public async Task DeactivateUserAsync(DeactivateUser command)
+        {
+            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == command.AccountId);
+
+            if (user == null) { return; }
+
+            user.IsActive = !user.IsActive;
+
+            _unitOfWork.Users.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+
+            // Expire user session if the user is deactivated
+            if (!user.IsActive)
+            {
+                await this.ExpireUserSessionAsync(user.Id);
+            }
+        }
+
+        public async Task ExpireUserSessionAsync(int accountId)
+        {
+            // Logic to expire user session
+            // This could involve updating the session status in the database, for example
+            lock (_knownUsers)
+            {
+                if (_knownUsers.ContainsKey(accountId))
+                {
+                    _knownUsers[accountId] = new DateTime();
+                }
+            }
         }
 
         public async Task ForgotPasswordAsync(ForgotPassword command)
@@ -223,7 +273,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
         public bool ValidateAccount(int accountId)
         {
             bool exists = false;
-            lock (_knownUsers) {
+            lock (_knownUsers)
+            {
                 DateTime expiration;
                 if (_knownUsers.TryGetValue(accountId, out expiration))
                 {
@@ -239,10 +290,16 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
                 if (!exists)
                 {
-                    exists = _unitOfWork.Users.Exist(accountId);
-                    if (exists)
+                    var user = _unitOfWork.Users.Query().Where(x => x.Id == accountId).FirstOrDefault();
+                    if (user != null)
                     {
-                        _knownUsers.Add(accountId, DateTime.Now.AddDays(1));
+                        if (user.IsActive == false)
+                        {
+                            return false;   
+                        } else
+                        {
+                            _knownUsers.Add(accountId, DateTime.Now.AddDays(1));
+                        }
                     }
                 }
             }
@@ -421,10 +478,9 @@ namespace MSR.Infrastructure.Resources.Services.Account
         /// Index 0 of the Array is for CanRead
         /// Index 1 of the Array is for CanApprove Activities
         /// </summary>
-        /// <param name="userId"></param>
         /// <returns></returns>
         private async Task<Dictionary<int, int[]>> GetTokenUserActivityRoles(User user)
-        {
+        {          
             var allMyActivitiesPrivileges = await _workflowService.GetAllMyActivitiesPrivileges(user.Id, user.Roles.Select(x => x.RoleId).ToList());
 
             var canApproveMenuItemRoles = (from userRole in user.Roles

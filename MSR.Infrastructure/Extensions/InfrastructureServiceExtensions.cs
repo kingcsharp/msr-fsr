@@ -37,6 +37,7 @@ using MSR.Infrastructure.Resources.Services.Report;
 using MSR.Infrastructure.Resources.Services.Search;
 using MSR.Infrastructure.Resources.Services.Document;
 using MSR.Infrastructure.Resources.Services.EquipmentMaintenance;
+using MSR.Infrastructure.Resources.Services.SessionManagement;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -90,6 +91,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<ICycleCountHistoryService, CycleCountHistoryService>();
             
             services.AddSingleton<IMessageHubClient, MessageHubService>();
+            services.AddSingleton<ISessionManagementService, SessionManagementService>();
 
             return services;
         }

@@ -120,7 +120,7 @@ namespace MSR.Domain.Models
         /// <value>Name of the current task that is active</value>
         public string CurrentActiveTaskName { get; set; }
 
-        private decimal _percentageOfTasksCompleted;
+        // private decimal _percentageOfTasksCompleted;
 
         /// <summary>
         /// (Tasks Completed / Total Tasks) * 100

@@ -6,7 +6,6 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Models.Config;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using MSR.Domain.Helpers;
 using Newtonsoft.Json;
 using System.Linq;
@@ -33,9 +32,10 @@ namespace MSR.Answer.API.Extentions
             {
                 x.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = context =>
+                    OnTokenValidated = async context =>
                     {
                         var accountService = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
+                        var sessionManagementService = context.HttpContext.RequestServices.GetRequiredService<ISessionManagementService>();
                         if (!int.TryParse(context.Principal.FindFirst(ClaimTypes.Name)?.Value, out var accountId)) context.Fail("Unauthorized");
                         if (!accountService.ValidateAccount(accountId))
                         {// return unauthorized if user no longer exists
@@ -127,7 +127,7 @@ namespace MSR.Answer.API.Extentions
                             return securityToken?.RawData;
                         };
 
-                        return Task.CompletedTask;
+                        return;
                     }
                 };
                 x.RequireHttpsMetadata = false;

@@ -8,6 +8,7 @@
         Conflict,
         Teapot,
         InternalServerError,
-        RemoteServerError
+        RemoteServerError,
+        Forbidden
     }
 }
