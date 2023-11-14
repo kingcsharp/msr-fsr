@@ -1028,7 +1028,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             int lineNumber = 1;
             var errors = new List<ImportError>();
-            //const int DEFAULTROLE = 7; //Technician
+            const int DEFAULTROLE = 7; //Technician
 
             var roleIds = _unitOfWork.Roles.Query().Select(i => i.Id).ToList();
             var procedureStepIds = _unitOfWork.ProcedureSteps.Query().Select(i => i.Id).ToList();

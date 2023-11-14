@@ -134,7 +134,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             _unitOfWork.Users.Update(user);
             await _unitOfWork.SaveChangesAsync();
 
-            _acountService.ExpireUserSessionAsync(user.Id);
+            await _acountService.ExpireUserSessionAsync(user.Id);
         }
 
         public async Task<Domain.Models.UserModel> UpdateUserAsync(UpdateUser command)
