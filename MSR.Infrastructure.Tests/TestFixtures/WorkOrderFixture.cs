@@ -38,6 +38,6 @@ namespace MSR.Infrastructure.Tests.TestFixtures
                 .RuleFor(o => o.Price, f => f.Random.Decimal(0,1000))
                 .Generate();
         public static DeleteWorkOrder WorkOrderDelete =>
-            new DeleteWorkOrder(){ Id = PlainWorkOrder.Id };
+            new DeleteWorkOrder(id :  PlainWorkOrder.Id) ;
     }
 }

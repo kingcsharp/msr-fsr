@@ -17,5 +17,7 @@ namespace MSR.Answer.API.V1.Models
         /// <example>password</example>
         [Required]
         public string Password { get; set; }
+
+        public int AccountId { get; set; }
     }
 }
