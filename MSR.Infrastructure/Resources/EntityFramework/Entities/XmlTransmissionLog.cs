@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using MSR.Domain.Models;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
