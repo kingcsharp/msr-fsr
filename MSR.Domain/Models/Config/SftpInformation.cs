@@ -8,6 +8,7 @@ namespace MSR.Domain.Models.Config
         public string Password { get; set; }
         public string RemoteDirectory { get; set; }
         public string S3Bucket { get; set; }
+        public bool IsEnabled { get; set; }
     }
 }
 

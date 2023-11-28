@@ -135,8 +135,6 @@ namespace MSR.Application.ApplicationServices
                         var data = _workOrderService.GetIntelXmlData(ret.WorkOrderId);
                         _logger.LogInformation($"UpdateWorkOrderTask: Successfully retrieved IntelXmlData for work order: {wo.Id}. Now beginning XML transmission");
 
-                        // Create and log XmlTransmissionLog for success
-                        CreateAndLogXmlTransmissionLog("Success", "File transmitted successfully", ret.WorkOrderId); ;
 
                         // Continue with your XML transmission logic
                         var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
@@ -166,22 +164,33 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<WorkOrderTaskModel>(ret);
         }
 
-        private XmlTransmissionLog CreateAndLogXmlTransmissionLog(string result, string detail, int workOrderId)
+        private async Task<string> CreateAndLogXmlTransmissionLog(string result, string detail, int workOrderId)
         {
-            var transmissionLog = new XmlTransmissionLog
+            try
             {
-                Result = result,
-                SubmittedOn = DateTime.Now,
-                TransmissionDetail = detail,
-                WorkOrderId = workOrderId,
-                XmlLink = "" // You may need to set the actual XmlLink based on your logic
-            };
+                var xmlLink = $"https://s3.amazonaws.com";
+                 
+                var transmissionLog = new XmlTransmissionLog
+                {
+                    Result = result,
+                    SubmittedOn = DateTime.Now,
+                    TransmissionDetail = detail,
+                    WorkOrderId = workOrderId,
+                    XmlLink = xmlLink
+                };
 
-            // Log the XmlTransmissionLog entity
-            _unitOfWork.XmlTransmissionLogs.Add(transmissionLog);
-            _unitOfWork.SaveChanges();
+                // Log the XmlTransmissionLog entity
+                _unitOfWork.XmlTransmissionLogs.Add(transmissionLog);
+                await _unitOfWork.SaveChangesAsync(); // Use asynchronous SaveChanges method
 
-            return transmissionLog;
+                return xmlLink;
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception, log, and return a default value or throw
+                _logger.LogError(ex, $"Error creating and logging XmlTransmissionLog: {ex.Message}");
+                return string.Empty; // Return a default value or throw an exception
+            }
         }
 
 

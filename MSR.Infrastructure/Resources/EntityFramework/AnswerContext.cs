@@ -93,6 +93,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<WorkOrderPartNCRMapItem> WorkOrderPartNCRMapItems { get; set; }
         public DbSet<WorkOrderPartDataMatrixView> WorkOrderPartDataMatrixViews { get; set; }
         public DbSet<XmlTransmissionLog> XmlTransmissonLog { get; set; }
+        public DbSet<XmlTransmissionLog> XmlTransmissionLogs { get; set; }
         public DbSet<MonitorUnitofMeasure> MonitorUnitofMeasures { get; set; }
 
         public AnswerContext() : base()

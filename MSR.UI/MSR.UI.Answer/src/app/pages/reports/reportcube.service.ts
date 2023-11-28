@@ -1141,7 +1141,7 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
         ];
-        case "IntelMonitorTransmissionsbyWorkOrder":
+      case "IntelMonitorTransmissionsbyWorkOrder":
           return [
             new ColumnsSaved({
               id: "id",
@@ -1165,7 +1165,7 @@ export class ReportCubeService {
               id: "xmllink",
               label: "XML Link",
               visible: true,
-              type: this.enumColumnType.String,
+              type: this.enumColumnType.DownloadLink,
             }),
             new ColumnsSaved({
               id: "submitteddate",
@@ -1474,6 +1474,8 @@ export class ReportCubeService {
           pagingModel,
           true
         );
+      case "IntelMonitorTransmissionsbyWorkOrder":
+        pagingModel.data.map(elem => elem["XMLTransmissionLog.downloadURL"] = elem["XMLTransmissionLog.xmllink"]);
       default:
         if (pagingModel.data.length > 0) {
           pagingModel.data = pagingModel.data.map((elem) =>

@@ -338,4 +338,8 @@ export class GridComponent implements OnInit {
     archiveDocmentView.fileSize = formatBytes(archiveDocmentView.fileSize);
     return archiveDocmentView;
   }
+
+  downloadFile(downloadURL: string) {
+    window.open(downloadURL, '_blank', 'popup=yes');
+  }
 }
