@@ -35,16 +35,51 @@ namespace MSR.Infrastructure.Resources.AWS
         }
 
 
-            public async Task<Stream> DownloadFile(string fileName)
+        public async Task<Stream> DownloadFileFromS3(string fileName)
+        {
+            try
+            {
+                // Use _fileDownloader to download the file
+                var stream = await DowloadFile(fileName, _s3Information.FileBucketName);
+
+                // Return the file stream as a response
+                return stream;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions related to file download
+                throw new DomainException($"Error downloading file: {ex.Message}");
+            }
+        }
+
+        public async Task<Stream> DownloadFile(string fileName)
+        {
+            try
+            {
+                // Use _fileDownloader to download the file
+                var stream = await DowloadFile(fileName, _s3Information.FileBucketName);
+
+                // Return the file stream as a response
+                return stream;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions related to file download
+                throw new DomainException($"Error downloading file: {ex.Message}");
+            }
+        }
+
+        public async Task<Stream> DownloadFile(string fileName, string bucketName)
         {
             var response = await _s3Handler.GetObjectAsync(new GetObjectRequest
             {
-                BucketName = _s3Information.FileBucketName,
+                BucketName = bucketName,
                 Key = fileName
             });
 
             return response.ResponseStream;
         }
+
 
         public async Task<ListObjectsV2Response> GetS3Files(string folderName)
         {
@@ -102,7 +137,7 @@ namespace MSR.Infrastructure.Resources.AWS
             return Upload(file.FileContents, _s3Information.FileBucketName, _s3Information.FileBucketName, file.Name);
         }
 
-        public string GetURL(string key, int expiresInSeconds = 6000)
+        public string GetURL(string key, int expiresInSeconds = 3600)
         {
             var s3Key = key;
             if (key.Contains(_s3Information.AWSURL)
@@ -120,6 +155,13 @@ namespace MSR.Infrastructure.Resources.AWS
                 Expires = DateTime.Now.AddSeconds(expiresInSeconds)
             });
         }
+
+        public string GetDownloadUrl(string fileName, int expiresInSeconds = 3600)
+        {
+            // Generate and return the pre-signed URL for downloading the file
+            return GetURL(fileName, expiresInSeconds);
+        }
+
 
         private async Task<string> Upload(byte[] fileContents, string contentType, string bucketName, string name)
         {
@@ -143,7 +185,9 @@ namespace MSR.Infrastructure.Resources.AWS
             return $"{name}";
         }
 
-
-
+        // public Task<Stream> DownloadFile(string fileName, string bucketName)
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 }

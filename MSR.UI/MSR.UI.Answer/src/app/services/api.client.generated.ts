@@ -1010,6 +1010,43 @@ export class DocumentService {
         }
         return _observableOf<AuditActionResultOfICollectionOfArchiveDocumentView>(null as any);
     }
+    public downloadXMLFile(id: number, version: string): Observable<any> {
+      let options_ : any = {
+          observe: "response",
+          responseType: "blob",
+          headers: new HttpHeaders({
+              'Cache-Control': 'no-cache',
+          })
+      };
+      let url_ = `${this.baseUrl}/v${version}/Xml/GetConfigItem/${id}`;
+
+      return this.http.request("get", url_, options_).pipe(_observableMergeMap((response : any) => {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(null as any);
+      }));
+  }
 }
 
 @Injectable()
@@ -8081,16 +8118,16 @@ export class WorkOrderService {
         if (sort !== undefined && sort !== null)
             sort && sort.forEach((item, index) => {
                 for (let attr in item)
-        			if (item.hasOwnProperty(attr)) {
-        				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
-        			}
+                    if (item.hasOwnProperty(attr)) {
+                        url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
+                    }
             });
         if (filters !== undefined && filters !== null)
             filters && filters.forEach((item, index) => {
                 for (let attr in item)
-        			if (item.hasOwnProperty(attr)) {
-        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
-        			}
+                    if (item.hasOwnProperty(attr)) {
+                        url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
+                    }
             });
         url_ = url_.replace(/[?&]$/, "");
 
@@ -8391,16 +8428,16 @@ export class WorkOrderService {
         if (sort !== undefined && sort !== null)
             sort && sort.forEach((item, index) => {
                 for (let attr in item)
-        			if (item.hasOwnProperty(attr)) {
-        				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
-        			}
+                    if (item.hasOwnProperty(attr)) {
+                        url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
+                    }
             });
         if (filters !== undefined && filters !== null)
             filters && filters.forEach((item, index) => {
                 for (let attr in item)
-        			if (item.hasOwnProperty(attr)) {
-        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
-        			}
+                    if (item.hasOwnProperty(attr)) {
+                        url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
+                    }
             });
         url_ = url_.replace(/[?&]$/, "");
 
@@ -24727,10 +24764,6 @@ export class XmlTransmissionLogModel implements IXmlTransmissionLogModel {
         data["xmlLink"] = this.xmlLink;
         return data;
     }
-
-    getXmlLinkHtml(): string {
-        return this.xmlLink ? `<a href="${this.xmlLink}" target="_blank">Download XML</a>` : '';
-      }
 }
 
 export interface IXmlTransmissionLogModel {

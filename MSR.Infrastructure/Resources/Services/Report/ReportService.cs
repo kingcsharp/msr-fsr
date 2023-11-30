@@ -31,7 +31,7 @@ namespace MSR.Infrastructure.Resources.Services.Report
 
             if (command.IsPortal)
             {
-                reportQuery = reportQuery.Where(x => x.ShowInPortal == command.IsPortal);
+                reportQuery = reportQuery.Where(x => x.ShowInPortal == true);
             }
 
             var reports = await reportQuery.Include(i => i.ReportCategories).ThenInclude(j => j.Report)

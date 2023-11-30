@@ -142,8 +142,7 @@ namespace MSR.Application.ApplicationServices
                     }
                     catch (Exception ex)
                     {
-                        // Log the exception and create XmlTransmissionLog for failure
-                         CreateAndLogXmlTransmissionLog("Failure", ex.Message, ret.WorkOrderId);
+                        
                     }
                 }
 
@@ -156,7 +155,7 @@ namespace MSR.Application.ApplicationServices
 
                 // Create and log XmlTransmissionLog for failure
 
-                var transmissionLog = CreateAndLogXmlTransmissionLog("Failure", ex.Message, command.WorkOrderId);
+                CreateAndLogXmlTransmissionLog("Failure", ex.Message, command.WorkOrderId);
 
             }
 
@@ -168,7 +167,7 @@ namespace MSR.Application.ApplicationServices
         {
             try
             {
-                var xmlLink = $"https://s3.amazonaws.com";
+                var xmlLink = $"";
                  
                 var transmissionLog = new XmlTransmissionLog
                 {
