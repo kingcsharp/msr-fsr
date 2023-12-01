@@ -34,24 +34,6 @@ namespace MSR.Infrastructure.Resources.AWS
             return response.ResponseStream;
         }
 
-
-        public async Task<Stream> DownloadFileFromS3(string fileName)
-        {
-            try
-            {
-                // Use _fileDownloader to download the file
-                var stream = await DowloadFile(fileName, _s3Information.FileBucketName);
-
-                // Return the file stream as a response
-                return stream;
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions related to file download
-                throw new DomainException($"Error downloading file: {ex.Message}");
-            }
-        }
-
         public async Task<Stream> DownloadFile(string fileName)
         {
             try
