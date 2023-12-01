@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using MSR.Domain.Helpers;
 using System.Threading.Tasks;
+using MSR.Domain.Models;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 {
@@ -372,6 +373,16 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
         private async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public IEnumerable<object> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(XmlTransmissionLogModel log)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 

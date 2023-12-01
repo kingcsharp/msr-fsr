@@ -74,7 +74,7 @@ export class GridComponent implements OnInit {
     public cg: CommonGrid,
     private reportCubeService: ReportCubeService,
     private cSVConverterService: CSVConverterService,
-    private documentService: DocumentService
+    private documentService: DocumentService,
   ) {}
 
   ngOnInit(): void {
@@ -339,7 +339,16 @@ export class GridComponent implements OnInit {
     return archiveDocmentView;
   }
 
-  downloadFile(downloadURL: string) {
-    window.open(downloadURL, '_blank', 'popup=yes');
+  downloadXmlFile(id: number) {
+    this.documentService.downloadXMLFile(id, env.apiVersion).subscribe(response => {
+      let blob = new Blob([response.data], { type: "application/oct-stream"});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'download.xml');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    });
   }
 }

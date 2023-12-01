@@ -38,6 +38,7 @@ using MSR.Infrastructure.Resources.Services.Search;
 using MSR.Infrastructure.Resources.Services.Document;
 using MSR.Infrastructure.Resources.Services.EquipmentMaintenance;
 using MSR.Infrastructure.Resources.Services.SessionManagement;
+using MSR.Infrastructure.Resources.Services.Xml;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -89,6 +90,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IEquipmentMaintenanceService, EquipmentMaintenanceService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<ICycleCountHistoryService, CycleCountHistoryService>();
+            services.AddScoped<IXmlService, XmlService>();
             
             services.AddSingleton<IMessageHubClient, MessageHubService>();
             services.AddSingleton<ISessionManagementService, SessionManagementService>();

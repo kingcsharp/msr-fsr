@@ -272,7 +272,7 @@
     <div *ngIf="colsDataAndSettings.colData?.downloadURL">
       <button
         class="btn btn-success"
-        (click)="downloadFile(colsDataAndSettings.colData.downloadURL)"
+        (click)="downloadXmlFile(colsDataAndSettings.colData.id)"
         tooltip="Download File"
       >
         <i class="fas fa-download"></i> Download

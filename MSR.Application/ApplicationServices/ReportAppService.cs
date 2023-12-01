@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSR.Application.ApplicationServices
 {
-    public class ReportAppService: 
+    public class ReportAppService:
         ICommandHandler<GetReport>,
         ICommandHandler<GetDashboard>
     {
