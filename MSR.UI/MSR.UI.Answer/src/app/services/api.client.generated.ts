@@ -23,7 +23,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
@@ -306,7 +306,7 @@ export class AdminCostSettingsService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
@@ -430,7 +430,7 @@ export class CustomerService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserFullName: string | null | undefined, secondaryContactUserFullName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
@@ -695,20 +695,20 @@ export class DocumentService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
      * Gets a list of Documents or a single Document matching the Id.
-     * @param id (optional)
-     * @param name (optional)
-     * @param revision (optional)
-     * @param lastUpdatedOn (optional)
-     * @param lastUpdatedFullName (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param id (optional) 
+     * @param name (optional) 
+     * @param revision (optional) 
+     * @param lastUpdatedOn (optional) 
+     * @param lastUpdatedFullName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     documentGet(id: number | null | undefined, name: string | null | undefined, revision: number | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedFullName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfDocumentView> {
         let url_ = this.baseUrl + "/v{version}/Document?";
@@ -954,7 +954,7 @@ export class DocumentService {
 
     /**
      * Gets list of files from a folder
-     * @param folder (optional)
+     * @param folder (optional) 
      */
     archive(folder: EnumAwsFolders | undefined, version: string): Observable<AuditActionResultOfICollectionOfArchiveDocumentView> {
         let url_ = this.baseUrl + "/v{version}/Document/Archive?";
@@ -1010,43 +1010,6 @@ export class DocumentService {
         }
         return _observableOf<AuditActionResultOfICollectionOfArchiveDocumentView>(null as any);
     }
-    public downloadXMLFile(id: number, version: string): Observable<any> {
-      let options_ : any = {
-          observe: "response",
-          responseType: "blob",
-          headers: new HttpHeaders({
-              'Cache-Control': 'no-cache',
-          })
-      };
-      let url_ = `${this.baseUrl}/v${version}/Xml/GetConfigItem/${id}`;
-
-      return this.http.request("get", url_, options_).pipe(_observableMergeMap((response : any) => {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-
-            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse>(null as any);
-      }));
-  }
 }
 
 @Injectable()
@@ -1057,26 +1020,26 @@ export class EquipmentMaintenanceService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
      * Gets EM/PM items. Filter the item using Id.
-     * @param id (optional)
-     * @param locationName (optional)
-     * @param createdOn (optional)
-     * @param createdFullName (optional)
-     * @param assignedToFullName (optional)
-     * @param troubleState (optional)
-     * @param maintenanceTask (optional)
-     * @param pemLastCompletedDate (optional)
-     * @param frequencyField (optional)
-     * @param comments (optional)
-     * @param statusName (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param id (optional) 
+     * @param locationName (optional) 
+     * @param createdOn (optional) 
+     * @param createdFullName (optional) 
+     * @param assignedToFullName (optional) 
+     * @param troubleState (optional) 
+     * @param maintenanceTask (optional) 
+     * @param pemLastCompletedDate (optional) 
+     * @param frequencyField (optional) 
+     * @param comments (optional) 
+     * @param statusName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     equipmentMaintenanceGet(id: number | null | undefined, locationName: string | null | undefined, createdOn: Date | null | undefined, createdFullName: string | null | undefined, assignedToFullName: string | null | undefined, troubleState: boolean | null | undefined, maintenanceTask: string | null | undefined, pemLastCompletedDate: Date | null | undefined, frequencyField: number | null | undefined, comments: string | null | undefined, statusName: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
         let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance?";
@@ -1335,14 +1298,14 @@ export class FileService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
      * GetFiles
-     * @param entityName (optional)
-     * @param entityId (optional)
-     * @param fileId (optional)
+     * @param entityName (optional) 
+     * @param entityId (optional) 
+     * @param fileId (optional) 
      */
     fileGet(entityName: string | null | undefined, entityId: number | null | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfFileModel> {
         let url_ = this.baseUrl + "/v{version}/File?";
@@ -1461,9 +1424,9 @@ export class FileService {
 
     /**
      * Detach a file from an entity.
-     * @param entityName (optional)
-     * @param entityId (optional)
-     * @param fileId (optional)
+     * @param entityName (optional) 
+     * @param entityId (optional) 
+     * @param fileId (optional) 
      */
     fileDelete(entityName: string | null | undefined, entityId: number | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/File?";
@@ -1591,7 +1554,7 @@ export class HelpService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, title: string | null | undefined, roles: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
@@ -1948,7 +1911,7 @@ export class InvoiceService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     invoiceGet(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceView> {
@@ -2283,7 +2246,7 @@ export class LocationService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, name: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, address1: string | null | undefined, city: string | null | undefined, state: string | null | undefined, postalcode: string | null | undefined, country: string | null | undefined, phone: string | null | undefined, parentName: string | null | undefined, timezoneDescription: string | null | undefined, address2: string | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
@@ -2718,7 +2681,7 @@ export class MenuService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     menu(version: string): Observable<AuditActionResultOfIEnumerableOfMenuItem> {
@@ -2950,7 +2913,7 @@ export class MonitorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
@@ -3019,27 +2982,27 @@ export class PartService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
      * Get part by Id
-     * @param id (optional)
-     * @param name (optional)
-     * @param segregationType (optional)
-     * @param partNumber (optional)
-     * @param oemPartNumber (optional)
-     * @param isKit (optional)
-     * @param isActive (optional)
-     * @param maximumCycles (optional)
-     * @param createdOn (optional)
-     * @param createdByName (optional)
-     * @param lastUpdatedOn (optional)
-     * @param lastUpdatedByName (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param id (optional) 
+     * @param name (optional) 
+     * @param segregationType (optional) 
+     * @param partNumber (optional) 
+     * @param oemPartNumber (optional) 
+     * @param isKit (optional) 
+     * @param isActive (optional) 
+     * @param maximumCycles (optional) 
+     * @param createdOn (optional) 
+     * @param createdByName (optional) 
+     * @param lastUpdatedOn (optional) 
+     * @param lastUpdatedByName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     partGet(id: number | null | undefined, name: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, partNumber: string | null | undefined, oemPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
@@ -3306,7 +3269,7 @@ export class ProcedureService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
@@ -3369,20 +3332,20 @@ export class ProcedureService {
 
     /**
      * Get one of all Procedures
-     * @param id (optional)
-     * @param name (optional)
-     * @param procedureTypeName (optional)
-     * @param duration (optional)
-     * @param durationType (optional)
-     * @param revision (optional)
-     * @param createdFullName (optional)
-     * @param createdOn (optional)
-     * @param lastUpdatedFullName (optional)
-     * @param lastUpdatedOn (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param id (optional) 
+     * @param name (optional) 
+     * @param procedureTypeName (optional) 
+     * @param duration (optional) 
+     * @param durationType (optional) 
+     * @param revision (optional) 
+     * @param createdFullName (optional) 
+     * @param createdOn (optional) 
+     * @param lastUpdatedFullName (optional) 
+     * @param lastUpdatedOn (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     procedureGet(id: number | null | undefined, name: string | null | undefined, procedureTypeName: string | null | undefined, duration: number | null | undefined, durationType: string | null | undefined, revision: number | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, lastUpdatedFullName: string | null | undefined, lastUpdatedOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedure> {
         let url_ = this.baseUrl + "/v{version}/Procedure?";
@@ -3641,7 +3604,7 @@ export class ProcedureService {
 
     /**
      * Get Procedure Step
-     * @param stepid (optional)
+     * @param stepid (optional) 
      */
     stepGet(id: number, stepid: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepModel> {
         let url_ = this.baseUrl + "/v{version}/Procedure/{id}/step?";
@@ -4027,7 +3990,7 @@ export class ProcedureStepMonitorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
@@ -4205,7 +4168,7 @@ export class ProcedureStepMonitorService {
 
     /**
      * Get monitors for a procedure step
-     * @param monitorId (optional)
+     * @param monitorId (optional) 
      */
     procedurestep(stepId: number, monitorId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepMonitor> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor/procedurestep/{stepId}?";
@@ -4265,7 +4228,7 @@ export class ProcedureStepMonitorService {
 
     /**
      * Get Unit of measure for monitor
-     * @param id (optional)
+     * @param id (optional) 
      */
     measureUnit(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfMonitorUnitofMeasureModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor/measureUnit?";
@@ -4329,18 +4292,18 @@ export class ProcedureStepTemplateService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
      * Get procedure step template by Id
-     * @param id (optional)
-     * @param title (optional)
-     * @param text (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param id (optional) 
+     * @param title (optional) 
+     * @param text (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     procedureStepTemplateGet(id: number | null | undefined, title: string | null | undefined, text: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate?";
@@ -4589,12 +4552,12 @@ export class ProcedureStepTypeService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
      * Get procedure step type
-     * @param id (optional)
+     * @param id (optional) 
      */
     procedureStepType(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTypeModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepType?";
@@ -4658,7 +4621,7 @@ export class ProcedureTemplateService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
@@ -4721,7 +4684,7 @@ export class ProcedureTemplateService {
 
     /**
      * Get a procedure template
-     * @param id (optional)
+     * @param id (optional) 
      */
     procedureTemplateGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureTemplate?";
@@ -4900,7 +4863,7 @@ export class ProcedureTypeService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
@@ -4963,12 +4926,12 @@ export class ProcedureTypeService {
 
     /**
      * Get one or all procedure types
-     * @param id (optional)
-     * @param name (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param id (optional) 
+     * @param name (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     procedureTypeGet(id: number | null | undefined, name: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureType> {
         let url_ = this.baseUrl + "/v{version}/ProcedureType?";
@@ -5157,7 +5120,7 @@ export class ProductService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
@@ -5222,7 +5185,7 @@ export class ProductService {
     /**
      * GetProduct
      * @param id (optional) Get product by Id
-     * @param customerId (optional)
+     * @param customerId (optional) 
      */
     productGet(id: number | null | undefined, customerId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfProductModel> {
         let url_ = this.baseUrl + "/v{version}/Product?";
@@ -5340,7 +5303,7 @@ export class ProductService {
     /**
      * GetPurchaseOrderProduct
      * @param id (optional) Get product by Id
-     * @param customerId (optional)
+     * @param customerId (optional) 
      */
     getPurchaseOrderProduct(id: number | null | undefined, customerId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderProductModel> {
         let url_ = this.baseUrl + "/v{version}/Product/GetPurchaseOrderProduct?";
@@ -5460,20 +5423,20 @@ export class PurchaseService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
      * Get Purchase by id
-     * @param id (optional)
-     * @param mttn (optional)
-     * @param purchaseOrderProductName (optional)
-     * @param statusId (optional)
-     * @param createdOn (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param id (optional) 
+     * @param mttn (optional) 
+     * @param purchaseOrderProductName (optional) 
+     * @param statusId (optional) 
+     * @param createdOn (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     purchaseGet(id: number | null | undefined, mttn: string | null | undefined, purchaseOrderProductName: string | null | undefined, statusId: string[] | null | undefined, createdOn: Date | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
         let url_ = this.baseUrl + "/v{version}/Purchase?";
@@ -5611,7 +5574,7 @@ export class PurchaseOrderService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     purchaseOrderGet(id: number | null | undefined, name: string | null | undefined, customerReferencePO: string | null | undefined, invoicedBalance: number | null | undefined, uninvoicedBalance: number | null | undefined, balance: number | null | undefined, customerName: string | null | undefined, openDate: Date | null | undefined, closeDate: Date | null | undefined, totalPurchaseLimit: number | null | undefined, unusedAmount: number | null | undefined, revision: number | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
@@ -5963,7 +5926,7 @@ export class QuoteService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureId: number | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
@@ -6338,7 +6301,7 @@ export class ReportService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     report(isPortal: boolean | undefined, version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
@@ -6459,7 +6422,7 @@ export class RoleService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     roleGet(id: number | null | undefined, name: string | null | undefined, isCertificationRole: boolean | null | undefined, parentRoles: number[] | null | undefined, assignedUsers: number[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfRole> {
@@ -6765,7 +6728,7 @@ export class SearchService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     search(searchTerm: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfSearchView> {
@@ -6830,7 +6793,7 @@ export class SensorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     sensor(sensorId: number | null | undefined, siteId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfSensorModel> {
@@ -7003,7 +6966,7 @@ export class TimezoneService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     timezone(version: string): Observable<AuditActionResultOfICollectionOfTimeZoneModel> {
@@ -7066,28 +7029,28 @@ export class UserService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
      * Get Users
-     * @param id (optional)
-     * @param firstName (optional)
-     * @param lastName (optional)
-     * @param userName (optional)
-     * @param title (optional)
-     * @param supervisorName (optional)
-     * @param primaryPhone (optional)
-     * @param email (optional)
-     * @param roles (optional)
-     * @param isActive (optional)
-     * @param isAnswerUser (optional)
-     * @param createdOn (optional)
-     * @param locationName (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param id (optional) 
+     * @param firstName (optional) 
+     * @param lastName (optional) 
+     * @param userName (optional) 
+     * @param title (optional) 
+     * @param supervisorName (optional) 
+     * @param primaryPhone (optional) 
+     * @param email (optional) 
+     * @param roles (optional) 
+     * @param isActive (optional) 
+     * @param isAnswerUser (optional) 
+     * @param createdOn (optional) 
+     * @param locationName (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisorName: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, roles: number[] | null | undefined, isActive: boolean | null | undefined, isAnswerUser: boolean | null | undefined, createdOn: Date | null | undefined, locationName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User?";
@@ -7346,16 +7309,16 @@ export class UserService {
 
     /**
      * Get training certificates
-     * @param userId (optional)
-     * @param employeeName (optional)
-     * @param certificationName (optional)
-     * @param certificationFromDate (optional)
-     * @param certificationToDate (optional)
-     * @param status (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param userId (optional) 
+     * @param employeeName (optional) 
+     * @param certificationName (optional) 
+     * @param certificationFromDate (optional) 
+     * @param certificationToDate (optional) 
+     * @param status (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     trainingCertification(userId: number | null | undefined, employeeName: string | null | undefined, certificationName: string | null | undefined, certificationFromDate: Date | null | undefined, certificationToDate: Date | null | undefined, status: boolean | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
         let url_ = this.baseUrl + "/v{version}/User/TrainingCertification?";
@@ -7654,7 +7617,7 @@ export class WorkflowPendingApprovalService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     workflowPendingApprovalGet(table: EnumApprovalTables | undefined, id: number | null | undefined, activityType: string[] | null | undefined, name: string | null | undefined, requestedChanges: string | null | undefined, workflowName: string | null | undefined, workflowGroupName: string | null | undefined, workflowCreatedByName: string | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
@@ -7922,30 +7885,30 @@ export class WorkOrderService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
      * Returns a summary of COMPLETED or CANCELLED WorkOrders
-     * @param purchaseId (optional)
-     * @param workOrderItemNumber (optional)
-     * @param customer (optional)
-     * @param location (optional)
-     * @param serialNumber (optional)
-     * @param purchaseOrderNumber (optional)
-     * @param qty (optional)
-     * @param scheduledStartDate (optional)
-     * @param scheduledEndDate (optional)
-     * @param actualStartDate (optional)
-     * @param actualEndDate (optional)
-     * @param product (optional)
-     * @param procedure (optional)
-     * @param status (optional)
-     * @param disposition (optional)
-     * @param term (optional)
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sortAscending (optional)
+     * @param purchaseId (optional) 
+     * @param workOrderItemNumber (optional) 
+     * @param customer (optional) 
+     * @param location (optional) 
+     * @param serialNumber (optional) 
+     * @param purchaseOrderNumber (optional) 
+     * @param qty (optional) 
+     * @param scheduledStartDate (optional) 
+     * @param scheduledEndDate (optional) 
+     * @param actualStartDate (optional) 
+     * @param actualEndDate (optional) 
+     * @param product (optional) 
+     * @param procedure (optional) 
+     * @param status (optional) 
+     * @param disposition (optional) 
+     * @param term (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortAscending (optional) 
      */
     history(purchaseId: number | null | undefined, workOrderItemNumber: string | null | undefined, customer: string | null | undefined, location: string[] | null | undefined, serialNumber: string | null | undefined, purchaseOrderNumber: string | null | undefined, qty: number | null | undefined, scheduledStartDate: Date | null | undefined, scheduledEndDate: Date | null | undefined, actualStartDate: Date | null | undefined, actualEndDate: Date | null | undefined, product: string | null | undefined, procedure: string | null | undefined, status: string[] | null | undefined, disposition: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderHistoryView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History?";
@@ -8038,7 +8001,7 @@ export class WorkOrderService {
 
     /**
      * Returns WorkOrder SelectItems
-     * @param assignedUserId (optional)
+     * @param assignedUserId (optional) 
      */
     selectItems(assignedUserId: number | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderSelectItem> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/SelectItems?";
@@ -8097,10 +8060,10 @@ export class WorkOrderService {
 
     /**
      * Returns a summary of WorkOrders IN PROGRESS or WAITING
-     * @param pageNumber (optional)
-     * @param pageSize (optional)
-     * @param sort (optional)
-     * @param filters (optional)
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sort (optional) 
+     * @param filters (optional) 
      */
     menu(pageNumber: number | undefined, pageSize: number | undefined, sort: Sort[] | null | undefined, filters: Filter[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu?";
@@ -8118,16 +8081,16 @@ export class WorkOrderService {
         if (sort !== undefined && sort !== null)
             sort && sort.forEach((item, index) => {
                 for (let attr in item)
-                    if (item.hasOwnProperty(attr)) {
-                        url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
-                    }
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
+        			}
             });
         if (filters !== undefined && filters !== null)
             filters && filters.forEach((item, index) => {
                 for (let attr in item)
-                    if (item.hasOwnProperty(attr)) {
-                        url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
-                    }
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
+        			}
             });
         url_ = url_.replace(/[?&]$/, "");
 
@@ -8428,16 +8391,16 @@ export class WorkOrderService {
         if (sort !== undefined && sort !== null)
             sort && sort.forEach((item, index) => {
                 for (let attr in item)
-                    if (item.hasOwnProperty(attr)) {
-                        url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
-                    }
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Sort[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
+        			}
             });
         if (filters !== undefined && filters !== null)
             filters && filters.forEach((item, index) => {
                 for (let attr in item)
-                    if (item.hasOwnProperty(attr)) {
-                        url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
-                    }
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Filters[" + index + "]." + attr + "=" + encodeURIComponent("" + (item as any)[attr]) + "&";
+        			}
             });
         url_ = url_.replace(/[?&]$/, "");
 
@@ -8938,7 +8901,7 @@ export class WorkOrderPartService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     workOrderPartGet(id: number | null | undefined, workOrderId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderPartModel> {
@@ -9227,7 +9190,7 @@ export class WorkOrderTaskService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     /**
@@ -9352,7 +9315,7 @@ export class WorkOrderTaskMonitorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     workOrderTaskMonitor(version: string | null, body: UpdateWorkOrderTaskMonitorRequest): Observable<AuditActionResultOfWorkOrderTaskMonitorModel> {
@@ -9419,7 +9382,7 @@ export class XmlService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     transmit(version: string, request: XmlTransmissionRequest): Observable<AuditActionResultOfXmlTransmissionLogModel> {
@@ -9476,6 +9439,114 @@ export class XmlService {
         }
         return _observableOf<AuditActionResultOfXmlTransmissionLogModel>(null as any);
     }
+
+    getConfigItem(id: number, version: string): Observable<AuditActionResultOfXmlTransmissionLogModel> {
+        let url_ = this.baseUrl + "/v{version}/Xml/GetConfigItem/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetConfigItem(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetConfigItem(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AuditActionResultOfXmlTransmissionLogModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AuditActionResultOfXmlTransmissionLogModel>;
+        }));
+    }
+
+    protected processGetConfigItem(response: HttpResponseBase): Observable<AuditActionResultOfXmlTransmissionLogModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfXmlTransmissionLogModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfXmlTransmissionLogModel>(null as any);
+    }
+
+    downloadFile(id: number, version: string): Observable<AuditActionResultOfXmlTransmissionLogModel> {
+        let url_ = this.baseUrl + "/v{version}/Xml/DownloadFile/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDownloadFile(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDownloadFile(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AuditActionResultOfXmlTransmissionLogModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AuditActionResultOfXmlTransmissionLogModel>;
+        }));
+    }
+
+    protected processDownloadFile(response: HttpResponseBase): Observable<AuditActionResultOfXmlTransmissionLogModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfXmlTransmissionLogModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfXmlTransmissionLogModel>(null as any);
+    }
 }
 
 @Injectable()
@@ -9486,7 +9557,7 @@ export class WorkflowService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     pending(version: string): Observable<AuditActionResultOfPendingApprovalNotification> {
@@ -9841,7 +9912,7 @@ export class WorkflowGroupService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     workflowGroupGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, groupRoles: string[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
@@ -10092,7 +10163,7 @@ export class WorkflowStageService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-32-185.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-11-77.us-west-2.compute.internal";
     }
 
     workflowStageGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowStageModel> {
