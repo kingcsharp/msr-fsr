@@ -2337,7 +2337,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         {
             var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             XmlTransmissionLogModel XmlLog = new XmlTransmissionLogModel() {
-                Result = "STARTFTP",
+                Result = "",
                 SubmittedOn = DateTime.Now,
                 TransmissionDetail = "Transferring XML file via SFTP",
                 WorkOrderId = workOrderId,
@@ -2361,9 +2361,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     XmlLog.Result = "Success";
                     XmlLog.SubmittedOn = DateTime.Now;
                     XmlLog.TransmissionDetail = "Successfully transmitted XML file via SFTP";
+                    SaveXmlTransmissionLog(XmlLog);
                 }
-
-                SaveXmlTransmissionLog(XmlLog);
+                
                 return XmlLog;
             }
             catch (Exception ex)
