@@ -49,7 +49,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<UpdateWorkOrderPartCycleCount>,
         ICommandHandler<TransmitIntelXmlDataByWorkOrder>,
         ICommandHandler<TransmitXmlFile>,
-        ICommandHandler<FtpRequest>,
+        ICommandHandler<XmlFtpTransmit>,
         ICommandHandler<DownloadXmlFile>
     {
         private readonly IWorkOrderService _workOrderService;
@@ -116,7 +116,7 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<WorkOrderTaskModel>(ret);
         }
 
-        public async Task<ICommandResponse> HandleAsync(FtpRequest command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(XmlFtpTransmit command, CancellationToken cancellationToken = default)
         {
             var ret = await _workOrderService.TransferFtpTransmission(command.workOrderId, command.XmlContent, command.XmlLink);
 
@@ -173,7 +173,7 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _xmlService.DownloadFile(command.Id);
 
-            return new CommandResponse<XmlDownloadFileModel>(ret);
+            return new CommandResponse<FileModel>(ret);
         }
 
         private async Task<string> CreateAndLogXmlTransmissionLog(string result, string detail, int workOrderId)

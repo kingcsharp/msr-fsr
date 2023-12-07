@@ -342,12 +342,10 @@ export class GridComponent implements OnInit {
   }
 
   downloadXmlFile(id: number) {
-    this.xmlService.downloadFile(id, env.apiVersion).subscribe(response => {
-      let blob = new Blob([response.data], { type: "application/oct-stream"});
-      const url = URL.createObjectURL(blob);
+    this.xmlService.downloadFile(id, env.apiVersion).subscribe(({ object }) => {
       const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'download.xml');
+      link.href = `data:application/xml;base64,${object.fileContents}`;
+      link.setAttribute('download', object.name);
       document.body.appendChild(link);
       link.click();
       link.remove();

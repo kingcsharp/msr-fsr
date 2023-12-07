@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MSR.Domain.Commands
 {
-    public class FtpRequest: Command
+    public class XmlFtpTransmit: Command
     {
         public int workOrderId { get; set; }
 

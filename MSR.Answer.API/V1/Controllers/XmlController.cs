@@ -49,24 +49,19 @@ namespace MSR.Answer.API.V1.Controllers
         public async Task<IActionResult> AddMessage([FromBody, Required] XmlTransmissionRequest request)
         {
             var command = request.ToTransmitXmlFileCommand();
-            var ret = await _dispatcher.DispatchAsync(command) as CommandResponse<XmlTransmissionLogModel>;
-            if (ret == null || ret.Data == null)
-            {
-                return StatusCode(500, "Xml file doesn't exist in AWS s3");
-            }
-            else
-            {
-                return ret.ToOkObjectResponse<XmlTransmissionLogModel>("File transmitted successfully");
-            }
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<XmlTransmissionLogModel>("File transmitted successfully via SFTP");
             
         }
 
-        [HttpGet("DownloadFile/{Id}"), SwaggerResponse(typeof(FileStreamResult))]
-        public async Task<FileStreamResult> DownlodFile([FromRoute, Required] DownloadXmlRequest request)
+        [HttpGet("DownloadFile/{Id}")]
+        [SwaggerResponse(typeof(AuditActionResult<FileModel>))]
+        public async Task<IActionResult> DownloadAsync([FromRoute, Required] DownloadXmlRequest request)
         {
             var command = request.ToDownloadXmlFileCommand();
-            var ret = await _dispatcher.DispatchAsync(command) as CommandResponse<XmlDownloadFileModel>;
-            return File(ret.Data.FileContent, "application/octet-stream", ret.Data.Name);
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToOkObjectResponse<FileModel>();
         }
     }
 }

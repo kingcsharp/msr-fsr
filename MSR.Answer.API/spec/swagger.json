@@ -6469,10 +6469,7 @@
             "content": {
               "application/octet-stream": {
                 "schema": {
-                  "schema": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "$ref": "#/components/schemas/FileModel"
                 }
               }
             }

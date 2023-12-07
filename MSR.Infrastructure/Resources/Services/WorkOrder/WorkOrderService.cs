@@ -2242,7 +2242,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var log = _unitOfWork.XmlTransmissionLogs.Query().FirstOrDefault(log => log.Id == command.TransmissionId);
             if (log == null || log.XmlLink == "")
             {
-                return null;
+                throw new DomainException("The XML file doesn't exist in S3", DomainError.InternalServerError);
             }
 
             var fileName = $"{log.XmlLink.Split("/").Last().Split(".xml").First()}.xml";
@@ -2265,8 +2265,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         private async Task BackgroundSftpTransfer(IServiceScopeFactory serviceScopeFactory, int workOrderId, string XmlContent, string XmlLink)
         {
             using var scope = serviceScopeFactory.CreateScope();
-            var handler = scope.ServiceProvider.GetService(typeof(ICommandHandler<FtpRequest>)) as ICommandHandler<FtpRequest>;
-            FtpRequest command = new FtpRequest()
+            var handler = scope.ServiceProvider.GetService(typeof(ICommandHandler<XmlFtpTransmit>)) as ICommandHandler<XmlFtpTransmit>;
+            XmlFtpTransmit command = new XmlFtpTransmit()
             {
                 workOrderId = workOrderId,
                 XmlContent = XmlContent,
@@ -2307,16 +2307,17 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _logger.LogInformation($"TransmitXmlDocuments: Generated filename {fileName} for WO: {workOrderId}.");
             try
             {
-                var xmlLink = await CreateAndUploadXmlFileAsync(log.XmlLink, fileName, workOrderId, transmitConfig.S3Bucket);
+                var xmlLink = await CreateAndUploadXmlFileAsync(XmlFile, fileName, workOrderId, transmitConfig.S3Bucket);
 
                 // Update log with XmlLink
                 log.XmlLink = xmlLink;
                 log.Result = "Success";
                 log.SubmittedOn = DateTime.Now;
-                log.TransmissionDetail = "Successfully transmitted to S3";
+                log.TransmissionDetail = "The XML file has been successfully transmitted to S3";
+                SaveXmlTransmissionLog(log);
 
-                _logger.LogInformation($"TransmitXmlDocuments: S3 Upload complete for file: {fileName} for WO: {workOrderId}");
-
+                _logger.LogInformation($"TransmitXmlDocuments: S3 Upload complete for file: {fileName} for WO: {workOrderId}");                
+                return log;
             }
             catch (Exception ex)
             {
@@ -2324,18 +2325,19 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 log.Result = "Failure";
                 log.TransmissionDetail = ex.Message;
                 log.SubmittedOn = DateTime.Now;
-                _logger.LogError(ex, log.TransmissionDetail);
-            }
-            SaveXmlTransmissionLog(log);
+                SaveXmlTransmissionLog(log);
 
-            return log;
+                _logger.LogError(ex, log.TransmissionDetail);
+
+                throw new DomainException("The XML file failed to transfer to S3", DomainError.InternalServerError);
+            }
         }
 
         public async Task<XmlTransmissionLogModel> TransferFtpTransmission(int workOrderId, string XmlFileContent, string XmlLink)
         {
             var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             XmlTransmissionLogModel XmlLog = new XmlTransmissionLogModel() {
-                Result = "Transferring SFTP",
+                Result = "STARTFTP",
                 SubmittedOn = DateTime.Now,
                 TransmissionDetail = "Transferring XML file via SFTP",
                 WorkOrderId = workOrderId,
@@ -2344,7 +2346,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             try
             {
-                
                 SaveXmlTransmissionLog(XmlLog);
 
                 using (SftpClient sftp = new SftpClient(sftpInfo.Host, sftpInfo.Username, sftpInfo.Password))
@@ -2361,6 +2362,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     XmlLog.SubmittedOn = DateTime.Now;
                     XmlLog.TransmissionDetail = "Successfully transmitted XML file via SFTP";
                 }
+
+                return XmlLog;
             }
             catch (Exception ex)
             {
@@ -2368,20 +2371,19 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 XmlLog.Result = "Failure";
                 XmlLog.SubmittedOn = DateTime.Now;
                 XmlLog.TransmissionDetail = ex.Message;
-            }
 
-            SaveXmlTransmissionLog(XmlLog);
-            return XmlLog;
+                SaveXmlTransmissionLog(XmlLog);
+
+                throw new DomainException("FTP Transmission is failed", DomainError.InternalServerError);
+            }
         }
 
-        private async Task<string> CreateAndUploadXmlFileAsync(string xmlContent, string fileName, int workOrderId, string s3Bucket)
+        private async Task<string> CreateAndUploadXmlFileAsync(XDocument xDoc, string fileName, int workOrderId, string s3Bucket)
         {
             using (MemoryStream stream = new MemoryStream())
             {
-                var xmlBytes = Encoding.UTF8.GetBytes(xmlContent);
-                stream.Write(xmlBytes, 0, xmlBytes.Length);
+                xDoc.Save(stream);
                 stream.Seek(0, SeekOrigin.Begin);
-
                 var fileModel = new FileModel() { Name = fileName, ContentType = "application/xml" };
 
                 // Assuming _fileUploader.UploadFile returns the URL

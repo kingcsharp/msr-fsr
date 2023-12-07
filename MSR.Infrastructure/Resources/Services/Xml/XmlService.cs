@@ -15,6 +15,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Exceptions;
 
 namespace MSR.Infrastructure.Resources.Services.Xml
 {
@@ -33,31 +35,34 @@ namespace MSR.Infrastructure.Resources.Services.Xml
             _fileDownloader = fileDownloader;
         }
 
-        public async Task<XmlDownloadFileModel> DownloadFile(int Id)
+        public async Task<FileModel> DownloadFile(int Id)
         {
             var XmlTransmissionLog = await _unitOfWork.XmlTransmissionLogs.Query()
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
             if (XmlTransmissionLog == null)
             {
-                return null;
+                throw new DomainException("XML trasmission log doesn't exist, you need to finish WorkOrder", DomainError.InternalServerError);
             }
             else if (XmlTransmissionLog.XmlLink == "")
             {
-                return null;
+                throw new DomainException("The XML file is not in S3", DomainError.InternalServerError);
             }
             var fileName = $"{XmlTransmissionLog.XmlLink.Split("/").Last().Split(".xml").First()}.xml";
 
             var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             Stream fileStream = await _fileDownloader.DownloadFile(fileName, sftpInfo.S3Bucket);
-            XmlDownloadFileModel xmlDownloadFile = new XmlDownloadFileModel()
+
+            var XmlMemoryStream = new MemoryStream();
+            fileStream.CopyTo(XmlMemoryStream);
+
+            var file = new FileModel()
             {
                 Name = fileName,
-                FileContent = fileStream
+                ContentType = "application/xml",
+                FileContents = XmlMemoryStream.ToArray()
             };
-
-
-            return xmlDownloadFile;
+            return file;
         }
     }
 }

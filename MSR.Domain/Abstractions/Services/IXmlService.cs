@@ -10,6 +10,6 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IXmlService
     {
-        Task<XmlDownloadFileModel> DownloadFile(int Id);
+        Task<FileModel> DownloadFile(int Id);
     }
 }
