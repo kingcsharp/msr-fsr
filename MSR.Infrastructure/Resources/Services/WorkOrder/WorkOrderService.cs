@@ -2363,6 +2363,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     XmlLog.TransmissionDetail = "Successfully transmitted XML file via SFTP";
                 }
 
+                SaveXmlTransmissionLog(XmlLog);
                 return XmlLog;
             }
             catch (Exception ex)
