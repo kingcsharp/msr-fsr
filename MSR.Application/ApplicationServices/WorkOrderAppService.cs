@@ -49,7 +49,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<UpdateWorkOrderPartCycleCount>,
         ICommandHandler<TransmitIntelXmlDataByWorkOrder>,
         ICommandHandler<TransmitXmlFile>,
-        ICommandHandler<FtpRequest>
+        ICommandHandler<FtpRequest>,
+        ICommandHandler<DownloadXmlFile>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IUnitOfWork _unitOfWork;
@@ -57,8 +58,9 @@ namespace MSR.Application.ApplicationServices
         private readonly IFileService _fileService;
         private readonly IDocumentService _documentService;
         private readonly ILogger<WorkOrderAppService> _logger;
+        private readonly IXmlService _xmlService;
 
-        public WorkOrderAppService(IWorkOrderService procedureService, IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IDocumentService documentService, ILogger<WorkOrderAppService> logger)
+        public WorkOrderAppService(IWorkOrderService procedureService, IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IDocumentService documentService, ILogger<WorkOrderAppService> logger, IXmlService xmlService)
         {
             _unitOfWork = unitOfWork;
             _workOrderService = procedureService;
@@ -66,6 +68,7 @@ namespace MSR.Application.ApplicationServices
             _fileService = fileService;
             _documentService = documentService;
             _logger = logger;
+            _xmlService = xmlService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetInvoiceableWorkOrders command, CancellationToken cancellationToken = default)
@@ -164,6 +167,13 @@ namespace MSR.Application.ApplicationServices
 
             // Return a default response if ret is null (handle this based on your logic)
             return new CommandResponse<WorkOrderTaskModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DownloadXmlFile command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _xmlService.DownloadFile(command.Id);
+
+            return new CommandResponse<XmlDownloadFileModel>(ret);
         }
 
         private async Task<string> CreateAndLogXmlTransmissionLog(string result, string detail, int workOrderId)

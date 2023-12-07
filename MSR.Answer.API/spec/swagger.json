@@ -4207,51 +4207,6 @@
         }
       }
     },
-    "/v{version}/Xml/GetConifgItem/{id}": {
-      "get": {
-        "tags": [ "Xml" ],
-        "operationId": "Xml_GetConfigItem",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 1
-          },
-          {
-            "name": "version",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 2
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfXmlTransmissionLogModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-
-
 
     "/v{version}/Report": {
       "get": {
@@ -6512,15 +6467,18 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": {
+              "application/octet-stream": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfXmlTransmissionLogModel"
+                  "schema": {
+                    "type": "string",
+                    "format": "binary"
+                  }
                 }
               }
             }
           },
-          "404": {
-            "description": "Not Found"
+          "500": {
+            "description": "File doesn't exist in the server"
           }
         }
       }
@@ -15629,8 +15587,7 @@
           "name": "5546379400b4c81a",
           "isActive": false
         }
-      }
-    },
+      },
     "securitySchemes": {
       "Bearer": {
         "type": "apiKey",

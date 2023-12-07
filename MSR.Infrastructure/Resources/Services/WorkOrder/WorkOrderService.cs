@@ -2240,6 +2240,11 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             var log = _unitOfWork.XmlTransmissionLogs.Query().FirstOrDefault(log => log.Id == command.TransmissionId);
+            if (log == null || log.XmlLink == "")
+            {
+                return null;
+            }
+
             var fileName = $"{log.XmlLink.Split("/").Last().Split(".xml").First()}.xml";
             var stream = await _fileDownloader.DownloadFile(fileName, sftpInfo.S3Bucket);
             StreamReader reader = new StreamReader(stream);

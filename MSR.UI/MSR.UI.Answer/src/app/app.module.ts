@@ -45,6 +45,7 @@ import {
   SearchService,
   ProcedureService,
   DocumentService,
+  XmlService
 } from "./services/api.client.generated";
 
 const APP_PROVIDERS = [
@@ -107,6 +108,7 @@ const APP_PROVIDERS = [
     SearchService,
     ProcedureService,
     DocumentService,
+    XmlService
   ],
 })
 // { //we have this bse url set in the app.config that's why we define as ''
