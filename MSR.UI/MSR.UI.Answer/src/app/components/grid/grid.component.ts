@@ -13,6 +13,7 @@ import {
   DocumentService,
   AuditActionResultOfICollectionOfArchiveDocumentView,
   ArchiveDocumentView,
+  XmlService
 } from "../../services/api.client.generated";
 import { take } from "rxjs/operators";
 import { environment as env } from "../../../environments/environment";
@@ -75,6 +76,7 @@ export class GridComponent implements OnInit {
     private reportCubeService: ReportCubeService,
     private cSVConverterService: CSVConverterService,
     private documentService: DocumentService,
+    private xmlService: XmlService
   ) {}
 
   ngOnInit(): void {
@@ -340,12 +342,10 @@ export class GridComponent implements OnInit {
   }
 
   downloadXmlFile(id: number) {
-    this.documentService.downloadXMLFile(id, env.apiVersion).subscribe(response => {
-      let blob = new Blob([response.data], { type: "application/oct-stream"});
-      const url = URL.createObjectURL(blob);
+    this.xmlService.downloadFile(id, env.apiVersion).subscribe(({ object }) => {
       const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'download.xml');
+      link.href = `data:application/xml;base64,${object.fileContents}`;
+      link.setAttribute('download', object.name);
       document.body.appendChild(link);
       link.click();
       link.remove();

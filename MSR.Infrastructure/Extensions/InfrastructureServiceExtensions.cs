@@ -90,7 +90,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IEquipmentMaintenanceService, EquipmentMaintenanceService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<ICycleCountHistoryService, CycleCountHistoryService>();
-            services.AddScoped<IXmlService, XmlService>();
+            services.AddTransient<IXmlService, XmlService>();
             
             services.AddSingleton<IMessageHubClient, MessageHubService>();
             services.AddSingleton<ISessionManagementService, SessionManagementService>();
