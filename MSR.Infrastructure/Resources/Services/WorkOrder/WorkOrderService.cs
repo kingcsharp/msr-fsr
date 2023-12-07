@@ -2297,7 +2297,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var transmitConfig = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             XmlTransmissionLogModel log = new XmlTransmissionLogModel
             { 
-               Result = "",
+               Result = "STARTFTP",
                SubmittedOn = DateTime.Now,
                WorkOrderId = workOrderId,
                TransmissionDetail = "Transferring XML file via AWS S3",
