@@ -1,9 +1,7 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
@@ -16,7 +14,6 @@ using MSR.Domain.Models;
 using MSR.Domain.Views;
 using NSwag.Annotations;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
-using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.API.V1.Controllers
 {

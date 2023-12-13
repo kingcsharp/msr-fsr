@@ -269,14 +269,15 @@
       )
     "
   >
-    <a
-      href="{{ colsDataAndSettings.colData.downloadURL }}"
-      style="color: #fff"
-      download
-      tooltip="Download File"
-    >
-      <i class="fas fa-download"></i>
-    </a>
+    <div *ngIf="colsDataAndSettings.colData?.downloadURL">
+      <button
+        class="btn btn-success"
+        (click)="downloadXmlFile(colsDataAndSettings.colData.id)"
+        tooltip="Download File"
+      >
+        <i class="fas fa-download"></i> Download
+      </button>
+    </div>
   </td>
   <td
     container="body"

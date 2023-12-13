@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MSR.Domain.DTOs;
 using System.Xml.Linq;
+using MSR.Domain.Models.Config;
 
 namespace MSR.Domain.Abstractions.Services
 {
@@ -36,9 +37,10 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderModel> UpdateWorkOrderEndDateAsync(UpdateWorkOrderEndDate command);
         Task<bool> BulkUpdateWorkOrderPart(BulkUpdateWorkOrderPart command);
         Task<(bool Success, string DisplayString)> UpdateWorkOrderPartCycleCount(UpdateWorkOrderPartCycleCount command);
-        Task<ICollection<XmlTransmissionLogModel>> GenerateAndTransmitXmlFiles(TransmitIntelXmlDataByWorkOrder command);
+        Task<XmlTransmissionLogModel> GenerateAndTransmitXmlFiles(TransmitIntelXmlDataByWorkOrder command);
         Task<XmlTransmissionLogModel> RetransmitXmlFile(TransmitXmlFile command);
         IntelXmlData GetIntelXmlData(int workOrderId);
+        Task<XmlTransmissionLogModel> TransferFtpTransmission(int workOrderId, string XmlFileContent, string XmlLink);
     }
         
 }

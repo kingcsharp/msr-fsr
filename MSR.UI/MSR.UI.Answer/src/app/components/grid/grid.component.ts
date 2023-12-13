@@ -13,6 +13,7 @@ import {
   DocumentService,
   AuditActionResultOfICollectionOfArchiveDocumentView,
   ArchiveDocumentView,
+  XmlService
 } from "../../services/api.client.generated";
 import { take } from "rxjs/operators";
 import { environment as env } from "../../../environments/environment";
@@ -74,7 +75,8 @@ export class GridComponent implements OnInit {
     public cg: CommonGrid,
     private reportCubeService: ReportCubeService,
     private cSVConverterService: CSVConverterService,
-    private documentService: DocumentService
+    private documentService: DocumentService,
+    private xmlService: XmlService
   ) {}
 
   ngOnInit(): void {
@@ -337,5 +339,16 @@ export class GridComponent implements OnInit {
   formatSize(archiveDocmentView: any) {
     archiveDocmentView.fileSize = formatBytes(archiveDocmentView.fileSize);
     return archiveDocmentView;
+  }
+
+  downloadXmlFile(id: number) {
+    this.xmlService.downloadFile(id, env.apiVersion).subscribe(({ object }) => {
+      const link = document.createElement('a');
+      link.href = `data:application/xml;base64,${object.fileContents}`;
+      link.setAttribute('download', object.name);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    });
   }
 }

@@ -11,6 +11,8 @@ namespace MSR.Domain.Abstractions.Services
         Task ResetPasswordAsync(ResetPassword command);
         bool ValidateAccount(int accountId);
         Task ResetMyPasswordAsync(ResetMyPassword command);
+        Task DeactivateUserAsync(DeactivateUser command);
         Task<string> GetJWTTokenAsync();
+        Task ExpireUserSessionAsync(int userId);
     }
 }

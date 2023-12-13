@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.Queries;
+//using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -25,13 +26,15 @@ namespace MSR.Infrastructure.Resources.Services.Users
         private readonly IMapper _mapper;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly IMessageHubClient _messageHub;
+        private readonly IAccountService _acountService;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IAuthenticationHelper authenticationHelper, IMessageHubClient messageHub)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IAuthenticationHelper authenticationHelper, IMessageHubClient messageHub, IAccountService accountService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _authenticationHelper = authenticationHelper;
             _messageHub = messageHub;
+            _acountService = accountService;
         }
 
         public async Task<Domain.Models.UserModel> CreateUserAsync(CreateUser command)
@@ -114,13 +117,24 @@ namespace MSR.Infrastructure.Resources.Services.Users
         {
             var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == command.AccountId);
 
+            //IUserService a = this._userService;
+
             if (user == null) { return; }
 
-            // user.IsActive = !user.IsActive;
-            user.IsActive = false;
+            // Check if the user is trying to deactivate themselves.
+            var loggedInUser = CurrentUser.GetId();   // Get the currently logged-in user's ID.
+
+            if (user.Id == loggedInUser)
+            {
+               throw new DomainException("You cannot deactivate yourself.", DomainError.BadRequest);
+            }
+
+            user.IsActive = !user.IsActive;
 
             _unitOfWork.Users.Update(user);
             await _unitOfWork.SaveChangesAsync();
+
+            await _acountService.ExpireUserSessionAsync(user.Id);
         }
 
         public async Task<Domain.Models.UserModel> UpdateUserAsync(UpdateUser command)
