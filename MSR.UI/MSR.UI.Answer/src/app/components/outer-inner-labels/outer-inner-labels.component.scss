@@ -1,0 +1,80 @@
+@media print {
+    @page {
+      size: 4.125in auto;
+    }
+    body {
+      margin-top: 0.0625in;
+      margin-left: 0.0625in;
+    }
+  
+    .roll-label {
+      margin-bottom: 0in !important;
+      margin-top: 0in !important;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+  }
+  
+  .roll-container {
+    display: table-cell;
+    vertical-align: middle;
+    margin-top: 0.0625in;
+    margin-left: 0.0625in;
+    width: 4.125in;
+  }
+  table.tight {
+    font: small Arial, Helvetica, sans-serif !important;
+    font-size: 7px !important;
+    table-layout: fixed;
+    width: 100%;
+  }
+  tr {
+    height: 20px;
+    padding: 3px;
+  }
+  table.tight td {
+    text-align: left;
+    padding: 4px;
+  }
+  .roll-label {
+    height: 1in;
+    width: 2in;
+    margin-top: 0.125in;
+
+    left: 0in;
+    top: 0in;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+  }
+  .coded {
+    border: 1px solid #000;
+    width: 100%;
+    display: block;
+    padding: 5px;
+  }
+  p {
+    margin: 0 0 2px;
+  }
+  .part-image {
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+  }
+  .part-image img {
+    max-width: 1.25in;
+    max-height: 2in;
+  }
+  
+  .data-matrix-label {
+    text-align: right !important;
+    img {
+      width: 120px !important;
+    }
+  }
+  
+  .space-between {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+  }
+  

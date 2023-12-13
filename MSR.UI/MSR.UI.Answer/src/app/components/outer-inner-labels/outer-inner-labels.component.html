@@ -1,0 +1,45 @@
+<div class="roll-label space-between" *ngFor="let workOrderPart of workOrderParts">
+    <table class="tight">
+        <tbody>
+            <tr>
+                <td width="100%">
+                    <div class="img-responsive" style="width: 75px">
+                        <img [src]="'assets/img/' + logo" alt="Logo" style="width: 100%" />
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items:center;">
+                        <div>Date: <strong>{{ todayDate | date : 'shortDate' }}</strong></div>
+                        <div style="max-width: 130px;">
+                            <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+                                [bc-value]="workOrderPart?.part?.partNumber" [bc-display-value]="false"
+                                [bc-width]="getWidth(workOrderPart?.part?.partNumber)" [bc-height]="30">
+                            </ngx-barcode>
+                        </div>
+                    </div>
+                    <p class="date">
+                        WO:
+                        <strong>
+                            {{ WorkOrder.product?.customer?.name }}-{{WorkOrder.id}}
+                        </strong>
+                        <br>
+                        Part Desc: 
+                        <strong>
+                            {{ workOrderPart?.part?.name }}
+                        </strong>
+                        <br>
+                        Customer Part #:
+                        <strong>
+                            {{ workOrderPart?.part?.partNumber }}
+                        </strong>
+                        Clean Spec:
+                        <strong>{{ WorkOrder.product?.procedureId }}</strong>
+                        <br>
+                        Qty: <strong>________</strong>
+                    </p>
+                    <div class="text-left mt-1">
+                        ONLY OPEN IN CLASS 100 CLEANROOM OR BETTER
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
