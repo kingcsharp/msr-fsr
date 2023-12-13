@@ -2297,7 +2297,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var transmitConfig = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             XmlTransmissionLogModel log = new XmlTransmissionLogModel
             { 
-               Result = "STARTFTP",
+               Result = "Submitting",
                SubmittedOn = DateTime.Now,
                WorkOrderId = workOrderId,
                TransmissionDetail = "Transferring XML file via AWS S3",
@@ -2337,7 +2337,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         {
             var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             XmlTransmissionLogModel XmlLog = new XmlTransmissionLogModel() {
-                Result = "",
+                Result = "Submitting",
                 SubmittedOn = DateTime.Now,
                 TransmissionDetail = "Transferring XML file via SFTP",
                 WorkOrderId = workOrderId,
@@ -2348,12 +2348,17 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             {
                 SaveXmlTransmissionLog(XmlLog);
 
-                using (SftpClient sftp = new SftpClient(sftpInfo.Host, sftpInfo.Username, sftpInfo.Password))
+                using (SftpClient sftp = new SftpClient(sftpInfo.Host, Int32.Parse(sftpInfo.Port), sftpInfo.Username, sftpInfo.Password))
                 {
-                    string fileNameInFTP = $"ftp-{DateTime.Now:MM_dd_yyyy_hh_mm_ss}.xml";
+                    string fileNameInFTP = $"{XmlLink.Split("/").Last().Split(".xml").First()}.xml";
                     sftp.Connect();
                     sftp.ChangeDirectory(sftpInfo.RemoteDirectory);
-                    sftp.Create(fileNameInFTP);
+                    bool isFile = sftp.Exists(fileNameInFTP);
+                    if (isFile == true)
+                    {
+                        sftp.DeleteFile(fileNameInFTP);
+                    }
+
                     sftp.AppendAllText(fileNameInFTP, XmlFileContent);
                     sftp.Disconnect();
                     _logger.LogInformation($"SendFtpTransmission: Transmission complete for file: {fileNameInFTP} for WO: {workOrderId} via FTP to: {sftpInfo.Host}");
