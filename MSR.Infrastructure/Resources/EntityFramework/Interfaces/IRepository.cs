@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using MSR.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
         Task<int> CountAsync(Expression<Func<TEntity, bool>> filter);
         int Count();
         Task<int> CountAsync();
+        IEnumerable<object> GetAll();
         bool Exists(Expression<Func<TEntity, bool>> filter);
         Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter);
         IQueryable<TEntity> Query();
@@ -52,5 +54,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
 
         Task<TEntity> FirstOrDefaultAsync(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
             params Expression<Func<TEntity, object>>[] includes);
+        void Add(XmlTransmissionLogModel log);
     }
 }

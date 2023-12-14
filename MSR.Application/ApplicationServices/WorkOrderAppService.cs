@@ -18,6 +18,10 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.EntityFramework.Application;
+using Microsoft.Extensions.DependencyInjection;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -44,21 +48,27 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<BulkUpdateWorkOrderPart>,
         ICommandHandler<UpdateWorkOrderPartCycleCount>,
         ICommandHandler<TransmitIntelXmlDataByWorkOrder>,
-        ICommandHandler<TransmitXmlFile>
+        ICommandHandler<TransmitXmlFile>,
+        ICommandHandler<XmlFtpTransmit>,
+        ICommandHandler<DownloadXmlFile>
     {
         private readonly IWorkOrderService _workOrderService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
         private readonly IDocumentService _documentService;
         private readonly ILogger<WorkOrderAppService> _logger;
+        private readonly IXmlService _xmlService;
 
-        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper, IFileService fileService, IDocumentService documentService, ILogger<WorkOrderAppService> logger)
+        public WorkOrderAppService(IWorkOrderService procedureService, IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IDocumentService documentService, ILogger<WorkOrderAppService> logger, IXmlService xmlService)
         {
+            _unitOfWork = unitOfWork;
             _workOrderService = procedureService;
             _mapper = mapper;
             _fileService = fileService;
             _documentService = documentService;
             _logger = logger;
+            _xmlService = xmlService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetInvoiceableWorkOrders command, CancellationToken cancellationToken = default)
@@ -106,42 +116,96 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<WorkOrderTaskModel>(ret);
         }
 
+        public async Task<ICommandResponse> HandleAsync(XmlFtpTransmit command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.TransferFtpTransmission(command.workOrderId, command.XmlContent, command.XmlLink);
+
+            return new CommandResponse<XmlTransmissionLogModel>(ret);
+        }
+
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderTask command, CancellationToken cancellationToken = default)
         {
-
             _logger.LogInformation($"UpdateWorkOrderTask: Starting Update for work order task: {command.Id} for workorder {command.WorkOrderId}");
-                 
-            var ret = await _workOrderService.UpdateWorkOrderTaskAsync(command);
-            var wo = (await _workOrderService.GetWorkOrderById(ret.WorkOrderId)).FirstOrDefault();
-            _logger.LogInformation($"UpdateWorkOrderTask: Update complete for work order task: {command.Id} for workorder {command.WorkOrderId}");
-            var isIntel = wo.Product.Customer.Name.ToLower().Contains("intel");
-            var allTasksComplete = wo.WorkOrderTasks.All(wot => wot.Status.Id == 3);
-            _logger.LogInformation($"UpdateWorkOrderTask: workOrderTask: {command.Id}, workOrder: {command.WorkOrderId}, isIntelCustomer: {isIntel}, allTasksComplete: {allTasksComplete}");
 
-            
+            WorkOrderTaskModel ret = null;
 
-            if (isIntel && allTasksComplete)
+            try
             {
-                _logger.LogInformation($"UpdateWorkOrderTask: All tasks are complete for intel customer work order {wo.Id}");
-                // Run this code in another thread pool so we don't block the action
+                ret = await _workOrderService.UpdateWorkOrderTaskAsync(command);
+                var wo = (await _workOrderService.GetWorkOrderById(ret.WorkOrderId)).FirstOrDefault();
+                _logger.LogInformation($"UpdateWorkOrderTask: Update complete for work order task: {command.Id} for workorder {command.WorkOrderId}");
+                var isIntel = wo.Product.Customer.Name.ToLower().Contains("intel");
+                var allTasksComplete = wo.WorkOrderTasks.All(wot => wot.Status.Id == 3);
+                var tasksCancelled = wo.WorkOrderTasks.Any(wot => wot.Status.Id == 4);
+                _logger.LogInformation($"UpdateWorkOrderTask: workOrderTask: {command.Id}, workOrder: {command.WorkOrderId}, isIntelCustomer: {isIntel}, allTasksComplete: {allTasksComplete}");
 
-                    try
-                    {
-                    _logger.LogInformation($"UpdateWorkOrderTask: Retreving IntexlXmlData for work order: {wo.Id}");
+                if ((isIntel && allTasksComplete) || (isIntel && tasksCancelled))
+                {
+                    _logger.LogInformation($"UpdateWorkOrderTask: All tasks are complete for intel customer work order {wo.Id}");
 
-                        var data = _workOrderService.GetIntelXmlData(ret.WorkOrderId);
-                        _logger.LogInformation($"UpdateWorkOrderTask: Successfully retrieved IntexlXmlData for work order: {wo.Id}. Now beginning xml transmission");
-                        var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
-                        await _workOrderService.GenerateAndTransmitXmlFiles(xmlCommand);
-                    }
-                    catch (Exception ex)
-                    {
-                        this._logger.LogError(ex, $"Error Transmitting Files: {ex.Message}");
-                    }
-               
+                    var data = _workOrderService.GetIntelXmlData(ret.WorkOrderId);
+                    _logger.LogInformation($"UpdateWorkOrderTask: Successfully retrieved IntelXmlData for work order: {wo.Id}. Now beginning XML transmission");
+
+
+                    // Continue with your XML transmission logic
+                    var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
+                    await _workOrderService.GenerateAndTransmitXmlFiles(xmlCommand);
+                }
+
+                return new CommandResponse<WorkOrderTaskModel>(ret);
             }
+            catch (Exception ex)
+            {
+                // Log any exceptions that occur during the UpdateWorkOrderTaskAsync call
+                _logger.LogError(ex, $"Error updating work order task: {ex.Message}");
+
+                // Create and log XmlTransmissionLog for failure
+
+                CreateAndLogXmlTransmissionLog("Failure", ex.Message, command.WorkOrderId);
+
+            }
+
+            // Return a default response if ret is null (handle this based on your logic)
             return new CommandResponse<WorkOrderTaskModel>(ret);
         }
+
+        public async Task<ICommandResponse> HandleAsync(DownloadXmlFile command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _xmlService.DownloadFile(command.Id);
+
+            return new CommandResponse<FileModel>(ret);
+        }
+
+        private async Task<string> CreateAndLogXmlTransmissionLog(string result, string detail, int workOrderId)
+        {
+            try
+            {
+                var xmlLink = $"";
+                 
+                var transmissionLog = new XmlTransmissionLog
+                {
+                    Result = result,
+                    SubmittedOn = DateTime.Now,
+                    TransmissionDetail = detail,
+                    WorkOrderId = workOrderId,
+                    XmlLink = xmlLink
+                };
+
+                // Log the XmlTransmissionLog entity
+                _unitOfWork.XmlTransmissionLogs.Add(transmissionLog);
+                await _unitOfWork.SaveChangesAsync(); // Use asynchronous SaveChanges method
+
+                return xmlLink;
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception, log, and return a default value or throw
+                _logger.LogError(ex, $"Error creating and logging XmlTransmissionLog: {ex.Message}");
+                return string.Empty; // Return a default value or throw an exception
+            }
+        }
+
+
 
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderTaskMonitor command, CancellationToken cancellationToken = default)
         {
@@ -214,7 +278,7 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workOrderService.GenerateAndTransmitXmlFiles(command);
 
-            return new CommandResponse<ICollection<XmlTransmissionLogModel>>(ret);
+            return new CommandResponse<XmlTransmissionLogModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(AddNCRWorkOrderTask command, CancellationToken cancellationToken = default)

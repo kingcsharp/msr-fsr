@@ -33,6 +33,13 @@ using System.Xml.Linq;
 using Renci.SshNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
+using System.Diagnostics;
+using MSR.Infrastructure.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commanding;
+using System.Threading;
+using System.Security.Cryptography;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -52,9 +59,10 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         private readonly ILogger _logger;
         private readonly IUploadFiles _fileUploader;
         private readonly IConfiguration _config;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
         public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IEmailService emailService, IConfiguration config,
-            EmailInformation emailInformation, GeneralInformation generalInformation, IMessageHubClient messageHub, IFileHandlerFactory fileHanderFactory, ILogger<WorkOrderService> logger)
+            EmailInformation emailInformation, GeneralInformation generalInformation, IMessageHubClient messageHub, IFileHandlerFactory fileHanderFactory, ILogger<WorkOrderService> logger, IServiceScopeFactory serviceScopeFactory)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -67,6 +75,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             _logger = logger;
             _fileUploader = fileHanderFactory.CreateUploader(FileProvider.S3);
             _config = config;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         // TODO: WorkOrder Status needs to be calculated in a timely matter
@@ -1490,7 +1499,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             });
 
             return workOrderTaskModel;
-            
+
         }
 
         public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
@@ -2231,197 +2240,213 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
             var log = _unitOfWork.XmlTransmissionLogs.Query().FirstOrDefault(log => log.Id == command.TransmissionId);
-            var fileName= $"{log.XmlLink.Split("/").Last().Split(".xml").First()}.xml";
-            var stream = await _fileDownloader.DowloadFile(fileName, sftpInfo.S3Bucket);
+            if (log == null || log.XmlLink == "")
+            {
+                throw new DomainException("The XML file doesn't exist in S3", DomainError.InternalServerError);
+            }
 
+            var fileName = $"{log.XmlLink.Split("/").Last().Split(".xml").First()}.xml";
+            var stream = await _fileDownloader.DownloadFile(fileName, sftpInfo.S3Bucket);
+            StreamReader reader = new StreamReader(stream);
+            string XmlContent = reader.ReadToEnd();
+
+            XmlTransmissionLogModel XmlLog = await TransferFtpTransmission(log.WorkOrderId, XmlContent, log.XmlLink);
+
+            return XmlLog;
+        }
+
+        private async Task<int> DelayAsync(int seconds)
+        {
+            await Task.Delay(seconds * 1000);
+            Trace.WriteLine($"Done waiting {seconds} seconds");
+            return seconds;
+        }
+
+        private async Task BackgroundSftpTransfer(IServiceScopeFactory serviceScopeFactory, int workOrderId, string XmlContent, string XmlLink)
+        {
+            using var scope = serviceScopeFactory.CreateScope();
+            var handler = scope.ServiceProvider.GetService(typeof(ICommandHandler<XmlFtpTransmit>)) as ICommandHandler<XmlFtpTransmit>;
+            XmlFtpTransmit command = new XmlFtpTransmit()
+            {
+                workOrderId = workOrderId,
+                XmlContent = XmlContent,
+                XmlLink = XmlLink
+            };
+            await handler.HandleAsync(command);
+        }
+
+        public async Task<XmlTransmissionLogModel> GenerateAndTransmitXmlFiles(TransmitIntelXmlDataByWorkOrder command)
+        {
+            // Generate XML documents for each WorkOrderPart
+            var monitors = command.Data.WorkOrderMonitors;
+            var XmlFiles = command.Data.WorkOrderParts.Select(wop => this.generateXmlDocument(wop, monitors.ToList()));
+            XDocument XmlFile = XmlFiles.ToArray()[0];
+            int WOId = command.Data.WorkOrderParts.FirstOrDefault().WorkOrderId;
+            
+            XmlTransmissionLogModel XmlTransferredLog = await TransmitXmlDocumentToS3(WOId, XmlFile);           
+
+            // Initiate the asynchronous tasks without awaiting SendFtpTransmission
+            Task.Run(() => BackgroundSftpTransfer(_serviceScopeFactory, WOId, XmlFile.ToString(), XmlTransferredLog.XmlLink));
+
+            return XmlTransferredLog;
+        }
+
+        private async Task<XmlTransmissionLogModel> TransmitXmlDocumentToS3(int workOrderId, XDocument XmlFile)
+        {
+            _logger.LogInformation($"TransmitXmlDocuments: Beginning Transmission the file for WO: {workOrderId}");
+            var transmitConfig = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
+            XmlTransmissionLogModel log = new XmlTransmissionLogModel
+            { 
+               Result = "Submitting",
+               SubmittedOn = DateTime.Now,
+               WorkOrderId = workOrderId,
+               TransmissionDetail = "Transferring XML file via AWS S3",
+               XmlLink = ""
+            };
+            var fileName = $"intel-{DateTime.Now:MM_dd_yyyy_hh_mm_ss}.xml";
+            _logger.LogInformation($"TransmitXmlDocuments: Generated filename {fileName} for WO: {workOrderId}.");
             try
             {
-                using (SftpClient sftp = new SftpClient(sftpInfo.Host, sftpInfo.Username, sftpInfo.Password))
-                {
-                    sftp.Connect();
-                    sftp.UploadFile(stream, sftpInfo.RemoteDirectory + fileName);
-                    sftp.Disconnect();
+                var xmlLink = await CreateAndUploadXmlFileAsync(XmlFile, fileName, workOrderId, transmitConfig.S3Bucket);
 
-                    log.Result = "Success";
-                    log.SubmittedOn = DateTime.Now;
-                    log.TransmissionDetail = "File transmitted successfully";
-                }
+                // Update log with XmlLink
+                log.XmlLink = xmlLink;
+                log.Result = "Success";
+                log.SubmittedOn = DateTime.Now;
+                log.TransmissionDetail = "The XML file has been successfully transmitted to S3";
+                SaveXmlTransmissionLog(log);
+
+                _logger.LogInformation($"TransmitXmlDocuments: S3 Upload complete for file: {fileName} for WO: {workOrderId}");                
+                return log;
             }
             catch (Exception ex)
             {
+                // Update log with failure details
                 log.Result = "Failure";
+                log.TransmissionDetail = ex.Message;
                 log.SubmittedOn = DateTime.Now;
-                log.TransmissionDetail = $"Failed to send file to SFTP Server. Error: {ex.Message}";
+                SaveXmlTransmissionLog(log);
+
+                _logger.LogError(ex, log.TransmissionDetail);
+
+                throw new DomainException("The XML file failed to transfer to S3", DomainError.InternalServerError);
             }
+        }
 
-            _unitOfWork.XmlTransmissionLogs.Update(log);
-
-            return new XmlTransmissionLogModel
-            {
-                Result = log.Result,
-                SubmittedOn = log.SubmittedOn,
-                TransmissionDetail = log.TransmissionDetail,
-                WorkOrderId = log.WorkOrderId,
-                XmlLink = log.XmlLink,
-                Id = log.Id
-
+        public async Task<XmlTransmissionLogModel> TransferFtpTransmission(int workOrderId, string XmlFileContent, string XmlLink)
+        {
+            var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
+            XmlTransmissionLogModel XmlLog = new XmlTransmissionLogModel() {
+                Result = "Submitting",
+                SubmittedOn = DateTime.Now,
+                TransmissionDetail = "Transferring XML file via SFTP",
+                WorkOrderId = workOrderId,
+                XmlLink = XmlLink
             };
 
-        }
-
-        public async Task<ICollection<XmlTransmissionLogModel>> GenerateAndTransmitXmlFiles(TransmitIntelXmlDataByWorkOrder command)
-        {
-            var monitors = command.Data.WorkOrderMonitors;
-            var xmlFiles = command.Data.WorkOrderParts.Select(wop => this.generateXmlDocument(
-                wop,
-                monitors.ToList())
-            );
-
-            var logs = await sendIntelXmlDocuments(command.Data.WorkOrderParts.FirstOrDefault().WorkOrderId, xmlFiles.ToList());
-
-            return logs;
-        }
-
-        private async Task<ICollection<XmlTransmissionLogModel>> sendIntelXmlDocuments(int workOrderId, ICollection<XDocument> files)
-        {
-
-            var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
-            _logger.LogInformation($"sendIntelXmlDocuments: Starting XML transmission for wo: {workOrderId}");
-
-
-            using (SftpClient sftp = new SftpClient(sftpInfo.Host, sftpInfo.Username, sftpInfo.Password))
+            try
             {
-                var logs = new List<XmlTransmissionLogModel>();
+                SaveXmlTransmissionLog(XmlLog);
 
-
-                
-                sftp.Connect();
-                _logger.LogInformation($"sendIntelXmlDocuments: Connected to host {sftpInfo.Host} for wo: {workOrderId}.");
-
-                if (!sftp.Exists(sftpInfo.RemoteDirectory))
+                using (SftpClient sftp = new SftpClient(sftpInfo.Host, Int32.Parse(sftpInfo.Port), sftpInfo.Username, sftpInfo.Password))
                 {
-                    _logger.LogInformation($"sendIntelXmlDocuments: Remoted Directory: {sftpInfo.RemoteDirectory} not found for host {sftpInfo.Host} for wo: {workOrderId}.");
-                    sftp.Disconnect(); // Disconnect if directory doesn't exist
-                    var ex = new Exception($"The SFTP path: {sftpInfo.RemoteDirectory} cannot be found on the remote server.");
-                    _logger.LogError(ex, ex.Message);
-                    throw ex;
+                    string fileNameInFTP = $"{XmlLink.Split("/").Last().Split(".xml").First()}.xml";
+                    sftp.Connect();
+                    sftp.ChangeDirectory(sftpInfo.RemoteDirectory);
+                    bool isFile = sftp.Exists(fileNameInFTP);
+                    if (isFile == true)
+                    {
+                        sftp.DeleteFile(fileNameInFTP);
+                    }
 
+                    sftp.AppendAllText(fileNameInFTP, XmlFileContent);
+                    sftp.Disconnect();
+                    _logger.LogInformation($"SendFtpTransmission: Transmission complete for file: {fileNameInFTP} for WO: {workOrderId} via FTP to: {sftpInfo.Host}");
+
+                    XmlLog.Result = "Success";
+                    XmlLog.SubmittedOn = DateTime.Now;
+                    XmlLog.TransmissionDetail = "Successfully transmitted XML file via SFTP";
+                    SaveXmlTransmissionLog(XmlLog);
                 }
-
-                _logger.LogInformation($"sendIntelXmlDocuments: Found {files.Count} for wo: {workOrderId}.");
-
-                var fileIndex = 1;
-
-                var uploadTasks = files.Select(async xDoc =>
-                {
-                    _logger.LogInformation($"sendIntelXmlDocuments: Beginning Transmisstion for file: {fileIndex}/{files.Count} for wo: {workOrderId}.");
-                    fileIndex = fileIndex + 1;
-                    // Log defaults
-                    var log = new XmlTransmissionLog
-                    {
-                        Result = "Success",
-                        SubmittedOn = DateTime.Now,
-                        XmlLink = "",
-                        TransmissionDetail = "Successful SFTP Transmission",
-                        WorkOrderId = workOrderId
-                    };
-
-                    var fileName = $"intel-{DateTime.Now.ToString("MM_dd_yyyy_hh_mm_ss")}.xml";
-                    _logger.LogInformation($"sendIntelXmlDocuments: Generated filename {fileName} for wo: {workOrderId}.");
-                    try
-                    {
-                        try
-                        {
-                            _logger.LogDebug($"sendIntelXmlDocuments: Attempting to upload file to S3: {fileName} for wo: {workOrderId} to Bucket: {sftpInfo.S3Bucket}");
-                            using (MemoryStream stream = new MemoryStream())
-                            {
-                                xDoc.Save(stream);
-                                stream.Seek(0, SeekOrigin.Begin);
-                                var fileModel = new FileModel() { Name = fileName, ContentType = "application/xml" };
-                                log.XmlLink = await _fileUploader.UploadFile(stream, fileModel, sftpInfo.S3Bucket);
-                            }
-                            _logger.LogInformation($"sendIntelXmlDocuments: Upload complete for file: {fileName} for wo: {workOrderId} to S3 Bucket: {sftpInfo.S3Bucket}");
-
-                        }
-                        catch (Exception ex)
-                        {
-                            var exception = new Exception($"Failed to send file to S3 bucket. Error: {ex.Message}");
-                            _logger.LogError(exception, exception.Message);
-                            throw exception;
-
-                        }
-
-                        try
-                        {
-                            _logger.LogInformation($"sendIntelXmlDocuments: Attempting to transmit file: {fileName} for wo: {workOrderId} via sftp to: {sftpInfo.Host}");
-                            using (MemoryStream stream = new MemoryStream())
-                            {
-                                xDoc.Save(stream);
-                                stream.Seek(0, SeekOrigin.Begin);
-                                sftp.UploadFile(stream, sftpInfo.RemoteDirectory + fileName);
-                                logs.Add(new XmlTransmissionLogModel
-                                {
-                                    Result = log.Result,
-                                    SubmittedOn = log.SubmittedOn,
-                                    TransmissionDetail = log.TransmissionDetail,
-                                    WorkOrderId = log.WorkOrderId,
-                                    XmlLink = log.XmlLink,
-                                    Id = log.Id
-
-                                });
-                                _unitOfWork.XmlTransmissionLogs.Add(log);
-                                _unitOfWork.SaveChanges();
-                            }
-                            _logger.LogInformation($"sendIntelXmlDocuments: Transmission complete for file: {fileName} for wo: {workOrderId} via sftp to: {sftpInfo.Host}");
-
-                        }
-                        catch (Exception ex)
-                        {
-                            var exception =  new Exception($"Failed to send file to SFTP Server. Error: {ex.Message}");
-                            _logger.LogError(exception, exception.Message);
-                            throw exception;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        log.TransmissionDetail = ex.Message;
-                        log.Result = "Failure";
-                        _unitOfWork.XmlTransmissionLogs.Add(log);
-                        _unitOfWork.SaveChanges();
-
-                        logs.Add(new XmlTransmissionLogModel
-                        {
-                            Result = log.Result,
-                            SubmittedOn = log.SubmittedOn,
-                            TransmissionDetail = log.TransmissionDetail,
-                            WorkOrderId = log.WorkOrderId,
-                            XmlLink = log.XmlLink,
-                            Id = log.Id
-
-                        });
-
-
-                    }
-
-                });
-
-                await Task.WhenAll(uploadTasks);
-
-                sftp.Disconnect();
-
                 
+                return XmlLog;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"SendFtpTransmission: Error updating XML transmission log for WorkOrderId: {workOrderId}. Exception: {ex.Message}");
+                XmlLog.Result = "Failure";
+                XmlLog.SubmittedOn = DateTime.Now;
+                XmlLog.TransmissionDetail = ex.Message;
 
-                return logs;
+                SaveXmlTransmissionLog(XmlLog);
 
+                throw new DomainException("FTP Transmission is failed", DomainError.InternalServerError);
             }
         }
+
+        private async Task<string> CreateAndUploadXmlFileAsync(XDocument xDoc, string fileName, int workOrderId, string s3Bucket)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                xDoc.Save(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                var fileModel = new FileModel() { Name = fileName, ContentType = "application/xml" };
+
+                // Assuming _fileUploader.UploadFile returns the URL
+                var xmlLink = await _fileUploader.UploadFile(stream, fileModel, s3Bucket);
+
+                return xmlLink;
+            }
+        }
+
+        private void SaveXmlTransmissionLog(XmlTransmissionLogModel log)
+        {
+            try
+            {
+                // Check if there is an existing log for the specified WorkOrderId
+                var existingLog = _unitOfWork.XmlTransmissionLogs.FirstOrDefault(false, x => x.WorkOrderId == log.WorkOrderId);
+
+                if (existingLog != null)
+                {
+                    // If log for the same WorkOrderId exists, update it
+                    existingLog.Result = log.Result;
+                    existingLog.SubmittedOn = log.SubmittedOn;
+                    existingLog.TransmissionDetail = log.TransmissionDetail;
+                    existingLog.XmlLink = log.XmlLink;
+                }
+                else
+                {
+                    // If log doesn't exist, create a new one
+                    var newLog = new XmlTransmissionLog
+                    {
+                        Result = log.Result,
+                        SubmittedOn = log.SubmittedOn,
+                        TransmissionDetail = log.TransmissionDetail,
+                        WorkOrderId = log.WorkOrderId,
+                        XmlLink = log.XmlLink
+                    };
+
+                    _unitOfWork.XmlTransmissionLogs.Add(newLog);
+                }
+
+                // Save changes to the database
+                _unitOfWork.SaveChanges();
+                _logger.LogInformation($"SaveXmlTransmissionLog: Log saved successfully for WorkOrderId: {log.WorkOrderId}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"SaveXmlTransmissionLog: Error saving log for WorkOrderId: {log.WorkOrderId}. Exception: {ex.Message}");
+                throw; // Rethrow the exception to ensure it's logged in your error handling
+            }
+        }
+
 
         private XDocument generateXmlDocument(IntelWorkOrderPartView woPart, ICollection<IntelWorkOrderMonitorView> monitors)
         {
             XNamespace xSchema = "x-schema:../Schema/PLTSchema2023May.xml";
-            
+
             DateTime utcDate = DateTime.UtcNow;
-            
+
             IEnumerable<XElement> monitorMaterialParameters = monitors.Select(m => new XElement(xSchema + "MaterialParameter",
                 new XElement(xSchema + "ShortName", m.ShortName),
                     new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
@@ -2434,7 +2459,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                     )
                 )
             ));
-            
+
             XDocument document = new XDocument(
                 new XDeclaration("1.0", "UTF-8", "yes"),
                 new XElement(xSchema + "QualityCertificateFile",
@@ -2482,8 +2507,9 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         public IntelXmlData GetIntelXmlData(int workOrderId)
         {
             // Issue starts here
-            var woParts = _unitOfWork.Context.SqlQuery<IntelWorkOrderPartView>("SELECT * FROM dbo.IntelXMLParts WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
-            var woMonitors = _unitOfWork.Context.SqlQuery<IntelWorkOrderMonitorView>("SELECT * FROM dbo.IntelXMLMonitors WHERE WorkOrderId = @WorkOrderId", new SqlParameter("@WorkOrderId", workOrderId));
+            var woParts = _unitOfWork.Context.SqlQuery<IntelWorkOrderPartView>("SELECT * FROM dbo.IntelXMLParts WHERE WorkOrderId = {0}", workOrderId).ToList();
+            var woMonitors = _unitOfWork.Context.SqlQuery<IntelWorkOrderMonitorView>("SELECT * FROM dbo.IntelXMLMonitors WHERE WorkOrderId = {0}", workOrderId).ToList();
+
             return new IntelXmlData
             {
                 WorkOrderParts = woParts,

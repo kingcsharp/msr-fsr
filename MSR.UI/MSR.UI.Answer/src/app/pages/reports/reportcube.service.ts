@@ -44,10 +44,10 @@ export class ReportCubeService {
     const headers = new HttpHeaders().set("key", this.cubeKey);
     headers.set("timeout", `${5 * 60000}`);
 
-    // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
+   // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
     // let apiEndPointUrl = reportInfo.apiEndPointURL.replace(
-    //   "https://qa-report-api.cmhworks.com",
-    //   "http://localhost"
+      //   "https://qa-report-api.cmhworks.com",
+      //   "http://localhost"
     // );
     let apiEndPointUrl = reportInfo.apiEndPointURL;
 
@@ -1141,7 +1141,7 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
         ];
-        case "IntelMonitorTransmissionsbyWorkOrder":
+      case "IntelMonitorTransmissionsbyWorkOrder":
           return [
             new ColumnsSaved({
               id: "id",
@@ -1165,7 +1165,7 @@ export class ReportCubeService {
               id: "xmllink",
               label: "XML Link",
               visible: true,
-              type: this.enumColumnType.String,
+              type: this.enumColumnType.DownloadLink,
             }),
             new ColumnsSaved({
               id: "submitteddate",
@@ -1474,6 +1474,8 @@ export class ReportCubeService {
           pagingModel,
           true
         );
+      case "IntelMonitorTransmissionsbyWorkOrder":
+        pagingModel.data.map(elem => elem["XMLTransmissionLog.downloadURL"] = elem["XMLTransmissionLog.xmllink"]);
       default:
         if (pagingModel.data.length > 0) {
           pagingModel.data = pagingModel.data.map((elem) =>

@@ -11,7 +11,10 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
+using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions.Services;
+using MSR.Infrastructure.Resources.Services;
+using MSR.Infrastructure.Resources.AWS;
 using NSwag.Annotations;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -37,7 +40,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
             _workOrderViewService = workOrderViewService;
             _workOrderService = workOrderService;
-        }
+                   }
 
         #region GET
         /// <summary>

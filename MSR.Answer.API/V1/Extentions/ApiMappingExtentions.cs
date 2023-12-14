@@ -291,6 +291,19 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        public static DownloadXmlFile ToDownloadXmlFileCommand(this DownloadXmlRequest request)
+        {
+            return new DownloadXmlFile()
+            {
+                Id = request.Id
+            };
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static UpdateUser ToUpdateUserCommand(this UpdateUserRequest request)
         {
             return new UpdateUser()
