@@ -36,7 +36,6 @@ import {
     constructor(private workOrderPartService: WorkOrderPartService) {}
   
     ngOnInit(): void {
- 
         this.workOrderPartService
       .workOrderPartGet(null, this.WorkOrder.id, env.apiVersion)
       .pipe(take(1))
@@ -44,7 +43,7 @@ import {
         responseHandler((response) => {
           this.workOrderParts = [];
           const sortData = _.sortBy(response.object, (woPart) => woPart.id);
-          
+
           const parentParts = _.filter(sortData, (part) => !part.parentId);
           parentParts.forEach((parentPart) => {
             this.workOrderParts.push(parentPart);
