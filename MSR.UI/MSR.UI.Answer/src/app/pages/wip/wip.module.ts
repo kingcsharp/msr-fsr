@@ -40,6 +40,7 @@ import { NcrLabelComponent } from "../../components/ncr-label/ncr-label.componen
 import { TechnicalDataLabelComponent } from "../../components/technical-data-label/technical-data-label.component";
 import { WorkReportComponent } from "../../components/work-report/work-report.component";
 import { EditableCellComponent } from "./wipdetails/editable-cell/editable-cell.component";
+import { OuterInnerLabelsComponent } from "../../components/outer-inner-labels/outer-inner-labels.component";
 
 export const routes: Routes = [
   { path: "", redirectTo: "wipstatus", pathMatch: "full" },
@@ -68,6 +69,7 @@ export const routes: Routes = [
     WipHistoryReportComponent,
     NcrReportComponent,
     PartLabelRollComponent,
+    OuterInnerLabelsComponent,
     TechnicalDataLabelComponent,
     NcrLabelComponent,
     WorkReportComponent,

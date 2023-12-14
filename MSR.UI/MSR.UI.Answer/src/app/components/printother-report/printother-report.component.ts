@@ -41,6 +41,9 @@ export class PrintotherReportComponent implements OnInit {
       { label: 'Part Label Roll 4in', value: 'PartLabelRoll4in' },
       { label: 'Part Label Roll 4in KoMiCo', value: 'PartLabelRoll4inKoMiCo' },
       { label: 'Part Label Roll 4in No Logo', value: 'PartLabelRoll4inNoLogo' },
+      { label: 'Part Label Roll 4in Outer/Inner', value: 'PartLabelRoll4inOuterInner' },
+      { label: 'Part Label Roll 1inx2in Outer', value: 'PartLabelRoll4in2inOuter' },
+      { label: 'Part Label Roll 1inx2in Inner', value: 'PartLabelRoll4in2inInner' },
     ];
   }
 
