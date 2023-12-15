@@ -40,6 +40,8 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding;
 using System.Threading;
 using System.Security.Cryptography;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Linq.Dynamic.Core;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -246,6 +248,20 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             return new List<WorkOrderModel>() { DetachBackPointers(workOrderModel) };
         }
 
+        public async Task<Boolean> CheckDuplicateWorkOrder(CreateWorkOrderDTO createWorkOrderDto)
+        {
+            int productId = createWorkOrderDto.WorkOrderProducts.First().ProductId;
+            return await _unitOfWork.WorkOrders.Query().Where(w =>
+                w.ProductId == productId
+                &&
+                w.PurchaseId == createWorkOrderDto.PurchaseId
+                 &&
+                w.Price == createWorkOrderDto.Price
+                &&
+                w.LocationId == createWorkOrderDto.LocationId
+            ).CountAsync() == 1;
+        }
+
         public async Task<string> CreateWorkOrderAsync(CreateWorkOrderDTO createWorkOrderDto)
         {
             try
@@ -259,11 +275,19 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                         $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
                         DomainError.BadRequest);
                 }
+                // Check Duplicate WorkOrder
+                Boolean isDuplicate = await CheckDuplicateWorkOrder(createWorkOrderDto);
+                if (isDuplicate == true)
+                {
+                    throw new DomainException(
+                        $"Duplicate WorkOrder, PurchaseId is {createWorkOrderDto.PurchaseId}, PurchaseOrderId is {createWorkOrderDto.PurchaseOrderId}",
+                        DomainError.BadRequest);
+                }
 
                 if (createWorkOrderDto.ScheduledStartDate.Ticks == 0)
                 {
                     createWorkOrderDto.ScheduledStartDate = DateTime.UtcNow;
-                }
+                }                
 
                 var purchase = _unitOfWork.Purchases.FirstOrDefault(false, i => i.Id == createWorkOrderDto.PurchaseId);
 
