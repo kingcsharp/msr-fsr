@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  url: "https://qa-api.answer.msr-fsr.com",
-  API_BASE_URL: "https://qa-api.answer.msr-fsr.com",
+  url: "https://prod-api.answer.msr-fsr.com",
+  API_BASE_URL: "https://prod-api.answer.msr-fsr.com",
   MESSAGE_URL: "https://message.answer.msr-fsr.com",
   hmr: false,
   backend: true,
