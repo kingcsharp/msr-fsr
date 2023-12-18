@@ -8,7 +8,10 @@ namespace MSR.Domain.Models
 	        public DateTime SubmittedOn { get; set; }
 	        public string TransmissionDetail { get; set; }
 	        public int WorkOrderId { get; set; }
-	        public string XmlLink { get; set; }
+			public int WorkOrderPartId { get; set; }
+			public string PartName { get; set; }
+			public string SerialNumber { get; set; }
+			public string XmlLink { get; set; }
    	}
 }
 

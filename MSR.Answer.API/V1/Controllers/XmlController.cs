@@ -45,12 +45,12 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
         [HttpPatch("Transmit")]
-        [SwaggerResponse(typeof(AuditActionResult<XmlTransmissionLogModel>))]
+        [SwaggerResponse(typeof(AuditActionResult<string>))]
         public async Task<IActionResult> AddMessage([FromBody, Required] XmlTransmissionRequest request)
         {
             var command = request.ToTransmitXmlFileCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<XmlTransmissionLogModel>("File transmitted successfully via SFTP");
+            return ret.ToOkObjectResponse<string>("Xml file was successfully transmitted via SFTP");
             
         }
 

@@ -53,5 +53,33 @@ namespace MSR.Infrastructure.Resources.Answer
 
             return answerResponse.Object;
         }
+
+        public async Task<string> PostWorkOrderTransmitXmlAsync(int WorkOrderId, CancellationToken cancellationToken = default)
+        {
+            var sendObj = new { WorkOrderId };
+            var request = JsonConvert.SerializeObject(sendObj);
+            var post = new HttpRequestMessage(HttpMethod.Post, "/v1/WorkOrder/TransmitXml")
+            {
+                Content = new StringContent(request, Encoding.UTF8, "application/json")
+            };
+            post.Headers.Add("Authorization", $"Bearer {CurrentUser.GetTokenString()}");
+
+            var httpResponse = await _httpClient.SendAsync(post, cancellationToken);
+
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                throw new DomainException($"Error attempting the transmission Xml files to WorkOrder{WorkOrderId}: {httpResponse.StatusCode} | Request: {request}", DomainError.InternalServerError);
+            }
+
+            var result = await httpResponse.Content.ReadAsStringAsync();
+
+            var answerResponse = JsonConvert.DeserializeObject<AnswerResponse>(result);
+            if (answerResponse.ErrorMessages.Any())
+            {
+                throw new DomainException($"Error attempting the transmission Xml files to WorkOrder{WorkOrderId}: {string.Join("|-|", answerResponse.ErrorMessages.ToList())}", DomainError.RemoteServerError);
+            }
+
+            return answerResponse.Object;
+        }
     }
 }
