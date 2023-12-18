@@ -23,6 +23,7 @@ import {
   export class OuterInnerLabelsComponent implements OnInit {
     @Input() WorkOrder: WorkOrderModel;
     @Input() printLogo: EnumWipPrintLogo;
+    @Input() selectedReport: string;
   
     todayDate: Date = new Date();
     logo: string;
