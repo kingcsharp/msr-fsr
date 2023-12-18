@@ -23,7 +23,8 @@ namespace MSR.Application.EventServices
 {
     public class EventServiceHandler :
         IEventHandler<ImportEvent>,
-        IEventHandler<WorkOrderCreateEvent>
+        IEventHandler<WorkOrderCreateEvent>,
+        IEventHandler<WorkOrderTransmitXmlEvent>
     {
         private readonly ICustomerService _customerService;
         private readonly ILocationService _locationService;
@@ -154,8 +155,32 @@ namespace MSR.Application.EventServices
                     Message = msg,
                     Status = EnumToasterStatus.Error
                 });
-                
+
                 //We need errors to bubble up all the way so that it can handle sending to the DL queue
+                throw;
+            }
+        }
+
+        public async Task HandleAsync(WorkOrderTransmitXmlEvent handledEvent, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var transmittedXmlFileNames = await _restClient.PostWorkOrderTransmitXmlAsync(handledEvent.WorkOrderId, cancellationToken);
+                await _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
+                {
+                    Message = $"XML files transfer to WorkOrder(Id:{handledEvent.WorkOrderId}) was successfull: Xml files are {transmittedXmlFileNames}",
+                    Status = EnumToasterStatus.Success
+                });
+            }
+            catch (Exception e)
+            {
+                var msg = $"XML files transfer to WorkOrder(Id:{handledEvent.WorkOrderId}) was unsuccessful. the error is {e.Message}";
+                await _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
+                {
+                    Message = msg,
+                    Status = EnumToasterStatus.Error
+                });
+
                 throw;
             }
         }

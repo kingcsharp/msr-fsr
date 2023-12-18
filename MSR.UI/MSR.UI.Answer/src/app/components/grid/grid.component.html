@@ -343,7 +343,7 @@
     "
   >
   <app-xml-retry
-    *ngIf="colsDataAndSettings.colData['result'] !== 'Success'"
+    *ngIf="colsDataAndSettings.colData['result'] === 'Failure'"
     [id]="colsDataAndSettings.colData['id']"
   ></app-xml-retry>
   </td>

@@ -22,6 +22,11 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using Microsoft.Extensions.DependencyInjection;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using MSR.Domain.Events;
+using MSR.Domain.SQSEventing.Models;
+using MSR.Infrastructure.Resources.Services.Account;
+using MSR.Domain.SQSEventing.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -49,7 +54,6 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<UpdateWorkOrderPartCycleCount>,
         ICommandHandler<TransmitIntelXmlDataByWorkOrder>,
         ICommandHandler<TransmitXmlFile>,
-        ICommandHandler<XmlFtpTransmit>,
         ICommandHandler<DownloadXmlFile>
     {
         private readonly IWorkOrderService _workOrderService;
@@ -59,8 +63,10 @@ namespace MSR.Application.ApplicationServices
         private readonly IDocumentService _documentService;
         private readonly ILogger<WorkOrderAppService> _logger;
         private readonly IXmlService _xmlService;
+        private readonly ISendSQSMessages _bus;
+        private readonly IAccountService _accountService;
 
-        public WorkOrderAppService(IWorkOrderService procedureService, IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IDocumentService documentService, ILogger<WorkOrderAppService> logger, IXmlService xmlService)
+        public WorkOrderAppService(IWorkOrderService procedureService, IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService, IDocumentService documentService, ILogger<WorkOrderAppService> logger, IXmlService xmlService, ISendSQSMessages bus, IAccountService accountService)
         {
             _unitOfWork = unitOfWork;
             _workOrderService = procedureService;
@@ -69,6 +75,8 @@ namespace MSR.Application.ApplicationServices
             _documentService = documentService;
             _logger = logger;
             _xmlService = xmlService;
+            _bus = bus;
+            _accountService = accountService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetInvoiceableWorkOrders command, CancellationToken cancellationToken = default)
@@ -116,13 +124,6 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<WorkOrderTaskModel>(ret);
         }
 
-        public async Task<ICommandResponse> HandleAsync(XmlFtpTransmit command, CancellationToken cancellationToken = default)
-        {
-            var ret = await _workOrderService.TransferFtpTransmission(command.workOrderId, command.XmlContent, command.XmlLink);
-
-            return new CommandResponse<XmlTransmissionLogModel>(ret);
-        }
-
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderTask command, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"UpdateWorkOrderTask: Starting Update for work order task: {command.Id} for workorder {command.WorkOrderId}");
@@ -136,20 +137,15 @@ namespace MSR.Application.ApplicationServices
                 _logger.LogInformation($"UpdateWorkOrderTask: Update complete for work order task: {command.Id} for workorder {command.WorkOrderId}");
                 var isIntel = wo.Product.Customer.Name.ToLower().Contains("intel");
                 var allTasksComplete = wo.WorkOrderTasks.All(wot => wot.Status.Id == 3);
-                var tasksCancelled = wo.WorkOrderTasks.Any(wot => wot.Status.Id == 4);
                 _logger.LogInformation($"UpdateWorkOrderTask: workOrderTask: {command.Id}, workOrder: {command.WorkOrderId}, isIntelCustomer: {isIntel}, allTasksComplete: {allTasksComplete}");
-
-                if ((isIntel && allTasksComplete) || (isIntel && tasksCancelled))
+                if (isIntel && allTasksComplete)
                 {
-                    _logger.LogInformation($"UpdateWorkOrderTask: All tasks are complete for intel customer work order {wo.Id}");
-
-                    var data = _workOrderService.GetIntelXmlData(ret.WorkOrderId);
-                    _logger.LogInformation($"UpdateWorkOrderTask: Successfully retrieved IntelXmlData for work order: {wo.Id}. Now beginning XML transmission");
-
-
-                    // Continue with your XML transmission logic
-                    var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
-                    await _workOrderService.GenerateAndTransmitXmlFiles(xmlCommand);
+                    var workOrderTransmitXmlEvent = new WorkOrderTransmitXmlEvent()
+                    {
+                        WorkOrderId = ret.WorkOrderId
+                    };
+                    var sqsMessageEnvelope = new MessageEnvelope(workOrderTransmitXmlEvent.GetType().Name, workOrderTransmitXmlEvent, await _accountService.GetJWTTokenAsync());
+                    await _bus.SendMessage(sqsMessageEnvelope);
                 }
 
                 return new CommandResponse<WorkOrderTaskModel>(ret);
@@ -158,15 +154,8 @@ namespace MSR.Application.ApplicationServices
             {
                 // Log any exceptions that occur during the UpdateWorkOrderTaskAsync call
                 _logger.LogError(ex, $"Error updating work order task: {ex.Message}");
-
-                // Create and log XmlTransmissionLog for failure
-
-                CreateAndLogXmlTransmissionLog("Failure", ex.Message, command.WorkOrderId);
-
+                throw new DomainException("Error updating work order task", DomainError.InternalServerError);
             }
-
-            // Return a default response if ret is null (handle this based on your logic)
-            return new CommandResponse<WorkOrderTaskModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DownloadXmlFile command, CancellationToken cancellationToken = default)
@@ -175,37 +164,6 @@ namespace MSR.Application.ApplicationServices
 
             return new CommandResponse<FileModel>(ret);
         }
-
-        private async Task<string> CreateAndLogXmlTransmissionLog(string result, string detail, int workOrderId)
-        {
-            try
-            {
-                var xmlLink = $"";
-                 
-                var transmissionLog = new XmlTransmissionLog
-                {
-                    Result = result,
-                    SubmittedOn = DateTime.Now,
-                    TransmissionDetail = detail,
-                    WorkOrderId = workOrderId,
-                    XmlLink = xmlLink
-                };
-
-                // Log the XmlTransmissionLog entity
-                _unitOfWork.XmlTransmissionLogs.Add(transmissionLog);
-                await _unitOfWork.SaveChangesAsync(); // Use asynchronous SaveChanges method
-
-                return xmlLink;
-            }
-            catch (Exception ex)
-            {
-                // Handle the exception, log, and return a default value or throw
-                _logger.LogError(ex, $"Error creating and logging XmlTransmissionLog: {ex.Message}");
-                return string.Empty; // Return a default value or throw an exception
-            }
-        }
-
-
 
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderTaskMonitor command, CancellationToken cancellationToken = default)
         {
@@ -278,7 +236,7 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workOrderService.GenerateAndTransmitXmlFiles(command);
 
-            return new CommandResponse<XmlTransmissionLogModel>(ret);
+            return new CommandResponse<string>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(AddNCRWorkOrderTask command, CancellationToken cancellationToken = default)
@@ -329,7 +287,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(TransmitXmlFile command, CancellationToken cancellationToken = default)
         {
             var ret = await _workOrderService.RetransmitXmlFile(command);
-            return new CommandResponse<XmlTransmissionLogModel>(ret);
+            return new CommandResponse<string>(ret);
         }
 
     }

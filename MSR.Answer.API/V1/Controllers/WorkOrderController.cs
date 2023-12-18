@@ -202,19 +202,13 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("TransmitXml")]
+        [SwaggerResponse(typeof(AuditActionResult<string>))]
         public async Task<IActionResult> TransmitXml([FromBody] TransmitXmlByWorkOrderRequest request)
         {
-            try
-            {
-                var data = _workOrderService.GetIntelXmlData(request.WorkOrderId);
-                var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
-                var ret = await _dispatcher.DispatchAsync(xmlCommand);
-                return ret.ToOkObjectResponse<ICollection<XmlTransmissionLogModel>>("Work Order Data has been successfuly transmited.");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var data = _workOrderService.GetIntelXmlData(request.WorkOrderId);
+            var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
+            var ret = await _dispatcher.DispatchAsync(xmlCommand);
+            return ret.ToOkObjectResponse<string>("Work Order Data has been successfuly transmited.");
         }
         #endregion
 

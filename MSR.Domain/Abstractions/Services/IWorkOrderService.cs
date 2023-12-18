@@ -37,10 +37,9 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderModel> UpdateWorkOrderEndDateAsync(UpdateWorkOrderEndDate command);
         Task<bool> BulkUpdateWorkOrderPart(BulkUpdateWorkOrderPart command);
         Task<(bool Success, string DisplayString)> UpdateWorkOrderPartCycleCount(UpdateWorkOrderPartCycleCount command);
-        Task<XmlTransmissionLogModel> GenerateAndTransmitXmlFiles(TransmitIntelXmlDataByWorkOrder command);
-        Task<XmlTransmissionLogModel> RetransmitXmlFile(TransmitXmlFile command);
+        Task<string> GenerateAndTransmitXmlFiles(TransmitIntelXmlDataByWorkOrder command);
+        Task<string> RetransmitXmlFile(TransmitXmlFile command);
         IntelXmlData GetIntelXmlData(int workOrderId);
-        Task<XmlTransmissionLogModel> TransferFtpTransmission(int workOrderId, string XmlFileContent, string XmlLink);
     }
         
 }
