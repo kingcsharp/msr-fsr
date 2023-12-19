@@ -108,12 +108,8 @@
 
     <!-- Outer Inner Labels -->
     <outer-inner-labels
-      *ngIf="selectedReport === 'PartLabelRoll4in2inOuter'"
-      [WorkOrder]="WorkOrder"
-      [printLogo]="enumWipPrintLogo.MSRFSR"
-    ></outer-inner-labels>
-    <outer-inner-labels
-      *ngIf="selectedReport === 'PartLabelRoll4in2inInner'"
+      *ngIf="selectedReport === 'PartLabelRoll4in2inOuter' || selectedReport === 'PartLabelRoll4in2inInner'"
+      [selectedReport]="selectedReport"
       [WorkOrder]="WorkOrder"
       [printLogo]="enumWipPrintLogo.MSRFSR"
     ></outer-inner-labels>
