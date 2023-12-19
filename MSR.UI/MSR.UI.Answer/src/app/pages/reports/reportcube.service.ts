@@ -1155,6 +1155,24 @@ export class ReportCubeService {
               visible: true,
               type: this.enumColumnType.String,
             }),
+             new ColumnsSaved({
+              id: "workorderpartid",
+              label: "WorkOrder Part Id",
+              visible: true,
+              type: this.enumColumnType.String,
+            }),
+            new ColumnsSaved({
+              id: "partname",
+              label: "Part Name",
+              visible: true,
+              type: this.enumColumnType.String,
+            }),
+            new ColumnsSaved({
+              id: "serialnumber",
+              label: "SerialNumber",
+              visible: true,
+              type: this.enumColumnType.String,
+            }),
             new ColumnsSaved({
               id: "transmissiondetail",
               label: "Transmission Detail",
