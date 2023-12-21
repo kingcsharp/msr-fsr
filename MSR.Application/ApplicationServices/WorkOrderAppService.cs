@@ -145,7 +145,7 @@ namespace MSR.Application.ApplicationServices
                         WorkOrderId = ret.WorkOrderId
                     };
                     var sqsMessageEnvelope = new MessageEnvelope(workOrderTransmitXmlEvent.GetType().Name, workOrderTransmitXmlEvent, await _accountService.GetJWTTokenAsync());
-                    await _bus.SendMessage(sqsMessageEnvelope);
+                    await _bus.SendXMLMessage(sqsMessageEnvelope);
                 }
 
                 return new CommandResponse<WorkOrderTaskModel>(ret);

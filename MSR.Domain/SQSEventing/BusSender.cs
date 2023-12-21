@@ -15,11 +15,13 @@ namespace MSR.Domain.SQSEventing
     {
         IAmazonSQS _handler;
         SQSInformation _sQSInformation;
+        XMLSQSInformation _XMLSQSInformation;
 
-        public BusSender(IAmazonSQS handler,SQSInformation sQSInformation)
+        public BusSender(IAmazonSQS handler,SQSInformation sQSInformation, XMLSQSInformation XMLSQSInformation)
         {
             _handler = handler;
             _sQSInformation = sQSInformation;
+            _XMLSQSInformation = XMLSQSInformation;
         }
 
         public async Task<string> SendMessage(MessageEnvelope data)
@@ -34,6 +36,22 @@ namespace MSR.Domain.SQSEventing
             if (string.IsNullOrEmpty(response.MessageId))
             {
                 throw new DomainException("Failure to submit message to queue", DomainError.InternalServerError);
+            }
+            return response.MessageId;
+        }
+
+        public async Task<string> SendXMLMessage(MessageEnvelope data)
+        {
+            var queueURL = _XMLSQSInformation.QueueURL;
+            SendMessageResponse response =
+                await _handler.SendMessageAsync(new SendMessageRequest(queueURL, JsonConvert.SerializeObject(data))
+                {
+                    MessageGroupId = Guid.NewGuid().ToString(),
+                    MessageDeduplicationId = Guid.NewGuid().ToString()
+                });
+            if (string.IsNullOrEmpty(response.MessageId))
+            {
+                throw new DomainException("Failure to submit message to XML queue", DomainError.InternalServerError);
             }
             return response.MessageId;
         }
