@@ -50,8 +50,8 @@ namespace MSR.Infrastructure.Resources.Services.Xml
             }
             var fileName = $"{XmlTransmissionLog.XmlLink.Split("/").Last().Split(".xml").First()}.xml";
 
-            var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
-            Stream fileStream = await _fileDownloader.DownloadFile(fileName, sftpInfo.S3Bucket);
+            var XMLS3Bucket = _config.GetSection("XMLS3Bucket").Get<string>();
+            Stream fileStream = await _fileDownloader.DownloadFile(fileName, XMLS3Bucket);
 
             var XmlMemoryStream = new MemoryStream();
             fileStream.CopyTo(XmlMemoryStream);
