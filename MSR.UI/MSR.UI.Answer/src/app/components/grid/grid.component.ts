@@ -78,7 +78,7 @@ export class GridComponent implements OnInit {
     private cSVConverterService: CSVConverterService,
     private documentService: DocumentService,
     private xmlService: XmlService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.calendarLocalSettings = this.globals.getCalendarDefault();
@@ -150,6 +150,7 @@ export class GridComponent implements OnInit {
           lazyLoadEvent.filters
         );
     }
+
     this.getReport(this.data, this.reportInfo);
   }
 
@@ -164,7 +165,7 @@ export class GridComponent implements OnInit {
         this.pagingModel
       );
       if (
-        this.reportInfo.name.replace(/\s/g, "") +
+          this.reportInfo.name.replace(/\s/g, "") +
         this.reportInfo.subtitle.replace(/\s/g, "") ===
         "PartsCycleCountsbyWorkOrderDate"
       ) {
@@ -179,7 +180,6 @@ export class GridComponent implements OnInit {
 
   getReport(data: any, reportInfo?: ReportModel) {
     this.showCharts = false;
-
     if (reportInfo === undefined || reportInfo.apiEndPointURL === undefined) {
       this.showReport = false;
       this.gridData.length = 0;
