@@ -100,13 +100,13 @@
   </table>
 
   <!-- Testing -->
-  <div class="space-between" *ngIf="innerOuter">
-    <div>
+  <div *ngIf="innerOuter">
+    <div class="pb-4">
     <table class="tight">
       <tbody>
         <tr>
           <td width="100%">
-            <div class="img-responsive" style="margin-top: 5px; width: 185px">
+            <div class="img-responsive" style="margin-top: 5px; width: 135px">
               <img [src]="'assets/img/' + logo" alt="Logo" style="width: 100%" />
             </div>
             <p class="date">
@@ -117,10 +117,12 @@
                 <span *ngIf="displayMSRFSRLabel">MSR-FSR</span>
                 {{ WorkOrder.location?.name }}
               </strong>
+              <span class="ml-3">
               WO:
               <strong>{{ WorkOrder.product?.customer?.name }}-{{
                 WorkOrder.id
                 }}</strong>
+              </span>
               <br>
               Part Desc: <strong>{{ workOrderPart?.part?.name }}</strong>
             </p>
@@ -141,20 +143,20 @@
               SN: <strong>{{ workOrderPart.serialNumber }}</strong>
               Cycle Count: <strong>{{ workOrderPart.cycleCount }}</strong>
             </p>
-            <div class="text-left mt-3">
-              ONLY OPEN IN CLASS 100 CLEANROOM OR BETTER
+            <div class="text-left mt-1">
+              CLEANROOM PARTS INSIDE
             </div>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div>
+  <div class="mt-5">
     <table class="tight">
       <tbody>
         <tr>
           <td width="100%">
-            <div class="img-responsive" style="margin-top: 5px; width: 185px">
+            <div class="img-responsive" style="margin-top: 5px; width: 135px">
               <img [src]="'assets/img/' + logo" alt="Logo" style="width: 100%" />
             </div>
             <p class="date">
@@ -165,10 +167,12 @@
                 <span *ngIf="displayMSRFSRLabel">MSR-FSR</span>
                 {{ WorkOrder.location?.name }}
               </strong>
+              <span class="ml-3">
               WO:
               <strong>{{ WorkOrder.product?.customer?.name }}-{{
                 WorkOrder.id
                 }}</strong>
+              </span>
               <br>
               Part Desc: <strong>{{ workOrderPart?.part?.name }}</strong>
             </p>
@@ -189,7 +193,7 @@
               SN: <strong>{{ workOrderPart.serialNumber }}</strong>
               Cycle Count: <strong>{{ workOrderPart.cycleCount }}</strong>
             </p>
-            <div class="text-left mt-3">
+            <div class="text-left mt-1">
               ONLY OPEN IN CLASS 100 CLEANROOM OR BETTER
             </div>
           </td>
