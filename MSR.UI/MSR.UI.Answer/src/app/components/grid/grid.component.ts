@@ -26,6 +26,7 @@ import { EnumColumnType } from "../../models/enums/EnumColumnType";
 import { GridSaved } from "../../models/lib/GridSaved";
 import { ReportCubeService } from "../../pages/reports/reportcube.service";
 import * as Highcharts from "highcharts";
+import * as moment from "moment";
 import { ChartInfo } from "../../../app/models/lib/ChartInfo";
 import { CSVConverterService } from "../../services/csvconverter.service";
 import { LocaleSettings } from "primeng/calendar";
@@ -164,8 +165,8 @@ export class GridComponent implements OnInit {
         this.pagingModel
       );
       if (
-        this.reportInfo.name.replace(/\s/g, "") +
-          this.reportInfo.subtitle.replace(/\s/g, "") ===
+          this.reportInfo.name.replace(/\s/g, "") +
+        this.reportInfo.subtitle.replace(/\s/g, "") ===
         "PartsCycleCountsbyWorkOrderDate"
       ) {
         this.regnerateCharOptions(pagingModel.HighChartsOptions);
@@ -198,7 +199,7 @@ export class GridComponent implements OnInit {
             this.gridData = responsePagingModel.data;
             if (
               reportInfo.name.replace(/\s/g, "") +
-                reportInfo.subtitle.replace(/\s/g, "") ===
+              reportInfo.subtitle.replace(/\s/g, "") ===
               "PartsCycleCountsbyWorkOrderDate"
             ) {
               this.regnerateCharOptions(responsePagingModel.HighChartsOptions);
@@ -240,6 +241,21 @@ export class GridComponent implements OnInit {
               }
             });
           }
+
+          if (responsePagingModel.data !== undefined && responsePagingModel.data.length !== 0) {
+            const convertUtcToDate = (utcDate: string): Date => {
+              const utcTime = moment.utc(utcDate).valueOf();
+              return new Date(utcTime);
+            };
+
+            responsePagingModel.data.forEach((object) => {
+              object.shipdate = convertUtcToDate(object.shipdate);
+              object.duedate = convertUtcToDate(object.duedate);
+              object.wocompleteddate = convertUtcToDate(object.wocompleteddate);
+              object.wocreationdate = convertUtcToDate(object.wocreationdate);
+            });
+          }
+
           this.filteredData = responsePagingModel.data;
           this.totalRows = responsePagingModel.totalRows;
           this.pagingModel.pageNumber = responsePagingModel.pageNumber;

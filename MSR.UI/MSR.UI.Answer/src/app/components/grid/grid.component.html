@@ -253,7 +253,7 @@
     </div>
     <div *ngIf="colsDataAndSettings.col.formattingAngular !== undefined">
       {{
-        colsDataAndSettings.colData[colsDataAndSettings.col.id]
+        colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone
           | date : colsDataAndSettings.col.formattingAngular
       }}
     </div>
