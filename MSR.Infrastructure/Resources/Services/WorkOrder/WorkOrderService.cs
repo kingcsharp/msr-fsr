@@ -2260,8 +2260,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         public async Task<string> RetransmitXmlFile(TransmitXmlFile command)
         {
-
-            var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
+            var XMLS3Bucket = _config.GetSection("XMLS3Bucket").Get<string>();
+            var sftpInfo = _config.GetSection(nameof(XMLSftpInformation)).Get<XMLSftpInformation>();
             var log = _unitOfWork.XmlTransmissionLogs.Query().FirstOrDefault(log => log.Id == command.TransmissionId);
             if (log == null || log.XmlLink.IsNullOrEmpty() == true)
             {
@@ -2269,7 +2269,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             }
 
             var fileName = $"{log.XmlLink.Split("/").Last().Split(".xml").First()}.xml";
-            var stream = await _fileDownloader.DownloadFile(fileName, sftpInfo.S3Bucket);
+            var stream = await _fileDownloader.DownloadFile(fileName, XMLS3Bucket);
             StreamReader reader = new StreamReader(stream);
             string XmlContent = reader.ReadToEnd();
 
@@ -2299,7 +2299,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
         public async Task<string> GenerateAndTransmitXmlFiles(TransmitIntelXmlDataByWorkOrder command)
         {
             // Generate XML documents for each WorkOrderPart
-            var transmitConfig = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
+            var XMLS3Bucket = _config.GetSection("XMLS3Bucket").Get<string>();
             var monitors = command.Data.WorkOrderMonitors.ToList();
 
             List<string> succeedXmlFileList = new List<string>();
@@ -2320,7 +2320,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 XmlFile.Save(stream);
                 stream.Seek(0, SeekOrigin.Begin);
                 var fileModel = new FileModel() { Name = fileName, ContentType = "application/xml" };
-                var XmlLink = await _fileUploader.UploadFile(stream, fileModel, transmitConfig.S3Bucket);
+                var XmlLink = await _fileUploader.UploadFile(stream, fileModel, XMLS3Bucket);
                 stream.Dispose();
                 // Update log with XmlLink
                 log.XmlLink = XmlLink;
@@ -2346,7 +2346,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
         public async Task<string> TransferFtpTransmission(int WorkOrderId, int WorkOrderPartId, string XmlFileContent, string XmlLink)
         {
-            var sftpInfo = _config.GetSection(nameof(TransmissionInformation)).Get<TransmissionInformation>();
+            var sftpInfo = _config.GetSection(nameof(XMLSftpInformation)).Get<XMLSftpInformation>();
             XmlTransmissionLogModel XmlLog = new XmlTransmissionLogModel() {
                 Result = "Submitting",
                 SubmittedOn = DateTime.Now,
