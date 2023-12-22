@@ -11,6 +11,8 @@ using MSR.Answer.API.V1.Extentions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 using System.ComponentModel.DataAnnotations;
+using MSR.Domain.Abstractions.Services;
+using System.Threading;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -19,11 +21,12 @@ namespace MSR.Answer.API.V1.Controllers
     public class ReportController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
+        private IReportService _reportService;
 
-
-        public ReportController(ICommandDispatcher dispatcher)
+        public ReportController(ICommandDispatcher dispatcher, IReportService reportService)
         {
             _dispatcher = dispatcher;
+            _reportService = reportService;
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<ReportModel>>))]
@@ -41,5 +44,6 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ReportDashboardModel>();
         }
+
     }
 }

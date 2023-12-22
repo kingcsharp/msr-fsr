@@ -1,5 +1,5 @@
-<div class="roll-label" *ngFor="let workOrderPart of workOrderParts">
-  <table class="tight">
+<div class="roll-label space-between" *ngFor="let workOrderPart of workOrderParts">
+  <table class="tight" *ngIf="!innerOuter">
     <tbody>
       <tr>
         <td width="60%">
@@ -19,43 +19,25 @@
           </p>
           <p>
             WO:
-            <strong
-              >{{ WorkOrder.product?.customer?.name }}-{{
-                WorkOrder.id
-              }}</strong
-            >
+            <strong>{{ WorkOrder.product?.customer?.name }}-{{
+              WorkOrder.id
+              }}</strong>
           </p>
           <div class="coded" style="max-width: 175px">
             PO #:
-            <strong>{{ WorkOrder.purchase?.purchaseOrder?.referencePO }}</strong
-            ><br />
-            <ngx-barcode
-              [bc-format]="'CODE128'"
-              [bc-background]="'none'"
-              [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"
-              [bc-display-value]="false"
-              [bc-width]="
+            <strong>{{ WorkOrder.purchase?.purchaseOrder?.referencePO }}</strong><br />
+            <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+              [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO" [bc-display-value]="false" [bc-width]="
                 getWidth(WorkOrder.purchase?.purchaseOrder?.referencePO)
-              "
-              [bc-height]="30"
-            >
+              " [bc-height]="30">
             </ngx-barcode>
           </div>
         </td>
         <td width="40%">
-          <div
-            class="image-container img-fluid part-image"
-            *ngIf="workOrderPart.part.files[0] !== undefined"
-          >
-            <img
-              src="{{ workOrderPart.part.files[0].fileURL }}"
-              alt="Product Image"
-            />
+          <div class="image-container img-fluid part-image" *ngIf="workOrderPart.part.files[0] !== undefined">
+            <img src="{{ workOrderPart.part.files[0].fileURL }}" alt="Product Image" />
           </div>
-          <div
-            class="col-12 justify-content-center d-flex"
-            *ngIf="workOrderPart.part.files[0] === undefined"
-          >
+          <div class="col-12 justify-content-center d-flex" *ngIf="workOrderPart.part.files[0] === undefined">
             No Image Available
           </div>
         </td>
@@ -63,42 +45,27 @@
       <tr>
         <td colspan="2">
           <div class="coded">
-            Part Desc: <strong>{{ workOrderPart?.part?.name }}</strong
-            ><br />
+            Part Desc: <strong>{{ workOrderPart?.part?.name }}</strong><br />
             <table class="tight">
               <tr>
                 <td width="50%">
                   Customer Part #:
-                  <strong>{{ workOrderPart?.part?.partNumber }}</strong
-                  ><br />
-                  <ngx-barcode
-                    [bc-format]="'CODE128'"
-                    [bc-background]="'none'"
-                    [bc-value]="workOrderPart?.part?.partNumber"
-                    [bc-display-value]="false"
-                    [bc-width]="getWidth(workOrderPart?.part?.partNumber)"
-                    [bc-height]="30"
-                  >
+                  <strong>{{ workOrderPart?.part?.partNumber }}</strong><br />
+                  <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+                    [bc-value]="workOrderPart?.part?.partNumber" [bc-display-value]="false"
+                    [bc-width]="getWidth(workOrderPart?.part?.partNumber)" [bc-height]="30">
                   </ngx-barcode>
                 </td>
                 <td width="50%">
                   OEM Part #:
-                  <span
-                    *ngIf="
+                  <span *ngIf="
                       workOrderPart?.part?.oemPartNumber !== null;
                       else OEMNotAvailable
-                    "
-                  >
-                    <strong>{{ workOrderPart?.part?.oemPartNumber }}</strong
-                    ><br />
-                    <ngx-barcode
-                      [bc-format]="'CODE128'"
-                      [bc-background]="'none'"
-                      [bc-value]="workOrderPart?.part?.oemPartNumber"
-                      [bc-display-value]="false"
-                      [bc-width]="getWidth(wworkOrderPart?.part?.oemPartNumber)"
-                      [bc-height]="30"
-                    >
+                    ">
+                    <strong>{{ workOrderPart?.part?.oemPartNumber }}</strong><br />
+                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+                      [bc-value]="workOrderPart?.part?.oemPartNumber" [bc-display-value]="false"
+                      [bc-width]="getWidth(wworkOrderPart?.part?.oemPartNumber)" [bc-height]="30">
                     </ngx-barcode>
                   </span>
                   <ng-template #OEMNotAvailable>
@@ -113,16 +80,9 @@
       <tr>
         <td width="40%" style="vertical-align: top">
           <div class="coded">
-            Serial #: <strong>{{ workOrderPart.serialNumber }}</strong
-            ><br />
-            <ngx-barcode
-              [bc-format]="'CODE128'"
-              [bc-background]="'none'"
-              [bc-value]="workOrderPart.serialNumber"
-              [bc-display-value]="false"
-              [bc-width]="getWidth(workOrderPart.serialNumber)"
-              [bc-height]="30"
-            >
+            Serial #: <strong>{{ workOrderPart.serialNumber }}</strong><br />
+            <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.serialNumber"
+              [bc-display-value]="false" [bc-width]="getWidth(workOrderPart.serialNumber)" [bc-height]="30">
             </ngx-barcode>
             This part processed
             <strong>{{ workOrderPart.cycleCount }}</strong> time(s) <br />
@@ -133,12 +93,113 @@
           </div>
         </td>
         <td *ngIf="workOrderPart.dataMatrix" class="data-matrix-label">
-          <img
-            [src]="'data:image/png;base64,' + workOrderPart.dataMatrix"
-            alt="dataMatrix Label"
-          />
+          <img [src]="'data:image/png;base64,' + workOrderPart.dataMatrix" alt="dataMatrix Label" />
         </td>
       </tr>
     </tbody>
   </table>
+
+  <!-- Testing -->
+  <div *ngIf="innerOuter">
+    <div class="pb-4">
+    <table class="tight">
+      <tbody>
+        <tr>
+          <td width="100%">
+            <div class="img-responsive" style="margin-top: 5px; width: 135px">
+              <img [src]="'assets/img/' + logo" alt="Logo" style="width: 100%" />
+            </div>
+            <p class="date">
+              Date: <strong>{{ todayDate | date : 'shortDate' }}</strong>
+              <br>
+              Site:
+              <strong>
+                <span *ngIf="displayMSRFSRLabel">MSR-FSR</span>
+                {{ WorkOrder.location?.name }}
+              </strong>
+              <span class="ml-3">
+              WO:
+              <strong>{{ WorkOrder.product?.customer?.name }}-{{
+                WorkOrder.id
+                }}</strong>
+              </span>
+              <br>
+              Part Desc: <strong>{{ workOrderPart?.part?.name }}</strong>
+            </p>
+            <div style="display: flex;">
+              <div style="padding-top: 4px; padding-right: 5px;">
+                Customer Part #:
+                <strong>{{ workOrderPart?.part?.partNumber }}</strong>
+              </div>
+              <div style="max-width: 175px;">
+                <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+                  [bc-value]="workOrderPart?.part?.partNumber" [bc-display-value]="false"
+                  [bc-width]="getWidth(workOrderPart?.part?.partNumber)" [bc-height]="30">
+                </ngx-barcode>
+              </div>
+            </div>
+            <p class="date">
+              Qty: <strong>________</strong>
+              SN: <strong>{{ workOrderPart.serialNumber }}</strong>
+              Cycle Count: <strong>{{ workOrderPart.cycleCount }}</strong>
+            </p>
+            <div class="text-left mt-1">
+              CLEANROOM PARTS INSIDE
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-5">
+    <table class="tight">
+      <tbody>
+        <tr>
+          <td width="100%">
+            <div class="img-responsive" style="margin-top: 5px; width: 135px">
+              <img [src]="'assets/img/' + logo" alt="Logo" style="width: 100%" />
+            </div>
+            <p class="date">
+              Date: <strong>{{ todayDate | date : 'shortDate' }}</strong>
+              <br>
+              Site:
+              <strong>
+                <span *ngIf="displayMSRFSRLabel">MSR-FSR</span>
+                {{ WorkOrder.location?.name }}
+              </strong>
+              <span class="ml-3">
+              WO:
+              <strong>{{ WorkOrder.product?.customer?.name }}-{{
+                WorkOrder.id
+                }}</strong>
+              </span>
+              <br>
+              Part Desc: <strong>{{ workOrderPart?.part?.name }}</strong>
+            </p>
+            <div style="display: flex;">
+              <div style="padding-top: 4px; padding-right: 5px;">
+                Customer Part #:
+                <strong>{{ workOrderPart?.part?.partNumber }}</strong>
+              </div>
+              <div style="max-width: 175px;">
+                <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+                  [bc-value]="workOrderPart?.part?.partNumber" [bc-display-value]="false"
+                  [bc-width]="getWidth(workOrderPart?.part?.partNumber)" [bc-height]="30">
+                </ngx-barcode>
+              </div>
+            </div>
+            <p class="date">
+              Qty: <strong>________</strong>
+              SN: <strong>{{ workOrderPart.serialNumber }}</strong>
+              Cycle Count: <strong>{{ workOrderPart.cycleCount }}</strong>
+            </p>
+            <div class="text-left mt-1">
+              ONLY OPEN IN CLASS 100 CLEANROOM OR BETTER
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
 </div>

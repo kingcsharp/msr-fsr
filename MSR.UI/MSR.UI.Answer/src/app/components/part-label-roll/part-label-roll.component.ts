@@ -25,6 +25,7 @@ import { EnumWipPrintLogo } from '../../models/enums/EnumWipPrintLogo';
 export class PartLabelRollComponent implements OnInit {
   @Input() WorkOrder: WorkOrderModel;
   @Input() printLogo: EnumWipPrintLogo;
+  @Input() innerOuter = false;
 
   todayDate: Date = new Date();
   logo: string;

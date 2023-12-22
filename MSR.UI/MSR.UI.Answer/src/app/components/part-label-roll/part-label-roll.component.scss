@@ -72,3 +72,9 @@ p {
     width: 120px !important;
   }
 }
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}

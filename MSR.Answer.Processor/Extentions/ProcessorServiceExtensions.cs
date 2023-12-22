@@ -82,6 +82,7 @@ namespace MSR.Answer.Processor.Extentions
             }
             services.AddSingleton<IEventHandlers>(eventHandlers);
             services.AddSingleton<ISqsConsumerService, SqsConsumerService>();
+            services.AddSingleton<ISqsXMLConsumerService, SqsXMLConsumerService>();
 
             services.AddLogging();
             var loggerConfig = new LoggerConfiguration()

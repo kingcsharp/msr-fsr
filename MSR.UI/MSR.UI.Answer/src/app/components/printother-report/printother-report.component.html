@@ -98,7 +98,22 @@
       [WorkOrder]="WorkOrder"
       [printLogo]="enumWipPrintLogo.NoLogo"
     ></part-label-roll>
+    <part-label-roll
+      *ngIf="selectedReport === 'PartLabelRoll4inOuterInner'"
+      [innerOuter]="true"
+      [WorkOrder]="WorkOrder"
+      [printLogo]="enumWipPrintLogo.MSRFSR"
+    ></part-label-roll>
     <!--End Part Label Roll -->
+
+    <!-- Outer Inner Labels -->
+    <outer-inner-labels
+      *ngIf="selectedReport === 'PartLabelRoll4in2inOuter' || selectedReport === 'PartLabelRoll4in2inInner'"
+      [selectedReport]="selectedReport"
+      [WorkOrder]="WorkOrder"
+      [printLogo]="enumWipPrintLogo.MSRFSR"
+    ></outer-inner-labels>
+    <!-- End Outer Inner Labels -->
 
     <work-report
       [WorkOrder]="WorkOrder"

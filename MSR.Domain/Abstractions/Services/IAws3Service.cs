@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MSR.Domain.Models;
 using System.Threading.Tasks;
 
 namespace MSR.Domain.Abstractions.Services
 {
-    public interface IXmlTransmissionRetryService
+    public interface IAws3Service
     {
-        Task<ToastMessage> RetryXmlSubmission(int transmissionId);
+        //Task<byte[]> DownloadFileAsync(string file);
     }
 }

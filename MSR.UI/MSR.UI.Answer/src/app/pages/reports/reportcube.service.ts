@@ -44,10 +44,10 @@ export class ReportCubeService {
     const headers = new HttpHeaders().set("key", this.cubeKey);
     headers.set("timeout", `${5 * 60000}`);
 
-    // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
+   // TODO: This is here to run with local cube backend. This should be controlled with env files and url removed from DB.
     // let apiEndPointUrl = reportInfo.apiEndPointURL.replace(
-    //   "https://qa-report-api.cmhworks.com",
-    //   "http://localhost"
+      //   "https://qa-report-api.cmhworks.com",
+      //   "http://localhost"
     // );
     let apiEndPointUrl = reportInfo.apiEndPointURL;
 
@@ -1152,6 +1152,24 @@ export class ReportCubeService {
             new ColumnsSaved({
               id: "workorderid",
               label: "WorkOrder Id",
+              visible: true,
+              type: this.enumColumnType.String,
+            }),
+             new ColumnsSaved({
+              id: "workorderpartid",
+              label: "WorkOrder Part Id",
+              visible: true,
+              type: this.enumColumnType.String,
+            }),
+            new ColumnsSaved({
+              id: "partname",
+              label: "Part Name",
+              visible: true,
+              type: this.enumColumnType.String,
+            }),
+            new ColumnsSaved({
+              id: "serialnumber",
+              label: "SerialNumber",
               visible: true,
               type: this.enumColumnType.String,
             }),

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.API.Extentions;
 using MSR.Answer.API.Infrastructure.Converters;
+using MSR.Domain.Abstractions.AWS;
+using MSR.Infrastructure.Resources.AWS;
+using MSR.Infrastructure.Resources.Services.Xml;
 using Newtonsoft.Json;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -40,6 +44,9 @@ namespace MSR.Answer.API
             });
 
             services.AddApiVersioning();
+            services.AddScoped<IDownloadFiles, S3FileHandler>();
+            services.AddScoped<XmlService>();
+            services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddApiServices(Configuration);
             services.AddOpenApiDocument(settings =>

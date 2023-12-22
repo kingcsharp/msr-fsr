@@ -39,7 +39,8 @@ namespace MSR.Answer.Processor
         public void Configure(
             IApplicationBuilder app, 
             IWebHostEnvironment env,
-            ISqsConsumerService sqsConsumerService)
+            ISqsConsumerService sqsConsumerService,
+            ISqsXMLConsumerService sqsXmlConsumerService)
         {
             if (env.IsDevelopment())
             {
@@ -53,6 +54,7 @@ namespace MSR.Answer.Processor
 
 
             sqsConsumerService.StartConsuming();
+            sqsXmlConsumerService.StartConsuming();
         }
     }
 }

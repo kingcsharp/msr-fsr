@@ -11,7 +11,10 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
+using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions.Services;
+using MSR.Infrastructure.Resources.Services;
+using MSR.Infrastructure.Resources.AWS;
 using NSwag.Annotations;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -37,7 +40,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
             _workOrderViewService = workOrderViewService;
             _workOrderService = workOrderService;
-        }
+                   }
 
         #region GET
         /// <summary>
@@ -199,19 +202,13 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("TransmitXml")]
+        [SwaggerResponse(typeof(AuditActionResult<string>))]
         public async Task<IActionResult> TransmitXml([FromBody] TransmitXmlByWorkOrderRequest request)
         {
-            try
-            {
-                var data = _workOrderService.GetIntelXmlData(request.WorkOrderId);
-                var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
-                var ret = await _dispatcher.DispatchAsync(xmlCommand);
-                return ret.ToOkObjectResponse<ICollection<XmlTransmissionLogModel>>("Work Order Data has been successfuly transmited.");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var data = _workOrderService.GetIntelXmlData(request.WorkOrderId);
+            var xmlCommand = new TransmitIntelXmlDataByWorkOrder { Data = data };
+            var ret = await _dispatcher.DispatchAsync(xmlCommand);
+            return ret.ToOkObjectResponse<string>("Work Order Data has been successfuly transmited.");
         }
         #endregion
 

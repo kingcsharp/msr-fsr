@@ -166,6 +166,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateWorkOrderEndDateRequest, UpdateWorkOrderEndDate>();
             CreateMap<ReorderStepRequest, ReorderStep>();
             CreateMap<GetMonitorUnitofMeasureRequest, GetMonitorUnitofMeasure>();
+            CreateMap<Object, XmlTransmissionLogModel>();
         }
     }
 }

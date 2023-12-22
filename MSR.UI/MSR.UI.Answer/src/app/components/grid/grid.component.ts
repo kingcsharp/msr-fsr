@@ -13,6 +13,7 @@ import {
   DocumentService,
   AuditActionResultOfICollectionOfArchiveDocumentView,
   ArchiveDocumentView,
+  XmlService
 } from "../../services/api.client.generated";
 import { take } from "rxjs/operators";
 import { environment as env } from "../../../environments/environment";
@@ -25,6 +26,7 @@ import { EnumColumnType } from "../../models/enums/EnumColumnType";
 import { GridSaved } from "../../models/lib/GridSaved";
 import { ReportCubeService } from "../../pages/reports/reportcube.service";
 import * as Highcharts from "highcharts";
+import * as moment from "moment";
 import { ChartInfo } from "../../../app/models/lib/ChartInfo";
 import { CSVConverterService } from "../../services/csvconverter.service";
 import { LocaleSettings } from "primeng/calendar";
@@ -74,7 +76,8 @@ export class GridComponent implements OnInit {
     public cg: CommonGrid,
     private reportCubeService: ReportCubeService,
     private cSVConverterService: CSVConverterService,
-    private documentService: DocumentService
+    private documentService: DocumentService,
+    private xmlService: XmlService
   ) {}
 
   ngOnInit(): void {
@@ -162,8 +165,8 @@ export class GridComponent implements OnInit {
         this.pagingModel
       );
       if (
-        this.reportInfo.name.replace(/\s/g, "") +
-          this.reportInfo.subtitle.replace(/\s/g, "") ===
+          this.reportInfo.name.replace(/\s/g, "") +
+        this.reportInfo.subtitle.replace(/\s/g, "") ===
         "PartsCycleCountsbyWorkOrderDate"
       ) {
         this.regnerateCharOptions(pagingModel.HighChartsOptions);
@@ -196,7 +199,7 @@ export class GridComponent implements OnInit {
             this.gridData = responsePagingModel.data;
             if (
               reportInfo.name.replace(/\s/g, "") +
-                reportInfo.subtitle.replace(/\s/g, "") ===
+              reportInfo.subtitle.replace(/\s/g, "") ===
               "PartsCycleCountsbyWorkOrderDate"
             ) {
               this.regnerateCharOptions(responsePagingModel.HighChartsOptions);
@@ -238,6 +241,21 @@ export class GridComponent implements OnInit {
               }
             });
           }
+
+          if (responsePagingModel.data !== undefined && responsePagingModel.data.length !== 0) {
+            const convertUtcToDate = (utcDate: string): Date => {
+              const utcTime = moment.utc(utcDate).valueOf();
+              return new Date(utcTime);
+            };
+
+            responsePagingModel.data.forEach((object) => {
+              object.shipdate = convertUtcToDate(object.shipdate);
+              object.duedate = convertUtcToDate(object.duedate);
+              object.wocompleteddate = convertUtcToDate(object.wocompleteddate);
+              object.wocreationdate = convertUtcToDate(object.wocreationdate);
+            });
+          }
+
           this.filteredData = responsePagingModel.data;
           this.totalRows = responsePagingModel.totalRows;
           this.pagingModel.pageNumber = responsePagingModel.pageNumber;
@@ -339,7 +357,14 @@ export class GridComponent implements OnInit {
     return archiveDocmentView;
   }
 
-  downloadFile(downloadURL: string) {
-    window.open(downloadURL, '_blank', 'popup=yes');
+  downloadXmlFile(id: number) {
+    this.xmlService.downloadFile(id, env.apiVersion).subscribe(({ object }) => {
+      const link = document.createElement('a');
+      link.href = `data:application/xml;base64,${object.fileContents}`;
+      link.setAttribute('download', object.name);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    });
   }
 }
