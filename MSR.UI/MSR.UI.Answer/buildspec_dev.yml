@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - cd ./MSR.UI/MSR.UI.Answer/
+      - yarn install --frozen-lockfile
+  pre_build:
+    commands:
+      - npm run lint
+  build:
+    commands:
+      - ng build --configuration dev
+      - aws s3 cp --recursive dist/  s3://answer-ui-qa
+      - aws cloudfront create-invalidation --distribution-id E2LJS1DYU10ZJH --paths "/*"
