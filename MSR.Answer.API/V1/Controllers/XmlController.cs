@@ -50,7 +50,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToTransmitXmlFileCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<string>("Xml file was successfully transmitted via SFTP");
+            return ret.ToOkObjectResponse<string>("The file has been sent successfully.");
             
         }
 
