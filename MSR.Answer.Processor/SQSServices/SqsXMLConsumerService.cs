@@ -150,19 +150,20 @@ namespace MSR.Answer.Processor.SQSServices
                 using var scope = _serviceProvider.CreateScope();
                 var dispatcher = (EventDispatcher)(scope.ServiceProvider.GetService(typeof(EventDispatcher<>).MakeGenericType(messageType)));
 
+                await _sqsXmlTransmissionClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle, cancellationToken);
+
                 await dispatcher.Dispatch((IEvent)@event, cancellationToken);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Cannot process message [id: {message.MessageId}, receiptHandle: {message.ReceiptHandle}, body: {message.Body}] from queue");
+                await _sqsXmlTransmissionClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle, cancellationToken);
                 await _sqsXmlTransmissionClient.SendMessageAsync(new SendMessageRequest(_XMLSQSInformation.DLQueueURL, message.Body)
                 {
                     MessageGroupId = Guid.NewGuid().ToString(),
                     MessageDeduplicationId = Guid.NewGuid().ToString()
                 }, cancellationToken);
             }
-
-            await _sqsXmlTransmissionClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle, cancellationToken);
         }
 
         private static void HandleUserToken(string token)
