@@ -148,7 +148,6 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources
                 .AddSingleton(new GeneralInformation()
                 {
                     Environment = "test",
-                    RollbarConfig = "test",
                     WebsiteURL = "test.com"
                 }
             );
