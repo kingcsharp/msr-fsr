@@ -47,6 +47,7 @@ import {
   DocumentService,
   XmlService
 } from "./services/api.client.generated";
+import { IpService } from "./services/ip-address.service";
 
 const APP_PROVIDERS = [
   CheckAllService,
@@ -91,6 +92,7 @@ const APP_PROVIDERS = [
     PartService,
     FileService,
     UserService,
+    IpService,
     InvoiceService,
     CustomerService,
     TimezoneService,

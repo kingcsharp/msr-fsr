@@ -1,4 +1,4 @@
-import { Component, HostBinding } from "@angular/core";
+import { Component, HostBinding, OnInit } from "@angular/core";
 import { LoginService } from "./login.service";
 import { ActivatedRoute } from "@angular/router";
 import {
@@ -9,17 +9,19 @@ import {
 import { environment as env } from "../../../environments/environment";
 import { take } from "rxjs/operators";
 import { responseHandler } from "../../utils/responseHandler";
+import { IpService } from "../../services/ip-address.service";
 
 @Component({
   selector: "login",
   templateUrl: "./login.template.html",
 })
-export class Login {
+export class Login implements OnInit {
   @HostBinding("class") classes = "auth-page app";
 
   email: string = "";
   password: string = "";
   username: string = "";
+  ipAddress: string = "";
   forgotUsername: boolean = false;
   showLogin: boolean = true;
   forgotPassword: boolean = false;
@@ -27,7 +29,9 @@ export class Login {
   constructor(
     public loginService: LoginService,
     private route: ActivatedRoute,
-    private accountService: AccountService
+    private accountService: AccountService,
+    public ipService: IpService,
+   
   ) {
     if (this.loginService.isAuthenticated()) {
       this.loginService.receiveLogin();
@@ -38,6 +42,10 @@ export class Login {
         this.loginService.receiveToken(params.token);
       }
     });
+  }
+  
+  async ngOnInit(): Promise<void> {
+    this.ipAddress = await this.ipService.getIpAnotherAddress();
   }
 
   public async forgotUserPassword() {
@@ -117,10 +125,10 @@ export class Login {
   }
 
   public login() {
-    const { email, password } = this;
+    const { email, password, ipAddress } = this;
 
     if (email.length !== 0 && password.length !== 0) {
-      this.loginService.loginUser({ email, password });
+      this.loginService.loginUser({ email, password, ipAddress });
     }
   }
 }

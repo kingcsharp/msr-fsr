@@ -31,7 +31,7 @@ export class LoginService {
     private router: Router,
     private accountService: AccountService,
     private userService: UserService,
-    private signalrService: SignalRService
+    private signalrService: SignalRService,
   ) {
     this.config = appConfig.getConfig();
   }
@@ -59,6 +59,7 @@ export class LoginService {
 
   async loginUser(creds) {
     // We check if app runs with backend mode
+    console.log(creds.ipAddress)
     this.requestLogin();
     const ctrl = this;
     if (creds.email.length <= 0 || creds.password.length <= 0) {
