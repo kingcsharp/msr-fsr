@@ -47,7 +47,7 @@ namespace MSR.Answer.API.Extentions
             AutoMapperHelper.Initialize(mapperConfiguration);
             services.AddApplicationServices();
             services.AddDomainServices(config);
-            services.AddInfrastructureServices(config,generalConfig);
+            services.AddInfrastructureServices(config, generalConfig);
             services.AddJWTServices(config);
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
@@ -62,9 +62,11 @@ namespace MSR.Answer.API.Extentions
 
             var serviceProvider = services.BuildServiceProvider();
             var cloudWatchClient = serviceProvider.GetService<IAmazonCloudWatchLogs>();
+            var logGroupName = $"answer3-api-{generalConfig.Environment}/api";
+            DomainServiceExtentions.createLogGroupInAWSCloudWatch(cloudWatchClient, logGroupName).Wait();
             var cloudWatchOpt = new MSR.Domain.Models.Config.CloudWatchSinkOptions()
             {
-                LogGroupName = $"answer3-api-{generalConfig.Environment}/api",
+                LogGroupName = logGroupName,
                 TextFormatter = new JsonFormatter(Environment.NewLine),
                 MinimumLogEventLevel = LogEventLevel.Debug
             };

@@ -64,11 +64,13 @@ namespace MSR.Answer.MessageHub.Extensions
 
             var serviceProvider = services.BuildServiceProvider();
             var cloudWatchClient = serviceProvider.GetService<IAmazonCloudWatchLogs>();
+            var logGroupName = $"answer3-message-{generalConfig.Environment}/message";
+            DomainServiceExtentions.createLogGroupInAWSCloudWatch(cloudWatchClient, logGroupName).Wait();
             var cloudWatchOpt = new MSR.Domain.Models.Config.CloudWatchSinkOptions()
             {
-                LogGroupName = $"answer3-message-{generalConfig.Environment}/message",
+                LogGroupName = logGroupName,
                 TextFormatter = new JsonFormatter(Environment.NewLine),
-                MinimumLogEventLevel = LogEventLevel.Debug
+                MinimumLogEventLevel = LogEventLevel.Debug,
             };
 
             var loggerConfig = new LoggerConfiguration()

@@ -10,11 +10,50 @@ using Amazon.S3;
 using Amazon.Runtime;
 using MSR.Domain.Validators;
 using Amazon.CloudWatchLogs;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Amazon.CloudWatchLogs.Model;
+using System.Linq;
+using Serilog.Sinks.AwsCloudWatch;
 
 namespace MSR.Domain.Extensions
 {
     public static class DomainServiceExtentions
     {
+        public static async Task createLogGroupInAWSCloudWatch(IAmazonCloudWatchLogs cloudWatchClient, string logGroupName)
+        {
+            var tags = new Dictionary<string, string>
+            {
+                { "Client", "MSR-FSR" },
+                { "Application", "Answer" }
+            };
+            var describeLogGroupsRequest = new DescribeLogGroupsRequest
+            {
+                LogGroupNamePrefix = logGroupName
+            };
+
+            var describeLogGroupsResponse = await cloudWatchClient.DescribeLogGroupsAsync(describeLogGroupsRequest);
+
+            bool isExistLogGroup = describeLogGroupsResponse.LogGroups.Any(group => group.LogGroupName == logGroupName);
+
+            if (isExistLogGroup == false)
+            {
+                var createLogGroupRequest = new CreateLogGroupRequest
+                {
+                    LogGroupName = logGroupName,
+                    Tags = tags
+                };
+                await cloudWatchClient.CreateLogGroupAsync(createLogGroupRequest);
+            }
+
+            var retentionPolicyRequest = new PutRetentionPolicyRequest
+            {
+                LogGroupName = logGroupName,
+                RetentionInDays = (int)LogGroupRetentionPolicy.TwoWeeks
+            };
+
+            await cloudWatchClient.PutRetentionPolicyAsync(retentionPolicyRequest);
+        }
         public static IServiceCollection AddDomainServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddScoped<ICommandDispatcher, CommandDispatcher>();
