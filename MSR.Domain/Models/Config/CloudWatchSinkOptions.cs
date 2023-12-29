@@ -5,6 +5,13 @@ using System;
 
 namespace MSR.Domain.Models.Config
 {
+    public class MyLogStreamNameProvider : ILogStreamNameProvider
+    {
+        public string GetLogStreamName()
+        {
+            return Guid.NewGuid().ToString();
+        }
+    }
     public class CloudWatchSinkOptions : ICloudWatchSinkOptions
     {
         public const LogEventLevel DefaultMinimumLogEventLevel = LogEventLevel.Information;
@@ -27,13 +34,13 @@ namespace MSR.Domain.Models.Config
 
         public TimeSpan Period { get; set; } = DefaultPeriod;
 
-        public LogGroupRetentionPolicy LogGroupRetentionPolicy { get; set; } = LogGroupRetentionPolicy.Indefinitely;
+        public LogGroupRetentionPolicy LogGroupRetentionPolicy { get; set; } = LogGroupRetentionPolicy.TwoWeeks;
 
         public bool CreateLogGroup { get; set; } = DefaultCreateLogGroup;
 
         public string LogGroupName { get; set; } = "answer3/api";
 
-        public ILogStreamNameProvider LogStreamNameProvider { get; set; } = new DefaultLogStreamProvider();
+        public ILogStreamNameProvider LogStreamNameProvider { get; set; } = new MyLogStreamNameProvider();
 
         public ITextFormatter TextFormatter { get; set; }
 
