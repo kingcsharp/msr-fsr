@@ -5,6 +5,13 @@ using System;
 
 namespace MSR.Domain.Models.Config
 {
+    public class MyLogStreamNameProvider : ILogStreamNameProvider
+    {
+        public string GetLogStreamName()
+        {
+            return Guid.NewGuid().ToString();
+        }
+    }
     public class CloudWatchSinkOptions : ICloudWatchSinkOptions
     {
         public const LogEventLevel DefaultMinimumLogEventLevel = LogEventLevel.Information;
@@ -33,7 +40,7 @@ namespace MSR.Domain.Models.Config
 
         public string LogGroupName { get; set; } = "answer3/api";
 
-        public ILogStreamNameProvider LogStreamNameProvider { get; set; } = new DefaultLogStreamProvider();
+        public ILogStreamNameProvider LogStreamNameProvider { get; set; } = new MyLogStreamNameProvider();
 
         public ITextFormatter TextFormatter { get; set; }
 
