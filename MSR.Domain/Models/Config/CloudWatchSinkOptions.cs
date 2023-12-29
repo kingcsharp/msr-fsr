@@ -34,7 +34,7 @@ namespace MSR.Domain.Models.Config
 
         public TimeSpan Period { get; set; } = DefaultPeriod;
 
-        public LogGroupRetentionPolicy LogGroupRetentionPolicy { get; set; } = LogGroupRetentionPolicy.Indefinitely;
+        public LogGroupRetentionPolicy LogGroupRetentionPolicy { get; set; } = LogGroupRetentionPolicy.TwoWeeks;
 
         public bool CreateLogGroup { get; set; } = DefaultCreateLogGroup;
 
