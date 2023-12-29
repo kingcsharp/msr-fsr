@@ -70,7 +70,7 @@ namespace MSR.Answer.MessageHub.Extensions
             {
                 LogGroupName = logGroupName,
                 TextFormatter = new JsonFormatter(Environment.NewLine),
-                MinimumLogEventLevel = LogEventLevel.Debug,
+                MinimumLogEventLevel = LogEventLevel.Warning,
             };
 
             var loggerConfig = new LoggerConfiguration()

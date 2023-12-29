@@ -97,7 +97,7 @@ namespace MSR.Answer.Processor.Extentions
             {
                 LogGroupName = logGroupName,
                 TextFormatter = new JsonFormatter(Environment.NewLine),
-                MinimumLogEventLevel = LogEventLevel.Debug,
+                MinimumLogEventLevel = LogEventLevel.Warning,
             };
 
             var loggerConfig = new LoggerConfiguration()
