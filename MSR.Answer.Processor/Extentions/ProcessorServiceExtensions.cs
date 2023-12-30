@@ -91,11 +91,13 @@ namespace MSR.Answer.Processor.Extentions
 
             var serviceProvider = services.BuildServiceProvider();
             var cloudWatchClient = serviceProvider.GetService<IAmazonCloudWatchLogs>();
+            var logGroupName = $"answer3-processor-{generalConfig.Environment}/processor";
+            DomainServiceExtentions.createLogGroupInAWSCloudWatch(cloudWatchClient, logGroupName).Wait();
             var cloudWatchOpt = new MSR.Domain.Models.Config.CloudWatchSinkOptions()
             {
-                LogGroupName = $"answer3-processor-{generalConfig.Environment}/processor",
+                LogGroupName = logGroupName,
                 TextFormatter = new JsonFormatter(Environment.NewLine),
-                MinimumLogEventLevel = LogEventLevel.Debug
+                MinimumLogEventLevel = LogEventLevel.Warning,
             };
 
             var loggerConfig = new LoggerConfiguration()
