@@ -2443,7 +2443,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             DateTime utcDate = DateTime.UtcNow;
 
-            IEnumerable<XElement> monitorMaterialParameters = monitors.Select(m => new XElement(xSchema + "MaterialParameter",
+            IEnumerable<XElement> monitorMaterialParameters = monitors.Where(m => m.WorkOrderPartId == woPart.WorkOrderPartId).Select(m => new XElement(xSchema + "MaterialParameter",
                 new XElement(xSchema + "ShortName", m.ShortName),
                     new XElement(xSchema + "UnitOfMeasure", m.UnitOfMeasure),
                     new XElement(xSchema + "Measurements",
