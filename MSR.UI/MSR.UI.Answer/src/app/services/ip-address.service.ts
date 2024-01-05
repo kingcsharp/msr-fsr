@@ -7,7 +7,7 @@ import axios from 'axios';
 export class IpService {
     constructor() { }
 
-    async getIpAnotherAddress(): Promise<string> {
+    async getIpAddress(): Promise<string> {
         try {
             const response = await axios.get('https://api.ipify.org?format=json');
             return response.data.ip;

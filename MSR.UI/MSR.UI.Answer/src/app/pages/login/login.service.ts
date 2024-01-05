@@ -10,11 +10,14 @@ import {
   UserService,
   ForgotPasswordRequest,
   ForgotUserNameRequest,
+  UpdateUserRequest,
+  UserModel,
 } from "../../services/api.client.generated";
 import { take } from "rxjs/operators";
 import { environment as env } from "../../../environments/environment";
 import { responseHandler } from "../../utils/responseHandler";
 import { SignalRService } from "../../services/signalr.service";
+import { IpService } from "../../services/ip-address.service";
 
 const jwt = new JwtHelperService();
 
@@ -23,6 +26,8 @@ export class LoginService {
   config: any;
   isFetching: boolean = false;
   _errorMessage: string = "";
+  user: UserModel;
+  ipAddress: string;
 
   constructor(
     appConfig: AppConfig,
@@ -30,6 +35,7 @@ export class LoginService {
     private http: HttpClient,
     private router: Router,
     private accountService: AccountService,
+    private ipService: IpService,
     private userService: UserService,
     private signalrService: SignalRService,
   ) {
@@ -59,7 +65,6 @@ export class LoginService {
 
   async loginUser(creds) {
     // We check if app runs with backend mode
-    console.log(creds.ipAddress)
     this.requestLogin();
     const ctrl = this;
     if (creds.email.length <= 0 || creds.password.length <= 0) {
@@ -105,6 +110,8 @@ export class LoginService {
         const decodedToken = jwt.decodeToken(token);
         user.approvalPrivileges = JSON.parse(decodedToken.ApprovalPrivileges);
         user.privileges = JSON.parse(decodedToken.Privileges);
+        this.user = user;
+        console.log(user)
         this.globals.updateUser(user);
 
         if (user.roles.length === 0) {
@@ -143,5 +150,10 @@ export class LoginService {
 
   requestLogin() {
     this.isFetching = true;
+  }
+
+  async getIpAddress(): Promise<string> {
+   const ipAddress = await this.ipService.getIpAddress();
+   return ipAddress;
   }
 }
