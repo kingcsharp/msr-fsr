@@ -40,6 +40,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             return FullName;
         }
         public string FullName { get;set;}
+        public DateTime? LastLogin { get; set; }
+        public string IPAddress { get; set; }
+
     }
 }
 

@@ -150,7 +150,32 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
             }
 
+            await UpdateUserIPAddressAndLastLogin(user.Id, command.IPAddress);
+
             return await GetJWTToken(user);
+        }
+
+        private async Task UpdateUserIPAddressAndLastLogin(int userId, string iPAddress)
+        {
+            CurrentUser.GetId = () => userId;
+
+            // get full user based on id to get all user info
+            var currentUser = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == userId);
+
+            if (currentUser == null)
+            {
+                throw new DomainException("User not found with user id: " + userId, DomainError.NotFound);
+            }
+
+            currentUser.LastLogin = DateTime.UtcNow;
+
+            if (!string.IsNullOrWhiteSpace(iPAddress))
+            {
+                currentUser.IPAddress = iPAddress;
+            }
+
+            _unitOfWork.Users.Update(currentUser);
+            await _unitOfWork.SaveChangesAsync();
         }
 
 

@@ -19,5 +19,6 @@ namespace MSR.Answer.API.V1.Models
         public string Password { get; set; }
 
         public int AccountId { get; set; }
+        public string IPAddress { get; set; }
     }
 }
