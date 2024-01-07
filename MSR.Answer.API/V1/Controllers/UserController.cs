@@ -129,8 +129,7 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
 
 
-            return ret.ToOkObjectResponse("User has been Deactivated");
-
+            return ret.ToOkObjectResponse();
         }
 
         /// <summary>

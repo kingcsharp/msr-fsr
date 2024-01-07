@@ -1,15 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using MSR.Infrastructure.Resources.EntityFramework.Application;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
-using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
 using NSwag.Annotations;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -23,17 +20,16 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
-        private readonly IAccountService _accountService; // Import the AccountService interface or class
-        private readonly IUserService _userService; // Import the UserService interface or class
-        private readonly IUnitOfWork _unitOfWork;
 
-        public AccountController(ILogger<AccountController> logger, ICommandDispatcher dispatcher, IAccountService accountService, IUserService userService, IUnitOfWork unitOfWork)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="dispatcher"></param>
+        public AccountController(ILogger<AccountController> logger, ICommandDispatcher dispatcher)
         {
             _logger = logger;
             _dispatcher = dispatcher;
-            _accountService = accountService; // Initialize _accountService
-            _userService = userService; // Initialize _userService
-            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -45,25 +41,6 @@ namespace MSR.Answer.API.V1.Controllers
         [AllowAnonymous, SwaggerResponse(typeof(AuditActionResult<string>))]
         public async Task<IActionResult> Login([FromBody, Required] SystemLoginRequest request)
         {
-            // Deactivate user using DeactivateUserAsync method
-            var deactivateCommand = new DeactivateUser() { AccountId = request.AccountId };
-            //await _accountService.DeactivateUserAsync(deactivateCommand);
-            await _userService.DeactivateUserAsync(deactivateCommand);
-
-            var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == request.AccountId);
-
-            _logger.LogInformation($"Before deactivation check. User ID: {request.AccountId}");
-            if (user != null && !user.IsActive)
-            {
-                _logger.LogInformation($"User is deactivated. User ID: {request.AccountId}");
-                // Return a response indicating that the login process should not continue
-                return StatusCode(403, new { Message = "User account is deactivated. Login is not allowed." });
-            }
-            _logger.LogInformation($"After deactivation check. User ID: {request.AccountId}");
-
-
-            // Continue with your login logic
-
             var command = request.ToSystemLoginCommand();
 
             Microsoft.Extensions.Primitives.StringValues value = "";
