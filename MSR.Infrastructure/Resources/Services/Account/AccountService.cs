@@ -34,10 +34,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private readonly GeneralInformation _generalInformation;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly IWorkflowService _workflowService;
-        private readonly ISessionManagementService _sessionManagementService;
 
-        private static readonly Dictionary<int, DateTime> _knownUsers =
-            new Dictionary<int, DateTime>();
+        private static readonly Dictionary<int, DateTime> _knownUsers = new Dictionary<int, DateTime>();
 
         public AccountService(
             IUnitOfWork unitOfWork,
@@ -48,8 +46,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             EmailInformation emailInformation,
             GeneralInformation generalInformation,
             IAuthenticationHelper authenticationHelper,
-            IWorkflowService workflowService,
-            ISessionManagementService sessionManagementService)
+            IWorkflowService workflowService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -59,7 +56,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
             _generalInformation = generalInformation;
             _authenticationHelper = authenticationHelper;
             _workflowService = workflowService;
-            _sessionManagementService = sessionManagementService;
         }
 
         public async Task<bool> IsUserDeactivatedAsync(int userId)
@@ -99,9 +95,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
             if (!user.IsActive)
             {
-                // If the user is deactivated, expire the session
-                await _sessionManagementService.ExpireUserSessionAsync(user.Id);
-
                 throw new DomainException("Your account is deactivated", DomainError.Unknown);
             }
 
@@ -140,7 +133,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).Distinct().ToList();
             }
 
-            if (user.IsAnswerUser.HasValue && !user.IsAnswerUser.Value && command.Host.IndexOf("answer") != -1 && command.Host.IndexOf("localhost") == -1 && user.IsActive == false)
+            if (user.IsAnswerUser.HasValue && !user.IsAnswerUser.Value && command.Host.IndexOf("answer") != -1 && command.Host.IndexOf("localhost") == -1)
             {
                 throw new DomainException("Your account does not have access to Answer Application.", DomainError.NotFound);
             }
@@ -153,34 +146,13 @@ namespace MSR.Infrastructure.Resources.Services.Account
             return await GetJWTToken(user);
         }
 
-
-        public async Task DeactivateUserAsync(DeactivateUser command)
-        {
-            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == command.AccountId);
-
-            if (user == null) { return; }
-
-            user.IsActive = !user.IsActive;
-
-            _unitOfWork.Users.Update(user);
-            await _unitOfWork.SaveChangesAsync();
-
-            // Expire user session if the user is deactivated
-            if (!user.IsActive)
-            {
-                await this.ExpireUserSessionAsync(user.Id);
-            }
-        }
-
         public async Task ExpireUserSessionAsync(int accountId)
         {
-            // Logic to expire user session
-            // This could involve updating the session status in the database, for example
             lock (_knownUsers)
             {
                 if (_knownUsers.ContainsKey(accountId))
                 {
-                    _knownUsers[accountId] = new DateTime();
+                    _knownUsers.Remove(accountId);
                 }
             }
         }
@@ -287,24 +259,29 @@ namespace MSR.Infrastructure.Resources.Services.Account
                         _knownUsers.Remove(accountId);
                     }
                 }
+            }
 
-                if (!exists)
+            if (exists == false)
+            {
+                var user = _unitOfWork.Users.Query().Where(x => x.Id == accountId).FirstOrDefault();
+                if (user != null)
                 {
-                    var user = _unitOfWork.Users.Query().Where(x => x.Id == accountId).FirstOrDefault();
-                    if (user != null)
+                    if (user.IsActive == false)
                     {
-                        if (user.IsActive == false)
-                        {
-                            return false;   
-                        } else
+                        throw new DomainException("Your account has been deactivated", DomainError.Forbidden);
+                    }
+                    else
+                    {
+                        lock (_knownUsers)
                         {
                             _knownUsers.Add(accountId, DateTime.Now.AddDays(1));
-                        }
+                            exists = true;
+                        }   
                     }
                 }
             }
 
-            if (!exists)
+            if (exists == false)
             {
                 throw new DomainException($"No user with {nameof(accountId)} {accountId} found", DomainError.NotFound);
             }
