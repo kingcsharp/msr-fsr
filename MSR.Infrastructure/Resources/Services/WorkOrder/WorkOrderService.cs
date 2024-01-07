@@ -32,17 +32,10 @@ using Microsoft.Extensions.Logging;
 using System.Xml.Linq;
 using Renci.SshNet;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Data.SqlClient;
-using System.Diagnostics;
-using MSR.Infrastructure.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commanding;
-using System.Threading;
-using System.Security.Cryptography;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Linq.Dynamic.Core;
 using Castle.Core.Internal;
+using System.Text.Json;
 
 namespace MSR.Infrastructure.Resources.Services.WorkOrder
 {
@@ -2346,6 +2339,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
 
             try
             {
+                _logger.LogError($"SendFtpTransmission: config is {JsonSerializer.Serialize(sftpInfo)}");
                 string fileNameInFTP = $"{XmlLink.Split("/").Last().Split(".xml").First()}.xml";
                 int FTPPort = sftpInfo.Port.IsNullOrEmpty() == false ? Int32.Parse(sftpInfo.Port) : 22;
 
