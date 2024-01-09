@@ -35,7 +35,6 @@ namespace MSR.Answer.API.Extentions
                     OnTokenValidated = async context =>
                     {
                         var accountService = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
-                        var sessionManagementService = context.HttpContext.RequestServices.GetRequiredService<ISessionManagementService>();
                         if (!int.TryParse(context.Principal.FindFirst(ClaimTypes.Name)?.Value, out var accountId)) context.Fail("Unauthorized");
                         if (!accountService.ValidateAccount(accountId))
                         {// return unauthorized if user no longer exists
