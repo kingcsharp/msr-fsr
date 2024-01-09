@@ -23,7 +23,6 @@ using MSR.Infrastructure.Resources.Services.Aws3Service;
 using System.Linq;
 using MSR.Domain.Models.Config;
 using AutoMapper.Configuration;
-using Rollbar.DTOs;
 using System.IO;
 using ClosedXML;
 using MSR.Domain.Commands;

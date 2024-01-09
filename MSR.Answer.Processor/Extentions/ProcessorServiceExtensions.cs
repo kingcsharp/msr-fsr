@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Amazon.CloudWatchLogs;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSR.Answer.Processor.SQSServices;
@@ -14,7 +15,9 @@ using MSR.Domain.SQSEventing;
 using MSR.Domain.SQSEventing.Abstractions;
 using MSR.Infrastructure.Extensions;
 using Serilog;
+using Serilog.Events;
 using Serilog.Formatting.Json;
+using Serilog.Sinks.AwsCloudWatch;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -85,9 +88,24 @@ namespace MSR.Answer.Processor.Extentions
             services.AddSingleton<ISqsXMLConsumerService, SqsXMLConsumerService>();
 
             services.AddLogging();
+
+            var serviceProvider = services.BuildServiceProvider();
+            var cloudWatchClient = serviceProvider.GetService<IAmazonCloudWatchLogs>();
+            var logGroupName = $"answer3-processor-{generalConfig.Environment}/processor";
+            DomainServiceExtentions.createLogGroupInAWSCloudWatch(cloudWatchClient, logGroupName).Wait();
+            var cloudWatchOpt = new MSR.Domain.Models.Config.CloudWatchSinkOptions()
+            {
+                LogGroupName = logGroupName,
+                TextFormatter = new JsonFormatter(Environment.NewLine),
+                MinimumLogEventLevel = LogEventLevel.Warning,
+            };
+
             var loggerConfig = new LoggerConfiguration()
                 .WriteTo.Console(new JsonFormatter())
-                .WriteTo.Rollbar("09d6582dd46349368d4b4956d164e33a", environment: generalConfig.Environment, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
+                .WriteTo.AmazonCloudWatch(
+                    cloudWatchClient: cloudWatchClient,
+                    options: cloudWatchOpt
+                );
 
             Log.Logger = loggerConfig.CreateLogger();
             services.AddLogging(loggerConfig => loggerConfig.AddSerilog(dispose: true));
