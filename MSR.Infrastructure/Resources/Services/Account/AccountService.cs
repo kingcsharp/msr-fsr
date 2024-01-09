@@ -171,25 +171,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
             await _unitOfWork.SaveChangesAsync();
         }
 
-
-        public async Task DeactivateUserAsync(DeactivateUser command)
-        {
-            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == command.AccountId);
-
-            if (user == null) { return; }
-
-            user.IsActive = !user.IsActive;
-
-            _unitOfWork.Users.Update(user);
-            await _unitOfWork.SaveChangesAsync();
-
-            // Expire user session if the user is deactivated
-            if (!user.IsActive)
-            {
-                await this.ExpireUserSessionAsync(user.Id);
-            }
-        }
-
         public async Task ExpireUserSessionAsync(int accountId)
         {
             lock (_knownUsers)
