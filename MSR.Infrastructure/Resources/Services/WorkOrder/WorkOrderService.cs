@@ -447,7 +447,8 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
                 throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} with ID: {command.Id} has been invoiced and cannot be deleted", DomainError.Conflict);
             }
 
-            _unitOfWork.Context.Database.ExecuteSqlRaw("EXECUTE [dbo].[DeleteSingleWOData] @WorkOrderId={0}", workOrder.Id);
+            string sql = $"EXECUTE [dbo].[DeleteSingleWOData] @WorkOrderId={workOrder.Id}, @userId={CurrentUser.GetId()}";
+            _unitOfWork.Context.Database.ExecuteSqlRaw(sql);
 
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(workOrder, workOrder.Id);
