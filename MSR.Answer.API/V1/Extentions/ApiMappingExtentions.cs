@@ -27,7 +27,8 @@ namespace MSR.Answer.API.V1.Extentions
             return new SystemLogin()
             {
                 UserName = request.UserName,
-                Password = request.Password
+                Password = request.Password,
+                IPAddress = request.IPAddress
             };
         }
 
