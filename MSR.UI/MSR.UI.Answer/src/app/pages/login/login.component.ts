@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from "@angular/core";
+import { Component, HostBinding } from "@angular/core";
 import { LoginService } from "./login.service";
 import { ActivatedRoute } from "@angular/router";
 import {
@@ -28,7 +28,6 @@ export class Login {
     public loginService: LoginService,
     private route: ActivatedRoute,
     private accountService: AccountService,
-   
   ) {
     if (this.loginService.isAuthenticated()) {
       this.loginService.receiveLogin();

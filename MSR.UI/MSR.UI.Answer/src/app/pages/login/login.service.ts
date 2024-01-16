@@ -10,7 +10,6 @@ import {
   UserService,
   ForgotPasswordRequest,
   ForgotUserNameRequest,
-  UpdateUserRequest,
 } from "../../services/api.client.generated";
 import { take } from "rxjs/operators";
 import { environment as env } from "../../../environments/environment";
@@ -109,7 +108,6 @@ export class LoginService {
         const decodedToken = jwt.decodeToken(token);
         user.approvalPrivileges = JSON.parse(decodedToken.ApprovalPrivileges);
         user.privileges = JSON.parse(decodedToken.Privileges);
-        console.log(user)
         this.globals.updateUser(user);
 
         if (user.roles.length === 0) {
