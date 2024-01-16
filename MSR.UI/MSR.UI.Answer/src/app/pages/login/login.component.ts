@@ -9,6 +9,7 @@ import {
 import { environment as env } from "../../../environments/environment";
 import { take } from "rxjs/operators";
 import { responseHandler } from "../../utils/responseHandler";
+import { IpService } from "../../services/ip-address.service";
 
 @Component({
   selector: "login",
@@ -20,6 +21,7 @@ export class Login {
   email: string = "";
   password: string = "";
   username: string = "";
+  ipAddress: string = "";
   forgotUsername: boolean = false;
   showLogin: boolean = true;
   forgotPassword: boolean = false;
@@ -28,6 +30,7 @@ export class Login {
     public loginService: LoginService,
     private route: ActivatedRoute,
     private accountService: AccountService,
+    private ipService: IpService
   ) {
     if (this.loginService.isAuthenticated()) {
       this.loginService.receiveLogin();
@@ -38,6 +41,7 @@ export class Login {
         this.loginService.receiveToken(params.token);
       }
     });
+    this.getIpAddress();
   }
 
   public async forgotUserPassword() {
@@ -98,6 +102,10 @@ export class Login {
       );
   }
 
+  async getIpAddress(): Promise<void> {
+    this.ipAddress = await this.ipService.getIpAddress();
+  }
+
   public showLoginDiv() {
     this.forgotUsername = false;
     this.showLogin = true;
@@ -117,10 +125,10 @@ export class Login {
   }
 
   public login() {
-    const { email, password } = this;
+    const { email, password, ipAddress } = this;
 
     if (email.length !== 0 && password.length !== 0) {
-      this.loginService.loginUser({ email, password });
+      this.loginService.loginUser({ email, password, ipAddress });
     }
   }
 }
