@@ -11,7 +11,6 @@ import {
   ForgotPasswordRequest,
   ForgotUserNameRequest,
   UpdateUserRequest,
-  UserModel,
 } from "../../services/api.client.generated";
 import { take } from "rxjs/operators";
 import { environment as env } from "../../../environments/environment";
@@ -26,7 +25,6 @@ export class LoginService {
   config: any;
   isFetching: boolean = false;
   _errorMessage: string = "";
-  user: UserModel;
   ipAddress: string;
 
   constructor(
@@ -77,6 +75,7 @@ export class LoginService {
         new SystemLoginRequest({
           userName: creds.email,
           password: creds.password,
+          ipAddress: this.ipAddress
         })
       )
       .pipe(take(1))
@@ -110,7 +109,6 @@ export class LoginService {
         const decodedToken = jwt.decodeToken(token);
         user.approvalPrivileges = JSON.parse(decodedToken.ApprovalPrivileges);
         user.privileges = JSON.parse(decodedToken.Privileges);
-        this.user = user;
         console.log(user)
         this.globals.updateUser(user);
 
@@ -152,8 +150,8 @@ export class LoginService {
     this.isFetching = true;
   }
 
-  async getIpAddress(): Promise<string> {
+  async getIpAddress(): Promise<void> {
    const ipAddress = await this.ipService.getIpAddress();
-   return ipAddress;
+   this.ipAddress = ipAddress.valueOf();
   }
 }
