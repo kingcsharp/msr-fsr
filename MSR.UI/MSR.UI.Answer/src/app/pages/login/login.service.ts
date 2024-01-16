@@ -15,6 +15,7 @@ import { take } from "rxjs/operators";
 import { environment as env } from "../../../environments/environment";
 import { responseHandler } from "../../utils/responseHandler";
 import { SignalRService } from "../../services/signalr.service";
+import { IpService } from "../../services/ip-address.service";
 
 const jwt = new JwtHelperService();
 
@@ -23,6 +24,7 @@ export class LoginService {
   config: any;
   isFetching: boolean = false;
   _errorMessage: string = "";
+  ipAddress: string;
 
   constructor(
     appConfig: AppConfig,
@@ -30,8 +32,9 @@ export class LoginService {
     private http: HttpClient,
     private router: Router,
     private accountService: AccountService,
+    private ipService: IpService,
     private userService: UserService,
-    private signalrService: SignalRService
+    private signalrService: SignalRService,
   ) {
     this.config = appConfig.getConfig();
   }
@@ -71,6 +74,7 @@ export class LoginService {
         new SystemLoginRequest({
           userName: creds.email,
           password: creds.password,
+          ipAddress: this.ipAddress
         })
       )
       .pipe(take(1))
@@ -142,5 +146,10 @@ export class LoginService {
 
   requestLogin() {
     this.isFetching = true;
+  }
+
+  async getIpAddress(): Promise<void> {
+   const ipAddress = await this.ipService.getIpAddress();
+   this.ipAddress = ipAddress.valueOf();
   }
 }

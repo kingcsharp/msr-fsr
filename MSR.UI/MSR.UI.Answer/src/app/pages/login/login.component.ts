@@ -27,7 +27,7 @@ export class Login {
   constructor(
     public loginService: LoginService,
     private route: ActivatedRoute,
-    private accountService: AccountService
+    private accountService: AccountService,
   ) {
     if (this.loginService.isAuthenticated()) {
       this.loginService.receiveLogin();
