@@ -222,7 +222,7 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({
         id: "id",
         label: "WIP Id",
-        visible: true,
+        visible: false,
         type: EnumColumnType.Number,
       }),
       new ColumnsSaved({
