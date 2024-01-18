@@ -128,6 +128,13 @@
             <th
               grid-input-filter
               [dt]="dt"
+              searchField="id"
+              [hidden]="!commonGrid.isVisibleCol('id', gridSettings)"
+              [gridSettings]="gridSettings"
+            ></th>
+            <th
+              grid-input-filter
+              [dt]="dt"
               searchField="purchaseId"
               [hidden]="!commonGrid.isVisibleCol('purchaseId', gridSettings)"
               [gridSettings]="gridSettings"
@@ -149,13 +156,6 @@
               [gridSettings]="gridSettings"
             ></th>
             <th
-              grid-input-filter
-              [dt]="dt"
-              searchField="serialNumber"
-              [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)"
-              [gridSettings]="gridSettings"
-            ></th>
-            <th
               [hidden]="!commonGrid.isVisibleCol('locationName', gridSettings)"
             >
               <multiselect-wrapper
@@ -169,6 +169,13 @@
               >
               </multiselect-wrapper>
             </th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="serialNumber"
+              [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)"
+              [gridSettings]="gridSettings"
+            ></th>
             <th
               grid-input-filter
               [dt]="dt"
@@ -248,14 +255,6 @@
               [hidden]="!commonGrid.isVisibleCol('procedureName', gridSettings)"
               [gridSettings]="gridSettings"
             ></th>
-            <th
-              grid-input-filter
-              [dt]="dt"
-              searchField="disposition"
-              [hidden]="!commonGrid.isVisibleCol('disposition', gridSettings)"
-              [gridSettings]="gridSettings"
-              class="column-disposition"
-            ></th>
             <th [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
               <multiselect-wrapper
                 [gridStorageId]="gridStorageId"
@@ -268,6 +267,14 @@
               >
               </multiselect-wrapper>
             </th>
+            <th
+              grid-input-filter
+              [dt]="dt"
+              searchField="disposition"
+              [hidden]="!commonGrid.isVisibleCol('disposition', gridSettings)"
+              [gridSettings]="gridSettings"
+              class="column-disposition"
+            ></th>
             <th
               *ngIf="adminOrManager"
               grid-input-filter
