@@ -328,7 +328,6 @@ export class WipComponent implements OnInit, AfterViewInit {
       { label: "Waiting to Start", value: "Waiting to Start" },
     ];
     this.locationOptions = this.globals.getTopLevelLocations();
-    console.log(this)
   }
 
   ngAfterViewInit(): void {
