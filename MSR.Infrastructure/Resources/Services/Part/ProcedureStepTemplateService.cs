@@ -57,6 +57,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         _mapper.Map<FileModel>(map.FileObject)
                     );
                 }
+
+                model.ReferenceDocumentIds = _unitOfWork.DocumentEntityMap
+                    .Query()
+                    .Where(x => x.EntityId == command.Id &&
+                        x.EntityTableName.Equals(nameof(ProcedureStepTemplate)))
+                    .Select(x => x.DocumentId)
+                    .ToList();
+
                 return model;
             }).ToList();
 
@@ -92,6 +100,21 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.ProcedureStepTemplate), ret.Id, file);
 
                     fileReferences.Add(fileModel);
+                }
+
+                if (command.ReferenceDocuments != null)
+                {
+                    foreach (int newDocId in command.ReferenceDocuments)
+                    {
+                        var documentEntityMap = new DocumentEntityMap()
+                        {
+                            EntityId = ret.Id,
+                            EntityTableName = nameof(ProcedureStepTemplate),
+                            DocumentId = newDocId
+                        };
+                        await _unitOfWork.DocumentEntityMap.AddAsync(documentEntityMap);
+                    }
+                    await _unitOfWork.SaveChangesAsync();
                 }
 
                 ret.ReferenceFiles = fileReferences;
@@ -154,6 +177,33 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
 
                 ret.ReferenceFiles = fileReferences;
+
+                List<int> savedDocumentIds = await _unitOfWork.DocumentEntityMap
+                    .Query()
+                    .Where(x => x.EntityId == command.Id &&
+                        x.EntityTableName.Equals(nameof(ProcedureStepTemplate)))
+                    .Select(x => x.Id)
+                    .ToListAsync();
+
+                foreach (int documentId in savedDocumentIds)
+                {
+                    _unitOfWork.DocumentEntityMap.Delete(false, documentId);
+                }
+
+                if (command.ReferenceDocuments != null)
+                {
+                    foreach (int newDocId in command.ReferenceDocuments)
+                    {
+                        var documentEntityMap = new DocumentEntityMap()
+                        {
+                            EntityId = command.Id,
+                            EntityTableName = nameof(ProcedureStepTemplate),
+                            DocumentId = newDocId
+                        };
+                        await _unitOfWork.DocumentEntityMap.AddAsync(documentEntityMap);
+                    }
+                    await _unitOfWork.SaveChangesAsync();
+                }
             }
             else
             {

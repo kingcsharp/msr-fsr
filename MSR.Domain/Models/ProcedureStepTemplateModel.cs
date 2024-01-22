@@ -95,5 +95,7 @@ namespace MSR.Domain.Models
         [DataMember(Name="revision")]
         public int? Revision { get; set; }
 
+        public List<int> ReferenceDocumentIds { get; set; }
+
     }
 }

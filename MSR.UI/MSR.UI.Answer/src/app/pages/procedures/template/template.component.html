@@ -70,6 +70,21 @@
                 >
                 </cmh-file-uploader>
             </div>
+            <div class="form-group">
+                <label for="referenceDocuments" class="col-form-label text-left">
+                    Documents
+                </label>
+                <div *ngIf="documentsAvailable.length > 0" style="width: 300px">
+                    <multiselect-wrapper-form
+                        [options]="documentsAvailable"
+                        [(model)]="referenceDocuments"
+                        defaultLabelProperty="label"
+                        defaultId="value"
+                        defaultLabel="Select Documents"
+                    >
+                    </multiselect-wrapper-form>
+                </div>
+            </div>
             <!-- TODO: Add Documents reference here when A3-164 is finished-->
             <div class="form-group" *ngIf="availableRoles !== undefined && selectedRoles !== undefined">
                 <label for="roles" class="col-form-label text-left">
