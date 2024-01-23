@@ -139,8 +139,8 @@ export class TemplateComponent implements OnInit {
           }));
 
           const referenceDocuments = [];
-          if (documentsAvailable.length > 0 && this.procedureStepTemplate?.referenceDocumentIds?.length > 0) {
-            this.procedureStepTemplate.referenceDocumentIds.forEach(Id => {
+          if (documentsAvailable.length > 0 && (this.procedureStepTemplate as any)?.referenceDocumentIds?.length > 0) {
+            (this.procedureStepTemplate as any).referenceDocumentIds.forEach(Id => {
               for (let doc of documentsAvailable) {
                 if (Id === parseInt(doc.value)) {
                   referenceDocuments.push({
