@@ -137,10 +137,11 @@ export class TemplateComponent implements OnInit {
             label: s.name,
             value: s.id,
           }));
-
-          const referenceDocuments = [];
+          
+          this.documentsAvailable = documentsAvailable;
           if (documentsAvailable.length > 0 && (this.procedureStepTemplate as any)?.referenceDocumentIds?.length > 0) {
-            (this.procedureStepTemplate as any).referenceDocumentIds.forEach(Id => {
+            const referenceDocuments = [];
+            for (let Id of (this.procedureStepTemplate as any).referenceDocumentIds) {
               for (let doc of documentsAvailable) {
                 if (Id === parseInt(doc.value)) {
                   referenceDocuments.push({
@@ -150,11 +151,10 @@ export class TemplateComponent implements OnInit {
                   break;
                 }
               }
-            });
+            }
 
             this.referenceDocuments = referenceDocuments;
           }
-          this.documentsAvailable = documentsAvailable;
         })
       );
   }
