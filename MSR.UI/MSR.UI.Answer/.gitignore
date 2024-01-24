@@ -20,4 +20,3 @@ logs
 
 plopfile.js
 plop-templates/
-/src/app/services/api.client.generated.ts
