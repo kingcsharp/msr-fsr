@@ -111,7 +111,6 @@ export class ReportCubeService {
   }
 
   public getReportColumns(reportInfo: ReportModel) {
-    console.log(reportInfo)
     switch (this.getReportName(reportInfo)) {
       case "PartsCycleCountsbyWorkOrderDate":
         return [
@@ -477,7 +476,7 @@ export class ReportCubeService {
       case "MonitorsHistorybyWorkOrder":
         return [
           new ColumnsSaved({
-            id: "wonumber",
+            id: "rownumber",
             label: "WO Item",
             visible: true,
             type: this.enumColumnType.String,
@@ -518,7 +517,7 @@ export class ReportCubeService {
             styles: { width: "4rem" },
           }),
           new ColumnsSaved({
-            id: "lastupdatedon",
+            id: "updatedon",
             label: "Updated On",
             visible: true,
             type: this.enumColumnType.Date,
@@ -528,14 +527,14 @@ export class ReportCubeService {
             formattingMoment: "MM-DD-YYYY",
           }),
           new ColumnsSaved({
-            id: "lastupdatedby",
+            id: "updatedby",
             label: "Updated By",
             visible: true,
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "description",
-            label: "Description",
+            id: "monitordescription",
+            label: "Monitor Description",
             visible: true,
             type: this.enumColumnType.String,
           }),
@@ -543,23 +542,23 @@ export class ReportCubeService {
             id: "monitortype",
             label: "Monitor Type",
             visible: true,
+            dropdownHeader: true,
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "unitOfMeasure",
+            id: "unitofmeasure",
             label: "Unit of Measure",
             visible: true,
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "value",
+            id: "result",
             label: "Monitor Result",
             visible: true,
-            dropdownHeader: true,
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "result",
+            id: "passing",
             label: "Passing",
             visible: true,
             type: this.enumColumnType.String,
@@ -1358,11 +1357,10 @@ export class ReportCubeService {
         );
         break;
       case "MonitorsHistorybyWorkOrder":
-        console.log(pagingModel.data)
         const gridDataRet = pagingModel.data.map((elem) => {
           elem = this.removePrefixesOfPropertyNames(elem);
           elem.elemKey =
-            elem["lastupdatedon"] +
+            elem["updatedon"] +
             this.splitChars +
             this.setName(elem, "partnumber", "serialnumber", "-");
           elem.isValidForChart = this.isValidRowForChart(
@@ -1371,7 +1369,7 @@ export class ReportCubeService {
             "serialnumber"
           );
           elem.cyclecount = this.checkIfCycleCountIsNaN(elem, "cyclecount");
-          elem.lastupdatedon = moment(elem["lastupdatedon"]);
+          elem.lastupdatedon = moment(elem["updatedon"]);
           elem.partname = [{ name: elem["partname"], id: elem["partname"] }];
           return elem;
         });
