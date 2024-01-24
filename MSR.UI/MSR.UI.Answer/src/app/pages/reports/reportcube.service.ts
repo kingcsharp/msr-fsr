@@ -476,24 +476,17 @@ export class ReportCubeService {
       case "MonitorsHistorybyWorkOrder":
         return [
           new ColumnsSaved({
-            id: "value",
-            label: "Monitor Value",
+            id: "rownumber",
+            label: "WO Item",
             visible: true,
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "customerid",
-            label: "Customer Id",
-            visible: false,
-            type: this.enumColumnType.Number,
-            dropdownHeader: true,
-          }),
-          new ColumnsSaved({
-            id: "cyclecount",
-            label: "Cycle Count",
+            id: "customername",
+            label: "Customer",
             visible: true,
-            type: this.enumColumnType.Number,
-            styles: { width: "4rem" },
+            type: this.enumColumnType.String,
+            dropdownHeader: true,
           }),
           new ColumnsSaved({
             id: "locationname",
@@ -501,12 +494,6 @@ export class ReportCubeService {
             visible: true,
             type: this.enumColumnType.String,
             dropdownHeader: true,
-          }),
-          new ColumnsSaved({
-            id: "serialnumber",
-            label: "Serial #",
-            visible: true,
-            type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
             id: "partnumber",
@@ -523,13 +510,14 @@ export class ReportCubeService {
             multipleValues: true,
           }),
           new ColumnsSaved({
-            id: "workordername",
-            label: "WO Name",
+            id: "cyclecount",
+            label: "Cycle Count",
             visible: true,
-            type: this.enumColumnType.String,
+            type: this.enumColumnType.Number,
+            styles: { width: "4rem" },
           }),
           new ColumnsSaved({
-            id: "lastupdatedon",
+            id: "updatedon",
             label: "Updated On",
             visible: true,
             type: this.enumColumnType.Date,
@@ -539,8 +527,39 @@ export class ReportCubeService {
             formattingMoment: "MM-DD-YYYY",
           }),
           new ColumnsSaved({
-            id: "lastupdatedby",
+            id: "updatedby",
             label: "Updated By",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "monitordescription",
+            label: "Monitor Description",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "monitortype",
+            label: "Monitor Type",
+            visible: true,
+            dropdownHeader: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "unitofmeasure",
+            label: "Unit of Measure",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "result",
+            label: "Monitor Result",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "passing",
+            label: "Passing",
             visible: true,
             type: this.enumColumnType.String,
           }),
@@ -1341,7 +1360,7 @@ export class ReportCubeService {
         const gridDataRet = pagingModel.data.map((elem) => {
           elem = this.removePrefixesOfPropertyNames(elem);
           elem.elemKey =
-            elem["lastupdatedon"] +
+            elem["updatedon"] +
             this.splitChars +
             this.setName(elem, "partnumber", "serialnumber", "-");
           elem.isValidForChart = this.isValidRowForChart(
@@ -1350,7 +1369,7 @@ export class ReportCubeService {
             "serialnumber"
           );
           elem.cyclecount = this.checkIfCycleCountIsNaN(elem, "cyclecount");
-          elem.lastupdatedon = moment(elem["lastupdatedon"]);
+          elem.lastupdatedon = moment(elem["updatedon"]);
           elem.partname = [{ name: elem["partname"], id: elem["partname"] }];
           return elem;
         });
