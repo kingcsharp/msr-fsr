@@ -194,7 +194,6 @@ export class AdhocComponent implements OnInit {
               this.reportInfo
             ),
           });
-          
           this.showReport = true;
         })
       );
