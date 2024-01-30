@@ -72,7 +72,7 @@ export class GridComponent implements OnInit {
   monitorTypes: Array<any>;
   mainSub: Array<any>;
   partOptions: Array<any> = new Array<any>();
-  
+
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
