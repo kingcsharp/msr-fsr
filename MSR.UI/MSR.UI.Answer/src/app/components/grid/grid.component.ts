@@ -13,7 +13,7 @@ import {
   DocumentService,
   AuditActionResultOfICollectionOfArchiveDocumentView,
   ArchiveDocumentView,
-  XmlService
+  XmlService,
 } from "../../services/api.client.generated";
 import { take } from "rxjs/operators";
 import { environment as env } from "../../../environments/environment";
@@ -77,7 +77,7 @@ export class GridComponent implements OnInit {
     private reportCubeService: ReportCubeService,
     private cSVConverterService: CSVConverterService,
     private documentService: DocumentService,
-    private xmlService: XmlService
+    private xmlService: XmlService,
   ) {}
 
   ngOnInit(): void {
@@ -147,7 +147,7 @@ export class GridComponent implements OnInit {
       this.pagingModel.pageSize = lazyLoadEvent.rows;
       this.pagingModel.queryString =
         this.reportCubeService.primeNgFilterToQueryStringConverter(
-          lazyLoadEvent.filters
+          lazyLoadEvent.filters,
         );
     }
 
@@ -162,11 +162,11 @@ export class GridComponent implements OnInit {
     setTimeout(() => {
       const pagingModel = this.reportCubeService.getResultDataAndChart(
         this.chartInfo,
-        this.pagingModel
+        this.pagingModel,
       );
       if (
-          this.reportInfo.name.replace(/\s/g, "") +
-        this.reportInfo.subtitle.replace(/\s/g, "") ===
+        this.reportInfo.name.replace(/\s/g, "") +
+          this.reportInfo.subtitle.replace(/\s/g, "") ===
         "PartsCycleCountsbyWorkOrderDate"
       ) {
         this.regnerateCharOptions(pagingModel.HighChartsOptions);
@@ -199,7 +199,7 @@ export class GridComponent implements OnInit {
             this.gridData = responsePagingModel.data;
             if (
               reportInfo.name.replace(/\s/g, "") +
-              reportInfo.subtitle.replace(/\s/g, "") ===
+                reportInfo.subtitle.replace(/\s/g, "") ===
               "PartsCycleCountsbyWorkOrderDate"
             ) {
               this.regnerateCharOptions(responsePagingModel.HighChartsOptions);
@@ -242,7 +242,10 @@ export class GridComponent implements OnInit {
             });
           }
 
-          if (responsePagingModel.data !== undefined && responsePagingModel.data.length !== 0) {
+          if (
+            responsePagingModel.data !== undefined &&
+            responsePagingModel.data.length !== 0
+          ) {
             const convertUtcToDate = (utcDate: string): Date => {
               const utcTime = moment.utc(utcDate).valueOf();
               return new Date(utcTime);
@@ -286,7 +289,7 @@ export class GridComponent implements OnInit {
         this.cSVConverterService.downloadFile(
           pagingModel.data,
           this.gridSaved.columnsSaved,
-          this.reportInfo.name
+          this.reportInfo.name,
         );
       });
   }
@@ -347,8 +350,8 @@ export class GridComponent implements OnInit {
           (resp: AuditActionResultOfICollectionOfArchiveDocumentView) => {
             this.archivedGridData = resp.object.map((x) => this.formatSize(x));
             this.showArchiveDialogue = true;
-          }
-        )
+          },
+        ),
       );
   }
 
@@ -357,14 +360,23 @@ export class GridComponent implements OnInit {
     return archiveDocmentView;
   }
 
-  downloadXmlFile(id: number) {
+  downloadXmlFile(id: any) {
     this.xmlService.downloadFile(id, env.apiVersion).subscribe(({ object }) => {
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = `data:application/xml;base64,${object.fileContents}`;
-      link.setAttribute('download', object.name);
+      link.setAttribute("download", object.name);
       document.body.appendChild(link);
       link.click();
       link.remove();
     });
+  }
+
+  downloadFile(url: string, fileName: string) {
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }
 }
