@@ -69,8 +69,10 @@ export class GridComponent implements OnInit {
   totalRows: number = 0;
   completedOrCancelledStatuses: Array<any>;
   waitingToStartOrInProgressStatuses: Array<any>;
+  monitorTypes: Array<any>;
   mainSub: Array<any>;
   partOptions: Array<any> = new Array<any>();
+
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
@@ -236,6 +238,18 @@ export class GridComponent implements OnInit {
                   {
                     name: part["CubeMonitors.partname"],
                     id: part["CubeMonitors.partname"],
+                  },
+                ]);
+              }
+
+              if (
+                part["CubeMonitorHistory.partname"] !== null &&
+                part["CubeMonitorHistory.partname"] !== undefined
+              ) {
+                this.partOptions.push([
+                  {
+                    name: part["CubeMonitorHistory.partname"],
+                    id: part["CubeMonitorHistory.partname"],
                   },
                 ]);
               }

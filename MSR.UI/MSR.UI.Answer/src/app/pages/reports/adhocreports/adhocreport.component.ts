@@ -127,6 +127,24 @@ export class AdhocComponent implements OnInit {
       {
         site: "Kiryat Gat",
       },
+      {
+        monitortype: "Equipment"
+      },
+      {
+        monitortype: "Number"
+      },
+      {
+        monitortype: "Text"
+      },
+      {
+        monitortype: "Yes or No"
+      },
+      {
+        monitortype: "Pass or Fail"
+      },
+      {
+        monitortype: "Select"
+      }
     ];
 
     this.customerService

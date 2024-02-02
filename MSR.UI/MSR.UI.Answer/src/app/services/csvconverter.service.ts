@@ -86,7 +86,8 @@ export class CSVConverterService {
       return value === true ? "Yes" : "No";
     }
     if (column.type === EnumColumnType.StringArray) {
-      return `${value}`;
+      const combinedNames: string[] = value.map(obj => obj.name);
+      return `${combinedNames.join(' ')}`;
     }
     if (column.type === EnumColumnType.Money) {
       return `$${value}`;
