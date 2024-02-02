@@ -510,6 +510,12 @@ export class ReportCubeService {
             multipleValues: true,
           }),
           new ColumnsSaved({
+            id: "serialnumber",
+            label: "Serial #",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
             id: "cyclecount",
             label: "Cycle Count",
             visible: true,
