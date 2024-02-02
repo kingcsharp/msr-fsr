@@ -374,7 +374,7 @@ export class GridComponent implements OnInit {
     return archiveDocmentView;
   }
 
-  downloadXmlFile(id: any) {
+  downloadXmlFile(id: number) {
     this.xmlService.downloadFile(id, env.apiVersion).subscribe(({ object }) => {
       const link = document.createElement("a");
       link.href = `data:application/xml;base64,${object.fileContents}`;
