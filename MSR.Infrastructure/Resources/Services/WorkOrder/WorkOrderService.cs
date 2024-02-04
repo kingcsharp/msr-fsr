@@ -2179,7 +2179,7 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             StreamReader reader = new StreamReader(stream);
             string XmlContent = reader.ReadToEnd();
 
-            string XmlFileName = await TransferFtpTransmission(log.WorkOrderId, log.WorkOrderPartId, XmlContent, log.XmlLink);
+            string XmlFileName = await TransferFtpTransmission(log.WorkOrderId, log.WorkOrderPartId ?? default(int), XmlContent, log.XmlLink);
 
             DisconnectFTP();
 
