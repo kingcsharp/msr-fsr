@@ -173,14 +173,6 @@ namespace MSR.Infrastructure.Resources.Services.WorkOrder
             var mappedParts = await _unitOfWork.WorkOrderPartNCRMap.Query().Where(i => workOrderWorkOrderPartIds.Contains(i.WorkOrderPartId)).ToListAsync();
             foreach (var workOrderPart in workOrderModel.WorkOrderParts)
             {
-                var mostRecentPart = await _unitOfWork.WorkOrderParts.Query().OrderByDescending(i => i.Id)
-                                            .FirstOrDefaultAsync(i => i.SerialNumber == workOrderPart.SerialNumber && i.PartId == workOrderPart.PartId
-                                                                    && i.Id < workOrderPart.Id && i.PartData != null);
-                if (mostRecentPart != null)
-                {
-                    workOrderPart.PartData = mostRecentPart.PartData;
-                }
-
                 var workOrderPartMappedPart = mappedParts.FirstOrDefault(i => i.WorkOrderPartId == workOrderPart.Id);
                 if (workOrderPartMappedPart != null)
                 {
