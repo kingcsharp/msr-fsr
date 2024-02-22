@@ -19,6 +19,16 @@
                     </div>
                 </div>
             </div>
+            <div class="col-12" *ngIf="checkMonitorType(label)">
+                <div class="row header">
+                    <div class="col-9 border p-2">Monitor</div>
+                    <div class="col-3 border p-2">Value</div>
+                  </div>
+                  <div *ngFor="let monitor of label.workOrderTaskMonitors" class="row">
+                    <div class="col-9 border p-2" *ngIf="monitor.monitorTypeId === 2">{{ monitor.description | slice:0:30 }}</div>
+                    <div class="col-3 border p-2" *ngIf="monitor.monitorTypeId === 2">{{ monitor | monitorResult }}</div>
+                  </div>
+            </div>
         </div>
     </div>
 </div>

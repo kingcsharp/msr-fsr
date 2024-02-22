@@ -18,6 +18,7 @@ export class TechnicalDataLabelComponent implements OnInit {
 
   ngOnInit(): void {
     this.WorkOrder.workOrderTasks.map((s) => {
+
       if (
         s.workOrderTaskMonitors === null ||
         s.workOrderTaskMonitors === undefined
@@ -37,6 +38,7 @@ export class TechnicalDataLabelComponent implements OnInit {
         index++
       ) {
         let dataLabel = new DataLabel();
+        dataLabel.workOrderTaskMonitors = workOrderTask.workOrderTaskMonitors
         dataLabel.CustomerPurchaseNumber =
           this.WorkOrder.purchase.customerPurchaseNumber;
         dataLabel.Date = this.WorkOrder.scheduledEndDate;
@@ -55,5 +57,11 @@ export class TechnicalDataLabelComponent implements OnInit {
         this.labels.push(dataLabel);
       }
     });
+  }
+
+  checkMonitorType(label: DataLabel): boolean {
+    return label.workOrderTaskMonitors.some(
+      workOrder => workOrder.monitorTypeId === 2
+    );
   }
 }
