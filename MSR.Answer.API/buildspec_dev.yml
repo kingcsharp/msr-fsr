@@ -10,11 +10,11 @@ phases:
   post_build:
     commands:
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_URL
-      - docker tag msr-rp $ACCOUNT_URL/msr-rp:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker push $ACCOUNT_URL/msr-rp:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker tag msr-api $ACCOUNT_URL/msr-api:CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker push $ACCOUNT_URL/msr-api:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - sh $SCRIPT_UPDATE_IMAGE_API QA $CODEBUILD_RESOLVED_SOURCE_VERSION $API_COMPOSE
+      - docker tag msr-rp $ACCOUNT_URL/msr-rp:$CODEBUILD_SOURCE_VERSION
+      - docker push $ACCOUNT_URL/msr-rp:$CODEBUILD_SOURCE_VERSION
+      - docker tag msr-api $ACCOUNT_URL/msr-api:CODEBUILD_SOURCE_VERSION
+      - docker push $ACCOUNT_URL/msr-api:$CODEBUILD_SOURCE_VERSION
+      - sh $SCRIPT_UPDATE_IMAGE_API QA $CODEBUILD_SOURCE_VERSION $API_COMPOSE
       - cat $API_COMPOSE
       - ecs-cli configure --cluster $QA_CLUSTER --default-launch-type FARGATE --config-name $CLUSTER_CONFIG --region $REGION
       - ecs-cli compose --file $API_COMPOSE --ecs-params $API_ECS_PARAMS_QA --project-name $QA_PROJECT_API service up --create-log-groups --cluster-config $CLUSTER_CONFIG --target-group-arn $QA_API_TARGET_ARN --container-name reverseproxy --container-port $PORT --timeout $TIMEOUT
