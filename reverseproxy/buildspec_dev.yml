@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - cd ./reverseproxy/
+  build:
+    commands:
+      - docker build -f ./Dockerfile --build-arg NGINX_CONF=dev -t msr-rp .
+  post_build:
+    commands:
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_URL
+      - docker tag msr-rp $ACCOUNT_URL/msr-rp:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push $ACCOUNT_URL/msr-rp:$CODEBUILD_RESOLVED_SOURCE_VERSION
