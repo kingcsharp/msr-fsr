@@ -4,9 +4,9 @@ phases:
   install:
     commands:
       - cd ./MSR.UI/MSR.UI.Answer/
-      - yarn install --frozen-lockfile
+      - yarn install --frozen-lockfile  
   build:
     commands:
-      - ng build --configuration dev
+      - npx ng build --configuration dev
       - aws s3 cp --recursive dist/  s3://answer-ui-qa
       - aws cloudfront create-invalidation --distribution-id E2LJS1DYU10ZJH --paths "/*"
