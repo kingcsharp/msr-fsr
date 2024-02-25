@@ -8,6 +8,7 @@ phases:
     commands:
       - cd ./reverseproxy/
       - docker build -f ./Dockerfile --build-arg NGINX_CONF=dev -t msr-rp .
+      - cd ..
       - docker build -f ./MSR.Answer.API/Dockerfile -t msr-api .
   post_build:
     commands:
