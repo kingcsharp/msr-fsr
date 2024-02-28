@@ -4,6 +4,7 @@ import {
   WorkOrderModel,
   WorkOrderTaskMonitorModel,
 } from "../../services/api.client.generated";
+import { PackingListViewModel } from "../detailed-packing-list/detailed-packing-list-view-model";
 
 @Component({
   selector: "technical-data-label",
@@ -12,9 +13,13 @@ import {
 })
 export class TechnicalDataLabelComponent implements OnInit {
   @Input() WorkOrder: WorkOrderModel;
+
+  packingList: PackingListViewModel;
   labels: Array<DataLabel> = new Array<DataLabel>();
 
-  constructor() {}
+  constructor() {
+    this.packingList = new PackingListViewModel();
+  }
 
   ngOnInit(): void {
     this.WorkOrder.workOrderTasks.map((s) => {
@@ -27,7 +32,9 @@ export class TechnicalDataLabelComponent implements OnInit {
       }
     });
 
-    this.generateLabels();
+    this.packingList.populate(this.WorkOrder, this.WorkOrder.purchase);
+    console.log(this.packingList)
+    // this.generateLabels();
   }
 
   generateLabels() {
