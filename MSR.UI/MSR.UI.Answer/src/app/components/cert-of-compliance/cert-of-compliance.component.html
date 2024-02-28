@@ -1,5 +1,5 @@
 <div *ngFor="let workOrderParentPart of packingList.parentParts" class="page">
-  <div class="row border mx-2 mt-5 mb-3" *ngIf="workOrderTaskMonitor.procedureStepMonitor?.displayInReports">
+  <div class="row border mx-2 mt-5 mb-3">
     <div class="col-4">
       <h1>MSR-FSR</h1>
     </div>
@@ -102,6 +102,7 @@
   >
     <div
       class="col-6 border"
+      *ngIf="workOrderTaskMonitor.procedureStepMonitor?.displayInReports"
       [innerHTML]="
         workOrderTaskMonitor.procedureStepMonitor?.description
           | workOrderTaskAndMonitor
