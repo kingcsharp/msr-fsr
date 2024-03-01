@@ -3,6 +3,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - printenv
       - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
   build:
     commands:
