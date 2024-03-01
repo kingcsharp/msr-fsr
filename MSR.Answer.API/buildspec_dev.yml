@@ -10,11 +10,10 @@ phases:
   post_build:
     commands:
       - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
-      - echo $TAG
+      - docker tag msr-rp "${ACCOUNT_URL}/msr-rp:${TAG}"
+      - docker tag msr-api "${ACCOUNT_URL}/msr-api:${TAG}"
       - aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT_URL}
-      - docker tag msr-rp:latest "${ACCOUNT_URL}/msr-rp:${TAG}"
       - docker push "${ACCOUNT_URL}/msr-rp:${TAG}"
-      - docker tag msr-api:latest "${ACCOUNT_URL}/msr-api:${TAG}"
       - docker push "${ACCOUNT_URL}/msr-api:${TAG}"
       - sh ${SCRIPT_UPDATE_IMAGE_API} QA ${TAG} ${API_COMPOSE}
       - cat ${API_COMPOSE}
