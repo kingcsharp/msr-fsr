@@ -1,8 +1,13 @@
 version: 0.2
 
+env:
+  secrets-manager:
+    DOCKERHUB_PASS: "dockerhub:password"
+    DOCKERHUB_USERNAME: "dockerhub:username"
 phases:
   build:
     commands:
+      - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS
       - cd ./reverseproxy/
       - docker build -f ./Dockerfile --build-arg NGINX_CONF=dev -t msr-rp .
       - cd ..
