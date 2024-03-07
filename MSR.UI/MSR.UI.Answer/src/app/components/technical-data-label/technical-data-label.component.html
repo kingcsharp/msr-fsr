@@ -1,38 +1,3 @@
-<!-- <div class="row m-4">
-    <div class="col-12 mb-4" *ngFor="let label of labels">
-        <div class="row col-7">
-            <div class="col-12 font-weight-bold" [innerHTML]="label.TaskDescription"></div>
-            <div class="col-12" [innerHTML]="label.MonitorName"></div>
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-4 border p-2">Part #:</div>
-                    <div class="col-4 border p-2">{{label.PartNumber}}</div>
-                    <div class="col-4 border p-2">Part Name:</div>
-                    <div class="col-4 border p-2">Purchase Item #:</div>
-                    <div class="col-4 border p-2">{{label.CustomerPurchaseNumber}}</div>
-                    <div class="col-4 border p-2">{{label.PartName}}</div>
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-4 border-bottom">Requestee:</div><div class="col-8">{{label.Requestee}}</div>
-                            <div class="col-4 border-bottom">Date:</div><div class="col-8">{{label.Date}}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12" *ngIf="checkMonitorType(label)">
-                <div class="row header">
-                    <div class="col-9 border p-2">Monitor</div>
-                    <div class="col-3 border p-2">Value</div>
-                  </div>
-                  <div *ngFor="let monitor of label.workOrderTaskMonitors" class="row">
-                    <div class="col-9 border p-2" *ngIf="monitor.monitorTypeId === 2">{{ monitor.description | slice:0:30 }}</div>
-                    <div class="col-3 border p-2" *ngIf="monitor.monitorTypeId === 2">{{ monitor | monitorResult }}</div>
-                  </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <div *ngFor="let workOrderParentPart of packingList.parentParts" class="roll-label space-between">
     <table class="tight">
         <thead></thead>
@@ -52,11 +17,6 @@
             </td>
           </tr>
           <tr><td class="spacer"></td></tr>
-          <!--  <tr>
-            <td width="100%">
-                <h3>Monitor Data Collected:</h3>
-            </td>
-          </tr> -->
         </tbody>
         <thead>
             <tr>
