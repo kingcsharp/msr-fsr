@@ -8,117 +8,133 @@ import { Construct } from "constructs";
 
 
 export class Answer30Stack extends cdk.Stack {
-    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-        super(scope, id, props);
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
 
-        const uicbr = new iam.Role(this, "uicbr", {
-            assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
-          });
-      
-          const uiqas3b = s3.Bucket.fromBucketName(this, "uiqas3b", "answer-ui-qa");
-      
-          uiqas3b.grantReadWrite(uicbr);
+    const uicbr = new iam.Role(this, "uicbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
 
-          const uiqacf = cf.Distribution.fromDistributionAttributes(this, "uiqacf", {
-            distributionId: "E2LJS1DYU10ZJH ",
-            domainName: "dq4p6lbe8guih.cloudfront.net",
-          });
+    const uiqas3b = s3.Bucket.fromBucketName(this, "uiqas3b", "answer-ui-qa");
 
-          uiqacf.grantCreateInvalidation(uicbr);
-      
-          const apicbr = new iam.Role(this, "apicbr", {
-            assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
-          });
+    uiqas3b.grantReadWrite(uicbr);
 
-          const dockerHubCreds = sm.Secret.fromSecretNameV2(this, 'dockerHubCreds', 'dockerhub');
+    const uiqacf = cf.Distribution.fromDistributionAttributes(this, "uiqacf", {
+      distributionId: "E2LJS1DYU10ZJH ",
+      domainName: "dq4p6lbe8guih.cloudfront.net",
+    });
 
-          dockerHubCreds.grantRead(apicbr);
-      
-          const msrRpRepo = ecr.Repository.fromRepositoryName(this, "msrRpRepo", "msr-rp");
+    uiqacf.grantCreateInvalidation(uicbr);
 
-          msrRpRepo.grantPush(apicbr);
+    uicbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-dev:log-stream:",
+      ],
+      actions: [
+        "logs:CreateLogStream",
+      ],
+    }));
 
-          const msrApiRepo = ecr.Repository.fromRepositoryName(this, "msrApiRepo", "msr-api");
+    const apicbr = new iam.Role(this, "apicbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
 
-          msrApiRepo.grantPush(apicbr);
+    const dockerHubCreds = sm.Secret.fromSecretNameV2(this, 'dockerHubCreds', 'dockerhub');
 
-          const ecsTaskExecRole = iam.Role.fromRoleName(this, "ecsTaskExecRole", "ecsTaskExecutionRole");
+    dockerHubCreds.grantRead(apicbr);
 
-          ecsTaskExecRole.grantPassRole(apicbr);
+    const msrRpRepo = ecr.Repository.fromRepositoryName(this, "msrRpRepo", "msr-rp");
 
-          apicbr.addToPolicy(new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            resources: [
-                "arn:aws:ecs:us-west-2:425480257575:service/answer-qa/qa-answer-api",
-                "arn:aws:ecs:us-west-2:425480257575:task-definition/qa-answer-api:*",
-                "arn:aws:logs:us-west-2:425480257575:log-group:answer3:log-stream:",
-            ],
-            actions: [
-                "ecs:UpdateService",
-                "ecs:DescribeServices",
-                "ecs:UpdateServicePrimaryTaskSet",
-                "ecs:CreateTaskSet",
-                "logs:CreateLogGroup",
-                "ecs:RegisterTaskDefinition",
-            ],
-          }));
+    msrRpRepo.grantPush(apicbr);
 
-          const mhcbr = new iam.Role(this, "mhcbr", {
-            assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
-          });
+    const msrApiRepo = ecr.Repository.fromRepositoryName(this, "msrApiRepo", "msr-api");
 
-          dockerHubCreds.grantRead(mhcbr);
+    msrApiRepo.grantPush(apicbr);
 
-          const msrMpRepo = ecr.Repository.fromRepositoryName(this, "msrMpRepo", "msr-mp");
+    const ecsTaskExecRole = iam.Role.fromRoleName(this, "ecsTaskExecRole", "ecsTaskExecutionRole");
 
-          msrMpRepo.grantPush(mhcbr);
+    ecsTaskExecRole.grantPassRole(apicbr);
 
-          const msrMessageRepo = ecr.Repository.fromRepositoryName(this, "msrMessageRepo", "msr-message");
+    apicbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:ecs:us-west-2:425480257575:service/answer-qa/qa-answer-api",
+        "arn:aws:ecs:us-west-2:425480257575:task-definition/qa-answer-api:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:log-stream:",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-dev:log-stream:",
+      ],
+      actions: [
+        "ecs:UpdateService",
+        "ecs:DescribeServices",
+        "ecs:UpdateServicePrimaryTaskSet",
+        "ecs:CreateTaskSet",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "ecs:RegisterTaskDefinition",
+      ],
+    }));
 
-          msrMessageRepo.grantPush(mhcbr);
+    const mhcbr = new iam.Role(this, "mhcbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
 
-          mhcbr.addToPolicy(new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            resources: [
-                "arn:aws:ecs:us-west-2:425480257575:service/answer-qa/qa-answer-message",
-                "arn:aws:ecs:us-west-2:425480257575:task-definition/qa-answer-message:*",
-                "arn:aws:logs:us-west-2:425480257575:log-group:answer3:log-stream:",
-            ],
-            actions: [
-                "ecs:UpdateService",
-                "ecs:DescribeServices",
-                "ecs:UpdateServicePrimaryTaskSet",
-                "ecs:CreateTaskSet",
-                "logs:CreateLogGroup",
-                "ecs:RegisterTaskDefinition",
-            ],
-          }));
+    dockerHubCreds.grantRead(mhcbr);
 
-          const pcbr = new iam.Role(this, "pcbr", {
-            assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
-          });
+    ecsTaskExecRole.grantPassRole(mhcbr);
 
-          dockerHubCreds.grantRead(pcbr);
+    const msrMpRepo = ecr.Repository.fromRepositoryName(this, "msrMpRepo", "msr-mp");
 
-          const msrProcessorRepo = ecr.Repository.fromRepositoryName(this, "msrProcessorRepo", "msr-processor");
+    msrMpRepo.grantPush(mhcbr);
 
-          msrProcessorRepo.grantPush(pcbr);
+    const msrMessageRepo = ecr.Repository.fromRepositoryName(this, "msrMessageRepo", "msr-message");
 
-          pcbr.addToPolicy(new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            resources: [
-                "arn:aws:ecs:us-west-2:425480257575:service/answer-qa/qa-answer-api-processor",
-                "arn:aws:ecs:us-west-2:425480257575:task-definition/qa-answer-api-processor:*",
-                "arn:aws:logs:us-west-2:425480257575:log-group:answer3:log-stream:",
-            ],
-            actions: [
-                "ecs:UpdateService",
-                "ecs:DescribeServices",
-                "ecs:UpdateServicePrimaryTaskSet",
-                "ecs:CreateTaskSet",
-                "logs:CreateLogGroup",
-                "ecs:RegisterTaskDefinition",
-            ],
-          }));
-    }
+    msrMessageRepo.grantPush(mhcbr);
+
+    mhcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:ecs:us-west-2:425480257575:service/answer-qa/qa-answer-message",
+        "arn:aws:ecs:us-west-2:425480257575:task-definition/qa-answer-message:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:log-stream:",
+      ],
+      actions: [
+        "ecs:UpdateService",
+        "ecs:DescribeServices",
+        "ecs:UpdateServicePrimaryTaskSet",
+        "ecs:CreateTaskSet",
+        "logs:CreateLogGroup",
+        "ecs:RegisterTaskDefinition",
+      ],
+    }));
+
+    const pcbr = new iam.Role(this, "pcbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
+
+    dockerHubCreds.grantRead(pcbr);
+
+    ecsTaskExecRole.grantPassRole(pcbr);
+
+    const msrProcessorRepo = ecr.Repository.fromRepositoryName(this, "msrProcessorRepo", "msr-processor");
+
+    msrProcessorRepo.grantPush(pcbr);
+
+    pcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:ecs:us-west-2:425480257575:service/answer-qa/qa-answer-api-processor",
+        "arn:aws:ecs:us-west-2:425480257575:task-definition/qa-answer-api-processor:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:log-stream:",
+      ],
+      actions: [
+        "ecs:UpdateService",
+        "ecs:DescribeServices",
+        "ecs:UpdateServicePrimaryTaskSet",
+        "ecs:CreateTaskSet",
+        "logs:CreateLogGroup",
+        "ecs:RegisterTaskDefinition",
+      ],
+    }));
+  }
 }
