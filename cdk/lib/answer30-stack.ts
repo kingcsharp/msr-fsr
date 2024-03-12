@@ -11,6 +11,31 @@ export class Answer30Stack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const codeBuildPermissions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:GetObjectVersion",
+      "s3:GetBucketAcl",
+      "s3:GetBucketLocation",
+      "codebuild:CreateReportGroup",
+      "codebuild:CreateReport",
+      "codebuild:UpdateReport",
+      "codebuild:BatchPutTestCases",
+      "codebuild:BatchPutCodeCoverages",
+    ];
+
+    const ecsPermissions = [
+      "ecs:UpdateService",
+      "ecs:DescribeServices",
+      "ecs:UpdateServicePrimaryTaskSet",
+      "ecs:CreateTaskSet",
+      "logs:CreateLogGroup",
+      "ecs:RegisterTaskDefinition",
+    ];
+
     const uicbr = new iam.Role(this, "uicbr", {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
@@ -20,7 +45,7 @@ export class Answer30Stack extends cdk.Stack {
     uiqas3b.grantReadWrite(uicbr);
 
     const uiqacf = cf.Distribution.fromDistributionAttributes(this, "uiqacf", {
-      distributionId: "E2LJS1DYU10ZJH ",
+      distributionId: "E2LJS1DYU10ZJH",
       domainName: "dq4p6lbe8guih.cloudfront.net",
     });
 
@@ -29,11 +54,12 @@ export class Answer30Stack extends cdk.Stack {
     uicbr.addToPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       resources: [
-        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-dev:log-stream:",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-dev:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-dev",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-UI-dev-*",
       ],
-      actions: [
-        "logs:CreateLogStream",
-      ],
+      actions: codeBuildPermissions,
     }));
 
     const apicbr = new iam.Role(this, "apicbr", {
@@ -61,18 +87,21 @@ export class Answer30Stack extends cdk.Stack {
       resources: [
         "arn:aws:ecs:us-west-2:425480257575:service/answer-qa/qa-answer-api",
         "arn:aws:ecs:us-west-2:425480257575:task-definition/qa-answer-api:*",
-        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:log-stream:",
-        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-dev:log-stream:",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:*",
       ],
-      actions: [
-        "ecs:UpdateService",
-        "ecs:DescribeServices",
-        "ecs:UpdateServicePrimaryTaskSet",
-        "ecs:CreateTaskSet",
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "ecs:RegisterTaskDefinition",
+      actions: ecsPermissions,
+    }));
+
+    apicbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-dev",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-dev:*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-API-dev-*",
       ],
+      actions: codeBuildPermissions,
     }));
 
     const mhcbr = new iam.Role(this, "mhcbr", {
@@ -96,16 +125,21 @@ export class Answer30Stack extends cdk.Stack {
       resources: [
         "arn:aws:ecs:us-west-2:425480257575:service/answer-qa/qa-answer-message",
         "arn:aws:ecs:us-west-2:425480257575:task-definition/qa-answer-message:*",
-        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:log-stream:",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3",
       ],
-      actions: [
-        "ecs:UpdateService",
-        "ecs:DescribeServices",
-        "ecs:UpdateServicePrimaryTaskSet",
-        "ecs:CreateTaskSet",
-        "logs:CreateLogGroup",
-        "ecs:RegisterTaskDefinition",
+      actions: ecsPermissions,
+    }));
+
+    mhcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-MessageHub-dev",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-MessageHub-dev:*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-MessageHub-dev-*",
       ],
+      actions: codeBuildPermissions,
     }));
 
     const pcbr = new iam.Role(this, "pcbr", {
@@ -125,16 +159,21 @@ export class Answer30Stack extends cdk.Stack {
       resources: [
         "arn:aws:ecs:us-west-2:425480257575:service/answer-qa/qa-answer-api-processor",
         "arn:aws:ecs:us-west-2:425480257575:task-definition/qa-answer-api-processor:*",
-        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:log-stream:",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3",
       ],
-      actions: [
-        "ecs:UpdateService",
-        "ecs:DescribeServices",
-        "ecs:UpdateServicePrimaryTaskSet",
-        "ecs:CreateTaskSet",
-        "logs:CreateLogGroup",
-        "ecs:RegisterTaskDefinition",
+      actions: ecsPermissions,
+    }));
+
+    pcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Processor-dev",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Processor-dev:*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-Processor-dev-*",
       ],
+      actions: codeBuildPermissions,
     }));
   }
 }
