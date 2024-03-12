@@ -1,0 +1,10 @@
+version: 0.2
+
+
+phases:
+  build:
+    commands:
+      - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - sh ${SCRIPT_UPDATE_IMAGE_API} Production ${TAG} ${API_COMPOSE}
+      - ecs-cli configure --cluster ${PROD_CLUSTER} --default-launch-type FARGATE --config-name ${CLUSTER_CONFIG} --region ${REGION}
+      - ecs-cli compose --file ${API_COMPOSE} --ecs-params ${API_ECS_PARAMS} --project-name ${PROD_PROJECT_API} service up --create-log-groups --cluster-config ${CLUSTER_CONFIG} --target-group-arn ${PROD_API_TARGET_ARN} --container-name reverseproxy --container-port ${PORT} --timeout ${TIMEOUT}
