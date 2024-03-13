@@ -175,5 +175,115 @@ export class Answer30Stack extends cdk.Stack {
       ],
       actions: codeBuildPermissions,
     }));
+
+    const uiprdcbr = new iam.Role(this, "uiprdcbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
+
+    const uiprds3b = s3.Bucket.fromBucketName(this, "uiprds3b", "answer-ui-prod");
+
+    uiprds3b.grantReadWrite(uiprdcbr);
+
+    const uiprdcf = cf.Distribution.fromDistributionAttributes(this, "uiprdcf", {
+      distributionId: "E1C3X9JHVR2W91",
+      domainName: "d1vsp9h29ngvyr.cloudfront.net",
+    });
+
+    uiprdcf.grantCreateInvalidation(uiprdcbr);
+
+    uiprdcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-prod:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-prod",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-UI-prod-*",
+      ],
+      actions: codeBuildPermissions,
+    }));
+
+    const apiprdcbr = new iam.Role(this, "apiprdcbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
+
+    ecsTaskExecRole.grantPassRole(apiprdcbr);
+
+    apiprdcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:ecs:us-west-2:425480257575:service/answer/prod-answer-api",
+        "arn:aws:ecs:us-west-2:425480257575:task-definition/prod-answer-api:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:*",
+      ],
+      actions: ecsPermissions,
+    }));
+
+    apiprdcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-prod",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-prod:*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-API-prod-*",
+      ],
+      actions: codeBuildPermissions,
+    }));
+
+    const mhprdcbr = new iam.Role(this, "mhprdcbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
+
+    ecsTaskExecRole.grantPassRole(mhprdcbr);
+
+    mhprdcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:ecs:us-west-2:425480257575:service/answer/prod-answer-message",
+        "arn:aws:ecs:us-west-2:425480257575:task-definition/prod-answer-message:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3",
+      ],
+      actions: ecsPermissions,
+    }));
+
+    mhprdcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-MessageHub-prod",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-MessageHub-prod:*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-MessageHub-prod-*",
+      ],
+      actions: codeBuildPermissions,
+    }));
+
+    const pprdcbr = new iam.Role(this, "pprdcbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
+
+    ecsTaskExecRole.grantPassRole(pprdcbr);
+
+    pprdcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:ecs:us-west-2:425480257575:service/answer/prod-answer-api-processor",
+        "arn:aws:ecs:us-west-2:425480257575:task-definition/prod-answer-api-processor:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:answer3",
+      ],
+      actions: ecsPermissions,
+    }));
+
+    pprdcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Processor-prod",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Processor-prod:*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-Processor-prod-*",
+      ],
+      actions: codeBuildPermissions,
+    }));
   }
 }
