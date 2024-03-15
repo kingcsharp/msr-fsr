@@ -11,5 +11,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual ProcedureStepApproval ProcedureStepApproval { get; set; }
 
+        private bool? _displayInReports;
+        [Column(TypeName = "bool")]
+        public bool? displayInReports { 
+            get => _displayInReports ?? true;
+            set => _displayInReports = value ?? true;
+        }
     }
 }
