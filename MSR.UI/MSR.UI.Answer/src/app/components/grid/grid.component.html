@@ -253,8 +253,9 @@
     </div>
     <div *ngIf="colsDataAndSettings.col.formattingAngular !== undefined">
       {{
-        colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone
-          | date : colsDataAndSettings.col.formattingAngular
+        colsDataAndSettings.colData[colsDataAndSettings.col.id]
+          | userTimezone
+          | date: colsDataAndSettings.col.formattingAngular
       }}
     </div>
   </td>
@@ -269,10 +270,35 @@
       )
     "
   >
-    <div *ngIf="colsDataAndSettings.colData?.downloadURL">
+    <div
+      *ngIf="
+        colsDataAndSettings.colData?.downloadURL &&
+        colsDataAndSettings.col?.id === 'xmllink'
+      "
+    >
       <button
         class="btn btn-success"
         (click)="downloadXmlFile(colsDataAndSettings.colData.id)"
+        tooltip="Download File"
+      >
+        <i class="fas fa-download"></i> Download
+      </button>
+    </div>
+
+    <div
+      *ngIf="
+        colsDataAndSettings.colData?.downloadURL &&
+        colsDataAndSettings.col?.id === 'downloadUrl'
+      "
+    >
+      <button
+        class="btn btn-success"
+        (click)="
+          downloadFile(
+            colsDataAndSettings.colData?.downloadURL,
+            colsDataAndSettings.colData?.fileName
+          )
+        "
         tooltip="Download File"
       >
         <i class="fas fa-download"></i> Download
@@ -328,7 +354,13 @@
       )
     "
   >
-    <span class="badge rounded-0 {{colsDataAndSettings.colData[colsDataAndSettings.col.id] === 'Success' ? 'badge-success' : 'badge-danger'}}">
+    <span
+      class="badge rounded-0 {{
+        colsDataAndSettings.colData[colsDataAndSettings.col.id] === 'Success'
+          ? 'badge-success'
+          : 'badge-danger'
+      }}"
+    >
       {{ colsDataAndSettings.colData[colsDataAndSettings.col.id] }}</span
     >
   </td>
@@ -342,10 +374,10 @@
       )
     "
   >
-  <app-xml-retry
-    *ngIf="colsDataAndSettings.colData['result'] === 'Failure'"
-    [id]="colsDataAndSettings.colData['id']"
-  ></app-xml-retry>
+    <app-xml-retry
+      *ngIf="colsDataAndSettings.colData['result'] === 'Failure'"
+      [id]="colsDataAndSettings.colData['id']"
+    ></app-xml-retry>
   </td>
 </ng-template>
 <ng-template #rowView let-colsAndSettings="colsAndSettings">
@@ -413,7 +445,7 @@
   <th
     *ngIf="
       (colsAndSettings.col.type === enumColumnType.String &&
-      !colsAndSettings.col.dropdownHeader) ||
+        !colsAndSettings.col.dropdownHeader) ||
       colsAndSettings.col.type === enumColumnType.XMLResult
     "
     grid-input-filter
