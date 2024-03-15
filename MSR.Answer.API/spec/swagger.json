@@ -10351,11 +10351,6 @@
             "description": "Gets or Sets Description",
             "nullable": true
           },
-          "displayInReports": {
-            "type": "boolean",
-            "description": "Gets or Sets DisplayInReports",
-            "nullable": true
-          },
           "sendNCREmail": {
             "type": "boolean",
             "description": "Gets or Sets SendEmailNotification",

@@ -19,6 +19,5 @@
         public decimal? LowTarget { get; set; }
         public int? MonitorListId { get; set; }
         public int? UnitofMeasureId { get; set; }
-        public bool? DisplayInReports { get; set; }
     }
 }

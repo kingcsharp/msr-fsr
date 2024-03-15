@@ -30,13 +30,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public bool? SendNCREmail { get; set; }
         public int? UnitofMeasureId { get; set; }
 
-        private bool? _displayInReports;
-        [Column(TypeName = "bool")]
-        public bool? displayInReports { 
-            get => _displayInReports ?? true;
-            set => _displayInReports = value ?? true;
-        }
-
         public virtual ProcedureStep ProcedureStep { get; set; }
     }
 }

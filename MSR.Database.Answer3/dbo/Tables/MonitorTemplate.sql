@@ -13,7 +13,6 @@
     [FailAction]       VARCHAR (20)  NOT NULL,
     [SensorMappingId]  INT           NOT NULL,
     [SendNCREmail]     BIT           NULL,
-    [DisplayInReports] BIT           NULL,
     [CreatedBy]        INT           NOT NULL,
     [CreateOn]         DATETIME      NOT NULL,
     [LastUpdatedBy]    INT           NULL,
