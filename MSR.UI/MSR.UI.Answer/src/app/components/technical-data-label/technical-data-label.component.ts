@@ -16,12 +16,9 @@ export class TechnicalDataLabelComponent implements OnInit {
 
   constructor() {
     this.packingList = new PackingListViewModel();
-
   }
 
   ngOnInit(): void {
-    console.log(this.WorkOrder)
     this.packingList.populate(this.WorkOrder, this.WorkOrder.purchase);
-    console.log(this.packingList)
   }
 }

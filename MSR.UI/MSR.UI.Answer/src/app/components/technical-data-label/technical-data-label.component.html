@@ -28,7 +28,7 @@
             <ng-container *ngFor="let monitor of packingList.allMonitors">
                 <tr *ngIf="monitor.monitorTypeId === 2" >
                     <td class=" border p-2"><span>{{ monitor.description | slice:0:30 }}</span></td>
-                    <td class=" border p-2"><span>{{ monitor | monitorResult }}{{monitor.displayInReports}}</span></td>
+                    <td class=" border p-2"><span>{{ monitor | monitorResult }}</span></td>
                 </tr>
             </ng-container>
         </tbody>
