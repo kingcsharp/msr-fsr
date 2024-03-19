@@ -19,6 +19,7 @@ namespace MSR.Domain.Commands
         public ICollection<SubPartModel> SubParts { get; set; }
         public string Comment { get; set; }
         public bool IsActive { get; set; }
+        public bool IsKit { get; set; }
         public EnumSegregationType? SegregationType { get; set; }
         public List<FileModel> Files { get; set; }
     }

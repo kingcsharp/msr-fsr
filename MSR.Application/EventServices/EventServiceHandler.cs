@@ -87,7 +87,7 @@ namespace MSR.Application.EventServices
                         break;
                     case EnumMenuItem.Parts:
                         var importedParts = await _partService.ImportParts(
-                            Encoding.UTF8.GetString(handledEvent.data)
+                            handledEvent.data
                         );
                         count = importedParts.Count();
                         break;
