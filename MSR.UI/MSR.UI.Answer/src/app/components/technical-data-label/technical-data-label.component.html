@@ -26,7 +26,7 @@
         </thead>
         <tbody>
             <ng-container *ngFor="let monitor of packingList.allMonitors">
-                <tr *ngIf="monitor.monitorTypeId === 2" >
+                <tr *ngIf="monitor.monitorTypeId === 2 && workOrderTaskMonitor.procedureStepMonitor?.displayInReports" >
                     <td class=" border p-2"><span>{{ monitor.description | slice:0:30 }}</span></td>
                     <td class=" border p-2"><span>{{ monitor | monitorResult }}</span></td>
                 </tr>
