@@ -23,6 +23,7 @@ import { ToastrService } from "ngx-toastr";
 import { Observable } from "rxjs";
 import { callFunctionWithFilters } from "../../../models/lib/Utils";
 import { LazyLoadEvent } from "primeng/api";
+import { CSVConverterService } from "../../../services/csvconverter.service";
 
 declare let jQuery: any;
 
@@ -57,13 +58,15 @@ export class PartsComponent implements OnInit {
   gridVersion: string;
   segregationTypes: any[] = [];
   totalRecords: number = 0;
+  currentEvent: LazyLoadEvent;
 
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
     private toastr: ToastrService,
     private elem: ElementRef,
-    private partsService: PartService
+    private partsService: PartService,
+    private csvService: CSVConverterService,
   ) {}
 
   ngOnInit(): void {
@@ -141,7 +144,7 @@ export class PartsComponent implements OnInit {
         this.partsService,
         this.partsService.partGet,
         event,
-        this.globals.functionDic
+        this.globals.functionDic,
       )
         .pipe(take(1))
         .subscribe(
@@ -151,8 +154,9 @@ export class PartsComponent implements OnInit {
               elem.isActive = elem.isActive === null ? false : elem.isActive;
               return elem;
             });
+            this.currentEvent = event;
             this.totalRecords = response.totalNumberOfRecords;
-          })
+          }),
         );
     }, 10);
   }
@@ -171,7 +175,7 @@ export class PartsComponent implements OnInit {
         this.partsService,
         this.partsService.partGet,
         filtering,
-        this.globals.functionDic
+        this.globals.functionDic,
       )
         .pipe(take(1))
         .subscribe(
@@ -182,7 +186,7 @@ export class PartsComponent implements OnInit {
             });
 
             resolve(responseResolved);
-          })
+          }),
         );
     });
     return promise;
@@ -323,8 +327,8 @@ export class PartsComponent implements OnInit {
           },
           () => {
             // DO not update user
-          }
-        )
+          },
+        ),
       );
   }
 
@@ -337,7 +341,7 @@ export class PartsComponent implements OnInit {
       this.globals
         .showApprovalCommentModal(
           this.currPart,
-          EnumApprovalTables.PartApproval
+          EnumApprovalTables.PartApproval,
         )
         .then(() => {
           if (this.currPart.id === undefined) {
@@ -345,14 +349,14 @@ export class PartsComponent implements OnInit {
             createPartRequest.comment = this.currPart.comment;
             method = this.partsService.partPost(
               env.apiVersion,
-              createPartRequest
+              createPartRequest,
             );
           } else {
             let updatePartRequest = this.getUpdatePartRequest(this.currPart);
             updatePartRequest.comment = this.currPart.comment;
             method = this.partsService.partPatch(
               env.apiVersion,
-              updatePartRequest
+              updatePartRequest,
             );
           }
 
@@ -365,7 +369,7 @@ export class PartsComponent implements OnInit {
                   this.data = this.data.slice(0);
                 } else {
                   const index = this.data.findIndex(
-                    (x) => x.id === this.currPart.id
+                    (x) => x.id === this.currPart.id,
                   );
                   this.data.splice(index, 1);
                   this.data.splice(index, 0, resp.object);
@@ -373,7 +377,7 @@ export class PartsComponent implements OnInit {
                 }
                 this.closeDialog();
               }
-            })
+            }),
           );
         });
     }
@@ -381,14 +385,14 @@ export class PartsComponent implements OnInit {
 
   removeFile(file) {
     const currIndex = this.currPart.files.findIndex(
-      (x) => x.fileId === file.fileId
+      (x) => x.fileId === file.fileId,
     );
     this.currPart.files.splice(currIndex, 1);
   }
 
   removeuploadFile(event) {
     const index = this.uploadedFiles.findIndex(
-      (x) => x.name === event.file.name
+      (x) => x.name === event.file.name,
     );
     this.uploadedFiles.splice(index, 1);
   }
@@ -430,5 +434,30 @@ export class PartsComponent implements OnInit {
     partUpdate.id = currentPart.id;
     Object.assign(partUpdate, this.getCreatePartRequest(currentPart));
     return partUpdate;
+  }
+
+  partsXlsx() {
+    this.globals.showLoader(true);
+    setTimeout(() => {
+      callFunctionWithFilters(
+        this.partsService,
+        this.partsService.partExport,
+        this.currentEvent,
+        this.globals.functionDic,
+      )
+        .pipe(take(1))
+        .subscribe(
+          responseHandler((response) => {
+            if (response.data) {
+              this.csvService.downloadFile(
+                response.data,
+                null,
+                "parts_export",
+                "xlsx",
+              );
+            }
+          }),
+        );
+    }, 10);
   }
 }
