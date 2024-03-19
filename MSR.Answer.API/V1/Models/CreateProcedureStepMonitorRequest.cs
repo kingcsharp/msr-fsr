@@ -10,6 +10,7 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using CsvHelper.Configuration.Attributes;
 
 namespace MSR.Answer.API.V1.Models
 {
@@ -101,5 +102,15 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name = "unitOfMeasureId")]
         public int? UnitofMeasureId { get; set; }
+
+        private bool? _displayInReports;
+        /// <summary>
+        /// Gets or Sets DisplayInReports
+        /// </summary>
+        [DataMember(Name="displayInReports")]
+        public bool? displayInReports { 
+            get => _displayInReports ?? true;
+            set => _displayInReports = value ?? true;
+        }
     }
 }
