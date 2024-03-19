@@ -24,7 +24,7 @@ namespace MSR.Domain.Validators
             _mapper = mapper;
         }
 
-        public bool ValidateImportDataC(byte[] excelData, out IEnumerable<ImportError> importErrors)
+        public bool ValidateImport(byte[] excelData, out IEnumerable<ImportError> importErrors)
         {
             IEnumerable<ImportError> errors;
             var parts = ReadImportData(excelData, out errors);
@@ -87,7 +87,7 @@ namespace MSR.Domain.Validators
 
         public bool ValidateImportData(byte[] binData, out IEnumerable<ImportError> importErrors)
         {
-            return ValidateImportDataC(binData, out importErrors);
+            return ValidateImport(binData, out importErrors);
         }
     }
 }
