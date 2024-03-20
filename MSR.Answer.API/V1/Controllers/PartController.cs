@@ -12,21 +12,27 @@ using NSwag.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MSR.Domain.Abstractions.Services;
+using MSR.Application.Abstractions;
 
 namespace MSR.Answer.API.V1.Controllers
 {
     /// <summary>
-    ///
+    /// Part Controller
     /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
     public class PartController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
+        private IPartViewService _partViewService;
 
-        public PartController(ICommandDispatcher dispatcher)
+        /// <summary>
+        /// Part Controller
+        /// </summary>
+        public PartController(ICommandDispatcher dispatcher, IPartViewService partViewService)
         {
             _dispatcher = dispatcher;
+            _partViewService = partViewService;
         }
 
         /// <summary>
@@ -100,6 +106,14 @@ namespace MSR.Answer.API.V1.Controllers
             };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<PartModel>("Part was successfully removed.");
+        }
+
+        [HttpGet("partExport")]
+        [SwaggerResponse(typeof(FileContentResult))]
+        public async Task<ActionResult> ExportFile([FromQuery] PartExportRequest filters)
+        {
+            var ret = await _partViewService.ExportParts(filters.ToPartExportQueryFilters());
+            return File(ret.data, "application/octet-stream", ret.FileName);
         }
     }
 }

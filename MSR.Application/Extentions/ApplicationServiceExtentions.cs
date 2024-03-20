@@ -40,6 +40,7 @@ namespace MSR.Application.Extentions
             services.AddTransient<IProductViewService, ProductViewService>();
             services.AddTransient<IWorkOrderPartViewService, WorkOrderPartViewService>();
             services.AddTransient<IProcedureViewService, ProcedureViewService>();
+            services.AddTransient<IPartViewService, PartViewService>();
             services.AddTransient<IWorkOrderViewService, WorkOrderViewService>();
 
             var assemblies = new List<Assembly>();

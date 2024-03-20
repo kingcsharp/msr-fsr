@@ -1130,6 +1130,11 @@ namespace MSR.Answer.API.V1.Extentions
                                                     , request.CreatedFullName, request.CreatedOn, request.LastUpdatedFullName, request.LastUpdatedOn);
         }
 
+        public static PartExportQueryFilters ToPartExportQueryFilters(this PartExportRequest request)
+        {
+            return new PartExportQueryFilters(request.Id, request.Name, request.SegregationType, request.PartNumber, request.OEMPartNumber, request.IsKit, request.IsActive, request.MaximumCycles);
+        }
+
         public static UpdateWorkOrderPartCycleCount ToUpdateWorkOrderPartCycleCount(this CycleCountUpdateRequest request)
         {
             return new UpdateWorkOrderPartCycleCount(request.PartNumber, request.SerialNumber, request.CycleCount);
