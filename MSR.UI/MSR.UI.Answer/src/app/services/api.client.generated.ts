@@ -23,7 +23,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -306,7 +306,7 @@ export class AdminCostSettingsService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -430,7 +430,7 @@ export class CustomerService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, primaryContactUserFullName: string | null | undefined, secondaryContactUserFullName: string | null | undefined, locationName: string | null | undefined, customerNumber: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomerModel> {
@@ -695,7 +695,7 @@ export class DocumentService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -1020,7 +1020,7 @@ export class EquipmentMaintenanceService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -1298,7 +1298,7 @@ export class FileService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -1554,7 +1554,7 @@ export class HelpService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, title: string | null | undefined, roles: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
@@ -1911,7 +1911,7 @@ export class InvoiceService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     invoiceGet(id: number | null | undefined, customerName: string | null | undefined, description: string | null | undefined, invoiceNumber: string | null | undefined, dueDate: Date[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, amount: number | null | undefined, statusId: number | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceView> {
@@ -2246,7 +2246,7 @@ export class LocationService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, name: string | null | undefined, createdFullName: string | null | undefined, createdOn: Date | null | undefined, address1: string | null | undefined, city: string | null | undefined, state: string | null | undefined, postalcode: string | null | undefined, country: string | null | undefined, phone: string | null | undefined, parentName: string | null | undefined, timezoneDescription: string | null | undefined, address2: string | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
@@ -2681,7 +2681,7 @@ export class MenuService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     menu(version: string): Observable<AuditActionResultOfIEnumerableOfMenuItem> {
@@ -2913,7 +2913,7 @@ export class MonitorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -2982,7 +2982,7 @@ export class PartService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -3259,6 +3259,89 @@ export class PartService {
         }
         return _observableOf<AuditActionResult>(null as any);
     }
+
+    partExport(id: number | null | undefined, name: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, partNumber: string | null | undefined, oEMPartNumber: string | null | undefined, isKit: boolean | null | undefined, isActive: boolean | null | undefined, maximumCycles: number | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/v{version}/Part/partExport?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (segregationType !== undefined && segregationType !== null)
+            segregationType && segregationType.forEach(item => { url_ += "SegregationType=" + encodeURIComponent("" + item) + "&"; });
+        if (partNumber !== undefined && partNumber !== null)
+            url_ += "PartNumber=" + encodeURIComponent("" + partNumber) + "&";
+        if (oEMPartNumber !== undefined && oEMPartNumber !== null)
+            url_ += "OEMPartNumber=" + encodeURIComponent("" + oEMPartNumber) + "&";
+        if (isKit !== undefined && isKit !== null)
+            url_ += "IsKit=" + encodeURIComponent("" + isKit) + "&";
+        if (isActive !== undefined && isActive !== null)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (maximumCycles !== undefined && maximumCycles !== null)
+            url_ += "MaximumCycles=" + encodeURIComponent("" + maximumCycles) + "&";
+        if (createdOn !== undefined && createdOn !== null)
+            url_ += "CreatedOn=" + encodeURIComponent(createdOn ? "" + createdOn.toISOString() : "") + "&";
+        if (createdByName !== undefined && createdByName !== null)
+            url_ += "CreatedByName=" + encodeURIComponent("" + createdByName) + "&";
+        if (term !== undefined && term !== null)
+            url_ += "Term=" + encodeURIComponent("" + term) + "&";
+        if (pageNumber !== undefined && pageNumber !== null)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortAscending !== undefined && sortAscending !== null)
+            url_ += "SortAscending=" + encodeURIComponent("" + sortAscending) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPartExport(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPartExport(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processPartExport(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(null as any);
+    }
 }
 
 @Injectable()
@@ -3269,7 +3352,7 @@ export class ProcedureService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -3990,7 +4073,7 @@ export class ProcedureStepMonitorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -4292,7 +4375,7 @@ export class ProcedureStepTemplateService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -4552,7 +4635,7 @@ export class ProcedureStepTypeService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -4621,7 +4704,7 @@ export class ProcedureTemplateService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -4863,7 +4946,7 @@ export class ProcedureTypeService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -5120,7 +5203,7 @@ export class ProductService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -5423,7 +5506,7 @@ export class PurchaseService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -5574,7 +5657,7 @@ export class PurchaseOrderService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     purchaseOrderGet(id: number | null | undefined, name: string | null | undefined, customerReferencePO: string | null | undefined, invoicedBalance: number | null | undefined, uninvoicedBalance: number | null | undefined, balance: number | null | undefined, customerName: string | null | undefined, openDate: Date | null | undefined, closeDate: Date | null | undefined, totalPurchaseLimit: number | null | undefined, unusedAmount: number | null | undefined, revision: number | null | undefined, status: string[] | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
@@ -5926,7 +6009,7 @@ export class QuoteService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     product(submittedDate: Date | null | undefined, company: string | null | undefined, submittedByFullName: string | null | undefined, divisionFab: string | null | undefined, partKitNo: string | null | undefined, segregationType: EnumSegregationType[] | null | undefined, procedureId: number | null | undefined, procedureName: string | null | undefined, productName: string | null | undefined, representative: string | null | undefined, revision: number | null | undefined, equipmentCost: number | null | undefined, materialCost: number | null | undefined, salesTax: number | null | undefined, totalPrice: number | null | undefined, cycleTime: number | null | undefined, lastUpdateOn: Date | null | undefined, lastUpdatedBy: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfQuotesProductsView> {
@@ -6301,7 +6384,7 @@ export class ReportService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     report(isPortal: boolean | undefined, version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
@@ -6422,7 +6505,7 @@ export class RoleService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     roleGet(id: number | null | undefined, name: string | null | undefined, isCertificationRole: boolean | null | undefined, parentRoles: number[] | null | undefined, assignedUsers: number[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfRole> {
@@ -6728,7 +6811,7 @@ export class SearchService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     search(searchTerm: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfSearchView> {
@@ -6793,7 +6876,7 @@ export class SensorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     sensor(sensorId: number | null | undefined, siteId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfSensorModel> {
@@ -6966,7 +7049,7 @@ export class TimezoneService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     timezone(version: string): Observable<AuditActionResultOfICollectionOfTimeZoneModel> {
@@ -7029,7 +7112,7 @@ export class UserService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -7617,7 +7700,7 @@ export class WorkflowPendingApprovalService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     workflowPendingApprovalGet(table: EnumApprovalTables | undefined, id: number | null | undefined, activityType: string[] | null | undefined, name: string | null | undefined, requestedChanges: string | null | undefined, workflowName: string | null | undefined, workflowGroupName: string | null | undefined, workflowCreatedByName: string | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
@@ -7885,7 +7968,7 @@ export class WorkOrderService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -8897,7 +8980,7 @@ export class WorkOrderPartService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     workOrderPartGet(id: number | null | undefined, workOrderId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderPartModel> {
@@ -9186,7 +9269,7 @@ export class WorkOrderTaskService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     /**
@@ -9311,7 +9394,7 @@ export class WorkOrderTaskMonitorService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     workOrderTaskMonitor(version: string | null, body: UpdateWorkOrderTaskMonitorRequest): Observable<AuditActionResultOfWorkOrderTaskMonitorModel> {
@@ -9378,7 +9461,7 @@ export class XmlService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     transmit(version: string, request: XmlTransmissionRequest): Observable<AuditActionResultOfString> {
@@ -9499,7 +9582,7 @@ export class WorkflowService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     pending(version: string): Observable<AuditActionResultOfPendingApprovalNotification> {
@@ -9854,7 +9937,7 @@ export class WorkflowGroupService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     workflowGroupGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, groupRoles: string[] | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
@@ -10105,7 +10188,7 @@ export class WorkflowStageService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://ip-172-31-27-170.us-west-2.compute.internal";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44398";
     }
 
     workflowStageGet(id: number | null | undefined, isActive: boolean | null | undefined, name: string | null | undefined, createdOn: Date | null | undefined, createdByName: string | null | undefined, lastUpdatedOn: Date | null | undefined, lastUpdatedByName: string | null | undefined, term: string | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined, sortAscending: boolean | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowStageModel> {

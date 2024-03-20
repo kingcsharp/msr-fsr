@@ -25,6 +25,7 @@ import { NgxDocViewerModule } from "ngx-doc-viewer";
 import { FormsModule } from "@angular/forms";
 import { FileUploadModule } from "primeng/fileupload";
 import { CsvImportComponent } from "../../../app/components/csv-import/csv-import.component";
+import { ExcelImportComponent } from "../../../app/components/excel-import/excel-import.component";
 import { CmhFileUploaderComponent } from "../../../app/components/cmh-file-uploader/cmh-file-uploader.component";
 import { GridInputFilterComponent } from "../../../app/components/grid-input-filter/grid-input-filter.component";
 import { TimeZonePipe } from "../../../app/pipes/timezone.pipe";
@@ -54,6 +55,7 @@ import { XmlRetryComponent } from "../../components/xml-retry/xml-retry.componen
     GridFileViewerComponent,
     ApproveEntityComponent,
     CsvImportComponent,
+    ExcelImportComponent,
     CmhFileUploaderComponent,
     GridInputFilterComponent,
     GridOptionsComponent,
@@ -80,6 +82,7 @@ import { XmlRetryComponent } from "../../components/xml-retry/xml-retry.componen
     GridFileViewerComponent,
     ApproveEntityComponent,
     CsvImportComponent,
+    ExcelImportComponent,
     CmhFileUploaderComponent,
     GridInputFilterComponent,
     FileUploadModule,

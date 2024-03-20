@@ -11,8 +11,10 @@ using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using MSR.Infrastructure.Resources.Queries;
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -147,7 +149,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }).ToList();
                 }
 
-                current.IsKit = current.Subparts.Count > 0;
+                current.IsKit = command.IsKit;
                 _unitOfWork.Parts.Update(current);
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(current, current.Id, "Approved", command.Comment);
@@ -260,9 +262,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         }
 
-        public async Task<ICollection<PartModel>> ImportParts(string csvData)
+        public async Task<ICollection<PartModel>> ImportParts(byte[] excelData)
         {
-            IEnumerable records = CSVHelper.ParseRecords<PartImportItem>(csvData);
+            IEnumerable records = CSVHelper.ParseRecords<PartImportItem>("");
+            var parsedRecords = XLSHelper.ParseRecords(excelData);
             List<UpdatePart> updates = new List<UpdatePart>();
             List<CreatePart> inserts = new List<CreatePart>();
             List<PartModel> results = new List<PartModel>();
@@ -274,20 +277,49 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
             }
 
-            // First parse the file to ensure valid data
-            foreach (PartImportItem record in records)
+            parsedRecords.Tables[0].Rows.Cast<DataRow>().ToList().ForEach(r =>
             {
-                if (record.Id.HasValue && record.Id.Value > 0 && partIds.Contains(record.Id.Value))
-                {
-                    var updatePartModel = _mapper.Map<UpdatePart>(record);
-                    updates.Add(updatePartModel); 
-                }
-                else
-                {
-                    var createPartModel = _mapper.Map<CreatePart>(record);
-                    inserts.Add(createPartModel);
-                }
+
+            EnumSegregationType segregationType;
+            Enum.TryParse(r["SegregationType"]?.ToString(), out segregationType);
+
+            var part = new PartImportItem
+            {
+                Name = r["Name"]?.ToString(),
+                PartNumber = r["PartNumber"]?.ToString(),
+                OEMPartNumber = r["OEMPartNumber"]?.ToString(),
+                IsKit = Convert.ToBoolean(r["IsKit"]),
+                IsActive = Convert.ToBoolean(r["IsActive"]),
+                NickName = r["NickName"]?.ToString(),
+            };
+
+            if (r["Id"] != DBNull.Value && !string.IsNullOrWhiteSpace(r["Id"].ToString()))
+            {
+                part.Id = Convert.ToInt32(r["Id"]);
             }
+
+
+            if (Enum.IsDefined(typeof(EnumSegregationType), segregationType))
+            {
+                part.SegregationType = segregationType;
+            }
+
+            if (r["MaximumCycles"] != DBNull.Value && !string.IsNullOrWhiteSpace(r["MaximumCycles"].ToString()))
+            {
+                part.MaximumCycles = Convert.ToInt32(r["MaximumCycles"]);
+            }
+
+            if (part.Id.HasValue && part.Id.Value > 0 && partIds.Contains(part.Id.Value))
+            {
+            var updatePartModel = _mapper.Map<UpdatePart>(part);
+            updates.Add(updatePartModel);
+            }
+            else
+                {
+                var createPartModel = _mapper.Map<CreatePart>(part);
+                inserts.Add(createPartModel);
+            }
+            });
 
             // Then perform the update
             foreach (UpdatePart model in updates)
