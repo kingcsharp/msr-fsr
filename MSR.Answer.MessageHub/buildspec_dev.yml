@@ -1,0 +1,26 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    DOCKERHUB_PASS: "dockerhub:password"
+    DOCKERHUB_USERNAME: "dockerhub:username"
+phases:
+  build:
+    commands:
+      - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS
+      - cd ./reverseproxy/
+      - docker build -f ./Dockerfile --build-arg NGINX_CONF=devmsg -t msr-mp .
+      - cd ..
+      - docker build -f ./MSR.Answer.MessageHub/Dockerfile -t msr-message .
+  post_build:
+    commands:
+      - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - docker tag msr-mp "${ACCOUNT_URL}/msr-mp:${TAG}"
+      - docker tag msr-message "${ACCOUNT_URL}/msr-message:${TAG}"
+      - aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT_URL}
+      - docker push "${ACCOUNT_URL}/msr-mp:${TAG}"
+      - docker push "${ACCOUNT_URL}/msr-message:${TAG}"
+      - sh ${SCRIPT_UPDATE_IMAGE_API} QA ${TAG} ${API_COMPOSE_MESSAGE}
+      - cat ${API_COMPOSE_MESSAGE}
+      - ecs-cli configure --cluster ${QA_CLUSTER} --default-launch-type FARGATE --config-name ${CLUSTER_CONFIG} --region ${REGION}
+      - ecs-cli compose --file ${API_COMPOSE_MESSAGE} --ecs-params ${MESSAGE_API_ECS_PARAMS} --project-name ${QA_PROJECT_MESSAGE} service up --create-log-groups --cluster-config ${CLUSTER_CONFIG} --target-group-arn ${QA_MESSAGE_TARGET_ARN} --container-name messageproxy --container-port ${PORT} --timeout ${TIMEOUT}
