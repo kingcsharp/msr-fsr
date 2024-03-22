@@ -22,8 +22,15 @@ export class TechnicalDataLabelComponent implements OnInit {
     this.packingList.populate(this.WorkOrder, this.WorkOrder.purchase);
   }
 
-  shortenHTML(htmlString: string) {
-    const shortenedHTML = htmlString.slice(0, 30);
-    return shortenedHTML;
-  }
+  truncateHTML(text: string): string {
+    let charlimit = 30;
+    if(!text || text.length <= charlimit )
+    {
+        return text;
+    }
+
+  let without_html = text.replace(/<(?:.|\n)*?>/gm, '');
+  let shortened = without_html.substring(0, charlimit) + "...";
+  return shortened;
+}
 }
