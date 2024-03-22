@@ -21,4 +21,9 @@ export class TechnicalDataLabelComponent implements OnInit {
   ngOnInit(): void {
     this.packingList.populate(this.WorkOrder, this.WorkOrder.purchase);
   }
+
+  shortenHTML(htmlString: string) {
+    const shortenedHTML = htmlString.slice(0, 30);
+    return shortenedHTML;
+  }
 }
