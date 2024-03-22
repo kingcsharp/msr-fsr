@@ -42,7 +42,7 @@ export class ProceduresComponent implements OnInit {
     public commonGrid: CommonGrid,
     private elementReference: ElementRef,
     public globals: Globals,
-    private csvService: CSVConverterService
+    private csvService: CSVConverterService,
   ) {}
 
   ngOnInit(): void {
@@ -94,7 +94,7 @@ export class ProceduresComponent implements OnInit {
       new ColumnsSaved({ id: "Actions", label: "Actions", visible: true }),
     ];
     this.procedurePrivileges = this.globals.getEnumPrivileges(
-      this.menuItems.RunnableProcedures
+      this.menuItems.RunnableProcedures,
     );
   }
 
@@ -105,7 +105,7 @@ export class ProceduresComponent implements OnInit {
         this.procedureService,
         this.procedureService.procedureGet,
         event,
-        this.globals.functionDic
+        this.globals.functionDic,
       )
         .pipe(take(1))
         .subscribe(
@@ -113,7 +113,7 @@ export class ProceduresComponent implements OnInit {
             this.data = response.object;
             this.currentEvent = event;
             this.totalRecords = response.totalNumberOfRecords;
-          })
+          }),
         );
     }, 10);
   }
@@ -141,7 +141,7 @@ export class ProceduresComponent implements OnInit {
           (response) => {
             // success, remove row
             let idx = this.data.findIndex(
-              (x) => x.id === this.procedureToDelete.id
+              (x) => x.id === this.procedureToDelete.id,
             );
             if (idx >= 0) {
               this.data.splice(idx, 1);
@@ -151,8 +151,8 @@ export class ProceduresComponent implements OnInit {
           },
           () => {
             this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
-          }
-        )
+          },
+        ),
       );
   }
 
@@ -165,7 +165,7 @@ export class ProceduresComponent implements OnInit {
         responseHandler((response) => {
           this.data.length = 0;
           this.getProcedures(this.currentEvent);
-        })
+        }),
       );
   }
   procedureXlsx() {
@@ -175,7 +175,7 @@ export class ProceduresComponent implements OnInit {
         this.procedureService,
         this.procedureService.export,
         this.currentEvent,
-        this.globals.functionDic
+        this.globals.functionDic,
       )
         .pipe(take(1))
         .subscribe(
@@ -185,10 +185,10 @@ export class ProceduresComponent implements OnInit {
                 response.data,
                 null,
                 "procedure_export",
-                "xlsx"
+                "xlsx",
               );
             }
-          })
+          }),
         );
     }, 10);
   }

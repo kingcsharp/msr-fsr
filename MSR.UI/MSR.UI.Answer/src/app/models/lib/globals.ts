@@ -79,6 +79,23 @@ export class Globals {
       "sortAscending",
       "version",
     ],
+    partExport: [
+      "id",
+      "name",
+      "segregationType",
+      "partNumber",
+      "oemPartNumber",
+      "isKit",
+      "isActive",
+      "maximumCycles",
+      "createdOn",
+      "createdByName",
+      "term",
+      "pageNumber",
+      "pageSize",
+      "sortAscending",
+      "version",
+    ],
     history: [
       "purchaseId",
       "workOrderItemNumber",
@@ -461,7 +478,7 @@ export class Globals {
   constructor(
     private router: Router,
     private toastr: ToastrService,
-    @Inject(DOCUMENT) document
+    @Inject(DOCUMENT) document,
   ) {
     this.loadUserFromLocalStorage();
     this.setActiveMenuItem(router);
@@ -470,7 +487,7 @@ export class Globals {
 
   async showApprovalCommentModal(
     approvalEntity: any,
-    activityType: EnumApprovalTables
+    activityType: EnumApprovalTables,
   ) {
     if (this.hasActivityPrivilege(activityType, EnumPrivilege.CanApprove)) {
       this.modalData.showModal = true;
@@ -503,7 +520,7 @@ export class Globals {
           let length = this.user.roles.length;
           while (length--) {
             const elem = this.user.roles[length].menus.filter(
-              (x) => x.url.toLowerCase() === urlTocheck
+              (x) => x.url.toLowerCase() === urlTocheck,
             );
             if (elem !== undefined && elem.length > 0) {
               this.activeMenu = elem[0];
@@ -613,7 +630,7 @@ export class Globals {
     if (approvalEnum === undefined) {
       console.error(
         "tableName does not exist in EnumApprovalTables, please select an enum that exists in EnumApprovalTables",
-        EnumApprovalTables
+        EnumApprovalTables,
       );
     }
 
@@ -717,7 +734,7 @@ export class Globals {
 
   removeRequestToIgnore(requestToIgnore: string): void {
     let indexOfRequestToRemove = this.requestsToIgnoreModal.findIndex(
-      (s) => s === requestToIgnore
+      (s) => s === requestToIgnore,
     );
     this.requestsToIgnoreModal.splice(indexOfRequestToRemove, 1);
   }

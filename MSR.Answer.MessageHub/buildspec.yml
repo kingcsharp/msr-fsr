@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - sh ${SCRIPT_UPDATE_IMAGE_API} Production ${TAG} ${API_COMPOSE_MESSAGE}
+      - cat ${API_COMPOSE_MESSAGE}
+      - ecs-cli configure --cluster ${PROD_CLUSTER} --default-launch-type FARGATE --config-name ${CLUSTER_CONFIG} --region ${REGION}
+      - ecs-cli compose --file ${API_COMPOSE_MESSAGE} --ecs-params ${MESSAGE_API_ECS_PARAMS} --project-name ${PROD_PROJECT_MESSAGE} service up --create-log-groups --cluster-config ${CLUSTER_CONFIG} --target-group-arn ${PROD_MESSAGE_TARGET_ARN} --container-name messageproxy --container-port ${PORT} --timeout ${TIMEOUT}
