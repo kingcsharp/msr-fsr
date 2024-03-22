@@ -15400,6 +15400,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
     lowTarget?: number | undefined;
     monitorListId?: number | undefined;
     unitofMeasureId?: number | undefined;
+    displayInReports?: boolean | undefined;
 
     constructor(data?: IProcedureStepMonitor) {
         if (data) {
@@ -15427,6 +15428,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
             this.unitofMeasureId = _data["unitofMeasureId"];
+            this.displayInReports = _data["displayInReports"];
         }
     }
 
@@ -15454,6 +15456,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
         data["unitofMeasureId"] = this.unitofMeasureId;
+        data["displayInReports"] = this.displayInReports;
         return data;
     }
 }
@@ -15474,6 +15477,7 @@ export interface IProcedureStepMonitor {
     lowTarget?: number | undefined;
     monitorListId?: number | undefined;
     unitofMeasureId?: number | undefined;
+    displayInReports?: boolean | undefined;
 }
 
 export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
@@ -16326,6 +16330,8 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
     monitorListId?: number | undefined;
     /** UnitofMeasureId */
     unitofMeasureId?: number | undefined;
+    /** Gets or Sets DisplayInReports */
+    displayInReports?: boolean | undefined;
 
     constructor(data?: ICreateProcedureStepMonitorRequest) {
         if (data) {
@@ -16351,6 +16357,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
             this.unitofMeasureId = _data["unitofMeasureId"];
+            this.displayInReports = _data["displayInReports"];
         }
     }
 
@@ -16376,6 +16383,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
         data["unitofMeasureId"] = this.unitofMeasureId;
+        data["displayInReports"] = this.displayInReports;
         return data;
     }
 }
@@ -16408,6 +16416,8 @@ export interface ICreateProcedureStepMonitorRequest {
     monitorListId?: number | undefined;
     /** UnitofMeasureId */
     unitofMeasureId?: number | undefined;
+    /** Gets or Sets DisplayInReports */
+    displayInReports?: boolean | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -16481,6 +16491,8 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
     monitorListId?: number | undefined;
     /** UnitofMeasureId */
     unitofMeasureId?: number | undefined;
+    /** Gets or Sets DisplayInReports */
+    displayInReports?: boolean | undefined;
 
     constructor(data?: IUpdateProcedureStepMonitorRequest) {
         if (data) {
@@ -16506,6 +16518,7 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
             this.unitofMeasureId = _data["unitofMeasureId"];
+            this.displayInReports = _data["displayInReports"];
         }
     }
 
@@ -16531,6 +16544,7 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
         data["unitofMeasureId"] = this.unitofMeasureId;
+        data["displayInReports"] = this.displayInReports;
         return data;
     }
 }
@@ -16563,6 +16577,8 @@ export interface IUpdateProcedureStepMonitorRequest {
     monitorListId?: number | undefined;
     /** UnitofMeasureId */
     unitofMeasureId?: number | undefined;
+    /** Gets or Sets DisplayInReports */
+    displayInReports?: boolean | undefined;
 }
 
 /** Base class for an API call with a typed result */
