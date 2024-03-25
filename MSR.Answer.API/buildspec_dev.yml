@@ -1,0 +1,26 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    DOCKERHUB_PASS: "dockerhub:password"
+    DOCKERHUB_USERNAME: "dockerhub:username"
+phases:
+  build:
+    commands:
+      - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS
+      - cd ./reverseproxy/
+      - docker build -f ./Dockerfile --build-arg NGINX_CONF=dev -t msr-rp .
+      - cd ..
+      - docker build -f ./MSR.Answer.API/Dockerfile -t msr-api .
+  post_build:
+    commands:
+      - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - docker tag msr-rp "${ACCOUNT_URL}/msr-rp:${TAG}"
+      - docker tag msr-api "${ACCOUNT_URL}/msr-api:${TAG}"
+      - aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT_URL}
+      - docker push "${ACCOUNT_URL}/msr-rp:${TAG}"
+      - docker push "${ACCOUNT_URL}/msr-api:${TAG}"
+      - sh ${SCRIPT_UPDATE_IMAGE_API} QA ${TAG} ${API_COMPOSE}
+      - cat ${API_COMPOSE}
+      - ecs-cli configure --cluster ${QA_CLUSTER} --default-launch-type FARGATE --config-name ${CLUSTER_CONFIG} --region ${REGION}
+      - ecs-cli compose --file ${API_COMPOSE} --ecs-params ${API_ECS_PARAMS_QA} --project-name ${QA_PROJECT_API} service up --create-log-groups --cluster-config ${CLUSTER_CONFIG} --target-group-arn ${QA_API_TARGET_ARN} --container-name reverseproxy --container-port ${PORT} --timeout ${TIMEOUT}

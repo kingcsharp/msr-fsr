@@ -1,4 +1,4 @@
-<div *ngFor="let workOrderParentPart of packingList.parentParts" class="roll-label space-between">
+<div *ngFor="let workOrderParentPart of packingList.parentParts" class="roll-label">
     <table class="tight">
         <thead></thead>
         <tbody>
@@ -18,17 +18,21 @@
           </tr>
           <tr><td class="spacer"></td></tr>
         </tbody>
+        </table>
+        <table>
         <thead>
             <tr>
-                <th width="75%">Monitor</th>
-                <th width="75%">Value</th>
+                <th width="60%">Monitor</th>
+                <th width="20%">Value</th>
+                <th width="20%">Unit Of Measure</th>
             </tr>
         </thead>
         <tbody>
             <ng-container *ngFor="let monitor of packingList.allMonitors">
-                <tr *ngIf="monitor.monitorTypeId === 2 && workOrderTaskMonitor.procedureStepMonitor?.displayInReports" >
-                    <td class=" border p-2"><span>{{ monitor.description | slice:0:30 }}</span></td>
-                    <td class=" border p-2"><span>{{ monitor | monitorResult }}</span></td>
+                <tr *ngIf="monitor.monitorTypeId === 2 && monitor.description" >
+                    <td class="border p-2"><span [innerHTML]="truncateHTML(monitor.description)"></span></td>
+                    <td class="border p-2"><span >{{ monitor | monitorResult }}</span></td>
+                    <td class="border p-2"><span >{{getUnitOfMeasureName(monitor.procedureStepMonitor.unitofMeasureId) ? getUnitOfMeasureName(monitor.procedureStepMonitor.unitofMeasureId) : ''}}</span></td>
                 </tr>
             </ng-container>
         </tbody>

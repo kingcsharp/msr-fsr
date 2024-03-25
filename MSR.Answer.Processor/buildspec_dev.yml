@@ -1,0 +1,21 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    DOCKERHUB_PASS: "dockerhub:password"
+    DOCKERHUB_USERNAME: "dockerhub:username"
+phases:
+  build:
+    commands:
+      - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS
+      - docker build -f ./MSR.Answer.Processor/Dockerfile -t msr-processor .
+  post_build:
+    commands:
+      - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - docker tag msr-processor "${ACCOUNT_URL}/msr-processor:${TAG}"
+      - aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT_URL}
+      - docker push "${ACCOUNT_URL}/msr-processor:${TAG}"
+      - sh ${SCRIPT_UPDATE_IMAGE_API} QA ${TAG} ${API_COMPOSE_PROCESSOR}
+      - cat ${API_COMPOSE_PROCESSOR}
+      - ecs-cli configure --cluster ${QA_CLUSTER} --default-launch-type FARGATE --config-name ${CLUSTER_CONFIG} --region ${REGION}
+      - ecs-cli compose --file ${API_COMPOSE_PROCESSOR} --project-name ${QA_PROJECT_PROCESSOR} service up --create-log-groups --cluster-config ${CLUSTER_CONFIG} --timeout ${TIMEOUT}

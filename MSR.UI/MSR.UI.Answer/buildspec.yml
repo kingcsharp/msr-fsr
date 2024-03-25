@@ -7,9 +7,9 @@ phases:
       - yarn install --frozen-lockfile
   pre_build:
     commands:
-      - npm run lint
+      - yarn lint
   build:
     commands:
-      - ng build --configuration dev
+      - yarn buildprod
       - aws s3 cp --recursive dist/  s3://answer-ui-prod
       - aws cloudfront create-invalidation --distribution-id E1C3X9JHVR2W91 --paths "/*"
