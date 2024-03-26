@@ -29,7 +29,7 @@
         </thead>
         <tbody>
             <ng-container *ngFor="let monitor of packingList.allMonitors">
-                <tr *ngIf="monitor.monitorTypeId === 2 && monitor.description" >
+                <tr *ngIf="monitor.monitorTypeId === 2 && monitor.description && workOrderTaskMonitor.procedureStepMonitor?.displayInReports">
                     <td class="border p-2"><span [innerHTML]="truncateHTML(monitor.description)"></span></td>
                     <td class="border p-2"><span >{{ monitor | monitorResult }}</span></td>
                     <td class="border p-2"><span >{{getUnitOfMeasureName(monitor.procedureStepMonitor.unitofMeasureId) ? getUnitOfMeasureName(monitor.procedureStepMonitor.unitofMeasureId) : ''}}</span></td>

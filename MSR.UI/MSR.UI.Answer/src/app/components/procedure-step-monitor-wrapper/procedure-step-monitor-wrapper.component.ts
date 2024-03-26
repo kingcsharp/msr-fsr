@@ -177,6 +177,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
       (s) => s.value === monitor.shouldBe
     )?.value;
     this.procedureStepMonitor.sendNCREmail = monitor.sendNCREmail;
+    this.procedureStepMonitor.displayInReports = monitor.displayInReports;
     this.procedureStepMonitor.highTarget = monitor.highTarget;
     this.procedureStepMonitor.lowTarget = monitor.lowTarget;
     this.procedureStepMonitor.description =
@@ -207,6 +208,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
             failAction: this.procedureStepMonitor.failAction,
             description: this.procedureStepMonitor.description,
             sendNCREmail: this.procedureStepMonitor.sendNCREmail,
+            displayInReports: this.procedureStepMonitor.displayInReports,
             procedureStepId: this.procedureStep.id,
             lowTarget: lowTarget ? parseFloat(lowTarget) : null,
             highTarget: highTarget ? parseFloat(highTarget) : null,
@@ -242,6 +244,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
             failAction: this.procedureStepMonitor.failAction,
             monitorListId: this.procedureStepMonitor.monitorListId,
             unitofMeasureId: this.procedureStepMonitor.unitofMeasureId,
+            displayInReports: this.procedureStepMonitor.displayInReports,
             sendNCREmail: this.procedureStepMonitor.sendNCREmail,
             target: target ? parseFloat(target) : null,
           } as IUpdateProcedureStepMonitorRequest);
