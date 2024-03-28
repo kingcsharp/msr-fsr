@@ -19,20 +19,20 @@
           <tr><td class="spacer"></td></tr>
         </tbody>
         </table>
-        <table>
+        <table *ngIf="checkApprovedMonitors(packingList.allMonitors)">
         <thead>
             <tr>
-                <th width="60%">Monitor</th>
+                <th width="60%">Monitor {{packingList.allMonitors.length}}</th>
                 <th width="20%">Value</th>
                 <th width="20%">Unit Of Measure</th>
             </tr>
         </thead>
         <tbody>
             <ng-container *ngFor="let monitor of packingList.allMonitors">
-                <tr *ngIf="monitor.monitorTypeId === 2 && monitor.description" >
+                <tr *ngIf="monitor && monitor.monitorTypeId === 2 && monitor.description" >
                     <td class="border p-2"><span [innerHTML]="truncateHTML(monitor.description)"></span></td>
                     <td class="border p-2"><span >{{ monitor | monitorResult }}</span></td>
-                    <td class="border p-2"><span >{{getUnitOfMeasureName(monitor.procedureStepMonitor.unitofMeasureId) ? getUnitOfMeasureName(monitor.procedureStepMonitor.unitofMeasureId) : ''}}</span></td>
+                    <td class="border p-2"><span >{{getUnitOfMeasureName(monitor.procedureStepMonitor?.unitofMeasureId) ? getUnitOfMeasureName(monitor.procedureStepMonitor.unitofMeasureId) : ''}}</span></td>
                 </tr>
             </ng-container>
         </tbody>
