@@ -4,7 +4,7 @@ env:
   secrets-manager:
     DOCKERHUB_PASS: "dockerhub:password"
     DOCKERHUB_USERNAME: "dockerhub:username"
-    GITHUB_TOKEN: "github:token"
+    GITHUB_TOKEN: "github:personal_access_token"
 phases:
   build:
     commands:
