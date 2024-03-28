@@ -66,9 +66,13 @@ export class Answer30Stack extends cdk.Stack {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
-    const dockerHubCreds = sm.Secret.fromSecretNameV2(this, 'dockerHubCreds', 'dockerhub');
+    const dockerHubCreds = sm.Secret.fromSecretNameV2(this, "dockerHubCreds", "dockerhub");
 
     dockerHubCreds.grantRead(apicbr);
+
+    const githubToken = sm.Secret.fromSecretNameV2(this, "githubToken", "github_pat");
+
+    githubToken.grantRead(apicbr);
 
     const msrRpRepo = ecr.Repository.fromRepositoryName(this, "msrRpRepo", "msr-rp");
 
