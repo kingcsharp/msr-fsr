@@ -18,7 +18,7 @@ phases:
       - |
           if [ "$CODEBUILD_BUILD_SUCCEEDING" == "1" ]; then
             STATE="success"
-          elif
+          else
             STATE="failure"
           fi
       - |
