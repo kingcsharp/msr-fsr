@@ -62,13 +62,19 @@ export class Answer30Stack extends cdk.Stack {
       actions: codeBuildPermissions,
     }));
 
+    const githubToken = sm.Secret.fromSecretNameV2(this, "githubToken", "github_pat");
+
+    githubToken.grantRead(uicbr);
+
     const apicbr = new iam.Role(this, "apicbr", {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
-    const dockerHubCreds = sm.Secret.fromSecretNameV2(this, 'dockerHubCreds', 'dockerhub');
+    const dockerHubCreds = sm.Secret.fromSecretNameV2(this, "dockerHubCreds", "dockerhub");
 
     dockerHubCreds.grantRead(apicbr);
+
+    githubToken.grantRead(apicbr);
 
     const msrRpRepo = ecr.Repository.fromRepositoryName(this, "msrRpRepo", "msr-rp");
 
@@ -110,6 +116,8 @@ export class Answer30Stack extends cdk.Stack {
 
     dockerHubCreds.grantRead(mhcbr);
 
+    githubToken.grantRead(mhcbr);
+
     ecsTaskExecRole.grantPassRole(mhcbr);
 
     const msrMpRepo = ecr.Repository.fromRepositoryName(this, "msrMpRepo", "msr-mp");
@@ -147,6 +155,8 @@ export class Answer30Stack extends cdk.Stack {
     });
 
     dockerHubCreds.grantRead(pcbr);
+
+    githubToken.grantRead(pcbr);
 
     ecsTaskExecRole.grantPassRole(pcbr);
 
