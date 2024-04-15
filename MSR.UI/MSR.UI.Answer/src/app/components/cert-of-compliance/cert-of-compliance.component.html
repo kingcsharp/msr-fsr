@@ -100,27 +100,29 @@
     *ngFor="let workOrderTaskMonitor of packingList.allMonitors"
     class="row mx-2"
   >
-    <div
-      class="col-6 border"
-      *ngIf="workOrderTaskMonitor.procedureStepMonitor?.displayInReports"
-      [innerHTML]="
-        workOrderTaskMonitor.procedureStepMonitor?.description
-          | workOrderTaskAndMonitor
-            : workOrderTaskMonitor.procedureStepId
-            : workOrderTaskMonitor.description
-      "
-    ></div>
-    <div class="col-3 border text-center">
-      {{ workOrderTaskMonitor | monitorResult }}
-    </div>
-    <div
-      class="col-3 border text-center"
-      [ngClass]="
-        (workOrderTaskMonitor | monitorstatus) ? 'text-success' : 'text-danger'
-      "
-    >
-      {{ (workOrderTaskMonitor | monitorstatus) ? "PASS" : "FAIL" }}
-    </div>
+    <ng-container *ngIf="workOrderTaskMonitor.procedureStepMonitor?.displayInReports">
+      <div
+        class="col-6 border"
+        *ngIf="workOrderTaskMonitor.procedureStepMonitor?.displayInReports"
+        [innerHTML]="
+          workOrderTaskMonitor.procedureStepMonitor?.description
+            | workOrderTaskAndMonitor
+              : workOrderTaskMonitor.procedureStepId
+              : workOrderTaskMonitor.description
+        "
+      ></div>
+      <div class="col-3 border text-center">
+        {{ workOrderTaskMonitor | monitorResult }}
+      </div>
+      <div
+        class="col-3 border text-center"
+        [ngClass]="
+          (workOrderTaskMonitor | monitorstatus) ? 'text-success' : 'text-danger'
+        "
+      >
+        {{ (workOrderTaskMonitor | monitorstatus) ? "PASS" : "FAIL" }}
+      </div>
+  </ng-container>
   </div>
   <div class="row mt-5 mx-2">
     <div class="col-12">
