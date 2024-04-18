@@ -60,6 +60,7 @@ export class ReportComponent implements OnInit {
       .subscribe(
         responseHandler((response) => {
           this.data = response.object;
+          console.log(response.object)
         })
       );
   }

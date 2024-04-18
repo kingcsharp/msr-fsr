@@ -552,7 +552,7 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "oemPartNumber",
+            id: "oemnumber",
             label: "OEM Number",
             visible: true,
             type: this.enumColumnType.String,
@@ -564,7 +564,7 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "result",
+            id: "measurement",
             label: "Measurement",
             visible: true,
             type: this.enumColumnType.String,
@@ -1391,6 +1391,7 @@ export class ReportCubeService {
           elem.partname = [{ name: elem["partname"], id: elem["partname"] }];
           return elem;
         });
+        console.log(pagingModel)
         return pagingModel;
         break;
       case "MonitorsbyWorkOrder":
