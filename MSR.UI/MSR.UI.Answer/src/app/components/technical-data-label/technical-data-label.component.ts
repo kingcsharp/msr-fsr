@@ -63,4 +63,8 @@ export class TechnicalDataLabelComponent implements OnInit {
       );
   }
 
+  checkApprovedMonitors(allMonitors) {
+    return allMonitors.some(monitor => monitor.monitorTypeId === 2 && monitor.description);
+  }
+
 }
