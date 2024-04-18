@@ -509,13 +509,13 @@ export class ReportCubeService {
             dropdownHeader: true,
           }),
           new ColumnsSaved({
-            id: "partnumber",
+            id: "kitpartnumber",
             label: "Kit Part Number",
             visible: true,
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "partname",
+            id: "kitname",
             label: "Kit Name",
             visible: true,
             type: this.enumColumnType.StringArray,
