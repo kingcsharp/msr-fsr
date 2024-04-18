@@ -64,20 +64,14 @@
     <div class="col-4 border"><strong>Description</strong></div>
     <div class="col-4 border"><strong>SN</strong></div>
   </div>
-  <div
-    *ngFor="let counter of generateArray(workOrderParentPart.part.qty)"
-    class="row mx-2"
-  >
+  <div *ngFor="let counter of generateArray(workOrderParentPart.part.qty)" class="row mx-2">
     <div class="col-4 border">
       {{ workOrderParentPart.part.part.partNumber }}
     </div>
     <div class="col-4 border">{{ workOrderParentPart.part.part.name }}</div>
     <div class="col-4 border">{{ workOrderParentPart.part.serialNumber }}</div>
   </div>
-  <div
-    *ngFor="let workOrderSubPart of workOrderParentPart.subparts"
-    class="row mx-2"
-  >
+  <div *ngFor="let workOrderSubPart of workOrderParentPart.subparts" class="row mx-2">
     <ng-container *ngFor="let counter of generateArray(workOrderSubPart.qty)">
       <div class="col-4 border">
         &nbsp;&nbsp;&nbsp;{{ workOrderSubPart.part.partNumber }}
@@ -96,31 +90,23 @@
     <div class="col-3 border text-center"><strong>Value</strong></div>
     <div class="col-3 border text-center"><strong>Pass/Fail</strong></div>
   </div>
-  <div
-    *ngFor="let workOrderTaskMonitor of packingList.allMonitors"
-    class="row mx-2"
-  >
-    <div
-      class="col-6 border"
-      *ngIf="workOrderTaskMonitor.procedureStepMonitor?.displayInReports"
-      [innerHTML]="
+  <div *ngFor="let workOrderTaskMonitor of packingList.allMonitors" class="row mx-2">
+    <ng-container *ngIf="workOrderTaskMonitor.procedureStepMonitor?.displayInReports">
+      <div class="col-6 border" [innerHTML]="
         workOrderTaskMonitor.procedureStepMonitor?.description
           | workOrderTaskAndMonitor
             : workOrderTaskMonitor.procedureStepId
             : workOrderTaskMonitor.description
-      "
-    ></div>
-    <div class="col-3 border text-center">
-      {{ workOrderTaskMonitor | monitorResult }}
-    </div>
-    <div
-      class="col-3 border text-center"
-      [ngClass]="
+      "></div>
+      <div class="col-3 border text-center">
+        {{ workOrderTaskMonitor | monitorResult }}
+      </div>
+      <div class="col-3 border text-center" [ngClass]="
         (workOrderTaskMonitor | monitorstatus) ? 'text-success' : 'text-danger'
-      "
-    >
-      {{ (workOrderTaskMonitor | monitorstatus) ? "PASS" : "FAIL" }}
-    </div>
+      ">
+        {{ (workOrderTaskMonitor | monitorstatus) ? "PASS" : "FAIL" }}
+      </div>
+    </ng-container>
   </div>
   <div class="row mt-5 mx-2">
     <div class="col-12">
