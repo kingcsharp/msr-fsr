@@ -482,11 +482,24 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
+            id: "vendor",
+            label: "Vendor",
+            visible: true,
+            type: this.enumColumnType.String,
+            dropdownHeader: true,
+          }),
+          new ColumnsSaved({
             id: "customername",
             label: "Customer",
             visible: true,
             type: this.enumColumnType.String,
             dropdownHeader: true,
+          }),
+          new ColumnsSaved({
+            id: "ponumber",
+            label: "PO #",
+            visible: true,
+            type: this.enumColumnType.Number,
           }),
           new ColumnsSaved({
             id: "locationname",
@@ -496,14 +509,14 @@ export class ReportCubeService {
             dropdownHeader: true,
           }),
           new ColumnsSaved({
-            id: "partnumber",
-            label: "Part #",
+            id: "kitpartnumber",
+            label: "Kit Part Number",
             visible: true,
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "partname",
-            label: "Part Names",
+            id: "kitname",
+            label: "Kit Name",
             visible: true,
             type: this.enumColumnType.StringArray,
             dropdownHeader: true,
@@ -539,16 +552,9 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "monitordescription",
-            label: "Monitor Description",
+            id: "oemnumber",
+            label: "OEM Number",
             visible: true,
-            type: this.enumColumnType.String,
-          }),
-          new ColumnsSaved({
-            id: "monitortype",
-            label: "Monitor Type",
-            visible: true,
-            dropdownHeader: true,
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
@@ -558,14 +564,20 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "result",
-            label: "Monitor Result",
+            id: "measurement",
+            label: "Measurement",
             visible: true,
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
-            id: "passing",
-            label: "Passing",
+            id: "lowerlimit",
+            label: "Lower Limit",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "upperlimit",
+            label: "Upper Limit",
             visible: true,
             type: this.enumColumnType.String,
           }),
@@ -1363,7 +1375,7 @@ export class ReportCubeService {
         );
         break;
       case "MonitorsHistorybyWorkOrder":
-        const gridDataRet = pagingModel.data.map((elem) => {
+        pagingModel.data = pagingModel.data.map((elem) => {
           elem = this.removePrefixesOfPropertyNames(elem);
           elem.elemKey =
             elem["updatedon"] +
@@ -1379,32 +1391,8 @@ export class ReportCubeService {
           elem.partname = [{ name: elem["partname"], id: elem["partname"] }];
           return elem;
         });
-        pagingModel.ChartInformation = new ChartInfo({
-          gridData: gridDataRet,
-          chartType: EnumChartType.Bar,
-          stackBy: "cyclecount",
-          chartTitle: "Parts Cycle Counts",
-          xAxisTitle: "Month (Previous 12 Months Rolling)",
-          yAxisTitle: "Cycle Count",
-          tooltipFormat: "Cycle Count: <b>{point.y:.1f}</b>",
-          chartTOptions: {
-            tooltip: {
-              formatter: function () {
-                const date = moment(this.point.category, "MM-YYYY").format(
-                  "MMM-YY"
-                );
-                return `<div>
-                                <b>${this.series.name}</b><br>
-                                ${date}: Cycle Count ${this.point.y}
-                                <div>`;
-              },
-            },
-          },
-        });
-        return this.getResultDataAndChart(
-          pagingModel.ChartInformation,
-          pagingModel
-        );
+        console.log(pagingModel)
+        return pagingModel;
         break;
       case "MonitorsbyWorkOrder":
         pagingModel.data = pagingModel.data.map((elem) => {
