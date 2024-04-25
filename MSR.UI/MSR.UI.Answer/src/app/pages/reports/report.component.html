@@ -19,7 +19,7 @@
         <div class="card-category"><small class="text-muted">
                 Categories:
                 <span class="badge badge-dark rounded-0" *ngFor="let category of rowData.item.categories">
-                    {{category.name}}
+                    {{category.name}}{{rowData.item.categories.length}}
                 </span>
             </small>
         </div>
