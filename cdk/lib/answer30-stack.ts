@@ -62,19 +62,35 @@ export class Answer30Stack extends cdk.Stack {
       actions: codeBuildPermissions,
     }));
 
-    const githubToken = sm.Secret.fromSecretNameV2(this, "githubToken", "github_pat");
+    const puicbr = new iam.Role(this, "puicbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
 
-    githubToken.grantRead(uicbr);
+    const puiqas3b = s3.Bucket.fromBucketName(this, "puiqas3b", "answer-portal-ui-qa");
+
+    puiqas3b.grantReadWrite(puicbr);
+
+    const puiqacf = cf.Distribution.fromDistributionAttributes(this, "puiqacf", {
+      distributionId: "EWYQGAJYKCGEH",
+      domainName: "d399ziharcg2zh.cloudfront.net",
+    });
+
+    puiqacf.grantCreateInvalidation(puicbr);
+
+    puicbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Portal-UI-dev:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Portal-UI-dev",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-Portal-UI-dev-*",
+      ],
+      actions: codeBuildPermissions,
+    }));
 
     const apicbr = new iam.Role(this, "apicbr", {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
-
-    const dockerHubCreds = sm.Secret.fromSecretNameV2(this, "dockerHubCreds", "dockerhub");
-
-    dockerHubCreds.grantRead(apicbr);
-
-    githubToken.grantRead(apicbr);
 
     const msrRpRepo = ecr.Repository.fromRepositoryName(this, "msrRpRepo", "msr-rp");
 
@@ -83,10 +99,6 @@ export class Answer30Stack extends cdk.Stack {
     const msrApiRepo = ecr.Repository.fromRepositoryName(this, "msrApiRepo", "msr-api");
 
     msrApiRepo.grantPush(apicbr);
-
-    const ecsTaskExecRole = iam.Role.fromRoleName(this, "ecsTaskExecRole", "ecsTaskExecutionRole");
-
-    ecsTaskExecRole.grantPassRole(apicbr);
 
     apicbr.addToPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -113,12 +125,6 @@ export class Answer30Stack extends cdk.Stack {
     const mhcbr = new iam.Role(this, "mhcbr", {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
-
-    dockerHubCreds.grantRead(mhcbr);
-
-    githubToken.grantRead(mhcbr);
-
-    ecsTaskExecRole.grantPassRole(mhcbr);
 
     const msrMpRepo = ecr.Repository.fromRepositoryName(this, "msrMpRepo", "msr-mp");
 
@@ -154,12 +160,6 @@ export class Answer30Stack extends cdk.Stack {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
-    dockerHubCreds.grantRead(pcbr);
-
-    githubToken.grantRead(pcbr);
-
-    ecsTaskExecRole.grantPassRole(pcbr);
-
     const msrProcessorRepo = ecr.Repository.fromRepositoryName(this, "msrProcessorRepo", "msr-processor");
 
     msrProcessorRepo.grantPush(pcbr);
@@ -185,6 +185,18 @@ export class Answer30Stack extends cdk.Stack {
       ],
       actions: codeBuildPermissions,
     }));
+
+    const githubToken = sm.Secret.fromSecretNameV2(this, "githubToken", "github_pat");
+
+    [uicbr, puicbr, apicbr, mhcbr, pcbr].forEach(role => {
+      githubToken.grantRead(role);  
+    });
+
+    const dockerHubCreds = sm.Secret.fromSecretNameV2(this, "dockerHubCreds", "dockerhub");
+
+    [apicbr, mhcbr, pcbr].forEach(role => {
+      dockerHubCreds.grantRead(role);  
+    });
 
     const uiprdcbr = new iam.Role(this, "uiprdcbr", {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
@@ -212,11 +224,35 @@ export class Answer30Stack extends cdk.Stack {
       actions: codeBuildPermissions,
     }));
 
-    const apiprdcbr = new iam.Role(this, "apiprdcbr", {
+    const puiprdcbr = new iam.Role(this, "puiprdcbr", {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
-    ecsTaskExecRole.grantPassRole(apiprdcbr);
+    const puiprds3b = s3.Bucket.fromBucketName(this, "puiprds3b", "answer-portal-ui-prod");
+
+    puiprds3b.grantReadWrite(puiprdcbr);
+
+    const puiprdcf = cf.Distribution.fromDistributionAttributes(this, "puiprdcf", {
+      distributionId: "E8747YGK29986",
+      domainName: "dpwyehdao8gvq.cloudfront.net",
+    });
+
+    puiprdcf.grantCreateInvalidation(puiprdcbr);
+
+    puiprdcbr.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Portal-UI-prod:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Portal-UI-prod",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-Portal-UI-prod-*",
+      ],
+      actions: codeBuildPermissions,
+    }));
+
+    const apiprdcbr = new iam.Role(this, "apiprdcbr", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+    });
 
     apiprdcbr.addToPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -244,8 +280,6 @@ export class Answer30Stack extends cdk.Stack {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
-    ecsTaskExecRole.grantPassRole(mhprdcbr);
-
     mhprdcbr.addToPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       resources: [
@@ -272,8 +306,6 @@ export class Answer30Stack extends cdk.Stack {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
-    ecsTaskExecRole.grantPassRole(pprdcbr);
-
     pprdcbr.addToPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       resources: [
@@ -295,5 +327,11 @@ export class Answer30Stack extends cdk.Stack {
       ],
       actions: codeBuildPermissions,
     }));
+
+    const ecsTaskExecRole = iam.Role.fromRoleName(this, "ecsTaskExecRole", "ecsTaskExecutionRole");
+
+    [apicbr, mhcbr, pcbr, apiprdcbr, mhprdcbr, pprdcbr].forEach(role => {
+      ecsTaskExecRole.grantPassRole(role);
+    });
   }
 }

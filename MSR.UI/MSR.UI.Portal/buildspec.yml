@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     commands:
-      - cd ./MSR.UI/MSR.UI.Answer/
+      - cd ./MSR.UI/MSR.UI.Portal/
       - yarn install --frozen-lockfile
   pre_build:
     commands:
@@ -11,5 +11,5 @@ phases:
   build:
     commands:
       - npx ng build --configuration=prod
-      - aws s3 cp --recursive dist/  s3://answer-ui-prod
-      - aws cloudfront create-invalidation --distribution-id E1C3X9JHVR2W91 --paths "/*"
+      - aws s3 cp --recursive dist/  s3://answer-portal-ui-prod
+      - aws cloudfront create-invalidation --distribution-id E8747YGK29986 --paths "/*"
