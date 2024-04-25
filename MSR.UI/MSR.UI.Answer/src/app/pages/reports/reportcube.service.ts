@@ -518,9 +518,8 @@ export class ReportCubeService {
             id: "kitname",
             label: "Kit Name",
             visible: true,
-            type: this.enumColumnType.StringArray,
+            type: this.enumColumnType.String,
             dropdownHeader: true,
-            multipleValues: true,
           }),
           new ColumnsSaved({
             id: "serialnumber",
@@ -1391,7 +1390,6 @@ export class ReportCubeService {
           elem.partname = [{ name: elem["partname"], id: elem["partname"] }];
           return elem;
         });
-        console.log(pagingModel)
         return pagingModel;
         break;
       case "MonitorsbyWorkOrder":
