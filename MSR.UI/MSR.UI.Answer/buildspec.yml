@@ -10,6 +10,6 @@ phases:
       - yarn lint
   build:
     commands:
-      - yarn buildprod
+      - npx ng build --configuration=prod
       - aws s3 cp --recursive dist/  s3://answer-ui-prod
       - aws cloudfront create-invalidation --distribution-id E1C3X9JHVR2W91 --paths "/*"
