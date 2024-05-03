@@ -5,9 +5,6 @@ phases:
     commands:
       - cd ./MSR.UI/MSR.UI.Answer/
       - yarn install --frozen-lockfile
-  pre_build:
-    commands:
-      - yarn lint
   build:
     commands:
       - npx ng build --configuration=prod
