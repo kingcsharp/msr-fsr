@@ -1,38 +1,39 @@
 <div *ngFor="let workOrderParentPart of packingList.parentParts" class="roll-label">
-    <table class="tight">
+    <table class="tight mt-2 mb-0">
         <thead></thead>
         <tbody>
           <tr>
-            <td width="40%">
-                <p class="text-left">
-                    <strong>Main Part Name</strong>:<br />
-                    <strong>Main Part Number</strong>:<br />
-                  </p>
+            <td width="30%" class="text-right">
+              <strong>Main Part Name:</strong>:
             </td>
-            <td width="60%">
-                <p class="text-left">
-                    {{ workOrderParentPart.part.part.name }}<br />
-                    {{ workOrderParentPart.part.part.partNumber }}<br />
-                </p>
+            <td width="70%" class="text-left">
+              {{ workOrderParentPart.part.part.name }}
             </td>
           </tr>
-          <tr><td class="spacer"></td></tr>
+          <tr>
+            <td width="30%" class="text-right">
+              <strong>Main Part Number:</strong>:
+            </td>
+            <td width="70%" class="text-left">
+              {{ workOrderParentPart.part.part.partNumber }}
+            </td>
+          </tr>
         </tbody>
         </table>
-        <table *ngIf="checkApprovedMonitors(packingList.allMonitors)">
+        <table *ngIf="checkApprovedMonitors(packingList.allMonitors) class="tight mb-2">
         <thead>
             <tr>
-                <th width="60%">Monitor</th>
-                <th width="20%">Value</th>
-                <th width="20%">Unit Of Measure</th>
+                <th width="70%" class="border p-1">Monitor</th>
+                <th width="15%" class="border p-1 text-center">Value</th>
+                <th width="15%" class="border p-1 text-center">Unit</th>
             </tr>
         </thead>
         <tbody>
             <ng-container *ngFor="let monitor of packingList.allMonitors">
                 <tr *ngIf="monitor && monitor.monitorTypeId === 2 && monitor.description && monitor.procedureStepMonitor?.displayInReports">
-                    <td class="border p-2"><span [innerHTML]="truncateHTML(monitor.description)"></span></td>
-                    <td class="border p-2"><span >{{ monitor | monitorResult }}</span></td>
-                    <td class="border p-2"><span >{{getUnitOfMeasureName(monitor.procedureStepMonitor?.unitofMeasureId) ? getUnitOfMeasureName(monitor.procedureStepMonitor.unitofMeasureId) : ''}}</span></td>
+                    <td class="border p-1"><span [innerHTML]="truncateHTML(monitor.description)"></span></td>
+                    <td class="border p-1 text-center"><span >{{ monitor | monitorResult }}</span></td>
+                    <td class="border p-1 text-center"><span >{{getUnitOfMeasureName(monitor.procedureStepMonitor?.unitofMeasureId) ? getUnitOfMeasureName(monitor.procedureStepMonitor.unitofMeasureId) : ''}}</span></td>
                 </tr>
             </ng-container>
         </tbody>
