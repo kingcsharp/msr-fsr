@@ -29,7 +29,7 @@ export class TechnicalDataLabelComponent implements OnInit {
   }
 
   truncateHTML(text: string): string {
-    let charlimit = 30;
+    let charlimit = 50;
     if(!text || text.length <= charlimit )
     {
         return text;
