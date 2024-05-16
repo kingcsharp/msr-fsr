@@ -56,8 +56,11 @@ export class Answer30Stack extends cdk.Stack {
       resources: [
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-dev:*",
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-dev",
-        "arn:aws:s3:::codepipeline-us-west-2-*",
         "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-UI-dev-*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-pr:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-UI-pr",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-UI-pr-*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
       ],
       actions: codeBuildPermissions,
     }));
@@ -82,8 +85,11 @@ export class Answer30Stack extends cdk.Stack {
       resources: [
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Portal-UI-dev:*",
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Portal-UI-dev",
-        "arn:aws:s3:::codepipeline-us-west-2-*",
         "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-Portal-UI-dev-*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Portal-UI-pr:*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Portal-UI-pr",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-Portal-UI-pr-*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
       ],
       actions: codeBuildPermissions,
     }));
@@ -116,8 +122,11 @@ export class Answer30Stack extends cdk.Stack {
       resources: [
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-dev",
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-dev:*",
-        "arn:aws:s3:::codepipeline-us-west-2-*",
         "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-API-dev-*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-pr",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-API-pr:*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-API-pr-*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
       ],
       actions: codeBuildPermissions,
     }));
@@ -150,8 +159,11 @@ export class Answer30Stack extends cdk.Stack {
       resources: [
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-MessageHub-dev",
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-MessageHub-dev:*",
-        "arn:aws:s3:::codepipeline-us-west-2-*",
         "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-MessageHub-dev-*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-MessageHub-pr",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-MessageHub-pr:*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-MessageHub-pr-*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
       ],
       actions: codeBuildPermissions,
     }));
@@ -180,8 +192,11 @@ export class Answer30Stack extends cdk.Stack {
       resources: [
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Processor-dev",
         "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Processor-dev:*",
-        "arn:aws:s3:::codepipeline-us-west-2-*",
         "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-Processor-dev-*",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Processor-pr",
+        "arn:aws:logs:us-west-2:425480257575:log-group:/aws/codebuild/Answer30-Processor-pr:*",
+        "arn:aws:codebuild:us-west-2:425480257575:report-group/Answer30-Processor-pr-*",
+        "arn:aws:s3:::codepipeline-us-west-2-*",
       ],
       actions: codeBuildPermissions,
     }));
