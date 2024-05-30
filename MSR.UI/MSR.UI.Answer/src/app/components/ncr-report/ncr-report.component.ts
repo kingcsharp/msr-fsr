@@ -29,7 +29,8 @@ export class NcrReportComponent implements OnInit {
   menuItems = EnumMenuItem;
   ncrParts: Array<any>;
   showNcrParts: boolean;
-
+  tmpNumbers = new Set();
+  ncrNumbers: Array<any>;
   constructor(private globals: Globals) {}
 
   ngOnInit(): void {
@@ -57,6 +58,7 @@ export class NcrReportComponent implements OnInit {
             EnumProcedureType.NCR || s.isNCRTask
       )
       .map((workOrderTask) => {
+        this.tmpNumbers.add(workOrderTask.ncNumber);        
         let taskSummary = {
           taskName:
             workOrderTask.procedureStep === undefined
@@ -66,7 +68,7 @@ export class NcrReportComponent implements OnInit {
           monitors: new Array<any>(),
           taskStepOrder: workOrderTask.taskStepOrder,
         };
-
+        this.ncrNumbers = Array.from(this.tmpNumbers)        
         workOrderTask.workOrderTaskMonitors.map((workOrderTaskMonitor) => {
           taskSummary.monitors.push({
             monitorTitle:
@@ -153,7 +155,7 @@ export class NcrReportComponent implements OnInit {
       }
     );
 
-    _.map(ncrWorkOrderTasks, (workOrderTask) => {
+    _.map(ncrWorkOrderTasks, (workOrderTask) => {            
       this.ncrParts.map((part, index) => {
         const mappedWorkOrderPart = _.find(
           workOrderTask.mappedWorkOrderParts,

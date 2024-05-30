@@ -1,111 +1,116 @@
-<div class="row m-4" *ngIf="workOrderPart !== undefined">
+<div class="row m-4 body" *ngIf="workOrderPart !== undefined">  
   <div class="col-12">
-    Part Non Conformance Report - Work Order {{ WorkOrder.id }}
-  </div>
-  <div class="col-12 border mb-2">
-    <div class="row">
-      <div class="col-2">MSR-FSR</div>
-      <div class="col-10">
-        Customer Part # {{ workOrderPart?.part?.partNumber }}, (Serial #:
-        {{ workOrderPart?.serialNumber }}), {{ workOrderPart?.part?.name }}
-      </div>
-    </div>
-  </div>
-  <div class="col-12 border mb-2">
-    <div class="row">
-      <div class="col-3 text-right">Date Report Prepared:</div>
-      <div class="col-9">{{ date | userTimezone }}</div>
-      <div class="col-3 text-right">Work Order #:</div>
-      <div class="col-9">{{ WorkOrder.id }}</div>
-      <div class="col-3 text-right">Customer:</div>
-      <div class="col-9">
-        {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}
-      </div>
-      <div class="col-3 text-right">Technician:</div>
-      <div class="col-9">{{ technicianFullName }}</div>
-    </div>
-  </div>
-  <div class="col-12 border mb-2">
-    <div class="row">
-      <div class="col-2 font-weight-bold">Part #</div>
-      <div class="col-3 font-weight-bold">Part Name</div>
-      <div class="col-2 font-weight-bold">Serial Number</div>
-      <div class="col-3 font-weight-bold">Detail</div>
-      <div class="col-2 font-weight-bold">Tag Type</div>
-      <ng-container *ngIf="!showNcrParts">
-        <div class="col-2">{{ workOrderPart.part?.partNumber }}</div>
-        <div class="col-3">{{ workOrderPart.part?.name }}</div>
-        <div class="col-2">{{ workOrderPart.serialNumber }}</div>
-        <div class="col-3">{{ workOrderPart.detail }}</div>
-        <div class="col-2"></div>
-      </ng-container>
-      <ng-container *ngFor="let part of ncrParts">
-        <ng-container *ngIf="part.mapped && showNcrParts">
-          <div class="col-2">{{ part.partNumber }}</div>
-          <div class="col-3">{{ part.name }}</div>
-          <div class="col-2">{{ part.serialNumber }}</div>
-          <div class="col-3">{{ part.detail }}</div>
-          <div class="col-2">{{ part.tagType }}</div>
-        </ng-container>
-      </ng-container>
-    </div>
-  </div>
-  <div class="col-12 border mb-2">
-    <div class="row">
-      <div class="col-3 font-weight-bold text-right">Associated Documents:</div>
-      <div class="col-9">
-        <grid-file-viewer
-          [menuItem]="menuItems.WorkOrderTasks"
-          [files]="associatedDocuments"
-          [showDescription]="true"
-          class="m-2"
-        ></grid-file-viewer>
-      </div>
-      <div class="col-3 font-weight-bold text-right">
-        Associated Digital Pictures:
-      </div>
-      <div class="col-9">
-        <div class="row">
-          <div
-            class="col-4 mt-4"
-            *ngFor="let fileModel of associatedDigitalPictures"
-          >
-            <a
-              *ngIf="fileModel.fileId !== undefined"
-              href="{{ fileModel.fileURL }}"
-              target="_blank"
-            >
-              <img
-                class="card-img-top"
-                src="{{ fileModel.fileURL }}"
-                alt="{{ fileModel.name }}"
-                (click)="showImagePreviewDialog(fileModel)"
-              />
-            </a>
-            <a
-              *ngIf="
-                fileModel.fileId === undefined || fileModel.fileId === null
-              "
-            >
-              <img
-                class="card-img-top"
-                [src]="fileModel.base64String"
-                alt="{{ fileModel.name }}"
-                (click)="showImagePreviewDialog(fileModel)"
-              />
-            </a>
-            <div *ngIf="fileModel.description" class="file-desc px-2">
-              {{ fileModel.description }}
+    <div class="row " *ngFor="let ncrNumber of ncrNumbers; let taskSummary of taskSummaries; let index"> 
+      <!-- check to ensure there are 2 monitors for each ncr-->           
+      <div *ngIf="taskSummaries.indexOf(taskSummary) % 2 == 0"  class="pagebreak" >
+        <br *ngIf = "taskSummaries.indexOf(taskSummary) % 2 == 0" />
+        <br *ngIf = "taskSummaries.indexOf(taskSummary) % 2 == 0" />
+        <div class="col-12" >          
+          Part Non Conformance Report - Work Order {{ WorkOrder.id }}<br />
+        </div>
+        <div class="col-12 border mb-2">
+          <div class="row">
+            <div class="col-2">MSR-FSR</div>
+            <div class="col-10">
+              Customer Part # {{ workOrderPart?.part?.partNumber }}, (Serial #:
+              {{ workOrderPart?.serialNumber }}), {{ workOrderPart?.part?.name }}
             </div>
           </div>
         </div>
+        <div class="col-12 border mb-2">
+          <div class="row">
+            <div class="col-3 text-right">Date Report Prepared:</div>
+            <div class="col-9">{{ date | userTimezone }}</div>
+            <div class="col-3 text-right">Work Order #:</div>
+            <div class="col-9">{{ WorkOrder.id }}</div>
+            <div class="col-3 text-right">Customer:</div>
+            <div class="col-9">
+              {{ WorkOrder.purchase?.purchaseOrder?.customer?.name }}
+            </div>
+            <div class="col-3 text-right">Technician:</div>
+            <div class="col-9">{{ technicianFullName }}</div>
+          </div>
+        </div>
+        <div class="col-12 border mb-2">
+          <div class="row">
+            <div class="col-2 font-weight-bold">Part #</div>
+            <div class="col-3 font-weight-bold">Part Name</div>
+            <div class="col-2 font-weight-bold">Serial Number</div>
+            <div class="col-3 font-weight-bold">Detail</div>
+            <div class="col-2 font-weight-bold">Tag Type</div>
+            <ng-container *ngIf="!showNcrParts">
+              <div class="col-2">{{ workOrderPart.part?.partNumber }}</div>
+              <div class="col-3">{{ workOrderPart.part?.name }}</div>
+              <div class="col-2">{{ workOrderPart.serialNumber }}</div>
+              <div class="col-3">{{ workOrderPart.detail }}</div>
+              <div class="col-2"></div>
+            </ng-container>
+            <ng-container *ngFor="let part of ncrParts">
+              <ng-container *ngIf="part.mapped && showNcrParts">
+                <div class="col-2">{{ part.partNumber }}</div>
+                <div class="col-3">{{ part.name }}</div>
+                <div class="col-2">{{ part.serialNumber }}</div>
+                <div class="col-3">{{ part.detail }}</div>
+                <div class="col-2">{{ part.tagType }}</div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-12 border mb-2">
+          <div class="row">
+            <div class="col-3 font-weight-bold text-right">Associated Documents:</div>
+            <div class="col-9">
+              <grid-file-viewer
+                [menuItem]="menuItems.WorkOrderTasks"
+                [files]="associatedDocuments"
+                [showDescription]="true"
+                class="m-2"
+              ></grid-file-viewer>
+            </div>
+            <div class="col-3 font-weight-bold text-right">
+              Associated Digital Pictures:
+            </div>
+            <div class="col-9">
+              <div class="row">
+                <div
+                  class="col-4 mt-4"
+                  *ngFor="let fileModel of associatedDigitalPictures"
+                >
+                  <a
+                    *ngIf="fileModel.fileId !== undefined"
+                    href="{{ fileModel.fileURL }}"
+                    target="_blank"
+                  >
+                    <img
+                      class="card-img-top"
+                      src="{{ fileModel.fileURL }}"
+                      alt="{{ fileModel.name }}"
+                      (click)="showImagePreviewDialog(fileModel)"
+                    />
+                  </a>
+                  <a
+                    *ngIf="
+                      fileModel.fileId === undefined || fileModel.fileId === null
+                    "
+                  >
+                    <img
+                      class="card-img-top"
+                      [src]="fileModel.base64String"
+                      alt="{{ fileModel.name }}"
+                      (click)="showImagePreviewDialog(fileModel)"
+                    />
+                  </a>
+                  <div *ngIf="fileModel.description" class="file-desc px-2">
+                    {{ fileModel.description }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-3 font-weight-bold text-right">Comments:</div>
+            <div class="col-9"></div>
+          </div>
+        </div>
       </div>
-      <div class="col-3 font-weight-bold text-right">Comments:</div>
-      <div class="col-9"></div>
-    </div>
-  </div>
-  <div class="col-12">
-    <div class="row" *ngFor="let taskSummary of taskSummaries">
       <div class="col-12 border bg-dark p-2">{{ taskSummary.taskName }}</div>
       <div class="col-6 border bg-secondary p-2">
         Monitor {{ taskSummary.taskId }}
@@ -122,8 +127,9 @@
             {{ monitorSummary.result | monitorResult }}
           </div>
           <div class="col-3 border p-2">{{ monitorSummary.comment }}</div>
+                   
         </div>
-      </div>
-    </div>
+      </div>                   
+    </div>        
   </div>
 </div>

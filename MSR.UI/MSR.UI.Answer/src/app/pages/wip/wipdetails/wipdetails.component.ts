@@ -132,7 +132,7 @@ export class WipdetailsComponent implements OnInit {
   enumProcedureStepType = ProcedureStepType;
   tagTypesValid: boolean = true;
   filesReadyToSubmit: boolean = false;
-
+  
   constructor(
     private route: ActivatedRoute,
     private workOrdersService: WorkOrderService,
@@ -775,6 +775,7 @@ export class WipdetailsComponent implements OnInit {
           _.some(this.ncrTaskIds, (id) => id === task.id) &&
           task.ncNumber === this.workOrderTaskToView.ncNumber
       );
+    
     }
 
     let updatedWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
