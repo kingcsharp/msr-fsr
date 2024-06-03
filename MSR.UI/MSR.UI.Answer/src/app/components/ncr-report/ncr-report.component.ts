@@ -30,9 +30,11 @@ export class NcrReportComponent implements OnInit {
   ncrParts: Array<any>;
   showNcrParts: boolean;
   tmpNumbers = new Set();
-  ncrNumbers: Array<any>;
-  constructor(private globals: Globals) {}
+  ncrNumbers: Array<any>;  
+  static firstTimeThru = '0-0';
 
+  constructor(private globals: Globals) {}
+  
   ngOnInit(): void {
     this.technicianFullName = this.globals.getCurrentUser().fullName;
     this.date = new Date();
@@ -49,7 +51,16 @@ export class NcrReportComponent implements OnInit {
     this.showNcrParts = false;
     this.getNCRParts();
   }
-
+  checkNCR(ncrNum, taskNcrNum){    
+    if (ncrNum == taskNcrNum && NcrReportComponent.firstTimeThru != ncrNum){      
+        NcrReportComponent.firstTimeThru = ncrNum        
+        return true;
+      } else {                       
+        return false;                  
+      }
+    }    
+    
+  
   generateMonitorSummaries() {
     this.WorkOrder.workOrderTasks
       .filter(
@@ -58,7 +69,7 @@ export class NcrReportComponent implements OnInit {
             EnumProcedureType.NCR || s.isNCRTask
       )
       .map((workOrderTask) => {
-        this.tmpNumbers.add(workOrderTask.ncNumber);        
+        this.tmpNumbers.add(workOrderTask.ncNumber);             
         let taskSummary = {
           taskName:
             workOrderTask.procedureStep === undefined
@@ -67,16 +78,18 @@ export class NcrReportComponent implements OnInit {
           taskId: workOrderTask.id,
           monitors: new Array<any>(),
           taskStepOrder: workOrderTask.taskStepOrder,
+          ncrNumber: workOrderTask.ncNumber
         };
         this.ncrNumbers = Array.from(this.tmpNumbers)        
-        workOrderTask.workOrderTaskMonitors.map((workOrderTaskMonitor) => {
+        workOrderTask.workOrderTaskMonitors.map((workOrderTaskMonitor) => {          
           taskSummary.monitors.push({
             monitorTitle:
               (workOrderTask.procedureStep === undefined) !== null
                 ? workOrderTaskMonitor.procedureStepMonitor?.description
                 : workOrderTaskMonitor.description,
             result: workOrderTaskMonitor,
-            comment: workOrderTaskMonitor.comment,
+            comment: workOrderTaskMonitor.comment, 
+            ncrNumber: workOrderTask.ncNumber           
           });
         });
 
@@ -99,7 +112,7 @@ export class NcrReportComponent implements OnInit {
       (taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder
     );
   }
-
+  
   showImagePreviewDialog(fileModel: FileModel) {
     this.imagePreview = fileModel;
     this.showImagePreview = !this.showImagePreview;

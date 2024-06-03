@@ -7,7 +7,7 @@
   page-break-before:always; 
 }
 @page {
-  margin: 0;
+  margin: 20px;
   display: none;
 }
 .pagebreak:first-child {
@@ -21,6 +21,5 @@
 }
 .body{
   -webkit-print-color-adjust:exact !important;
-  print-color-adjust:exact !important;  
- 
+  print-color-adjust:exact !important;   
 }

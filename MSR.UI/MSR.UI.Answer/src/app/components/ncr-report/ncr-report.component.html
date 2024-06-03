@@ -1,11 +1,18 @@
-<div class="row m-4 body" *ngIf="workOrderPart !== undefined">  
+<div class="row m-4 body" *ngIf="workOrderPart !== undefined">
   <div class="col-12">
-    <div class="row " *ngFor="let ncrNumber of ncrNumbers; let taskSummary of taskSummaries; let index"> 
-      <!-- check to ensure there are 2 monitors for each ncr-->           
-      <div *ngIf="taskSummaries.indexOf(taskSummary) % 2 == 0"  class="pagebreak" >
-        <br *ngIf = "taskSummaries.indexOf(taskSummary) % 2 == 0" />
-        <br *ngIf = "taskSummaries.indexOf(taskSummary) % 2 == 0" />
-        <div class="col-12" >          
+    <div
+      class="row"
+      *ngFor="
+        let ncrNumber of ncrNumbers; let taskSummary of taskSummaries; let i=index">
+    
+      <!-- check to ensure there are 2 monitors for each ncr-->
+      <div
+        *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)"
+        class="pagebreak"
+      >
+        <br *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" />
+        <br *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" />
+        <div class="col-12">
           Part Non Conformance Report - Work Order {{ WorkOrder.id }}<br />
         </div>
         <div class="col-12 border mb-2">
@@ -13,7 +20,8 @@
             <div class="col-2">MSR-FSR</div>
             <div class="col-10">
               Customer Part # {{ workOrderPart?.part?.partNumber }}, (Serial #:
-              {{ workOrderPart?.serialNumber }}), {{ workOrderPart?.part?.name }}
+              {{ workOrderPart?.serialNumber }}),
+              {{ workOrderPart?.part?.name }}
             </div>
           </div>
         </div>
@@ -58,7 +66,9 @@
         </div>
         <div class="col-12 border mb-2">
           <div class="row">
-            <div class="col-3 font-weight-bold text-right">Associated Documents:</div>
+            <div class="col-3 font-weight-bold text-right">
+              Associated Documents:
+            </div>
             <div class="col-9">
               <grid-file-viewer
                 [menuItem]="menuItems.WorkOrderTasks"
@@ -90,7 +100,8 @@
                   </a>
                   <a
                     *ngIf="
-                      fileModel.fileId === undefined || fileModel.fileId === null
+                      fileModel.fileId === undefined ||
+                      fileModel.fileId === null
                     "
                   >
                     <img
@@ -111,9 +122,12 @@
           </div>
         </div>
       </div>
-      <div class="col-12 border bg-dark p-2">{{ taskSummary.taskName }}</div>
+      
+      <div class="col-12 border bg-dark p-2">
+        <b>{{ taskSummary.taskName }}</b>
+      </div>
       <div class="col-6 border bg-secondary p-2">
-        Monitor {{ taskSummary.taskId }}
+        Monitor <b>{{ taskSummary.taskId }}</b>
       </div>
       <div class="col-3 border bg-secondary p-2">Result</div>
       <div class="col-3 border bg-secondary p-2">Comment</div>
@@ -127,9 +141,8 @@
             {{ monitorSummary.result | monitorResult }}
           </div>
           <div class="col-3 border p-2">{{ monitorSummary.comment }}</div>
-                   
         </div>
-      </div>                   
-    </div>        
+      </div>
+    </div>
   </div>
 </div>
