@@ -1,17 +1,6 @@
 <div class="row m-4 body" *ngIf="workOrderPart !== undefined">
   <div class="col-12">
-    <div
-      class="row"
-      *ngFor="
-        let ncrNumber of ncrNumbers; let taskSummary of taskSummaries; let i=index">
-    
-      <!-- check to ensure there are 2 monitors for each ncr-->
-      <div
-        *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)"
-        class="pagebreak"
-      >
-        <br *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" />
-        <br *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" />
+    <div class="row" *ngFor=" let ncrNumber of ncrNumbers; let taskSummary of taskSummaries; let i=index">
         <div class="col-12">
           Part Non Conformance Report - Work Order {{ WorkOrder.id }}<br />
         </div>
@@ -121,28 +110,31 @@
             <div class="col-9"></div>
           </div>
         </div>
-      </div>
-      
       <div class="col-12 border bg-dark p-2">
         <b>{{ taskSummary.taskName }}</b>
       </div>
-      <div class="col-6 border bg-secondary p-2">
-        Monitor <b>{{ taskSummary.taskId }}</b>
-      </div>
-      <div class="col-3 border bg-secondary p-2">Result</div>
-      <div class="col-3 border bg-secondary p-2">Comment</div>
-      <div class="col-12">
-        <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
-          <div
-            class="col-6 border p-2"
-            [innerHTML]="monitorSummary.monitorTitle"
-          ></div>
-          <div class="col-3 border p-2">
-            {{ monitorSummary.result | monitorResult }}
-          </div>
-          <div class="col-3 border p-2">{{ monitorSummary.comment }}</div>
+        <div class="col-6 border bg-secondary p-2">
+            Monitor <b>{{ taskSummary.taskId }}</b>
         </div>
+        <div class="col-3 border bg-secondary p-2">Result</div>
+        <div class="col-3 border bg-secondary p-2">Comment</div>
+        <div class="col-12">
+            <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
+            <div
+                class="col-6 border p-2"
+                [innerHTML]="monitorSummary.monitorTitle"
+            ></div>
+            <div class="col-3 border p-2">
+                {{ monitorSummary.result | monitorResult }}
+            </div>
+            <div class="col-3 border p-2">{{ monitorSummary.comment }}</div>
+            </div>
       </div>
-    </div>
+      <!-- break page after first ncr -->
+      <div *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" class="pagebreak">
+        <br *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" />
+        <br *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" />
+      </div>
+    </div><!-- end for each ncr-->
   </div>
 </div>
