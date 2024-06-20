@@ -131,11 +131,6 @@
             <div class="col-3 border p-2">{{ monitorSummary.comment }}</div>
             </div>
       </div>
-      <!-- break page after first ncr -->
-      <div *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" class="pagebreak">
-        <br *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" />
-        <br *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" />
-      </div>
     </div><!-- end for each ncr-->
   </div>
 </div>
