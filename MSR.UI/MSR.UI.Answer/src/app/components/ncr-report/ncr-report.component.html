@@ -132,5 +132,8 @@
             </div>
       </div>
     </div><!-- end for each ncr-->
+      !-- break page after ncr -->
+      <div *ngIf="checkNCR(ncrNumber.ncrNumber, taskSummary.ncrNumber)" class="pagebreak">
+    </div>
   </div>
 </div>
