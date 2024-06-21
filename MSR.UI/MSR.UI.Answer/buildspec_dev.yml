@@ -10,7 +10,7 @@ phases:
       - yarn install --frozen-lockfile  
   build:
     commands:
-      - npx ng build --configuration=prod
+      - npx ng build --configuration=dev
   post_build:
     commands:
       - |
