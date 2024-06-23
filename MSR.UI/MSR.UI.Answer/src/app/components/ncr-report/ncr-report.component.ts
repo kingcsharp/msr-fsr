@@ -31,7 +31,8 @@ export class NcrReportComponent implements OnInit {
   showNcrParts: boolean;
   tmpNumbers = new Set();
   ncrNumbers: Array<any>;  
-  static firstTimeThru = '0-0';
+  group: any;
+  grouped: Object;
 
   constructor(private globals: Globals) {}
   
@@ -51,15 +52,8 @@ export class NcrReportComponent implements OnInit {
     this.showNcrParts = false;
     this.getNCRParts();
   }
-  checkNCR(ncrNum, taskNcrNum){    
-    if (ncrNum == taskNcrNum && NcrReportComponent.firstTimeThru != ncrNum){      
-        NcrReportComponent.firstTimeThru = ncrNum        
-        return true;
-      } else {                       
-        return false;                  
-      }
-    }    
-  const grouped = data.reduce((res, curr) => {
+  
+  const grouped = this.WorkOrder.workOrderTasks.reduce((res, curr) => {
     res[curr.line] = res[curr.ncrNumber] || [];
     res[curr.line].push(curr);
     return res;
