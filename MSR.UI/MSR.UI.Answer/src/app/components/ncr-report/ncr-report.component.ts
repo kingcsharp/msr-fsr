@@ -53,7 +53,7 @@ export class NcrReportComponent implements OnInit {
     this.getNCRParts();
   }
   
-  const grouped = this.WorkOrder.workOrderTasks.reduce((res, curr) => {
+  grouped = this.WorkOrder.workOrderTasks.reduce((res, curr) => {
     res[curr.line] = res[curr.ncrNumber] || [];
     res[curr.line].push(curr);
     return res;
