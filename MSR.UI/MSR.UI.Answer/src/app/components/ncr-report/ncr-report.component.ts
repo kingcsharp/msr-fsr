@@ -59,7 +59,11 @@ export class NcrReportComponent implements OnInit {
         return false;                  
       }
     }    
-    
+  const grouped = data.reduce((res, curr) => {
+    res[curr.line] = res[curr.ncrNumber] || [];
+    res[curr.line].push(curr);
+    return res;
+  }, {});  
   
   generateMonitorSummaries() {
     this.WorkOrder.workOrderTasks
@@ -108,9 +112,9 @@ export class NcrReportComponent implements OnInit {
         }
       });
 
-    this.taskSummaries.sort(
-      (taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder
-    );
+      for (const group of this.taskSummaries(grouped)) {
+        group.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
+      }
   }
   
   showImagePreviewDialog(fileModel: FileModel) {
