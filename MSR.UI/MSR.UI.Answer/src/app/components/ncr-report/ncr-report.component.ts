@@ -30,7 +30,8 @@ export class NcrReportComponent implements OnInit {
   ncrParts: Array<any>;
   showNcrParts: boolean;
   tmpNumbers = new Set();
-  ncrNumbers: Array<any>;  
+  ncrNumbers: Array<any>;
+  static firstTimeThru = '0-0';
 
   constructor(private globals: Globals) {}
   
@@ -50,7 +51,16 @@ export class NcrReportComponent implements OnInit {
     this.showNcrParts = false;
     this.getNCRParts();
   }
-   
+
+  checkNCR(ncrNum, taskNcrNum){    
+    if (ncrNum == taskNcrNum && NcrReportComponent.firstTimeThru != ncrNum){      
+        NcrReportComponent.firstTimeThru = ncrNum        
+        return true;
+    } else {                       
+      return false;                  
+    }
+  }
+  
   generateMonitorSummaries() {
     this.WorkOrder.workOrderTasks
       .filter(
