@@ -31,7 +31,6 @@ export class NcrReportComponent implements OnInit {
   showNcrParts: boolean;
   tmpNumbers = new Set();
   ncrNumbers: Array<any>;  
-  static firstTimeThru = '0-0';
 
   constructor(private globals: Globals) {}
   
@@ -51,20 +50,7 @@ export class NcrReportComponent implements OnInit {
     this.showNcrParts = false;
     this.getNCRParts();
   }
-  checkNCR(ncrNum, taskNcrNum){    
-    if (ncrNum == taskNcrNum && NcrReportComponent.firstTimeThru != ncrNum){      
-        NcrReportComponent.firstTimeThru = ncrNum        
-        return true;
-      } else {                       
-        return false;                  
-      }
-    }    
-  const grouped = data.reduce((res, curr) => {
-    res[curr.line] = res[curr.ncrNumber] || [];
-    res[curr.line].push(curr);
-    return res;
-  }, {});  
-  
+   
   generateMonitorSummaries() {
     this.WorkOrder.workOrderTasks
       .filter(
@@ -112,9 +98,9 @@ export class NcrReportComponent implements OnInit {
         }
       });
 
-      for (const group of this.taskSummaries(grouped)) {
-        group.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
-      }
+    this.taskSummaries.sort(
+      (taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder
+    );
   }
   
   showImagePreviewDialog(fileModel: FileModel) {
