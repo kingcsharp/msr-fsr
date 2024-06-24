@@ -31,7 +31,7 @@ export class NcrReportComponent implements OnInit {
   showNcrParts: boolean;
   tmpNumbers = new Set();
   ncrNumbers: Array<any>;  
-  group: any;
+  group: Object;
   grouped: Object;
 
   constructor(private globals: Globals) {}
@@ -54,8 +54,8 @@ export class NcrReportComponent implements OnInit {
   }
   
   grouped = this.WorkOrder.workOrderTasks.reduce((res, curr) => {
-    res[curr.line] = res[curr.ncrNumber] || [];
-    res[curr.line].push(curr);
+    res[curr.ncNumber] = res[curr.ncNumber] || [];
+    res[curr.ncNumber].push(curr);
     return res;
   }, {});  
   
@@ -106,7 +106,7 @@ export class NcrReportComponent implements OnInit {
         }
       });
 
-      for (const group of this.taskSummaries(this.grouped)) {
+      for (group of this.taskSummaries(this.grouped)) {
         group.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
       }
   }
