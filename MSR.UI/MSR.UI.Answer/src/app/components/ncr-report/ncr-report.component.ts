@@ -29,9 +29,7 @@ export class NcrReportComponent implements OnInit {
   menuItems = EnumMenuItem;
   ncrParts: Array<any>;
   showNcrParts: boolean;
-  tmpNumbers = new Set();
   ncrNumbers: Array<any>;
-  static firstTimeThru = "0-0";
 
   constructor(private globals: Globals) {}
 
@@ -52,14 +50,6 @@ export class NcrReportComponent implements OnInit {
     this.getNCRParts();
   }
 
-  checkNCR(ncrNum, taskNcrNum) {
-    if (ncrNum == taskNcrNum && NcrReportComponent.firstTimeThru != ncrNum) {
-      NcrReportComponent.firstTimeThru = ncrNum;
-      return true;
-    } else {
-      return false;
-    }
-  }
   /**
    * Maps the reference files of a work order task.
    * @param workOrderTask - The work order task object.

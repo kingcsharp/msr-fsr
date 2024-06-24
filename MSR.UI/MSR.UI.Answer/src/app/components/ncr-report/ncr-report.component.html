@@ -1,8 +1,8 @@
 <div class="row m-4 body" *ngIf="workOrderPart !== undefined">
   <div class="col-12">
-    <div class="row" *ngFor=" let taskSummary of taskSummaries; ">
+    <div class="row" *ngFor="let taskSummary of taskSummaries">
         <div class="col-12">
-          <h2 class"report-title">Part Non Conformance Report - Work Order {{ WorkOrder.id }}</h2>
+          <h2 class="report-title">Part Non Conformance Report - Work Order {{ WorkOrder.id }}</h2>
         </div>
         <div class="col-12 border mb-2">
           <div class="row">
