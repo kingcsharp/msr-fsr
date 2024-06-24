@@ -106,8 +106,8 @@ export class NcrReportComponent implements OnInit {
          return res;
       }, {});  
     
-    for (group of this.taskSummaries(this.grouped)) {
-        group.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
+    for (this.group of this.taskSummaries(this.grouped)) {
+        this.taskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
       }
   }
   
