@@ -3,6 +3,9 @@
   text-align: center;
   word-break: break-word;
 }
+h2.report-title {
+  margin: 20px 0 10px -17px;
+}
 @media print {
     .pagebreak {
         clear: both;
@@ -15,6 +18,9 @@
     .body{
       -webkit-print-color-adjust:exact !important;
       print-color-adjust:exact !important;   
+    }
+    h2.report-title {
+      margin: 20px 0 10px -17px;
     }
 }
 
