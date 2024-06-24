@@ -9,21 +9,12 @@
         page-break-after: always;
     }
     @page {
-    margin: 20px;
-    display: none;
-  }
-  .pagebreak:first-child {
-    page-break-after: avoid;
-  }
-  .pagebreak:last-child { 
-    page-break-after: avoid;
-  }
-  .pagebreak{
-    page-break-after: auto;
-  }
-  .body{
-    -webkit-print-color-adjust:exact !important;
-    print-color-adjust:exact !important;   
-  }
+      margin: 20px;
+      display: none;
+    }
+    .body{
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;   
+    }
 }
 
