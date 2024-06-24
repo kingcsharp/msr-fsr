@@ -11,6 +11,12 @@ import { EnumProcedureType } from "../../models/enums/EnumProcedureType";
 import * as _ from "lodash";
 import { ProcedureStepType } from "../../models/enums/ProcedureStepType";
 
+interface TaskSummary {
+  ncrNumber: string;
+  tasks: Array<any>;
+  taskStepOrder?: number;
+}
+
 @Component({
   selector: "ncr-report",
   templateUrl: "./ncr-report.component.html",
@@ -19,7 +25,7 @@ import { ProcedureStepType } from "../../models/enums/ProcedureStepType";
 export class NcrReportComponent implements OnInit {
   @Input() WorkOrder: WorkOrderModel;
   workOrderPart: WorkOrderPartModel;
-  taskSummaries: Array<any> = new Array<any>();
+  taskSummaries: Array<TaskSummary> = [];
   technicianFullName: string;
   date: Date;
   associatedDigitalPictures: Array<FileModel> = new Array<FileModel>();
@@ -97,7 +103,6 @@ export class NcrReportComponent implements OnInit {
     };
   }
 
-  
   /**
    * Generates monitor summaries based on the work order tasks.
    * Updates the `ncrNumbers` array and `taskSummaries` array.
@@ -106,13 +111,14 @@ export class NcrReportComponent implements OnInit {
   private generateMonitorSummaries() {
     this.ncrNumbers = _.uniq(
       this.WorkOrder.workOrderTasks.map((s) => s.ncNumber)
-    );
+    ).filter((s) => s !== null && s !== undefined);
+    debugger;
     this.ncrNumbers.forEach((ncrNumber) => {
-      const woTaskSummary = this.WorkOrder.workOrderTasks
+      const woTasks = this.WorkOrder.workOrderTasks
         .filter((workOrderTask) => workOrderTask.ncNumber === ncrNumber)
         .map((workOrderTask) => this.mapToTaskSummary(workOrderTask));
-
-      this.taskSummaries.push(woTaskSummary);
+      // do task
+      this.taskSummaries.push({ tasks: woTasks, ncrNumber: ncrNumber});
     });
 
     this.taskSummaries.sort(

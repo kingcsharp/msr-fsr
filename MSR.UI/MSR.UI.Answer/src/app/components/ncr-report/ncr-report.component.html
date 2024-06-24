@@ -110,26 +110,28 @@
             <div class="col-9"></div>
           </div>
         </div>
-      <div class="col-12 border bg-dark p-2">
-        <b>{{ taskSummary.taskName }}</b>
-      </div>
-        <div class="col-6 border bg-secondary p-2">
-            Monitor <b>{{ taskSummary.taskId }}</b>
+      <ng-container *ngFor="let task of taskSummary.tasks">
+        <div class="col-12 border bg-dark p-2 mt-3">
+          <b>{{ task.taskName }}</b>
         </div>
-        <div class="col-3 border bg-secondary p-2">Result</div>
-        <div class="col-3 border bg-secondary p-2">Comment</div>
-        <div class="col-12">
-            <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
-            <div
-                class="col-6 border p-2"
-                [innerHTML]="monitorSummary.monitorTitle"
-            ></div>
-            <div class="col-3 border p-2">
-                {{ monitorSummary.result | monitorResult }}
-            </div>
-            <div class="col-3 border p-2">{{ monitorSummary.comment }}</div>
-            </div>
-      </div>
+          <div class="col-6 border bg-secondary p-2">
+              Monitor <b>{{ task.taskId }}</b>
+          </div>
+          <div class="col-3 border bg-secondary p-2">Result</div>
+          <div class="col-3 border bg-secondary p-2">Comment</div>
+          <div class="col-12">
+              <div class="row" *ngFor="let monitorSummary of task.monitors">
+              <div
+                  class="col-6 border p-2"
+                  [innerHTML]="monitorSummary.monitorTitle"
+              ></div>
+              <div class="col-3 border p-2">
+                  {{ monitorSummary.result | monitorResult }}
+              </div>
+              <div class="col-3 border p-2">{{ monitorSummary.comment }}</div>
+              </div>
+        </div>
+      </ng-container>
       <div class="pagebreak">
         <br/>
         <br/>
