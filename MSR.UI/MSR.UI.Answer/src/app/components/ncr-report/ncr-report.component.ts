@@ -31,8 +31,6 @@ export class NcrReportComponent implements OnInit {
   showNcrParts: boolean;
   tmpNumbers = new Set();
   ncrNumbers: Array<any>;  
-  group: Object;
-  grouped: Array<any> = new Array<any>();
 
   constructor(private globals: Globals) {}
   
@@ -100,15 +98,9 @@ export class NcrReportComponent implements OnInit {
         }
       });
 
-      this.grouped = this.taskSummaries.reduce((res, curr) => {
-         res[curr.ncNumber] = res[curr.ncNumber] || [];
-         res[curr.ncNumber].push(curr);
-         return res;
-      }, {});  
-    
-    for (this.group of this.taskSummaries(this.grouped)) {
-        this.taskSummaries.sort((taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder);
-      }
+    this.taskSummaries.sort(
+      (taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder
+    );
   }
   
   showImagePreviewDialog(fileModel: FileModel) {
