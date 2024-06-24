@@ -88,8 +88,7 @@ export class NcrReportComponent implements OnInit {
                 ? workOrderTaskMonitor.procedureStepMonitor?.description
                 : workOrderTaskMonitor.description,
             result: workOrderTaskMonitor,
-            comment: workOrderTaskMonitor.comment, 
-            ncrNumber: workOrderTask.ncNumber           
+            comment: workOrderTaskMonitor.comment       
           });
         });
 
