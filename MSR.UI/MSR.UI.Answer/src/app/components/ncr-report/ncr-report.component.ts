@@ -31,10 +31,10 @@ export class NcrReportComponent implements OnInit {
   showNcrParts: boolean;
   tmpNumbers = new Set();
   ncrNumbers: Array<any>;
-  static firstTimeThru = '0-0';
+  static firstTimeThru = "0-0";
 
   constructor(private globals: Globals) {}
-  
+
   ngOnInit(): void {
     this.technicianFullName = this.globals.getCurrentUser().fullName;
     this.date = new Date();
@@ -52,67 +52,84 @@ export class NcrReportComponent implements OnInit {
     this.getNCRParts();
   }
 
-  checkNCR(ncrNum, taskNcrNum){    
-    if (ncrNum == taskNcrNum && NcrReportComponent.firstTimeThru != ncrNum){      
-        NcrReportComponent.firstTimeThru = ncrNum        
-        return true;
-    } else {                       
-      return false;                  
+  checkNCR(ncrNum, taskNcrNum) {
+    if (ncrNum == taskNcrNum && NcrReportComponent.firstTimeThru != ncrNum) {
+      NcrReportComponent.firstTimeThru = ncrNum;
+      return true;
+    } else {
+      return false;
     }
   }
-  
-  generateMonitorSummaries() {
-    this.WorkOrder.workOrderTasks
-      .filter(
-        (s) =>
-          s.procedureStep?.procedure?.procedureTypeId ===
-            EnumProcedureType.NCR || s.isNCRTask
-      )
-      .map((workOrderTask) => {
-        this.tmpNumbers.add(workOrderTask.ncNumber);             
-        let taskSummary = {
-          taskName:
-            workOrderTask.procedureStep === undefined
-              ? workOrderTask.title
-              : workOrderTask.procedureStep.title,
-          taskId: workOrderTask.id,
-          monitors: new Array<any>(),
-          taskStepOrder: workOrderTask.taskStepOrder,
-          ncrNumber: workOrderTask.ncNumber
-        };
-        this.ncrNumbers = Array.from(this.tmpNumbers)        
-        workOrderTask.workOrderTaskMonitors.map((workOrderTaskMonitor) => {          
-          taskSummary.monitors.push({
-            monitorTitle:
-              (workOrderTask.procedureStep === undefined) !== null
-                ? workOrderTaskMonitor.procedureStepMonitor?.description
-                : workOrderTaskMonitor.description,
-            result: workOrderTaskMonitor,
-            comment: workOrderTaskMonitor.comment, 
-            ncrNumber: workOrderTask.ncNumber      
-          });
-        });
+  /**
+   * Maps the reference files of a work order task.
+   * @param workOrderTask - The work order task object.
+   * @returns An array of mapped reference files.
+   */
+  private mapWoTaskReferenceFiles = (workOrderTask) => {
+    if (
+      !workOrderTask.referenceFiles ||
+      workOrderTask.referenceFiles.length < 1
+    )
+      return [];
 
-        this.taskSummaries.push(taskSummary);
-        if (
-          typeof workOrderTask.referenceFiles !== "undefined" &&
-          workOrderTask.referenceFiles !== null
-        ) {
-          workOrderTask.referenceFiles.map((referenceFile) => {
-            if (this.getViewerType(referenceFile.contentType) === "img") {
-              this.associatedDigitalPictures.push(referenceFile);
-            } else {
-              this.associatedDocuments.push(referenceFile);
-            }
-          });
-        }
-      });
+    return workOrderTask.referenceFiles.map((referenceFile) => {
+      if (this.getViewerType(referenceFile.contentType) === "img") {
+        this.associatedDigitalPictures.push(referenceFile);
+      } else {
+        this.associatedDocuments.push(referenceFile);
+      }
+    });
+  };
+  /**
+   * Maps a work order task to a task summary object.
+   * @param workOrderTask - The work order task to be mapped.
+   * @returns The task summary object.
+   */
+  private mapToTaskSummary(workOrderTask) {
+    return {
+      taskName:
+        workOrderTask.procedureStep === undefined
+          ? workOrderTask.title
+          : workOrderTask.procedureStep.title,
+      taskId: workOrderTask.id,
+      monitors: workOrderTask.workOrderTaskMonitors.map((monitor) => {
+        return {
+          monitorTitle:
+            (workOrderTask.procedureStep === undefined) !== null
+              ? monitor.procedureStepMonitor?.description
+              : monitor.description,
+          result: monitor,
+          comment: monitor.comment,
+        };
+      }),
+      taskStepOrder: workOrderTask.taskStepOrder,
+      referenceFiles: this.mapWoTaskReferenceFiles(workOrderTask),
+    };
+  }
+
+  
+  /**
+   * Generates monitor summaries based on the work order tasks.
+   * Updates the `ncrNumbers` array and `taskSummaries` array.
+   * Sorts the `taskSummaries` array based on task step order.
+   */
+  private generateMonitorSummaries() {
+    this.ncrNumbers = _.uniq(
+      this.WorkOrder.workOrderTasks.map((s) => s.ncNumber)
+    );
+    this.ncrNumbers.forEach((ncrNumber) => {
+      const woTaskSummary = this.WorkOrder.workOrderTasks
+        .filter((workOrderTask) => workOrderTask.ncNumber === ncrNumber)
+        .map((workOrderTask) => this.mapToTaskSummary(workOrderTask));
+
+      this.taskSummaries.push(woTaskSummary);
+    });
 
     this.taskSummaries.sort(
       (taskA, taskB) => taskA.taskStepOrder - taskB.taskStepOrder
     );
   }
-  
+
   showImagePreviewDialog(fileModel: FileModel) {
     this.imagePreview = fileModel;
     this.showImagePreview = !this.showImagePreview;
@@ -168,7 +185,7 @@ export class NcrReportComponent implements OnInit {
       }
     );
 
-    _.map(ncrWorkOrderTasks, (workOrderTask) => {            
+    _.map(ncrWorkOrderTasks, (workOrderTask) => {
       this.ncrParts.map((part, index) => {
         const mappedWorkOrderPart = _.find(
           workOrderTask.mappedWorkOrderParts,
