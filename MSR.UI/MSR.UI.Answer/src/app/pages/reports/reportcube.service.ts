@@ -532,7 +532,6 @@ export class ReportCubeService {
             label: "Part Name",
             visible: true,
             type: this.enumColumnType.String,
-            dropdownHeader: true,
           }),
           new ColumnsSaved({
             id: "serialnumber",
