@@ -522,6 +522,19 @@ export class ReportCubeService {
             dropdownHeader: true,
           }),
           new ColumnsSaved({
+            id: "partnumber",
+            label: "Part Number",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "partname",
+            label: "Part Name",
+            visible: true,
+            type: this.enumColumnType.String,
+            dropdownHeader: true,
+          }),
+          new ColumnsSaved({
             id: "serialnumber",
             label: "Serial #",
             visible: true,
@@ -557,8 +570,20 @@ export class ReportCubeService {
             type: this.enumColumnType.String,
           }),
           new ColumnsSaved({
+            id: "monitordescription",
+            label: "Monitor Description",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
             id: "unitofmeasure",
             label: "Unit of Measure",
+            visible: true,
+            type: this.enumColumnType.String,
+          }),
+          new ColumnsSaved({
+            id: "passfail",
+            label: "Pass/Fail",
             visible: true,
             type: this.enumColumnType.String,
           }),
