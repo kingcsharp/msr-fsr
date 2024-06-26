@@ -1403,15 +1403,9 @@ export class ReportCubeService {
           elem.elemKey =
             elem["updatedon"] +
             this.splitChars +
-            this.setName(elem, "partnumber", "serialnumber", "-");
-          elem.isValidForChart = this.isValidRowForChart(
-            elem,
-            "partnumber",
-            "serialnumber"
-          );
+            this.setName(elem, "serialnumber", "-");
           elem.cyclecount = this.checkIfCycleCountIsNaN(elem, "cyclecount");
           elem.lastupdatedon = moment(elem["updatedon"]);
-          elem.partname = [{ name: elem["partname"], id: elem["partname"] }];
           return elem;
         });
         return pagingModel;
