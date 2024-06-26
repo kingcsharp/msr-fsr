@@ -1403,7 +1403,7 @@ export class ReportCubeService {
           elem.elemKey =
             elem["updatedon"] +
             this.splitChars +
-            this.setName(elem, "serialnumber", "-");
+            this.setName(elem, "partnumber", "serialnumber", "-");
           elem.cyclecount = this.checkIfCycleCountIsNaN(elem, "cyclecount");
           elem.lastupdatedon = moment(elem["updatedon"]);
           return elem;
