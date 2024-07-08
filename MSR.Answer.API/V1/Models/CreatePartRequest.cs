@@ -18,6 +18,7 @@ namespace MSR.Answer.API.V1.Models
         public string PartNumber { get; set; }
         public string OEMPartNumber { get; set; }
         public string NickName { get; set; }
+        public bool IsKit { get; set; }
         public bool IsActive { get; set; }
         public int? MaximumCycles { get; set; }
         public EnumSegregationType? SegregationType { get; set; }

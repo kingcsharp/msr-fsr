@@ -254,7 +254,7 @@ export class PartsComponent implements OnInit {
 
   resetParsleyjs() {
     if (jQuery(".parsleyjs").parsley() !== undefined) {
-      jQuery(".parsleyjs").parsley().reset();
+      jQuery(".parsleyjs").parsley('reset');
     }
   }
 
@@ -419,6 +419,7 @@ export class PartsComponent implements OnInit {
       name: currentPart.name,
       partNumber: currentPart.partNumber,
       isActive: currentPart.isActive,
+      isKit: currentPart.isKit,
       createSubParts: currentPart.createSubParts,
       maximumCycles: currentPart.maximumCycles,
       nickName: currentPart.nickName,
