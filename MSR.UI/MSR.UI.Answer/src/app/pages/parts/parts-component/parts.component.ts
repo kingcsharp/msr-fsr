@@ -419,7 +419,7 @@ export class PartsComponent implements OnInit {
       name: currentPart.name,
       partNumber: currentPart.partNumber,
       isActive: currentPart.isActive,
-      isKit: currentPart?.isKit as any,
+      isKit: (currentPart as any).isKit,
       createSubParts: currentPart.createSubParts,
       maximumCycles: currentPart.maximumCycles,
       nickName: currentPart.nickName,
