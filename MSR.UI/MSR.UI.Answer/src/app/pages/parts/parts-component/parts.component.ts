@@ -419,7 +419,6 @@ export class PartsComponent implements OnInit {
       name: currentPart.name,
       partNumber: currentPart.partNumber,
       isActive: currentPart.isActive,
-      isKit: (currentPart as any).isKit,
       createSubParts: currentPart.createSubParts,
       maximumCycles: currentPart.maximumCycles,
       nickName: currentPart.nickName,
@@ -427,6 +426,7 @@ export class PartsComponent implements OnInit {
       files: currentPart.files,
       segregationType: currentPart.segregationType,
     });
+    (ret as any).isKit = (currentPart as any).isKit;
     return ret;
   }
 
