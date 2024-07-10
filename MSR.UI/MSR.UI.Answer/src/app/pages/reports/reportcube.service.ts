@@ -476,7 +476,7 @@ export class ReportCubeService {
       case "MonitorsHistorybyWorkOrder":
         return [
           new ColumnsSaved({
-            id: "rownumber",
+            id: "workordernumber",
             label: "WO Item",
             visible: true,
             type: this.enumColumnType.String,
