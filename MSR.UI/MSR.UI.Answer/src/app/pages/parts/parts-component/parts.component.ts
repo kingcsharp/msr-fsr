@@ -53,6 +53,7 @@ export class PartsComponent implements OnInit {
   allParts: any[] = [];
   uploadedFiles: FileModel[] = [];
   isActive: any[];
+  isKit: any[];
   uploadedFinished: boolean = false;
   showApproveButtons: boolean = true;
   gridVersion: string;
@@ -127,6 +128,7 @@ export class PartsComponent implements OnInit {
     ];
     this.isKitStatus = this.globals.getYesNoArray();
     this.isActive = this.globals.getYesNoArray();
+    this.isKit = this.globals.getYesNoArray();
 
     this.segregationTypes = this.globals.getSegregationTypes();
 
