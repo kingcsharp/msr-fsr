@@ -14,6 +14,7 @@ import { ProcedureStepType } from "../../models/enums/ProcedureStepType";
 interface TaskSummary {
   ncrNumber: string;
   tasks: Array<any>;
+  ncrParts: Array<any>;
   taskStepOrder?: number;
 }
 
@@ -33,7 +34,6 @@ export class NcrReportComponent implements OnInit {
   showImagePreview: boolean = false;
   imagePreview: FileModel = new FileModel();
   menuItems = EnumMenuItem;
-  ncrParts: Array<any>;
   showNcrParts: boolean;
   ncrNumbers: Array<any>;
 
@@ -50,10 +50,9 @@ export class NcrReportComponent implements OnInit {
         s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>();
       }
     });
+    this.showNcrParts = false;
     this.generateMonitorSummaries();
     this.workOrderPart = this.WorkOrder.workOrderParts[0];
-    this.showNcrParts = false;
-    this.getNCRParts();
   }
 
   /**
@@ -112,13 +111,49 @@ export class NcrReportComponent implements OnInit {
     this.ncrNumbers = _.uniq(
       this.WorkOrder.workOrderTasks.map((s) => s.ncNumber)
     ).filter((s) => s !== null && s !== undefined);
-    debugger;
+
+    const totalNcrParts = this.WorkOrder.workOrderParts.map((part) => ({
+      id: part.id,
+      name: part.part?.name || "",
+      serialNumber: part.serialNumber,
+      partNumber: part.part?.partNumber || "",
+      detail: part.detail,
+      tagType: ""
+    }));
+
+    const ncrWorkOrderTasks = _.map(
+      _.groupBy(
+        _.filter(
+          this.WorkOrder.workOrderTasks || [],
+          (task) => !!task.ncNumber
+        ),
+        "ncNumber"
+      ),
+      (tasks) => {
+        return _.orderBy(tasks, ["taskStepOrder"], ["asc"])[0];
+      }
+    );
+    
     this.ncrNumbers.forEach((ncrNumber) => {
       const woTasks = this.WorkOrder.workOrderTasks
         .filter((workOrderTask) => workOrderTask.ncNumber === ncrNumber)
         .map((workOrderTask) => this.mapToTaskSummary(workOrderTask));
-      // do task
-      this.taskSummaries.push({ tasks: woTasks, ncrNumber: ncrNumber});
+      
+      const matchingWorkOrderTask = ncrWorkOrderTasks.find(task => task.ncNumber === ncrNumber);
+      const mappedWorkOrderParts = matchingWorkOrderTask ? matchingWorkOrderTask.mappedWorkOrderParts : [];
+      const ncrParts = totalNcrParts.reduce((acc, part) => {
+        const mappedWorkOrderPart = mappedWorkOrderParts.find(s => s.id === part.id);
+        if (mappedWorkOrderPart) {
+          this.showNcrParts = true;
+          acc.push({
+            ...part,
+            tagType: mappedWorkOrderPart.tagType || ""
+          });
+        }
+        return acc;
+      }, []);
+
+      this.taskSummaries.push({ tasks: woTasks, ncrNumber: ncrNumber, ncrParts: ncrParts});
     });
 
     this.taskSummaries.sort(
@@ -155,45 +190,5 @@ export class NcrReportComponent implements OnInit {
       default:
         return "url";
     }
-  }
-
-  getNCRParts() {
-    this.ncrParts = this.WorkOrder.workOrderParts.map((part) => ({
-      id: part.id,
-      name: part.part?.name || "",
-      serialNumber: part.serialNumber,
-      partNumber: part.part?.partNumber || "",
-      detail: part.detail,
-      tagType: "",
-      mapped: false,
-    }));
-
-    const ncrWorkOrderTasks = _.map(
-      _.groupBy(
-        _.filter(
-          this.WorkOrder.workOrderTasks || [],
-          (task) => !!task.ncNumber
-        ),
-        "ncNumber"
-      ),
-      (tasks) => {
-        return _.orderBy(tasks, ["taskStepOrder"], ["asc"])[0];
-      }
-    );
-
-    _.map(ncrWorkOrderTasks, (workOrderTask) => {
-      this.ncrParts.map((part, index) => {
-        const mappedWorkOrderPart = _.find(
-          workOrderTask.mappedWorkOrderParts,
-          (s) => s.id === part.id
-        );
-        if (mappedWorkOrderPart) {
-          this.ncrParts[index].mapped = true;
-          this.ncrParts[index].tagType = mappedWorkOrderPart.tagType || "";
-        }
-      });
-    });
-
-    this.showNcrParts = _.some(this.ncrParts, (part) => part.mapped);
   }
 }
