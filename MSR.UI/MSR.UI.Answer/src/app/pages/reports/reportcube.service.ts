@@ -519,7 +519,6 @@ export class ReportCubeService {
             label: "Kit Name",
             visible: true,
             type: this.enumColumnType.String,
-            dropdownHeader: true,
           }),
           new ColumnsSaved({
             id: "partnumber",
