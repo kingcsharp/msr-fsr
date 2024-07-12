@@ -295,7 +295,6 @@ export class PartsComponent implements OnInit {
 
   addSubPart(part: PartModel) {
     this.currPart.createSubParts.push(this.getSubPart());
-    part.isKit = part.createSubParts.length > 0;
   }
 
   removeSubPart(subpart: SubPartModel) {
