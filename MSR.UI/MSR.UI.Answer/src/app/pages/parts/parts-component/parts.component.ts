@@ -254,7 +254,7 @@ export class PartsComponent implements OnInit {
 
   resetParsleyjs() {
     if (jQuery(".parsleyjs").parsley() !== undefined) {
-      jQuery(".parsleyjs").parsley().reset();
+      jQuery(".parsleyjs").parsley('reset');
     }
   }
 
@@ -426,6 +426,7 @@ export class PartsComponent implements OnInit {
       files: currentPart.files,
       segregationType: currentPart.segregationType,
     });
+    (ret as any).isKit = (currentPart as any).isKit;
     return ret;
   }
 
