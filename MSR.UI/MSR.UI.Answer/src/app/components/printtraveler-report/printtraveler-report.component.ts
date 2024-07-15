@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, Input, OnChanges, ViewEncapsulation } from "@angular/core";
 import {
   WorkOrderModel,
   WorkOrderPartModel,
@@ -17,7 +17,7 @@ import * as _ from "lodash";
   encapsulation: ViewEncapsulation.Emulated,
   providers: [WorkOrderPartService],
 })
-export class PrinttravelerReportComponent implements OnInit {
+export class PrinttravelerReportComponent implements OnChanges {
   @Input() WorkOrder: WorkOrderModel = undefined;
   parentPartImageUrl: string;
   showPrintTravelerDialog: boolean = false;
@@ -30,7 +30,7 @@ export class PrinttravelerReportComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.router.events
       .pipe(
         filter.call(

@@ -42,8 +42,8 @@
               <div class="col-3">{{ workOrderPart.detail }}</div>
               <div class="col-2"></div>
             </ng-container>
-            <ng-container *ngFor="let part of ncrParts">
-              <ng-container *ngIf="part.mapped && showNcrParts">
+            <ng-container *ngFor="let part of taskSummary?.ncrParts">
+              <ng-container *ngIf="showNcrParts">
                 <div class="col-2">{{ part.partNumber }}</div>
                 <div class="col-3">{{ part.name }}</div>
                 <div class="col-2">{{ part.serialNumber }}</div>
