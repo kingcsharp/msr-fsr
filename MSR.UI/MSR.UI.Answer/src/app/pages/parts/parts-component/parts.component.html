@@ -475,13 +475,11 @@
               Is Kit
             </label>
             <div class="col-md-4">
-              <div class="display-inline-block isActive">
-                <label
-                  class="form-check-label"
-                  for="isKit"
-                  class="col-form-label"
-                >
-                  {{ currPart.isKit ? "Yes" : "No" }}
+              <div class="display-inline-block isKit">
+                <label class="form-check-label" for="isKit" class="switch">
+                  <input class="form-check-input" [(ngModel)]="currPart.isKit" name="isKit" type="checkbox" class="ios"
+                    checked id="isKit" />
+                  <i data-cy="isKit-checkbox"></i>
                 </label>
               </div>
             </div>
@@ -550,7 +548,7 @@
         </fieldset>
       </div>
     </section>
-    <section class="widget mrg-btm-sm" widget>
+    <section class="widget mrg-btm-sm" *ngIf="currPart.isKit" widget>
       <header>
         <h5>
           <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
