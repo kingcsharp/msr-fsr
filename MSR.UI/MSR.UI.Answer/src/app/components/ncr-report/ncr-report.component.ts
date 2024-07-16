@@ -16,6 +16,8 @@ interface TaskSummary {
   tasks: Array<any>;
   ncrParts: Array<any>;
   taskStepOrder?: number;
+  associatedDigitalPictures: Array<FileModel>;
+  associatedDocuments: Array<FileModel>;
 }
 
 @Component({
@@ -29,8 +31,6 @@ export class NcrReportComponent implements OnInit {
   taskSummaries: Array<TaskSummary> = [];
   technicianFullName: string;
   date: Date;
-  associatedDigitalPictures: Array<FileModel> = new Array<FileModel>();
-  associatedDocuments: Array<FileModel> = new Array<FileModel>();
   showImagePreview: boolean = false;
   imagePreview: FileModel = new FileModel();
   menuItems = EnumMenuItem;
@@ -56,26 +56,6 @@ export class NcrReportComponent implements OnInit {
   }
 
   /**
-   * Maps the reference files of a work order task.
-   * @param workOrderTask - The work order task object.
-   * @returns An array of mapped reference files.
-   */
-  private mapWoTaskReferenceFiles = (workOrderTask) => {
-    if (
-      !workOrderTask.referenceFiles ||
-      workOrderTask.referenceFiles.length < 1
-    )
-      return [];
-
-    return workOrderTask.referenceFiles.map((referenceFile) => {
-      if (this.getViewerType(referenceFile.contentType) === "img") {
-        this.associatedDigitalPictures.push(referenceFile);
-      } else {
-        this.associatedDocuments.push(referenceFile);
-      }
-    });
-  };
-  /**
    * Maps a work order task to a task summary object.
    * @param workOrderTask - The work order task to be mapped.
    * @returns The task summary object.
@@ -98,7 +78,7 @@ export class NcrReportComponent implements OnInit {
         };
       }),
       taskStepOrder: workOrderTask.taskStepOrder,
-      referenceFiles: this.mapWoTaskReferenceFiles(workOrderTask),
+      referenceFiles: (!workOrderTask.referenceFiles || workOrderTask.referenceFiles.length < 1) ? [] : workOrderTask.referenceFiles
     };
   }
 
@@ -139,6 +119,22 @@ export class NcrReportComponent implements OnInit {
         .filter((workOrderTask) => workOrderTask.ncNumber === ncrNumber)
         .map((workOrderTask) => this.mapToTaskSummary(workOrderTask));
       
+      const referenceFiles = woTasks.reduce((total, task) => {
+        const uniquePhotoIds = new Set(total.map(file => file.fileId));
+        
+        task.referenceFiles.forEach(file => {
+          if (!uniquePhotoIds.has(file.fileId)) {
+            uniquePhotoIds.add(file.fileId);
+            total.push(file);
+          }
+        });
+      
+        return total;
+      }, []);
+
+      const associatedDigitalPictures = referenceFiles.filter((file) => this.getViewerType(file.contentType) === 'img');
+      const associatedDocuments = referenceFiles.filter((file) => this.getViewerType(file.contentType) !== 'img');
+
       const matchingWorkOrderTask = ncrWorkOrderTasks.find(task => task.ncNumber === ncrNumber);
       const mappedWorkOrderParts = matchingWorkOrderTask ? matchingWorkOrderTask.mappedWorkOrderParts : [];
       const ncrParts = totalNcrParts.reduce((acc, part) => {
@@ -153,7 +149,7 @@ export class NcrReportComponent implements OnInit {
         return acc;
       }, []);
 
-      this.taskSummaries.push({ tasks: woTasks, ncrNumber: ncrNumber, ncrParts: ncrParts});
+      this.taskSummaries.push({ tasks: woTasks, ncrNumber, ncrParts, associatedDigitalPictures, associatedDocuments});
     });
 
     this.taskSummaries.sort(

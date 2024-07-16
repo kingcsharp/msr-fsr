@@ -61,7 +61,7 @@
             <div class="col-9">
               <grid-file-viewer
                 [menuItem]="menuItems.WorkOrderTasks"
-                [files]="associatedDocuments"
+                [files]="taskSummary.associatedDocuments"
                 [showDescription]="true"
                 class="m-2"
               ></grid-file-viewer>
@@ -73,7 +73,7 @@
               <div class="row">
                 <div
                   class="col-4 mt-4"
-                  *ngFor="let fileModel of associatedDigitalPictures"
+                  *ngFor="let fileModel of taskSummary.associatedDigitalPictures"
                 >
                   <a
                     *ngIf="fileModel.fileId !== undefined"
