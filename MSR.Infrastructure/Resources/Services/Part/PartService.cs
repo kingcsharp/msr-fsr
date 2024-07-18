@@ -137,7 +137,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 {
                     current.Subparts = new List<PartSubPartMap>();
                 }
-                else
+                else if(current.IsKit == true)
                 {
                     current.Subparts = command.SubParts.Select(x =>
                     {
@@ -147,6 +147,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
                         return subpart;
                     }).ToList();
+                } else
+                {
+                    current.Subparts = new List<PartSubPartMap>();
                 }
 
                 current.IsKit = command.IsKit;
