@@ -40,7 +40,7 @@ export class WorkordertaskmonitorsWrapperComponent implements OnInit {
   @Input() workOrderMonitorsToView: Array<any>;
   @Input() showNCParts: boolean = false;
   @Input() locationId: number;
-  @Input() doNotAllowEditing: boolean = true;
+  @Input() doNotAllowEditing: boolean = false;
   @Input() workOrderModel: WorkOrderModel;
   @Input() workOrderTaskToView: WorkOrderTaskModel;
   @Input() ncrParts: Array<any>;
